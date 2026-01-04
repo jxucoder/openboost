@@ -6,7 +6,7 @@ app = modal.App("openboost-test")
 
 # Use CUDA devel image (includes NVVM compiler needed by numba)
 image = (
-    modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.11")
+    modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
     .pip_install("numpy>=1.24", "numba-cuda>=0.23", "xgboost>=2.0", "scikit-learn")
     .add_local_dir("src", "/root/src")
 )

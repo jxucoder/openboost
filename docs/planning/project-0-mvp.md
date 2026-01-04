@@ -115,7 +115,7 @@ pred = model.predict(X)
 
 **Status: ✅ Complete**
 
-Tested on NVIDIA T4 GPU via Modal (CUDA 12.4, Python 3.11).
+Tested on NVIDIA T4 GPU via Modal (CUDA 12.4, Python 3.12).
 
 ### Benchmark vs XGBoost
 
