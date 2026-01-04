@@ -1,18 +1,15 @@
 # openboost
 
+[![Unit Tests](https://github.com/jxucoder/openboost/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/jxucoder/openboost/actions/workflows/unit-tests.yml)
+[![PyPI version](https://img.shields.io/pypi/v/openboost.svg)](https://pypi.org/project/openboost/)
+[![Python](https://img.shields.io/pypi/pyversions/openboost.svg)](https://pypi.org/project/openboost/)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 GPU-accelerated gradient boosting, written in Python.
 
 ## Building Blocks
 
-[numba-cuda](https://github.com/NVIDIA/numba-cuda) compiles Python to CUDA kernels:
-
-```python
-@cuda.jit
-def _histogram_kernel(binned, grad, hess, hist_grad, hist_hess):
-    feature_idx = cuda.blockIdx.x
-    local_grad = cuda.shared.array(256, dtype=float32)
-    # ...
-```
+[numba-cuda](https://github.com/NVIDIA/numba-cuda) compiles Python to CUDA kernels.
 
 ## The Problem
 

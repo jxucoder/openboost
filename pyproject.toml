@@ -25,12 +25,23 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=1.24",
-    "numba-cuda>=0.23",  # https://github.com/NVIDIA/numba-cuda
+    "numba>=0.60",
 ]
 
 [project.optional-dependencies]
-dev = [
+cuda = [
+    "numba-cuda>=0.23",  # Linux/Windows only
+]
+test = [
     "pytest>=7.0",
+]
+bench = [
+    "modal>=1.0",
+    "xgboost>=2.0",
+    "scikit-learn>=1.0",
+]
+dev = [
+    "openboost[test,bench]",
 ]
 
 [project.urls]
