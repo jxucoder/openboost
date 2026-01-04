@@ -3,10 +3,6 @@
 import numpy as np
 from numba import cuda
 
-# =============================================================================
-# Histogram Kernels
-# =============================================================================
-
 HIST_BLOCK_SIZE = 256
 MAX_BINS = 256
 
@@ -56,10 +52,6 @@ def histogram_kernel(
         cuda.atomic.add(histograms, (node_offset, feature_idx, tid, 0), local_hist[tid, 0])
         cuda.atomic.add(histograms, (node_offset, feature_idx, tid, 1), local_hist[tid, 1])
 
-
-# =============================================================================
-# Split Finding Kernel
-# =============================================================================
 
 @cuda.jit
 def find_best_split_kernel(
@@ -140,10 +132,6 @@ def find_best_split_kernel(
         best_bin[node_idx] = shared_bin[0]
 
 
-# =============================================================================
-# Sample Assignment Kernel
-# =============================================================================
-
 @cuda.jit
 def update_sample_nodes_kernel(
     X_binned,       # (n_features, n_samples) uint8
@@ -178,10 +166,6 @@ def update_sample_nodes_kernel(
     else:
         sample_nodes[idx] = 2 * node_idx + 2
 
-
-# =============================================================================
-# Prediction Kernel
-# =============================================================================
 
 @cuda.jit
 def predict_kernel(

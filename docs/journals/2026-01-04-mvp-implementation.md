@@ -58,6 +58,18 @@ All success criteria passed.
 
 4. **Grid size warnings are fine**: Early tree levels (1, 2, 4 nodes) trigger low-occupancy warnings but don't hurt overall performance.
 
+5. **numba-cuda requires CUDA at import**: The new `numba-cuda` package (split from numba 0.60+) requires `libcudart.so` even to import, breaking the simulator approach. Solution: CI uses `numba<0.60` (has built-in CUDA simulator), production uses `numba-cuda>=0.23`.
+
+### CI Testing Strategy
+
+| Environment | Numba Version | CUDA |
+|-------------|---------------|------|
+| GitHub Actions | `numba<0.60` | Simulator (`NUMBA_ENABLE_CUDASIM=1`) |
+| Modal | `numba-cuda>=0.23` | Real GPU (T4) |
+| Production | `numba-cuda>=0.23` | Real GPU |
+
+Local Mac development cannot run CUDA tests (no CUDA support on macOS).
+
 ## Future Plans
 
 - Profile to find actual bottlenecks
