@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, NamedTuple
 
 import numpy as np
 
-from ._backends import is_cuda
+from .._backends import is_cuda
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -56,14 +56,14 @@ def find_best_split(
     
     # Dispatch to backend
     if is_cuda() and hasattr(hist_grad, '__cuda_array_interface__'):
-        from ._backends._cuda import find_best_split_cuda
+        from .._backends._cuda import find_best_split_cuda
         feature, threshold, gain = find_best_split_cuda(
             hist_grad, hist_hess,
             total_grad, total_hess,
             reg_lambda, min_child_weight,
         )
     else:
-        from ._backends._cpu import find_best_split_cpu
+        from .._backends._cpu import find_best_split_cpu
         # Ensure numpy for CPU
         hist_grad_np = np.asarray(hist_grad.copy_to_host() if hasattr(hist_grad, 'copy_to_host') else hist_grad)
         hist_hess_np = np.asarray(hist_hess.copy_to_host() if hasattr(hist_hess, 'copy_to_host') else hist_hess)

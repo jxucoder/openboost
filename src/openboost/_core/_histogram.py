@@ -9,11 +9,11 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from ._backends import is_cuda
+from .._backends import is_cuda
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
-    from ._array import BinnedArray
+    from .._array import BinnedArray
 
 
 def build_histogram(
@@ -35,7 +35,7 @@ def build_histogram(
         hist_hess: Shape (n_features, 256), float64
     """
     # Extract raw data if BinnedArray
-    from ._array import BinnedArray
+    from .._array import BinnedArray
     if isinstance(binned, BinnedArray):
         binned_data = binned.data
         device = binned.device
@@ -47,7 +47,7 @@ def build_histogram(
     if sample_indices is not None:
         # Subset the data (needed for node-specific histograms)
         if device == "cuda":
-            from ._backends._cuda import gather_cuda
+            from .._backends._cuda import gather_cuda
             binned_data = gather_cuda(binned_data, sample_indices)
             grad = gather_cuda(grad, sample_indices)
             hess = gather_cuda(hess, sample_indices)
@@ -58,10 +58,10 @@ def build_histogram(
     
     # Dispatch to backend
     if device == "cuda" and is_cuda():
-        from ._backends._cuda import build_histogram_cuda
+        from .._backends._cuda import build_histogram_cuda
         return build_histogram_cuda(binned_data, grad, hess)
     else:
-        from ._backends._cpu import build_histogram_cpu
+        from .._backends._cpu import build_histogram_cpu
         # Ensure numpy arrays for CPU backend
         if hasattr(binned_data, 'copy_to_host'):
             binned_data = binned_data.copy_to_host()
@@ -99,7 +99,7 @@ def subtract_histogram(
     # Check if we're dealing with CUDA arrays
     if hasattr(parent_grad, '__cuda_array_interface__'):
         # Use CUDA subtraction kernel
-        from ._backends._cuda import subtract_histograms_cuda
+        from .._backends._cuda import subtract_histograms_cuda
         return subtract_histograms_cuda(parent_grad, parent_hess, child_grad, child_hess)
     else:
         # NumPy arrays - direct subtraction

@@ -16,9 +16,9 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from ._array import BinnedArray, array
-from ._backends import is_cuda
-from ._loss import get_loss_function, LossFunction
+from .._array import BinnedArray, array
+from .._backends import is_cuda
+from .._loss import get_loss_function, LossFunction
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -94,7 +94,7 @@ class OpenBoostGAM:
     def _fit_gpu(self, y: NDArray):
         """GPU training path - all features in parallel."""
         from numba import cuda
-        from ._backends._cuda import build_histogram_cuda
+        from .._backends._cuda import build_histogram_cuda
         
         n_features = self.X_binned_.n_features
         n_samples = self.X_binned_.n_samples
@@ -135,7 +135,7 @@ class OpenBoostGAM:
     
     def _fit_cpu(self, y: NDArray):
         """CPU training path."""
-        from ._backends._cpu import build_histogram_cpu
+        from .._backends._cpu import build_histogram_cpu
         
         n_features = self.X_binned_.n_features
         n_samples = self.X_binned_.n_samples

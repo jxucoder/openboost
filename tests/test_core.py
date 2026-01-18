@@ -74,7 +74,7 @@ class TestFitTree:
         
         tree = ob.fit_tree(binned, grad, hess, max_depth=3)
         
-        assert len(tree.nodes) > 0
+        assert tree.n_nodes > 0
         assert tree.depth <= 3
     
     def test_tree_prediction(self):
@@ -176,7 +176,7 @@ class TestEdgeCases:
         hess = np.ones(100, dtype=np.float32)
         tree = ob.fit_tree(binned, grad, hess, max_depth=3)
         
-        assert len(tree.nodes) > 0
+        assert tree.n_nodes > 0
     
     def test_small_dataset(self):
         """Test with very small dataset."""

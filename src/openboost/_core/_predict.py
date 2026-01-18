@@ -10,8 +10,8 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from ._array import BinnedArray
-from ._backends import is_cuda
+from .._array import BinnedArray
+from .._backends import is_cuda
 
 if TYPE_CHECKING:
     from ._tree import Tree

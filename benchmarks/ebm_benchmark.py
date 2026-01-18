@@ -113,7 +113,7 @@ def benchmark_gam_vs_ebm(
     
     try:
         import openboost as ob
-        from openboost._gam import OpenBoostGAM
+        from openboost import OpenBoostGAM
         
         print(f"Backend: {ob.get_backend()}")
         
@@ -324,7 +324,7 @@ def benchmark_scaling(max_samples: int = 1_000_000):
     print(f"GPU: {cuda.get_current_device().name}")
     
     import openboost as ob
-    from openboost._gam import OpenBoostGAM
+    from openboost import OpenBoostGAM
     from interpret.glassbox import ExplainableBoostingRegressor
     
     n_features = 20
@@ -451,7 +451,7 @@ if __name__ == "__main__":
         # OpenBoost GPU-GAM
         try:
             import openboost as ob
-            from openboost._gam import OpenBoostGAM
+            from openboost import OpenBoostGAM
             
             print(f"\nOpenBoost backend: {ob.get_backend()}")
             

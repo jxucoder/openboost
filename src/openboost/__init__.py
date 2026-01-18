@@ -34,27 +34,89 @@ Low-Level API (Full Control):
 
 __version__ = "0.5.0"  # Phase 5 - GradientBoosting batch mode
 
-# Core API
+# =============================================================================
+# Data Layer
+# =============================================================================
 from ._array import BinnedArray, array, as_numba_array
-from ._tree import (
-    Tree, fit_tree, fit_tree_gpu_native,
-    predict_tree, fit_trees_batch,
+
+# =============================================================================
+# Core (Foundation)
+# =============================================================================
+from ._core import (
+    # Growth strategies (Phase 8.2)
+    GrowthConfig,
+    GrowthStrategy,
+    TreeStructure,
+    LevelWiseGrowth,
+    LeafWiseGrowth,
+    SymmetricGrowth,
+    get_growth_strategy,
+    # Leaf value abstractions (Phase 9.0)
+    LeafValues,
+    ScalarLeaves,
+    VectorLeaves,
+    # Tree building
+    fit_tree,
+    fit_trees_batch,
+    Tree as LegacyTree,
+    TreeNode,
+    fit_tree_gpu_native,
+    predict_tree,
     # Symmetric trees
-    SymmetricTree, fit_tree_symmetric, fit_tree_symmetric_gpu_native, predict_symmetric_tree,
+    SymmetricTree,
+    fit_tree_symmetric,
+    fit_tree_symmetric_gpu_native,
+    predict_symmetric_tree,
+    # Primitives (Phase 8.1)
+    NodeHistogram,
+    NodeSplit,
+    build_node_histograms,
+    subtract_histogram,
+    find_node_splits,
+    partition_samples,
+    compute_leaf_values,
+    init_sample_node_ids,
+    get_nodes_at_depth,
+    get_children,
+    get_parent,
+    # Prediction
+    predict_ensemble,
 )
-from ._predict import predict_ensemble
 
-# High-level API (scikit-learn-like)
-from ._boosting import GradientBoosting
-from ._gam import OpenBoostGAM
+# Phase 8: TreeStructure is the new Tree
+Tree = TreeStructure  # Alias for backward compatibility
 
-# Loss functions
-from ._loss import mse_gradient, logloss_gradient, huber_gradient, get_loss_function
+# =============================================================================
+# Models (High-Level)
+# =============================================================================
+from ._models import (
+    GradientBoosting,
+    MultiClassGradientBoosting,
+    DART,
+    OpenBoostGAM,
+    ConfigBatch,
+    BatchTrainingState,
+)
 
-# Batch training (low-level)
-from ._batch import ConfigBatch, BatchTrainingState
+# =============================================================================
+# Loss Functions
+# =============================================================================
+from ._loss import (
+    mse_gradient,
+    logloss_gradient,
+    huber_gradient,
+    mae_gradient,        # Phase 9.1
+    quantile_gradient,   # Phase 9.1
+    poisson_gradient,    # Phase 9.3
+    gamma_gradient,      # Phase 9.3
+    tweedie_gradient,    # Phase 9.3
+    softmax_gradient,    # Phase 9.2
+    get_loss_function,
+)
 
-# Backend control
+# =============================================================================
+# Backend Control
+# =============================================================================
 from ._backends import get_backend, set_backend, is_cuda, is_cpu
 
 __all__ = [
@@ -66,15 +128,23 @@ __all__ = [
     "as_numba_array",
     # High-level API (recommended)
     "GradientBoosting",
-    "OpenBoostGAM",  # GPU-accelerated interpretable GAM (EBM-style)
+    "MultiClassGradientBoosting",
+    "OpenBoostGAM",
+    "DART",
     # Loss functions
     "mse_gradient",
     "logloss_gradient",
     "huber_gradient",
+    "mae_gradient",
+    "quantile_gradient",
+    "poisson_gradient",
+    "gamma_gradient",
+    "tweedie_gradient",
+    "softmax_gradient",
     "get_loss_function",
     # Training (single tree, low-level)
-    "fit_tree",              # Auto-dispatches to GPU-native when on GPU
-    "fit_tree_gpu_native",   # Explicit GPU-native (advanced)
+    "fit_tree",
+    "fit_tree_gpu_native",
     "Tree",
     # Training (symmetric/oblivious trees)
     "fit_tree_symmetric",
@@ -85,6 +155,30 @@ __all__ = [
     "fit_trees_batch",
     "ConfigBatch",
     "BatchTrainingState",
+    # Tree building primitives (Phase 8.1)
+    "NodeHistogram",
+    "NodeSplit",
+    "build_node_histograms",
+    "subtract_histogram",
+    "find_node_splits",
+    "partition_samples",
+    "compute_leaf_values",
+    "init_sample_node_ids",
+    "get_nodes_at_depth",
+    "get_children",
+    "get_parent",
+    # Growth strategies (Phase 8.2)
+    "GrowthConfig",
+    "GrowthStrategy",
+    "TreeStructure",
+    "LevelWiseGrowth",
+    "LeafWiseGrowth",
+    "SymmetricGrowth",
+    "get_growth_strategy",
+    # Leaf value abstractions (Phase 9.0)
+    "LeafValues",
+    "ScalarLeaves",
+    "VectorLeaves",
     # Prediction
     "predict_tree",
     "predict_ensemble",
@@ -94,4 +188,3 @@ __all__ = [
     "is_cuda",
     "is_cpu",
 ]
-

@@ -120,10 +120,15 @@ OpenBoost Core (Histograms, Binning, Loss Functions)
 **Built-in:**
 - `GradientBoosting` — Standard GBDT with scikit-learn API
 - `OpenBoostGAM` — GPU-accelerated interpretable model
+- `DART` — Dropout regularized boosting
+
+**Growth strategies:**
+- Level-wise (XGBoost default)
+- Leaf-wise (LightGBM style)
+- Symmetric/Oblivious (CatBoost style)
 
 **Easy to build:**
-- Symmetric trees (CatBoost-style)
-- DART (dropout trees)
+- Custom growth strategies
 - Custom research variants
 
 ### 🚀 Competitive Performance
@@ -255,8 +260,10 @@ uv run modal run benchmarks/modal_bench.py
 
 - [x] Standard GBDT (`GradientBoosting`)
 - [x] GPU-accelerated GAM (`OpenBoostGAM`)
-- [ ] Symmetric/Oblivious trees
-- [ ] DART (dropout trees)
+- [x] DART (dropout trees)
+- [x] Growth strategies (level-wise, leaf-wise, symmetric)
+- [x] Loss function parity (MSE, MAE, Huber, Quantile, LogLoss, Softmax, Poisson, Gamma, Tweedie)
+- [x] Multi-class classification (`MultiClassGradientBoosting`)
 - [ ] Multi-GPU support
 - [ ] More tree variants (contributions welcome!)
 

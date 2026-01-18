@@ -155,7 +155,7 @@ class ConfigBatch:
         
         Call this once before batch training to avoid repeated transfers.
         """
-        from ._backends import is_cuda
+        from .._backends import is_cuda
         
         if not is_cuda():
             return
@@ -253,7 +253,7 @@ class BatchTrainingState:
     
     def to_device(self):
         """Transfer predictions to GPU."""
-        from ._backends import is_cuda
+        from .._backends import is_cuda
         
         if is_cuda() and not hasattr(self.predictions, '__cuda_array_interface__'):
             from numba import cuda

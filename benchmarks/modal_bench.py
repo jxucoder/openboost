@@ -1844,7 +1844,7 @@ def profile_gradient_boosting(
         times_tree.append((t2 - t1) * 1000)
         
         # Prediction update
-        from openboost._predict import predict_tree_add_gpu
+        from openboost._core._predict import predict_tree_add_gpu
         predict_tree_add_gpu(tree, X_binned, pred_gpu, learning_rate)
         cuda.synchronize()
         t3 = time.perf_counter()
@@ -2627,7 +2627,7 @@ def profile_large_scale(
         times_tree.append((t2 - t1) * 1000)
         
         # Prediction
-        from openboost._predict import predict_tree_add_gpu
+        from openboost._core._predict import predict_tree_add_gpu
         predict_tree_add_gpu(tree, X_binned, pred_gpu, 0.1)
         cuda.synchronize()
         t3 = time.perf_counter()
@@ -2905,7 +2905,7 @@ def benchmark_10m():
     from numba import cuda
     
     import openboost as ob
-    from openboost._tree import fit_tree_gpu_native
+    from openboost._core._tree import fit_tree_gpu_native
     
     print("=" * 70)
     print("10M Sample Benchmark")
@@ -3012,6 +3012,4 @@ def benchmark_10m():
 # NOTE: Phase 7 V2 benchmark functions (profile_v1_vs_v2, benchmark_phase7_rowbased)
 # were removed after analysis showed V1 is 4x faster than V2.
 # See logs/2026-01-03-phase-7-final.md for details.
-
-
 # End of benchmark file

@@ -1,4 +1,8 @@
-"""Tree structure and fitting for OpenBoost."""
+"""Tree structure and fitting for OpenBoost.
+
+Phase 8.3+8.4: Refactored to use growth strategies from _growth.py.
+The main `fit_tree()` function now uses composable primitives and strategies.
+"""
 
 from __future__ import annotations
 
@@ -7,8 +11,19 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from ._array import BinnedArray, as_numba_array
-from ._backends import is_cuda
+from .._array import BinnedArray, as_numba_array
+from .._backends import is_cuda
+from ._growth import (
+    GrowthConfig,
+    GrowthStrategy,
+    TreeStructure,
+    LevelWiseGrowth,
+    LeafWiseGrowth,
+    SymmetricGrowth,
+    get_growth_strategy,
+)
+
+# Legacy imports for backward compatibility with internal code
 from ._histogram import build_histogram, subtract_histogram
 from ._split import SplitInfo, compute_leaf_value, find_best_split
 
@@ -16,21 +31,18 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
+# =============================================================================
+# Legacy Tree Classes (kept for backward compatibility)
+# =============================================================================
+
 @dataclass
 class TreeNode:
-    """A node in the decision tree."""
-    # Split info (for internal nodes)
-    feature: int = -1      # Feature to split on
-    threshold: int = -1    # Bin threshold (go left if <= threshold)
-    
-    # Value (for leaf nodes)
+    """A node in the decision tree (legacy)."""
+    feature: int = -1
+    threshold: int = -1
     value: float = 0.0
-    
-    # Children indices (-1 = no child = leaf)
     left: int = -1
     right: int = -1
-    
-    # Statistics
     n_samples: int = 0
     sum_grad: float = 0.0
     sum_hess: float = 0.0
@@ -234,7 +246,7 @@ def fit_tree_gpu_native(
     hess = as_numba_array(hess)
     
     # Build tree on GPU
-    from ._backends._cuda import build_tree_gpu_native
+    from .._backends._cuda import build_tree_gpu_native
     
     node_features, node_thresholds, node_values, node_left, node_right = build_tree_gpu_native(
         binned, grad, hess,
@@ -267,15 +279,16 @@ def fit_tree(
     min_child_weight: float = 1.0,
     reg_lambda: float = 1.0,
     min_gain: float = 0.0,
-) -> Tree:
+    growth: str | GrowthStrategy = "levelwise",
+    max_leaves: int | None = None,
+) -> TreeStructure:
     """Fit a single gradient boosting tree.
     
-    This is the core function of OpenBoost. It builds a tree by:
-    1. Building histograms of grad/hess for all features
-    2. Finding the best split
-    3. Recursively splitting until max_depth or no valid splits
+    This is the core function of OpenBoost. It builds a tree using the
+    specified growth strategy and returns a TreeStructure that can be
+    used for prediction.
     
-    Phase 4: Auto-dispatches to GPU-native implementation when data is on GPU.
+    Phase 8: Uses composable growth strategies from _growth.py.
     
     Args:
         X: Binned feature data (BinnedArray from ob.array(), or raw binned array)
@@ -285,22 +298,83 @@ def fit_tree(
         min_child_weight: Minimum sum of hessian in a leaf
         reg_lambda: L2 regularization
         min_gain: Minimum gain to make a split
+        growth: Growth strategy - "levelwise", "leafwise", "symmetric", 
+                or a GrowthStrategy instance
+        max_leaves: Maximum leaves (for leafwise growth)
         
     Returns:
-        Fitted Tree object
+        TreeStructure that can predict via tree.predict(X) or tree(X)
         
     Example:
         >>> import openboost as ob
-        >>> import torch
         >>> 
         >>> X_binned = ob.array(X_train)
-        >>> pred = torch.zeros(n_samples, device="cuda")
+        >>> pred = np.zeros(n_samples, dtype=np.float32)
         >>> 
         >>> for round in range(100):
         ...     grad = 2 * (pred - y)  # MSE gradient
-        ...     hess = torch.ones_like(grad) * 2
+        ...     hess = np.ones_like(grad) * 2
         ...     tree = ob.fit_tree(X_binned, grad, hess)
-        ...     pred = pred + 0.1 * tree(X_binned)
+        ...     pred = pred + 0.1 * tree.predict(X_binned)
+        
+        >>> # Use leaf-wise growth (LightGBM style)
+        >>> tree = ob.fit_tree(X_binned, grad, hess, growth="leafwise", max_leaves=32)
+        
+        >>> # Use symmetric growth (CatBoost style)  
+        >>> tree = ob.fit_tree(X_binned, grad, hess, growth="symmetric")
+    """
+    # Extract binned data
+    if isinstance(X, BinnedArray):
+        binned = X.data
+        n_features = X.n_features
+        n_samples = X.n_samples
+    else:
+        binned = X
+        n_features, n_samples = binned.shape
+    
+    # Convert grad/hess to appropriate format
+    grad = as_numba_array(grad)
+    hess = as_numba_array(hess)
+    
+    # Validate shapes
+    if grad.shape[0] != n_samples:
+        raise ValueError(f"grad has {grad.shape[0]} samples, expected {n_samples}")
+    if hess.shape[0] != n_samples:
+        raise ValueError(f"hess has {hess.shape[0]} samples, expected {n_samples}")
+    
+    # Get growth strategy
+    if isinstance(growth, str):
+        strategy = get_growth_strategy(growth)
+    else:
+        strategy = growth
+    
+    # Build config
+    config = GrowthConfig(
+        max_depth=max_depth,
+        max_leaves=max_leaves,
+        min_child_weight=min_child_weight,
+        reg_lambda=reg_lambda,
+        min_gain=min_gain,
+    )
+    
+    # Use the growth strategy to build the tree
+    return strategy.grow(binned, grad, hess, config)
+
+
+def fit_tree_legacy(
+    X: BinnedArray | NDArray,
+    grad: NDArray,
+    hess: NDArray,
+    *,
+    max_depth: int = 6,
+    min_child_weight: float = 1.0,
+    reg_lambda: float = 1.0,
+    min_gain: float = 0.0,
+) -> Tree:
+    """Legacy fit_tree that returns the old Tree class.
+    
+    Kept for backward compatibility with code that depends on Tree internals.
+    For new code, use fit_tree() which returns TreeStructure.
     """
     # Extract binned data
     if isinstance(X, BinnedArray):
@@ -442,7 +516,7 @@ def _build_tree_recursive(
                 sum_grad = float(np.sum(hist_grad[0]))
                 sum_hess = float(np.sum(hist_hess[0]))
         elif is_cuda() and hasattr(grad, '__cuda_array_interface__'):
-            from ._backends._cuda import reduce_sum_indexed_cuda
+            from .._backends._cuda import reduce_sum_indexed_cuda
             sum_grad = float(reduce_sum_indexed_cuda(grad, sample_indices).copy_to_host()[0])
             sum_hess = float(reduce_sum_indexed_cuda(hess, sample_indices).copy_to_host()[0])
         else:
@@ -507,7 +581,7 @@ def _build_tree_recursive(
     
     # Split samples
     if is_cuda() and hasattr(binned, '__cuda_array_interface__'):
-        from ._backends._cuda import partition_samples_cuda
+        from .._backends._cuda import partition_samples_cuda
         
         left_indices, right_indices, n_left, n_right = partition_samples_cuda(
             binned, sample_indices, split.feature, split.threshold
@@ -602,7 +676,7 @@ def predict_tree(tree: Tree, X: BinnedArray | NDArray) -> NDArray:
     
     # Dispatch to backend
     if device == "cuda" and is_cuda():
-        from ._backends._cuda import predict_cuda, to_device
+        from .._backends._cuda import predict_cuda, to_device
         return predict_cuda(
             binned,
             to_device(features),
@@ -612,7 +686,7 @@ def predict_tree(tree: Tree, X: BinnedArray | NDArray) -> NDArray:
             to_device(right),
         )
     else:
-        from ._backends._cpu import predict_cpu
+        from .._backends._cpu import predict_cpu
         binned_cpu = binned.copy_to_host() if hasattr(binned, 'copy_to_host') else np.asarray(binned)
         return predict_cpu(binned_cpu, features, thresholds, values, left, right)
 
@@ -668,7 +742,7 @@ def fit_trees_batch(
         >>> 
         >>> # all_trees[0] contains trees for first config, etc.
     """
-    from ._batch import ConfigBatch, BatchTrainingState
+    from .._models._batch import ConfigBatch, BatchTrainingState
     
     if not isinstance(configs, ConfigBatch):
         raise TypeError(f"configs must be ConfigBatch, got {type(configs)}")
@@ -764,7 +838,7 @@ def _fit_trees_batch_cuda(
 ) -> list[list[Tree]]:
     """CUDA batch training using fused kernels."""
     from numba import cuda
-    from ._backends._cuda import (
+    from .._backends._cuda import (
         build_histogram_batch_cuda,
         find_best_split_batch_cuda,
         compute_split_masks_batch_cuda,
@@ -1058,7 +1132,7 @@ def predict_symmetric_tree(tree: SymmetricTree, X: BinnedArray | NDArray) -> NDA
     use_gpu = is_cuda() and hasattr(binned, '__cuda_array_interface__')
     
     if use_gpu:
-        from ._backends._cuda import predict_symmetric_cuda
+        from .._backends._cuda import predict_symmetric_cuda
         return predict_symmetric_cuda(
             binned,
             tree.level_features,
@@ -1149,7 +1223,7 @@ def fit_tree_symmetric_gpu_native(
     if not hasattr(hess, '__cuda_array_interface__'):
         hess = cuda.to_device(np.ascontiguousarray(hess, dtype=np.float32))
     
-    from ._backends._cuda import build_tree_symmetric_gpu_native
+    from .._backends._cuda import build_tree_symmetric_gpu_native
     
     level_features_gpu, level_thresholds_gpu, leaf_values_gpu = build_tree_symmetric_gpu_native(
         binned_data, grad, hess,
