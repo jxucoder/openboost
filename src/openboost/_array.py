@@ -219,4 +219,3 @@ def ensure_contiguous_float32(arr) -> np.ndarray:
     if not arr.flags['C_CONTIGUOUS']:
         arr = np.ascontiguousarray(arr)
     return arr
-

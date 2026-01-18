@@ -32,7 +32,7 @@ Low-Level API (Full Control):
     ...     pred = pred + 0.1 * tree(X_binned)
 """
 
-__version__ = "0.5.0"  # Phase 5 - GradientBoosting batch mode
+__version__ = "0.1.0"
 
 # =============================================================================
 # Data Layer

@@ -1,3 +1,6 @@
+# macOS
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -208,6 +211,7 @@ __marimo__/
 
 # External repositories (cloned for benchmarking)
 .repos/
+repos/
 
 # Project-specific
 .cursor/

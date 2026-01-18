@@ -1,22 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "openboost"
 version = "0.1.0"
-description = "The PyTorch of Gradient Boosting. Train-many optimized, research-friendly, GPU-accelerated."
+description = "GPU-accelerated gradient boosting, written in Python"
 readme = "README.md"
-license = { text = "MIT" }
-requires-python = ">=3.11,<3.14"
-authors = [{ name = "OpenBoost Contributors" }]
-keywords = ["machine-learning", "gradient-boosting", "gpu", "cuda", "numba"]
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    { name = "J. Xu" }
+]
+keywords = ["gradient-boosting", "gbdt", "gpu", "cuda", "machine-learning"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-
 dependencies = [
     "numpy>=1.24",
     "numba>=0.60",
@@ -33,22 +40,29 @@ torch = [
 jax = [
     "jax[cuda12]>=0.4",
 ]
-dev = [
-    "pytest>=8.0",
+test = [
+    "pytest>=7.0",
     "pytest-cov>=4.0",
-    "ruff>=0.4",
 ]
 bench = [
     "modal>=0.73",
     "scikit-learn>=1.0",
+    "xgboost>=2.0",
+]
+dev = [
+    "openboost[test,bench]",
+    "ruff>=0.4",
 ]
 all = [
-    "openboost[cuda,torch,dev,bench]",
+    "openboost[cuda,torch,dev]",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+[project.urls]
+Homepage = "https://github.com/jxucoder/openboost"
+Repository = "https://github.com/jxucoder/openboost"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/openboost"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/openboost"]
@@ -73,4 +87,3 @@ dev = [
     "ruff>=0.4",
     "xgboost>=3.1.3",
 ]
-
