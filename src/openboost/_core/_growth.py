@@ -146,13 +146,19 @@ class GrowthConfig:
         max_leaves: Maximum number of leaves (for leaf-wise)
         min_child_weight: Minimum sum of hessian in each child
         reg_lambda: L2 regularization on leaf values
-        min_gain: Minimum gain required to split
+        reg_alpha: L1 regularization on leaf values (Phase 11)
+        min_gain: Minimum gain required to split (alias: gamma)
+        subsample: Row sampling ratio per tree (Phase 11)
+        colsample_bytree: Column sampling ratio per tree (Phase 11)
     """
     max_depth: int = 6
     max_leaves: int | None = None  # For leaf-wise growth
     min_child_weight: float = 1.0
     reg_lambda: float = 1.0
+    reg_alpha: float = 0.0  # Phase 11: L1 regularization
     min_gain: float = 0.0
+    subsample: float = 1.0  # Phase 11: row sampling
+    colsample_bytree: float = 1.0  # Phase 11: column sampling
 
 
 # =============================================================================
@@ -455,7 +461,7 @@ class LevelWiseGrowth(GrowthStrategy):
         # Compute leaf values for all leaf nodes
         leaf_nodes = self._find_leaf_nodes(features, left_children, max_nodes)
         leaf_values = compute_leaf_values(
-            grad, hess, sample_node_ids, leaf_nodes, config.reg_lambda
+            grad, hess, sample_node_ids, leaf_nodes, config.reg_lambda, config.reg_alpha
         )
         
         for node_id, value in leaf_values.items():
@@ -643,7 +649,7 @@ class LeafWiseGrowth(GrowthStrategy):
         leaf_nodes = [i for i in range(max_nodes) if left_children[i] == -1 and 
                       (i == 0 or features[(i-1)//2] >= 0)]
         leaf_values = compute_leaf_values(
-            grad, hess, sample_node_ids, leaf_nodes, config.reg_lambda
+            grad, hess, sample_node_ids, leaf_nodes, config.reg_lambda, config.reg_alpha
         )
         
         for node_id, value in leaf_values.items():

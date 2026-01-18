@@ -84,20 +84,36 @@ def compute_leaf_value(
     sum_grad: float,
     sum_hess: float,
     reg_lambda: float = 1.0,
+    reg_alpha: float = 0.0,
 ) -> float:
-    """Compute optimal leaf value (Newton step).
+    """Compute optimal leaf value with L1/L2 regularization.
     
-    leaf_value = -sum_grad / (sum_hess + lambda)
+    Without L1 (reg_alpha=0):
+        leaf_value = -sum_grad / (sum_hess + lambda)
+    
+    With L1 (reg_alpha > 0), uses soft-thresholding:
+        if |sum_grad| <= reg_alpha: return 0
+        else: return -(sum_grad - sign(sum_grad)*reg_alpha) / (sum_hess + lambda)
     
     Args:
         sum_grad: Sum of gradients in the leaf
         sum_hess: Sum of hessians in the leaf
         reg_lambda: L2 regularization
+        reg_alpha: L1 regularization (Phase 11)
         
     Returns:
         Optimal leaf value
     """
-    return -sum_grad / (sum_hess + reg_lambda)
+    # L1 soft-thresholding
+    if reg_alpha > 0.0:
+        if abs(sum_grad) <= reg_alpha:
+            return 0.0
+        elif sum_grad > 0:
+            return -(sum_grad - reg_alpha) / (sum_hess + reg_lambda)
+        else:
+            return -(sum_grad + reg_alpha) / (sum_hess + reg_lambda)
+    else:
+        return -sum_grad / (sum_hess + reg_lambda)
 
 
 def _sum_histogram(hist: NDArray) -> float:

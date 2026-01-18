@@ -278,9 +278,13 @@ def fit_tree(
     max_depth: int = 6,
     min_child_weight: float = 1.0,
     reg_lambda: float = 1.0,
+    reg_alpha: float = 0.0,
     min_gain: float = 0.0,
+    gamma: float | None = None,  # Alias for min_gain (XGBoost compat)
     growth: str | GrowthStrategy = "levelwise",
     max_leaves: int | None = None,
+    subsample: float = 1.0,
+    colsample_bytree: float = 1.0,
 ) -> TreeStructure:
     """Fit a single gradient boosting tree.
     
@@ -289,6 +293,7 @@ def fit_tree(
     used for prediction.
     
     Phase 8: Uses composable growth strategies from _growth.py.
+    Phase 11: Added reg_alpha, subsample, colsample_bytree.
     
     Args:
         X: Binned feature data (BinnedArray from ob.array(), or raw binned array)
@@ -296,11 +301,15 @@ def fit_tree(
         hess: Hessian vector, shape (n_samples,), float32
         max_depth: Maximum tree depth
         min_child_weight: Minimum sum of hessian in a leaf
-        reg_lambda: L2 regularization
+        reg_lambda: L2 regularization on leaf values
+        reg_alpha: L1 regularization on leaf values (Phase 11)
         min_gain: Minimum gain to make a split
+        gamma: Alias for min_gain (XGBoost compatibility)
         growth: Growth strategy - "levelwise", "leafwise", "symmetric", 
                 or a GrowthStrategy instance
         max_leaves: Maximum leaves (for leafwise growth)
+        subsample: Row sampling ratio (0.0-1.0), 1.0 = no sampling (Phase 11)
+        colsample_bytree: Column sampling ratio (0.0-1.0), 1.0 = no sampling (Phase 11)
         
     Returns:
         TreeStructure that can predict via tree.predict(X) or tree(X)
@@ -322,7 +331,13 @@ def fit_tree(
         
         >>> # Use symmetric growth (CatBoost style)  
         >>> tree = ob.fit_tree(X_binned, grad, hess, growth="symmetric")
+        
+        >>> # Stochastic gradient boosting (Phase 11)
+        >>> tree = ob.fit_tree(X_binned, grad, hess, subsample=0.8, colsample_bytree=0.8)
     """
+    # Handle gamma alias
+    if gamma is not None:
+        min_gain = gamma
     # Extract binned data
     if isinstance(X, BinnedArray):
         binned = X.data
@@ -342,6 +357,19 @@ def fit_tree(
     if hess.shape[0] != n_samples:
         raise ValueError(f"hess has {hess.shape[0]} samples, expected {n_samples}")
     
+    # Apply row subsampling (Phase 11)
+    if subsample < 1.0:
+        n_subsample = int(n_samples * subsample)
+        if n_subsample < 1:
+            n_subsample = 1
+        subsample_indices = np.random.choice(n_samples, n_subsample, replace=False)
+        subsample_indices = np.sort(subsample_indices)  # Keep order for cache efficiency
+        # Create mask for sampling
+        subsample_mask = np.zeros(n_samples, dtype=np.bool_)
+        subsample_mask[subsample_indices] = True
+    else:
+        subsample_mask = None
+    
     # Get growth strategy
     if isinstance(growth, str):
         strategy = get_growth_strategy(growth)
@@ -354,11 +382,34 @@ def fit_tree(
         max_leaves=max_leaves,
         min_child_weight=min_child_weight,
         reg_lambda=reg_lambda,
+        reg_alpha=reg_alpha,
         min_gain=min_gain,
+        subsample=subsample,
+        colsample_bytree=colsample_bytree,
     )
     
-    # Use the growth strategy to build the tree
-    return strategy.grow(binned, grad, hess, config)
+    # Apply subsampling to gradients if needed
+    if subsample_mask is not None:
+        # Zero out gradients for non-sampled rows
+        # Handle both CPU (numpy) and GPU (DeviceNDArray) arrays
+        if hasattr(grad, '__cuda_array_interface__'):
+            # GPU path: copy to host, modify, copy back
+            from numba import cuda
+            grad_host = grad.copy_to_host()
+            hess_host = hess.copy_to_host()
+            grad_host[~subsample_mask] = 0.0
+            hess_host[~subsample_mask] = 0.0
+            grad_sampled = cuda.to_device(grad_host)
+            hess_sampled = cuda.to_device(hess_host)
+        else:
+            # CPU path
+            grad_sampled = grad.copy()
+            hess_sampled = hess.copy()
+            grad_sampled[~subsample_mask] = 0.0
+            hess_sampled[~subsample_mask] = 0.0
+        return strategy.grow(binned, grad_sampled, hess_sampled, config)
+    else:
+        return strategy.grow(binned, grad, hess, config)
 
 
 def fit_tree_legacy(

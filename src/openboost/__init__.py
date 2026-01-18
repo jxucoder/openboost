@@ -96,6 +96,32 @@ from ._models import (
     OpenBoostGAM,
     ConfigBatch,
     BatchTrainingState,
+    # Phase 13: sklearn-compatible wrappers
+    OpenBoostRegressor,
+    OpenBoostClassifier,
+)
+
+# =============================================================================
+# Callbacks (Phase 13)
+# =============================================================================
+from ._callbacks import (
+    Callback,
+    EarlyStopping,
+    Logger,
+    ModelCheckpoint,
+    LearningRateScheduler,
+    HistoryCallback,
+    CallbackManager,
+    TrainingState,
+)
+
+# =============================================================================
+# Feature Importance (Phase 13)
+# =============================================================================
+from ._importance import (
+    compute_feature_importances,
+    get_feature_importance_dict,
+    plot_feature_importances,
 )
 
 # =============================================================================
@@ -131,6 +157,22 @@ __all__ = [
     "MultiClassGradientBoosting",
     "OpenBoostGAM",
     "DART",
+    # sklearn-compatible wrappers (Phase 13)
+    "OpenBoostRegressor",
+    "OpenBoostClassifier",
+    # Callbacks (Phase 13)
+    "Callback",
+    "EarlyStopping",
+    "Logger",
+    "ModelCheckpoint",
+    "LearningRateScheduler",
+    "HistoryCallback",
+    "CallbackManager",
+    "TrainingState",
+    # Feature importance (Phase 13)
+    "compute_feature_importances",
+    "get_feature_importance_dict",
+    "plot_feature_importances",
     # Loss functions
     "mse_gradient",
     "logloss_gradient",

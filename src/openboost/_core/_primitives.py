@@ -615,10 +615,14 @@ def compute_leaf_values(
     sample_node_ids: NDArray,
     leaf_node_ids: list[int],
     reg_lambda: float = 1.0,
+    reg_alpha: float = 0.0,
 ) -> dict[int, float]:
     """Compute optimal leaf values for specified nodes.
     
-    Uses the Newton-Raphson optimal value: -sum(grad) / (sum(hess) + lambda)
+    Uses the Newton-Raphson optimal value with L1/L2 regularization.
+    
+    Without L1: -sum(grad) / (sum(hess) + lambda)
+    With L1: soft-thresholding applied to gradients
     
     Args:
         grad: Gradients, shape (n_samples,), float32
@@ -626,13 +630,14 @@ def compute_leaf_values(
         sample_node_ids: Node assignment for each sample, shape (n_samples,), int32
         leaf_node_ids: List of node IDs to compute values for
         reg_lambda: L2 regularization term
+        reg_alpha: L1 regularization term (Phase 11)
         
     Returns:
         Dictionary mapping node_id -> leaf_value
     """
     if is_cuda() and hasattr(grad, '__cuda_array_interface__'):
-        return _compute_leaf_values_gpu(grad, hess, sample_node_ids, leaf_node_ids, reg_lambda)
-    return _compute_leaf_values_cpu(grad, hess, sample_node_ids, leaf_node_ids, reg_lambda)
+        return _compute_leaf_values_gpu(grad, hess, sample_node_ids, leaf_node_ids, reg_lambda, reg_alpha)
+    return _compute_leaf_values_cpu(grad, hess, sample_node_ids, leaf_node_ids, reg_lambda, reg_alpha)
 
 
 def _compute_leaf_values_cpu(
@@ -641,8 +646,11 @@ def _compute_leaf_values_cpu(
     sample_node_ids: NDArray,
     leaf_node_ids: list[int],
     reg_lambda: float,
+    reg_alpha: float = 0.0,
 ) -> dict[int, float]:
     """CPU implementation of leaf value computation."""
+    from ._split import compute_leaf_value
+    
     grad = np.asarray(grad, dtype=np.float32)
     hess = np.asarray(hess, dtype=np.float32)
     sample_node_ids = np.asarray(sample_node_ids, dtype=np.int32)
@@ -657,8 +665,8 @@ def _compute_leaf_values_cpu(
         sum_grad = float(np.sum(grad[mask]))
         sum_hess = float(np.sum(hess[mask]))
         
-        # Newton-Raphson optimal value
-        result[node_id] = -sum_grad / (sum_hess + reg_lambda)
+        # Use shared leaf value computation (supports L1/L2)
+        result[node_id] = compute_leaf_value(sum_grad, sum_hess, reg_lambda, reg_alpha)
     
     return result
 
@@ -669,6 +677,7 @@ def _compute_leaf_values_gpu(
     sample_node_ids,
     leaf_node_ids: list[int],
     reg_lambda: float,
+    reg_alpha: float = 0.0,
 ) -> dict[int, float]:
     """GPU implementation of leaf value computation."""
     # For simplicity, copy to CPU and compute there
@@ -678,7 +687,7 @@ def _compute_leaf_values_gpu(
     sample_node_ids_cpu = sample_node_ids.copy_to_host()
     
     return _compute_leaf_values_cpu(
-        grad_cpu, hess_cpu, sample_node_ids_cpu, leaf_node_ids, reg_lambda
+        grad_cpu, hess_cpu, sample_node_ids_cpu, leaf_node_ids, reg_lambda, reg_alpha
     )
 
 
