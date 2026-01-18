@@ -209,8 +209,11 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# Local repos
+# External repositories (cloned for benchmarking)
+.repos/
 repos/
 
-# Cursor rules (project-specific)
+# Project-specific
 .cursor/
+docs/
+logs/
