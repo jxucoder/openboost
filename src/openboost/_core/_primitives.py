@@ -3,6 +3,9 @@
 Phase 8.1: Extract reusable primitives that can be composed into different
 tree growth strategies (level-wise, leaf-wise, symmetric).
 
+Phase 14: Added missing value handling - samples with bin 255 (NaN) are
+routed according to the learned direction.
+
 These primitives operate on the `sample_node_ids` paradigm:
 - Each sample is assigned to a node ID
 - Histograms are built by aggregating samples per node
@@ -22,6 +25,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from .._backends import is_cuda
+from .._array import MISSING_BIN
 from ._split import SplitInfo
 
 if TYPE_CHECKING:
@@ -45,11 +49,18 @@ class NodeHistogram:
 
 @dataclass 
 class NodeSplit:
-    """Split decision for a single node."""
+    """Split decision for a single node.
+    
+    Phase 14: Added missing_go_left for NaN handling.
+    Phase 14.3: Added categorical split info.
+    """
     node_id: int
     split: SplitInfo
     left_child: int   # Node ID for left child (2 * node_id in binary tree)
     right_child: int  # Node ID for right child (2 * node_id + 1)
+    missing_go_left: bool = True     # Direction for missing values (Phase 14)
+    is_categorical: bool = False     # Phase 14.3: True if categorical split
+    cat_bitset: int = 0              # Phase 14.3: Bitmask for categories going left
 
 
 # =============================================================================
@@ -385,14 +396,24 @@ def find_node_splits(
     reg_lambda: float = 1.0,
     min_child_weight: float = 1.0,
     min_gain: float = 0.0,
+    has_missing: NDArray | None = None,
+    is_categorical: NDArray | None = None,
+    n_categories: NDArray | None = None,
 ) -> dict[int, NodeSplit]:
     """Find the best split for each node given histograms.
+    
+    Phase 14: Added has_missing parameter for NaN handling.
+    Phase 14.3: Added categorical feature support.
     
     Args:
         histograms: Dictionary mapping node_id -> NodeHistogram
         reg_lambda: L2 regularization term
         min_child_weight: Minimum sum of hessian in each child
         min_gain: Minimum gain required to split
+        has_missing: Boolean array (n_features,) indicating which features have NaN.
+                     If None, standard split finding is used.
+        is_categorical: Boolean array (n_features,) indicating categorical features
+        n_categories: Number of categories per feature (0 for numeric)
         
     Returns:
         Dictionary mapping node_id -> NodeSplit
@@ -404,9 +425,13 @@ def find_node_splits(
         >>> for node_id, split in splits.items():
         ...     print(f"Node {node_id}: split on feature {split.split.feature}")
     """
-    from ._split import find_best_split
+    from ._split import find_best_split, find_best_split_with_missing, find_best_split_with_categorical
     
     result = {}
+    
+    # Check if we should use special split finding
+    use_missing = has_missing is not None and np.any(has_missing)
+    use_categorical = is_categorical is not None and np.any(is_categorical)
     
     for node_id, hist in histograms.items():
         # Skip empty nodes
@@ -418,15 +443,41 @@ def find_node_splits(
             continue
         
         # Find best split
-        split = find_best_split(
-            hist.hist_grad,
-            hist.hist_hess,
-            hist.sum_grad,
-            hist.sum_hess,
-            reg_lambda=reg_lambda,
-            min_child_weight=min_child_weight,
-            min_gain=min_gain,
-        )
+        if use_categorical:
+            # Phase 14.3: Use categorical-aware split finding
+            split = find_best_split_with_categorical(
+                hist.hist_grad,
+                hist.hist_hess,
+                hist.sum_grad,
+                hist.sum_hess,
+                reg_lambda=reg_lambda,
+                min_child_weight=min_child_weight,
+                min_gain=min_gain,
+                has_missing=has_missing,
+                is_categorical=is_categorical,
+                n_categories=n_categories,
+            )
+        elif use_missing:
+            split = find_best_split_with_missing(
+                hist.hist_grad,
+                hist.hist_hess,
+                hist.sum_grad,
+                hist.sum_hess,
+                reg_lambda=reg_lambda,
+                min_child_weight=min_child_weight,
+                min_gain=min_gain,
+                has_missing=has_missing,
+            )
+        else:
+            split = find_best_split(
+                hist.hist_grad,
+                hist.hist_hess,
+                hist.sum_grad,
+                hist.sum_hess,
+                reg_lambda=reg_lambda,
+                min_child_weight=min_child_weight,
+                min_gain=min_gain,
+            )
         
         if split.is_valid:
             result[node_id] = NodeSplit(
@@ -434,6 +485,9 @@ def find_node_splits(
                 split=split,
                 left_child=2 * node_id + 1,   # Binary tree indexing
                 right_child=2 * node_id + 2,
+                missing_go_left=split.missing_go_left,  # Phase 14
+                is_categorical=split.is_categorical,    # Phase 14.3
+                cat_bitset=split.cat_bitset,            # Phase 14.3
             )
     
     return result
@@ -447,12 +501,14 @@ def partition_samples(
     binned: NDArray,
     sample_node_ids: NDArray,
     splits: dict[int, NodeSplit],
+    missing_go_left: NDArray | None = None,
 ) -> NDArray:
     """Update sample node assignments based on split decisions.
     
     For each sample in a node that was split:
     - If feature[split.feature] <= split.threshold: go to left child
     - Otherwise: go to right child
+    - Phase 14: Missing values (bin 255) go according to learned direction
     
     Samples in nodes without splits remain unchanged.
     
@@ -460,6 +516,7 @@ def partition_samples(
         binned: Binned feature data, shape (n_features, n_samples), uint8
         sample_node_ids: Current node assignment, shape (n_samples,), int32
         splits: Dictionary of splits from find_node_splits()
+        missing_go_left: Boolean array (n_nodes,) for missing direction (Phase 14)
         
     Returns:
         Updated sample_node_ids array (new array, original unchanged)
@@ -469,16 +526,21 @@ def partition_samples(
         is on GPU. For CPU, it's a numpy array.
     """
     if is_cuda() and hasattr(binned, '__cuda_array_interface__'):
-        return _partition_samples_gpu(binned, sample_node_ids, splits)
-    return _partition_samples_cpu(binned, sample_node_ids, splits)
+        return _partition_samples_gpu(binned, sample_node_ids, splits, missing_go_left)
+    return _partition_samples_cpu(binned, sample_node_ids, splits, missing_go_left)
 
 
 def _partition_samples_cpu(
     binned: NDArray,
     sample_node_ids: NDArray,
     splits: dict[int, NodeSplit],
+    missing_go_left: NDArray | None = None,
 ) -> NDArray:
-    """CPU implementation of sample partitioning."""
+    """CPU implementation of sample partitioning.
+    
+    Phase 14: Handles missing values (bin 255) using learned direction.
+    Phase 14.3: Handles categorical splits using bitmask membership.
+    """
     binned = np.asarray(binned)
     sample_node_ids = np.asarray(sample_node_ids, dtype=np.int32)
     
@@ -496,8 +558,25 @@ def _partition_samples_cpu(
         # Get feature values for samples in this node
         feature_values = binned[feature, mask]
         
-        # Determine which child each sample goes to
-        goes_left = feature_values <= threshold
+        # Phase 14: Handle missing values
+        is_missing = feature_values == MISSING_BIN
+        
+        # Phase 14.3: Determine routing based on split type
+        if node_split.is_categorical:
+            # Categorical split: use bitmask membership
+            bitset = node_split.cat_bitset
+            goes_left = np.array([(bitset >> fv) & 1 for fv in feature_values], dtype=np.bool_)
+        else:
+            # Ordinal split: use threshold
+            goes_left = feature_values <= threshold
+        
+        # Override for missing values using learned direction
+        if np.any(is_missing):
+            # Get the missing direction for this split
+            miss_left = node_split.missing_go_left if hasattr(node_split, 'missing_go_left') else True
+            if missing_go_left is not None and node_id < len(missing_go_left):
+                miss_left = missing_go_left[node_id]
+            goes_left[is_missing] = miss_left
         
         # Update node IDs
         sample_indices = np.where(mask)[0]
@@ -511,8 +590,12 @@ def _partition_samples_gpu(
     binned,
     sample_node_ids,
     splits: dict[int, NodeSplit],
+    missing_go_left: NDArray | None = None,
 ) -> "DeviceNDArray":
-    """GPU implementation of sample partitioning."""
+    """GPU implementation of sample partitioning.
+    
+    Phase 14: Handles missing values (bin 255) using learned direction.
+    """
     from numba import cuda
     import math
     
@@ -534,46 +617,51 @@ def _partition_samples_gpu(
     split_thresholds = np.full(max_node_id, 0, dtype=np.int32)
     left_children = np.full(max_node_id, -1, dtype=np.int32)
     right_children = np.full(max_node_id, -1, dtype=np.int32)
+    split_missing_left = np.ones(max_node_id, dtype=np.uint8)  # Phase 14
     
     for node_id, node_split in splits.items():
         split_features[node_id] = node_split.split.feature
         split_thresholds[node_id] = node_split.split.threshold
         left_children[node_id] = node_split.left_child
         right_children[node_id] = node_split.right_child
+        split_missing_left[node_id] = 1 if node_split.missing_go_left else 0  # Phase 14
     
     # Transfer to GPU
     split_features_gpu = cuda.to_device(split_features)
     split_thresholds_gpu = cuda.to_device(split_thresholds)
     left_children_gpu = cuda.to_device(left_children)
     right_children_gpu = cuda.to_device(right_children)
+    split_missing_left_gpu = cuda.to_device(split_missing_left)
     
     # Launch kernel
     threads = 256
     blocks = math.ceil(n_samples / threads)
-    _partition_kernel[blocks, threads](
+    _partition_kernel_with_missing[blocks, threads](
         binned, sample_node_ids, new_node_ids,
         split_features_gpu, split_thresholds_gpu,
         left_children_gpu, right_children_gpu,
+        split_missing_left_gpu,
         max_node_id, n_samples
     )
     
     return new_node_ids
 
 
-# Partition kernel (defined at module level per Phase 3.6 lesson)
-_partition_kernel = None
+# Partition kernel with missing value support (Phase 14)
+_partition_kernel_with_missing = None
 
-def _init_partition_kernel():
-    global _partition_kernel
-    if _partition_kernel is not None:
+def _init_partition_kernel_with_missing():
+    global _partition_kernel_with_missing
+    if _partition_kernel_with_missing is not None:
         return
     
-    from numba import cuda, int32
+    from numba import cuda, int32, uint8
     
     @cuda.jit
     def kernel(binned, old_node_ids, new_node_ids, 
                split_features, split_thresholds, left_children, right_children,
-               max_node_id, n_samples):
+               split_missing_left, max_node_id, n_samples):
+        """Partition kernel with missing value handling (Phase 14)."""
         idx = cuda.grid(1)
         if idx >= n_samples:
             return
@@ -589,18 +677,25 @@ def _init_partition_kernel():
         threshold = split_thresholds[node_id]
         bin_value = int32(binned[feature, idx])
         
-        if bin_value <= threshold:
+        # Phase 14: Handle missing values (bin 255)
+        if bin_value == 255:
+            # Use learned direction for missing
+            if split_missing_left[node_id] == 1:
+                new_node_ids[idx] = left_children[node_id]
+            else:
+                new_node_ids[idx] = right_children[node_id]
+        elif bin_value <= threshold:
             new_node_ids[idx] = left_children[node_id]
         else:
             new_node_ids[idx] = right_children[node_id]
     
-    _partition_kernel = kernel
+    _partition_kernel_with_missing = kernel
 
 
 # Initialize kernel if CUDA available
 if is_cuda():
     try:
-        _init_partition_kernel()
+        _init_partition_kernel_with_missing()
     except Exception:
         pass
 

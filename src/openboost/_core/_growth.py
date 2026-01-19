@@ -2,6 +2,7 @@
 
 Phase 8.2: Abstraction for different tree growth approaches.
 Phase 9.0: Decoupled leaf values for flexibility (multi-output, distributions, etc.)
+Phase 14: Added missing value handling - learns optimal direction for NaN values.
 
 Each strategy uses the primitives from `_primitives.py` but orchestrates
 them differently:
@@ -20,6 +21,7 @@ from typing import TYPE_CHECKING, Protocol, runtime_checkable
 import numpy as np
 
 from .._backends import is_cuda
+from .._array import MISSING_BIN
 from ._primitives import (
     NodeHistogram,
     NodeSplit,
@@ -182,10 +184,13 @@ class TreeStructure:
         
     Phase 9.0: Leaf values are now abstracted via LeafValues protocol.
     This enables multi-output, distributions, embeddings, etc.
+    
+    Phase 14: Added missing_go_left for handling NaN values.
+    Phase 14.3: Added categorical split support.
     """
     # Tree structure (routing)
     features: NDArray        # (n_nodes,) int32 - split feature (-1 for leaf)
-    thresholds: NDArray      # (n_nodes,) int32 - split threshold
+    thresholds: NDArray      # (n_nodes,) int32 - split threshold (ordinal) or split_point (cat)
     left_children: NDArray   # (n_nodes,) int32 - left child (-1 for leaf)
     right_children: NDArray  # (n_nodes,) int32 - right child (-1 for leaf)
     
@@ -202,6 +207,13 @@ class TreeStructure:
     is_symmetric: bool = False
     level_features: NDArray | None = None    # (depth,) int32
     level_thresholds: NDArray | None = None  # (depth,) int32
+    
+    # Phase 14: Missing value handling
+    missing_go_left: NDArray | None = None   # (n_nodes,) bool - direction for NaN
+    
+    # Phase 14.3: Categorical split support
+    is_categorical_split: NDArray | None = None  # (n_nodes,) bool - True if categorical split
+    cat_bitsets: NDArray | None = None           # (n_nodes,) uint64 - bitmask for categories going left
     
     def get_leaf_values(self, leaf_ids: NDArray) -> NDArray:
         """Get leaf values for given leaf IDs.
@@ -275,9 +287,18 @@ class TreeStructure:
         return self._predict_standard_cpu(binned)
     
     def _predict_standard_cpu(self, binned: NDArray) -> NDArray:
-        """CPU prediction for standard trees."""
+        """CPU prediction for standard trees.
+        
+        Phase 14: Handles missing values (bin 255) using learned direction.
+        Phase 14.3: Handles categorical splits using bitmask membership.
+        """
         binned = np.asarray(binned)
         n_samples = binned.shape[1]
+        
+        # Check if we have missing value handling
+        has_missing_handling = self.missing_go_left is not None
+        # Phase 14.3: Check for categorical splits
+        has_categorical = self.is_categorical_split is not None and self.cat_bitsets is not None
         
         # Get leaf indices for all samples
         leaf_ids = np.empty(n_samples, dtype=np.int32)
@@ -286,7 +307,26 @@ class TreeStructure:
             while self.left_children[node] != -1:
                 feature = self.features[node]
                 threshold = self.thresholds[node]
-                if binned[feature, i] <= threshold:
+                bin_value = binned[feature, i]
+                
+                # Phase 14: Handle missing values first
+                if bin_value == MISSING_BIN and has_missing_handling:
+                    # Use learned direction for missing values
+                    if self.missing_go_left[node]:
+                        node = self.left_children[node]
+                    else:
+                        node = self.right_children[node]
+                # Phase 14.3: Handle categorical splits
+                elif has_categorical and self.is_categorical_split[node]:
+                    # Check bitmask membership: bit[bin_value] == 1 means go left
+                    bitset = self.cat_bitsets[node]
+                    goes_left = (bitset >> bin_value) & 1
+                    if goes_left:
+                        node = self.left_children[node]
+                    else:
+                        node = self.right_children[node]
+                # Standard ordinal split
+                elif bin_value <= threshold:
                     node = self.left_children[node]
                 else:
                     node = self.right_children[node]
@@ -361,6 +401,9 @@ class GrowthStrategy(ABC):
         grad: NDArray,
         hess: NDArray,
         config: GrowthConfig,
+        has_missing: NDArray | None = None,
+        is_categorical: NDArray | None = None,
+        n_categories: NDArray | None = None,
     ) -> TreeStructure:
         """Grow a tree using this strategy.
         
@@ -369,6 +412,11 @@ class GrowthStrategy(ABC):
             grad: Gradients, shape (n_samples,), float32
             hess: Hessians, shape (n_samples,), float32
             config: Growth configuration
+            has_missing: Boolean array (n_features,) indicating which features
+                        have missing values (Phase 14). If None, no missing handling.
+            is_categorical: Boolean array (n_features,) indicating categorical features
+                           (Phase 14.3). If None, all features are numeric.
+            n_categories: Array (n_features,) of category counts (0 for numeric)
             
         Returns:
             TreeStructure ready for prediction
@@ -390,6 +438,9 @@ class LevelWiseGrowth(GrowthStrategy):
     - Balanced trees (all branches grow equally)
     - O(depth) kernel launches on GPU
     - Good GPU utilization (batch all nodes at a level)
+    
+    Phase 14: Added missing value handling.
+    Phase 14.3: Added categorical feature support.
     """
     
     def grow(
@@ -398,8 +449,15 @@ class LevelWiseGrowth(GrowthStrategy):
         grad: NDArray,
         hess: NDArray,
         config: GrowthConfig,
+        has_missing: NDArray | None = None,
+        is_categorical: NDArray | None = None,
+        n_categories: NDArray | None = None,
     ) -> TreeStructure:
-        """Grow tree level by level."""
+        """Grow tree level by level.
+        
+        Phase 14: Added has_missing parameter for NaN handling.
+        Phase 14.3: Added categorical feature support.
+        """
         n_features, n_samples = binned.shape
         max_nodes = 2**(config.max_depth + 1) - 1
         
@@ -409,6 +467,9 @@ class LevelWiseGrowth(GrowthStrategy):
         values = np.zeros(max_nodes, dtype=np.float32)
         left_children = np.full(max_nodes, -1, dtype=np.int32)
         right_children = np.full(max_nodes, -1, dtype=np.int32)
+        missing_go_left = np.ones(max_nodes, dtype=np.bool_)  # Phase 14: default left
+        is_categorical_split = np.zeros(max_nodes, dtype=np.bool_)  # Phase 14.3
+        cat_bitsets = np.zeros(max_nodes, dtype=np.uint64)          # Phase 14.3
         
         # Track sample assignments
         sample_node_ids = init_sample_node_ids(n_samples, device="cpu")
@@ -436,12 +497,15 @@ class LevelWiseGrowth(GrowthStrategy):
                 binned, grad, hess, sample_node_ids, active_nodes
             )
             
-            # Find splits for all nodes
+            # Find splits for all nodes (with missing/categorical handling)
             splits = find_node_splits(
                 histograms,
                 reg_lambda=config.reg_lambda,
                 min_child_weight=config.min_child_weight,
                 min_gain=config.min_gain,
+                has_missing=has_missing,        # Phase 14
+                is_categorical=is_categorical,  # Phase 14.3
+                n_categories=n_categories,      # Phase 14.3
             )
             
             # Apply splits to tree structure
@@ -450,10 +514,16 @@ class LevelWiseGrowth(GrowthStrategy):
                 thresholds[node_id] = node_split.split.threshold
                 left_children[node_id] = node_split.left_child
                 right_children[node_id] = node_split.right_child
+                missing_go_left[node_id] = node_split.missing_go_left      # Phase 14
+                is_categorical_split[node_id] = node_split.is_categorical  # Phase 14.3
+                cat_bitsets[node_id] = node_split.cat_bitset               # Phase 14.3
             
-            # Partition samples
+            # Partition samples (handles missing via learned direction)
             if splits:
-                sample_node_ids = partition_samples(binned, sample_node_ids, splits)
+                sample_node_ids = partition_samples(
+                    binned, sample_node_ids, splits, 
+                    missing_go_left=missing_go_left  # Phase 14
+                )
             
             # Store histograms for potential subtraction (future optimization)
             parent_histograms = histograms
@@ -470,6 +540,9 @@ class LevelWiseGrowth(GrowthStrategy):
         # Trim to actual size
         n_nodes = self._count_nodes(left_children)
         
+        # Check if we have any categorical splits
+        any_cat = np.any(is_categorical_split[:n_nodes]) if n_nodes > 0 else False
+        
         return TreeStructure(
             features=features[:n_nodes] if n_nodes < max_nodes else features,
             thresholds=thresholds[:n_nodes] if n_nodes < max_nodes else thresholds,
@@ -479,6 +552,9 @@ class LevelWiseGrowth(GrowthStrategy):
             n_nodes=n_nodes,
             depth=actual_depth,
             n_features=n_features,
+            missing_go_left=missing_go_left[:n_nodes] if n_nodes < max_nodes else missing_go_left,  # Phase 14
+            is_categorical_split=is_categorical_split[:n_nodes] if any_cat else None,  # Phase 14.3
+            cat_bitsets=cat_bitsets[:n_nodes] if any_cat else None,                    # Phase 14.3
         )
     
     def _get_active_nodes(self, sample_node_ids, candidate_nodes: list[int]) -> list[int]:
@@ -543,6 +619,9 @@ class LeafWiseGrowth(GrowthStrategy):
         grad: NDArray,
         hess: NDArray,
         config: GrowthConfig,
+        has_missing: NDArray | None = None,
+        is_categorical: NDArray | None = None,
+        n_categories: NDArray | None = None,
     ) -> TreeStructure:
         """Grow tree by always splitting best leaf."""
         if config.max_leaves is None:
@@ -715,6 +794,9 @@ class SymmetricGrowth(GrowthStrategy):
         grad: NDArray,
         hess: NDArray,
         config: GrowthConfig,
+        has_missing: NDArray | None = None,
+        is_categorical: NDArray | None = None,
+        n_categories: NDArray | None = None,
     ) -> TreeStructure:
         """Grow symmetric tree with one split per level."""
         n_features, n_samples = binned.shape

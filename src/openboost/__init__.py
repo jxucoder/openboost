@@ -37,7 +37,7 @@ __version__ = "0.1.0"
 # =============================================================================
 # Data Layer
 # =============================================================================
-from ._array import BinnedArray, array, as_numba_array
+from ._array import BinnedArray, array, as_numba_array, MISSING_BIN
 
 # =============================================================================
 # Core (Foundation)
@@ -152,6 +152,7 @@ __all__ = [
     "array",
     "BinnedArray",
     "as_numba_array",
+    "MISSING_BIN",
     # High-level API (recommended)
     "GradientBoosting",
     "MultiClassGradientBoosting",

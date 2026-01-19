@@ -294,9 +294,11 @@ def fit_tree(
     
     Phase 8: Uses composable growth strategies from _growth.py.
     Phase 11: Added reg_alpha, subsample, colsample_bytree.
+    Phase 14: Handles missing values automatically via BinnedArray.has_missing.
     
     Args:
         X: Binned feature data (BinnedArray from ob.array(), or raw binned array)
+           Missing values (NaN in original data) are encoded as bin 255.
         grad: Gradient vector, shape (n_samples,), float32
         hess: Hessian vector, shape (n_samples,), float32
         max_depth: Maximum tree depth
@@ -316,9 +318,12 @@ def fit_tree(
         
     Example:
         >>> import openboost as ob
+        >>> import numpy as np
         >>> 
+        >>> # Missing values handled automatically
+        >>> X_train = np.array([[1.0, np.nan], [2.0, 3.0], [np.nan, 4.0]])
         >>> X_binned = ob.array(X_train)
-        >>> pred = np.zeros(n_samples, dtype=np.float32)
+        >>> pred = np.zeros(3, dtype=np.float32)
         >>> 
         >>> for round in range(100):
         ...     grad = 2 * (pred - y)  # MSE gradient
@@ -338,11 +343,23 @@ def fit_tree(
     # Handle gamma alias
     if gamma is not None:
         min_gain = gamma
-    # Extract binned data
+    
+    # Extract binned data and missing/categorical info
+    has_missing = None
+    is_categorical = None
+    n_categories = None
     if isinstance(X, BinnedArray):
         binned = X.data
         n_features = X.n_features
         n_samples = X.n_samples
+        # Phase 14: Get missing value info if available
+        if hasattr(X, 'has_missing') and len(X.has_missing) > 0:
+            has_missing = X.has_missing
+        # Phase 14.3: Get categorical info if available
+        if hasattr(X, 'is_categorical') and len(X.is_categorical) > 0:
+            is_categorical = X.is_categorical
+        if hasattr(X, 'n_categories') and len(X.n_categories) > 0:
+            n_categories = X.n_categories
     else:
         binned = X
         n_features, n_samples = binned.shape
@@ -407,9 +424,21 @@ def fit_tree(
             hess_sampled = hess.copy()
             grad_sampled[~subsample_mask] = 0.0
             hess_sampled[~subsample_mask] = 0.0
-        return strategy.grow(binned, grad_sampled, hess_sampled, config)
+        # Phase 14/14.3: Pass has_missing and categorical info to growth strategy
+        return strategy.grow(
+            binned, grad_sampled, hess_sampled, config, 
+            has_missing=has_missing,
+            is_categorical=is_categorical,
+            n_categories=n_categories,
+        )
     else:
-        return strategy.grow(binned, grad, hess, config)
+        # Phase 14/14.3: Pass has_missing and categorical info to growth strategy
+        return strategy.grow(
+            binned, grad, hess, config,
+            has_missing=has_missing,
+            is_categorical=is_categorical,
+            n_categories=n_categories,
+        )
 
 
 def fit_tree_legacy(
