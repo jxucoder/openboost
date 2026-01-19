@@ -100,6 +100,17 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
         Number of bins for histogram building.
     quantile_alpha : float, default=0.5
         Quantile level for 'quantile' loss.
+    subsample_strategy : {'none', 'random', 'goss'}, default='none'
+        Sampling strategy for large-scale training (Phase 17).
+        - 'none': No sampling (default)
+        - 'random': Random subsampling
+        - 'goss': Gradient-based One-Side Sampling (LightGBM-style)
+    goss_top_rate : float, default=0.2
+        Fraction of top-gradient samples to keep (for GOSS).
+    goss_other_rate : float, default=0.1
+        Fraction of remaining samples to sample (for GOSS).
+    batch_size : int, optional
+        Mini-batch size for large datasets. If None, process all at once.
     early_stopping_rounds : int, optional
         Stop training if validation score doesn't improve for this many rounds.
         Requires eval_set to be passed to fit().
@@ -157,6 +168,10 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
         colsample_bytree: float = 1.0,
         n_bins: int = 256,
         quantile_alpha: float = 0.5,
+        subsample_strategy: str = 'none',
+        goss_top_rate: float = 0.2,
+        goss_other_rate: float = 0.1,
+        batch_size: int | None = None,
         early_stopping_rounds: int | None = None,
         verbose: int = 0,
         random_state: int | None = None,
@@ -173,6 +188,10 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
         self.colsample_bytree = colsample_bytree
         self.n_bins = n_bins
         self.quantile_alpha = quantile_alpha
+        self.subsample_strategy = subsample_strategy
+        self.goss_top_rate = goss_top_rate
+        self.goss_other_rate = goss_other_rate
+        self.batch_size = batch_size
         self.early_stopping_rounds = early_stopping_rounds
         self.verbose = verbose
         self.random_state = random_state
@@ -242,6 +261,11 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
             colsample_bytree=self.colsample_bytree,
             n_bins=self.n_bins,
             quantile_alpha=self.quantile_alpha,
+            # Phase 17: Large-scale training
+            subsample_strategy=self.subsample_strategy,
+            goss_top_rate=self.goss_top_rate,
+            goss_other_rate=self.goss_other_rate,
+            batch_size=self.batch_size,
         )
         
         # Fit with callbacks
@@ -316,6 +340,14 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         Fraction of features per tree.
     n_bins : int, default=256
         Number of bins for histogram building.
+    subsample_strategy : {'none', 'random', 'goss'}, default='none'
+        Sampling strategy for large-scale training (Phase 17).
+    goss_top_rate : float, default=0.2
+        Fraction of top-gradient samples to keep (for GOSS).
+    goss_other_rate : float, default=0.1
+        Fraction of remaining samples to sample (for GOSS).
+    batch_size : int, optional
+        Mini-batch size for large datasets.
     early_stopping_rounds : int, optional
         Stop if validation doesn't improve.
     verbose : int, default=0
@@ -364,6 +396,10 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         subsample: float = 1.0,
         colsample_bytree: float = 1.0,
         n_bins: int = 256,
+        subsample_strategy: str = 'none',
+        goss_top_rate: float = 0.2,
+        goss_other_rate: float = 0.1,
+        batch_size: int | None = None,
         early_stopping_rounds: int | None = None,
         verbose: int = 0,
         random_state: int | None = None,
@@ -378,6 +414,10 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         self.subsample = subsample
         self.colsample_bytree = colsample_bytree
         self.n_bins = n_bins
+        self.subsample_strategy = subsample_strategy
+        self.goss_top_rate = goss_top_rate
+        self.goss_other_rate = goss_other_rate
+        self.batch_size = batch_size
         self.early_stopping_rounds = early_stopping_rounds
         self.verbose = verbose
         self.random_state = random_state
@@ -453,6 +493,11 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
                 subsample=self.subsample,
                 colsample_bytree=self.colsample_bytree,
                 n_bins=self.n_bins,
+                # Phase 17: Large-scale training
+                subsample_strategy=self.subsample_strategy,
+                goss_top_rate=self.goss_top_rate,
+                goss_other_rate=self.goss_other_rate,
+                batch_size=self.batch_size,
             )
             self.booster_.fit(
                 X, y_encoded.astype(np.float32),
@@ -474,6 +519,10 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
                 subsample=self.subsample,
                 colsample_bytree=self.colsample_bytree,
                 n_bins=self.n_bins,
+                # Phase 17: Large-scale training
+                subsample_strategy=self.subsample_strategy,
+                goss_top_rate=self.goss_top_rate,
+                goss_other_rate=self.goss_other_rate,
             )
             # Note: MultiClass doesn't support callbacks yet
             self.booster_.fit(X, y_encoded)
@@ -533,3 +582,420 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         return compute_feature_importances(self.booster_, importance_type='frequency')
     
     # score() is inherited from ClassifierMixin (accuracy)
+
+
+# =============================================================================
+# Phase 15: Distributional Regressor (NGBoost-style)
+# =============================================================================
+
+class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
+    """Distributional regression with sklearn-compatible interface.
+    
+    Predicts full probability distributions instead of point estimates.
+    Uses natural gradient boosting (NGBoost) by default for faster convergence.
+    
+    Parameters
+    ----------
+    distribution : str, default='normal'
+        Distribution family. Options: 'normal', 'lognormal', 'gamma', 
+        'poisson', 'studentt'.
+    n_estimators : int, default=100
+        Number of boosting rounds.
+    max_depth : int, default=4
+        Maximum depth of each tree. Typically shallower than standard GBDT.
+    learning_rate : float, default=0.1
+        Shrinkage factor.
+    min_child_weight : float, default=1.0
+        Minimum sum of hessian in a leaf.
+    reg_lambda : float, default=1.0
+        L2 regularization on leaf values.
+    n_bins : int, default=256
+        Number of bins for histogram building.
+    use_natural_gradient : bool, default=True
+        If True, use NGBoost (natural gradient). Recommended for faster
+        convergence and better uncertainty calibration.
+    verbose : int, default=0
+        Verbosity level.
+        
+    Attributes
+    ----------
+    n_features_in_ : int
+        Number of features seen during fit.
+    booster_ : NGBoost or DistributionalGBDT
+        The underlying fitted model.
+        
+    Examples
+    --------
+    >>> from openboost import OpenBoostDistributionalRegressor
+    >>> model = OpenBoostDistributionalRegressor(distribution='normal')
+    >>> model.fit(X_train, y_train)
+    >>> 
+    >>> # Point prediction (mean)
+    >>> y_pred = model.predict(X_test)
+    >>> 
+    >>> # Prediction intervals (90%)
+    >>> lower, upper = model.predict_interval(X_test, alpha=0.1)
+    >>> 
+    >>> # Full distribution parameters
+    >>> params = model.predict_distribution(X_test)
+    >>> mu, sigma = params['loc'], params['scale']
+    >>> 
+    >>> # Sample from predicted distribution
+    >>> samples = model.sample(X_test, n_samples=100)
+    """
+    
+    def __init__(
+        self,
+        distribution: str = 'normal',
+        n_estimators: int = 100,
+        max_depth: int = 4,
+        learning_rate: float = 0.1,
+        min_child_weight: float = 1.0,
+        reg_lambda: float = 1.0,
+        n_bins: int = 256,
+        use_natural_gradient: bool = True,
+        verbose: int = 0,
+    ):
+        self.distribution = distribution
+        self.n_estimators = n_estimators
+        self.max_depth = max_depth
+        self.learning_rate = learning_rate
+        self.min_child_weight = min_child_weight
+        self.reg_lambda = reg_lambda
+        self.n_bins = n_bins
+        self.use_natural_gradient = use_natural_gradient
+        self.verbose = verbose
+    
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        **kwargs,
+    ) -> "OpenBoostDistributionalRegressor":
+        """Fit the distributional regressor.
+        
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Training features.
+        y : array-like of shape (n_samples,)
+            Target values.
+            
+        Returns
+        -------
+        self : OpenBoostDistributionalRegressor
+            Fitted estimator.
+        """
+        _check_sklearn()
+        X, y = check_X_y(X, y, dtype=np.float32, y_numeric=True)
+        
+        self.n_features_in_ = X.shape[1]
+        
+        # Import here to avoid circular imports
+        from ._distributional import NGBoost, DistributionalGBDT
+        
+        ModelClass = NGBoost if self.use_natural_gradient else DistributionalGBDT
+        
+        self.booster_ = ModelClass(
+            distribution=self.distribution,
+            n_trees=self.n_estimators,
+            max_depth=self.max_depth,
+            learning_rate=self.learning_rate,
+            min_child_weight=self.min_child_weight,
+            reg_lambda=self.reg_lambda,
+            n_bins=self.n_bins,
+        )
+        
+        self.booster_.fit(X, y)
+        return self
+    
+    def predict(self, X: NDArray) -> NDArray:
+        """Predict mean (expected value).
+        
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Features to predict on.
+            
+        Returns
+        -------
+        y_pred : ndarray of shape (n_samples,)
+            Predicted mean values.
+        """
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        
+        return self.booster_.predict(X)
+    
+    def predict_interval(
+        self,
+        X: NDArray,
+        alpha: float = 0.1,
+    ) -> tuple[NDArray, NDArray]:
+        """Predict (1-alpha) prediction interval.
+        
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Features to predict on.
+        alpha : float, default=0.1
+            Significance level. 0.1 gives a 90% prediction interval.
+            
+        Returns
+        -------
+        lower : ndarray of shape (n_samples,)
+            Lower bounds of the interval.
+        upper : ndarray of shape (n_samples,)
+            Upper bounds of the interval.
+        """
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        
+        return self.booster_.predict_interval(X, alpha=alpha)
+    
+    def predict_distribution(self, X: NDArray) -> dict[str, NDArray]:
+        """Predict all distribution parameters.
+        
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Features to predict on.
+            
+        Returns
+        -------
+        params : dict
+            Dictionary mapping parameter names to predicted values.
+            For Normal: {'loc': mean, 'scale': std}
+        """
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        
+        return self.booster_.predict_params(X)
+    
+    def predict_quantile(self, X: NDArray, q: float) -> NDArray:
+        """Predict q-th quantile.
+        
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Features to predict on.
+        q : float
+            Quantile level (0 < q < 1).
+            
+        Returns
+        -------
+        quantiles : ndarray of shape (n_samples,)
+            Predicted quantiles.
+        """
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        
+        return self.booster_.predict_quantile(X, q)
+    
+    def sample(
+        self,
+        X: NDArray,
+        n_samples: int = 1,
+        seed: int | None = None,
+    ) -> NDArray:
+        """Sample from predicted distribution.
+        
+        Parameters
+        ----------
+        X : array-like of shape (n_obs, n_features)
+            Features to predict on.
+        n_samples : int, default=1
+            Number of samples per observation.
+        seed : int, optional
+            Random seed for reproducibility.
+            
+        Returns
+        -------
+        samples : ndarray of shape (n_obs, n_samples)
+            Samples from the predicted distribution.
+        """
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        
+        return self.booster_.sample(X, n_samples, seed)
+    
+    def nll_score(self, X: NDArray, y: NDArray) -> float:
+        """Compute negative log-likelihood (lower is better).
+        
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Features.
+        y : array-like of shape (n_samples,)
+            True target values.
+            
+        Returns
+        -------
+        nll : float
+            Mean negative log-likelihood.
+        """
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        
+        return self.booster_.nll(X, y)
+    
+    # score() inherited from RegressorMixin uses R² on mean predictions
+
+
+# =============================================================================
+# Phase 15: Linear Leaf Regressor
+# =============================================================================
+
+class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
+    """Linear Leaf Gradient Boosting with sklearn-compatible interface.
+    
+    Uses trees with linear models in leaves instead of constant values.
+    This provides better extrapolation beyond the training data range.
+    
+    Parameters
+    ----------
+    n_estimators : int, default=100
+        Number of boosting rounds.
+    max_depth : int, default=4
+        Maximum tree depth. Typically shallower than standard GBDT since
+        linear models in leaves add flexibility.
+    learning_rate : float, default=0.1
+        Shrinkage factor.
+    loss : str, default='squared_error'
+        Loss function: 'squared_error', 'absolute_error', 'huber'.
+    min_samples_leaf : int, default=20
+        Minimum samples in a leaf to fit linear model.
+    reg_lambda : float, default=1.0
+        L2 regularization for tree splits.
+    reg_lambda_linear : float, default=0.1
+        L2 regularization for linear models in leaves (ridge).
+    max_features_linear : int, str, or None, default='sqrt'
+        Max features for linear model in each leaf:
+        - None: Use all features
+        - 'sqrt': Use sqrt(n_features)
+        - 'log2': Use log2(n_features)
+        - int: Use exactly this many features
+    n_bins : int, default=256
+        Number of bins for histogram building.
+    verbose : int, default=0
+        Verbosity level.
+        
+    Attributes
+    ----------
+    n_features_in_ : int
+        Number of features seen during fit.
+    booster_ : LinearLeafGBDT
+        The underlying fitted model.
+        
+    Examples
+    --------
+    >>> from openboost import OpenBoostLinearLeafRegressor
+    >>> model = OpenBoostLinearLeafRegressor(n_estimators=100, max_depth=4)
+    >>> model.fit(X_train, y_train)
+    >>> y_pred = model.predict(X_test)
+    >>> 
+    >>> # Compare with standard GBDT on extrapolation tasks
+    >>> # LinearLeafRegressor typically performs better when the
+    >>> # underlying relationship has linear components
+    """
+    
+    def __init__(
+        self,
+        n_estimators: int = 100,
+        max_depth: int = 4,
+        learning_rate: float = 0.1,
+        loss: str = 'squared_error',
+        min_samples_leaf: int = 20,
+        reg_lambda: float = 1.0,
+        reg_lambda_linear: float = 0.1,
+        max_features_linear: int | str | None = 'sqrt',
+        n_bins: int = 256,
+        verbose: int = 0,
+    ):
+        self.n_estimators = n_estimators
+        self.max_depth = max_depth
+        self.learning_rate = learning_rate
+        self.loss = loss
+        self.min_samples_leaf = min_samples_leaf
+        self.reg_lambda = reg_lambda
+        self.reg_lambda_linear = reg_lambda_linear
+        self.max_features_linear = max_features_linear
+        self.n_bins = n_bins
+        self.verbose = verbose
+    
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        **kwargs,
+    ) -> "OpenBoostLinearLeafRegressor":
+        """Fit the linear leaf regressor.
+        
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Training features.
+        y : array-like of shape (n_samples,)
+            Target values.
+            
+        Returns
+        -------
+        self : OpenBoostLinearLeafRegressor
+            Fitted estimator.
+        """
+        _check_sklearn()
+        X, y = check_X_y(X, y, dtype=np.float32, y_numeric=True)
+        
+        self.n_features_in_ = X.shape[1]
+        
+        # Map sklearn loss names to internal names
+        loss_map = {
+            'squared_error': 'mse',
+            'absolute_error': 'mae',
+            'huber': 'huber',
+        }
+        internal_loss = loss_map.get(self.loss, self.loss)
+        
+        from ._linear_leaf import LinearLeafGBDT
+        
+        self.booster_ = LinearLeafGBDT(
+            n_trees=self.n_estimators,
+            max_depth=self.max_depth,
+            learning_rate=self.learning_rate,
+            loss=internal_loss,
+            min_samples_leaf=self.min_samples_leaf,
+            reg_lambda_tree=self.reg_lambda,
+            reg_lambda_linear=self.reg_lambda_linear,
+            max_features_linear=self.max_features_linear,
+            n_bins=self.n_bins,
+        )
+        
+        self.booster_.fit(X, y)
+        return self
+    
+    def predict(self, X: NDArray) -> NDArray:
+        """Predict target values.
+        
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Features to predict on.
+            
+        Returns
+        -------
+        y_pred : ndarray of shape (n_samples,)
+            Predicted values.
+        """
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        
+        return self.booster_.predict(X)
+    
+    # score() inherited from RegressorMixin (R² score)

@@ -81,7 +81,10 @@ class RayDistributedContext:
     
     def __init__(self, n_workers: int = None):
         if not ray:
-            raise ImportError("Ray is not installed. Run 'pip install ray'.")
+            raise ImportError(
+                "Distributed training requires Ray. "
+                "Install with: pip install 'openboost[distributed]'"
+            )
             
         if not ray.is_initialized():
             ray.init(ignore_reinit_error=True)
