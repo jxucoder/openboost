@@ -21,15 +21,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies (old numba for simulator)
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install "numba<0.60" numpy pytest
+          # Install package with test dependencies (uses numba<0.60 for CUDA simulator compatibility)
+          pip install "numba<0.60" numpy joblib pytest
+          pip install -e .
 
       - name: Run tests (CUDA simulator)
         env:
           NUMBA_ENABLE_CUDASIM: "1"
-          PYTHONPATH: src
         run: |
           pytest tests/test_core.py -v
 
