@@ -1140,12 +1140,16 @@ def predict_cuda(
     tree_values: DeviceNDArray,
     tree_left: DeviceNDArray,
     tree_right: DeviceNDArray,
+    tree_missing_left: DeviceNDArray | None = None,
 ) -> DeviceNDArray:
     """Predict using a tree on GPU.
+    
+    Phase 14.2: Added support for missing value handling.
     
     Args:
         binned: Binned feature matrix, shape (n_features, n_samples)
         tree_*: Tree structure arrays
+        tree_missing_left: Direction for missing values, shape (n_nodes,), bool
         
     Returns:
         predictions: Shape (n_samples,), float32
@@ -1156,12 +1160,641 @@ def predict_cuda(
     threads = 256
     blocks = math.ceil(n_samples / threads)
     
-    _predict_kernel[blocks, threads](
+    if tree_missing_left is not None:
+        _predict_with_missing_kernel[blocks, threads](
+            binned, tree_features, tree_thresholds, tree_values,
+            tree_left, tree_right, tree_missing_left, predictions
+        )
+    else:
+        _predict_kernel[blocks, threads](
+            binned, tree_features, tree_thresholds, tree_values,
+            tree_left, tree_right, predictions
+        )
+    
+    return predictions
+
+
+# =============================================================================
+# Phase 14.2: Missing Value Handling Kernels
+# =============================================================================
+
+MISSING_BIN_GPU = 255  # Reserved bin for missing values
+
+
+@cuda.jit
+def _predict_with_missing_kernel(
+    binned: DeviceNDArray,      # (n_features, n_samples) uint8
+    tree_features: DeviceNDArray,  # (n_nodes,) int32
+    tree_thresholds: DeviceNDArray, # (n_nodes,) uint8
+    tree_values: DeviceNDArray,    # (n_nodes,) float32
+    tree_left: DeviceNDArray,      # (n_nodes,) int32
+    tree_right: DeviceNDArray,     # (n_nodes,) int32
+    tree_missing_left: DeviceNDArray,  # (n_nodes,) bool - Phase 14.2
+    predictions: DeviceNDArray,    # (n_samples,) float32
+):
+    """Traverse tree with missing value handling.
+    
+    Phase 14.2: Missing values (bin 255) are routed according to 
+    the learned direction stored in tree_missing_left.
+    """
+    sample_idx = cuda.grid(1)
+    n_samples = binned.shape[1]
+    
+    if sample_idx >= n_samples:
+        return
+    
+    node = 0
+    
+    while tree_left[node] != -1:
+        feature = tree_features[node]
+        threshold = tree_thresholds[node]
+        bin_value = binned[feature, sample_idx]
+        
+        # Phase 14.2: Check for missing value
+        if bin_value == 255:  # MISSING_BIN
+            if tree_missing_left[node]:
+                node = tree_left[node]
+            else:
+                node = tree_right[node]
+        elif bin_value <= threshold:
+            node = tree_left[node]
+        else:
+            node = tree_right[node]
+    
+    predictions[sample_idx] = tree_values[node]
+
+
+@cuda.jit
+def _predict_with_categorical_kernel(
+    binned: DeviceNDArray,          # (n_features, n_samples) uint8
+    tree_features: DeviceNDArray,   # (n_nodes,) int32
+    tree_thresholds: DeviceNDArray, # (n_nodes,) uint8
+    tree_values: DeviceNDArray,     # (n_nodes,) float32
+    tree_left: DeviceNDArray,       # (n_nodes,) int32
+    tree_right: DeviceNDArray,      # (n_nodes,) int32
+    tree_missing_left: DeviceNDArray,  # (n_nodes,) bool
+    is_categorical_split: DeviceNDArray,  # (n_nodes,) bool - Phase 14.4
+    cat_bitsets: DeviceNDArray,     # (n_nodes,) int64 - Phase 14.4
+    predictions: DeviceNDArray,     # (n_samples,) float32
+):
+    """Traverse tree with categorical and missing value handling.
+    
+    Phase 14.4: Supports categorical splits using bitmask routing.
+    For categorical splits, go left if (1 << bin_value) & cat_bitset != 0.
+    """
+    sample_idx = cuda.grid(1)
+    n_samples = binned.shape[1]
+    
+    if sample_idx >= n_samples:
+        return
+    
+    node = 0
+    
+    while tree_left[node] != -1:
+        feature = tree_features[node]
+        bin_value = binned[feature, sample_idx]
+        
+        # Check for missing value first
+        if bin_value == 255:  # MISSING_BIN
+            if tree_missing_left[node]:
+                node = tree_left[node]
+            else:
+                node = tree_right[node]
+        elif is_categorical_split[node]:
+            # Categorical split: use bitmask
+            bitset = cat_bitsets[node]
+            if (int64(1) << bin_value) & bitset:
+                node = tree_left[node]
+            else:
+                node = tree_right[node]
+        else:
+            # Numeric split: use threshold
+            threshold = tree_thresholds[node]
+            if bin_value <= threshold:
+                node = tree_left[node]
+            else:
+                node = tree_right[node]
+    
+    predictions[sample_idx] = tree_values[node]
+
+
+def predict_with_categorical_cuda(
+    binned: DeviceNDArray,
+    tree_features: DeviceNDArray,
+    tree_thresholds: DeviceNDArray,
+    tree_values: DeviceNDArray,
+    tree_left: DeviceNDArray,
+    tree_right: DeviceNDArray,
+    tree_missing_left: DeviceNDArray | None = None,
+    is_categorical_split: DeviceNDArray | None = None,
+    cat_bitsets: DeviceNDArray | None = None,
+) -> DeviceNDArray:
+    """Predict using a tree with categorical support on GPU.
+    
+    Phase 14.4: GPU prediction supporting categorical splits.
+    
+    Args:
+        binned: Binned feature matrix, shape (n_features, n_samples)
+        tree_*: Tree structure arrays
+        tree_missing_left: Direction for missing values
+        is_categorical_split: Whether each node is categorical
+        cat_bitsets: Bitmasks for categorical splits
+        
+    Returns:
+        predictions: Shape (n_samples,), float32
+    """
+    n_samples = binned.shape[1]
+    n_nodes = tree_features.shape[0]
+    predictions = cuda.device_array(n_samples, dtype=np.float32)
+    
+    threads = 256
+    blocks = math.ceil(n_samples / threads)
+    
+    # Prepare default arrays if not provided
+    if tree_missing_left is None:
+        tree_missing_left = cuda.to_device(np.ones(n_nodes, dtype=np.bool_))
+    if is_categorical_split is None:
+        is_categorical_split = cuda.to_device(np.zeros(n_nodes, dtype=np.bool_))
+    if cat_bitsets is None:
+        cat_bitsets = cuda.to_device(np.zeros(n_nodes, dtype=np.int64))
+    
+    _predict_with_categorical_kernel[blocks, threads](
         binned, tree_features, tree_thresholds, tree_values,
-        tree_left, tree_right, predictions
+        tree_left, tree_right, tree_missing_left,
+        is_categorical_split, cat_bitsets, predictions
     )
     
     return predictions
+
+
+@cuda.jit
+def _find_best_split_with_missing_kernel(
+    hist_grad: DeviceNDArray,   # (n_features, 256) float32
+    hist_hess: DeviceNDArray,   # (n_features, 256) float32
+    has_missing: DeviceNDArray, # (n_features,) bool
+    total_grad: float32,
+    total_hess: float32,
+    reg_lambda: float32,
+    min_child_weight: float32,
+    best_gains: DeviceNDArray,       # (n_features,) float32
+    best_bins: DeviceNDArray,        # (n_features,) int32
+    best_missing_left: DeviceNDArray, # (n_features,) bool - Phase 14.2
+):
+    """Find the best split considering missing values.
+    
+    Phase 14.2: For each split candidate, tries both directions for missing:
+    1. Missing goes LEFT
+    2. Missing goes RIGHT
+    
+    Picks whichever gives higher gain.
+    """
+    feature_idx = cuda.grid(1)
+    n_features = hist_grad.shape[0]
+    
+    if feature_idx >= n_features:
+        return
+    
+    # Get missing statistics for this feature
+    miss_grad = hist_grad[feature_idx, 255]  # MISSING_BIN
+    miss_hess = hist_hess[feature_idx, 255]
+    feature_has_missing = has_missing[feature_idx]
+    
+    # Total for non-missing values
+    if feature_has_missing:
+        nonmiss_total_grad = total_grad - miss_grad
+        nonmiss_total_hess = total_hess - miss_hess
+    else:
+        nonmiss_total_grad = total_grad
+        nonmiss_total_hess = total_hess
+    
+    # Parent gain
+    parent_gain = (total_grad * total_grad) / (total_hess + reg_lambda)
+    
+    best_gain = float32(-1e10)
+    best_bin = int32(-1)
+    best_miss_left = True
+    
+    # Cumulative sums for left child
+    left_grad = float32(0.0)
+    left_hess = float32(0.0)
+    
+    # Scan through bins 0-254 (not 255 which is missing)
+    for bin_idx in range(255):
+        left_grad += hist_grad[feature_idx, bin_idx]
+        left_hess += hist_hess[feature_idx, bin_idx]
+        
+        right_grad = nonmiss_total_grad - left_grad
+        right_hess = nonmiss_total_hess - left_hess
+        
+        if feature_has_missing and (miss_grad != float32(0.0) or miss_hess != float32(0.0)):
+            # Try missing goes LEFT
+            left_g_miss = left_grad + miss_grad
+            left_h_miss = left_hess + miss_hess
+            
+            if left_h_miss >= min_child_weight and right_hess >= min_child_weight:
+                left_score = (left_g_miss * left_g_miss) / (left_h_miss + reg_lambda)
+                right_score = (right_grad * right_grad) / (right_hess + reg_lambda)
+                gain_miss_left = left_score + right_score - parent_gain
+                
+                if gain_miss_left > best_gain:
+                    best_gain = gain_miss_left
+                    best_bin = bin_idx
+                    best_miss_left = True
+            
+            # Try missing goes RIGHT
+            right_g_miss = right_grad + miss_grad
+            right_h_miss = right_hess + miss_hess
+            
+            if left_hess >= min_child_weight and right_h_miss >= min_child_weight:
+                left_score = (left_grad * left_grad) / (left_hess + reg_lambda)
+                right_score = (right_g_miss * right_g_miss) / (right_h_miss + reg_lambda)
+                gain_miss_right = left_score + right_score - parent_gain
+                
+                if gain_miss_right > best_gain:
+                    best_gain = gain_miss_right
+                    best_bin = bin_idx
+                    best_miss_left = False
+        else:
+            # No missing values - standard split
+            if left_hess >= min_child_weight and right_hess >= min_child_weight:
+                left_score = (left_grad * left_grad) / (left_hess + reg_lambda)
+                right_score = (right_grad * right_grad) / (right_hess + reg_lambda)
+                gain = left_score + right_score - parent_gain
+                
+                if gain > best_gain:
+                    best_gain = gain
+                    best_bin = bin_idx
+                    best_miss_left = True  # Default direction
+    
+    best_gains[feature_idx] = best_gain
+    best_bins[feature_idx] = best_bin
+    best_missing_left[feature_idx] = best_miss_left
+
+
+def find_best_split_with_missing_cuda(
+    hist_grad: DeviceNDArray,
+    hist_hess: DeviceNDArray,
+    total_grad: float,
+    total_hess: float,
+    reg_lambda: float = 1.0,
+    min_child_weight: float = 1.0,
+    has_missing: np.ndarray | None = None,
+) -> tuple[int, int, float, bool]:
+    """Find the best split considering missing values on GPU.
+    
+    Phase 14.2: GPU implementation of missing-aware split finding.
+    
+    Args:
+        hist_grad: Gradient histogram, shape (n_features, 256)
+        hist_hess: Hessian histogram, shape (n_features, 256)
+        total_grad: Sum of all gradients
+        total_hess: Sum of all hessians
+        reg_lambda: L2 regularization
+        min_child_weight: Minimum sum of hessian in child
+        has_missing: Boolean array (n_features,) indicating which features have NaN
+        
+    Returns:
+        best_feature: Index of best feature (-1 if no valid split)
+        best_bin: Bin threshold for split
+        best_gain: Gain from the split
+        missing_go_left: Whether missing values should go left
+    """
+    n_features = hist_grad.shape[0]
+    
+    # Allocate output arrays
+    best_gains = cuda.device_array(n_features, dtype=np.float32)
+    best_bins = cuda.device_array(n_features, dtype=np.int32)
+    best_missing_left = cuda.device_array(n_features, dtype=np.bool_)
+    
+    # Prepare has_missing on GPU
+    if has_missing is None:
+        has_missing = np.zeros(n_features, dtype=np.bool_)
+    has_missing_gpu = cuda.to_device(has_missing.astype(np.bool_))
+    
+    # Launch kernel
+    threads = 256
+    blocks = math.ceil(n_features / threads)
+    
+    _find_best_split_with_missing_kernel[blocks, threads](
+        hist_grad, hist_hess, has_missing_gpu,
+        np.float32(total_grad), np.float32(total_hess),
+        np.float32(reg_lambda), np.float32(min_child_weight),
+        best_gains, best_bins, best_missing_left,
+    )
+    
+    # Find global best (small array, OK to copy to CPU)
+    gains_cpu = best_gains.copy_to_host()
+    bins_cpu = best_bins.copy_to_host()
+    missing_left_cpu = best_missing_left.copy_to_host()
+    
+    best_feature = int(np.argmax(gains_cpu))
+    best_gain = float(gains_cpu[best_feature])
+    best_bin = int(bins_cpu[best_feature])
+    best_miss_left = bool(missing_left_cpu[best_feature])
+    
+    if best_gain <= 0 or best_bin < 0:
+        return -1, -1, 0.0, True
+    
+    return best_feature, best_bin, best_gain, best_miss_left
+
+
+# =============================================================================
+# Phase 14.4: Categorical Split Finding GPU Kernels
+# =============================================================================
+
+@cuda.jit(device=True)
+def _compute_gain_device(left_g: float32, left_h: float32, 
+                         right_g: float32, right_h: float32, 
+                         reg_lambda: float32) -> float32:
+    """Device function to compute split gain."""
+    left_score = (left_g * left_g) / (left_h + reg_lambda)
+    right_score = (right_g * right_g) / (right_h + reg_lambda)
+    return left_score + right_score
+
+
+@cuda.jit
+def _find_best_categorical_split_kernel(
+    hist_grad: DeviceNDArray,       # (n_features, 256) float32
+    hist_hess: DeviceNDArray,       # (n_features, 256) float32
+    is_categorical: DeviceNDArray,  # (n_features,) bool
+    n_categories: DeviceNDArray,    # (n_features,) int32
+    has_missing: DeviceNDArray,     # (n_features,) bool
+    total_grad: float32,
+    total_hess: float32,
+    reg_lambda: float32,
+    min_child_weight: float32,
+    # Outputs:
+    best_gains: DeviceNDArray,       # (n_features,) float32
+    best_thresholds: DeviceNDArray,  # (n_features,) int32
+    best_missing_left: DeviceNDArray,  # (n_features,) bool
+    best_is_cat: DeviceNDArray,      # (n_features,) bool
+    best_cat_bitsets: DeviceNDArray, # (n_features,) int64
+):
+    """Find best split per feature - handles both categorical and numeric.
+    
+    Phase 14.4: For categorical features, uses Fisher's optimal ordering.
+    Each thread handles one feature.
+    
+    For categorical: Sort categories by G/(H+λ), find best split in sorted order.
+    For numeric: Standard ordinal split with missing value handling.
+    """
+    feature_idx = cuda.grid(1)
+    n_features = hist_grad.shape[0]
+    
+    if feature_idx >= n_features:
+        return
+    
+    # Get missing stats
+    miss_grad = hist_grad[feature_idx, 255]
+    miss_hess = hist_hess[feature_idx, 255]
+    has_miss = has_missing[feature_idx]
+    
+    # Parent gain
+    parent_gain = (total_grad * total_grad) / (total_hess + reg_lambda)
+    
+    if is_categorical[feature_idx]:
+        # === CATEGORICAL SPLIT ===
+        n_cats = n_categories[feature_idx]
+        
+        # Local arrays for sorting (max 254 categories)
+        # Using thread-local registers/arrays
+        cat_scores = cuda.local.array(256, dtype=float32)
+        cat_grads = cuda.local.array(256, dtype=float32)
+        cat_hess_arr = cuda.local.array(256, dtype=float32)
+        sorted_cats = cuda.local.array(256, dtype=int32)
+        
+        # Compute scores and initialize sorted order
+        total_cat_g = float32(0.0)
+        total_cat_h = float32(0.0)
+        
+        for cat in range(n_cats):
+            g = hist_grad[feature_idx, cat]
+            h = hist_hess[feature_idx, cat]
+            cat_grads[cat] = g
+            cat_hess_arr[cat] = h
+            total_cat_g += g
+            total_cat_h += h
+            
+            # Fisher score: -G / (H + lambda)
+            if h > float32(1e-10):
+                cat_scores[cat] = -g / (h + reg_lambda)
+            else:
+                cat_scores[cat] = float32(0.0)
+            sorted_cats[cat] = cat
+        
+        # Simple selection sort (O(n^2) but n <= 254, runs in registers)
+        for i in range(n_cats - 1):
+            min_idx = i
+            min_val = cat_scores[sorted_cats[i]]
+            for j in range(i + 1, n_cats):
+                if cat_scores[sorted_cats[j]] < min_val:
+                    min_val = cat_scores[sorted_cats[j]]
+                    min_idx = j
+            # Swap
+            if min_idx != i:
+                tmp = sorted_cats[i]
+                sorted_cats[i] = sorted_cats[min_idx]
+                sorted_cats[min_idx] = tmp
+        
+        # Find best split in sorted order
+        best_gain_cat = float32(-1e10)
+        best_split = int32(0)
+        best_miss_left_cat = True
+        
+        left_g = float32(0.0)
+        left_h = float32(0.0)
+        
+        for i in range(n_cats - 1):
+            cat = sorted_cats[i]
+            left_g += cat_grads[cat]
+            left_h += cat_hess_arr[cat]
+            
+            right_g = total_cat_g - left_g
+            right_h = total_cat_h - left_h
+            
+            if has_miss and (miss_grad != float32(0.0) or miss_hess != float32(0.0)):
+                # Try missing LEFT
+                if left_h + miss_hess >= min_child_weight and right_h >= min_child_weight:
+                    gain = _compute_gain_device(left_g + miss_grad, left_h + miss_hess,
+                                               right_g, right_h, reg_lambda) - parent_gain
+                    if gain > best_gain_cat:
+                        best_gain_cat = gain
+                        best_split = i + 1
+                        best_miss_left_cat = True
+                
+                # Try missing RIGHT
+                if left_h >= min_child_weight and right_h + miss_hess >= min_child_weight:
+                    gain = _compute_gain_device(left_g, left_h,
+                                               right_g + miss_grad, right_h + miss_hess, 
+                                               reg_lambda) - parent_gain
+                    if gain > best_gain_cat:
+                        best_gain_cat = gain
+                        best_split = i + 1
+                        best_miss_left_cat = False
+            else:
+                if left_h >= min_child_weight and right_h >= min_child_weight:
+                    gain = _compute_gain_device(left_g, left_h, right_g, right_h, 
+                                               reg_lambda) - parent_gain
+                    if gain > best_gain_cat:
+                        best_gain_cat = gain
+                        best_split = i + 1
+                        best_miss_left_cat = True
+        
+        # Build bitmask: categories before split_point go left
+        cat_bitset = int64(0)
+        for i in range(best_split):
+            cat = sorted_cats[i]
+            cat_bitset |= (int64(1) << cat)
+        
+        best_gains[feature_idx] = best_gain_cat
+        best_thresholds[feature_idx] = best_split
+        best_missing_left[feature_idx] = best_miss_left_cat
+        best_is_cat[feature_idx] = True
+        best_cat_bitsets[feature_idx] = cat_bitset
+        
+    else:
+        # === NUMERIC SPLIT ===
+        nonmiss_total_grad = total_grad - miss_grad if has_miss else total_grad
+        nonmiss_total_hess = total_hess - miss_hess if has_miss else total_hess
+        
+        best_gain_num = float32(-1e10)
+        best_bin = int32(-1)
+        best_miss_left_num = True
+        
+        left_grad = float32(0.0)
+        left_hess = float32(0.0)
+        
+        for bin_idx in range(255):
+            left_grad += hist_grad[feature_idx, bin_idx]
+            left_hess += hist_hess[feature_idx, bin_idx]
+            
+            right_grad = nonmiss_total_grad - left_grad
+            right_hess = nonmiss_total_hess - left_hess
+            
+            if has_miss and (miss_grad != float32(0.0) or miss_hess != float32(0.0)):
+                # Try missing LEFT
+                if left_hess + miss_hess >= min_child_weight and right_hess >= min_child_weight:
+                    gain = _compute_gain_device(left_grad + miss_grad, left_hess + miss_hess,
+                                               right_grad, right_hess, reg_lambda) - parent_gain
+                    if gain > best_gain_num:
+                        best_gain_num = gain
+                        best_bin = bin_idx
+                        best_miss_left_num = True
+                
+                # Try missing RIGHT
+                if left_hess >= min_child_weight and right_hess + miss_hess >= min_child_weight:
+                    gain = _compute_gain_device(left_grad, left_hess,
+                                               right_grad + miss_grad, right_hess + miss_hess,
+                                               reg_lambda) - parent_gain
+                    if gain > best_gain_num:
+                        best_gain_num = gain
+                        best_bin = bin_idx
+                        best_miss_left_num = False
+            else:
+                if left_hess >= min_child_weight and right_hess >= min_child_weight:
+                    gain = _compute_gain_device(left_grad, left_hess, right_grad, right_hess,
+                                               reg_lambda) - parent_gain
+                    if gain > best_gain_num:
+                        best_gain_num = gain
+                        best_bin = bin_idx
+                        best_miss_left_num = True
+        
+        best_gains[feature_idx] = best_gain_num
+        best_thresholds[feature_idx] = best_bin
+        best_missing_left[feature_idx] = best_miss_left_num
+        best_is_cat[feature_idx] = False
+        best_cat_bitsets[feature_idx] = int64(0)
+
+
+def find_best_split_categorical_cuda(
+    hist_grad: DeviceNDArray,
+    hist_hess: DeviceNDArray,
+    total_grad: float,
+    total_hess: float,
+    reg_lambda: float = 1.0,
+    min_child_weight: float = 1.0,
+    is_categorical: np.ndarray | None = None,
+    n_categories: np.ndarray | None = None,
+    has_missing: np.ndarray | None = None,
+) -> tuple[int, int, float, bool, bool, int, int]:
+    """Find best split considering both categorical and numeric features on GPU.
+    
+    Phase 14.4: GPU implementation supporting mixed feature types.
+    
+    Args:
+        hist_grad: Gradient histogram, shape (n_features, 256)
+        hist_hess: Hessian histogram, shape (n_features, 256)
+        total_grad: Sum of all gradients
+        total_hess: Sum of all hessians
+        reg_lambda: L2 regularization
+        min_child_weight: Minimum sum of hessian in child
+        is_categorical: Boolean array indicating categorical features
+        n_categories: Number of categories per feature
+        has_missing: Boolean array indicating features with missing values
+        
+    Returns:
+        best_feature: Index of best feature (-1 if no valid split)
+        best_threshold: Bin threshold (ordinal) or split point (categorical)
+        best_gain: Gain from the split
+        missing_go_left: Direction for missing values
+        is_cat_split: Whether this is a categorical split
+        cat_bitset: Bitmask for categorical split (0 for numeric)
+        cat_threshold: Category threshold in sorted order
+    """
+    n_features = hist_grad.shape[0]
+    
+    # Prepare arrays on GPU
+    if is_categorical is None:
+        is_categorical = np.zeros(n_features, dtype=np.bool_)
+    if n_categories is None:
+        n_categories = np.zeros(n_features, dtype=np.int32)
+    if has_missing is None:
+        has_missing = np.zeros(n_features, dtype=np.bool_)
+    
+    is_cat_gpu = cuda.to_device(is_categorical.astype(np.bool_))
+    n_cats_gpu = cuda.to_device(n_categories.astype(np.int32))
+    has_miss_gpu = cuda.to_device(has_missing.astype(np.bool_))
+    
+    # Allocate outputs
+    best_gains = cuda.device_array(n_features, dtype=np.float32)
+    best_thresholds = cuda.device_array(n_features, dtype=np.int32)
+    best_missing_left = cuda.device_array(n_features, dtype=np.bool_)
+    best_is_cat = cuda.device_array(n_features, dtype=np.bool_)
+    best_cat_bitsets = cuda.device_array(n_features, dtype=np.int64)
+    
+    # Launch kernel
+    threads = 256
+    blocks = math.ceil(n_features / threads)
+    
+    _find_best_categorical_split_kernel[blocks, threads](
+        hist_grad, hist_hess,
+        is_cat_gpu, n_cats_gpu, has_miss_gpu,
+        np.float32(total_grad), np.float32(total_hess),
+        np.float32(reg_lambda), np.float32(min_child_weight),
+        best_gains, best_thresholds, best_missing_left,
+        best_is_cat, best_cat_bitsets,
+    )
+    
+    # Find global best
+    gains_cpu = best_gains.copy_to_host()
+    thresholds_cpu = best_thresholds.copy_to_host()
+    missing_left_cpu = best_missing_left.copy_to_host()
+    is_cat_cpu = best_is_cat.copy_to_host()
+    cat_bitsets_cpu = best_cat_bitsets.copy_to_host()
+    
+    best_feature = int(np.argmax(gains_cpu))
+    best_gain = float(gains_cpu[best_feature])
+    best_threshold = int(thresholds_cpu[best_feature])
+    best_miss_left = bool(missing_left_cpu[best_feature])
+    is_cat_split = bool(is_cat_cpu[best_feature])
+    cat_bitset = int(cat_bitsets_cpu[best_feature])
+    
+    if best_gain <= 0 or best_threshold < 0:
+        return -1, -1, 0.0, True, False, 0, -1
+    
+    cat_thresh = best_threshold if is_cat_split else -1
+    return (best_feature, best_threshold, best_gain, best_miss_left,
+            is_cat_split, cat_bitset, cat_thresh)
 
 
 # =============================================================================

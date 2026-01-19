@@ -41,12 +41,16 @@ class TestArray:
         for edges in binned.bin_edges:
             assert len(edges) > 0  # At least some bin edges
     
-    def test_invalid_n_bins(self):
-        """Test that n_bins > 256 raises error."""
+    def test_n_bins_capped_at_255(self):
+        """Test that n_bins > 255 is capped (Phase 14: bin 255 reserved for NaN)."""
         X = np.random.randn(10, 2)
         
-        with pytest.raises(ValueError, match="n_bins must be <= 256"):
-            ob.array(X, n_bins=300)
+        # n_bins > 255 should be silently capped to 255
+        # (bin 255 is reserved for missing values)
+        binned = ob.array(X, n_bins=300)
+        
+        # Data should not contain bin 255 (no NaN in this data)
+        assert np.max(binned.data) < 255
     
     def test_invalid_shape(self):
         """Test that 1D input raises error."""

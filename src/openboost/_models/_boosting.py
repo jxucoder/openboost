@@ -6,6 +6,8 @@ with both built-in and custom loss functions.
 This module implements batched training that keeps computation on the GPU
 without returning to Python between trees, achieving performance competitive
 with XGBoost.
+
+Phase 13: Added callback support for early stopping, logging, etc.
 """
 
 from __future__ import annotations
@@ -20,6 +22,14 @@ from .._backends import is_cuda
 from .._loss import get_loss_function, LossFunction
 from .._core._tree import fit_tree
 from .._core._growth import TreeStructure
+from .._callbacks import Callback, CallbackManager, TrainingState
+
+try:
+    from .._distributed._ray import RayDistributedContext
+    from .._distributed._tree import fit_tree_distributed
+except ImportError:
+    RayDistributedContext = None
+    fit_tree_distributed = None
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -74,24 +84,49 @@ class GradientBoosting:
     loss: str | LossFunction = 'mse'
     min_child_weight: float = 1.0
     reg_lambda: float = 1.0
+    reg_alpha: float = 0.0       # Phase 11: L1 regularization
+    gamma: float = 0.0           # Phase 11: min split gain
+    subsample: float = 1.0       # Phase 11: row sampling
+    colsample_bytree: float = 1.0  # Phase 11: column sampling
     n_bins: int = 256
     quantile_alpha: float = 0.5  # Phase 9.1
     tweedie_rho: float = 1.5     # Phase 9.3
+    distributed: bool = False    # Phase 12
+    n_workers: int | None = None # Phase 12
     
     # Fitted attributes (not init)
     trees_: list[TreeStructure] = field(default_factory=list, init=False, repr=False)
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     _loss_fn: LossFunction | None = field(default=None, init=False, repr=False)
     
-    def fit(self, X: NDArray, y: NDArray) -> GradientBoosting:
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        callbacks: list[Callback] | None = None,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+        sample_weight: NDArray | None = None,
+    ) -> GradientBoosting:
         """Fit the gradient boosting model.
         
         Args:
             X: Training features, shape (n_samples, n_features).
             y: Training targets, shape (n_samples,).
+            callbacks: List of Callback instances for training hooks.
+                       Use EarlyStopping for early stopping, Logger for progress.
+            eval_set: List of (X, y) tuples for validation (used with callbacks).
+            sample_weight: Sample weights, shape (n_samples,).
             
         Returns:
             self: The fitted model.
+            
+        Example:
+            >>> from openboost import GradientBoosting, EarlyStopping, Logger
+            >>> model = GradientBoosting(n_trees=1000)
+            >>> model.fit(X, y, 
+            ...     callbacks=[EarlyStopping(patience=50), Logger(period=10)],
+            ...     eval_set=[(X_val, y_val)]
+            ... )
         """
         # Clear any previous fit
         self.trees_ = []
@@ -113,17 +148,80 @@ class GradientBoosting:
         else:
             self.X_binned_ = array(X, n_bins=self.n_bins)
         
+        # Store for feature importance
+        self.n_features_in_ = self.X_binned_.n_features
+        
         # Choose training path based on backend
-        if is_cuda():
-            self._fit_gpu(y, n_samples)
+        if self.distributed:
+            self._fit_distributed(y, n_samples)
+        elif is_cuda():
+            self._fit_gpu(y, n_samples, callbacks, eval_set, sample_weight)
         else:
-            self._fit_cpu(y, n_samples)
+            self._fit_cpu(y, n_samples, callbacks, eval_set, sample_weight)
         
         return self
     
-    def _fit_gpu(self, y: NDArray, n_samples: int):
-        """GPU-optimized training using growth strategies."""
+    def _fit_distributed(self, y: NDArray, n_samples: int):
+        """Distributed training using Ray."""
+        if RayDistributedContext is None:
+            raise ImportError("Distributed training requires 'ray'. Install with 'pip install ray'.")
+            
+        ctx = RayDistributedContext(self.n_workers)
+        
+        X_data = self.X_binned_.data
+        if hasattr(X_data, 'copy_to_host'):
+            X_data = X_data.copy_to_host()
+        
+        ctx.setup(X_data, y, self.n_bins)
+        
+        import ray
+        
+        for i in range(self.n_trees):
+            # Compute gradients on each worker
+            grad_hess_refs = [
+                w.compute_gradients.options(num_returns=2).remote(self._loss_fn) 
+                for w in ctx.workers
+            ]
+            
+            grad_refs = [pair[0] for pair in grad_hess_refs]
+            hess_refs = [pair[1] for pair in grad_hess_refs]
+            
+            # Distributed tree fitting
+            tree = fit_tree_distributed(
+                ctx, 
+                ctx.workers, 
+                grad_refs, 
+                hess_refs,
+                max_depth=self.max_depth,
+                min_child_weight=self.min_child_weight,
+                reg_lambda=self.reg_lambda,
+                reg_alpha=self.reg_alpha,
+                min_gain=self.gamma,
+                subsample=self.subsample,
+                colsample_bytree=self.colsample_bytree,
+            )
+            
+            # Update predictions on each worker
+            for w in ctx.workers:
+                w.update_predictions.remote(tree, self.learning_rate)
+            
+            self.trees_.append(tree)
+    
+    def _fit_gpu(
+        self,
+        y: NDArray,
+        n_samples: int,
+        callbacks: list[Callback] | None = None,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+        sample_weight: NDArray | None = None,
+    ):
+        """GPU-optimized training using growth strategies with callback support."""
         from numba import cuda
+        
+        # Setup callbacks
+        cb_manager = CallbackManager(callbacks)
+        state = TrainingState(model=self, n_rounds=self.n_trees)
+        cb_manager.on_train_begin(state)
         
         # Move y to GPU
         y_gpu = cuda.to_device(y)
@@ -142,6 +240,9 @@ class GradientBoosting:
         
         # Train trees
         for i in range(self.n_trees):
+            state.round_idx = i
+            cb_manager.on_round_begin(state)
+            
             # Compute gradients
             if is_custom_loss:
                 # Custom loss: need to copy pred to CPU, call Python, copy back
@@ -153,6 +254,9 @@ class GradientBoosting:
                 # Built-in loss: compute entirely on GPU
                 grad_gpu, hess_gpu = self._loss_fn(pred_gpu, y_gpu)
             
+            # Note: sample_weight not fully supported on GPU yet
+            # TODO: Implement GPU sample weighting
+            
             # Build tree using new fit_tree (Phase 8)
             tree = fit_tree(
                 self.X_binned_,
@@ -161,6 +265,10 @@ class GradientBoosting:
                 max_depth=self.max_depth,
                 min_child_weight=self.min_child_weight,
                 reg_lambda=self.reg_lambda,
+                reg_alpha=self.reg_alpha,
+                gamma=self.gamma,
+                subsample=self.subsample,
+                colsample_bytree=self.colsample_bytree,
             )
             
             # Update predictions
@@ -176,31 +284,87 @@ class GradientBoosting:
             cuda.to_device(pred_cpu, to=pred_gpu)
             
             self.trees_.append(tree)
+            
+            # Compute losses for callbacks
+            state.train_loss = float(np.mean((pred_cpu - y) ** 2))
+            
+            if eval_set:
+                X_val, y_val = eval_set[0]
+                val_pred = self.predict(X_val)
+                state.val_loss = float(np.mean((val_pred - y_val) ** 2))
+            
+            # Check if callbacks want to stop
+            if not cb_manager.on_round_end(state):
+                break
+        
+        cb_manager.on_train_end(state)
     
-    def _fit_cpu(self, y: NDArray, n_samples: int):
-        """CPU training path."""
+    def _fit_cpu(
+        self,
+        y: NDArray,
+        n_samples: int,
+        callbacks: list[Callback] | None = None,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+        sample_weight: NDArray | None = None,
+    ):
+        """CPU training path with callback support."""
+        # Setup callbacks
+        cb_manager = CallbackManager(callbacks)
+        state = TrainingState(model=self, n_rounds=self.n_trees)
+        cb_manager.on_train_begin(state)
+        
         # Initialize predictions
         pred = np.zeros(n_samples, dtype=np.float32)
         
         # Train trees
         for i in range(self.n_trees):
+            state.round_idx = i
+            cb_manager.on_round_begin(state)
+            
             # Compute gradients
             grad, hess = self._loss_fn(pred, y)
+            grad = grad.astype(np.float32)
+            hess = hess.astype(np.float32)
+            
+            # Apply sample weights if provided
+            if sample_weight is not None:
+                weights = np.asarray(sample_weight, dtype=np.float32)
+                grad = grad * weights
+                hess = hess * weights
             
             # Build tree
             tree = fit_tree(
                 self.X_binned_,
-                grad.astype(np.float32),
-                hess.astype(np.float32),
+                grad,
+                hess,
                 max_depth=self.max_depth,
                 min_child_weight=self.min_child_weight,
                 reg_lambda=self.reg_lambda,
+                reg_alpha=self.reg_alpha,
+                gamma=self.gamma,
+                subsample=self.subsample,
+                colsample_bytree=self.colsample_bytree,
             )
             
             # Update predictions
-            pred += self.learning_rate * tree(self.X_binned_)
+            tree_pred = tree(self.X_binned_)
+            pred += self.learning_rate * tree_pred
             
             self.trees_.append(tree)
+            
+            # Compute losses for callbacks
+            state.train_loss = float(np.mean((pred - y) ** 2))
+            
+            if eval_set:
+                X_val, y_val = eval_set[0]
+                val_pred = self.predict(X_val)
+                state.val_loss = float(np.mean((val_pred - y_val) ** 2))
+            
+            # Check if callbacks want to stop
+            if not cb_manager.on_round_end(state):
+                break
+        
+        cb_manager.on_train_end(state)
     
     def predict(self, X: NDArray | BinnedArray) -> NDArray:
         """Generate predictions for X.
@@ -331,6 +495,10 @@ class MultiClassGradientBoosting:
     learning_rate: float = 0.1
     min_child_weight: float = 1.0
     reg_lambda: float = 1.0
+    reg_alpha: float = 0.0       # Phase 11
+    gamma: float = 0.0           # Phase 11
+    subsample: float = 1.0       # Phase 11
+    colsample_bytree: float = 1.0  # Phase 11
     n_bins: int = 256
     
     # Fitted attributes
@@ -384,6 +552,10 @@ class MultiClassGradientBoosting:
                     max_depth=self.max_depth,
                     min_child_weight=self.min_child_weight,
                     reg_lambda=self.reg_lambda,
+                    reg_alpha=self.reg_alpha,
+                    gamma=self.gamma,
+                    subsample=self.subsample,
+                    colsample_bytree=self.colsample_bytree,
                 )
                 round_trees.append(tree)
                 

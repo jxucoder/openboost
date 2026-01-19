@@ -1844,7 +1844,7 @@ def profile_gradient_boosting(
         times_tree.append((t2 - t1) * 1000)
         
         # Prediction update
-        from openboost._core._predict import predict_tree_add_gpu
+        from openboost._predict import predict_tree_add_gpu
         predict_tree_add_gpu(tree, X_binned, pred_gpu, learning_rate)
         cuda.synchronize()
         t3 = time.perf_counter()
@@ -2627,7 +2627,7 @@ def profile_large_scale(
         times_tree.append((t2 - t1) * 1000)
         
         # Prediction
-        from openboost._core._predict import predict_tree_add_gpu
+        from openboost._predict import predict_tree_add_gpu
         predict_tree_add_gpu(tree, X_binned, pred_gpu, 0.1)
         cuda.synchronize()
         t3 = time.perf_counter()
@@ -2905,7 +2905,7 @@ def benchmark_10m():
     from numba import cuda
     
     import openboost as ob
-    from openboost._core._tree import fit_tree_gpu_native
+    from openboost._tree import fit_tree_gpu_native
     
     print("=" * 70)
     print("10M Sample Benchmark")
@@ -3012,4 +3012,152 @@ def benchmark_10m():
 # NOTE: Phase 7 V2 benchmark functions (profile_v1_vs_v2, benchmark_phase7_rowbased)
 # were removed after analysis showed V1 is 4x faster than V2.
 # See logs/2026-01-03-phase-7-final.md for details.
+
+
+@app.function(gpu="A100", timeout=600, image=image)
+def benchmark_phase11():
+    """Phase 11: Benchmark new parameters (gamma, reg_alpha, subsample, colsample)."""
+    import sys
+    sys.path.insert(0, "/root")
+    
+    import time
+    import numpy as np
+    import xgboost as xgb
+    from numba import cuda
+    
+    import openboost as ob
+    
+    print("=" * 70)
+    print("Phase 11: XGBoost Parameter Parity Benchmark")
+    print("=" * 70)
+    
+    n_samples = 500_000
+    n_features = 50
+    n_trees = 50
+    max_depth = 6
+    
+    print(f"Data: {n_samples:,} samples, {n_features} features, {n_trees} trees")
+    print(f"GPU: {cuda.get_current_device().name}")
+    print()
+    
+    # Generate data
+    print("Generating data...")
+    np.random.seed(42)
+    X = np.random.randn(n_samples, n_features).astype(np.float32)
+    y = X[:, 0] + 0.5 * X[:, 1] + 0.3 * X[:, 2] + np.random.randn(n_samples).astype(np.float32) * 0.5
+    
+    results = {}
+    
+    # Test 1: Baseline
+    print("\n" + "-" * 70)
+    print("[1] Baseline (no Phase 11 params)")
+    print("-" * 70)
+    model = ob.GradientBoosting(n_trees=n_trees, max_depth=max_depth)
+    t0 = time.perf_counter()
+    model.fit(X, y)
+    base_time = time.perf_counter() - t0
+    pred = model.predict(X)
+    r2 = 1 - np.mean((pred - y)**2) / np.var(y)
+    print(f"Time: {base_time:.2f}s, R²: {r2:.4f}")
+    results["baseline"] = {"time": base_time, "r2": r2}
+    
+    # Test 2: With gamma + reg_alpha
+    print("\n" + "-" * 70)
+    print("[2] With gamma=0.1, reg_alpha=0.1")
+    print("-" * 70)
+    model = ob.GradientBoosting(n_trees=n_trees, max_depth=max_depth, gamma=0.1, reg_alpha=0.1)
+    t0 = time.perf_counter()
+    model.fit(X, y)
+    reg_time = time.perf_counter() - t0
+    pred = model.predict(X)
+    r2 = 1 - np.mean((pred - y)**2) / np.var(y)
+    print(f"Time: {reg_time:.2f}s, R²: {r2:.4f}, Ratio: {reg_time/base_time:.2f}x")
+    results["regularized"] = {"time": reg_time, "r2": r2}
+    
+    # Test 3: With subsample
+    print("\n" + "-" * 70)
+    print("[3] With subsample=0.8")
+    print("-" * 70)
+    model = ob.GradientBoosting(n_trees=n_trees, max_depth=max_depth, subsample=0.8)
+    t0 = time.perf_counter()
+    model.fit(X, y)
+    sub_time = time.perf_counter() - t0
+    pred = model.predict(X)
+    r2 = 1 - np.mean((pred - y)**2) / np.var(y)
+    print(f"Time: {sub_time:.2f}s, R²: {r2:.4f}, Ratio: {sub_time/base_time:.2f}x")
+    results["subsample"] = {"time": sub_time, "r2": r2}
+    
+    # Test 4: Full stochastic GB
+    print("\n" + "-" * 70)
+    print("[4] Stochastic GB (all Phase 11 params)")
+    print("-" * 70)
+    model = ob.GradientBoosting(
+        n_trees=n_trees, max_depth=max_depth,
+        gamma=0.1, reg_alpha=0.1,
+        subsample=0.8, colsample_bytree=0.8
+    )
+    t0 = time.perf_counter()
+    model.fit(X, y)
+    stoch_time = time.perf_counter() - t0
+    pred = model.predict(X)
+    r2 = 1 - np.mean((pred - y)**2) / np.var(y)
+    print(f"Time: {stoch_time:.2f}s, R²: {r2:.4f}, Ratio: {stoch_time/base_time:.2f}x")
+    results["stochastic"] = {"time": stoch_time, "r2": r2}
+    
+    # Summary
+    print("\n" + "=" * 70)
+    print("SUMMARY")
+    print("=" * 70)
+    print(f"\n{'Config':<25} {'Time':<10} {'R²':<10} {'vs Base':<10}")
+    print("-" * 55)
+    print(f"{'Baseline':<25} {base_time:<10.2f} {results['baseline']['r2']:<10.4f} {'1.00x':<10}")
+    print(f"{'+ gamma, reg_alpha':<25} {reg_time:<10.2f} {results['regularized']['r2']:<10.4f} {reg_time/base_time:<10.2f}x")
+    print(f"{'+ subsample':<25} {sub_time:<10.2f} {results['subsample']['r2']:<10.4f} {sub_time/base_time:<10.2f}x")
+    print(f"{'Full stochastic':<25} {stoch_time:<10.2f} {results['stochastic']['r2']:<10.4f} {stoch_time/base_time:<10.2f}x")
+    
+    # XGBoost comparison
+    print("\n" + "=" * 70)
+    print("XGBoost Comparison")
+    print("=" * 70)
+    
+    # XGBoost baseline
+    print("\n[XGB-1] XGBoost baseline")
+    dtrain = xgb.DMatrix(X, label=y)
+    params = {'max_depth': max_depth, 'tree_method': 'hist', 'device': 'cuda', 'objective': 'reg:squarederror'}
+    xgb.train(params, dtrain, num_boost_round=1)  # warmup
+    t0 = time.perf_counter()
+    xgb_model = xgb.train(params, dtrain, num_boost_round=n_trees)
+    xgb_base_time = time.perf_counter() - t0
+    xgb_pred = xgb_model.predict(dtrain)
+    xgb_r2 = 1 - np.mean((xgb_pred - y)**2) / np.var(y)
+    print(f"Time: {xgb_base_time:.2f}s, R²: {xgb_r2:.4f}")
+    
+    # XGBoost with same params as stochastic
+    print("\n[XGB-2] XGBoost stochastic (gamma=0.1, alpha=0.1, subsample=0.8, colsample=0.8)")
+    params_stoch = {
+        'max_depth': max_depth, 'tree_method': 'hist', 'device': 'cuda',
+        'objective': 'reg:squarederror',
+        'gamma': 0.1, 'alpha': 0.1, 'subsample': 0.8, 'colsample_bytree': 0.8
+    }
+    t0 = time.perf_counter()
+    xgb_stoch = xgb.train(params_stoch, dtrain, num_boost_round=n_trees)
+    xgb_stoch_time = time.perf_counter() - t0
+    xgb_stoch_pred = xgb_stoch.predict(dtrain)
+    xgb_stoch_r2 = 1 - np.mean((xgb_stoch_pred - y)**2) / np.var(y)
+    print(f"Time: {xgb_stoch_time:.2f}s, R²: {xgb_stoch_r2:.4f}")
+    
+    # Final comparison
+    print("\n" + "=" * 70)
+    print("FINAL COMPARISON")
+    print("=" * 70)
+    print(f"\n{'Config':<30} {'OB Time':<10} {'XGB Time':<10} {'Ratio':<10}")
+    print("-" * 60)
+    print(f"{'Baseline':<30} {base_time:<10.2f} {xgb_base_time:<10.2f} {base_time/xgb_base_time:<10.1f}x")
+    print(f"{'Stochastic (all params)':<30} {stoch_time:<10.2f} {xgb_stoch_time:<10.2f} {stoch_time/xgb_stoch_time:<10.1f}x")
+    
+    print("\n✅ Phase 11 parameters working on GPU!")
+    
+    return results
+
+
 # End of benchmark file
