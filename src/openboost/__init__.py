@@ -99,6 +99,51 @@ from ._models import (
     # Phase 13: sklearn-compatible wrappers
     OpenBoostRegressor,
     OpenBoostClassifier,
+    # Phase 15: sklearn wrappers for new models
+    OpenBoostDistributionalRegressor,
+    OpenBoostLinearLeafRegressor,
+    # Phase 15/16: Distributional GBDT (NaturalBoost)
+    DistributionalGBDT,
+    NaturalBoost,
+    NaturalBoostNormal,
+    NaturalBoostLogNormal,
+    NaturalBoostGamma,
+    NaturalBoostPoisson,
+    NaturalBoostStudentT,
+    NaturalBoostTweedie,
+    NaturalBoostNegBin,
+    # Backward compatibility aliases (deprecated)
+    NGBoost,
+    NGBoostNormal,
+    NGBoostLogNormal,
+    NGBoostGamma,
+    NGBoostPoisson,
+    NGBoostStudentT,
+    NGBoostTweedie,
+    NGBoostNegBin,
+    # Phase 15: Linear Leaf GBDT
+    LinearLeafGBDT,
+)
+
+# =============================================================================
+# Distributions (Phase 15)
+# =============================================================================
+from ._distributions import (
+    Distribution,
+    DistributionOutput,
+    Normal,
+    LogNormal,
+    Gamma,
+    Poisson,
+    StudentT,
+    # Kaggle competition favorites
+    Tweedie,
+    NegativeBinomial,
+    # Custom distributions with autodiff
+    CustomDistribution,
+    create_custom_distribution,
+    get_distribution,
+    list_distributions,
 )
 
 # =============================================================================
@@ -145,6 +190,33 @@ from ._loss import (
 # =============================================================================
 from ._backends import get_backend, set_backend, is_cuda, is_cpu
 
+# =============================================================================
+# Sampling Strategies (Phase 17)
+# =============================================================================
+from ._sampling import (
+    SamplingStrategy,
+    GOSSConfig,
+    MiniBatchConfig,
+    SamplingResult,
+    goss_sample,
+    random_sample,
+    apply_sampling,
+    MiniBatchIterator,
+    accumulate_histograms_minibatch,
+    create_memmap_binned,
+    load_memmap_binned,
+)
+
+# =============================================================================
+# Multi-GPU Training (Phase 18)
+# =============================================================================
+from ._distributed import (
+    MultiGPUContext,
+    GPUWorkerBase,
+    GPUWorker,
+    fit_tree_multigpu,
+)
+
 __all__ = [
     # Version
     "__version__",
@@ -158,9 +230,48 @@ __all__ = [
     "MultiClassGradientBoosting",
     "OpenBoostGAM",
     "DART",
-    # sklearn-compatible wrappers (Phase 13)
+    # Phase 15/16: Distributional GBDT (NaturalBoost)
+    "DistributionalGBDT",
+    "NaturalBoost",
+    "NaturalBoostNormal",
+    "NaturalBoostLogNormal",
+    "NaturalBoostGamma",
+    "NaturalBoostPoisson",
+    "NaturalBoostStudentT",
+    "NaturalBoostTweedie",
+    "NaturalBoostNegBin",
+    # Backward compatibility (deprecated)
+    "NGBoost",
+    "NGBoostNormal",
+    "NGBoostLogNormal",
+    "NGBoostGamma",
+    "NGBoostPoisson",
+    "NGBoostStudentT",
+    "NGBoostTweedie",
+    "NGBoostNegBin",
+    # Phase 15: Linear Leaf GBDT
+    "LinearLeafGBDT",
+    # Phase 15: Distributions
+    "Distribution",
+    "DistributionOutput",
+    "Normal",
+    "LogNormal",
+    "Gamma",
+    "Poisson",
+    "StudentT",
+    # Kaggle competition favorites
+    "Tweedie",
+    "NegativeBinomial",
+    # Custom distributions
+    "CustomDistribution",
+    "create_custom_distribution",
+    "get_distribution",
+    "list_distributions",
+    # sklearn-compatible wrappers (Phase 13 + 15)
     "OpenBoostRegressor",
     "OpenBoostClassifier",
+    "OpenBoostDistributionalRegressor",
+    "OpenBoostLinearLeafRegressor",
     # Callbacks (Phase 13)
     "Callback",
     "EarlyStopping",
@@ -230,4 +341,21 @@ __all__ = [
     "set_backend",
     "is_cuda",
     "is_cpu",
+    # Sampling (Phase 17)
+    "SamplingStrategy",
+    "GOSSConfig",
+    "MiniBatchConfig",
+    "SamplingResult",
+    "goss_sample",
+    "random_sample",
+    "apply_sampling",
+    "MiniBatchIterator",
+    "accumulate_histograms_minibatch",
+    "create_memmap_binned",
+    "load_memmap_binned",
+    # Multi-GPU (Phase 18)
+    "MultiGPUContext",
+    "GPUWorkerBase",
+    "GPUWorker",
+    "fit_tree_multigpu",
 ]

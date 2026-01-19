@@ -36,7 +36,10 @@ def fit_tree_distributed(
 ) -> TreeStructure:
     """Distributed tree fitting (Level-wise)."""
     if ray is None:
-        raise ImportError("Ray is required for distributed training")
+        raise ImportError(
+            "Distributed training requires Ray. "
+            "Install with: pip install 'openboost[distributed]'"
+        )
     
     # 1. Initialize
     sample_node_ids_refs = [w.init_node_ids.remote() for w in workers]
@@ -140,7 +143,10 @@ def compute_leaf_values_from_histograms(histograms: dict, reg_lambda: float, reg
 
 def get_worker_n_features(worker):
     if ray is None:
-        raise ImportError("Ray is required")
+        raise ImportError(
+            "Distributed training requires Ray. "
+            "Install with: pip install 'openboost[distributed]'"
+        )
     return ray.get(worker.get_n_features.remote())
 
 

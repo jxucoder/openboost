@@ -1,6 +1,7 @@
 """Distributed training for OpenBoost.
 
 Phase 12: Adds Ray-based distributed training capability.
+Phase 18: Adds multi-GPU support via Ray actors.
 """
 
 from typing import Protocol, Any
@@ -26,4 +27,20 @@ class DistributedContext(Protocol):
         ...
 
 
-__all__ = ["DistributedContext"]
+# Phase 18: Multi-GPU support
+from ._multigpu import (
+    GPUWorkerBase,
+    GPUWorker,
+    MultiGPUContext,
+    fit_tree_multigpu,
+)
+
+
+__all__ = [
+    "DistributedContext",
+    # Phase 18: Multi-GPU
+    "GPUWorkerBase",
+    "GPUWorker",
+    "MultiGPUContext",
+    "fit_tree_multigpu",
+]

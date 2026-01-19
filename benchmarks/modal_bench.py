@@ -25,8 +25,11 @@ image = (
         "scikit-learn>=1.0",
         "xgboost>=2.0",
         "joblib>=1.3",
+        "scipy>=1.10",
         # Py-Boost (install from PyPI)
         "py-boost",
+        # NGBoost for comparison (CPU-only)
+        "ngboost>=0.5",
     )
     # Mount local openboost source code
     .add_local_dir(
@@ -1063,6 +1066,384 @@ def benchmark_phase32_gpu_native(
     return results
 
 
+# =============================================================================
+# Phase 16: NaturalBoost vs NGBoost Benchmark
+# =============================================================================
+
+# Image with NGBoost added
+image_with_ngboost = (
+    modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
+    .pip_install(
+        "numpy>=1.24",
+        "numba>=0.60",
+        "scikit-learn>=1.0",
+        "ngboost>=0.5",
+        "scipy>=1.10",
+    )
+    .add_local_dir(
+        str(PROJECT_ROOT / "src" / "openboost"),
+        remote_path="/root/openboost",
+    )
+)
+
+
+@app.function(image=image_with_ngboost, timeout=1800, cpu=8, memory=32768)
+def benchmark_naturalboost_vs_ngboost(
+    n_samples: int = 50_000, 
+    n_features: int = 20, 
+    n_trees: int = 100
+):
+    """Compare OpenBoost NaturalBoost vs official NGBoost on large datasets.
+    
+    This benchmark runs on CPU (NGBoost is CPU-only) to provide fair comparison.
+    
+    Args:
+        n_samples: Number of training samples
+        n_features: Number of features
+        n_trees: Number of boosting rounds
+        
+    Returns:
+        Benchmark results comparing training time, prediction time, and NLL
+    """
+    import sys
+    sys.path.insert(0, "/root")
+    
+    import numpy as np
+    import time
+    from sklearn.datasets import make_regression
+    from sklearn.model_selection import train_test_split
+    
+    print(f"\n{'='*70}")
+    print(f"NaturalBoost vs NGBoost: {n_samples:,} samples × {n_features} features × {n_trees} trees")
+    print(f"{'='*70}")
+    
+    # Generate data
+    X, y = make_regression(n_samples=n_samples, n_features=n_features, noise=10, random_state=42)
+    X = X.astype(np.float32)
+    y = y.astype(np.float32)
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    results = {
+        "n_samples": n_samples,
+        "n_features": n_features,
+        "n_trees": n_trees,
+    }
+    
+    # --- Official NGBoost ---
+    print("\n[Official NGBoost]")
+    try:
+        from ngboost import NGBRegressor
+        from ngboost.distns import Normal
+        
+        model_ng = NGBRegressor(
+            Dist=Normal,
+            n_estimators=n_trees,
+            learning_rate=0.1,
+            verbose=False,
+        )
+        
+        t0 = time.perf_counter()
+        model_ng.fit(X_train, y_train)
+        train_time_ng = time.perf_counter() - t0
+        
+        t0 = time.perf_counter()
+        pred_ng = model_ng.predict(X_test)
+        pred_time_ng = time.perf_counter() - t0
+        
+        # NLL
+        dist_ng = model_ng.pred_dist(X_test)
+        nll_ng = -dist_ng.logpdf(y_test).mean()
+        
+        # RMSE
+        rmse_ng = np.sqrt(np.mean((pred_ng - y_test)**2))
+        
+        # Coverage
+        lower = dist_ng.ppf(0.05)
+        upper = dist_ng.ppf(0.95)
+        coverage_ng = np.mean((y_test >= lower) & (y_test <= upper))
+        
+        results["ngboost"] = {
+            "train_time": train_time_ng,
+            "pred_time": pred_time_ng,
+            "nll": float(nll_ng),
+            "rmse": float(rmse_ng),
+            "coverage_90": float(coverage_ng),
+        }
+        
+        print(f"  Train time:  {train_time_ng:.2f}s")
+        print(f"  Pred time:   {pred_time_ng*1000:.1f}ms")
+        print(f"  NLL:         {nll_ng:.4f}")
+        print(f"  RMSE:        {rmse_ng:.4f}")
+        print(f"  90% coverage: {coverage_ng:.1%}")
+        
+    except Exception as e:
+        print(f"  Error: {e}")
+        import traceback
+        traceback.print_exc()
+        results["ngboost"] = None
+    
+    # --- OpenBoost NaturalBoost ---
+    print("\n[OpenBoost NaturalBoost]")
+    try:
+        import openboost as ob
+        
+        model_ob = ob.NaturalBoostNormal(
+            n_trees=n_trees,
+            learning_rate=0.1,
+            max_depth=3,
+        )
+        
+        t0 = time.perf_counter()
+        model_ob.fit(X_train, y_train)
+        train_time_ob = time.perf_counter() - t0
+        
+        t0 = time.perf_counter()
+        pred_ob = model_ob.predict(X_test)
+        pred_time_ob = time.perf_counter() - t0
+        
+        # NLL
+        nll_ob = model_ob.nll(X_test, y_test)
+        
+        # RMSE
+        rmse_ob = np.sqrt(np.mean((pred_ob - y_test)**2))
+        
+        # Coverage
+        lower_ob, upper_ob = model_ob.predict_interval(X_test, alpha=0.1)
+        coverage_ob = np.mean((y_test >= lower_ob) & (y_test <= upper_ob))
+        
+        results["naturalboost"] = {
+            "train_time": train_time_ob,
+            "pred_time": pred_time_ob,
+            "nll": float(nll_ob),
+            "rmse": float(rmse_ob),
+            "coverage_90": float(coverage_ob),
+        }
+        
+        print(f"  Train time:  {train_time_ob:.2f}s")
+        print(f"  Pred time:   {pred_time_ob*1000:.1f}ms")
+        print(f"  NLL:         {nll_ob:.4f}")
+        print(f"  RMSE:        {rmse_ob:.4f}")
+        print(f"  90% coverage: {coverage_ob:.1%}")
+        
+    except Exception as e:
+        print(f"  Error: {e}")
+        import traceback
+        traceback.print_exc()
+        results["naturalboost"] = None
+    
+    # --- Comparison ---
+    if results.get("ngboost") and results.get("naturalboost"):
+        print(f"\n{'='*50}")
+        print("COMPARISON")
+        print(f"{'='*50}")
+        
+        speedup = results["ngboost"]["train_time"] / results["naturalboost"]["train_time"]
+        winner = "NaturalBoost" if speedup > 1 else "NGBoost"
+        print(f"Training speedup: {speedup:.2f}x ({winner} faster)")
+        
+        pred_speedup = results["ngboost"]["pred_time"] / results["naturalboost"]["pred_time"]
+        print(f"Prediction speedup: {pred_speedup:.2f}x")
+        
+        nll_diff = results["naturalboost"]["nll"] - results["ngboost"]["nll"]
+        better = "NaturalBoost" if nll_diff < 0 else "NGBoost"
+        print(f"NLL difference: {nll_diff:+.4f} ({better} better)")
+        
+        results["speedup"] = speedup
+        results["winner"] = winner
+    
+    return results
+
+
+@app.function(gpu="A100", image=image, timeout=1800)
+def benchmark_naturalboost_gpu(
+    n_samples: int = 100_000, 
+    n_features: int = 50, 
+    n_trees: int = 100
+):
+    """Benchmark NaturalBoost on GPU vs NGBoost on CPU.
+    
+    This shows the REAL advantage: NaturalBoost can use GPU, NGBoost cannot!
+    
+    Args:
+        n_samples: Number of training samples
+        n_features: Number of features
+        n_trees: Number of boosting rounds
+    """
+    import sys
+    sys.path.insert(0, "/root")
+    
+    import numpy as np
+    import time
+    from sklearn.datasets import make_regression
+    from sklearn.model_selection import train_test_split
+    from numba import cuda
+    
+    print(f"\n{'='*70}")
+    print(f"NaturalBoost (GPU) vs NGBoost (CPU-only)")
+    print(f"{n_samples:,} samples × {n_features} features × {n_trees} trees")
+    print(f"GPU: {cuda.get_current_device().name}")
+    print(f"{'='*70}")
+    
+    # Generate data
+    X, y = make_regression(n_samples=n_samples, n_features=n_features, noise=10, random_state=42)
+    X = X.astype(np.float32)
+    y = y.astype(np.float32)
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    results = {
+        "n_samples": n_samples,
+        "n_features": n_features,
+        "n_trees": n_trees,
+    }
+    
+    # --- NGBoost (CPU-only) ---
+    print("\n[NGBoost - CPU only]")
+    print("  (NGBoost does not support GPU)")
+    try:
+        # NGBoost must be installed
+        from ngboost import NGBRegressor
+        from ngboost.distns import Normal
+        
+        model_ng = NGBRegressor(
+            Dist=Normal,
+            n_estimators=n_trees,
+            learning_rate=0.1,
+            verbose=False,
+        )
+        
+        t0 = time.perf_counter()
+        model_ng.fit(X_train, y_train)
+        train_time_ng = time.perf_counter() - t0
+        
+        print(f"  Train time: {train_time_ng:.2f}s")
+        results["ngboost_cpu_time"] = train_time_ng
+        
+    except ImportError:
+        print("  NGBoost not installed, skipping")
+        train_time_ng = None
+        results["ngboost_cpu_time"] = None
+    except Exception as e:
+        print(f"  Error: {e}")
+        train_time_ng = None
+        results["ngboost_cpu_time"] = None
+    
+    # --- NaturalBoost (GPU) ---
+    print("\n[NaturalBoost - GPU accelerated]")
+    import openboost as ob
+    print(f"  Backend: {ob.get_backend()}")
+    
+    model_ob = ob.NaturalBoostNormal(
+        n_trees=n_trees,
+        learning_rate=0.1,
+        max_depth=4,
+    )
+    
+    # Warmup
+    model_ob.fit(X_train[:1000], y_train[:1000])
+    cuda.synchronize()
+    
+    t0 = time.perf_counter()
+    model_ob.fit(X_train, y_train)
+    cuda.synchronize()
+    train_time_ob = time.perf_counter() - t0
+    
+    print(f"  Train time: {train_time_ob:.2f}s")
+    results["naturalboost_gpu_time"] = train_time_ob
+    
+    # --- Comparison ---
+    print(f"\n{'='*50}")
+    print("COMPARISON")
+    print(f"{'='*50}")
+    
+    if train_time_ng:
+        speedup = train_time_ng / train_time_ob
+        print(f"NGBoost (CPU):      {train_time_ng:.2f}s")
+        print(f"NaturalBoost (GPU): {train_time_ob:.2f}s")
+        print(f"GPU Speedup:        {speedup:.1f}x FASTER!")
+        results["gpu_speedup"] = speedup
+    else:
+        print(f"NaturalBoost (GPU): {train_time_ob:.2f}s")
+    
+    return results
+
+
+@app.function(image=image_with_ngboost, timeout=3600, cpu=8, memory=32768)
+def benchmark_naturalboost_scaling():
+    """Benchmark NaturalBoost vs NGBoost scaling with data size."""
+    import sys
+    sys.path.insert(0, "/root")
+    
+    import numpy as np
+    import time
+    from sklearn.datasets import make_regression
+    
+    print(f"\n{'='*70}")
+    print("NaturalBoost vs NGBoost SCALING BENCHMARK")
+    print(f"{'='*70}")
+    
+    sizes = [5_000, 10_000, 25_000, 50_000, 100_000]
+    n_trees = 50
+    n_features = 20
+    
+    results = []
+    
+    print(f"\n{'Size':<12} {'NGBoost':<12} {'NaturalBoost':<14} {'Speedup':<12} {'Winner':<15}")
+    print("-" * 65)
+    
+    for n in sizes:
+        X, y = make_regression(n_samples=n, n_features=n_features, noise=10, random_state=42)
+        X = X.astype(np.float32)
+        y = y.astype(np.float32)
+        
+        # NGBoost
+        try:
+            from ngboost import NGBRegressor
+            from ngboost.distns import Normal
+            
+            model = NGBRegressor(Dist=Normal, n_estimators=n_trees, learning_rate=0.1, verbose=False)
+            t0 = time.perf_counter()
+            model.fit(X, y)
+            time_ng = time.perf_counter() - t0
+        except Exception as e:
+            print(f"NGBoost error at {n}: {e}")
+            time_ng = float('nan')
+        
+        # NaturalBoost
+        try:
+            import openboost as ob
+            
+            model = ob.NaturalBoostNormal(n_trees=n_trees, learning_rate=0.1, max_depth=3)
+            t0 = time.perf_counter()
+            model.fit(X, y)
+            time_ob = time.perf_counter() - t0
+        except Exception as e:
+            print(f"NaturalBoost error at {n}: {e}")
+            time_ob = float('nan')
+        
+        if not np.isnan(time_ng) and not np.isnan(time_ob):
+            speedup = time_ng / time_ob
+            winner = "NaturalBoost" if speedup > 1 else "NGBoost"
+            speedup_str = f"{speedup:.2f}x"
+        else:
+            speedup = None
+            winner = "N/A"
+            speedup_str = "N/A"
+        
+        print(f"{n:<12,} {time_ng:<12.2f}s {time_ob:<14.2f}s {speedup_str:<12} {winner:<15}")
+        
+        results.append({
+            "n_samples": n,
+            "ngboost_time": time_ng,
+            "naturalboost_time": time_ob,
+            "speedup": speedup,
+            "winner": winner,
+        })
+    
+    return results
+
+
 @app.local_entrypoint()
 def main():
     """Run all benchmarks."""
@@ -1091,6 +1472,34 @@ def main():
         n_features=50,
         n_rounds=100,
     )
+    
+    # ========== Phase 16: NaturalBoost vs NGBoost ==========
+    print("\n" + "=" * 70)
+    print("PHASE 16: NaturalBoost vs NGBoost")
+    print("=" * 70)
+    
+    # GPU benchmark (the real advantage!)
+    print("\n🚀 NaturalBoost (GPU) vs NGBoost (CPU-only) - 100k samples")
+    print("-" * 50)
+    print("NGBoost is CPU-only. NaturalBoost uses GPU!")
+    nb_gpu_results = benchmark_naturalboost_gpu.remote(
+        n_samples=100_000,
+        n_features=50,
+        n_trees=100,
+    )
+    
+    # Fair CPU comparison (for reference)
+    print("\n📈 Fair CPU Comparison (50k samples)")
+    print("-" * 50)
+    nb_results = benchmark_naturalboost_vs_ngboost.remote(
+        n_samples=50_000,
+        n_features=20,
+        n_trees=100,
+    )
+    
+    print("\n📊 CPU Scaling Benchmark")
+    print("-" * 50)
+    nb_scaling = benchmark_naturalboost_scaling.remote()
     
     # ========== OpenBoost Internal Benchmarks ==========
     print("\n" + "=" * 70)

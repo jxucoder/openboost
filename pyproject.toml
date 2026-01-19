@@ -31,6 +31,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# GPU backends
 cuda = [
     "cupy-cuda12x>=13.0",
 ]
@@ -40,21 +41,33 @@ torch = [
 jax = [
     "jax[cuda12]>=0.4",
 ]
+# Distributed/Multi-GPU training (Phase 12, 18)
+distributed = [
+    "ray[default]>=2.0",
+]
+# sklearn-compatible wrappers (Phase 13)
+sklearn = [
+    "scikit-learn>=1.0",
+]
+# Testing
 test = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
 ]
+# Benchmarking
 bench = [
     "modal>=0.73",
     "scikit-learn>=1.0",
     "xgboost>=2.0",
 ]
+# Development
 dev = [
-    "openboost[test,bench]",
+    "openboost[test,bench,sklearn]",
     "ruff>=0.4",
 ]
+# Full installation (all optional features)
 all = [
-    "openboost[cuda,torch,dev]",
+    "openboost[cuda,torch,distributed,sklearn,dev]",
 ]
 
 [project.urls]
