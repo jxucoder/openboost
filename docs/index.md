@@ -1,7 +1,7 @@
 # OpenBoost
 
 <p align="center" style="font-size: 1.2em;">
-  <strong>The GPU-native, all-Python platform for tree-based machine learning.</strong>
+  <strong>A GPU-native, all-Python platform for tree-based machine learning.</strong>
 </p>
 
 <p align="center">
@@ -15,14 +15,20 @@
 
 ## Why OpenBoost?
 
-**XGBoost and LightGBM are products. OpenBoost is a platform.**
+For standard GBDT, use XGBoost/LightGBM—they're highly optimized C++.
+
+For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:
+
+- **NaturalBoost**: 1.3-2x faster than NGBoost
+- **OpenBoostGAM**: 10-40x faster than InterpretML EBM
+
+Plus: ~20K lines of readable Python. Modify, extend, and build on—no C++ required.
 
 | | XGBoost / LightGBM | OpenBoost |
 |---|---|---|
-| **Code** | 200K+ lines of C++ | ~6K lines of Python |
-| **GPU** | Added later (bolt-on) | Native (designed for it) |
-| **Customize** | Write C++, recompile | Modify Python, reload |
-| **New algorithms** | Wait for maintainers | Build it yourself |
+| **Code** | 200K+ lines of C++ | ~20K lines of Python |
+| **GPU** | Added later | Native from day one |
+| **Customize** | Modify C++, recompile | Modify Python, reload |
 
 ## Quick Example
 
@@ -53,7 +59,7 @@ NaturalBoost provides full probability distributions with uncertainty quantifica
 
 ### :snake: All Python
 
-~6K lines of readable, hackable code. No C++ compilation needed. Understand and modify the algorithms.
+~20K lines of readable, hackable code. No C++ compilation needed. Understand and modify the algorithms.
 
 ### :gear: sklearn Compatible
 
@@ -78,11 +84,14 @@ pip install "openboost[cuda]"
 
 ## Performance
 
-| Benchmark | Comparison | Result |
-|-----------|------------|--------|
-| NaturalBoost vs NGBoost | 20K samples | **11x faster** |
-| OpenBoostGAM vs InterpretML EBM | 100K samples | **43x faster** |
-| GradientBoosting vs XGBoost | Model quality | Within 5% RMSE |
+OpenBoost GPU-accelerates GBDT variants that were previously slow:
+
+| Benchmark | Result |
+|-----------|--------|
+| NaturalBoost vs NGBoost | **1.3-2x faster** |
+| OpenBoostGAM vs InterpretML EBM | **10-40x faster** |
+
+For standard GBDT, XGBoost/LightGBM are faster. OpenBoost's value is in the variants.
 
 ## Who Is OpenBoost For?
 
@@ -90,6 +99,10 @@ pip install "openboost[cuda]"
 - **ML Researchers** - Prototype new algorithms in Python
 - **Startups** - Ship interpretable models fast
 - **Students** - Actually understand how gradient boosting works
+
+## Roadmap
+
+**Train-many optimization**: Industry workloads often train many models (hyperparameter tuning, CV, per-segment models). XGBoost optimizes for one model fast. OpenBoost plans to enable native optimization for training many models efficiently.
 
 ## License
 
