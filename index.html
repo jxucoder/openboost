@@ -608,6 +608,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roadmap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#license" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2042,6 +2053,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roadmap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#license" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2074,7 +2096,7 @@
 
 <h1 id="openboost">OpenBoost<a class="headerlink" href="#openboost" title="Permanent link">&para;</a></h1>
 <p align="center" style="font-size: 1.2em;">
-  <strong>The GPU-native, all-Python platform for tree-based machine learning.</strong>
+  <strong>A GPU-native, all-Python platform for tree-based machine learning.</strong>
 </p>
 
 <p align="center">
@@ -2086,7 +2108,13 @@
 
 <hr />
 <h2 id="why-openboost">Why OpenBoost?<a class="headerlink" href="#why-openboost" title="Permanent link">&para;</a></h2>
-<p><strong>XGBoost and LightGBM are products. OpenBoost is a platform.</strong></p>
+<p>For standard GBDT, use XGBoost/LightGBM—they're highly optimized C++.</p>
+<p>For GBDT <strong>variants</strong> (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:</p>
+<ul>
+<li><strong>NaturalBoost</strong>: 1.3-2x faster than NGBoost</li>
+<li><strong>OpenBoostGAM</strong>: 10-40x faster than InterpretML EBM</li>
+</ul>
+<p>Plus: ~20K lines of readable Python. Modify, extend, and build on—no C++ required.</p>
 <table>
 <thead>
 <tr>
@@ -2099,22 +2127,17 @@
 <tr>
 <td><strong>Code</strong></td>
 <td>200K+ lines of C++</td>
-<td>~6K lines of Python</td>
+<td>~20K lines of Python</td>
 </tr>
 <tr>
 <td><strong>GPU</strong></td>
-<td>Added later (bolt-on)</td>
-<td>Native (designed for it)</td>
+<td>Added later</td>
+<td>Native from day one</td>
 </tr>
 <tr>
 <td><strong>Customize</strong></td>
-<td>Write C++, recompile</td>
+<td>Modify C++, recompile</td>
 <td>Modify Python, reload</td>
-</tr>
-<tr>
-<td><strong>New algorithms</strong></td>
-<td>Wait for maintainers</td>
-<td>Build it yourself</td>
 </tr>
 </tbody>
 </table>
@@ -2138,7 +2161,7 @@
 <h3 id="brain-probabilistic-predictions">:brain: Probabilistic Predictions<a class="headerlink" href="#brain-probabilistic-predictions" title="Permanent link">&para;</a></h3>
 <p>NaturalBoost provides full probability distributions with uncertainty quantification. 8 built-in distributions including Normal, Gamma, Tweedie, and Negative Binomial.</p>
 <h3 id="snake-all-python">:snake: All Python<a class="headerlink" href="#snake-all-python" title="Permanent link">&para;</a></h3>
-<p>~6K lines of readable, hackable code. No C++ compilation needed. Understand and modify the algorithms.</p>
+<p>~20K lines of readable, hackable code. No C++ compilation needed. Understand and modify the algorithms.</p>
 <h3 id="gear-sklearn-compatible">:gear: sklearn Compatible<a class="headerlink" href="#gear-sklearn-compatible" title="Permanent link">&para;</a></h3>
 <p>Drop-in replacement for scikit-learn pipelines. Works with GridSearchCV, cross_val_score, and Pipeline.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
@@ -2171,32 +2194,26 @@
 </tbody>
 </table>
 <h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
+<p>OpenBoost GPU-accelerates GBDT variants that were previously slow:</p>
 <table>
 <thead>
 <tr>
 <th>Benchmark</th>
-<th>Comparison</th>
 <th>Result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>NaturalBoost vs NGBoost</td>
-<td>20K samples</td>
-<td><strong>11x faster</strong></td>
+<td><strong>1.3-2x faster</strong></td>
 </tr>
 <tr>
 <td>OpenBoostGAM vs InterpretML EBM</td>
-<td>100K samples</td>
-<td><strong>43x faster</strong></td>
-</tr>
-<tr>
-<td>GradientBoosting vs XGBoost</td>
-<td>Model quality</td>
-<td>Within 5% RMSE</td>
+<td><strong>10-40x faster</strong></td>
 </tr>
 </tbody>
 </table>
+<p>For standard GBDT, XGBoost/LightGBM are faster. OpenBoost's value is in the variants.</p>
 <h2 id="who-is-openboost-for">Who Is OpenBoost For?<a class="headerlink" href="#who-is-openboost-for" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Kaggle Competitors</strong> - Probabilistic predictions that XGBoost can't do</li>
@@ -2204,6 +2221,8 @@
 <li><strong>Startups</strong> - Ship interpretable models fast</li>
 <li><strong>Students</strong> - Actually understand how gradient boosting works</li>
 </ul>
+<h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
+<p><strong>Train-many optimization</strong>: Industry workloads often train many models (hyperparameter tuning, CV, per-segment models). XGBoost optimizes for one model fast. OpenBoost plans to enable native optimization for training many models efficiently.</p>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>Apache 2.0</p>
 
