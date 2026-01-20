@@ -4,9 +4,14 @@
 
 ## Why OpenBoost?
 
-Tree-based ML libraries are monolithic C++ codebases—optimized for performance, but hard to customize, extend, or learn from.
+For standard GBDT, use XGBoost/LightGBM—they're highly optimized C++.
 
-OpenBoost takes a different approach: GPU-accelerated building blocks in pure Python. Readable code you can understand, modify, and build on.
+For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:
+
+- **NaturalBoost**: 1.3-2x faster than NGBoost
+- **OpenBoostGAM**: 10-40x faster than InterpretML EBM
+
+Plus: ~20K lines of readable Python. Modify, extend, and build on—no C++ required.
 
 | | XGBoost / LightGBM | OpenBoost |
 |---|---|---|
@@ -71,6 +76,10 @@ Full docs, tutorials, and API reference: **[jxucoder.github.io/openboost](https:
 - [User Guide](https://jxucoder.github.io/openboost/user-guide/models/gradient-boosting/)
 - [API Reference](https://jxucoder.github.io/openboost/api/openboost/)
 - [Examples](./examples/)
+
+## Roadmap
+
+**Train-many optimization**: Industry workloads often train many models (hyperparameter tuning, CV, per-segment models). XGBoost optimizes for one model fast. OpenBoost plans to enable native optimization for training many models efficiently.
 
 ## References
 

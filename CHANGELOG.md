@@ -62,9 +62,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `evaluate_coverage()` - Prediction interval validation
 
 ### Performance
+GPU-accelerates GBDT variants that were previously slow:
 - NaturalBoost: 1.3-2x faster than NGBoost
-- OpenBoostGAM: 10-40x faster than InterpretML EBM on GPU
-- Standard GBDT: Comparable to XGBoost (within 5% RMSE)
+- OpenBoostGAM: 10-40x faster than InterpretML EBM
+
+For standard GBDT, XGBoost/LightGBM are faster. OpenBoost's value is in the variants and customizability.
 
 ### Known Limitations (1.0.0rc1)
 - `sample_weight` is not yet fully supported on GPU backend (works on CPU)
@@ -79,6 +81,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom loss function tutorial
 - XGBoost migration guide
 - 13 runnable examples
+
+### Roadmap
+- GPU sample_weight support
+- Callbacks for multi-class models
+- **Train-many optimization**: Native support for training many models efficiently (hyperparameter tuning, CV, per-segment models) - batching and GPU parallelization across models
 
 ## Development Phases
 
