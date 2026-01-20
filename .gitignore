@@ -215,5 +215,8 @@ repos/
 
 # Project-specific
 .cursor/
-docs/
+agent_space/
 logs/
+
+# Benchmark results (generated)
+benchmarks/results/*.json

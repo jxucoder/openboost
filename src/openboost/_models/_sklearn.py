@@ -10,18 +10,20 @@ These wrappers delegate to the core OpenBoost models while providing:
 - Feature importance as a property
 
 Example:
-    >>> from openboost import OpenBoostRegressor, OpenBoostClassifier
-    >>> from sklearn.model_selection import GridSearchCV
-    >>> 
-    >>> # Regression
-    >>> reg = OpenBoostRegressor(n_estimators=100, max_depth=6)
-    >>> reg.fit(X_train, y_train)
-    >>> reg.score(X_test, y_test)  # R² score
-    >>> 
-    >>> # Classification
-    >>> clf = OpenBoostClassifier(n_estimators=100)
-    >>> clf.fit(X_train, y_train)
-    >>> clf.predict_proba(X_test)
+    ```python
+    from openboost import OpenBoostRegressor, OpenBoostClassifier
+    from sklearn.model_selection import GridSearchCV
+    
+    # Regression
+    reg = OpenBoostRegressor(n_estimators=100, max_depth=6)
+    reg.fit(X_train, y_train)
+    reg.score(X_test, y_test)  # R² score
+    
+    # Classification
+    clf = OpenBoostClassifier(n_estimators=100)
+    clf.fit(X_train, y_train)
+    clf.predict_proba(X_test)
+    ```
     >>> clf.classes_
     >>> 
     >>> # GridSearchCV
@@ -32,7 +34,7 @@ Example:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
@@ -159,7 +161,7 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
         n_estimators: int = 100,
         max_depth: int = 6,
         learning_rate: float = 0.1,
-        loss: str = 'squared_error',
+        loss: Literal['squared_error', 'absolute_error', 'huber', 'quantile'] = 'squared_error',
         min_child_weight: float = 1.0,
         reg_lambda: float = 1.0,
         reg_alpha: float = 0.0,
@@ -168,14 +170,14 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
         colsample_bytree: float = 1.0,
         n_bins: int = 256,
         quantile_alpha: float = 0.5,
-        subsample_strategy: str = 'none',
+        subsample_strategy: Literal['none', 'random', 'goss'] = 'none',
         goss_top_rate: float = 0.2,
         goss_other_rate: float = 0.1,
         batch_size: int | None = None,
         early_stopping_rounds: int | None = None,
         verbose: int = 0,
         random_state: int | None = None,
-    ):
+    ) -> None:
         self.n_estimators = n_estimators
         self.max_depth = max_depth
         self.learning_rate = learning_rate
@@ -396,14 +398,14 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         subsample: float = 1.0,
         colsample_bytree: float = 1.0,
         n_bins: int = 256,
-        subsample_strategy: str = 'none',
+        subsample_strategy: Literal['none', 'random', 'goss'] = 'none',
         goss_top_rate: float = 0.2,
         goss_other_rate: float = 0.1,
         batch_size: int | None = None,
         early_stopping_rounds: int | None = None,
         verbose: int = 0,
         random_state: int | None = None,
-    ):
+    ) -> None:
         self.n_estimators = n_estimators
         self.max_depth = max_depth
         self.learning_rate = learning_rate
@@ -646,7 +648,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
     
     def __init__(
         self,
-        distribution: str = 'normal',
+        distribution: Literal['normal', 'lognormal', 'gamma', 'poisson', 'studentt'] = 'normal',
         n_estimators: int = 100,
         max_depth: int = 4,
         learning_rate: float = 0.1,
@@ -655,7 +657,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         n_bins: int = 256,
         use_natural_gradient: bool = True,
         verbose: int = 0,
-    ):
+    ) -> None:
         self.distribution = distribution
         self.n_estimators = n_estimators
         self.max_depth = max_depth
@@ -910,14 +912,14 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
         n_estimators: int = 100,
         max_depth: int = 4,
         learning_rate: float = 0.1,
-        loss: str = 'squared_error',
+        loss: Literal['squared_error', 'absolute_error', 'huber'] = 'squared_error',
         min_samples_leaf: int = 20,
         reg_lambda: float = 1.0,
         reg_lambda_linear: float = 0.1,
-        max_features_linear: int | str | None = 'sqrt',
+        max_features_linear: int | Literal['sqrt', 'log2'] | None = 'sqrt',
         n_bins: int = 256,
         verbose: int = 0,
-    ):
+    ) -> None:
         self.n_estimators = n_estimators
         self.max_depth = max_depth
         self.learning_rate = learning_rate

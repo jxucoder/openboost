@@ -19,13 +19,14 @@ import numpy as np
 from .._array import BinnedArray, array
 from .._backends import is_cuda
 from .._loss import get_loss_function, LossFunction
+from .._persistence import PersistenceMixin
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
 @dataclass
-class OpenBoostGAM:
+class OpenBoostGAM(PersistenceMixin):
     """GPU-accelerated Generalized Additive Model.
     
     An interpretable model where:
@@ -42,13 +43,16 @@ class OpenBoostGAM:
         n_bins: Number of bins for histogram building.
         
     Example:
-        >>> import openboost as ob
-        >>> gam = ob.OpenBoostGAM(n_rounds=1000, learning_rate=0.01)
-        >>> gam.fit(X_train, y_train)
-        >>> predictions = gam.predict(X_test)
-        >>> 
-        >>> # Interpret: plot shape function for feature 0
-        >>> gam.plot_shape_function(0, feature_name="age")
+        ```python
+        import openboost as ob
+        
+        gam = ob.OpenBoostGAM(n_rounds=1000, learning_rate=0.01)
+        gam.fit(X_train, y_train)
+        predictions = gam.predict(X_test)
+        
+        # Interpret: plot shape function for feature 0
+        gam.plot_shape_function(0, feature_name="age")
+        ```
     """
     
     n_rounds: int = 1000
@@ -191,9 +195,11 @@ class OpenBoostGAM:
         if self.shape_values_ is None:
             raise RuntimeError("Model not fitted. Call fit() first.")
         
-        # Bin the data if needed
+        # Bin the data if needed, using training bin edges for consistency
         if isinstance(X, BinnedArray):
             X_binned = X
+        elif self.X_binned_ is not None:
+            X_binned = self.X_binned_.transform(X)
         else:
             X_binned = array(X, n_bins=self.n_bins)
         

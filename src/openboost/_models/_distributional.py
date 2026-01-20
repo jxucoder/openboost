@@ -10,31 +10,34 @@ Classes:
 - NGBoost: Uses natural gradient descent (faster convergence)
 
 Example:
-    >>> import openboost as ob
-    >>> 
-    >>> # Standard distributional GBDT
-    >>> model = ob.DistributionalGBDT(distribution='normal', n_trees=100)
-    >>> model.fit(X_train, y_train)
-    >>> 
-    >>> # Get distribution parameters
-    >>> output = model.predict_distribution(X_test)
-    >>> mu, sigma = output.params['loc'], output.params['scale']
-    >>> 
-    >>> # Get prediction intervals
-    >>> lower, upper = output.interval(alpha=0.1)  # 90% interval
-    >>> 
-    >>> # Sample from predicted distribution
-    >>> samples = output.sample(n_samples=100)
-    >>> 
-    >>> # NGBoost (natural gradient - recommended)
-    >>> model = ob.NGBoost(distribution='normal', n_trees=500)
-    >>> model.fit(X_train, y_train)
+    ```python
+    import openboost as ob
+    
+    # Standard distributional GBDT
+    model = ob.DistributionalGBDT(distribution='normal', n_trees=100)
+    model.fit(X_train, y_train)
+    
+    # Get distribution parameters
+    output = model.predict_distribution(X_test)
+    mu, sigma = output.params['loc'], output.params['scale']
+    
+    # Get prediction intervals
+    lower, upper = output.interval(alpha=0.1)  # 90% interval
+    
+    # Sample from predicted distribution
+    samples = output.sample(n_samples=100)
+    
+    # NaturalBoost (recommended)
+    model = ob.NaturalBoostNormal(n_trees=500)
+    model.fit(X_train, y_train)
+    ```
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from pathlib import Path
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
@@ -47,13 +50,14 @@ from .._distributions import (
 )
 from .._core._tree import fit_tree
 from .._core._growth import TreeStructure
+from .._persistence import PersistenceMixin
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
 @dataclass
-class DistributionalGBDT:
+class DistributionalGBDT(PersistenceMixin):
     """Distributional Gradient Boosting for probabilistic prediction.
     
     Trains K tree ensembles, where K = number of distribution parameters.
@@ -80,18 +84,23 @@ class DistributionalGBDT:
         distribution_: Fitted Distribution instance
         
     Example:
-        >>> model = DistributionalGBDT(distribution='normal', n_trees=100)
-        >>> model.fit(X_train, y_train)
-        >>> 
-        >>> # Point prediction (mean)
-        >>> y_pred = model.predict(X_test)
-        >>> 
-        >>> # Full distribution
-        >>> output = model.predict_distribution(X_test)
-        >>> lower, upper = output.interval(alpha=0.1)
+        ```python
+        model = DistributionalGBDT(distribution='normal', n_trees=100)
+        model.fit(X_train, y_train)
+        
+        # Point prediction (mean)
+        y_pred = model.predict(X_test)
+        
+        # Full distribution
+        output = model.predict_distribution(X_test)
+        lower, upper = output.interval(alpha=0.1)
+        ```
     """
     
-    distribution: str | Distribution = 'normal'
+    distribution: (
+        Literal['normal', 'lognormal', 'gamma', 'poisson', 'studentt', 'tweedie', 'negbin']
+        | Distribution
+    ) = 'normal'
     n_trees: int = 100
     max_depth: int = 6
     learning_rate: float = 0.1
@@ -211,8 +220,12 @@ class DistributionalGBDT:
         if not self.trees_:
             raise RuntimeError("Model not fitted. Call fit() first.")
         
+        # Bin the data if needed, using training bin edges for consistency
         if isinstance(X, BinnedArray):
             X_binned = X
+        elif self.X_binned_ is not None:
+            # Use transform to apply training bin edges to new data
+            X_binned = self.X_binned_.transform(X)
         else:
             X_binned = array(X, n_bins=self.n_bins)
         
@@ -348,6 +361,11 @@ class DistributionalGBDT:
         """Alias for score() - compute mean NLL."""
         return self.score(X, y)
 
+    def _post_load(self) -> None:
+        """Recreate distribution instance after loading from file."""
+        if self.distribution_ is None and self.distribution is not None:
+            self.distribution_ = get_distribution(self.distribution)
+
 
 @dataclass
 class NaturalBoost(DistributionalGBDT):
@@ -384,15 +402,17 @@ class NaturalBoost(DistributionalGBDT):
         n_bins: Number of bins for histogram building
         
     Example:
-        >>> model = NaturalBoost(distribution='normal', n_trees=500)
-        >>> model.fit(X_train, y_train)
-        >>> 
-        >>> # Get prediction intervals
-        >>> lower, upper = model.predict_interval(X_test, alpha=0.1)
-        >>> 
-        >>> # Get full distribution
-        >>> output = model.predict_distribution(X_test)
-        >>> samples = output.sample(n_samples=1000)
+        ```python
+        model = NaturalBoost(distribution='normal', n_trees=500)
+        model.fit(X_train, y_train)
+        
+        # Get prediction intervals
+        lower, upper = model.predict_interval(X_test, alpha=0.1)
+        
+        # Get full distribution
+        output = model.predict_distribution(X_test)
+        samples = output.sample(n_samples=1000)
+        ```
     """
     
     # Override defaults for NaturalBoost
@@ -460,11 +480,13 @@ def NaturalBoostTweedie(power: float = 1.5, **kwargs) -> NaturalBoost:
         **kwargs: Other NaturalBoost parameters (n_trees, learning_rate, etc.)
         
     Example:
-        >>> model = NaturalBoostTweedie(power=1.5, n_trees=500)
-        >>> model.fit(X_train, y_train)  # y has zeros and positive values
-        >>> 
-        >>> # Get prediction intervals (XGBoost can't do this!)
-        >>> lower, upper = model.predict_interval(X_test, alpha=0.1)
+        ```python
+        model = NaturalBoostTweedie(power=1.5, n_trees=500)
+        model.fit(X_train, y_train)  # y has zeros and positive values
+        
+        # Get prediction intervals (XGBoost can't do this!)
+        lower, upper = model.predict_interval(X_test, alpha=0.1)
+        ```
     """
     from .._distributions import Tweedie
     return NaturalBoost(distribution=Tweedie(power=power), **kwargs)
@@ -483,12 +505,14 @@ def NaturalBoostNegBin(**kwargs) -> NaturalBoost:
         **kwargs: NaturalBoost parameters (n_trees, learning_rate, etc.)
         
     Example:
-        >>> model = NaturalBoostNegBin(n_trees=500)
-        >>> model.fit(X_train, y_train)  # y is count data
-        >>> 
-        >>> # Probability of exceeding threshold (demand planning!)
-        >>> output = model.predict_distribution(X_test)
-        >>> prob_high_demand = output.distribution.prob_exceed(output.params, 100)
+        ```python
+        model = NaturalBoostNegBin(n_trees=500)
+        model.fit(X_train, y_train)  # y is count data
+        
+        # Probability of exceeding threshold (demand planning!)
+        output = model.predict_distribution(X_test)
+        prob_high_demand = output.distribution.prob_exceed(output.params, 100)
+        ```
     """
     return NaturalBoost(distribution='negativebinomial', **kwargs)
 

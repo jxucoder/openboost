@@ -1,0 +1,113 @@
+site_name: OpenBoost
+site_description: GPU-native, all-Python platform for tree-based machine learning
+site_url: https://jxucoder.github.io/openboost
+repo_url: https://github.com/jxucoder/openboost
+repo_name: jxucoder/openboost
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: google
+            docstring_section_style: spacy
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            members_order: source
+            separate_signature: true
+            signature_crossrefs: true
+            merge_init_into_class: true
+            show_docstring_examples: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/jxucoder/openboost
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/openboost/
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+      - GPU Setup: getting-started/gpu-setup.md
+  - User Guide:
+      - Models:
+          - Gradient Boosting: user-guide/models/gradient-boosting.md
+          - Multi-class Classification: user-guide/models/multiclass.md
+          - DART: user-guide/models/dart.md
+          - OpenBoostGAM: user-guide/models/gam.md
+          - Linear Leaf GBDT: user-guide/models/linear-leaf.md
+      - NaturalBoost:
+          - Overview: user-guide/naturalboost/overview.md
+          - Distributions: user-guide/naturalboost/distributions.md
+          - Custom Distributions: user-guide/naturalboost/custom-distributions.md
+      - Training:
+          - Callbacks: user-guide/training/callbacks.md
+          - Large-Scale Training: user-guide/training/large-scale.md
+      - Evaluation:
+          - Metrics: user-guide/evaluation/metrics.md
+      - sklearn Integration: user-guide/sklearn-integration.md
+      - Model Persistence: user-guide/model-persistence.md
+  - Tutorials:
+      - Uncertainty Quantification: tutorials/uncertainty.md
+      - Custom Loss Functions: tutorials/custom-loss.md
+  - API Reference:
+      - openboost: api/openboost.md
+      - Models: api/models.md
+      - Distributions: api/distributions.md
+      - Callbacks: api/callbacks.md
+      - Loss Functions: api/loss.md
+      - Utilities: api/utils.md
+  - Migration:
+      - From XGBoost: migration/from-xgboost.md
+  - Changelog: changelog.md

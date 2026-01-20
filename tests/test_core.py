@@ -215,7 +215,7 @@ class TestGradientBoosting:
     def test_import(self):
         """Test that openboost can be imported."""
         assert hasattr(ob, "GradientBoosting")
-        assert ob.__version__ == "0.1.0"
+        assert ob.__version__ == "1.0.0rc1"
     
     def test_fit_predict_small(self):
         """Test fit/predict on small data."""

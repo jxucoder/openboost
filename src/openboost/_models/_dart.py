@@ -23,13 +23,14 @@ from .._backends import is_cuda
 from .._core._growth import TreeStructure, GrowthConfig
 from .._loss import get_loss_function, LossFunction
 from .._core._tree import fit_tree
+from .._persistence import PersistenceMixin
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
 @dataclass
-class DART:
+class DART(PersistenceMixin):
     """DART: Gradient Boosting with Dropout.
     
     Implements DART (Dropouts meet Multiple Additive Regression Trees),
@@ -50,16 +51,18 @@ class DART:
         seed: Random seed for reproducibility.
         
     Example:
-        >>> import openboost as ob
-        >>> 
-        >>> # DART with 10% dropout
-        >>> model = ob.DART(n_trees=100, dropout_rate=0.1)
-        >>> model.fit(X_train, y_train)
-        >>> predictions = model.predict(X_test)
+        ```python
+        import openboost as ob
         
-        >>> # DART with higher dropout for more regularization
-        >>> model = ob.DART(n_trees=200, dropout_rate=0.3, skip_drop=0.5)
-        >>> model.fit(X_train, y_train)
+        # DART with 10% dropout
+        model = ob.DART(n_trees=100, dropout_rate=0.1)
+        model.fit(X_train, y_train)
+        predictions = model.predict(X_test)
+        
+        # DART with higher dropout for more regularization
+        model = ob.DART(n_trees=200, dropout_rate=0.3, skip_drop=0.5)
+        model.fit(X_train, y_train)
+        ```
     """
     
     n_trees: int = 100
@@ -240,9 +243,11 @@ class DART:
         if not self.trees_:
             raise RuntimeError("Model not fitted. Call fit() first.")
         
-        # Bin the data if needed
+        # Bin the data if needed, using training bin edges for consistency
         if isinstance(X, BinnedArray):
             X_binned = X
+        elif self.X_binned_ is not None:
+            X_binned = self.X_binned_.transform(X)
         else:
             X_binned = array(X, n_bins=self.n_bins)
         

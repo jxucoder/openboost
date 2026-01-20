@@ -32,7 +32,7 @@ Low-Level API (Full Control):
     ...     pred = pred + 0.1 * tree(X_binned)
 """
 
-__version__ = "0.1.0"
+__version__ = "1.0.0rc1"
 
 # =============================================================================
 # Data Layer
@@ -217,6 +217,51 @@ from ._distributed import (
     fit_tree_multigpu,
 )
 
+# =============================================================================
+# Utilities (Phase 20.6)
+# =============================================================================
+from ._utils import (
+    suggest_params,
+    cross_val_predict,
+    cross_val_predict_proba,
+    cross_val_predict_interval,
+    evaluate_coverage,
+    get_param_grid,
+    PARAM_GRID_REGRESSION,
+    PARAM_GRID_CLASSIFICATION,
+    PARAM_GRID_DISTRIBUTIONAL,
+)
+
+# =============================================================================
+# Evaluation Metrics (Phase 22)
+# =============================================================================
+from ._utils import (
+    roc_auc_score,
+    accuracy_score,
+    log_loss_score,
+    mse_score,
+    r2_score,
+    mae_score,
+    rmse_score,
+    f1_score,
+    precision_score,
+    recall_score,
+)
+
+# =============================================================================
+# Probabilistic/Distributional Metrics (Phase 22 Sprint 2)
+# =============================================================================
+from ._utils import (
+    crps_gaussian,
+    crps_empirical,
+    brier_score,
+    pinball_loss,
+    interval_score,
+    expected_calibration_error,
+    calibration_curve,
+    negative_log_likelihood,
+)
+
 __all__ = [
     # Version
     "__version__",
@@ -358,4 +403,34 @@ __all__ = [
     "GPUWorkerBase",
     "GPUWorker",
     "fit_tree_multigpu",
+    # Utilities (Phase 20.6)
+    "suggest_params",
+    "cross_val_predict",
+    "cross_val_predict_proba",
+    "cross_val_predict_interval",
+    "evaluate_coverage",
+    "get_param_grid",
+    "PARAM_GRID_REGRESSION",
+    "PARAM_GRID_CLASSIFICATION",
+    "PARAM_GRID_DISTRIBUTIONAL",
+    # Evaluation Metrics (Phase 22)
+    "roc_auc_score",
+    "accuracy_score",
+    "log_loss_score",
+    "mse_score",
+    "r2_score",
+    "mae_score",
+    "rmse_score",
+    "f1_score",
+    "precision_score",
+    "recall_score",
+    # Probabilistic/Distributional Metrics (Phase 22 Sprint 2)
+    "crps_gaussian",
+    "crps_empirical",
+    "brier_score",
+    "pinball_loss",
+    "interval_score",
+    "expected_calibration_error",
+    "calibration_curve",
+    "negative_log_likelihood",
 ]

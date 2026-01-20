@@ -68,6 +68,96 @@ class BinnedArray:
     def any_categorical(self) -> bool:
         """Check if any feature is categorical."""
         return len(self.is_categorical) > 0 and np.any(self.is_categorical)
+    
+    def transform(self, X: ArrayLike) -> "BinnedArray":
+        """Transform new data using the bin edges from this BinnedArray.
+        
+        Use this method to transform test/validation data using the same
+        binning learned from training data. This ensures tree splits work
+        correctly across train and test sets.
+        
+        Args:
+            X: New input features, shape (n_samples_new, n_features).
+               Must have the same number of features as the training data.
+               
+        Returns:
+            BinnedArray with new data binned using training bin edges.
+            
+        Example:
+            >>> X_train_binned = ob.array(X_train)
+            >>> model.fit(X_train_binned, y_train)
+            >>> X_test_binned = X_train_binned.transform(X_test)
+            >>> predictions = model.predict(X_test_binned)
+        """
+        # Convert to numpy
+        X_np = _to_numpy(X)
+        if X_np.ndim == 1:
+            X_np = X_np.reshape(-1, 1)
+        
+        n_samples_new, n_features_new = X_np.shape
+        
+        if n_features_new != self.n_features:
+            raise ValueError(
+                f"X has {n_features_new} features, but BinnedArray was fitted with "
+                f"{self.n_features} features"
+            )
+        
+        # Bin each feature using existing bin edges
+        binned = np.zeros((n_samples_new, self.n_features), dtype=np.uint8)
+        
+        for j in range(self.n_features):
+            col = X_np[:, j].astype(np.float64)
+            nan_mask = np.isnan(col)
+            
+            if self.is_categorical[j] if len(self.is_categorical) > j else False:
+                # Categorical feature: use category map
+                cat_map = self.category_maps[j] if j < len(self.category_maps) else None
+                if cat_map is not None:
+                    for i, val in enumerate(col):
+                        if np.isnan(val):
+                            binned[i, j] = MISSING_BIN
+                        else:
+                            # Convert to hashable type for dict lookup
+                            key = int(val) if np.isfinite(val) else val
+                            binned[i, j] = cat_map.get(key, 0)  # Default to 0 for unseen
+                else:
+                    binned[:, j] = 0
+            else:
+                # Numeric feature: use bin edges with searchsorted
+                edges = self.bin_edges[j]
+                if len(edges) == 0:
+                    # No bin edges (constant feature)
+                    binned[:, j] = 0
+                else:
+                    # searchsorted finds the bin index
+                    bin_idx = np.searchsorted(edges, col[~nan_mask], side='right')
+                    # Clip to valid range (in case test values exceed training range)
+                    bin_idx = np.clip(bin_idx, 0, len(edges))
+                    binned[~nan_mask, j] = bin_idx.astype(np.uint8)
+                
+                # Handle missing values
+                if np.any(nan_mask):
+                    binned[nan_mask, j] = MISSING_BIN
+        
+        # Transpose to feature-major layout
+        binned = np.ascontiguousarray(binned.T)
+        
+        # Move to device if needed
+        if self.device == "cuda":
+            from numba import cuda
+            binned = cuda.to_device(binned)
+        
+        return BinnedArray(
+            data=binned,
+            bin_edges=self.bin_edges,  # Keep same bin edges
+            n_features=self.n_features,
+            n_samples=n_samples_new,
+            device=self.device,
+            has_missing=self.has_missing,
+            is_categorical=self.is_categorical,
+            category_maps=self.category_maps,
+            n_categories=self.n_categories,
+        )
 
 
 def array(

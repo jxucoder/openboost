@@ -15,11 +15,13 @@ Reference:
     Similar to LightGBM's linear tree feature.
 
 Example:
-    >>> import openboost as ob
-    >>> 
-    >>> model = ob.LinearLeafGBDT(n_trees=100, max_depth=4)
-    >>> model.fit(X_train, y_train)
-    >>> pred = model.predict(X_test)  # Better extrapolation!
+    ```python
+    import openboost as ob
+    
+    model = ob.LinearLeafGBDT(n_trees=100, max_depth=4)
+    model.fit(X_train, y_train)
+    pred = model.predict(X_test)  # Better extrapolation!
+    ```
 """
 
 from __future__ import annotations
@@ -34,6 +36,7 @@ from .._backends import is_cuda
 from .._loss import get_loss_function, LossFunction
 from .._core._tree import fit_tree
 from .._core._growth import TreeStructure
+from .._persistence import PersistenceMixin
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -52,12 +55,14 @@ class LinearLeafTree:
         leaf_features: List of feature indices used in each leaf
         leaf_ids: Mapping from tree leaf indices to our leaf indices
         n_features: Total number of features in the dataset
+        training_binned: Reference to training BinnedArray for transform
     """
     tree_structure: TreeStructure
     leaf_weights: NDArray  # (n_leaves, max_features_linear + 1)
     leaf_features: list[list[int]]  # Features used per leaf
     leaf_ids: dict[int, int]  # Map tree leaf -> our leaf index
     n_features: int
+    training_binned: BinnedArray | None = None  # For transform
     
     def __call__(self, X: NDArray) -> NDArray:
         """Predict using linear leaf tree."""
@@ -107,8 +112,11 @@ class LinearLeafTree:
     
     def _get_leaf_predictions(self, X: NDArray) -> NDArray:
         """Get the constant leaf value for each sample (used as leaf ID)."""
-        # Bin the data for tree prediction
-        X_binned = array(X)
+        # Bin the data for tree prediction, using training bin edges
+        if self.training_binned is not None:
+            X_binned = self.training_binned.transform(X)
+        else:
+            X_binned = array(X)
         preds = self.tree_structure(X_binned)
         if hasattr(preds, 'copy_to_host'):
             preds = preds.copy_to_host()
@@ -116,7 +124,7 @@ class LinearLeafTree:
 
 
 @dataclass
-class LinearLeafGBDT:
+class LinearLeafGBDT(PersistenceMixin):
     """Gradient Boosting with Linear Leaf Trees.
     
     Each tree has linear models in its leaves instead of constant values.
@@ -145,15 +153,17 @@ class LinearLeafGBDT:
         n_bins: Number of bins for histogram building
         
     Example:
-        >>> model = LinearLeafGBDT(n_trees=100, max_depth=4)
-        >>> model.fit(X_train, y_train)
-        >>> pred = model.predict(X_test)
-        >>> 
-        >>> # Compare extrapolation with standard GBDT
-        >>> from openboost import GradientBoosting
-        >>> standard = GradientBoosting(n_trees=100, max_depth=6)
-        >>> standard.fit(X_train, y_train)
-        >>> # LinearLeafGBDT typically extrapolates better on linear trends
+        ```python
+        model = LinearLeafGBDT(n_trees=100, max_depth=4)
+        model.fit(X_train, y_train)
+        pred = model.predict(X_test)
+        
+        # Compare extrapolation with standard GBDT
+        from openboost import GradientBoosting
+        standard = GradientBoosting(n_trees=100, max_depth=6)
+        standard.fit(X_train, y_train)
+        # LinearLeafGBDT typically extrapolates better on linear trends
+        ```
     """
     
     n_trees: int = 100
@@ -327,6 +337,7 @@ class LinearLeafGBDT:
             leaf_features=leaf_features,
             leaf_ids=leaf_ids,
             n_features=n_features,
+            training_binned=self.X_binned_,  # For transform on new data
         )
     
     def _select_features(
@@ -431,3 +442,13 @@ class LinearLeafGBDT:
             return 0.0
         
         return 1.0 - ss_res / ss_tot
+    
+    def _post_load(self) -> None:
+        """Post-load hook to restore tree references.
+        
+        After model is loaded, update all LinearLeafTree instances
+        with the restored X_binned_ reference for correct transform behavior.
+        """
+        if hasattr(self, 'X_binned_') and self.X_binned_ is not None:
+            for tree in self.trees_:
+                tree.training_binned = self.X_binned_

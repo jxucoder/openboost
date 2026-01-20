@@ -24,12 +24,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Install package with test dependencies
-          pip install -e ".[test]"
+          # Install package with test and sklearn dependencies
+          pip install -e ".[test,sklearn]"
+          # Also install xgboost for integration tests
+          pip install xgboost>=2.0
 
       - name: Run tests (CPU backend)
         env:
           OPENBOOST_BACKEND: "cpu"
         run: |
-          pytest tests/test_core.py -v
+          pytest tests/ -v --tb=short
 
