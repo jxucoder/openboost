@@ -24,12 +24,6 @@ For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom alg
 
 Plus: ~20K lines of readable Python. Modify, extend, and build on—no C++ required.
 
-| | XGBoost / LightGBM | OpenBoost |
-|---|---|---|
-| **Code** | 200K+ lines of C++ | ~20K lines of Python |
-| **GPU** | Added later | Native from day one |
-| **Customize** | Modify C++, recompile | Modify Python, reload |
-
 ## Quick Example
 
 ```python
