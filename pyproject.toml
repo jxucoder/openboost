@@ -33,6 +33,7 @@ dependencies = [
 [project.optional-dependencies]
 # GPU backends
 cuda = [
+    "numba-cuda>=0.23",
     "cupy-cuda12x>=13.0",
 ]
 torch = [
