@@ -15,7 +15,8 @@ Phase 18: Added multi-GPU support via Ray for data-parallel training.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Callable
+from pathlib import Path
+from typing import TYPE_CHECKING, Callable, Literal
 
 import numpy as np
 
@@ -32,6 +33,15 @@ from .._sampling import (
     apply_sampling,
     MiniBatchIterator,
     accumulate_histograms_minibatch,
+)
+from .._persistence import PersistenceMixin
+from .._validation import (
+    validate_X,
+    validate_y,
+    validate_sample_weight,
+    validate_eval_set,
+    validate_hyperparameters,
+    validate_predict_input,
 )
 
 try:
@@ -52,7 +62,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class GradientBoosting:
+class GradientBoosting(PersistenceMixin):
     """Gradient Boosting ensemble model.
     
     A gradient boosting model that supports both built-in loss functions
@@ -87,66 +97,70 @@ class GradientBoosting:
         goss_other_rate: Fraction of remaining samples to sample (for GOSS).
         batch_size: Mini-batch size for large datasets. If None, process all at once.
         
-    Example:
-        >>> import openboost as ob
-        >>> model = ob.GradientBoosting(n_trees=100, loss='mse')
-        >>> model.fit(X_train, y_train)
-        >>> predictions = model.predict(X_test)
+    Examples:
+        Basic regression:
         
-        # Quantile regression (90th percentile)
-        >>> model = ob.GradientBoosting(loss='quantile', quantile_alpha=0.9)
-        >>> model.fit(X_train, y_train)
+        ```python
+        import openboost as ob
         
-        # MAE (L1) regression
-        >>> model = ob.GradientBoosting(loss='mae')
+        model = ob.GradientBoosting(n_trees=100, loss='mse')
+        model.fit(X_train, y_train)
+        predictions = model.predict(X_test)
+        ```
         
-        # GOSS for faster training (Phase 17)
-        >>> model = ob.GradientBoosting(
-        ...     n_trees=100,
-        ...     subsample_strategy='goss',
-        ...     goss_top_rate=0.2,
-        ...     goss_other_rate=0.1,
-        ... )
+        Quantile regression (90th percentile):
         
-        # Mini-batch training for large datasets (Phase 17)
-        >>> model = ob.GradientBoosting(n_trees=100, batch_size=100_000)
+        ```python
+        model = ob.GradientBoosting(loss='quantile', quantile_alpha=0.9)
+        model.fit(X_train, y_train)
+        ```
         
-        # Multi-GPU training (Phase 18)
-        >>> model = ob.GradientBoosting(n_trees=100, n_gpus=4)
-        >>> model.fit(X, y)  # Data parallel across 4 GPUs
+        GOSS for faster training:
         
-        # Explicit GPU selection (Phase 18)
-        >>> model = ob.GradientBoosting(n_trees=100, devices=[0, 2, 4, 6])
+        ```python
+        model = ob.GradientBoosting(
+            n_trees=100,
+            subsample_strategy='goss',
+            goss_top_rate=0.2,
+            goss_other_rate=0.1,
+        )
+        ```
+        
+        Multi-GPU training:
+        
+        ```python
+        model = ob.GradientBoosting(n_trees=100, n_gpus=4)
+        model.fit(X, y)  # Data parallel across 4 GPUs
+        ```
     """
     
     n_trees: int = 100
     max_depth: int = 6
     learning_rate: float = 0.1
-    loss: str | LossFunction = 'mse'
+    loss: str | LossFunction | Callable[..., tuple] = 'mse'
     min_child_weight: float = 1.0
     reg_lambda: float = 1.0
-    reg_alpha: float = 0.0       # Phase 11: L1 regularization
-    gamma: float = 0.0           # Phase 11: min split gain
-    subsample: float = 1.0       # Phase 11: row sampling
-    colsample_bytree: float = 1.0  # Phase 11: column sampling
+    reg_alpha: float = 0.0
+    gamma: float = 0.0
+    subsample: float = 1.0
+    colsample_bytree: float = 1.0
     n_bins: int = 256
-    quantile_alpha: float = 0.5  # Phase 9.1
-    tweedie_rho: float = 1.5     # Phase 9.3
-    distributed: bool = False    # Phase 12
-    n_workers: int | None = None # Phase 12
-    # Phase 17: Large-scale training
-    subsample_strategy: str = 'none'  # 'none', 'random', 'goss'
+    quantile_alpha: float = 0.5
+    tweedie_rho: float = 1.5
+    distributed: bool = False
+    n_workers: int | None = None
+    subsample_strategy: Literal['none', 'random', 'goss'] = 'none'
     goss_top_rate: float = 0.2
     goss_other_rate: float = 0.1
-    batch_size: int | None = None  # Mini-batch size (None = all at once)
-    # Phase 18: Multi-GPU training
-    n_gpus: int | None = None  # Number of GPUs to use (None = single GPU/CPU)
-    devices: list[int] | None = None  # Explicit list of GPU device IDs
+    batch_size: int | None = None
+    n_gpus: int | None = None
+    devices: list[int] | None = None
     
     # Fitted attributes (not init)
     trees_: list[TreeStructure] = field(default_factory=list, init=False, repr=False)
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     _loss_fn: LossFunction | None = field(default=None, init=False, repr=False)
+    n_features_in_: int = field(default=0, init=False, repr=False)  # Phase 20.3: store for validation
     
     def fit(
         self,
@@ -170,19 +184,37 @@ class GradientBoosting:
             self: The fitted model.
             
         Example:
-            >>> from openboost import GradientBoosting, EarlyStopping, Logger
-            >>> model = GradientBoosting(n_trees=1000)
-            >>> model.fit(X, y, 
-            ...     callbacks=[EarlyStopping(patience=50), Logger(period=10)],
-            ...     eval_set=[(X_val, y_val)]
-            ... )
+            ```python
+            from openboost import GradientBoosting, EarlyStopping, Logger
+            
+            model = GradientBoosting(n_trees=1000)
+            model.fit(
+                X, y,
+                callbacks=[EarlyStopping(patience=50), Logger(period=10)],
+                eval_set=[(X_val, y_val)]
+            )
+            ```
         """
         # Clear any previous fit
         self.trees_ = []
         
-        # Convert to float32
-        y = np.asarray(y, dtype=np.float32).ravel()
+        # Validate inputs (Phase 20.3)
+        X = validate_X(X, allow_nan=True, context="fit")
+        y = validate_y(y, n_samples=X.shape[0] if hasattr(X, 'shape') else None, context="fit")
+        sample_weight = validate_sample_weight(sample_weight, len(y))
+        
         n_samples = len(y)
+        
+        # Validate hyperparameters
+        validate_hyperparameters(
+            n_trees=self.n_trees,
+            max_depth=self.max_depth,
+            learning_rate=self.learning_rate,
+            min_child_weight=self.min_child_weight,
+            reg_lambda=self.reg_lambda,
+            subsample=self.subsample,
+            n_samples=n_samples,
+        )
         
         # Get loss function (pass parameters for parameterized losses)
         self._loss_fn = get_loss_function(
@@ -190,6 +222,11 @@ class GradientBoosting:
             quantile_alpha=self.quantile_alpha,
             tweedie_rho=self.tweedie_rho,
         )
+        
+        # Validate eval_set
+        if eval_set is not None:
+            n_features = X.shape[1] if hasattr(X, 'shape') else X.n_features
+            eval_set = validate_eval_set(eval_set, n_features)
         
         # Bin the data (this is the expensive step, but only done once)
         if isinstance(X, BinnedArray):
@@ -544,8 +581,11 @@ class GradientBoosting:
                 # Built-in loss: compute entirely on GPU
                 grad_gpu, hess_gpu = self._loss_fn(pred_gpu, y_gpu)
             
-            # Note: sample_weight not fully supported on GPU yet
-            # TODO: Implement GPU sample weighting
+            # Known Limitation (1.0.0rc1): sample_weight not fully supported on GPU
+            # GPU training uses histograms built from all samples; weighting would
+            # require weighted histogram accumulation which is not yet implemented.
+            # Workaround: Use CPU backend with ob.set_backend('cpu') for weighted training
+            # TODO(v1.1): Implement GPU sample weighting via weighted histogram kernels
             
             # Apply sampling strategy (Phase 17)
             if use_goss:
@@ -776,13 +816,29 @@ class GradientBoosting:
                
         Returns:
             predictions: Shape (n_samples,).
+            
+        Raises:
+            ValueError: If model is not fitted or X has wrong shape.
         """
+        # Check if fitted first (Phase 20.3)
         if not self.trees_:
-            raise RuntimeError("Model not fitted. Call fit() first.")
+            raise ValueError(
+                f"This {type(self).__name__} instance is not fitted yet. "
+                f"Call 'fit' with appropriate arguments before using 'predict'."
+            )
         
-        # Bin the data if needed
+        # Validate (Phase 20.3)
+        n_features = getattr(self, 'n_features_in_', None) or (self.X_binned_.n_features if self.X_binned_ else None)
+        if n_features is None:
+            raise ValueError("Model is not properly fitted. Missing feature count.")
+        X = validate_predict_input(self, X, n_features)
+        
+        # Bin the data if needed, using training bin edges for consistency
         if isinstance(X, BinnedArray):
             X_binned = X
+        elif self.X_binned_ is not None:
+            # Use transform to apply training bin edges to new data
+            X_binned = self.X_binned_.transform(X)
         else:
             X_binned = array(X, n_bins=self.n_bins)
         
@@ -867,7 +923,7 @@ if is_cuda():
 # =============================================================================
 
 @dataclass
-class MultiClassGradientBoosting:
+class MultiClassGradientBoosting(PersistenceMixin):
     """Multi-class Gradient Boosting classifier.
     
     Uses softmax loss and trains K trees per round (one per class),
@@ -886,17 +942,25 @@ class MultiClassGradientBoosting:
         goss_other_rate: Fraction of remaining samples to sample (for GOSS).
         
     Example:
-        >>> import openboost as ob
-        >>> model = ob.MultiClassGradientBoosting(n_classes=10, n_trees=100)
-        >>> model.fit(X_train, y_train)  # y_train: 0 to 9
-        >>> predictions = model.predict(X_test)  # Returns class labels
-        >>> proba = model.predict_proba(X_test)  # Returns probabilities
+        ```python
+        import openboost as ob
         
-        # With GOSS (Phase 17)
-        >>> model = ob.MultiClassGradientBoosting(
-        ...     n_classes=10, n_trees=100,
-        ...     subsample_strategy='goss', goss_top_rate=0.2, goss_other_rate=0.1
-        ... )
+        model = ob.MultiClassGradientBoosting(n_classes=10, n_trees=100)
+        model.fit(X_train, y_train)  # y_train: 0 to 9
+        predictions = model.predict(X_test)  # Returns class labels
+        proba = model.predict_proba(X_test)  # Returns probabilities
+        ```
+        
+        With GOSS sampling:
+        
+        ```python
+        model = ob.MultiClassGradientBoosting(
+            n_classes=10, n_trees=100,
+            subsample_strategy='goss',
+            goss_top_rate=0.2,
+            goss_other_rate=0.1
+        )
+        ```
     """
     
     n_classes: int
@@ -905,19 +969,19 @@ class MultiClassGradientBoosting:
     learning_rate: float = 0.1
     min_child_weight: float = 1.0
     reg_lambda: float = 1.0
-    reg_alpha: float = 0.0       # Phase 11
-    gamma: float = 0.0           # Phase 11
-    subsample: float = 1.0       # Phase 11
-    colsample_bytree: float = 1.0  # Phase 11
+    reg_alpha: float = 0.0
+    gamma: float = 0.0
+    subsample: float = 1.0
+    colsample_bytree: float = 1.0
     n_bins: int = 256
-    # Phase 17: Large-scale training
-    subsample_strategy: str = 'none'
+    subsample_strategy: Literal['none', 'random', 'goss'] = 'none'
     goss_top_rate: float = 0.2
     goss_other_rate: float = 0.1
     
     # Fitted attributes
     trees_: list[list[TreeStructure]] = field(default_factory=list, init=False, repr=False)
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
+    n_features_in_: int = field(default=0, init=False, repr=False)
     
     def fit(self, X: NDArray, y: NDArray) -> "MultiClassGradientBoosting":
         """Fit the multi-class gradient boosting model.
@@ -1038,9 +1102,12 @@ class MultiClassGradientBoosting:
         if not self.trees_:
             raise RuntimeError("Model not fitted. Call fit() first.")
         
-        # Bin the data if needed
+        # Bin the data if needed, using training bin edges for consistency
         if isinstance(X, BinnedArray):
             X_binned = X
+        elif self.X_binned_ is not None:
+            # Use transform to apply training bin edges to new data
+            X_binned = self.X_binned_.transform(X)
         else:
             X_binned = array(X, n_bins=self.n_bins)
         

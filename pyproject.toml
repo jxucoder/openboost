@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "openboost"
-version = "0.2.0"
+version = "1.0.0rc1"
 description = "GPU-accelerated gradient boosting, written in Python"
 readme = "README.md"
 license = "Apache-2.0"
@@ -14,7 +14,7 @@ authors = [
 ]
 keywords = ["gradient-boosting", "gbdt", "gpu", "cuda", "machine-learning"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License",
@@ -95,6 +95,12 @@ addopts = "-v --tb=short"
 
 [dependency-groups]
 dev = [
+    "mkdocs-gen-files>=0.6.0",
+    "mkdocs-literate-nav>=0.6.2",
+    "mkdocs-material>=9.7.1",
+    "mkdocs-section-index>=0.3.10",
+    "mkdocstrings[python]>=1.0.1",
+    "mypy>=1.19.1",
     "pytest>=8.0",
     "pytest-cov>=4.0",
     "ruff>=0.4",
