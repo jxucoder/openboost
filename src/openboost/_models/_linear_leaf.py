@@ -60,8 +60,7 @@ class LinearLeafTree:
     tree_structure: TreeStructure
     leaf_weights: NDArray  # (n_leaves, max_features_linear + 1)
     leaf_features: list[list[int]]  # Features used per leaf
-    leaf_ids: dict[int, int]  # Map tree leaf -> our leaf index
-    unique_leaves: NDArray | None = None  # Sorted unique leaf prediction values
+    leaf_ids: dict[float, int]  # Map tree leaf prediction value -> our leaf index
     n_features: int = 0
     training_binned: BinnedArray | None = None  # For transform
     
@@ -88,18 +87,14 @@ class LinearLeafTree:
         predictions = np.zeros(n_samples, dtype=np.float32)
         
         for sample_idx in range(n_samples):
-            leaf_pred = leaf_preds[sample_idx]
+            leaf_pred = float(leaf_preds[sample_idx])
 
-            # Find nearest leaf using sorted unique values (avoids float == issues)
-            if self.unique_leaves is not None and len(self.unique_leaves) > 0:
-                leaf_idx = int(np.searchsorted(self.unique_leaves, leaf_pred))
-                if leaf_idx >= len(self.unique_leaves):
-                    leaf_idx = len(self.unique_leaves) - 1
-                elif leaf_idx > 0:
-                    # Pick closer neighbour
-                    if abs(leaf_pred - self.unique_leaves[leaf_idx - 1]) < abs(leaf_pred - self.unique_leaves[leaf_idx]):
-                        leaf_idx = leaf_idx - 1
+            # Look up leaf index using float prediction value as key.
+            # This works because the tree returns deterministic leaf constants.
+            if leaf_pred in self.leaf_ids:
+                leaf_idx = self.leaf_ids[leaf_pred]
             else:
+                # Fallback: use the constant term from first leaf
                 leaf_idx = 0
             
             # Get weights and features for this leaf
@@ -287,9 +282,8 @@ class LinearLeafGBDT(PersistenceMixin):
         unique_leaves = np.unique(leaf_preds)
         n_leaves = len(unique_leaves)
         
-        # Map leaf prediction value -> our leaf index using sorted array
-        # (avoids exact float comparison issues with dict lookup)
-        leaf_ids = {i: i for i in range(n_leaves)}
+        # Map leaf prediction value -> our leaf index
+        leaf_ids = {float(v): i for i, v in enumerate(unique_leaves)}
         
         # Storage for linear models
         leaf_weights = np.zeros((n_leaves, n_linear_features + 1), dtype=np.float32)
@@ -343,7 +337,6 @@ class LinearLeafGBDT(PersistenceMixin):
             leaf_weights=leaf_weights,
             leaf_features=leaf_features,
             leaf_ids=leaf_ids,
-            unique_leaves=unique_leaves,
             n_features=n_features,
             training_binned=self.X_binned_,  # For transform on new data
         )

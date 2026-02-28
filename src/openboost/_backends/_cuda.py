@@ -1974,9 +1974,6 @@ def _find_split_batch_kernel(
     # IEEE 754 float32 bit-pattern comparison preserves order for non-negative values.
     if thread_idx == 0 and best_gain > float32(0.0):
         # Reinterpret float32 gain as uint32 for bit packing
-        gain_bits = int64(0)
-        # Manual bit-level conversion: multiply to scale then cast
-        # Use view-cast trick: store to shared mem as float, read back as int
         gain_uint = int64(cuda.libdevice.float_as_int(best_gain))
         # Pack: upper 32 bits = gain, lower 32 = (feature << 16) | bin
         packed = (gain_uint << int64(32)) | (int64(feature_idx) << int64(16)) | int64(best_bin)

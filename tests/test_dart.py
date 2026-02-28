@@ -98,9 +98,10 @@ class TestDART:
         model = ob.DART(n_trees=10, dropout_rate=0.5, skip_drop=1.0, seed=42)
         model.fit(X, y)
         
-        # All weights should be learning_rate (no normalization applied)
+        # All weights should be 1.0 (no normalization applied, learning_rate
+        # is applied separately during prediction)
         for w in model.tree_weights_:
-            assert abs(w - model.learning_rate) < 1e-6
+            assert abs(w - 1.0) < 1e-6
     
     def test_classification(self):
         """Test DART for binary classification."""
