@@ -2032,7 +2032,7 @@ def find_best_split_batch_cuda(
     n_configs = hist_grad.shape[0]
     n_features = hist_grad.shape[1]
     
-    # Allocate packed output: int64 encodes (gain_bits << 32 | feature << 16 | bin)
+    # Allocate packed output: int64 encodes (gain_uint << 32 | feature << 16 | bin)
     best_packed = cuda.device_array(n_configs, dtype=np.int64)
     # Initialize to 0 (no valid split)
     threads = 256

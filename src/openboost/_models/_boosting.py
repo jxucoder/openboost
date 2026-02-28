@@ -22,7 +22,7 @@ import numpy as np
 
 from .._array import BinnedArray, array
 from .._backends import is_cuda
-from .._loss import get_loss_function, LossFunction
+from .._loss import get_loss_function, compute_loss_value, LossFunction
 from .._core._tree import fit_tree
 from .._core._growth import TreeStructure
 from .._callbacks import Callback, CallbackManager, TrainingState
@@ -61,20 +61,34 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
-def _compute_loss_value(loss_fn, pred, y) -> float:
-    """Compute scalar loss using the actual loss function (not hardcoded MSE).
+def _compute_loss_value(loss, pred, y, **kwargs) -> float:
+    """Compute scalar loss using the true loss formula for known objectives.
 
-    Uses a second-order approximation: mean(grad^2 / (2 * hess)).
+    Delegates to ``compute_loss_value`` in ``_loss.py`` which computes the
+    actual loss (MSE, MAE, logloss, …) rather than the second-order Taylor
+    proxy that is unreliable for MAE/quantile.
+
+    *loss* may be a string name or a callable.  For callables the grad/hess
+    proxy is used as fallback.
     """
-    grad, hess = loss_fn(pred, y)
+    if hasattr(pred, 'copy_to_host'):
+        pred = pred.copy_to_host()
+    pred = np.asarray(pred, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+
+    if isinstance(loss, str):
+        return compute_loss_value(loss, pred, y, **kwargs)
+
+    # Custom callable — use grad/hess proxy
+    grad, hess = loss(np.asarray(pred, dtype=np.float32),
+                      np.asarray(y, dtype=np.float32))
     if hasattr(grad, 'copy_to_host'):
         grad = grad.copy_to_host()
     if hasattr(hess, 'copy_to_host'):
         hess = hess.copy_to_host()
     grad = np.asarray(grad, dtype=np.float64)
-    hess = np.asarray(hess, dtype=np.float64)
-    hess_safe = np.maximum(hess, 1e-10)
-    return float(np.mean(grad ** 2 / (2.0 * hess_safe)))
+    hess = np.maximum(np.asarray(hess, dtype=np.float64), 1e-10)
+    return float(np.mean(grad ** 2 / (2.0 * hess)))
 
 
 @dataclass
@@ -492,24 +506,29 @@ class GradientBoosting(PersistenceMixin):
                 right_grad = s_grad - left_grad
                 right_hess = s_hess - left_hess
                 
-                # Create child histograms via subtraction.
-                # NOTE: histogram subtraction only works correctly for the split
-                # feature.  For non-split features the per-bin distribution between
-                # left and right depends on sample assignments, not bin thresholds.
-                # We zero-init and only partition the split feature; child nodes
-                # that need to split on a different feature will recompute histograms
-                # from samples on the workers (the distributed path does this via
-                # compute_histograms for subsequent levels).
+                # Create child histograms.
+                # For the split feature we can partition exactly by threshold.
+                # For non-split features the true per-bin distribution depends
+                # on sample assignments which we don't have here, so we
+                # approximate by scaling the parent histogram proportionally
+                # (by the fraction of hessian going to each child).
                 sf = split.feature
-                left_hist_grad = np.zeros_like(h_grad)
-                left_hist_hess = np.zeros_like(h_hess)
-                # Only partition the split feature's histogram by threshold
+                frac_left = left_hess / s_hess if s_hess > 0 else 0.5
+                frac_right = 1.0 - frac_left
+
+                left_hist_grad = h_grad * frac_left
+                left_hist_hess = h_hess * frac_left
+                # Split feature: exact partition replaces the approximation
+                left_hist_grad[sf, :] = 0.0
                 left_hist_grad[sf, :split.threshold + 1] = h_grad[sf, :split.threshold + 1]
+                left_hist_hess[sf, :] = 0.0
                 left_hist_hess[sf, :split.threshold + 1] = h_hess[sf, :split.threshold + 1]
 
-                right_hist_grad = np.zeros_like(h_grad)
-                right_hist_hess = np.zeros_like(h_hess)
+                right_hist_grad = h_grad * frac_right
+                right_hist_hess = h_hess * frac_right
+                right_hist_grad[sf, :] = 0.0
                 right_hist_grad[sf, split.threshold + 1:] = h_grad[sf, split.threshold + 1:]
+                right_hist_hess[sf, :] = 0.0
                 right_hist_hess[sf, split.threshold + 1:] = h_hess[sf, split.threshold + 1:]
                 
                 # Store child info
@@ -694,12 +713,12 @@ class GradientBoosting(PersistenceMixin):
             self.trees_.append(tree)
             
             # Compute losses for callbacks using actual loss function
-            state.train_loss = _compute_loss_value(self._loss_fn, pred_cpu, y)
+            state.train_loss = _compute_loss_value(self.loss, pred_cpu, y, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
 
             if eval_set:
                 X_val, y_val = eval_set[0]
                 val_pred = self.predict(X_val)
-                state.val_loss = _compute_loss_value(self._loss_fn, val_pred, y_val)
+                state.val_loss = _compute_loss_value(self.loss, val_pred, y_val, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
 
             # Check if callbacks want to stop
             if not cb_manager.on_round_end(state):
@@ -814,12 +833,12 @@ class GradientBoosting(PersistenceMixin):
             self.trees_.append(tree)
             
             # Compute losses for callbacks using actual loss function
-            state.train_loss = _compute_loss_value(self._loss_fn, pred, y)
+            state.train_loss = _compute_loss_value(self.loss, pred, y, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
 
             if eval_set:
                 X_val, y_val = eval_set[0]
                 val_pred = self.predict(X_val)
-                state.val_loss = _compute_loss_value(self._loss_fn, val_pred, y_val)
+                state.val_loss = _compute_loss_value(self.loss, val_pred, y_val, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
             
             # Store extra info for research callbacks
             if use_goss:
