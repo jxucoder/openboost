@@ -1,6 +1,8 @@
 """Test openboost on GPU via Modal."""
 
-import modal
+import pytest
+
+modal = pytest.importorskip("modal")
 
 app = modal.App("openboost-test")
 
