@@ -93,10 +93,11 @@ def fit_tree_distributed(
             new_active_nodes.append(node_split.left_child)
             new_active_nodes.append(node_split.right_child)
             
-        # 7. Partition samples on workers
+        # 7. Partition samples on workers — must complete before next level
         if splits:
             partition_refs = [w.partition_samples.remote(splits) for w in workers]
-        
+            ray.get(partition_refs)  # Wait for partitioning to finish
+
         active_nodes = new_active_nodes
         
     # 8. Compute leaf values
@@ -151,10 +152,11 @@ def get_worker_n_features(worker):
 
 
 def count_nodes(left_children):
+    """Count actual nodes in tree by finding highest valid index."""
     for i in range(len(left_children) - 1, -1, -1):
-        if i == 0 or left_children[(i - 1) // 2] != -1 or ((i - 1) // 2 == 0):
-            if i == 0: return 1
-            parent = (i - 1) // 2
-            if left_children[parent] != -1:
-                return max(left_children[parent], left_children[parent] + 1, i) + 1
+        if i == 0:
+            return 1
+        parent = (i - 1) // 2
+        if left_children[parent] != -1:
+            return i + 1
     return 1

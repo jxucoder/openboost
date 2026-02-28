@@ -290,10 +290,13 @@ def find_best_split_with_missing_cpu(
             if hist_grad[f, MISSING_BIN] != 0 or hist_hess[f, MISSING_BIN] != 0:
                 has_missing[f] = True
     
+    # NOTE: CPU split-finding uses float64 for higher precision.
+    # GPU uses float32 (see _backends/_cuda.py), which can produce
+    # slightly different "best split" results, affecting reproducibility.
     best_gains = np.full(n_features, -1e10, dtype=np.float64)
     best_bins = np.full(n_features, -1, dtype=np.int32)
     best_missing_left = np.ones(n_features, dtype=np.bool_)
-    
+
     _find_best_split_with_missing_all_features(
         hist_grad.astype(np.float64),
         hist_hess.astype(np.float64),

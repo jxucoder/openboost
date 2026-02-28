@@ -526,7 +526,21 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
                 goss_top_rate=self.goss_top_rate,
                 goss_other_rate=self.goss_other_rate,
             )
-            # Note: MultiClass doesn't support callbacks yet
+            import warnings
+            unsupported = []
+            if sample_weight is not None:
+                unsupported.append("sample_weight")
+            if eval_set is not None:
+                unsupported.append("eval_set")
+            if callbacks:
+                unsupported.append("callbacks/early_stopping_rounds")
+            if unsupported:
+                warnings.warn(
+                    f"MultiClassGradientBoosting does not yet support "
+                    f"{', '.join(unsupported)}. These arguments are ignored.",
+                    UserWarning,
+                    stacklevel=2,
+                )
             self.booster_.fit(X, y_encoded)
         
         # Copy early stopping attributes

@@ -168,9 +168,10 @@ class DART(PersistenceMixin):
             else:
                 tree_weight = 1.0
             
-            # Store tree
+            # Store tree — keep learning_rate separate to avoid compounding
+            # during DART normalization (k/(k+1) rescaling)
             self.trees_.append(tree)
-            self.tree_weights_.append(tree_weight * self.learning_rate)
+            self.tree_weights_.append(tree_weight)
             
             # Update predictions (full model)
             pred = self._predict_internal(self.X_binned_)
@@ -213,21 +214,21 @@ class DART(PersistenceMixin):
             tree_pred = tree(X)
             if hasattr(tree_pred, 'copy_to_host'):
                 tree_pred = tree_pred.copy_to_host()
-            pred += weight * tree_pred
-        
+            pred += self.learning_rate * weight * tree_pred
+
         return pred
     
     def _predict_internal(self, X: BinnedArray) -> NDArray:
         """Internal prediction using all trees (for training)."""
         n_samples = X.n_samples
         pred = np.zeros(n_samples, dtype=np.float32)
-        
+
         for tree, weight in zip(self.trees_, self.tree_weights_):
             tree_pred = tree(X)
             if hasattr(tree_pred, 'copy_to_host'):
                 tree_pred = tree_pred.copy_to_host()
-            pred += weight * tree_pred
-        
+            pred += self.learning_rate * weight * tree_pred
+
         return pred
     
     def predict(self, X: NDArray | BinnedArray) -> NDArray:

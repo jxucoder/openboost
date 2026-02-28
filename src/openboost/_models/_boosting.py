@@ -22,7 +22,7 @@ import numpy as np
 
 from .._array import BinnedArray, array
 from .._backends import is_cuda
-from .._loss import get_loss_function, LossFunction
+from .._loss import get_loss_function, compute_loss_value, LossFunction
 from .._core._tree import fit_tree
 from .._core._growth import TreeStructure
 from .._callbacks import Callback, CallbackManager, TrainingState
@@ -59,6 +59,36 @@ except ImportError:
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
+
+
+def _compute_loss_value(loss, pred, y, **kwargs) -> float:
+    """Compute scalar loss using the true loss formula for known objectives.
+
+    Delegates to ``compute_loss_value`` in ``_loss.py`` which computes the
+    actual loss (MSE, MAE, logloss, …) rather than the second-order Taylor
+    proxy that is unreliable for MAE/quantile.
+
+    *loss* may be a string name or a callable.  For callables the grad/hess
+    proxy is used as fallback.
+    """
+    if hasattr(pred, 'copy_to_host'):
+        pred = pred.copy_to_host()
+    pred = np.asarray(pred, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+
+    if isinstance(loss, str):
+        return compute_loss_value(loss, pred, y, **kwargs)
+
+    # Custom callable — use grad/hess proxy
+    grad, hess = loss(np.asarray(pred, dtype=np.float32),
+                      np.asarray(y, dtype=np.float32))
+    if hasattr(grad, 'copy_to_host'):
+        grad = grad.copy_to_host()
+    if hasattr(hess, 'copy_to_host'):
+        hess = hess.copy_to_host()
+    grad = np.asarray(grad, dtype=np.float64)
+    hess = np.maximum(np.asarray(hess, dtype=np.float64), 1e-10)
+    return float(np.mean(grad ** 2 / (2.0 * hess)))
 
 
 @dataclass
@@ -476,17 +506,30 @@ class GradientBoosting(PersistenceMixin):
                 right_grad = s_grad - left_grad
                 right_hess = s_hess - left_hess
                 
-                # Create child histograms via subtraction
-                # Left histogram: cumsum up to threshold
-                left_hist_grad = np.zeros_like(h_grad)
-                left_hist_hess = np.zeros_like(h_hess)
-                for f in range(n_features):
-                    # For split feature, take bins <= threshold
-                    left_hist_grad[f, :split.threshold + 1] = h_grad[f, :split.threshold + 1]
-                    left_hist_hess[f, :split.threshold + 1] = h_hess[f, :split.threshold + 1]
-                
-                right_hist_grad = h_grad - left_hist_grad
-                right_hist_hess = h_hess - left_hist_hess
+                # Create child histograms.
+                # For the split feature we can partition exactly by threshold.
+                # For non-split features the true per-bin distribution depends
+                # on sample assignments which we don't have here, so we
+                # approximate by scaling the parent histogram proportionally
+                # (by the fraction of hessian going to each child).
+                sf = split.feature
+                frac_left = left_hess / s_hess if s_hess > 0 else 0.5
+                frac_right = 1.0 - frac_left
+
+                left_hist_grad = h_grad * frac_left
+                left_hist_hess = h_hess * frac_left
+                # Split feature: exact partition replaces the approximation
+                left_hist_grad[sf, :] = 0.0
+                left_hist_grad[sf, :split.threshold + 1] = h_grad[sf, :split.threshold + 1]
+                left_hist_hess[sf, :] = 0.0
+                left_hist_hess[sf, :split.threshold + 1] = h_hess[sf, :split.threshold + 1]
+
+                right_hist_grad = h_grad * frac_right
+                right_hist_hess = h_hess * frac_right
+                right_hist_grad[sf, :] = 0.0
+                right_hist_grad[sf, split.threshold + 1:] = h_grad[sf, split.threshold + 1:]
+                right_hist_hess[sf, :] = 0.0
+                right_hist_hess[sf, split.threshold + 1:] = h_hess[sf, split.threshold + 1:]
                 
                 # Store child info
                 left_id = next_node_id
@@ -669,20 +712,20 @@ class GradientBoosting(PersistenceMixin):
             
             self.trees_.append(tree)
             
-            # Compute losses for callbacks
-            state.train_loss = float(np.mean((pred_cpu - y) ** 2))
-            
+            # Compute losses for callbacks using actual loss function
+            state.train_loss = _compute_loss_value(self.loss, pred_cpu, y, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
+
             if eval_set:
                 X_val, y_val = eval_set[0]
                 val_pred = self.predict(X_val)
-                state.val_loss = float(np.mean((val_pred - y_val) ** 2))
-            
+                state.val_loss = _compute_loss_value(self.loss, val_pred, y_val, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
+
             # Check if callbacks want to stop
             if not cb_manager.on_round_end(state):
                 break
-        
+
         cb_manager.on_train_end(state)
-    
+
     def _fit_cpu(
         self,
         y: NDArray,
@@ -789,13 +832,13 @@ class GradientBoosting(PersistenceMixin):
             
             self.trees_.append(tree)
             
-            # Compute losses for callbacks
-            state.train_loss = float(np.mean((pred - y) ** 2))
-            
+            # Compute losses for callbacks using actual loss function
+            state.train_loss = _compute_loss_value(self.loss, pred, y, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
+
             if eval_set:
                 X_val, y_val = eval_set[0]
                 val_pred = self.predict(X_val)
-                state.val_loss = float(np.mean((val_pred - y_val) ** 2))
+                state.val_loss = _compute_loss_value(self.loss, val_pred, y_val, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
             
             # Store extra info for research callbacks
             if use_goss:
@@ -878,44 +921,32 @@ class GradientBoosting(PersistenceMixin):
         return np.column_stack([prob_0, prob_1])
 
 
+_fill_zeros_kernel = None
+
+
+def _ensure_fill_zeros_kernel():
+    """Lazily compile the fill-zeros kernel."""
+    global _fill_zeros_kernel
+    if _fill_zeros_kernel is not None:
+        return
+    from numba import cuda
+
+    @cuda.jit
+    def _kernel(arr, n):
+        idx = cuda.grid(1)
+        if idx < n:
+            arr[idx] = 0.0
+
+    _fill_zeros_kernel = _kernel
+
+
 def _fill_zeros_gpu(arr):
     """Fill GPU array with zeros."""
-    from numba import cuda
-    
+    _ensure_fill_zeros_kernel()
     n = arr.shape[0]
     threads = 256
     blocks = (n + threads - 1) // threads
     _fill_zeros_kernel[blocks, threads](arr, n)
-
-
-@staticmethod
-def _get_fill_zeros_kernel():
-    from numba import cuda
-    
-    @cuda.jit
-    def kernel(arr, n):
-        idx = cuda.grid(1)
-        if idx < n:
-            arr[idx] = 0.0
-    
-    return kernel
-
-
-_fill_zeros_kernel = None
-
-if is_cuda():
-    try:
-        from numba import cuda
-        
-        @cuda.jit
-        def _fill_zeros_kernel_impl(arr, n):
-            idx = cuda.grid(1)
-            if idx < n:
-                arr[idx] = 0.0
-        
-        _fill_zeros_kernel = _fill_zeros_kernel_impl
-    except Exception:
-        pass
 
 
 # =============================================================================
@@ -1011,7 +1042,9 @@ class MultiClassGradientBoosting(PersistenceMixin):
             self.X_binned_ = X
         else:
             self.X_binned_ = array(X, n_bins=self.n_bins)
-        
+
+        self.n_features_in_ = self.X_binned_.n_features
+
         # Initialize predictions for each class
         pred = np.zeros((n_samples, self.n_classes), dtype=np.float32)
         

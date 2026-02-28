@@ -76,6 +76,67 @@ def get_loss_function(loss: str | LossFunction, **kwargs) -> LossFunction:
     return loss_map[loss]
 
 
+def compute_loss_value(loss_name: str, pred: np.ndarray, y: np.ndarray, **kwargs) -> float:
+    """Compute the actual scalar loss value (not the grad/hess proxy).
+
+    For built-in objectives this uses the true loss formula.  For custom
+    (callable) losses we fall back to the second-order Taylor approximation
+    ``mean(grad^2 / (2 * hess))``.
+    """
+    pred = np.asarray(pred, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+
+    if loss_name == 'mse' or loss_name == 'squared_error':
+        return float(np.mean((pred - y) ** 2))
+
+    if loss_name == 'mae' or loss_name == 'l1' or loss_name == 'absolute_error':
+        return float(np.mean(np.abs(pred - y)))
+
+    if loss_name == 'huber':
+        delta = kwargs.get('huber_delta', 1.0)
+        diff = np.abs(pred - y)
+        loss = np.where(diff <= delta, 0.5 * diff ** 2, delta * (diff - 0.5 * delta))
+        return float(np.mean(loss))
+
+    if loss_name == 'quantile':
+        alpha = kwargs.get('quantile_alpha', 0.5)
+        residual = y - pred
+        return float(np.mean(np.where(residual >= 0, alpha * residual, (alpha - 1) * residual)))
+
+    if loss_name == 'logloss' or loss_name == 'binary_crossentropy':
+        p = 1.0 / (1.0 + np.exp(-np.clip(pred, -500, 500)))
+        p = np.clip(p, 1e-15, 1 - 1e-15)
+        return float(-np.mean(y * np.log(p) + (1 - y) * np.log(1 - p)))
+
+    if loss_name == 'poisson':
+        return float(np.mean(np.exp(np.clip(pred, -20, 20)) - y * pred))
+
+    if loss_name == 'gamma':
+        return float(np.mean(pred + y * np.exp(-np.clip(pred, -20, 20))))
+
+    if loss_name == 'tweedie':
+        rho = kwargs.get('tweedie_rho', 1.5)
+        mu = np.exp(np.clip(pred, -20, 20))
+        return float(np.mean(-y * mu ** (1 - rho) / (1 - rho) + mu ** (2 - rho) / (2 - rho)))
+
+    # Unknown/custom loss: fall back to grad/hess proxy
+    return _grad_hess_proxy(loss_name, pred, y, **kwargs)
+
+
+def _grad_hess_proxy(loss_name, pred, y, **kwargs):
+    """Fallback: second-order Taylor approximation ``mean(grad^2 / (2*hess))``."""
+    loss_fn = get_loss_function(loss_name, **kwargs)
+    grad, hess = loss_fn(np.asarray(pred, dtype=np.float32),
+                         np.asarray(y, dtype=np.float32))
+    if hasattr(grad, 'copy_to_host'):
+        grad = grad.copy_to_host()
+    if hasattr(hess, 'copy_to_host'):
+        hess = hess.copy_to_host()
+    grad = np.asarray(grad, dtype=np.float64)
+    hess = np.maximum(np.asarray(hess, dtype=np.float64), 1e-10)
+    return float(np.mean(grad ** 2 / (2.0 * hess)))
+
+
 # =============================================================================
 # MSE Loss (Regression)
 # =============================================================================
@@ -427,8 +488,8 @@ def quantile_gradient(pred: NDArray, y: NDArray, alpha: float = 0.5) -> tuple[ND
     - alpha=0.1: 10th percentile
     
     Gradient:
-        alpha - 1  if pred > y  (under-prediction)
-        alpha      if pred < y  (over-prediction)
+        alpha - 1  if pred > y  (over-prediction)
+        alpha      if pred < y  (under-prediction)
         
     Hessian: Use constant (not twice-differentiable)
     

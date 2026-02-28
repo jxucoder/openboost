@@ -127,6 +127,11 @@ def predict_tree_add_gpu(
     threads = 256
     blocks = (n_samples + threads - 1) // threads
     
+    # Ensure kernel is compiled (may be None if CUDA init failed at import)
+    global _predict_tree_add_kernel
+    if _predict_tree_add_kernel is None:
+        _predict_tree_add_kernel = _get_predict_tree_add_kernel()
+
     # Kernel expects: features, thresholds, left, right, values (match signature!)
     _predict_tree_add_kernel[blocks, threads](
         X_data, node_features, node_thresholds, node_left, node_right,

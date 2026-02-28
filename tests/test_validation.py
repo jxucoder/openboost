@@ -290,9 +290,10 @@ class TestValidateEvalSet:
 
         model = ob.GradientBoosting(n_trees=100)
 
-        # eval_set should be list of tuples
+        # eval_set as a single (X, y) tuple is auto-wrapped (supported),
+        # but passing a non-list/non-tuple type should raise TypeError
         with pytest.raises(TypeError, match="list"):
-            model.fit(X, y, callbacks=[EarlyStopping()], eval_set=(X, y))
+            model.fit(X, y, callbacks=[EarlyStopping()], eval_set="invalid")
 
     def test_wrong_n_features_raises(self):
         """Test that eval_set with wrong features raises."""

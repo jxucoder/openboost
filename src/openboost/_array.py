@@ -117,8 +117,11 @@ class BinnedArray:
                         if np.isnan(val):
                             binned[i, j] = MISSING_BIN
                         else:
-                            # Convert to hashable type for dict lookup
-                            key = int(val) if np.isfinite(val) else val
+                            # Try the raw numeric value first, then int form
+                            # to match however the key was stored at fit time
+                            key = val.item() if hasattr(val, 'item') else val
+                            if key not in cat_map:
+                                key = int(val) if np.isfinite(val) else val
                             binned[i, j] = cat_map.get(key, 0)  # Default to 0 for unseen
                 else:
                     binned[:, j] = 0
@@ -206,9 +209,9 @@ def array(
         >>> X_binned = ob.array(X, categorical_features=[1])  # Feature 1 is categorical
         >>> print(X_binned.is_categorical)  # [False, True, False]
     """
-    # Reserve bin 255 for missing values
-    if n_bins > 255:
-        n_bins = 255  # Cap at 255, leaving 255 for MISSING_BIN
+    # Reserve bin 255 for missing values — max usable bin is 254 (indices 0-254)
+    if n_bins > 254:
+        n_bins = 254
     
     # Convert to numpy for binning computation
     X_np = _to_numpy(X)
@@ -414,15 +417,20 @@ def _bin_categorical_feature(
             "(bin 255 reserved for missing values)"
         )
     
-    # Create mapping: value -> bin index
-    category_map = {v: i for i, v in enumerate(unique_vals)}
-    
+    # Create mapping: value -> bin index (preserve original types so
+    # string/object categories work, not just numeric ones)
+    category_map = {}
+    for i, v in enumerate(unique_vals):
+        item = v.item() if hasattr(v, 'item') else v
+        category_map[item] = i
+
     # Encode values
     for i, v in enumerate(col):
         if nan_mask[i]:
             binned_col[i] = MISSING_BIN
         else:
-            binned_col[i] = category_map[v]
+            item = v.item() if hasattr(v, 'item') else v
+            binned_col[i] = category_map[item]
     
     # Empty edges for categorical (not used in splits)
     edges = np.array([], dtype=np.float64)

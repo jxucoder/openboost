@@ -134,9 +134,10 @@ def run_training_loop(
     
     cb_manager = CallbackManager(callbacks)
     
-    # Initialize
+    # Initialize with model's initial prediction (e.g. mean(y) for regression)
     n_samples = len(y)
-    pred = np.zeros(n_samples, dtype=np.float32)
+    init_pred = getattr(model, 'initial_prediction_', 0.0)
+    pred = np.full(n_samples, init_pred, dtype=np.float32)
     
     # Ensure model has trees_ attribute
     if not hasattr(model, 'trees_'):
@@ -183,16 +184,23 @@ def run_training_loop(
         tree = fit_round_fn(model, X_binned, grad, hess)
         model.trees_.append(tree)
         
-        # Update predictions
+        # Update predictions — read LR from model so LearningRateScheduler works
         tree_pred = tree(X_binned)
         if hasattr(tree_pred, 'copy_to_host'):
             tree_pred = tree_pred.copy_to_host()
-        pred = pred + config.learning_rate * tree_pred
+        lr = getattr(model, 'learning_rate', config.learning_rate)
+        pred = pred + lr * tree_pred
         
         # Compute train loss for callbacks
+        loss_name = getattr(model, 'loss', None)
+        loss_kw = {}
+        if hasattr(model, 'quantile_alpha'):
+            loss_kw['quantile_alpha'] = model.quantile_alpha
+        if hasattr(model, 'tweedie_rho'):
+            loss_kw['tweedie_rho'] = model.tweedie_rho
         if config.compute_train_loss:
-            state.train_loss = _compute_loss(pred, y, loss_fn)
-        
+            state.train_loss = _compute_loss(pred, y, loss_fn, loss_name, **loss_kw)
+
         # Compute validation loss if eval_set provided
         if config.eval_set:
             X_val, y_val = config.eval_set[0]
@@ -200,7 +208,7 @@ def run_training_loop(
                 val_pred = predict_fn(model, X_val)
             else:
                 val_pred = _default_predict(model, X_val, config.learning_rate)
-            state.val_loss = _compute_loss(val_pred, y_val, loss_fn)
+            state.val_loss = _compute_loss(val_pred, y_val, loss_fn, loss_name, **loss_kw)
         
         # Round end callbacks (may stop training)
         if not cb_manager.on_round_end(state):
@@ -225,37 +233,56 @@ def run_training_loop(
     return result
 
 
-def _compute_loss(pred: NDArray, y: NDArray, loss_fn) -> float:
+def _compute_loss(pred: NDArray, y: NDArray, loss_fn, loss_name: str | None = None,
+                   **kwargs) -> float:
     """Compute loss value for predictions.
-    
-    Uses the gradient to approximate loss value.
-    For common losses: MSE = mean((pred - y)^2), etc.
+
+    When *loss_name* is a known built-in string the true loss formula is used.
+    Otherwise falls back to the second-order Taylor proxy.
     """
-    # Simple approximation: use MSE-like loss
-    # This is a reasonable default; specific losses can override
-    diff = pred - y
-    return float(np.mean(diff ** 2))
+    from ._loss import compute_loss_value as _cv
+    if hasattr(pred, 'copy_to_host'):
+        pred = pred.copy_to_host()
+    pred = np.asarray(pred, dtype=np.float64)
+    y = np.asarray(y, dtype=np.float64)
+
+    if isinstance(loss_name, str):
+        return _cv(loss_name, pred, y, **kwargs)
+
+    # Fallback: grad/hess proxy for custom callables
+    grad, hess = loss_fn(np.asarray(pred, dtype=np.float32),
+                         np.asarray(y, dtype=np.float32))
+    if hasattr(grad, 'copy_to_host'):
+        grad = grad.copy_to_host()
+    if hasattr(hess, 'copy_to_host'):
+        hess = hess.copy_to_host()
+    grad = np.asarray(grad, dtype=np.float64)
+    hess = np.maximum(np.asarray(hess, dtype=np.float64), 1e-10)
+    return float(np.mean(grad ** 2 / (2.0 * hess)))
 
 
 def _default_predict(model, X, learning_rate: float) -> NDArray:
     """Default prediction using accumulated trees."""
     from ._array import BinnedArray, array
-    
-    # Bin if needed
+
+    # Bin using training edges for consistency (instead of computing new edges)
     if isinstance(X, BinnedArray):
         X_binned = X
+    elif hasattr(model, 'X_binned_') and model.X_binned_ is not None:
+        X_binned = model.X_binned_.transform(X)
     else:
-        X_binned = array(X, n_bins=256)
-    
+        X_binned = array(X, n_bins=254)
+
     n_samples = X_binned.n_samples
-    pred = np.zeros(n_samples, dtype=np.float32)
-    
+    init_pred = getattr(model, 'initial_prediction_', 0.0)
+    pred = np.full(n_samples, init_pred, dtype=np.float32)
+
     for tree in model.trees_:
         tree_pred = tree(X_binned)
         if hasattr(tree_pred, 'copy_to_host'):
             tree_pred = tree_pred.copy_to_host()
         pred = pred + learning_rate * tree_pred
-    
+
     return pred
 
 
@@ -281,4 +308,10 @@ def compute_eval_loss(
         Loss value.
     """
     pred = _default_predict(model, X, learning_rate)
-    return _compute_loss(pred, y, loss_fn)
+    loss_name = getattr(model, 'loss', None)
+    loss_kw = {}
+    if hasattr(model, 'quantile_alpha'):
+        loss_kw['quantile_alpha'] = model.quantile_alpha
+    if hasattr(model, 'tweedie_rho'):
+        loss_kw['tweedie_rho'] = model.tweedie_rho
+    return _compute_loss(pred, y, loss_fn, loss_name, **loss_kw)

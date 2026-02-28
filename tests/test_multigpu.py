@@ -269,32 +269,42 @@ def test_multigpu_scaling(sample_data):
 
 def test_tree_from_histogram_simple():
     """Test tree building from histogram."""
-    # Create a simple histogram with clear best split
+    # Create a simple histogram with clear best split.
+    # The algorithm iterates over 255 bins, so use shape (n_features, 256).
+    # In real gradient boosting each feature's histogram sums to the same
+    # total (every sample falls into exactly one bin per feature), so
+    # per-feature gradient/hessian sums must be consistent.
     n_features = 3
-    n_bins = 10
-    
+    n_bins = 256
+
     hist_grad = np.zeros((n_features, n_bins), dtype=np.float32)
-    hist_hess = np.ones((n_features, n_bins), dtype=np.float32)
-    
-    # Feature 0: has a good split at bin 5
-    # Left (bins 0-5): positive gradient sum
-    # Right (bins 6-9): negative gradient sum
+    hist_hess = np.zeros((n_features, n_bins), dtype=np.float32)
+
+    # Feature 0: has a good split at bin 5 (strong)
+    # Left (bins 0-5): positive gradient   Right (bins 6-9): negative
     hist_grad[0, :6] = 1.0
-    hist_grad[0, 6:] = -1.0
-    
-    # Feature 1: no good split (all same gradient)
-    hist_grad[1, :] = 0.5
-    
+    hist_grad[0, 6:10] = -1.0
+    hist_hess[0, :10] = 1.0
+    # Per-feature sum: 6*1.0 + 4*(-1.0) = 2.0
+
+    # Feature 1: no good split (uniform gradient)
+    hist_grad[1, :10] = 0.2
+    hist_hess[1, :10] = 1.0
+    # Per-feature sum: 10*0.2 = 2.0
+
     # Feature 2: weaker split
-    hist_grad[2, :3] = 0.3
-    hist_grad[2, 3:] = -0.1
-    
+    hist_grad[2, :5] = 0.6
+    hist_grad[2, 5:10] = -0.2
+    hist_hess[2, :10] = 1.0
+    # Per-feature sum: 5*0.6 + 5*(-0.2) = 2.0
+
     # Test split finding
     from openboost._core._split import find_best_split
-    
-    sum_grad = float(np.sum(hist_grad))
-    sum_hess = float(np.sum(hist_hess))
-    
+
+    # Per-feature totals (all features sum to the same value)
+    sum_grad = float(np.sum(hist_grad[0]))
+    sum_hess = float(np.sum(hist_hess[0]))
+
     split = find_best_split(
         hist_grad, hist_hess,
         sum_grad, sum_hess,
@@ -302,7 +312,7 @@ def test_tree_from_histogram_simple():
         min_child_weight=1.0,
         min_gain=0.0,
     )
-    
+
     # Should select feature 0 with threshold 5
     assert split.is_valid
     assert split.feature == 0

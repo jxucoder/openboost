@@ -60,8 +60,8 @@ class LinearLeafTree:
     tree_structure: TreeStructure
     leaf_weights: NDArray  # (n_leaves, max_features_linear + 1)
     leaf_features: list[list[int]]  # Features used per leaf
-    leaf_ids: dict[int, int]  # Map tree leaf -> our leaf index
-    n_features: int
+    leaf_ids: dict[float, int]  # Map tree leaf prediction value -> our leaf index
+    n_features: int = 0
     training_binned: BinnedArray | None = None  # For transform
     
     def __call__(self, X: NDArray) -> NDArray:
@@ -87,9 +87,10 @@ class LinearLeafTree:
         predictions = np.zeros(n_samples, dtype=np.float32)
         
         for sample_idx in range(n_samples):
-            leaf_pred = leaf_preds[sample_idx]
-            
-            # Find which of our leaves this corresponds to
+            leaf_pred = float(leaf_preds[sample_idx])
+
+            # Look up leaf index using float prediction value as key.
+            # This works because the tree returns deterministic leaf constants.
             if leaf_pred in self.leaf_ids:
                 leaf_idx = self.leaf_ids[leaf_pred]
             else:
@@ -382,16 +383,13 @@ class LinearLeafGBDT(PersistenceMixin):
         # Add bias column
         X_aug = np.column_stack([np.ones(n_samples), X])
         
-        # Diagonal weight matrix
-        W = np.diag(weights)
-        
         # Regularization (don't regularize bias)
         reg_matrix = reg_lambda * np.eye(n_features + 1)
         reg_matrix[0, 0] = 0
-        
+
         try:
-            # Solve normal equations
-            XtWX = X_aug.T @ W @ X_aug + reg_matrix
+            # Solve normal equations — O(n*p^2) instead of O(n^2) via np.diag
+            XtWX = X_aug.T @ (weights[:, None] * X_aug) + reg_matrix
             XtWy = X_aug.T @ (weights * y)
             beta = np.linalg.solve(XtWX, XtWy)
         except np.linalg.LinAlgError:

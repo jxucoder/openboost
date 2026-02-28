@@ -34,7 +34,10 @@ from sklearn.model_selection import train_test_split, cross_val_score
 @pytest.fixture(scope="module")
 def california_housing():
     """Load California Housing dataset (cached at module level)."""
-    data = fetch_california_housing()
+    try:
+        data = fetch_california_housing()
+    except Exception as exc:
+        pytest.skip(f"Could not download California Housing dataset: {exc}")
     X_train, X_test, y_train, y_test = train_test_split(
         data.data.astype(np.float32),
         data.target.astype(np.float32),
