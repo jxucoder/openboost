@@ -22,6 +22,7 @@ Example:
 
 from __future__ import annotations
 
+import copy
 from abc import ABC
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -179,7 +180,7 @@ class EarlyStopping(Callback):
             
             if self.restore_best:
                 # Snapshot current model state
-                self._best_trees = [t for t in state.model.trees_]
+                self._best_trees = copy.deepcopy(state.model.trees_)
                 # Handle DART tree weights
                 if hasattr(state.model, 'tree_weights_'):
                     self._best_weights = list(state.model.tree_weights_)

@@ -338,8 +338,27 @@ class TreeStructure:
     def _predict_standard_gpu(self, binned) -> NDArray:
         """GPU prediction for standard trees."""
         from numba import cuda
-        from .._backends._cuda import predict_cuda, to_device
-        
+        from .._backends._cuda import predict_cuda, predict_with_categorical_cuda, to_device
+
+        has_categorical = (
+            self.is_categorical_split is not None
+            and self.cat_bitsets is not None
+            and np.any(self.is_categorical_split)
+        )
+
+        if has_categorical:
+            return predict_with_categorical_cuda(
+                binned,
+                to_device(self.features),
+                to_device(self.thresholds.astype(np.uint8)),
+                to_device(self.values),
+                to_device(self.left_children),
+                to_device(self.right_children),
+                tree_missing_left=to_device(self.missing_go_left) if self.missing_go_left is not None else None,
+                is_categorical_split=to_device(self.is_categorical_split),
+                cat_bitsets=to_device(self.cat_bitsets),
+            )
+
         return predict_cuda(
             binned,
             to_device(self.features),
@@ -347,6 +366,7 @@ class TreeStructure:
             to_device(self.values),
             to_device(self.left_children),
             to_device(self.right_children),
+            tree_missing_left=to_device(self.missing_go_left) if self.missing_go_left is not None else None,
         )
     
     def _predict_symmetric(self, binned: NDArray) -> NDArray:
@@ -377,12 +397,16 @@ class TreeStructure:
     def _predict_symmetric_gpu(self, binned) -> NDArray:
         """GPU prediction for symmetric trees."""
         from .._backends._cuda import predict_symmetric_cuda
-        
+
+        # GPU kernel indexes leaves from 0, so pass only the leaf portion
+        leaf_start = 2**self.depth - 1
+        leaf_values = self.values[leaf_start:leaf_start + 2**self.depth]
+
         return predict_symmetric_cuda(
             binned,
             self.level_features,
             self.level_thresholds.astype(np.uint8),
-            self.values,
+            leaf_values,
             self.depth,
         )
 
@@ -580,16 +604,16 @@ class LevelWiseGrowth(GrowthStrategy):
         return features[parent] >= 0
     
     def _count_nodes(self, left_children) -> int:
-        """Count actual nodes in tree."""
-        # Find the highest index that's either root or has a valid parent
+        """Count actual nodes in tree by walking from highest index down."""
+        # Find the highest valid node index: a node is valid if it's the root
+        # or its parent was split (parent has left_children != -1).
         for i in range(len(left_children) - 1, -1, -1):
-            if i == 0 or left_children[(i - 1) // 2] != -1 or ((i - 1) // 2 == 0):
-                if i == 0:
-                    return 1
-                # Check if this node or its sibling was created
-                parent = (i - 1) // 2
-                if left_children[parent] != -1:
-                    return max(left_children[parent], left_children[parent] + 1, i) + 1
+            if i == 0:
+                return 1
+            parent = (i - 1) // 2
+            if left_children[parent] != -1:
+                # This node is valid — the tree size is at least i+1
+                return i + 1
         return 1
 
 
@@ -624,8 +648,8 @@ class LeafWiseGrowth(GrowthStrategy):
         n_categories: NDArray | None = None,
     ) -> TreeStructure:
         """Grow tree by always splitting best leaf."""
-        if config.max_leaves is None:
-            config.max_leaves = 2**config.max_depth
+        # Compute locally instead of mutating the shared config object
+        max_leaves = config.max_leaves if config.max_leaves is not None else 2**config.max_depth
         
         n_features, n_samples = binned.shape
         # Use complete binary tree size to accommodate any depth
@@ -671,7 +695,7 @@ class LeafWiseGrowth(GrowthStrategy):
         n_leaves = 1
         actual_depth = 0
         
-        while candidates and n_leaves < config.max_leaves:
+        while candidates and n_leaves < max_leaves:
             neg_gain, node_id, node_split, node_hist = heapq.heappop(candidates)
             
             # Check if this node is still a leaf (might have been split)

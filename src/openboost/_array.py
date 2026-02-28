@@ -206,9 +206,9 @@ def array(
         >>> X_binned = ob.array(X, categorical_features=[1])  # Feature 1 is categorical
         >>> print(X_binned.is_categorical)  # [False, True, False]
     """
-    # Reserve bin 255 for missing values
-    if n_bins > 255:
-        n_bins = 255  # Cap at 255, leaving 255 for MISSING_BIN
+    # Reserve bin 255 for missing values — max usable bin is 254 (indices 0-254)
+    if n_bins > 254:
+        n_bins = 254
     
     # Convert to numpy for binning computation
     X_np = _to_numpy(X)
@@ -414,15 +414,15 @@ def _bin_categorical_feature(
             "(bin 255 reserved for missing values)"
         )
     
-    # Create mapping: value -> bin index
-    category_map = {v: i for i, v in enumerate(unique_vals)}
+    # Create mapping: value -> bin index (use int keys for consistent lookup)
+    category_map = {int(v): i for i, v in enumerate(unique_vals)}
     
     # Encode values
     for i, v in enumerate(col):
         if nan_mask[i]:
             binned_col[i] = MISSING_BIN
         else:
-            binned_col[i] = category_map[v]
+            binned_col[i] = category_map[int(v)]
     
     # Empty edges for categorical (not used in splits)
     edges = np.array([], dtype=np.float64)

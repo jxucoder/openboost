@@ -62,34 +62,47 @@ def predict_ensemble(
     return pred
 
 
-def _fill_cuda(arr, value: float):
-    """Fill CUDA array with a value."""
+_fill_kernel = None
+_add_inplace_kernel = None
+
+
+def _ensure_cuda_kernels():
+    """Lazily compile module-level CUDA kernels."""
+    global _fill_kernel, _add_inplace_kernel
+    if _fill_kernel is not None:
+        return
     from numba import cuda
-    
+
     @cuda.jit
-    def _kernel(arr, val):
+    def fill_kernel(arr, val):
         idx = cuda.grid(1)
         if idx < arr.shape[0]:
             arr[idx] = val
-    
+
+    @cuda.jit
+    def add_inplace_kernel(arr, other, scale):
+        idx = cuda.grid(1)
+        if idx < arr.shape[0]:
+            arr[idx] += scale * other[idx]
+
+    _fill_kernel = fill_kernel
+    _add_inplace_kernel = add_inplace_kernel
+
+
+def _fill_cuda(arr, value: float):
+    """Fill CUDA array with a value."""
+    _ensure_cuda_kernels()
     threads = 256
     blocks = (len(arr) + threads - 1) // threads
-    _kernel[blocks, threads](arr, value)
+    _fill_kernel[blocks, threads](arr, value)
 
 
 def _add_inplace_cuda(arr, other, scale: float):
     """arr += scale * other (in-place on GPU)."""
-    from numba import cuda
-    
-    @cuda.jit
-    def _kernel(arr, other, scale):
-        idx = cuda.grid(1)
-        if idx < arr.shape[0]:
-            arr[idx] += scale * other[idx]
-    
+    _ensure_cuda_kernels()
     threads = 256
     blocks = (len(arr) + threads - 1) // threads
-    _kernel[blocks, threads](arr, other, scale)
+    _add_inplace_kernel[blocks, threads](arr, other, scale)
 
 
 # =============================================================================

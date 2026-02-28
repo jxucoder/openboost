@@ -10,7 +10,7 @@ import math
 from typing import TYPE_CHECKING
 
 import numpy as np
-from numba import cuda, float32, float64, int32, uint8
+from numba import cuda, float32, float64, int32, int64, uint8
 
 if TYPE_CHECKING:
     from numba.cuda.cudadrv.devicearray import DeviceNDArray
@@ -1911,9 +1911,7 @@ def _find_split_batch_kernel(
     total_hesses: DeviceNDArray,    # (n_configs,) float32
     reg_lambdas: DeviceNDArray,     # (n_configs,) float32
     min_child_weights: DeviceNDArray,  # (n_configs,) float32
-    best_features_out: DeviceNDArray,  # (n_configs,) int32
-    best_bins_out: DeviceNDArray,   # (n_configs,) int32
-    best_gains_out: DeviceNDArray,  # (n_configs,) float32
+    best_gains_out: DeviceNDArray,  # (n_configs,) int64 — packed (gain|feature|bin)
 ):
     """Find best split for each config in parallel.
     
@@ -1971,22 +1969,18 @@ def _find_split_batch_kernel(
             best_gain = gain
             best_bin = bin_idx
     
-    # Atomic update of best for this config (across features)
-    # Use shared memory to find best across features in this block
-    # For simplicity, use atomicMax pattern
-    
-    # Only thread 0 updates (this kernel runs 1 thread per (config, feature) effectively)
-    if thread_idx == 0:
-        # Check if this feature is better than current best
-        current_best = best_gains_out[config_idx]
-        if best_gain > current_best:
-            # Atomic compare-and-swap pattern
-            cuda.atomic.max(best_gains_out, config_idx, best_gain)
-            # If we successfully updated, also update feature and bin
-            # Note: This has a race condition but works for finding *a* good split
-            if best_gains_out[config_idx] == best_gain:
-                best_features_out[config_idx] = feature_idx
-                best_bins_out[config_idx] = best_bin
+    # Atomic update of best for this config (across features).
+    # Pack (gain, feature, bin) into a single int64 for race-free comparison.
+    # IEEE 754 float32 bit-pattern comparison preserves order for non-negative values.
+    if thread_idx == 0 and best_gain > float32(0.0):
+        # Reinterpret float32 gain as uint32 for bit packing
+        gain_bits = int64(0)
+        # Manual bit-level conversion: multiply to scale then cast
+        # Use view-cast trick: store to shared mem as float, read back as int
+        gain_uint = int64(cuda.libdevice.float_as_int(best_gain))
+        # Pack: upper 32 bits = gain, lower 32 = (feature << 16) | bin
+        packed = (gain_uint << int64(32)) | (int64(feature_idx) << int64(16)) | int64(best_bin)
+        cuda.atomic.max(best_gains_out, config_idx, packed)
 
 
 @cuda.jit
@@ -2002,6 +1996,17 @@ def _init_batch_split_results(
         best_gains[idx] = float32(-1e10)
         best_features[idx] = int32(-1)
         best_bins[idx] = int32(-1)
+
+
+@cuda.jit
+def _init_packed_split_results(
+    best_packed: DeviceNDArray,
+    n_configs: int32,
+):
+    """Initialize packed split results to zero (no valid split)."""
+    idx = cuda.grid(1)
+    if idx < n_configs:
+        best_packed[idx] = int64(0)
 
 
 def find_best_split_batch_cuda(
@@ -2030,29 +2035,41 @@ def find_best_split_batch_cuda(
     n_configs = hist_grad.shape[0]
     n_features = hist_grad.shape[1]
     
-    # Allocate output arrays (Phase 3.3: float32)
-    best_features = cuda.device_array(n_configs, dtype=np.int32)
-    best_bins = cuda.device_array(n_configs, dtype=np.int32)
-    best_gains = cuda.device_array(n_configs, dtype=np.float32)
-    
-    # Initialize to invalid
+    # Allocate packed output: int64 encodes (gain_bits << 32 | feature << 16 | bin)
+    best_packed = cuda.device_array(n_configs, dtype=np.int64)
+    # Initialize to 0 (no valid split)
     threads = 256
     blocks = math.ceil(n_configs / threads)
-    _init_batch_split_results[blocks, threads](
-        best_gains, best_features, best_bins, n_configs
-    )
-    
+    _init_packed_split_results[blocks, threads](best_packed, n_configs)
+
     # Find best split for each (config, feature) pair
     # Use 2D grid with single thread per block for simplicity
-    # (Each block scans all bins for one feature of one config)
     grid = (n_features, n_configs)
     _find_split_batch_kernel[grid, 1](
         hist_grad, hist_hess,
         total_grads, total_hesses,
         reg_lambdas, min_child_weights,
-        best_features, best_bins, best_gains
+        best_packed
     )
-    
+
+    # Unpack results on host
+    packed_host = best_packed.copy_to_host()
+    best_features_host = np.full(n_configs, -1, dtype=np.int32)
+    best_bins_host = np.full(n_configs, -1, dtype=np.int32)
+    best_gains_host = np.full(n_configs, -1e10, dtype=np.float32)
+
+    for i in range(n_configs):
+        p = packed_host[i]
+        if p > 0:
+            gain_uint = np.uint32((p >> 32) & 0xFFFFFFFF)
+            best_gains_host[i] = gain_uint.view(np.float32)
+            best_features_host[i] = int((p >> 16) & 0xFFFF)
+            best_bins_host[i] = int(p & 0xFFFF)
+
+    best_features = cuda.to_device(best_features_host)
+    best_bins = cuda.to_device(best_bins_host)
+    best_gains = cuda.to_device(best_gains_host)
+
     return best_features, best_bins, best_gains
 
 

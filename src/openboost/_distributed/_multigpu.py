@@ -88,7 +88,17 @@ class GPUWorkerBase:
         # Bin and store data
         # If bin_edges provided, use them for consistent binning across shards
         if bin_edges is not None:
-            self.X_binned = ob.array(X_shard, n_bins=n_bins, bin_edges=bin_edges)
+            from .._array import BinnedArray
+            # Build a template BinnedArray from pre-computed edges, then transform
+            n_features = len(bin_edges)
+            template = BinnedArray(
+                data=np.empty(0, dtype=np.uint8),
+                bin_edges=bin_edges,
+                n_features=n_features,
+                n_samples=0,
+                device="cpu",
+            )
+            self.X_binned = template.transform(X_shard)
         else:
             self.X_binned = ob.array(X_shard, n_bins=n_bins)
         

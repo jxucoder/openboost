@@ -134,9 +134,10 @@ def run_training_loop(
     
     cb_manager = CallbackManager(callbacks)
     
-    # Initialize
+    # Initialize with model's initial prediction (e.g. mean(y) for regression)
     n_samples = len(y)
-    pred = np.zeros(n_samples, dtype=np.float32)
+    init_pred = getattr(model, 'initial_prediction_', 0.0)
+    pred = np.full(n_samples, init_pred, dtype=np.float32)
     
     # Ensure model has trees_ attribute
     if not hasattr(model, 'trees_'):
@@ -183,11 +184,12 @@ def run_training_loop(
         tree = fit_round_fn(model, X_binned, grad, hess)
         model.trees_.append(tree)
         
-        # Update predictions
+        # Update predictions — read LR from model so LearningRateScheduler works
         tree_pred = tree(X_binned)
         if hasattr(tree_pred, 'copy_to_host'):
             tree_pred = tree_pred.copy_to_host()
-        pred = pred + config.learning_rate * tree_pred
+        lr = getattr(model, 'learning_rate', config.learning_rate)
+        pred = pred + lr * tree_pred
         
         # Compute train loss for callbacks
         if config.compute_train_loss:
@@ -226,36 +228,46 @@ def run_training_loop(
 
 
 def _compute_loss(pred: NDArray, y: NDArray, loss_fn) -> float:
-    """Compute loss value for predictions.
-    
-    Uses the gradient to approximate loss value.
-    For common losses: MSE = mean((pred - y)^2), etc.
+    """Compute loss value for predictions using the actual loss function.
+
+    Approximates the scalar loss via a second-order Taylor expansion:
+        loss ≈ mean(grad^2 / (2 * hess))
+    This is exact for MSE and a good approximation for other losses.
     """
-    # Simple approximation: use MSE-like loss
-    # This is a reasonable default; specific losses can override
-    diff = pred - y
-    return float(np.mean(diff ** 2))
+    grad, hess = loss_fn(pred, y)
+    if hasattr(grad, 'copy_to_host'):
+        grad = grad.copy_to_host()
+    if hasattr(hess, 'copy_to_host'):
+        hess = hess.copy_to_host()
+    grad = np.asarray(grad, dtype=np.float64)
+    hess = np.asarray(hess, dtype=np.float64)
+    # Second-order approximation: sum(g^2 / (2h)) / n
+    hess_safe = np.maximum(hess, 1e-10)
+    return float(np.mean(grad ** 2 / (2.0 * hess_safe)))
 
 
 def _default_predict(model, X, learning_rate: float) -> NDArray:
     """Default prediction using accumulated trees."""
     from ._array import BinnedArray, array
-    
-    # Bin if needed
+
+    # Bin using training edges for consistency (instead of computing new edges)
     if isinstance(X, BinnedArray):
         X_binned = X
+    elif hasattr(model, 'X_binned_') and model.X_binned_ is not None:
+        X_binned = model.X_binned_.transform(X)
     else:
-        X_binned = array(X, n_bins=256)
-    
+        X_binned = array(X, n_bins=254)
+
     n_samples = X_binned.n_samples
-    pred = np.zeros(n_samples, dtype=np.float32)
-    
+    init_pred = getattr(model, 'initial_prediction_', 0.0)
+    pred = np.full(n_samples, init_pred, dtype=np.float32)
+
     for tree in model.trees_:
         tree_pred = tree(X_binned)
         if hasattr(tree_pred, 'copy_to_host'):
             tree_pred = tree_pred.copy_to_host()
         pred = pred + learning_rate * tree_pred
-    
+
     return pred
 
 

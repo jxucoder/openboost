@@ -427,8 +427,8 @@ def quantile_gradient(pred: NDArray, y: NDArray, alpha: float = 0.5) -> tuple[ND
     - alpha=0.1: 10th percentile
     
     Gradient:
-        alpha - 1  if pred > y  (under-prediction)
-        alpha      if pred < y  (over-prediction)
+        alpha - 1  if pred > y  (over-prediction)
+        alpha      if pred < y  (under-prediction)
         
     Hessian: Use constant (not twice-differentiable)
     

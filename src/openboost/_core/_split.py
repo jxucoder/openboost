@@ -134,10 +134,14 @@ def compute_leaf_value(
 
 
 def _sum_histogram(hist: NDArray) -> float:
-    """Sum all values in a histogram."""
+    """Sum values in a histogram (first feature only).
+
+    hist is (n_features, n_bins); each feature has the same total, so
+    summing only the first avoids returning n_features * actual_total.
+    """
     if hasattr(hist, 'copy_to_host'):
         hist = hist.copy_to_host()
-    return float(np.sum(hist))
+    return float(np.sum(hist[0]))
 
 
 def find_best_split_with_missing(

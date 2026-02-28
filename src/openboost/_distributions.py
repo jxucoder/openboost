@@ -191,9 +191,13 @@ class Distribution(ABC):
         n_params = F.shape[1]
         if n_params == 1:
             return True
-        # Check if off-diagonal elements are near zero (sample a few)
-        off_diag_sum = np.sum(np.abs(F[0])) - np.sum(np.abs(np.diag(F[0])))
-        return off_diag_sum < 1e-8
+        # Check multiple samples to avoid false positives from a single sample
+        check_indices = np.linspace(0, len(F) - 1, min(10, len(F)), dtype=int)
+        for idx in check_indices:
+            off_diag_sum = np.sum(np.abs(F[idx])) - np.sum(np.abs(np.diag(F[idx])))
+            if off_diag_sum >= 1e-8:
+                return False
+        return True
     
     def natural_gradient(
         self,
@@ -1367,11 +1371,13 @@ class NegativeBinomial(Distribution):
         r = params['r']
         y_int = np.round(np.clip(y, 0, None))
         
-        return (
-            gammaln(r) + gammaln(y_int + 1) - gammaln(y_int + r)
+        # NLL = -(gammaln(y+r) - gammaln(r) - gammaln(y+1)
+        #         + r*log(r/(r+μ)) + y*log(μ/(r+μ)))
+        return -(
+            gammaln(y_int + r) - gammaln(r) - gammaln(y_int + 1)
             + r * np.log(r / (r + μ))
             + y_int * np.log(μ / (r + μ))
-        ) * -1  # Negate log-likelihood
+        )
     
     def prob_exceed(self, params: dict[str, NDArray], threshold: float) -> NDArray:
         """Probability that Y > threshold.

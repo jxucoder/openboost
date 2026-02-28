@@ -3,7 +3,7 @@
 import numpy as np
 from numba import cuda
 
-from ._array import quantile_bin
+from ._array import _quantile_bin
 from ._tree import Tree
 from ._histogram import build_histograms
 from ._split import find_best_splits, compute_leaf_values
@@ -51,8 +51,10 @@ class GradientBoosting:
         y = np.ascontiguousarray(y, dtype=np.float32)
         n_samples, n_features = X.shape
         
-        # Quantile binning
-        X_binned, self.bin_edges_ = quantile_bin(X)
+        # Quantile binning — returns (n_samples, n_features); transpose to
+        # (n_features, n_samples) for GPU kernels that index as X[feature, sample].
+        X_binned, self.bin_edges_, _ = _quantile_bin(X, n_bins=255)
+        X_binned = np.ascontiguousarray(X_binned.T)
         
         # Initial prediction = mean(y)
         self.initial_prediction_ = float(y.mean())
@@ -191,7 +193,7 @@ class GradientBoosting:
         # Bin using stored edges
         X_binned = np.empty((len(self.bin_edges_), n_samples), dtype=np.uint8)
         for f, edges in enumerate(self.bin_edges_):
-            X_binned[f] = np.digitize(X[:, f], edges[1:-1], right=False).astype(np.uint8)
+            X_binned[f] = np.digitize(X[:, f], edges, right=False).astype(np.uint8)
         
         d_X_binned = cuda.to_device(X_binned)
         d_predictions = cuda.device_array(n_samples, dtype=np.float32)

@@ -61,7 +61,8 @@ class LinearLeafTree:
     leaf_weights: NDArray  # (n_leaves, max_features_linear + 1)
     leaf_features: list[list[int]]  # Features used per leaf
     leaf_ids: dict[int, int]  # Map tree leaf -> our leaf index
-    n_features: int
+    unique_leaves: NDArray | None = None  # Sorted unique leaf prediction values
+    n_features: int = 0
     training_binned: BinnedArray | None = None  # For transform
     
     def __call__(self, X: NDArray) -> NDArray:
@@ -88,12 +89,17 @@ class LinearLeafTree:
         
         for sample_idx in range(n_samples):
             leaf_pred = leaf_preds[sample_idx]
-            
-            # Find which of our leaves this corresponds to
-            if leaf_pred in self.leaf_ids:
-                leaf_idx = self.leaf_ids[leaf_pred]
+
+            # Find nearest leaf using sorted unique values (avoids float == issues)
+            if self.unique_leaves is not None and len(self.unique_leaves) > 0:
+                leaf_idx = int(np.searchsorted(self.unique_leaves, leaf_pred))
+                if leaf_idx >= len(self.unique_leaves):
+                    leaf_idx = len(self.unique_leaves) - 1
+                elif leaf_idx > 0:
+                    # Pick closer neighbour
+                    if abs(leaf_pred - self.unique_leaves[leaf_idx - 1]) < abs(leaf_pred - self.unique_leaves[leaf_idx]):
+                        leaf_idx = leaf_idx - 1
             else:
-                # Fallback: use the constant term from first leaf
                 leaf_idx = 0
             
             # Get weights and features for this leaf
@@ -281,8 +287,9 @@ class LinearLeafGBDT(PersistenceMixin):
         unique_leaves = np.unique(leaf_preds)
         n_leaves = len(unique_leaves)
         
-        # Map leaf prediction value -> our leaf index
-        leaf_ids = {float(v): i for i, v in enumerate(unique_leaves)}
+        # Map leaf prediction value -> our leaf index using sorted array
+        # (avoids exact float comparison issues with dict lookup)
+        leaf_ids = {i: i for i in range(n_leaves)}
         
         # Storage for linear models
         leaf_weights = np.zeros((n_leaves, n_linear_features + 1), dtype=np.float32)
@@ -336,6 +343,7 @@ class LinearLeafGBDT(PersistenceMixin):
             leaf_weights=leaf_weights,
             leaf_features=leaf_features,
             leaf_ids=leaf_ids,
+            unique_leaves=unique_leaves,
             n_features=n_features,
             training_binned=self.X_binned_,  # For transform on new data
         )
@@ -382,16 +390,13 @@ class LinearLeafGBDT(PersistenceMixin):
         # Add bias column
         X_aug = np.column_stack([np.ones(n_samples), X])
         
-        # Diagonal weight matrix
-        W = np.diag(weights)
-        
         # Regularization (don't regularize bias)
         reg_matrix = reg_lambda * np.eye(n_features + 1)
         reg_matrix[0, 0] = 0
-        
+
         try:
-            # Solve normal equations
-            XtWX = X_aug.T @ W @ X_aug + reg_matrix
+            # Solve normal equations — O(n*p^2) instead of O(n^2) via np.diag
+            XtWX = X_aug.T @ (weights[:, None] * X_aug) + reg_matrix
             XtWy = X_aug.T @ (weights * y)
             beta = np.linalg.solve(XtWX, XtWy)
         except np.linalg.LinAlgError:
