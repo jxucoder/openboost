@@ -26,35 +26,41 @@ import time
 import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
-import modal
 import numpy as np
 
 PROJECT_ROOT = Path(__file__).parent.parent
 
 # =============================================================================
-# Modal Configuration
+# Modal Configuration (optional — allows local execution without modal)
 # =============================================================================
 
-app = modal.App("openboost-integration-tests")
+try:
+    import modal
 
-image = (
-    modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
-    .pip_install(
-        "numpy>=1.24",
-        "numba>=0.60",
-        "scikit-learn>=1.0",
-        "xgboost>=2.0",
-        "openml>=0.14",
-        "pandas>=2.0",
-        "tabulate>=0.9",
+    app = modal.App("openboost-integration-tests")
+
+    image = (
+        modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
+        .pip_install(
+            "numpy>=1.24",
+            "numba>=0.60",
+            "scikit-learn>=1.0",
+            "xgboost>=2.0",
+            "openml>=0.14",
+            "pandas>=2.0",
+            "tabulate>=0.9",
+        )
+        .add_local_dir(
+            str(PROJECT_ROOT / "src" / "openboost"),
+            remote_path="/root/openboost",
+        )
     )
-    .add_local_dir(
-        str(PROJECT_ROOT / "src" / "openboost"),
-        remote_path="/root/openboost",
-    )
-)
+except ImportError:
+    modal = None
+    app = None
+    image = None
 
 # =============================================================================
 # Dataset Definitions
@@ -1123,8 +1129,7 @@ def run_integration_tests(
 # =============================================================================
 
 
-@app.function(gpu="A100", image=image, timeout=7200)
-def benchmark_gpu(
+def _benchmark_gpu(
     datasets: list[str] | None = None,
     configs: list[str] | None = None,
     include_extended: bool = False,
@@ -1153,46 +1158,49 @@ def benchmark_gpu(
     return results_to_dict(results)
 
 
-@app.local_entrypoint()
-def main(
-    datasets: str | None = None,
-    configs: str | None = None,
-    extended: bool = False,
-):
-    """Run benchmark on Modal.
+if modal is not None and app is not None:
+    benchmark_gpu = app.function(gpu="A100", image=image, timeout=7200)(_benchmark_gpu)
 
-    Args:
-        datasets: Comma-separated dataset names (e.g., "cpu_act,higgs")
-        configs: Comma-separated config names (e.g., "baseline,deep_tree")
-        extended: Include extended datasets
-    """
-    dataset_list = datasets.split(",") if datasets else None
-    config_list = configs.split(",") if configs else None
+    @app.local_entrypoint()
+    def main(
+        datasets: str | None = None,
+        configs: str | None = None,
+        extended: bool = False,
+    ):
+        """Run benchmark on Modal.
 
-    print("Running OpenBoost integration tests on Modal A100...")
-    print(f"Datasets: {dataset_list or 'primary'}")
-    print(f"Configs: {config_list or 'default'}")
-    print(f"Extended: {extended}")
-    print("")
+        Args:
+            datasets: Comma-separated dataset names (e.g., "cpu_act,higgs")
+            configs: Comma-separated config names (e.g., "baseline,deep_tree")
+            extended: Include extended datasets
+        """
+        dataset_list = datasets.split(",") if datasets else None
+        config_list = configs.split(",") if configs else None
 
-    results = benchmark_gpu.remote(
-        datasets=dataset_list,
-        configs=config_list,
-        include_extended=extended,
-    )
+        print("Running OpenBoost integration tests on Modal A100...")
+        print(f"Datasets: {dataset_list or 'primary'}")
+        print(f"Configs: {config_list or 'default'}")
+        print(f"Extended: {extended}")
+        print("")
 
-    # Save results
-    results_dir = PROJECT_ROOT / "benchmarks" / "results"
-    results_dir.mkdir(exist_ok=True)
+        results = benchmark_gpu.remote(
+            datasets=dataset_list,
+            configs=config_list,
+            include_extended=extended,
+        )
 
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    results_file = results_dir / f"integration_results_{timestamp}.json"
+        # Save results
+        results_dir = PROJECT_ROOT / "benchmarks" / "results"
+        results_dir.mkdir(exist_ok=True)
 
-    with open(results_file, "w") as f:
-        json.dump(results, f, indent=2)
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        results_file = results_dir / f"integration_results_{timestamp}.json"
 
-    print(f"\nResults saved to: {results_file}")
-    print(f"\nSummary: {results['summary']}")
+        with open(results_file, "w") as f:
+            json.dump(results, f, indent=2)
+
+        print(f"\nResults saved to: {results_file}")
+        print(f"\nSummary: {results['summary']}")
 
 
 # =============================================================================
