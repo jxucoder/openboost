@@ -1,16 +1,27 @@
-"""Phase 16: Benchmark OpenBoost NGBoost vs Official NGBoost.
+"""Benchmark: OpenBoost NaturalBoost vs Official NGBoost.
 
 Compare:
 1. Training speed
-2. Prediction speed  
+2. Prediction speed
 3. NLL (negative log-likelihood) - prediction quality
 4. Calibration of prediction intervals
+
+Usage:
+    uv run python benchmarks/ngboost_benchmark.py
 """
 
+from __future__ import annotations
+
+import sys
 import time
+from pathlib import Path
+
 import numpy as np
-from sklearn.datasets import make_regression, fetch_california_housing
+from sklearn.datasets import fetch_california_housing, make_regression
 from sklearn.model_selection import train_test_split
+
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 
 def benchmark_synthetic(n_samples: int = 10000, n_features: int = 20, n_trees: int = 100):
@@ -78,12 +89,17 @@ def benchmark_synthetic(n_samples: int = 10000, n_features: int = 20, n_trees: i
         print(f"  Error: {e}")
         results['official'] = None
     
-    # --- OpenBoost NGBoost ---
+    # --- OpenBoost NaturalBoost ---
     try:
         import openboost as ob
+
+        # Warmup JIT
+        ob.NaturalBoostNormal(n_trees=3, learning_rate=0.1, max_depth=3).fit(
+            X_train[:500], y_train[:500]
+        )
         
-        print("\n[OpenBoost NGBoost]")
-        model_openboost = ob.NGBoostNormal(
+        print("\n[OpenBoost NaturalBoost]")
+        model_openboost = ob.NaturalBoostNormal(
             n_trees=n_trees,
             learning_rate=0.1,
             max_depth=3,
@@ -98,7 +114,7 @@ def benchmark_synthetic(n_samples: int = 10000, n_features: int = 20, n_trees: i
         pred_time_openboost = time.perf_counter() - t0
         
         # NLL
-        nll_openboost = model_openboost.nll(X_test, y_test)
+        nll_openboost = model_openboost.score(X_test, y_test)
         if hasattr(nll_openboost, 'mean'):
             nll_openboost = nll_openboost.mean()
         
@@ -187,19 +203,24 @@ def benchmark_california_housing(n_trees: int = 100):
     except Exception as e:
         print(f"  Error: {e}")
     
-    # --- OpenBoost NGBoost ---
+    # --- OpenBoost NaturalBoost ---
     try:
         import openboost as ob
+
+        # Warmup JIT
+        ob.NaturalBoostNormal(n_trees=3, learning_rate=0.1, max_depth=3).fit(
+            X_train[:500], y_train[:500]
+        )
         
-        print("\n[OpenBoost NGBoost]")
-        model = ob.NGBoostNormal(n_trees=n_trees, learning_rate=0.1, max_depth=3)
+        print("\n[OpenBoost NaturalBoost]")
+        model = ob.NaturalBoostNormal(n_trees=n_trees, learning_rate=0.1, max_depth=3)
         
         t0 = time.perf_counter()
         model.fit(X_train, y_train)
         train_time = time.perf_counter() - t0
         
         pred = model.predict(X_test)
-        nll = model.nll(X_test, y_test)
+        nll = model.score(X_test, y_test)
         if hasattr(nll, 'mean'):
             nll = nll.mean()
         rmse = np.sqrt(np.mean((pred - y_test)**2))
@@ -233,6 +254,16 @@ def benchmark_scaling():
     print(f"\n{'Size':<10} {'NGBoost':<12} {'OpenBoost':<12} {'Speedup':<10}")
     print("-" * 44)
     
+    # Warmup JIT on small data
+    try:
+        import openboost as ob
+        warmup_X, warmup_y = make_regression(n_samples=500, n_features=10, noise=10, random_state=0)
+        ob.NaturalBoostNormal(n_trees=3, learning_rate=0.1, max_depth=3).fit(
+            warmup_X.astype(np.float32), warmup_y.astype(np.float32)
+        )
+    except Exception:
+        pass
+
     for n in sizes:
         X, y = make_regression(n_samples=n, n_features=10, noise=10, random_state=42)
         X = X.astype(np.float32)
@@ -247,18 +278,18 @@ def benchmark_scaling():
             t0 = time.perf_counter()
             model.fit(X, y)
             time_official = time.perf_counter() - t0
-        except:
+        except Exception:
             time_official = float('nan')
         
         # OpenBoost
         try:
             import openboost as ob
             
-            model = ob.NGBoostNormal(n_trees=n_trees, learning_rate=0.1, max_depth=3)
+            model = ob.NaturalBoostNormal(n_trees=n_trees, learning_rate=0.1, max_depth=3)
             t0 = time.perf_counter()
             model.fit(X, y)
             time_openboost = time.perf_counter() - t0
-        except:
+        except Exception:
             time_openboost = float('nan')
         
         speedup = time_official / time_openboost if time_openboost > 0 else 0
@@ -267,7 +298,7 @@ def benchmark_scaling():
 
 if __name__ == '__main__':
     print("="*70)
-    print("PHASE 16: OpenBoost NGBoost vs Official NGBoost Benchmark")
+    print("OpenBoost NaturalBoost vs Official NGBoost Benchmark")
     print("="*70)
     
     # Quick benchmark

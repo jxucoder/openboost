@@ -1,37 +1,44 @@
 """Benchmark: OpenBoost GPU-GAM vs InterpretML EBM.
 
-Run locally (if you have GPU):
+Run locally:
     cd openboost
-    uv run python benchmarks/ebm_benchmark.py
+    uv run python benchmarks/ebm_benchmark.py --local
 
 Run on Modal (cloud A100):
     cd openboost
     uv run modal run benchmarks/ebm_benchmark.py
 """
 
-import modal
+from __future__ import annotations
+
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent
 
-app = modal.App("openboost-ebm-bench")
+try:
+    import modal
 
-# Image with CUDA + OpenBoost + InterpretML
-image = (
-    modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
-    .pip_install(
-        "numpy>=1.24",
-        "numba>=0.60",
-        "cupy-cuda12x>=13.0",
-        "scikit-learn>=1.0",
-        "interpret>=0.6",  # InterpretML with EBM
-        "xgboost>=2.0",
+    app = modal.App("openboost-ebm-bench")
+
+    image = (
+        modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
+        .pip_install(
+            "numpy>=1.24",
+            "numba>=0.60",
+            "cupy-cuda12x>=13.0",
+            "scikit-learn>=1.0",
+            "interpret>=0.6",
+            "xgboost>=2.0",
+        )
+        .add_local_dir(
+            str(PROJECT_ROOT / "src" / "openboost"),
+            remote_path="/root/openboost",
+        )
     )
-    .add_local_dir(
-        str(PROJECT_ROOT / "src" / "openboost"),
-        remote_path="/root/openboost",
-    )
-)
+except ImportError:
+    modal = None
+    app = None
+    image = None
 
 
 def generate_data(n_samples: int, n_features: int, task: str = "regression"):
@@ -58,7 +65,6 @@ def generate_data(n_samples: int, n_features: int, task: str = "regression"):
     return X, y
 
 
-@app.function(gpu="A100", image=image, timeout=1800)
 def benchmark_gam_vs_ebm(
     n_samples: int = 100_000,
     n_features: int = 20,
@@ -308,7 +314,6 @@ def benchmark_gam_vs_ebm(
     return results
 
 
-@app.function(gpu="A100", image=image, timeout=3600)
 def benchmark_scaling(max_samples: int = 1_000_000):
     """Benchmark how both scale with data size."""
     import sys
@@ -400,77 +405,78 @@ def benchmark_scaling(max_samples: int = 1_000_000):
     return results
 
 
-@app.local_entrypoint()
-def main():
-    """Run benchmarks on Modal."""
-    print("Running GAM vs EBM benchmark on Modal A100...")
-    
-    # Main benchmark
-    results = benchmark_gam_vs_ebm.remote(
-        n_samples=100_000,
-        n_features=20,
-        n_rounds=500,
-    )
-    
-    print("\n\nFinal Results:")
-    print(results)
-    
-    # Scaling benchmark (optional, takes longer)
-    # scaling_results = benchmark_scaling.remote(max_samples=500_000)
-    # print("\n\nScaling Results:")
-    # print(scaling_results)
+if modal is not None and app is not None:
+    _benchmark_gam_vs_ebm_modal = app.function(gpu="A100", image=image, timeout=1800)(benchmark_gam_vs_ebm)
+    _benchmark_scaling_modal = app.function(gpu="A100", image=image, timeout=3600)(benchmark_scaling)
+
+    @app.local_entrypoint()
+    def main():
+        """Run benchmarks on Modal."""
+        print("Running GAM vs EBM benchmark on Modal A100...")
+
+        results = _benchmark_gam_vs_ebm_modal.remote(
+            n_samples=100_000,
+            n_features=20,
+            n_rounds=500,
+        )
+
+        print("\n\nFinal Results:")
+        print(results)
 
 
 # For local execution without Modal
 if __name__ == "__main__":
     import sys
-    
+
     if len(sys.argv) > 1 and sys.argv[1] == "--local":
-        # Run locally
         print("Running locally...")
-        
+
         import numpy as np
         import time
-        from sklearn.metrics import mean_squared_error, r2_score
+        from sklearn.metrics import r2_score
         from sklearn.model_selection import train_test_split
-        
-        # Add openboost to path
-        import sys
+
         sys.path.insert(0, str(PROJECT_ROOT / "src"))
-        
+
         n_samples = 50_000
         n_features = 20
         n_rounds = 200
-        
-        # Generate data
+
         X, y = generate_data(n_samples, n_features)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-        
-        print(f"Data: {n_samples:,} samples × {n_features} features")
-        
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+
+        print(f"Data: {n_samples:,} samples x {n_features} features")
+
         # OpenBoost GPU-GAM
         try:
             import openboost as ob
             from openboost import OpenBoostGAM
-            
+
             print(f"\nOpenBoost backend: {ob.get_backend()}")
-            
+
+            # Warmup JIT
+            OpenBoostGAM(n_rounds=10, learning_rate=0.1).fit(
+                X_train[:1000], y_train[:1000]
+            )
+
             gam = OpenBoostGAM(n_rounds=n_rounds, learning_rate=0.05)
             start = time.perf_counter()
             gam.fit(X_train, y_train)
             train_time = time.perf_counter() - start
-            
+
             y_pred = gam.predict(X_test)
             print(f"OpenBoost GPU-GAM: {train_time:.2f}s, R²={r2_score(y_test, y_pred):.4f}")
         except Exception as e:
             print(f"OpenBoost failed: {e}")
             import traceback
             traceback.print_exc()
-        
+
         # InterpretML EBM
         try:
             from interpret.glassbox import ExplainableBoostingRegressor
-            
+
             ebm = ExplainableBoostingRegressor(
                 max_rounds=n_rounds,
                 learning_rate=0.05,
@@ -482,7 +488,7 @@ if __name__ == "__main__":
             start = time.perf_counter()
             ebm.fit(X_train, y_train)
             train_time = time.perf_counter() - start
-            
+
             y_pred = ebm.predict(X_test)
             print(f"InterpretML EBM:   {train_time:.2f}s, R²={r2_score(y_test, y_pred):.4f}")
         except ImportError:

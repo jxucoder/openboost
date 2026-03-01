@@ -7,26 +7,34 @@ Run on Modal (cloud A100):
     uv run modal run benchmarks/xgboost_benchmark.py
 """
 
-import modal
+from __future__ import annotations
+
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent
 
-app = modal.App("openboost-xgboost-bench")
+try:
+    import modal
 
-image = (
-    modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
-    .pip_install(
-        "numpy>=1.24",
-        "numba>=0.60",
-        "scikit-learn>=1.0",
-        "xgboost>=2.0",
+    app = modal.App("openboost-xgboost-bench")
+
+    image = (
+        modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
+        .pip_install(
+            "numpy>=1.24",
+            "numba>=0.60",
+            "scikit-learn>=1.0",
+            "xgboost>=2.0",
+        )
+        .add_local_dir(
+            str(PROJECT_ROOT / "src" / "openboost"),
+            remote_path="/root/openboost",
+        )
     )
-    .add_local_dir(
-        str(PROJECT_ROOT / "src" / "openboost"),
-        remote_path="/root/openboost",
-    )
-)
+except ImportError:
+    modal = None
+    app = None
+    image = None
 
 
 # =============================================================================
@@ -198,6 +206,15 @@ def benchmark_binary(X_train, X_test, y_train, y_test, n_trees=100, max_depth=6,
     
     # OpenBoost
     import openboost as ob
+
+    # Warmup JIT
+    ob.GradientBoosting(n_trees=5, max_depth=3, loss='logloss').fit(
+        X_train[:1000], y_train[:1000]
+    )
+    if use_gpu:
+        from numba import cuda
+        cuda.synchronize()
+
     model = ob.GradientBoosting(
         n_trees=n_trees,
         max_depth=max_depth,
@@ -273,6 +290,15 @@ def benchmark_multiclass(X_train, X_test, y_train, y_test, n_classes=5, n_trees=
     
     # OpenBoost MultiClass
     import openboost as ob
+
+    # Warmup JIT
+    ob.MultiClassGradientBoosting(
+        n_classes=n_classes, n_trees=5, max_depth=3
+    ).fit(X_train[:1000], y_train[:1000])
+    if use_gpu:
+        from numba import cuda
+        cuda.synchronize()
+
     model = ob.MultiClassGradientBoosting(
         n_classes=n_classes,
         n_trees=n_trees,
@@ -352,6 +378,15 @@ def benchmark_poisson(X_train, X_test, y_train, y_test, n_trees=100, max_depth=6
     
     # OpenBoost
     import openboost as ob
+
+    # Warmup JIT
+    ob.GradientBoosting(n_trees=5, max_depth=3, loss='poisson').fit(
+        X_train[:1000], y_train[:1000]
+    )
+    if use_gpu:
+        from numba import cuda
+        cuda.synchronize()
+
     model = ob.GradientBoosting(
         n_trees=n_trees,
         max_depth=max_depth,
@@ -427,10 +462,11 @@ def print_results(task_name, results, metric1_name, metric2_name):
     print(f"{'Model':<15} {'Train (s)':<12} {'Pred (ms)':<12} {metric1_name:<12} {metric2_name:<12}")
     print(f"{'─' * 60}")
     
+    metric_keys = [k for k in list(results['openboost'].keys()) if k not in ('train_time', 'pred_time')]
     for name in ['openboost', 'xgboost']:
         r = results[name]
-        m1 = list(r.values())[2]  # First metric after times
-        m2 = list(r.values())[3]  # Second metric
+        m1 = r[metric_keys[0]] if metric_keys else 0.0
+        m2 = r[metric_keys[1]] if len(metric_keys) > 1 else 0.0
         print(f"{name:<15} {r['train_time']:<12.3f} {r['pred_time']:<12.2f} {m1:<12.4f} {m2:<12.4f}")
     
     # Speedup
@@ -502,34 +538,35 @@ def run_all_benchmarks(n_samples=50_000, n_features=20, n_trees=100, max_depth=6
 
 
 # =============================================================================
-# Modal Entry Points
+# Modal Entry Points (only defined when modal is installed)
 # =============================================================================
 
-@app.function(gpu="A100", image=image, timeout=1800)
-def benchmark_gpu(n_samples: int = 100_000, n_features: int = 20, n_trees: int = 100):
-    """Run benchmark on GPU."""
-    import sys
-    sys.path.insert(0, "/root")
-    
-    from numba import cuda
-    print(f"GPU: {cuda.get_current_device().name}")
-    
-    return run_all_benchmarks(
-        n_samples=n_samples,
-        n_features=n_features,
-        n_trees=n_trees,
-        max_depth=6,
-        use_gpu=True,
-    )
+if modal is not None and app is not None:
 
+    @app.function(gpu="A100", image=image, timeout=1800)
+    def benchmark_gpu(n_samples: int = 100_000, n_features: int = 20, n_trees: int = 100):
+        """Run benchmark on GPU."""
+        import sys
+        sys.path.insert(0, "/root")
 
-@app.local_entrypoint()
-def main():
-    """Run benchmark on Modal."""
-    print("Running OpenBoost vs XGBoost benchmark on Modal A100...")
-    results = benchmark_gpu.remote(n_samples=100_000, n_features=20, n_trees=100)
-    print("\n\nFinal Results:")
-    print(results)
+        from numba import cuda
+        print(f"GPU: {cuda.get_current_device().name}")
+
+        return run_all_benchmarks(
+            n_samples=n_samples,
+            n_features=n_features,
+            n_trees=n_trees,
+            max_depth=6,
+            use_gpu=True,
+        )
+
+    @app.local_entrypoint()
+    def main():
+        """Run benchmark on Modal."""
+        print("Running OpenBoost vs XGBoost benchmark on Modal A100...")
+        results = benchmark_gpu.remote(n_samples=100_000, n_features=20, n_trees=100)
+        print("\n\nFinal Results:")
+        print(results)
 
 
 # =============================================================================
@@ -542,8 +579,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--local":
         print("Running locally on CPU...")
         
-        import sys as system
-        system.path.insert(0, str(PROJECT_ROOT / "src"))
+        sys.path.insert(0, str(PROJECT_ROOT / "src"))
         
         run_all_benchmarks(
             n_samples=20_000,  # Smaller for CPU

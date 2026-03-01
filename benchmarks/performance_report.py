@@ -1,8 +1,6 @@
 """Generate comprehensive performance report for OpenBoost.
 
-Phase 22 Sprint 4: GPU Performance Validation
-
-This script runs all performance benchmarks and generates a report comparing:
+GPU Performance Validation — compares:
 1. NaturalBoost vs NGBoost (distributional GBDT)
 2. OpenBoostGAM vs InterpretML EBM (interpretable models)
 
@@ -13,32 +11,40 @@ Run locally (if you have GPU):
     uv run python benchmarks/performance_report.py --local
 """
 
-import modal
-import time
+from __future__ import annotations
+
 import json
+import time
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent
 
-app = modal.App("openboost-perf-report")
+try:
+    import modal
 
-image = (
-    modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
-    .pip_install(
-        "numpy>=1.24",
-        "numba>=0.60",
-        "scikit-learn>=1.0",
-        "ngboost>=0.5",
-        "interpret>=0.6",
-        "xgboost>=2.0",
-        "tabulate>=0.9",
-        "scipy>=1.10",
+    app = modal.App("openboost-perf-report")
+
+    image = (
+        modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
+        .pip_install(
+            "numpy>=1.24",
+            "numba>=0.60",
+            "scikit-learn>=1.0",
+            "ngboost>=0.5",
+            "interpret>=0.6",
+            "xgboost>=2.0",
+            "tabulate>=0.9",
+            "scipy>=1.10",
+        )
+        .add_local_dir(
+            str(PROJECT_ROOT / "src" / "openboost"),
+            remote_path="/root/openboost",
+        )
     )
-    .add_local_dir(
-        str(PROJECT_ROOT / "src" / "openboost"),
-        remote_path="/root/openboost",
-    )
-)
+except ImportError:
+    modal = None
+    app = None
+    image = None
 
 
 def generate_data(n_samples: int, n_features: int, noise: float = 10.0, seed: int = 42):
@@ -59,7 +65,6 @@ def generate_data(n_samples: int, n_features: int, noise: float = 10.0, seed: in
     return X, y
 
 
-@app.function(gpu="A100", image=image, timeout=14400)  # 4 hours for large-scale benchmarks
 def run_performance_report():
     """Run all performance benchmarks."""
     import sys
@@ -321,53 +326,55 @@ def convert_bytes_in_dict(obj):
     return obj
 
 
-@app.local_entrypoint()
-def main():
-    """Run performance report."""
-    print("Running OpenBoost Performance Report on Modal A100...")
-    print("This may take 10-20 minutes.\n")
+if modal is not None and app is not None:
+    _run_performance_report_modal = app.function(
+        gpu="A100", image=image, timeout=14400
+    )(run_performance_report)
 
-    results = run_performance_report.remote()
-    
-    # Convert any bytes to strings (e.g., GPU device name)
-    results = convert_bytes_in_dict(results)
+    @app.local_entrypoint()
+    def main():
+        """Run performance report."""
+        print("Running OpenBoost Performance Report on Modal A100...")
+        print("This may take 10-20 minutes.\n")
 
-    # Save results
-    results_dir = PROJECT_ROOT / "benchmarks" / "results"
-    results_dir.mkdir(exist_ok=True)
+        results = _run_performance_report_modal.remote()
 
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    results_file = results_dir / f"performance_report_{timestamp}.json"
+        results = convert_bytes_in_dict(results)
 
-    with open(results_file, "w") as f:
-        json.dump(results, f, indent=2, cls=BytesEncoder)
+        results_dir = PROJECT_ROOT / "benchmarks" / "results"
+        results_dir.mkdir(exist_ok=True)
 
-    print(f"\nResults saved to: {results_file}")
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        results_file = results_dir / f"performance_report_{timestamp}.json"
 
-    # Print summary for README
-    print("\n" + "=" * 70)
-    print("README MARKDOWN (copy-paste ready):")
-    print("=" * 70)
+        with open(results_file, "w") as f:
+            json.dump(results, f, indent=2, cls=BytesEncoder)
 
-    print("""
+        print(f"\nResults saved to: {results_file}")
+
+        print("\n" + "=" * 70)
+        print("README MARKDOWN (copy-paste ready):")
+        print("=" * 70)
+
+        print("""
 ### NaturalBoost vs NGBoost
 
 | Samples | NGBoost | NaturalBoost (GPU) | Speedup |
 |---------|---------|-------------------|---------|""")
-    for r in results["benchmarks"]["ngboost"]:
-        print(f"| {r['samples']:,}   | {r['ngboost_time']:.1f}s    | {r['naturalboost_time']:.1f}s             | {r['speedup']:.1f}x    |")
+        for r in results["benchmarks"]["ngboost"]:
+            print(f"| {r['samples']:,}   | {r['ngboost_time']:.1f}s    | {r['naturalboost_time']:.1f}s             | {r['speedup']:.1f}x    |")
 
-    print("""
+        print("""
 *Benchmark: Normal distribution, 100 trees, 20 features, A100 GPU*
 
 ### OpenBoostGAM vs InterpretML EBM
 
 | Samples | EBM (CPU) | OpenBoostGAM (GPU) | Speedup |
 |---------|-----------|-------------------|---------|""")
-    for r in results["benchmarks"]["ebm"]:
-        print(f"| {r['samples']:,}  | {r['ebm_time']:.0f}s       | {r['openboostgam_time']:.1f}s              | {r['speedup']:.0f}x     |")
+        for r in results["benchmarks"]["ebm"]:
+            print(f"| {r['samples']:,}  | {r['ebm_time']:.0f}s       | {r['openboostgam_time']:.1f}s              | {r['speedup']:.0f}x     |")
 
-    print("""
+        print("""
 *Benchmark: 200 rounds, 20 features, pure GAM (no interactions), A100 GPU*
 """)
 
@@ -407,6 +414,11 @@ if __name__ == "__main__":
             ngb_time = None
 
         try:
+            # Warmup JIT
+            ob.NaturalBoostNormal(n_trees=3, learning_rate=0.1, max_depth=3).fit(
+                X_train[:500], y_train[:500]
+            )
+
             nb = ob.NaturalBoostNormal(n_trees=50, learning_rate=0.1, max_depth=3)
             start = time.perf_counter()
             nb.fit(X_train, y_train)
