@@ -13,6 +13,7 @@ Reference:
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -115,8 +116,13 @@ class DART(PersistenceMixin):
         else:
             self.X_binned_ = array(X, n_bins=self.n_bins)
         
-        # Initialize predictions
-        pred = np.zeros(n_samples, dtype=np.float32)
+        # Initialize predictions with base score
+        if self.loss in ('logloss', 'binary_crossentropy'):
+            p = np.clip(np.mean(y), 1e-7, 1 - 1e-7)
+            self.base_score_ = np.float32(np.log(p / (1 - p)))
+        else:
+            self.base_score_ = np.float32(np.mean(y))
+        pred = np.full(n_samples, self.base_score_, dtype=np.float32)
         
         # Train trees
         for i in range(self.n_trees):
@@ -156,25 +162,34 @@ class DART(PersistenceMixin):
                 reg_lambda=self.reg_lambda,
             )
             
-            # Determine tree weight
-            if apply_dropout and self.normalize and dropped_indices:
-                # Normalize: new tree weight depends on number of dropped trees
-                k = len(dropped_indices)
-                tree_weight = 1.0 / (k + 1)
-                
-                # Also rescale dropped trees
-                for idx in dropped_indices:
-                    self.tree_weights_[idx] *= k / (k + 1)
-            else:
-                tree_weight = 1.0
-            
-            # Store tree — keep learning_rate separate to avoid compounding
-            # during DART normalization (k/(k+1) rescaling)
+            # Store tree with weight 1.0 — normalization is applied at
+            # prediction time to avoid cumulative weight corruption (HIGH-3).
             self.trees_.append(tree)
-            self.tree_weights_.append(tree_weight)
-            
-            # Update predictions (full model)
-            pred = self._predict_internal(self.X_binned_)
+            self.tree_weights_.append(1.0)
+
+            if apply_dropout and self.normalize and dropped_indices:
+                # For the current round's prediction update, scale the
+                # non-dropped trees by k/(k+1) and new tree by 1/(k+1)
+                # but only temporarily — don't modify stored weights.
+                k = len(dropped_indices)
+                n_samples_tmp = self.X_binned_.n_samples
+                pred = np.zeros(n_samples_tmp, dtype=np.float32)
+                excluded_set = set(dropped_indices)
+                for t_i, (t, w) in enumerate(zip(self.trees_, self.tree_weights_)):
+                    t_pred = t(self.X_binned_)
+                    if hasattr(t_pred, 'copy_to_host'):
+                        t_pred = t_pred.copy_to_host()
+                    if t_i == len(self.trees_) - 1:
+                        # New tree: scale by 1/(k+1)
+                        pred += self.learning_rate * w * (1.0 / (k + 1)) * t_pred
+                    elif t_i in excluded_set:
+                        # Dropped tree: re-added with normalization k/(k+1)
+                        pred += self.learning_rate * w * (k / (k + 1)) * t_pred
+                    else:
+                        pred += self.learning_rate * w * t_pred
+            else:
+                # No dropout this round: full prediction from all trees
+                pred = self._predict_internal(self.X_binned_)
         
         return self
     
@@ -191,6 +206,12 @@ class DART(PersistenceMixin):
             dropped = self._rng.choice(n_trees, size=n_drop, replace=False)
         elif self.sample_type == 'weighted':
             # Weight by tree contribution (not implemented, fall back to uniform)
+            warnings.warn(
+                f"sample_type='{self.sample_type}' is not implemented, "
+                "falling back to uniform sampling",
+                UserWarning,
+                stacklevel=2,
+            )
             dropped = self._rng.choice(n_trees, size=n_drop, replace=False)
         else:
             raise ValueError(f"Unknown sample_type: {self.sample_type}")
@@ -204,7 +225,8 @@ class DART(PersistenceMixin):
     ) -> NDArray:
         """Predict using all trees except those in excluded_indices."""
         n_samples = X.n_samples
-        pred = np.zeros(n_samples, dtype=np.float32)
+        base = getattr(self, 'base_score_', np.float32(0.0))
+        pred = np.full(n_samples, base, dtype=np.float32)
         
         excluded_set = set(excluded_indices)
         

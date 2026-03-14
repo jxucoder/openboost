@@ -407,7 +407,13 @@ def fit_tree(
     
     # Apply subsampling to gradients if needed
     if subsample_mask is not None:
-        # Zero out gradients for non-sampled rows
+        # Zero out gradients for non-sampled rows.
+        # Design choice: we zero the grad/hess for non-sampled rows rather than
+        # physically removing them. This is correct (zero-weight samples don't
+        # affect the Newton step) but doesn't provide the performance benefit of
+        # true subsampling since histogram building still iterates over all samples.
+        # TODO: For a performance improvement, consider physically filtering to
+        # only the sampled rows before histogram building.
         # Handle both CPU (numpy) and GPU (DeviceNDArray) arrays
         if hasattr(grad, '__cuda_array_interface__'):
             # GPU path: copy to host, modify, copy back
@@ -880,14 +886,17 @@ def _fit_trees_batch_cpu(
             # Compute gradients from current predictions
             # Note: User provides initial grad/hess, subsequent rounds recompute
             if round_idx > 0:
-                # For MSE: grad = 2*(pred - y), but we don't have y here
-                # This is a limitation - batch training needs custom gradient callback
-                # For now, assume constant hess and update grad based on tree predictions
-                pass
-            
+                # Recompute MSE gradients from current predictions.
+                # Initial grad = 2*(0 - y) = -2y, so for MSE:
+                #   grad_new = 2*(pred - y) = 2*pred + initial_grad
+                # Hessian is constant (2.0) for MSE, so we reuse the original.
+                current_grad = grad + 2.0 * pred
+            else:
+                current_grad = grad
+
             tree = fit_tree(
                 binned,
-                grad if round_idx == 0 else (2 * (pred - (pred - grad / 2))),  # Simplified
+                current_grad,
                 hess,
                 max_depth=config['max_depth'],
                 min_child_weight=config['min_child_weight'],
@@ -1151,8 +1160,10 @@ def fit_tree_symmetric(
             break
         
         # Find ONE best split for the entire level
-        total_grad = float(np.sum(combined_hist_grad))
-        total_hess = float(np.sum(combined_hist_hess))
+        # Sum only feature 0 to get the true total (all features have the same
+        # total; summing across all features would give n_features * actual_total).
+        total_grad = float(np.sum(combined_hist_grad[0]))
+        total_hess = float(np.sum(combined_hist_hess[0]))
         
         split = find_best_split(
             combined_hist_grad, combined_hist_hess,

@@ -329,29 +329,36 @@ def _reduce_sum_direct_kernel(
 
 def reduce_sum_cuda(arr: DeviceNDArray) -> DeviceNDArray:
     """Compute sum of array entirely on GPU.
-    
+
     Args:
         arr: Array to sum, shape (n,), float32
-        
+
     Returns:
         result: Shape (1,) float64 device array containing the sum
     """
     n_samples = arr.shape[0]
-    
+
+    # Guard: return 0.0 for empty input
+    if n_samples == 0:
+        result = cuda.device_array(1, dtype=np.float64)
+        result.copy_to_device(np.array([0.0], dtype=np.float64))
+        return result
+
     threads_per_block = 256
     n_blocks = min(256, math.ceil(n_samples / threads_per_block))
-    
+
     partial_sums = cuda.device_array(n_blocks, dtype=np.float64)
-    result = cuda.device_array(1, dtype=np.float64)
-    
+    # Initialize result to 0 before kernel launch
+    result = cuda.to_device(np.array([0.0], dtype=np.float64))
+
     _reduce_sum_direct_kernel[n_blocks, threads_per_block](
         arr, n_samples, partial_sums
     )
-    
+
     _reduce_final_kernel[1, threads_per_block](
         partial_sums, n_blocks, result
     )
-    
+
     return result
 
 
@@ -650,8 +657,14 @@ def _scatter_by_mask_kernel(
     right_out: DeviceNDArray,       # (n_right,) int32
 ):
     """Scatter indices by mask using atomic counters.
-    
+
     Simple two-pass approach: atomics for position, then write.
+
+    NOTE: Known non-determinism -- The order of elements within left_out and
+    right_out is non-deterministic because cuda.atomic.add on the counters
+    does not guarantee a consistent ordering across threads/warps/blocks.
+    This means the output partitions will contain the same set of indices
+    but potentially in a different order on each run.
     """
     idx = cuda.grid(1)
     if idx >= n:
@@ -936,48 +949,54 @@ def _find_best_split_kernel(
     best_bins: DeviceNDArray,   # (n_features,) int32 - best bin per feature
 ):
     """Find the best split for each feature.
-    
+
     Each thread handles one feature, scanning all bins.
-    Phase 3.3: All computations in float32 for 2x throughput.
+    Gain computation uses float64 for parity with CPU split-finding.
     """
     feature_idx = cuda.grid(1)
     n_features = hist_grad.shape[0]
-    
+
     if feature_idx >= n_features:
         return
-    
+
+    # Cast totals to float64 for gain computation (parity with CPU)
+    total_grad_64 = float64(total_grad)
+    total_hess_64 = float64(total_hess)
+    reg_lambda_64 = float64(reg_lambda)
+    min_cw_64 = float64(min_child_weight)
+
     # Parent gain (constant for this split)
-    parent_gain = (total_grad * total_grad) / (total_hess + reg_lambda)
-    
-    best_gain = float32(-1e10)
+    parent_gain = (total_grad_64 * total_grad_64) / (total_hess_64 + reg_lambda_64)
+
+    best_gain = float64(-1e10)
     best_bin = int32(-1)
-    
-    # Cumulative sums for left child
-    left_grad = float32(0.0)
-    left_hess = float32(0.0)
-    
+
+    # Cumulative sums for left child (float64 for precision)
+    left_grad = float64(0.0)
+    left_hess = float64(0.0)
+
     # Scan through bins (split point is "go left if bin <= threshold")
     for bin_idx in range(255):  # Can't split on last bin
-        left_grad += hist_grad[feature_idx, bin_idx]
-        left_hess += hist_hess[feature_idx, bin_idx]
-        
-        right_grad = total_grad - left_grad
-        right_hess = total_hess - left_hess
-        
+        left_grad += float64(hist_grad[feature_idx, bin_idx])
+        left_hess += float64(hist_hess[feature_idx, bin_idx])
+
+        right_grad = total_grad_64 - left_grad
+        right_hess = total_hess_64 - left_hess
+
         # Check min_child_weight constraint
-        if left_hess < min_child_weight or right_hess < min_child_weight:
+        if left_hess < min_cw_64 or right_hess < min_cw_64:
             continue
-        
-        # Compute gain
-        left_score = (left_grad * left_grad) / (left_hess + reg_lambda)
-        right_score = (right_grad * right_grad) / (right_hess + reg_lambda)
+
+        # Compute gain in float64
+        left_score = (left_grad * left_grad) / (left_hess + reg_lambda_64)
+        right_score = (right_grad * right_grad) / (right_hess + reg_lambda_64)
         gain = left_score + right_score - parent_gain
-        
+
         if gain > best_gain:
             best_gain = gain
             best_bin = bin_idx
-    
-    best_gains[feature_idx] = best_gain
+
+    best_gains[feature_idx] = float64(best_gain)
     best_bins[feature_idx] = best_bin
 
 
@@ -2803,6 +2822,10 @@ def _compute_leaf_sums_kernel(
         return
     
     node_idx = sample_node_ids[sample_idx]
+    # NOTE: Known non-determinism -- float32 atomic adds are not
+    # associative due to floating-point rounding.  The order in which
+    # threads accumulate into node_sum_grad / node_sum_hess varies
+    # across runs, producing slightly different sums each time.
     cuda.atomic.add(node_sum_grad, node_idx, grad[sample_idx])
     cuda.atomic.add(node_sum_hess, node_idx, hess[sample_idx])
 
