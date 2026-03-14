@@ -6,6 +6,7 @@ Single-tree prediction is in _tree.py.
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -186,5 +187,5 @@ if is_cuda():
     try:
         _predict_tree_add_kernel = _get_predict_tree_add_kernel()
     except Exception:
-        pass
+        warnings.warn("Failed to compile predict CUDA kernel; will retry on first use", stacklevel=1)
 

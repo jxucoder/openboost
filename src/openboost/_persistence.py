@@ -367,6 +367,11 @@ class PersistenceMixin:
     def load(cls: type[T], path: str | Path) -> T:
         """Load model from file.
 
+        .. warning::
+            This method uses joblib/pickle deserialization which can execute
+            arbitrary code. Never load models from untrusted or unverified
+            sources.
+
         Args:
             path: File path to load from
 

@@ -8,6 +8,7 @@ Phase 14.3: Added native categorical feature support.
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Sequence
 
@@ -122,7 +123,14 @@ class BinnedArray:
                             key = val.item() if hasattr(val, 'item') else val
                             if key not in cat_map:
                                 key = int(val) if np.isfinite(val) else val
-                            binned[i, j] = cat_map.get(key, 0)  # Default to 0 for unseen
+                            if key in cat_map:
+                                binned[i, j] = cat_map[key]
+                            else:
+                                warnings.warn(
+                                    f"Unseen category {key!r} in feature {j}; mapping to bin 0",
+                                    stacklevel=2,
+                                )
+                                binned[i, j] = 0
                 else:
                     binned[:, j] = 0
             else:
@@ -135,7 +143,7 @@ class BinnedArray:
                     # searchsorted finds the bin index
                     bin_idx = np.searchsorted(edges, col[~nan_mask], side='right')
                     # Clip to valid range (in case test values exceed training range)
-                    bin_idx = np.clip(bin_idx, 0, len(edges))
+                    bin_idx = np.clip(bin_idx, 0, len(edges) - 1)
                     binned[~nan_mask, j] = bin_idx.astype(np.uint8)
                 
                 # Handle missing values
@@ -211,6 +219,11 @@ def array(
     """
     # Reserve bin 255 for missing values — max usable bin is 254 (indices 0-254)
     if n_bins > 254:
+        warnings.warn(
+            f"n_bins={n_bins} exceeds maximum of 254 (bin 255 is reserved for missing values). "
+            "Clamping to 254.",
+            stacklevel=2,
+        )
         n_bins = 254
     
     # Convert to numpy for binning computation
