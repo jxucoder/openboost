@@ -56,7 +56,11 @@ def get_loss_function(loss: str | LossFunction, **kwargs) -> LossFunction:
     if loss == 'tweedie':
         rho = kwargs.get('tweedie_rho', 1.5)
         return lambda pred, y: tweedie_gradient(pred, y, rho=rho)
-    
+
+    if loss == 'huber':
+        delta = kwargs.get('huber_delta', kwargs.get('delta', 1.0))
+        return lambda pred, y: huber_gradient(pred, y, delta=delta)
+
     loss_map = {
         'mse': mse_gradient,
         'squared_error': mse_gradient,
@@ -164,24 +168,25 @@ def _mse_gradient_cpu(pred: NDArray, y: NDArray) -> tuple[NDArray, NDArray]:
 def _mse_gradient_gpu(pred, y):
     """GPU implementation of MSE gradient."""
     from numba import cuda
-    
+    _ensure_mse_kernel()
+
     # Handle device arrays
     if hasattr(pred, 'copy_to_host'):
         n = pred.shape[0]
     else:
         n = len(pred)
         pred = cuda.to_device(np.asarray(pred, dtype=np.float32))
-    
+
     if not hasattr(y, 'copy_to_host'):
         y = cuda.to_device(np.asarray(y, dtype=np.float32))
-    
+
     grad = cuda.device_array(n, dtype=np.float32)
     hess = cuda.device_array(n, dtype=np.float32)
-    
+
     threads = 256
     blocks = (n + threads - 1) // threads
     _mse_gradient_kernel[blocks, threads](pred, y, grad, hess, n)
-    
+
     return grad, hess
 
 
@@ -250,10 +255,18 @@ def _logloss_gradient_cpu(pred: NDArray, y: NDArray) -> tuple[NDArray, NDArray]:
     return grad, hess
 
 
+def _ensure_logloss_kernel():
+    global _logloss_gradient_kernel
+    if _logloss_gradient_kernel is None:
+        _logloss_gradient_kernel = _get_logloss_kernel()
+    return _logloss_gradient_kernel
+
+
 def _logloss_gradient_gpu(pred, y):
     """GPU implementation of LogLoss gradient."""
     from numba import cuda
-    
+    _ensure_logloss_kernel()
+
     if hasattr(pred, 'copy_to_host'):
         n = pred.shape[0]
     else:
@@ -338,10 +351,18 @@ def _huber_gradient_cpu(pred: NDArray, y: NDArray, delta: float = 1.0) -> tuple[
     return grad.astype(np.float32), hess.astype(np.float32)
 
 
+def _ensure_huber_kernel():
+    global _huber_gradient_kernel
+    if _huber_gradient_kernel is None:
+        _huber_gradient_kernel = _get_huber_kernel()
+    return _huber_gradient_kernel
+
+
 def _huber_gradient_gpu(pred, y, delta: float = 1.0):
     """GPU implementation of Huber gradient."""
     from numba import cuda
-    
+    _ensure_huber_kernel()
+
     if hasattr(pred, 'copy_to_host'):
         n = pred.shape[0]
     else:
@@ -422,10 +443,18 @@ def _mae_gradient_cpu(pred: NDArray, y: NDArray) -> tuple[NDArray, NDArray]:
     return grad, hess
 
 
+def _ensure_mae_kernel():
+    global _mae_gradient_kernel
+    if _mae_gradient_kernel is None:
+        _mae_gradient_kernel = _get_mae_kernel()
+    return _mae_gradient_kernel
+
+
 def _mae_gradient_gpu(pred, y):
     """GPU implementation of MAE gradient."""
     from numba import cuda
-    
+    _ensure_mae_kernel()
+
     if hasattr(pred, 'copy_to_host'):
         n = pred.shape[0]
     else:
@@ -521,10 +550,18 @@ def _quantile_gradient_cpu(pred: NDArray, y: NDArray, alpha: float = 0.5) -> tup
     return grad, hess
 
 
+def _ensure_quantile_kernel():
+    global _quantile_gradient_kernel
+    if _quantile_gradient_kernel is None:
+        _quantile_gradient_kernel = _get_quantile_kernel()
+    return _quantile_gradient_kernel
+
+
 def _quantile_gradient_gpu(pred, y, alpha: float = 0.5):
     """GPU implementation of Quantile gradient."""
     from numba import cuda
-    
+    _ensure_quantile_kernel()
+
     if hasattr(pred, 'copy_to_host'):
         n = pred.shape[0]
     else:

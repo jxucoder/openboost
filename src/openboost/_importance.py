@@ -23,6 +23,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
+import warnings
+
 import numpy as np
 
 if TYPE_CHECKING:
@@ -117,8 +119,14 @@ def _get_trees_flat(model: Any) -> list:
     if isinstance(trees, dict):
         return [t for feature_trees in trees.values() for t in feature_trees]
     
-    # Regular flat list
-    return list(trees)
+    # Regular flat list - unwrap LinearLeafTree if needed
+    result = []
+    for tree in trees:
+        if hasattr(tree, 'tree_structure'):
+            result.append(tree.tree_structure)
+        else:
+            result.append(tree)
+    return result
 
 
 def _get_n_features(model: Any, trees: list) -> int:
@@ -167,14 +175,26 @@ def _accumulate_importance(tree, importances: NDArray, importance_type: str) -> 
                     importances[feature] += tree.split_gains[node_idx]
                 else:
                     # Fallback: use 1.0 (equivalent to frequency)
+                    warnings.warn(
+                        f"Tree does not have {importance_type} data, "
+                        "falling back to frequency-based importance",
+                        UserWarning,
+                        stacklevel=2,
+                    )
                     importances[feature] += 1.0
-            
+
             elif importance_type == 'cover':
                 # Use sample counts if stored, otherwise fall back to frequency
                 if hasattr(tree, 'node_counts') and tree.node_counts is not None:
                     importances[feature] += tree.node_counts[node_idx]
                 else:
                     # Fallback: use 1.0
+                    warnings.warn(
+                        f"Tree does not have {importance_type} data, "
+                        "falling back to frequency-based importance",
+                        UserWarning,
+                        stacklevel=2,
+                    )
                     importances[feature] += 1.0
             
             else:

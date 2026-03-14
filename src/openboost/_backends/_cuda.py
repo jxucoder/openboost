@@ -3499,20 +3499,10 @@ def build_tree_symmetric_gpu_native(
         leaf_sum_grad, leaf_sum_hess
     )
     
-    # Finalize leaf values on GPU
+    # Finalize leaf values on GPU (using module-level kernel)
     leaf_values = cuda.device_array(n_leaves, dtype=np.float32)
-    
-    @cuda.jit
-    def _finalize_leaf_values(leaf_vals, sum_grad, sum_hess, reg_lambda, n):
-        idx = cuda.grid(1)
-        if idx < n:
-            h = sum_hess[idx]
-            if h + reg_lambda > float32(0.0):
-                leaf_vals[idx] = float32(-sum_grad[idx] / (h + reg_lambda))
-            else:
-                leaf_vals[idx] = float32(0.0)
-    
-    _finalize_leaf_values[leaf_blocks, threads](
+
+    _finalize_leaf_values_kernel[leaf_blocks, threads](
         leaf_values, leaf_sum_grad, leaf_sum_hess, reg_lambda_f32, n_leaves
     )
     
