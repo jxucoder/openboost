@@ -571,12 +571,16 @@ def _partition_samples_cpu(
             # Ordinal split: use threshold
             goes_left = feature_values <= threshold
         
-        # Override for missing values using learned direction
+        # Override for missing values using learned direction.
+        # Use the per-split learned direction as the primary source;
+        # only fall back to the tree-wide array if the split doesn't have the attribute.
         if np.any(is_missing):
-            # Get the missing direction for this split
-            miss_left = node_split.missing_go_left if hasattr(node_split, 'missing_go_left') else True
-            if missing_go_left is not None and node_id < len(missing_go_left):
+            if hasattr(node_split, 'missing_go_left'):
+                miss_left = node_split.missing_go_left
+            elif missing_go_left is not None and node_id < len(missing_go_left):
                 miss_left = missing_go_left[node_id]
+            else:
+                miss_left = True
             goes_left[is_missing] = miss_left
         
         # Update node IDs

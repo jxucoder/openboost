@@ -324,9 +324,10 @@ def validate_eval_set(
         X_val, y_val = item
         X_val = validate_X(X_val, allow_nan=True, context="eval")
         
-        if X_val.shape[1] != n_features:
+        n_features_val = X_val.n_features if hasattr(X_val, 'n_features') else X_val.shape[1]
+        if n_features_val != n_features:
             raise ValueError(
-                f"eval_set[{i}] X has {X_val.shape[1]} features, "
+                f"eval_set[{i}] X has {n_features_val} features, "
                 f"but training data has {n_features} features."
             )
 

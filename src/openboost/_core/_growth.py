@@ -522,9 +522,7 @@ class LevelWiseGrowth(GrowthStrategy):
             active_nodes = self._get_active_nodes(sample_node_ids, nodes_at_level)
             if not active_nodes:
                 break
-            
-            actual_depth = depth + 1
-            
+
             # Build histograms for active nodes
             histograms = build_node_histograms(
                 binned, grad, hess, sample_node_ids, active_nodes
@@ -547,6 +545,10 @@ class LevelWiseGrowth(GrowthStrategy):
                 n_categories=n_categories,      # Phase 14.3
             )
             
+            # Only update depth if at least one valid split was found
+            if splits:
+                actual_depth = depth + 1
+
             # Apply splits to tree structure
             for node_id, node_split in splits.items():
                 features[node_id] = node_split.split.feature

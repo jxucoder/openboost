@@ -378,12 +378,16 @@ def _bin_numeric_feature(
         else:
             edges = np.nanpercentile(valid_col, percentiles)
             edges = np.unique(edges)
-            binned_col[~nan_mask] = np.digitize(valid_col, edges).astype(np.uint8)
+            bin_idx = np.digitize(valid_col, edges)
+            bin_idx = np.clip(bin_idx, 0, len(edges) - 1)
+            binned_col[~nan_mask] = bin_idx.astype(np.uint8)
             binned_col[nan_mask] = MISSING_BIN
     else:
         edges = np.percentile(col, percentiles)
         edges = np.unique(edges)
-        binned_col = np.digitize(col, edges).astype(np.uint8)
+        bin_idx = np.digitize(col, edges)
+        bin_idx = np.clip(bin_idx, 0, len(edges) - 1)
+        binned_col = bin_idx.astype(np.uint8)
     
     return binned_col, edges, has_nan, False, None, 0
 

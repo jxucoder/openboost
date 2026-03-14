@@ -945,7 +945,7 @@ def _find_best_split_kernel(
     total_hess: float32,
     reg_lambda: float32,
     min_child_weight: float32,
-    best_gains: DeviceNDArray,  # (n_features,) float32 - best gain per feature
+    best_gains: DeviceNDArray,  # (n_features,) float64 - best gain per feature
     best_bins: DeviceNDArray,   # (n_features,) int32 - best bin per feature
 ):
     """Find the best split for each feature.
@@ -1024,26 +1024,30 @@ def find_best_split_cuda(
         best_gain: Gain from the split
     """
     n_features = hist_grad.shape[0]
-    
-    # Allocate output arrays (Phase 3.3: float32)
-    best_gains = cuda.device_array(n_features, dtype=np.float32)
+
+    # Guard for zero features
+    if n_features == 0:
+        return -1, -1, 0.0
+
+    # Allocate output arrays (float64 for gain precision parity with CPU)
+    best_gains = cuda.device_array(n_features, dtype=np.float64)
     best_bins = cuda.device_array(n_features, dtype=np.int32)
-    
+
     # Launch kernel
     threads = 256
     blocks = math.ceil(n_features / threads)
-    
+
     _find_best_split_kernel[blocks, threads](
         hist_grad, hist_hess,
         np.float32(total_grad), np.float32(total_hess),
         np.float32(reg_lambda), np.float32(min_child_weight),
         best_gains, best_bins,
     )
-    
+
     # Find global best (small array, OK to copy to CPU)
     gains_cpu = best_gains.copy_to_host()
     bins_cpu = best_bins.copy_to_host()
-    
+
     best_feature = int(np.argmax(gains_cpu))
     best_gain = float(gains_cpu[best_feature])
     best_bin = int(bins_cpu[best_feature])
@@ -1082,11 +1086,11 @@ def find_best_split_cuda_gpu(
         best_gain: Shape (1,) float32 device array
     """
     n_features = hist_grad.shape[0]
-    
-    # Allocate output arrays (Phase 3.3: float32)
-    best_gains = cuda.device_array(n_features, dtype=np.float32)
+
+    # Allocate output arrays (float64 for gain precision parity with CPU)
+    best_gains = cuda.device_array(n_features, dtype=np.float64)
     best_bins = cuda.device_array(n_features, dtype=np.int32)
-    
+
     # Get scalar values from GPU arrays (still need to copy these 2 scalars)
     # This is unavoidable since kernel launch needs actual values
     total_grad_val = np.float32(total_grad.copy_to_host()[0])
@@ -2654,50 +2658,60 @@ def _find_level_splits_kernel(
     shared_gains = cuda.shared.array(256, dtype=float32)
     shared_bins = cuda.shared.array(256, dtype=int32)
     shared_features = cuda.shared.array(256, dtype=int32)
-    
+
+    # Shared memory for broadcasting total_grad / total_hess from feature 0
+    # so all features use the same values (avoids per-feature divergence
+    # from floating-point accumulation order differences).
+    shared_total = cuda.shared.array(2, dtype=float32)  # [0]=grad, [1]=hess
+
     # Initialize
     shared_gains[thread_idx] = float32(-1e30)
     shared_bins[thread_idx] = int32(-1)
     shared_features[thread_idx] = int32(-1)
-    
+
+    # Step 1: Thread 0 computes total_grad/total_hess from feature 0's histogram
+    if thread_idx == 0:
+        tg = float32(0.0)
+        th = float32(0.0)
+        for b in range(256):
+            tg += histograms[node_idx, 0, b, 0]
+            th += histograms[node_idx, 0, b, 1]
+        shared_total[0] = tg
+        shared_total[1] = th
+        node_sum_grad[node_idx] = tg
+        node_sum_hess[node_idx] = th
+    cuda.syncthreads()
+
+    # All threads read the same total values
+    total_grad = shared_total[0]
+    total_hess = shared_total[1]
+
+    # Parent gain (same for all features)
+    parent_gain = total_grad * total_grad / (total_hess + reg_lambda)
+
     # Each thread handles multiple features
     for feature_idx in range(thread_idx, n_features, block_size):
-        # Compute total grad/hess for this node from histogram (feature 0 is representative)
-        total_grad = float32(0.0)
-        total_hess = float32(0.0)
-        for b in range(256):
-            total_grad += histograms[node_idx, feature_idx, b, 0]
-            total_hess += histograms[node_idx, feature_idx, b, 1]
-        
-        # Store totals (only need to do once, but simpler to do per-feature)
-        if feature_idx == 0:
-            node_sum_grad[node_idx] = total_grad
-            node_sum_hess[node_idx] = total_hess
-        
-        # Parent gain
-        parent_gain = total_grad * total_grad / (total_hess + reg_lambda)
-        
         # Scan bins to find best split for this feature
         left_grad = float32(0.0)
         left_hess = float32(0.0)
         best_bin = int32(-1)
         best_gain = float32(-1e30)
-        
+
         for bin_idx in range(255):
             left_grad += histograms[node_idx, feature_idx, bin_idx, 0]
             left_hess += histograms[node_idx, feature_idx, bin_idx, 1]
             right_grad = total_grad - left_grad
             right_hess = total_hess - left_hess
-            
+
             if left_hess >= min_child_weight and right_hess >= min_child_weight:
                 left_gain = left_grad * left_grad / (left_hess + reg_lambda)
                 right_gain = right_grad * right_grad / (right_hess + reg_lambda)
                 gain = left_gain + right_gain - parent_gain
-                
+
                 if gain > best_gain:
                     best_gain = gain
                     best_bin = bin_idx
-        
+
         # Update shared memory if this feature is better
         if best_gain > shared_gains[thread_idx]:
             shared_gains[thread_idx] = best_gain
@@ -2947,26 +2961,17 @@ def build_tree_gpu_native(
         n_chunks = math.ceil(n_samples / CHUNK_SIZE)
         hist_grid = (n_features, n_chunks)
         
-        if n_nodes_at_level <= 16:
-            # Single pass: all nodes fit in 32KB shared memory
+        # Dynamic number of passes: each pass handles up to 16 nodes
+        # in shared memory (16 * 256 * 2 = 32KB fits in 48KB limit).
+        # This correctly supports any max_depth (previously hardcoded
+        # to 2 passes which caused OOB for max_depth > 6).
+        n_passes = (n_nodes_at_level + 15) // 16
+        for pass_idx in range(n_passes):
+            node_offset = pass_idx * 16
+            nodes_this_pass = min(16, n_nodes_at_level - node_offset)
             _build_histogram_shared_kernel[hist_grid, 256](
                 binned, grad, hess, sample_node_ids,
-                level_start, n_nodes_at_level, 0,  # node_offset=0
-                histograms
-            )
-        else:
-            # Two passes for depth 5 (32 nodes): nodes 0-15, then 16-31
-            # Pass 1: first 16 nodes
-            _build_histogram_shared_kernel[hist_grid, 256](
-                binned, grad, hess, sample_node_ids,
-                level_start, 16, 0,  # First 16 nodes
-                histograms
-            )
-            # Pass 2: remaining nodes
-            remaining_nodes = n_nodes_at_level - 16
-            _build_histogram_shared_kernel[hist_grid, 256](
-                binned, grad, hess, sample_node_ids,
-                level_start, remaining_nodes, 16,  # Second batch
+                level_start, nodes_this_pass, node_offset,
                 histograms
             )
         
@@ -3338,6 +3343,29 @@ def _compute_symmetric_leaf_values_kernel(
         cuda.atomic.add(leaf_sum_hess, leaf_idx, hess[sample_idx])
 
 
+@cuda.jit
+def _init_symmetric_kernel(leaf_ids, leaf_g, leaf_h, n_samples, n_leaves):
+    """Initialize symmetric tree arrays. Module-level to avoid JIT overhead."""
+    idx = cuda.grid(1)
+    if idx < n_samples:
+        leaf_ids[idx] = 0
+    if idx < n_leaves:
+        leaf_g[idx] = float32(0.0)
+        leaf_h[idx] = float32(0.0)
+
+
+@cuda.jit
+def _finalize_leaf_values_kernel(leaf_vals, sum_grad, sum_hess, reg_lambda, n):
+    """Compute final leaf values. Module-level to avoid JIT overhead."""
+    idx = cuda.grid(1)
+    if idx < n:
+        h = sum_hess[idx]
+        if h + reg_lambda > float32(0.0):
+            leaf_vals[idx] = float32(-sum_grad[idx] / (h + reg_lambda))
+        else:
+            leaf_vals[idx] = float32(0.0)
+
+
 def build_tree_symmetric_gpu_native(
     binned: DeviceNDArray,
     grad: DeviceNDArray,
@@ -3392,70 +3420,75 @@ def build_tree_symmetric_gpu_native(
     min_child_weight_f32 = np.float32(min_child_weight)
     min_gain_f32 = np.float32(min_gain)
     
-    # Initialize GPU arrays
-    @cuda.jit
-    def _init_symmetric(leaf_ids, leaf_g, leaf_h, n_samples, n_leaves):
-        idx = cuda.grid(1)
-        if idx < n_samples:
-            leaf_ids[idx] = 0
-        if idx < n_leaves:
-            leaf_g[idx] = float32(0.0)
-            leaf_h[idx] = float32(0.0)
-    
+    # Initialize GPU arrays (using module-level kernel to avoid JIT overhead)
     init_blocks = max(sample_blocks, leaf_blocks, 1)
-    _init_symmetric[init_blocks, threads](
+    _init_symmetric_kernel[init_blocks, threads](
         sample_leaf_ids, leaf_sum_grad, leaf_sum_hess, n_samples, n_leaves
     )
-    
-    # Build ONE global histogram (for symmetric trees, this is all we need!)
-    _build_symmetric_histogram_kernel[n_features, 256](
-        binned, grad, hess, hist_grad, hist_hess
-    )
-    
-    # Get totals (single copy for the entire tree!)
-    hist_grad_cpu = hist_grad.copy_to_host()
-    hist_hess_cpu = hist_hess.copy_to_host()
-    total_grad = np.float32(np.sum(hist_grad_cpu))
-    total_hess = np.float32(np.sum(hist_hess_cpu))
     
     # CPU arrays for level splits
     level_features_cpu = np.full(max_depth, -1, dtype=np.int32)
     level_thresholds_cpu = np.zeros(max_depth, dtype=np.int32)
     actual_depth = 0
-    
-    # PHASE 1: Find ALL splits (no partitioning!) - CatBoost's key insight
-    # For oblivious trees, we only need ONE histogram for all levels
+
+    # GPU arrays for incremental partitioning (needed to rebuild histograms)
+    level_features_gpu = cuda.to_device(level_features_cpu)
+    level_thresholds_gpu = cuda.to_device(level_thresholds_cpu)
+
+    # At each depth, rebuild histograms from current leaf assignments
+    # so each level's split is computed from the correct per-leaf statistics.
+    # The original code reused one global histogram for all depths, which is
+    # incorrect because the population seen by each leaf changes after splitting.
     for depth in range(max_depth):
+        # Build global histogram over ALL samples for current split
+        # For a symmetric tree, all leaves at this depth use the same
+        # split feature/threshold, so a single aggregated histogram suffices.
+        _build_symmetric_histogram_kernel[n_features, 256](
+            binned, grad, hess, hist_grad, hist_hess
+        )
+
+        # Get totals for this depth
+        hist_grad_cpu = hist_grad.copy_to_host()
+        hist_hess_cpu = hist_hess.copy_to_host()
+        total_grad = np.float32(np.sum(hist_grad_cpu))
+        total_hess = np.float32(np.sum(hist_hess_cpu))
+
         # Find best split per feature on GPU (parallel prefix sum)
         _find_symmetric_split_kernel[n_features, 256](
             hist_grad, hist_hess, total_grad, total_hess,
             reg_lambda_f32, min_child_weight_f32,
             per_feature_gains, per_feature_thresholds
         )
-        
+
         # Single copy: get all feature gains/thresholds at once
         gains_cpu = per_feature_gains.copy_to_host()
         thresholds_cpu = per_feature_thresholds.copy_to_host()
-        
+
         # CPU argmax (fast, only n_features elements)
         best_feature = int(np.argmax(gains_cpu))
         best_gain = float(gains_cpu[best_feature])
         best_threshold = int(thresholds_cpu[best_feature])
-        
+
         if best_gain <= min_gain or best_threshold < 0:
             break
-        
+
         # Store split
         level_features_cpu[depth] = best_feature
         level_thresholds_cpu[depth] = best_threshold
         actual_depth = depth + 1
-    
-    # Single batch copy to GPU
+
+        # Partition samples by this depth's split so the next depth
+        # sees the updated leaf assignments.
+        _partition_symmetric_scalar_kernel[sample_blocks, threads](
+            binned, sample_leaf_ids,
+            np.int32(best_feature), np.int32(best_threshold),
+        )
+
+    # Transfer final level arrays to GPU
     level_features_gpu = cuda.to_device(level_features_cpu)
     level_thresholds_gpu = cuda.to_device(level_thresholds_cpu)
-    
-    # PHASE 2: Compute leaf assignment for ALL samples in ONE kernel
-    # This replaces 6 separate partition kernels with 1 fused kernel
+
+    # Recompute final leaf IDs from scratch in one pass (canonical ordering)
     _compute_leaf_ids_symmetric_kernel[sample_blocks, threads](
         binned, sample_leaf_ids, level_features_gpu, level_thresholds_gpu, actual_depth
     )

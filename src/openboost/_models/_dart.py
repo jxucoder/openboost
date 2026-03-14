@@ -243,7 +243,8 @@ class DART(PersistenceMixin):
     def _predict_internal(self, X: BinnedArray) -> NDArray:
         """Internal prediction using all trees (for training)."""
         n_samples = X.n_samples
-        pred = np.zeros(n_samples, dtype=np.float32)
+        base = getattr(self, 'base_score_', np.float32(0.0))
+        pred = np.full(n_samples, base, dtype=np.float32)
 
         for tree, weight in zip(self.trees_, self.tree_weights_):
             tree_pred = tree(X)

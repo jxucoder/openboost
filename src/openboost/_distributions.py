@@ -930,10 +930,16 @@ class StudentT(Distribution):
         grad_scale = 1 - w * z2
         hess_scale = 2.0 * np.ones_like(y)  # Approximation
         
-        # DF gradient (complex, use approximation)
-        # For simplicity, use small gradient toward Normal (large ν)
-        grad_df = 0.01 * np.ones_like(y)  # Slight regularization toward large df
-        hess_df = 0.1 * np.ones_like(y)
+        # DF gradient: d(NLL)/d(log ν) with exp link
+        df_safe = np.maximum(ν, 1e-6)
+        z2 = z ** 2
+        grad_df = df_safe * 0.5 * (
+            -digamma(df_safe / 2) + digamma((df_safe + 1) / 2)
+            + np.log(df_safe) + 1
+            - np.log(df_safe + z2)
+            - (df_safe + 1) * z2 / (df_safe * (df_safe + z2))
+        )
+        hess_df = np.maximum(np.abs(grad_df), 0.1) * np.ones_like(y)
         
         return {
             'loc': (grad_loc.astype(np.float32), hess_loc.astype(np.float32)),
@@ -1119,19 +1125,25 @@ class Tweedie(Distribution):
     def _compute_deviance(self, y: NDArray, mu: NDArray) -> NDArray:
         """Compute Tweedie deviance."""
         ρ = self.power
-        y_safe = np.clip(y, 1e-10, None)
         mu_safe = np.clip(mu, 1e-10, None)
-        
+
         if ρ == 1:  # Poisson
+            y_safe = np.clip(y, 1e-10, None)
             return 2 * (y_safe * np.log(y_safe / mu_safe) - (y_safe - mu_safe))
         elif ρ == 2:  # Gamma
+            y_safe = np.clip(y, 1e-10, None)
             return 2 * (np.log(mu_safe / y_safe) + (y_safe - mu_safe) / mu_safe)
         else:
             # General Tweedie (1 < ρ < 2)
-            term1 = np.power(y_safe, 2 - ρ) / ((1 - ρ) * (2 - ρ))
-            term2 = y_safe * np.power(mu_safe, 1 - ρ) / (1 - ρ)
+            # Handle y=0 as a special case: when y=0, the y-dependent terms vanish
+            y_pos = np.clip(y, 1e-10, None)
+            term1 = np.power(y_pos, 2 - ρ) / ((1 - ρ) * (2 - ρ))
+            term2 = y_pos * np.power(mu_safe, 1 - ρ) / (1 - ρ)
             term3 = np.power(mu_safe, 2 - ρ) / (2 - ρ)
-            return 2 * (term1 - term2 + term3)
+            deviance_ypos = 2 * (term1 - term2 + term3)
+            # When y=0, deviance = 2 * mu^(2-ρ) / (2-ρ)
+            deviance_yzero = 2 * np.power(mu_safe, 2 - ρ) / (2 - ρ)
+            return np.where(y == 0, deviance_yzero, deviance_ypos)
     
     def fisher_information(
         self,
@@ -1300,7 +1312,7 @@ class NegativeBinomial(Distribution):
         #                 = μ²/(r+μ) - y*r/(r+μ) = (μ² - y*r)/(r+μ)
         #                 = μ * (μ - y*r/μ)/(r+μ) = μ * (μ - y*r/μ) * (1-p)/μ
         #                 = (μ - y) * (1-p) ... simplified
-        grad_mu_raw = (μ_safe - y_safe) * (1 - p)
+        grad_mu_raw = (μ_safe - y_safe) * p
         
         # Expected hessian
         hess_mu = μ_safe * (1 - p)
@@ -1308,7 +1320,7 @@ class NegativeBinomial(Distribution):
         
         # Gradient w.r.t. log(r) (dispersion)
         # This is complex, use approximation
-        grad_r_raw = r_safe * (digamma(y_safe + r_safe) - digamma(r_safe) + np.log(p))
+        grad_r_raw = r_safe * (digamma(y_safe + r_safe) - digamma(r_safe) + np.log(p) + (1 - p))
         hess_r = r_safe * polygamma(1, r_safe)  # Expected hessian
         hess_r = np.clip(hess_r, 0.1, 10)
         
@@ -1437,7 +1449,7 @@ class CustomDistribution(Distribution):
     LINK_FUNCTIONS = {
         'identity': (lambda x: x, lambda x: x),
         'exp': (lambda x: np.exp(np.clip(x, -20, 20)), lambda x: np.log(np.clip(x, 1e-10, None))),
-        'softplus': (lambda x: np.log1p(np.exp(np.clip(x, -20, 20))), lambda x: np.log(np.exp(np.clip(x, 1e-10, None)) - 1)),
+        'softplus': (lambda x: np.log1p(np.exp(np.clip(x, -20, 20))), lambda x: np.where(x > 20, x, np.log(np.expm1(np.minimum(x, 20))))),
         'sigmoid': (lambda x: 1 / (1 + np.exp(-np.clip(x, -20, 20))), lambda x: np.log(np.clip(x / (1 - x + 1e-10), 1e-10, None))),
         'square': (lambda x: x ** 2, lambda x: np.sqrt(np.clip(x, 0, None))),
     }
@@ -1522,42 +1534,75 @@ class CustomDistribution(Distribution):
         """Compute NLL using user-provided function."""
         return self._nll_fn(y, params)
     
+    def _link_derivative(self, param_name: str, constrained: NDArray) -> NDArray:
+        """Compute d(constrained)/d(raw) for the link function.
+
+        For exp link: d(exp(raw))/d(raw) = exp(raw) = constrained
+        For identity link: derivative is 1
+        For softplus link: d(log(1+exp(raw)))/d(raw) = sigmoid(raw) = 1 - exp(-constrained)
+        For sigmoid link: d(sigmoid(raw))/d(raw) = constrained * (1 - constrained)
+        For square link: d(raw^2)/d(raw) = 2*raw = 2*sqrt(constrained)
+        """
+        link_type = self._link_functions.get(param_name, 'identity')
+        if link_type == 'exp':
+            return constrained
+        elif link_type == 'identity':
+            return np.ones_like(constrained)
+        elif link_type == 'softplus':
+            return 1.0 - np.exp(-constrained)
+        elif link_type == 'sigmoid':
+            return constrained * (1.0 - constrained)
+        elif link_type == 'square':
+            return 2.0 * np.sqrt(np.maximum(constrained, 0.0))
+        else:
+            return np.ones_like(constrained)
+
     def _numerical_gradient(
         self,
         y: NDArray,
         params: dict[str, NDArray],
     ) -> dict[str, GradHess]:
-        """Compute gradients numerically (vectorized finite differences)."""
+        """Compute gradients numerically (vectorized finite differences).
+
+        Perturbs constrained parameters and then multiplies by the Jacobian
+        of the link function to obtain gradients w.r.t. raw parameters.
+        """
         results = {}
         eps = self._eps
         n = len(y)
-        
+
         # Compute center NLL once
         nll_center = self._nll_fn(y, params)
-        
+
         for param_name in self._param_names:
-            # Vectorized perturbation
+            # Vectorized perturbation in constrained space
             params_plus = {k: v.copy() for k, v in params.items()}
             params_minus = {k: v.copy() for k, v in params.items()}
-            
+
             params_plus[param_name] = params[param_name] + eps
             params_minus[param_name] = params[param_name] - eps
-            
+
             nll_plus = self._nll_fn(y, params_plus)
             nll_minus = self._nll_fn(y, params_minus)
-            
-            # Central difference for gradient
-            grad = (nll_plus - nll_minus) / (2 * eps)
-            
-            # Central difference for hessian
-            hess = (nll_plus - 2 * nll_center + nll_minus) / (eps ** 2)
-            
+
+            # Central difference for gradient w.r.t. constrained params
+            grad_constrained = (nll_plus - nll_minus) / (2 * eps)
+
+            # Central difference for hessian w.r.t. constrained params
+            hess_constrained = (nll_plus - 2 * nll_center + nll_minus) / (eps ** 2)
+
+            # Multiply by link function derivative to get gradient w.r.t. raw params
+            # grad_raw = grad_constrained * d(constrained)/d(raw)
+            link_deriv = self._link_derivative(param_name, params[param_name])
+            grad = grad_constrained * link_deriv
+            hess = hess_constrained * link_deriv ** 2
+
             # Ensure positive hessian and clip extremes
             hess = np.clip(hess, 1e-6, 1e6)
             grad = np.clip(grad, -1e6, 1e6)
-            
+
             results[param_name] = (grad.astype(np.float32), hess.astype(np.float32))
-        
+
         return results
     
     def _jax_gradient(
@@ -1565,41 +1610,62 @@ class CustomDistribution(Distribution):
         y: NDArray,
         params: dict[str, NDArray],
     ) -> dict[str, GradHess]:
-        """Compute gradients using JAX autodiff."""
+        """Compute gradients using JAX autodiff (vectorized with vmap)."""
         jax = self._jax
         jnp = self._jnp
-        
+
         # Define loss for a single sample
-        def single_nll(param_values, y_single, param_names):
-            params_dict = {name: jnp.array([val]) for name, val in zip(param_names, param_values)}
+        def single_nll(param_values, y_single):
+            params_dict = {name: jnp.array([val]) for name, val in zip(self._param_names, param_values)}
             return self._nll_fn(jnp.array([y_single]), params_dict)[0]
-        
-        # Get grad and hessian functions
-        grad_fn = jax.grad(single_nll)
-        hess_fn = jax.hessian(single_nll)
-        
-        # Vectorize over samples
+
+        # Create grad and hessian functions once (cached pattern)
+        if self._jax_grad_fn is None:
+            self._jax_grad_fn = jax.grad(single_nll)
+            self._jax_hess_fn = jax.hessian(single_nll)
+
+        grad_fn = self._jax_grad_fn
+        hess_fn = self._jax_hess_fn
+
+        # Vectorize over samples using vmap
+        batched_grad_fn = jax.vmap(grad_fn, in_axes=(0, 0))
+        batched_hess_fn = jax.vmap(hess_fn, in_axes=(0, 0))
+
         n = len(y)
-        results = {name: (np.zeros(n, dtype=np.float32), np.zeros(n, dtype=np.float32)) 
-                   for name in self._param_names}
-        
-        for i in range(n):
-            param_values = [params[name][i] for name in self._param_names]
-            
-            try:
-                grads = grad_fn(param_values, y[i], self._param_names)
-                hess_matrix = hess_fn(param_values, y[i], self._param_names)
-                
-                for j, name in enumerate(self._param_names):
-                    results[name][0][i] = float(grads[j])
-                    results[name][1][i] = max(float(hess_matrix[j, j]), 1e-6)
-            except Exception:
-                # Fall back to numerical for this sample
-                for j, name in enumerate(self._param_names):
-                    results[name][0][i] = 0.0
-                    results[name][1][i] = 1.0
-        
-        return results
+        # Stack param values into array of shape (n, n_params)
+        param_values = jnp.stack([jnp.array(params[name]) for name in self._param_names], axis=-1)
+        y_jax = jnp.array(y)
+
+        try:
+            grads = batched_grad_fn(param_values, y_jax)  # shape (n, n_params)
+            hess_matrices = batched_hess_fn(param_values, y_jax)  # shape (n, n_params, n_params)
+
+            results = {}
+            for j, name in enumerate(self._param_names):
+                g = np.array(grads[:, j], dtype=np.float32)
+                h = np.maximum(np.array(hess_matrices[:, j, j], dtype=np.float32), 1e-6)
+                results[name] = (g, h)
+
+            return results
+        except Exception:
+            # Fall back to sample-by-sample on error
+            results = {name: (np.zeros(n, dtype=np.float32), np.zeros(n, dtype=np.float32))
+                       for name in self._param_names}
+
+            for i in range(n):
+                pv = jnp.array([params[name][i] for name in self._param_names])
+                try:
+                    g = grad_fn(pv, y_jax[i])
+                    h = hess_fn(pv, y_jax[i])
+                    for j, name in enumerate(self._param_names):
+                        results[name][0][i] = float(g[j])
+                        results[name][1][i] = max(float(h[j, j]), 1e-6)
+                except Exception:
+                    for j, name in enumerate(self._param_names):
+                        results[name][0][i] = 0.0
+                        results[name][1][i] = 1.0
+
+            return results
     
     def nll_gradient(
         self,

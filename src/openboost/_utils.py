@@ -406,7 +406,7 @@ def crps_gaussian(
         0.123...
         
     Notes:
-        CRPS formula for Gaussian: CRPS(N(μ,σ²), y) = σ * [z*Φ(z) + φ(z) - 1/√π]
+        CRPS formula for Gaussian: CRPS(N(μ,σ²), y) = σ * [z*(2*Φ(z) - 1) + 2*φ(z) - 1/√π]
         where z = (y - μ) / σ, Φ is CDF, φ is PDF of standard normal.
         
         For NaturalBoost models, use:
@@ -1080,44 +1080,44 @@ def cross_val_predict_proba(
         AttributeError: If model doesn't have predict_proba method.
     """
     try:
-        from sklearn.model_selection import KFold
+        from sklearn.model_selection import StratifiedKFold
         from sklearn.base import clone
     except ImportError:
         raise ImportError(
             "sklearn is required for cross_val_predict_proba. "
             "Install with: pip install scikit-learn"
         )
-    
+
     if not hasattr(model, 'predict_proba'):
         raise AttributeError(
             f"{type(model).__name__} doesn't have predict_proba method. "
             "Use cross_val_predict for regressors."
         )
-    
+
     X = np.asarray(X)
     y = np.asarray(y)
     n_samples = len(y)
-    
-    kf = KFold(n_splits=cv, shuffle=True, random_state=random_state)
-    
+
+    kf = StratifiedKFold(n_splits=cv, shuffle=True, random_state=random_state)
+
     # First fold to determine number of classes
-    first_train, first_val = next(iter(kf.split(X)))
+    first_train, first_val = next(iter(kf.split(X, y)))
     model_clone = clone(model)
     model_clone.fit(X[first_train], y[first_train])
     first_proba = model_clone.predict_proba(X[first_val])
     n_classes = first_proba.shape[1]
-    
+
     oof_proba = np.zeros((n_samples, n_classes), dtype=np.float32)
     oof_proba[first_val] = first_proba
-    
+
     # Remaining folds
-    for i, (train_idx, val_idx) in enumerate(kf.split(X)):
+    for i, (train_idx, val_idx) in enumerate(kf.split(X, y)):
         if i == 0:
             continue
         model_clone = clone(model)
         model_clone.fit(X[train_idx], y[train_idx])
         oof_proba[val_idx] = model_clone.predict_proba(X[val_idx])
-    
+
     return oof_proba
 
 

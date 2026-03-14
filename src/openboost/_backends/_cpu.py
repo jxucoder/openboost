@@ -132,7 +132,11 @@ def find_best_split_cpu(
         best_gain: Gain from the split
     """
     n_features = hist_grad.shape[0]
-    
+
+    # Guard for zero features
+    if n_features == 0:
+        return -1, -1, 0.0
+
     # Phase 3.3: Keep float64 for gain comparison precision on CPU
     # (CPU has no float64 penalty, and this is small data)
     best_gains = np.full(n_features, -1e10, dtype=np.float64)

@@ -224,12 +224,19 @@ def fit_tree_gpu_native(
         min_gain: Minimum gain to make a split
         
     Returns:
-        Fitted Tree object
+        Fitted Tree object (legacy Tree, not TreeStructure).
+
+    Note:
+        This intentionally returns a ``Tree`` (legacy class) rather than
+        ``TreeStructure`` (returned by ``fit_tree``).  ``Tree`` keeps GPU
+        arrays directly for zero-copy training, while ``TreeStructure`` is
+        a struct-of-arrays representation used by the growth strategies.
+        If you need a ``TreeStructure``, use ``fit_tree()`` instead.
     """
     if not is_cuda():
         # Fall back to CPU recursive implementation
-        return _fit_tree_cpu(X, grad, hess, max_depth=max_depth, 
-                            min_child_weight=min_child_weight, 
+        return _fit_tree_cpu(X, grad, hess, max_depth=max_depth,
+                            min_child_weight=min_child_weight,
                             reg_lambda=reg_lambda, min_gain=min_gain)
     
     # Handle BinnedArray
