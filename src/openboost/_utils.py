@@ -915,27 +915,42 @@ def suggest_params(
         - For noisy data: Consider distributional models for uncertainty
     """
     X = np.asarray(X)
+    y = np.asarray(y)
     n_samples, n_features = X.shape
-    
+
+    # Use y to determine task type if task is not explicitly set
+    # and to inform parameter suggestions
+    unique_y = np.unique(y)
+    n_unique = len(unique_y)
+
+    # Detect task type from y if classification
+    is_binary = n_unique == 2
+    is_multiclass = n_unique > 2 and n_unique <= 50 and task == 'classification'
+    is_imbalanced = False
+    if task == 'classification' and n_unique <= 50:
+        class_counts = np.array([np.sum(y == c) for c in unique_y])
+        imbalance_ratio = class_counts.max() / class_counts.min()
+        is_imbalanced = imbalance_ratio > 5
+
     # Base parameters
     params: dict[str, Any] = {}
-    
+
     # Number of trees: scale with data size, but cap
     if n_samples < 1000:
-        params['n_estimators'] = min(100, n_estimators_cap)
+        params['n_trees'] = min(100, n_estimators_cap)
     elif n_samples < 10000:
-        params['n_estimators'] = min(200, n_estimators_cap)
+        params['n_trees'] = min(200, n_estimators_cap)
     elif n_samples < 100000:
-        params['n_estimators'] = min(300, n_estimators_cap)
+        params['n_trees'] = min(300, n_estimators_cap)
     else:
-        params['n_estimators'] = min(500, n_estimators_cap)
-    
+        params['n_trees'] = min(500, n_estimators_cap)
+
     # Learning rate: lower for more trees
-    if params['n_estimators'] >= 300:
+    if params['n_trees'] >= 300:
         params['learning_rate'] = 0.05
     else:
         params['learning_rate'] = 0.1
-    
+
     # Tree depth: based on features and task
     if task == 'distributional':
         # Distributional models work better with shallower trees
@@ -945,7 +960,7 @@ def suggest_params(
         params['max_depth'] = min(6, 4 + n_features // 100)
     else:
         params['max_depth'] = min(8, 4 + n_features // 20)
-    
+
     # Regularization: more for small datasets
     if n_samples < 1000:
         params['reg_lambda'] = 10.0
@@ -956,16 +971,26 @@ def suggest_params(
     else:
         params['reg_lambda'] = 0.1
         params['min_child_weight'] = 1.0
-    
+
     # Sampling: use for larger datasets
     if n_samples > 10000:
         params['subsample'] = 0.8
         params['colsample_bytree'] = 0.8
-    
+
     # High-dimensional: more column sampling
     if n_features > 100:
         params['colsample_bytree'] = 0.6
-    
+
+    # Adjust for imbalanced classification
+    if is_imbalanced:
+        # More trees and lower learning rate help with imbalanced data
+        params['n_trees'] = min(params['n_trees'] + 100, n_estimators_cap)
+        params['learning_rate'] = min(params['learning_rate'], 0.05)
+
+    # Multiclass may benefit from shallower trees
+    if is_multiclass and n_unique > 10:
+        params['max_depth'] = min(params['max_depth'], 6)
+
     return params
 
 

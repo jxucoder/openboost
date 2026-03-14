@@ -636,10 +636,18 @@ def _poisson_gradient_cpu(pred: NDArray, y: NDArray) -> tuple[NDArray, NDArray]:
     return grad, hess
 
 
+def _ensure_poisson_kernel():
+    global _poisson_gradient_kernel
+    if _poisson_gradient_kernel is None:
+        _poisson_gradient_kernel = _get_poisson_kernel()
+    return _poisson_gradient_kernel
+
+
 def _poisson_gradient_gpu(pred, y):
     """GPU implementation of Poisson gradient."""
     from numba import cuda
-    
+    _ensure_poisson_kernel()
+
     if hasattr(pred, 'copy_to_host'):
         n = pred.shape[0]
     else:
@@ -718,10 +726,18 @@ def _gamma_gradient_cpu(pred: NDArray, y: NDArray) -> tuple[NDArray, NDArray]:
     return grad, hess
 
 
+def _ensure_gamma_kernel():
+    global _gamma_gradient_kernel
+    if _gamma_gradient_kernel is None:
+        _gamma_gradient_kernel = _get_gamma_kernel()
+    return _gamma_gradient_kernel
+
+
 def _gamma_gradient_gpu(pred, y):
     """GPU implementation of Gamma gradient."""
     from numba import cuda
-    
+    _ensure_gamma_kernel()
+
     if hasattr(pred, 'copy_to_host'):
         n = pred.shape[0]
     else:
@@ -814,10 +830,18 @@ def _tweedie_gradient_cpu(pred: NDArray, y: NDArray, rho: float = 1.5) -> tuple[
     return grad, hess
 
 
+def _ensure_tweedie_kernel():
+    global _tweedie_gradient_kernel
+    if _tweedie_gradient_kernel is None:
+        _tweedie_gradient_kernel = _get_tweedie_kernel()
+    return _tweedie_gradient_kernel
+
+
 def _tweedie_gradient_gpu(pred, y, rho: float = 1.5):
     """GPU implementation of Tweedie gradient."""
     from numba import cuda
-    
+    _ensure_tweedie_kernel()
+
     if hasattr(pred, 'copy_to_host'):
         n = pred.shape[0]
     else:
