@@ -1147,15 +1147,22 @@ class MultiClassGradientBoosting(PersistenceMixin):
     
     def predict_raw(self, X: NDArray | BinnedArray) -> NDArray:
         """Get raw predictions (logits) for each class.
-        
+
         Args:
             X: Features to predict on.
-            
+
         Returns:
             logits: Shape (n_samples, n_classes).
         """
         if not self.trees_:
             raise RuntimeError("Model not fitted. Call fit() first.")
+
+        # MED-9: Validate input
+        n_features = getattr(self, 'n_features_in_', None) or (
+            self.X_binned_.n_features if self.X_binned_ else None
+        )
+        if n_features is not None and not isinstance(X, BinnedArray):
+            X = validate_predict_input(self, X, n_features)
         
         # Bin the data if needed, using training bin edges for consistency
         if isinstance(X, BinnedArray):

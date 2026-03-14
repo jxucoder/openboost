@@ -1494,6 +1494,7 @@ class CustomDistribution(Distribution):
         # Check for JAX availability
         self._jax_available = False
         self._jax_grad_fn = None
+        self._jax_hess_fn = None
         if use_jax:
             try:
                 import jax
