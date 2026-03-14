@@ -6471,7 +6471,7 @@ ob.crps_gaussian(y_true, mean, std)
 
 <details class="notes" open>
   <summary>Notes</summary>
-  <p>CRPS formula for Gaussian: CRPS(N(μ,σ²), y) = σ * [z*Φ(z) + φ(z) - 1/√π]
+  <p>CRPS formula for Gaussian: CRPS(N(μ,σ²), y) = σ * [z<em>(2</em>Φ(z) - 1) + 2*φ(z) - 1/√π]
 where z = (y - μ) / σ, Φ is CDF, φ is PDF of standard normal.</p>
 <p>For NaturalBoost models, use:</p>
 <blockquote>
