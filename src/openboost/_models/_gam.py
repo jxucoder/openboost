@@ -11,6 +11,7 @@ this trains all feature shape functions simultaneously on GPU.
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -390,5 +391,5 @@ if is_cuda():
     try:
         _init_cuda_kernels()
     except Exception:
-        pass
+        warnings.warn("Failed to compile GAM CUDA kernels; will retry on first use", stacklevel=1)
 

@@ -6,6 +6,7 @@ of common loss functions, enabling fully batched training.
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING, Callable
 
 import numpy as np
@@ -213,7 +214,7 @@ if is_cuda():
     try:
         _mse_gradient_kernel = _get_mse_kernel()
     except Exception:
-        pass  # Will be compiled on first use
+        warnings.warn("Failed to compile MSE CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
@@ -303,7 +304,7 @@ if is_cuda():
     try:
         _logloss_gradient_kernel = _get_logloss_kernel()
     except Exception:
-        pass
+        warnings.warn("Failed to compile LogLoss CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
@@ -390,7 +391,7 @@ if is_cuda():
     try:
         _huber_gradient_kernel = _get_huber_kernel()
     except Exception:
-        pass
+        warnings.warn("Failed to compile Huber CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
@@ -470,7 +471,7 @@ if is_cuda():
     try:
         _mae_gradient_kernel = _get_mae_kernel()
     except Exception:
-        pass
+        warnings.warn("Failed to compile MAE CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
@@ -567,7 +568,7 @@ if is_cuda():
     try:
         _quantile_gradient_kernel = _get_quantile_kernel()
     except Exception:
-        pass
+        warnings.warn("Failed to compile Quantile CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
@@ -649,7 +650,7 @@ if is_cuda():
     try:
         _poisson_gradient_kernel = _get_poisson_kernel()
     except Exception:
-        pass
+        warnings.warn("Failed to compile Poisson CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
@@ -731,7 +732,7 @@ if is_cuda():
     try:
         _gamma_gradient_kernel = _get_gamma_kernel()
     except Exception:
-        pass
+        warnings.warn("Failed to compile Gamma CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
@@ -832,7 +833,7 @@ if is_cuda():
     try:
         _tweedie_gradient_kernel = _get_tweedie_kernel()
     except Exception:
-        pass
+        warnings.warn("Failed to compile Tweedie CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
@@ -868,7 +869,7 @@ def _softmax_gradient_cpu(pred: NDArray, y: NDArray, n_classes: int) -> tuple[ND
     # Compute softmax probabilities (with numerical stability)
     pred_max = np.max(pred, axis=1, keepdims=True)
     exp_pred = np.exp(pred - pred_max)
-    probs = exp_pred / np.sum(exp_pred, axis=1, keepdims=True)
+    probs = exp_pred / (np.sum(exp_pred, axis=1, keepdims=True) + 1e-10)
     
     # One-hot encode y
     y_onehot = np.zeros((n_samples, n_classes), dtype=np.float32)

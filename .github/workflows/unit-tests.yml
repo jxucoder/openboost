@@ -35,6 +35,11 @@ jobs:
           # Also install xgboost for integration tests
           pip install "xgboost>=2.0"
 
+      - name: Lint with ruff
+        run: |
+          pip install "ruff>=0.4"
+          ruff check src/openboost/
+
       - name: Run tests (CPU backend)
         env:
           OPENBOOST_BACKEND: "cpu"

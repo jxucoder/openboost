@@ -32,6 +32,8 @@ Low-Level API (Full Control):
     ...     pred = pred + 0.1 * tree(X_binned)
 """
 
+import warnings as _warnings
+
 __version__ = "1.0.0rc1"
 
 # =============================================================================
@@ -112,15 +114,15 @@ from ._models import (
     NaturalBoostStudentT,
     NaturalBoostTweedie,
     NaturalBoostNegBin,
-    # Backward compatibility aliases (deprecated)
-    NGBoost,
-    NGBoostNormal,
-    NGBoostLogNormal,
-    NGBoostGamma,
-    NGBoostPoisson,
-    NGBoostStudentT,
-    NGBoostTweedie,
-    NGBoostNegBin,
+    # Backward compatibility aliases (deprecated, accessed via __getattr__)
+    NGBoost as _NGBoost,
+    NGBoostNormal as _NGBoostNormal,
+    NGBoostLogNormal as _NGBoostLogNormal,
+    NGBoostGamma as _NGBoostGamma,
+    NGBoostPoisson as _NGBoostPoisson,
+    NGBoostStudentT as _NGBoostStudentT,
+    NGBoostTweedie as _NGBoostTweedie,
+    NGBoostNegBin as _NGBoostNegBin,
     # Phase 15: Linear Leaf GBDT
     LinearLeafGBDT,
 )
@@ -261,6 +263,30 @@ from ._utils import (
     calibration_curve,
     negative_log_likelihood,
 )
+
+_DEPRECATED_ALIASES = {
+    "NGBoost": ("NaturalBoost", _NGBoost),
+    "NGBoostNormal": ("NaturalBoostNormal", _NGBoostNormal),
+    "NGBoostLogNormal": ("NaturalBoostLogNormal", _NGBoostLogNormal),
+    "NGBoostGamma": ("NaturalBoostGamma", _NGBoostGamma),
+    "NGBoostPoisson": ("NaturalBoostPoisson", _NGBoostPoisson),
+    "NGBoostStudentT": ("NaturalBoostStudentT", _NGBoostStudentT),
+    "NGBoostTweedie": ("NaturalBoostTweedie", _NGBoostTweedie),
+    "NGBoostNegBin": ("NaturalBoostNegBin", _NGBoostNegBin),
+}
+
+
+def __getattr__(name: str):
+    if name in _DEPRECATED_ALIASES:
+        new_name, obj = _DEPRECATED_ALIASES[name]
+        _warnings.warn(
+            f"{name} is deprecated, use {new_name} instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return obj
+    raise AttributeError(f"module 'openboost' has no attribute {name!r}")
+
 
 __all__ = [
     # Version

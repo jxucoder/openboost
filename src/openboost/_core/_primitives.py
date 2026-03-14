@@ -19,6 +19,7 @@ This design enables:
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -697,7 +698,7 @@ if is_cuda():
     try:
         _init_partition_kernel_with_missing()
     except Exception:
-        pass
+        warnings.warn("Failed to compile partition CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
@@ -837,7 +838,7 @@ if is_cuda():
     try:
         _init_zero_kernel()
     except Exception:
-        pass
+        warnings.warn("Failed to compile zero-fill CUDA kernel; will retry on first use", stacklevel=1)
 
 
 # =============================================================================
