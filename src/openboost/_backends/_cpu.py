@@ -132,7 +132,11 @@ def find_best_split_cpu(
         best_gain: Gain from the split
     """
     n_features = hist_grad.shape[0]
-    
+
+    # Guard for zero features
+    if n_features == 0:
+        return -1, -1, 0.0
+
     # Phase 3.3: Keep float64 for gain comparison precision on CPU
     # (CPU has no float64 penalty, and this is small data)
     best_gains = np.full(n_features, -1e10, dtype=np.float64)
@@ -663,7 +667,7 @@ def _predict_cpu_with_missing(
             feature = tree_features[node]
             threshold = tree_thresholds[node]
             bin_value = binned[feature, i]
-            
+
             # Check for missing value
             if bin_value == MISSING_BIN:
                 # Use learned direction
@@ -675,6 +679,111 @@ def _predict_cpu_with_missing(
                 node = tree_left[node]
             else:
                 node = tree_right[node]
-        
+
         predictions[i] = tree_values[node]
+
+
+# =============================================================================
+# Phase 14.4: Prediction with Categorical Split Support (CPU)
+# =============================================================================
+
+@jit(nopython=True, parallel=True, cache=True)
+def _predict_cpu_with_categorical(
+    binned: np.ndarray,              # (n_features, n_samples) uint8
+    tree_features: np.ndarray,       # (n_nodes,) int32
+    tree_thresholds: np.ndarray,     # (n_nodes,) uint8
+    tree_values: np.ndarray,         # (n_nodes,) float32
+    tree_left: np.ndarray,           # (n_nodes,) int32
+    tree_right: np.ndarray,          # (n_nodes,) int32
+    tree_missing_left: np.ndarray,   # (n_nodes,) bool
+    is_categorical_split: np.ndarray,  # (n_nodes,) bool
+    cat_bitsets: np.ndarray,         # (n_nodes,) int64
+    predictions: np.ndarray,         # (n_samples,) float32
+):
+    """Predict using tree structure with categorical and missing value handling (CPU).
+
+    For categorical splits, go left if (1 << bin_value) & cat_bitset != 0.
+    For numeric splits, go left if bin_value <= threshold.
+    Missing values (bin 255) are routed according to tree_missing_left.
+    """
+    n_samples = binned.shape[1]
+
+    for i in prange(n_samples):
+        node = 0
+        while tree_left[node] != -1:
+            feature = tree_features[node]
+            bin_value = binned[feature, i]
+
+            # Check for missing value
+            if bin_value == MISSING_BIN:
+                if tree_missing_left[node]:
+                    node = tree_left[node]
+                else:
+                    node = tree_right[node]
+            elif is_categorical_split[node]:
+                # Categorical split: use bitmask
+                bitset = cat_bitsets[node]
+                if (np.int64(1) << bin_value) & bitset:
+                    node = tree_left[node]
+                else:
+                    node = tree_right[node]
+            else:
+                # Numeric split: use threshold
+                threshold = tree_thresholds[node]
+                if bin_value <= threshold:
+                    node = tree_left[node]
+                else:
+                    node = tree_right[node]
+
+        predictions[i] = tree_values[node]
+
+
+def predict_with_categorical_cpu(
+    binned: np.ndarray,
+    tree_features: np.ndarray,
+    tree_thresholds: np.ndarray,
+    tree_values: np.ndarray,
+    tree_left: np.ndarray,
+    tree_right: np.ndarray,
+    tree_missing_left: np.ndarray | None = None,
+    is_categorical_split: np.ndarray | None = None,
+    cat_bitsets: np.ndarray | None = None,
+) -> np.ndarray:
+    """Predict using a tree with categorical support on CPU.
+
+    Phase 14.4: CPU prediction supporting categorical splits.
+
+    Args:
+        binned: Binned feature matrix, shape (n_features, n_samples)
+        tree_features: Feature index for each node
+        tree_thresholds: Threshold for each node
+        tree_values: Leaf values
+        tree_left: Left child indices
+        tree_right: Right child indices
+        tree_missing_left: Whether missing goes left for each node
+        is_categorical_split: Whether each node is a categorical split
+        cat_bitsets: Bitmasks for categorical splits
+
+    Returns:
+        predictions: Shape (n_samples,), float32
+    """
+    n_samples = binned.shape[1]
+    n_nodes = tree_features.shape[0]
+    predictions = np.empty(n_samples, dtype=np.float32)
+
+    # Prepare default arrays if not provided
+    if tree_missing_left is None:
+        tree_missing_left = np.ones(n_nodes, dtype=np.bool_)
+    if is_categorical_split is None:
+        is_categorical_split = np.zeros(n_nodes, dtype=np.bool_)
+    if cat_bitsets is None:
+        cat_bitsets = np.zeros(n_nodes, dtype=np.int64)
+
+    _predict_cpu_with_categorical(
+        binned, tree_features, tree_thresholds, tree_values,
+        tree_left, tree_right, tree_missing_left,
+        is_categorical_split, cat_bitsets, predictions
+    )
+
+    return predictions
 

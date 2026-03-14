@@ -18,9 +18,22 @@ from openboost._core._primitives import build_node_histograms, partition_samples
 
 class RayWorker:
     """Worker that holds a data shard and computes local histograms."""
-    
-    def __init__(self, X_shard: NDArray, y_shard: NDArray, n_bins: int):
-        self.X_binned = ob.array(X_shard, n_bins=n_bins)
+
+    def __init__(self, X_shard: NDArray, y_shard: NDArray, n_bins: int,
+                 bin_edges=None):
+        if bin_edges is not None:
+            from openboost._array import BinnedArray
+            n_features = len(bin_edges)
+            template = BinnedArray(
+                data=np.empty(0, dtype=np.uint8),
+                bin_edges=bin_edges,
+                n_features=n_features,
+                n_samples=0,
+                device="cpu",
+            )
+            self.X_binned = template.transform(X_shard)
+        else:
+            self.X_binned = ob.array(X_shard, n_bins=n_bins)
         self.y = y_shard
         self.n_samples = len(y_shard)
         # Initialize sample_node_ids locally
@@ -98,11 +111,15 @@ class RayDistributedContext:
     
     def setup(self, X: NDArray, y: NDArray, n_bins: int):
         """Partition data and create workers."""
+        # Compute global bin edges on the driver for consistent binning
+        global_binned = ob.array(X, n_bins=n_bins)
+        global_bin_edges = global_binned.bin_edges
+
         shards = np.array_split(X, self.n_workers)
         y_shards = np.array_split(y, self.n_workers)
-        
+
         self.workers = [
-            RayWorker.remote(s, ys, n_bins) 
+            RayWorker.remote(s, ys, n_bins, bin_edges=global_bin_edges)
             for s, ys in zip(shards, y_shards)
         ]
     

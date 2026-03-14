@@ -45,83 +45,106 @@ if TYPE_CHECKING:
 @dataclass
 class LinearLeafTree:
     """A tree with linear models in leaves.
-    
+
     Instead of constant leaf values, each leaf has a linear model:
         prediction = w0 + w1*x[f1] + w2*x[f2] + ...
-    
+
     Attributes:
         tree_structure: Base tree for routing samples to leaves
         leaf_weights: (n_leaves, max_features + 1) linear model weights
         leaf_features: List of feature indices used in each leaf
-        leaf_ids: Mapping from tree leaf indices to our leaf indices
+        leaf_ids: Mapping from integer tree node index to our leaf index
         n_features: Total number of features in the dataset
         training_binned: Reference to training BinnedArray for transform
     """
     tree_structure: TreeStructure
     leaf_weights: NDArray  # (n_leaves, max_features_linear + 1)
     leaf_features: list[list[int]]  # Features used per leaf
-    leaf_ids: dict[float, int]  # Map tree leaf prediction value -> our leaf index
+    leaf_ids: dict[int, int]  # Map tree node index -> our leaf index
     n_features: int = 0
     training_binned: BinnedArray | None = None  # For transform
-    
+
     def __call__(self, X: NDArray) -> NDArray:
         """Predict using linear leaf tree."""
         return self.predict(X)
-    
+
     def predict(self, X: NDArray) -> NDArray:
         """Generate predictions using linear models in leaves.
-        
+
         Args:
             X: Features, shape (n_samples, n_features)
-            
+
         Returns:
             predictions: Shape (n_samples,)
         """
         X = np.asarray(X, dtype=np.float32)
         n_samples = X.shape[0]
-        
-        # Get leaf assignments from tree structure
-        # We need to route samples through the tree to find their leaf
-        leaf_preds = self._get_leaf_predictions(X)
-        
-        predictions = np.zeros(n_samples, dtype=np.float32)
-        
-        for sample_idx in range(n_samples):
-            leaf_pred = float(leaf_preds[sample_idx])
 
-            # Look up leaf index using float prediction value as key.
-            # This works because the tree returns deterministic leaf constants.
-            if leaf_pred in self.leaf_ids:
-                leaf_idx = self.leaf_ids[leaf_pred]
+        # Get leaf node indices from tree structure
+        leaf_node_ids = self._get_leaf_node_indices(X)
+
+        predictions = np.zeros(n_samples, dtype=np.float32)
+
+        for sample_idx in range(n_samples):
+            node_id = int(leaf_node_ids[sample_idx])
+
+            # Look up leaf index using integer node index as key.
+            if node_id in self.leaf_ids:
+                leaf_idx = self.leaf_ids[node_id]
             else:
                 # Fallback: use the constant term from first leaf
                 leaf_idx = 0
-            
+
             # Get weights and features for this leaf
             weights = self.leaf_weights[leaf_idx]
             feat_indices = self.leaf_features[leaf_idx]
-            
+
             # Linear prediction: w0 + sum(w_i * x_i)
             pred = weights[0]  # Bias term
             for j, feat_idx in enumerate(feat_indices):
                 if j + 1 < len(weights):
                     pred += weights[j + 1] * X[sample_idx, feat_idx]
-            
+
             predictions[sample_idx] = pred
-        
+
         return predictions
-    
-    def _get_leaf_predictions(self, X: NDArray) -> NDArray:
-        """Get the constant leaf value for each sample (used as leaf ID)."""
+
+    def _get_leaf_node_indices(self, X: NDArray) -> NDArray:
+        """Get the tree node index of the leaf each sample falls into."""
         # Bin the data for tree prediction, using training bin edges
         if self.training_binned is not None:
             X_binned = self.training_binned.transform(X)
         else:
             X_binned = array(X)
-        preds = self.tree_structure(X_binned)
-        if hasattr(preds, 'copy_to_host'):
-            preds = preds.copy_to_host()
-        return preds
+
+        # Get binned data for tree traversal
+        from .._array import BinnedArray as BA
+        if isinstance(X_binned, BA):
+            binned = X_binned.data
+        else:
+            binned = X_binned
+
+        if hasattr(binned, 'copy_to_host'):
+            binned = binned.copy_to_host()
+        binned = np.asarray(binned)
+
+        tree = self.tree_structure
+        n_samples = binned.shape[1]
+        leaf_ids = np.empty(n_samples, dtype=np.int32)
+
+        for i in range(n_samples):
+            node = 0
+            while tree.left_children[node] != -1:
+                feature = tree.features[node]
+                threshold = tree.thresholds[node]
+                bin_value = binned[feature, i]
+                if bin_value <= threshold:
+                    node = tree.left_children[node]
+                else:
+                    node = tree.right_children[node]
+            leaf_ids[i] = node
+
+        return leaf_ids
 
 
 @dataclass
@@ -224,8 +247,13 @@ class LinearLeafGBDT(PersistenceMixin):
         
         self._n_linear_features = n_linear_features
         
-        # Initialize predictions
-        pred = np.zeros(n_samples, dtype=np.float32)
+        # Initialize predictions with base score
+        if self.loss in ('logloss', 'binary_crossentropy'):
+            p = np.clip(np.mean(y), 1e-7, 1 - 1e-7)
+            self.base_score_ = np.float32(np.log(p / (1 - p)))
+        else:
+            self.base_score_ = np.float32(np.mean(y))
+        pred = np.full(n_samples, self.base_score_, dtype=np.float32)
         
         for round_idx in range(self.n_trees):
             # Compute gradients
@@ -253,7 +281,10 @@ class LinearLeafGBDT(PersistenceMixin):
             # Update predictions
             tree_pred = linear_tree.predict(X)
             pred = pred + self.learning_rate * tree_pred
-        
+
+        # MED-21: Release raw data reference to free memory
+        self._X_raw = None
+
         return self
     
     def _fit_linear_leaves(
@@ -272,26 +303,40 @@ class LinearLeafGBDT(PersistenceMixin):
         Target is the negative gradient divided by hessian (Newton step).
         """
         n_samples, n_features = X.shape
-        
-        # Get leaf predictions (these serve as leaf identifiers)
-        leaf_preds = base_tree(self.X_binned_)
-        if hasattr(leaf_preds, 'copy_to_host'):
-            leaf_preds = leaf_preds.copy_to_host()
-        
-        # Find unique leaves and their indices
-        unique_leaves = np.unique(leaf_preds)
-        n_leaves = len(unique_leaves)
-        
-        # Map leaf prediction value -> our leaf index
-        leaf_ids = {float(v): i for i, v in enumerate(unique_leaves)}
-        
+
+        # Get leaf node indices (integer IDs) for each sample
+        binned_data = self.X_binned_.data
+        if hasattr(binned_data, 'copy_to_host'):
+            binned_data = binned_data.copy_to_host()
+        binned_data = np.asarray(binned_data)
+
+        leaf_node_ids = np.empty(n_samples, dtype=np.int32)
+        for i in range(n_samples):
+            node = 0
+            while base_tree.left_children[node] != -1:
+                feature = base_tree.features[node]
+                threshold = base_tree.thresholds[node]
+                bin_value = binned_data[feature, i]
+                if bin_value <= threshold:
+                    node = base_tree.left_children[node]
+                else:
+                    node = base_tree.right_children[node]
+            leaf_node_ids[i] = node
+
+        # Find unique leaf node IDs
+        unique_node_ids = np.unique(leaf_node_ids)
+        n_leaves = len(unique_node_ids)
+
+        # Map integer node index -> our leaf index
+        leaf_ids = {int(nid): i for i, nid in enumerate(unique_node_ids)}
+
         # Storage for linear models
         leaf_weights = np.zeros((n_leaves, n_linear_features + 1), dtype=np.float32)
         leaf_features = []
-        
-        for leaf_idx, leaf_val in enumerate(unique_leaves):
+
+        for leaf_idx, node_id in enumerate(unique_node_ids):
             # Get samples in this leaf
-            mask = np.isclose(leaf_preds, leaf_val)
+            mask = leaf_node_ids == node_id
             n_leaf = np.sum(mask)
             
             if n_leaf < self.min_samples_leaf:
@@ -413,11 +458,12 @@ class LinearLeafGBDT(PersistenceMixin):
         
         X = np.asarray(X, dtype=np.float32)
         n_samples = X.shape[0]
-        
-        pred = np.zeros(n_samples, dtype=np.float32)
+
+        base = getattr(self, 'base_score_', np.float32(0.0))
+        pred = np.full(n_samples, base, dtype=np.float32)
         for tree in self.trees_:
             pred = pred + self.learning_rate * tree.predict(X)
-        
+
         return pred
     
     def score(self, X: NDArray, y: NDArray) -> float:

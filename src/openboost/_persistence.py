@@ -208,7 +208,13 @@ class PersistenceMixin:
         """
         # Get all attributes from dataclass fields
         if hasattr(self, "__dataclass_fields__"):
-            return list(self.__dataclass_fields__.keys())
+            attrs = list(self.__dataclass_fields__.keys())
+            # Also include fitted attributes (sklearn convention: trailing _)
+            # and other instance attributes not in dataclass fields
+            for k in vars(self).keys():
+                if k not in attrs and not k.startswith("_"):
+                    attrs.append(k)
+            return attrs
         # Fallback: all non-private attributes
         return [k for k in vars(self).keys() if not k.startswith("_")]
 
@@ -218,7 +224,7 @@ class PersistenceMixin:
         Returns:
             Dictionary containing all model state
         """
-        state = {"__class__": type(self).__name__}
+        state = {"__class__": type(self).__name__, "_serialization_version": 1}
 
         for attr in self._get_persist_attrs():
             value = getattr(self, attr, None)
@@ -276,6 +282,26 @@ class PersistenceMixin:
         Args:
             state: Dictionary containing model state
         """
+        import warnings
+
+        _CURRENT_SERIALIZATION_VERSION = 1
+        saved_version = state.get("_serialization_version", None)
+        if saved_version is None:
+            warnings.warn(
+                "Loading a model saved without a serialization version number. "
+                "The model may have been saved with an older version of OpenBoost.",
+                UserWarning,
+                stacklevel=2,
+            )
+        elif saved_version > _CURRENT_SERIALIZATION_VERSION:
+            warnings.warn(
+                f"Model was saved with serialization version {saved_version}, "
+                f"but current version is {_CURRENT_SERIALIZATION_VERSION}. "
+                "Some features may not load correctly.",
+                UserWarning,
+                stacklevel=2,
+            )
+
         trees_type = state.get("_trees_type", "list")
 
         for attr, value in state.items():
@@ -340,6 +366,22 @@ class PersistenceMixin:
                 n_categories=n_categories if isinstance(n_categories, np.ndarray) else np.array(n_categories, dtype=np.int32),
             )
         
+        # Reconstruct _loss_fn from stored loss name/config
+        if hasattr(self, 'loss') and self.loss is not None:
+            try:
+                from openboost._loss import get_loss_function
+                self._loss_fn = get_loss_function(self.loss)
+            except Exception:
+                pass  # Will be recreated on next use if needed
+
+        # Reconstruct distribution_ from stored distribution name/config
+        if hasattr(self, 'distribution') and self.distribution is not None:
+            try:
+                from openboost._distributions import get_distribution
+                self.distribution_ = get_distribution(self.distribution)
+            except Exception:
+                pass  # Will be recreated on next use if needed
+
         # Call post-load hook if defined (for recreating derived attributes)
         if hasattr(self, "_post_load"):
             self._post_load()
@@ -382,7 +424,15 @@ class PersistenceMixin:
             >>> model = ob.GradientBoosting.load('my_model.joblib')
             >>> predictions = model.predict(X_test)
         """
+        import warnings
         import joblib
+
+        warnings.warn(
+            "Loading a model with joblib/pickle can execute arbitrary code. "
+            "Only load models from trusted sources.",
+            UserWarning,
+            stacklevel=2,
+        )
 
         path = Path(path)
         state = joblib.load(path)

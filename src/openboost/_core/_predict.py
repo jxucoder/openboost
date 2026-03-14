@@ -62,34 +62,76 @@ def predict_ensemble(
     return pred
 
 
-def _fill_cuda(arr, value: float):
-    """Fill CUDA array with a value."""
+# Module-level CUDA kernels to avoid recompilation on every call
+_fill_cuda_kernel = None
+_add_inplace_cuda_kernel = None
+
+
+def _get_fill_cuda_kernel():
+    """Get or compile the fill kernel."""
+    global _fill_cuda_kernel
+    if _fill_cuda_kernel is not None:
+        return _fill_cuda_kernel
+
     from numba import cuda
-    
+
     @cuda.jit
-    def _kernel(arr, val):
+    def kernel(arr, val):
         idx = cuda.grid(1)
         if idx < arr.shape[0]:
             arr[idx] = val
-    
+
+    _fill_cuda_kernel = kernel
+    return kernel
+
+
+def _get_add_inplace_cuda_kernel():
+    """Get or compile the add-inplace kernel."""
+    global _add_inplace_cuda_kernel
+    if _add_inplace_cuda_kernel is not None:
+        return _add_inplace_cuda_kernel
+
+    from numba import cuda
+
+    @cuda.jit
+    def kernel(arr, other, scale):
+        idx = cuda.grid(1)
+        if idx < arr.shape[0]:
+            arr[idx] += scale * other[idx]
+
+    _add_inplace_cuda_kernel = kernel
+    return kernel
+
+
+# Initialize kernels at module load if CUDA available
+if is_cuda():
+    try:
+        _fill_cuda_kernel = _get_fill_cuda_kernel()
+        _add_inplace_cuda_kernel = _get_add_inplace_cuda_kernel()
+    except Exception:
+        pass
+
+
+def _fill_cuda(arr, value: float):
+    """Fill CUDA array with a value."""
+    global _fill_cuda_kernel
+    if _fill_cuda_kernel is None:
+        _fill_cuda_kernel = _get_fill_cuda_kernel()
+
     threads = 256
     blocks = (len(arr) + threads - 1) // threads
-    _kernel[blocks, threads](arr, value)
+    _fill_cuda_kernel[blocks, threads](arr, value)
 
 
 def _add_inplace_cuda(arr, other, scale: float):
     """arr += scale * other (in-place on GPU)."""
-    from numba import cuda
-    
-    @cuda.jit
-    def _kernel(arr, other, scale):
-        idx = cuda.grid(1)
-        if idx < arr.shape[0]:
-            arr[idx] += scale * other[idx]
-    
+    global _add_inplace_cuda_kernel
+    if _add_inplace_cuda_kernel is None:
+        _add_inplace_cuda_kernel = _get_add_inplace_cuda_kernel()
+
     threads = 256
     blocks = (len(arr) + threads - 1) // threads
-    _kernel[blocks, threads](arr, other, scale)
+    _add_inplace_cuda_kernel[blocks, threads](arr, other, scale)
 
 
 # =============================================================================

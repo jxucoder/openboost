@@ -155,6 +155,8 @@ class EarlyStopping(Callback):
         self.stopped_round: int | None = None
         self._best_trees: list | None = None
         self._best_weights: list | None = None  # For DART
+        self._best_tree_weights: list | None = None
+        self._best_base_score: float | None = None
     
     def on_train_begin(self, state: TrainingState) -> None:
         """Reset state at start of training."""
@@ -164,6 +166,8 @@ class EarlyStopping(Callback):
         self.stopped_round = None
         self._best_trees = None
         self._best_weights = None
+        self._best_tree_weights = None
+        self._best_base_score = None
     
     def on_round_end(self, state: TrainingState) -> bool:
         """Check if we should stop training."""
@@ -182,8 +186,8 @@ class EarlyStopping(Callback):
                 # Snapshot current model state
                 self._best_trees = copy.deepcopy(state.model.trees_)
                 # Handle DART tree weights
-                if hasattr(state.model, 'tree_weights_'):
-                    self._best_weights = list(state.model.tree_weights_)
+                self._best_tree_weights = copy.deepcopy(getattr(state.model, 'tree_weights_', None))
+                self._best_base_score = copy.deepcopy(getattr(state.model, 'base_score_', None))
         else:
             self.wait += 1
             if self.wait >= self.patience:
@@ -199,8 +203,10 @@ class EarlyStopping(Callback):
         """Restore best model if requested."""
         if self.restore_best and self._best_trees is not None:
             state.model.trees_ = self._best_trees
-            if self._best_weights is not None and hasattr(state.model, 'tree_weights_'):
-                state.model.tree_weights_ = self._best_weights
+            if self._best_tree_weights is not None and hasattr(state.model, 'tree_weights_'):
+                state.model.tree_weights_ = self._best_tree_weights
+            if self._best_base_score is not None and hasattr(state.model, 'base_score_'):
+                state.model.base_score_ = self._best_base_score
         
         # Set attributes on model
         state.model.best_iteration_ = self.best_round
@@ -293,10 +299,20 @@ class ModelCheckpoint(Callback):
         return True
     
     def _save_model(self, model) -> None:
-        """Save model using pickle."""
-        import pickle
-        with open(self.filepath, 'wb') as f:
-            pickle.dump(model, f)
+        """Save model using its save() method, falling back to pickle."""
+        if hasattr(model, 'save'):
+            model.save(self.filepath)
+        else:
+            import pickle
+            import warnings
+            warnings.warn(
+                f"{type(model).__name__} does not have a save() method. "
+                "Falling back to pickle.dump.",
+                UserWarning,
+                stacklevel=2,
+            )
+            with open(self.filepath, 'wb') as f:
+                pickle.dump(model, f)
 
 
 class LearningRateScheduler(Callback):
@@ -394,10 +410,11 @@ class CallbackManager:
         Returns:
             True if training should continue, False if any callback wants to stop.
         """
+        should_continue = True
         for cb in self.callbacks:
             if not cb.on_round_end(state):
-                return False
-        return True
+                should_continue = False
+        return should_continue
     
     def on_train_end(self, state: TrainingState) -> None:
         """Call on_train_end for all callbacks."""

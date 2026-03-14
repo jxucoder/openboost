@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import threading
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -10,6 +11,7 @@ if TYPE_CHECKING:
 
 # Backend state
 _BACKEND: Literal["cuda", "cpu"] | None = None
+_BACKEND_LOCK = threading.Lock()
 
 
 def get_backend() -> Literal["cuda", "cpu"]:
@@ -45,23 +47,26 @@ def _cuda_available() -> bool:
 
 def set_backend(backend: Literal["cuda", "cpu"]) -> None:
     """Force a specific backend.
-    
+
+    Thread-safe: uses a lock to prevent concurrent modification.
+
     Args:
         backend: "cuda" or "cpu"
-        
+
     Raises:
         ValueError: If backend is not "cuda" or "cpu"
         RuntimeError: If CUDA is requested but not available
     """
     global _BACKEND
-    
+
     if backend not in ("cuda", "cpu"):
         raise ValueError(f"backend must be 'cuda' or 'cpu', got {backend!r}")
-    
+
     if backend == "cuda" and not _cuda_available():
         raise RuntimeError("CUDA backend requested but CUDA is not available")
-    
-    _BACKEND = backend
+
+    with _BACKEND_LOCK:
+        _BACKEND = backend
 
 
 def is_cuda() -> bool:

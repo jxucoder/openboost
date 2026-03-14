@@ -406,7 +406,7 @@ def crps_gaussian(
         0.123...
         
     Notes:
-        CRPS formula for Gaussian: CRPS(N(μ,σ²), y) = σ * [z*Φ(z) + φ(z) - 1/√π]
+        CRPS formula for Gaussian: CRPS(N(μ,σ²), y) = σ * [z*(2*Φ(z) - 1) + 2*φ(z) - 1/√π]
         where z = (y - μ) / σ, Φ is CDF, φ is PDF of standard normal.
         
         For NaturalBoost models, use:
@@ -915,11 +915,26 @@ def suggest_params(
         - For noisy data: Consider distributional models for uncertainty
     """
     X = np.asarray(X)
+    y = np.asarray(y)
     n_samples, n_features = X.shape
-    
+
+    # Use y to determine task type if task is not explicitly set
+    # and to inform parameter suggestions
+    unique_y = np.unique(y)
+    n_unique = len(unique_y)
+
+    # Detect task type from y if classification
+    is_binary = n_unique == 2
+    is_multiclass = n_unique > 2 and n_unique <= 50 and task == 'classification'
+    is_imbalanced = False
+    if task == 'classification' and n_unique <= 50:
+        class_counts = np.array([np.sum(y == c) for c in unique_y])
+        imbalance_ratio = class_counts.max() / class_counts.min()
+        is_imbalanced = imbalance_ratio > 5
+
     # Base parameters
     params: dict[str, Any] = {}
-    
+
     # Number of trees: scale with data size, but cap
     if n_samples < 1000:
         params['n_estimators'] = min(100, n_estimators_cap)
@@ -929,13 +944,13 @@ def suggest_params(
         params['n_estimators'] = min(300, n_estimators_cap)
     else:
         params['n_estimators'] = min(500, n_estimators_cap)
-    
+
     # Learning rate: lower for more trees
     if params['n_estimators'] >= 300:
         params['learning_rate'] = 0.05
     else:
         params['learning_rate'] = 0.1
-    
+
     # Tree depth: based on features and task
     if task == 'distributional':
         # Distributional models work better with shallower trees
@@ -945,7 +960,7 @@ def suggest_params(
         params['max_depth'] = min(6, 4 + n_features // 100)
     else:
         params['max_depth'] = min(8, 4 + n_features // 20)
-    
+
     # Regularization: more for small datasets
     if n_samples < 1000:
         params['reg_lambda'] = 10.0
@@ -956,16 +971,26 @@ def suggest_params(
     else:
         params['reg_lambda'] = 0.1
         params['min_child_weight'] = 1.0
-    
+
     # Sampling: use for larger datasets
     if n_samples > 10000:
         params['subsample'] = 0.8
         params['colsample_bytree'] = 0.8
-    
+
     # High-dimensional: more column sampling
     if n_features > 100:
         params['colsample_bytree'] = 0.6
-    
+
+    # Adjust for imbalanced classification
+    if is_imbalanced:
+        # More trees and lower learning rate help with imbalanced data
+        params['n_estimators'] = min(params['n_estimators'] + 100, n_estimators_cap)
+        params['learning_rate'] = min(params['learning_rate'], 0.05)
+
+    # Multiclass may benefit from shallower trees
+    if is_multiclass and n_unique > 10:
+        params['max_depth'] = min(params['max_depth'], 6)
+
     return params
 
 
@@ -1080,44 +1105,44 @@ def cross_val_predict_proba(
         AttributeError: If model doesn't have predict_proba method.
     """
     try:
-        from sklearn.model_selection import KFold
+        from sklearn.model_selection import StratifiedKFold
         from sklearn.base import clone
     except ImportError:
         raise ImportError(
             "sklearn is required for cross_val_predict_proba. "
             "Install with: pip install scikit-learn"
         )
-    
+
     if not hasattr(model, 'predict_proba'):
         raise AttributeError(
             f"{type(model).__name__} doesn't have predict_proba method. "
             "Use cross_val_predict for regressors."
         )
-    
+
     X = np.asarray(X)
     y = np.asarray(y)
     n_samples = len(y)
-    
-    kf = KFold(n_splits=cv, shuffle=True, random_state=random_state)
-    
+
+    kf = StratifiedKFold(n_splits=cv, shuffle=True, random_state=random_state)
+
     # First fold to determine number of classes
-    first_train, first_val = next(iter(kf.split(X)))
+    first_train, first_val = next(iter(kf.split(X, y)))
     model_clone = clone(model)
     model_clone.fit(X[first_train], y[first_train])
     first_proba = model_clone.predict_proba(X[first_val])
     n_classes = first_proba.shape[1]
-    
+
     oof_proba = np.zeros((n_samples, n_classes), dtype=np.float32)
     oof_proba[first_val] = first_proba
-    
+
     # Remaining folds
-    for i, (train_idx, val_idx) in enumerate(kf.split(X)):
+    for i, (train_idx, val_idx) in enumerate(kf.split(X, y)):
         if i == 0:
             continue
         model_clone = clone(model)
         model_clone.fit(X[train_idx], y[train_idx])
         oof_proba[val_idx] = model_clone.predict_proba(X[val_idx])
-    
+
     return oof_proba
 
 

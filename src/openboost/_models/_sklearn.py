@@ -283,17 +283,22 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
             self.best_iteration_ = self.booster_.best_iteration_
         if hasattr(self.booster_, 'best_score_'):
             self.best_score_ = self.booster_.best_score_
-        
+
+        # LOW-11: Cache feature importances at fit time
+        self._cached_feature_importances = compute_feature_importances(
+            self.booster_, importance_type='frequency'
+        )
+
         return self
-    
+
     def predict(self, X: NDArray) -> NDArray:
         """Predict target values.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Features to predict on.
-            
+
         Returns
         -------
         y_pred : ndarray of shape (n_samples,)
@@ -302,15 +307,15 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
+
         return self.booster_.predict(X)
-    
+
     @property
     def feature_importances_(self) -> NDArray:
         """Feature importances based on split frequency."""
         check_is_fitted(self, 'booster_')
-        return compute_feature_importances(self.booster_, importance_type='frequency')
-    
+        return self._cached_feature_importances
+
     # score() is inherited from RegressorMixin (R² score)
 
 
@@ -525,6 +530,7 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
                 subsample_strategy=self.subsample_strategy,
                 goss_top_rate=self.goss_top_rate,
                 goss_other_rate=self.goss_other_rate,
+                batch_size=self.batch_size,
             )
             import warnings
             unsupported = []
@@ -548,17 +554,22 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
             self.best_iteration_ = self.booster_.best_iteration_
         if hasattr(self.booster_, 'best_score_'):
             self.best_score_ = self.booster_.best_score_
-        
+
+        # LOW-11: Cache feature importances at fit time
+        self._cached_feature_importances = compute_feature_importances(
+            self.booster_, importance_type='frequency'
+        )
+
         return self
-    
+
     def predict(self, X: NDArray) -> NDArray:
         """Predict class labels.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Features to predict on.
-            
+
         Returns
         -------
         y_pred : ndarray of shape (n_samples,)
@@ -567,19 +578,19 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
+
         proba = self.predict_proba(X)
         indices = np.argmax(proba, axis=1)
         return self.classes_[indices]
-    
+
     def predict_proba(self, X: NDArray) -> NDArray:
         """Predict class probabilities.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Features to predict on.
-            
+
         Returns
         -------
         proba : ndarray of shape (n_samples, n_classes)
@@ -588,15 +599,15 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
+
         return self.booster_.predict_proba(X)
-    
+
     @property
     def feature_importances_(self) -> NDArray:
         """Feature importances based on split frequency."""
         check_is_fitted(self, 'booster_')
-        return compute_feature_importances(self.booster_, importance_type='frequency')
-    
+        return self._cached_feature_importances
+
     # score() is inherited from ClassifierMixin (accuracy)
 
 

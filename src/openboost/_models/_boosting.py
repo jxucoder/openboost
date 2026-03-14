@@ -266,7 +266,15 @@ class GradientBoosting(PersistenceMixin):
         
         # Store for feature importance
         self.n_features_in_ = self.X_binned_.n_features
-        
+
+        # LOW-12: Initialize base score
+        loss_name = self.loss if isinstance(self.loss, str) else ''
+        if loss_name in ('logloss', 'binary_crossentropy'):
+            p = np.clip(np.mean(y), 1e-7, 1 - 1e-7)
+            self.base_score_ = np.float32(np.log(p / (1 - p)))
+        else:
+            self.base_score_ = np.float32(np.mean(y))
+
         # Choose training path based on backend
         # Phase 18: Check for multi-GPU first
         use_multigpu = (self.n_gpus is not None and self.n_gpus > 1) or (self.devices is not None and len(self.devices) > 1)
@@ -592,9 +600,10 @@ class GradientBoosting(PersistenceMixin):
         # Move y to GPU
         y_gpu = cuda.to_device(y)
         
-        # Initialize predictions on GPU
-        pred_gpu = cuda.device_array(n_samples, dtype=np.float32)
-        _fill_zeros_gpu(pred_gpu)
+        # Initialize predictions on GPU with base score
+        base = getattr(self, 'base_score_', np.float32(0.0))
+        pred_host = np.full(n_samples, base, dtype=np.float32)
+        pred_gpu = cuda.to_device(pred_host)
         
         # Check if using custom loss (requires Python callback)
         is_custom_loss = callable(self.loss)
@@ -629,6 +638,13 @@ class GradientBoosting(PersistenceMixin):
             # require weighted histogram accumulation which is not yet implemented.
             # Workaround: Use CPU backend with ob.set_backend('cpu') for weighted training
             # TODO(v1.1): Implement GPU sample weighting via weighted histogram kernels
+            if sample_weight is not None:
+                import warnings
+                warnings.warn(
+                    "sample_weight is not supported on GPU backend and will be ignored",
+                    UserWarning,
+                    stacklevel=2,
+                )
             
             # Apply sampling strategy (Phase 17)
             if use_goss:
@@ -742,10 +758,11 @@ class GradientBoosting(PersistenceMixin):
         cb_manager = CallbackManager(callbacks)
         state = TrainingState(model=self, n_rounds=self.n_trees)
         cb_manager.on_train_begin(state)
-        
-        # Initialize predictions
-        pred = np.zeros(n_samples, dtype=np.float32)
-        
+
+        # Initialize predictions with base score
+        base = getattr(self, 'base_score_', np.float32(0.0))
+        pred = np.full(n_samples, base, dtype=np.float32)
+
         # Determine sampling strategy
         use_goss = self.subsample_strategy == 'goss'
         use_random_sampling = self.subsample_strategy == 'random' and self.subsample < 1.0
@@ -888,14 +905,15 @@ class GradientBoosting(PersistenceMixin):
         # Get number of samples
         n_samples = X_binned.n_samples
         
-        # Accumulate tree predictions
-        pred = np.zeros(n_samples, dtype=np.float32)
+        # Accumulate tree predictions with base score
+        base = getattr(self, 'base_score_', np.float32(0.0))
+        pred = np.full(n_samples, base, dtype=np.float32)
         for tree in self.trees_:
             tree_pred = tree(X_binned)
             if hasattr(tree_pred, 'copy_to_host'):
                 tree_pred = tree_pred.copy_to_host()
             pred += self.learning_rate * tree_pred
-        
+
         return pred
     
     def predict_proba(self, X: NDArray | BinnedArray) -> NDArray:
@@ -1008,35 +1026,39 @@ class MultiClassGradientBoosting(PersistenceMixin):
     subsample_strategy: Literal['none', 'random', 'goss'] = 'none'
     goss_top_rate: float = 0.2
     goss_other_rate: float = 0.1
-    
+    batch_size: int | None = None
+
     # Fitted attributes
     trees_: list[list[TreeStructure]] = field(default_factory=list, init=False, repr=False)
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
-    
+
     def fit(self, X: NDArray, y: NDArray) -> "MultiClassGradientBoosting":
         """Fit the multi-class gradient boosting model.
-        
+
         Args:
             X: Training features, shape (n_samples, n_features).
             y: Training labels, shape (n_samples,). Integer class labels 0 to n_classes-1.
-            
+
         Returns:
             self: The fitted model.
         """
         from .._loss import softmax_gradient
-        
+
         # Clear previous fit
         self.trees_ = []
-        
+
         # Convert y to integer labels
         y = np.asarray(y, dtype=np.int32).ravel()
         n_samples = len(y)
-        
+
         # Validate labels
         if y.min() < 0 or y.max() >= self.n_classes:
             raise ValueError(f"Labels must be in [0, {self.n_classes-1}], got [{y.min()}, {y.max()}]")
-        
+
+        # MED-9: Validate inputs
+        X = validate_X(X, allow_nan=True, context="fit")
+
         # Bin the data
         if isinstance(X, BinnedArray):
             self.X_binned_ = X
@@ -1125,15 +1147,22 @@ class MultiClassGradientBoosting(PersistenceMixin):
     
     def predict_raw(self, X: NDArray | BinnedArray) -> NDArray:
         """Get raw predictions (logits) for each class.
-        
+
         Args:
             X: Features to predict on.
-            
+
         Returns:
             logits: Shape (n_samples, n_classes).
         """
         if not self.trees_:
             raise RuntimeError("Model not fitted. Call fit() first.")
+
+        # MED-9: Validate input
+        n_features = getattr(self, 'n_features_in_', None) or (
+            self.X_binned_.n_features if self.X_binned_ else None
+        )
+        if n_features is not None and not isinstance(X, BinnedArray):
+            X = validate_predict_input(self, X, n_features)
         
         # Bin the data if needed, using training bin edges for consistency
         if isinstance(X, BinnedArray):

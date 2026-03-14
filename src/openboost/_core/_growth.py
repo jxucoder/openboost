@@ -502,9 +502,18 @@ class LevelWiseGrowth(GrowthStrategy):
         
         # Track active nodes and their histograms for subtraction
         parent_histograms: dict[int, NodeHistogram] = {}
-        
+
         actual_depth = 0
-        
+
+        # Column subsampling: select a random subset of features for this tree
+        if config.colsample_bytree < 1.0:
+            n_selected = max(1, int(n_features * config.colsample_bytree))
+            selected_features = np.sort(np.random.choice(n_features, size=n_selected, replace=False))
+            col_mask = np.zeros(n_features, dtype=np.bool_)
+            col_mask[selected_features] = True
+        else:
+            col_mask = None
+
         # Build level by level
         for depth in range(config.max_depth):
             nodes_at_level = get_nodes_at_depth(depth)
@@ -513,14 +522,18 @@ class LevelWiseGrowth(GrowthStrategy):
             active_nodes = self._get_active_nodes(sample_node_ids, nodes_at_level)
             if not active_nodes:
                 break
-            
-            actual_depth = depth + 1
-            
+
             # Build histograms for active nodes
             histograms = build_node_histograms(
                 binned, grad, hess, sample_node_ids, active_nodes
             )
-            
+
+            # Column subsampling: zero out non-selected feature histograms
+            if col_mask is not None:
+                for node_id, hist in histograms.items():
+                    hist.hist_grad[~col_mask] = 0.0
+                    hist.hist_hess[~col_mask] = 0.0
+
             # Find splits for all nodes (with missing/categorical handling)
             splits = find_node_splits(
                 histograms,
@@ -532,6 +545,10 @@ class LevelWiseGrowth(GrowthStrategy):
                 n_categories=n_categories,      # Phase 14.3
             )
             
+            # Only update depth if at least one valid split was found
+            if splits:
+                actual_depth = depth + 1
+
             # Apply splits to tree structure
             for node_id, node_split in splits.items():
                 features[node_id] = node_split.split.feature
@@ -682,8 +699,11 @@ class LeafWiseGrowth(GrowthStrategy):
             reg_lambda=config.reg_lambda,
             min_child_weight=config.min_child_weight,
             min_gain=config.min_gain,
+            has_missing=has_missing,
+            is_categorical=is_categorical,
+            n_categories=n_categories,
         )
-        
+
         if 0 in root_splits:
             heapq.heappush(candidates, (
                 -root_splits[0].split.gain,
@@ -736,6 +756,9 @@ class LeafWiseGrowth(GrowthStrategy):
                 reg_lambda=config.reg_lambda,
                 min_child_weight=config.min_child_weight,
                 min_gain=config.min_gain,
+                has_missing=has_missing,
+                is_categorical=is_categorical,
+                n_categories=n_categories,
             )
             
             # Add valid child splits to candidates
@@ -852,6 +875,7 @@ class SymmetricGrowth(GrowthStrategy):
                 reg_lambda=config.reg_lambda,
                 min_child_weight=config.min_child_weight,
                 min_gain=config.min_gain,
+                has_missing=has_missing,
             )
             
             if 0 not in splits:
@@ -868,7 +892,16 @@ class SymmetricGrowth(GrowthStrategy):
             else:
                 binned_cpu = np.asarray(binned)
             
-            goes_right = binned_cpu[split.feature, :] > split.threshold
+            feature_values = binned_cpu[split.feature, :]
+            is_missing = feature_values == MISSING_BIN
+            goes_right = feature_values > split.threshold
+            # Handle missing values: route according to learned direction
+            if np.any(is_missing):
+                missing_go_left = splits[0].missing_go_left
+                if missing_go_left:
+                    goes_right[is_missing] = False
+                else:
+                    goes_right[is_missing] = True
             sample_leaf_ids = 2 * sample_leaf_ids + goes_right.astype(np.int32)
         
         # Compute leaf values for all 2^depth leaves
@@ -887,7 +920,16 @@ class SymmetricGrowth(GrowthStrategy):
             if np.any(mask):
                 sum_grad = float(np.sum(grad_cpu[mask]))
                 sum_hess = float(np.sum(hess_cpu[mask]))
-                leaf_values[leaf_id] = -sum_grad / (sum_hess + config.reg_lambda)
+                # Apply L1 soft-thresholding (same pattern as compute_leaf_values in _split.py)
+                if config.reg_alpha > 0:
+                    if sum_grad > config.reg_alpha:
+                        leaf_values[leaf_id] = -(sum_grad - config.reg_alpha) / (sum_hess + config.reg_lambda)
+                    elif sum_grad < -config.reg_alpha:
+                        leaf_values[leaf_id] = -(sum_grad + config.reg_alpha) / (sum_hess + config.reg_lambda)
+                    else:
+                        leaf_values[leaf_id] = 0.0
+                else:
+                    leaf_values[leaf_id] = -sum_grad / (sum_hess + config.reg_lambda)
         
         # Create TreeStructure with symmetric flag
         # For compatibility, also create standard tree arrays
