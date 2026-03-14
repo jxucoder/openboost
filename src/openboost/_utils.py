@@ -937,16 +937,16 @@ def suggest_params(
 
     # Number of trees: scale with data size, but cap
     if n_samples < 1000:
-        params['n_trees'] = min(100, n_estimators_cap)
+        params['n_estimators'] = min(100, n_estimators_cap)
     elif n_samples < 10000:
-        params['n_trees'] = min(200, n_estimators_cap)
+        params['n_estimators'] = min(200, n_estimators_cap)
     elif n_samples < 100000:
-        params['n_trees'] = min(300, n_estimators_cap)
+        params['n_estimators'] = min(300, n_estimators_cap)
     else:
-        params['n_trees'] = min(500, n_estimators_cap)
+        params['n_estimators'] = min(500, n_estimators_cap)
 
     # Learning rate: lower for more trees
-    if params['n_trees'] >= 300:
+    if params['n_estimators'] >= 300:
         params['learning_rate'] = 0.05
     else:
         params['learning_rate'] = 0.1
@@ -984,7 +984,7 @@ def suggest_params(
     # Adjust for imbalanced classification
     if is_imbalanced:
         # More trees and lower learning rate help with imbalanced data
-        params['n_trees'] = min(params['n_trees'] + 100, n_estimators_cap)
+        params['n_estimators'] = min(params['n_estimators'] + 100, n_estimators_cap)
         params['learning_rate'] = min(params['learning_rate'], 0.05)
 
     # Multiclass may benefit from shallower trees

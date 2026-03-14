@@ -173,7 +173,8 @@ class DART(PersistenceMixin):
                 # but only temporarily — don't modify stored weights.
                 k = len(dropped_indices)
                 n_samples_tmp = self.X_binned_.n_samples
-                pred = np.zeros(n_samples_tmp, dtype=np.float32)
+                base = getattr(self, 'base_score_', np.float32(0.0))
+                pred = np.full(n_samples_tmp, base, dtype=np.float32)
                 excluded_set = set(dropped_indices)
                 for t_i, (t, w) in enumerate(zip(self.trees_, self.tree_weights_)):
                     t_pred = t(self.X_binned_)

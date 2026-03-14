@@ -78,7 +78,15 @@ class OpenBoostGAM(PersistenceMixin):
             self: The fitted model.
         """
         y = np.asarray(y, dtype=np.float32).ravel()
-        
+
+        # LOW-12: Initialize base score
+        loss_name = self.loss if isinstance(self.loss, str) else ''
+        if loss_name in ('logloss', 'binary_crossentropy'):
+            p = np.clip(np.mean(y), 1e-7, 1 - 1e-7)
+            self.base_score_ = np.float32(np.log(p / (1 - p)))
+        else:
+            self.base_score_ = np.float32(np.mean(y))
+
         # Get loss function
         self._loss_fn = get_loss_function(self.loss)
         
@@ -109,9 +117,10 @@ class OpenBoostGAM(PersistenceMixin):
         shape_values_gpu = cuda.device_array((n_features, 256), dtype=np.float32)
         _fill_zeros_2d_gpu(shape_values_gpu)
         
-        # Initialize predictions
-        pred_gpu = cuda.device_array(n_samples, dtype=np.float32)
-        _fill_zeros_1d_gpu(pred_gpu)
+        # Initialize predictions with base score
+        base = getattr(self, 'base_score_', np.float32(0.0))
+        pred_host = np.full(n_samples, base, dtype=np.float32)
+        pred_gpu = cuda.to_device(pred_host)
         
         y_gpu = cuda.to_device(y)
         
@@ -141,19 +150,20 @@ class OpenBoostGAM(PersistenceMixin):
     def _fit_cpu(self, y: NDArray):
         """CPU training path."""
         from .._backends._cpu import build_histogram_cpu
-        
+
         n_features = self.X_binned_.n_features
         n_samples = self.X_binned_.n_samples
-        
+
         # Get binned data on CPU
         if hasattr(self.X_binned_.data, 'copy_to_host'):
             binned = self.X_binned_.data.copy_to_host()
         else:
             binned = np.asarray(self.X_binned_.data)
-        
-        # Initialize
+
+        # Initialize with base score
         shape_values = np.zeros((n_features, 256), dtype=np.float32)
-        pred = np.zeros(n_samples, dtype=np.float32)
+        base = getattr(self, 'base_score_', np.float32(0.0))
+        pred = np.full(n_samples, base, dtype=np.float32)
         
         for _ in range(self.n_rounds):
             # Compute gradients
@@ -179,7 +189,8 @@ class OpenBoostGAM(PersistenceMixin):
         """CPU prediction using shape functions."""
         n_samples = binned.shape[1]
         n_features = binned.shape[0]
-        pred = np.zeros(n_samples, dtype=np.float32)
+        base = getattr(self, 'base_score_', np.float32(0.0))
+        pred = np.full(n_samples, base, dtype=np.float32)
         for f in range(n_features):
             pred += shape_values[f, binned[f, :]]
         return pred
@@ -216,8 +227,12 @@ class OpenBoostGAM(PersistenceMixin):
             threads = 256
             blocks = (n_samples + threads - 1) // threads
             _predict_gam_kernel[blocks, threads](binned_gpu, shape_gpu, pred_gpu)
-            
-            return pred_gpu.copy_to_host()
+
+            result = pred_gpu.copy_to_host()
+            base = getattr(self, 'base_score_', np.float32(0.0))
+            if base != 0.0:
+                result += base
+            return result
         else:
             if hasattr(X_binned.data, 'copy_to_host'):
                 binned = X_binned.data.copy_to_host()

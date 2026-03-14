@@ -1026,12 +1026,13 @@ class MultiClassGradientBoosting(PersistenceMixin):
     subsample_strategy: Literal['none', 'random', 'goss'] = 'none'
     goss_top_rate: float = 0.2
     goss_other_rate: float = 0.1
-    
+    batch_size: int | None = None
+
     # Fitted attributes
     trees_: list[list[TreeStructure]] = field(default_factory=list, init=False, repr=False)
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
-    
+
     def fit(self, X: NDArray, y: NDArray) -> "MultiClassGradientBoosting":
         """Fit the multi-class gradient boosting model.
 
@@ -1044,21 +1045,20 @@ class MultiClassGradientBoosting(PersistenceMixin):
         """
         from .._loss import softmax_gradient
 
-        # MED-9: Validate inputs
-        X = validate_X(X, allow_nan=True, context="fit")
-        y = validate_y(y, n_samples=X.shape[0] if hasattr(X, 'shape') else None, context="fit")
-
         # Clear previous fit
         self.trees_ = []
 
         # Convert y to integer labels
         y = np.asarray(y, dtype=np.int32).ravel()
         n_samples = len(y)
-        
+
         # Validate labels
         if y.min() < 0 or y.max() >= self.n_classes:
             raise ValueError(f"Labels must be in [0, {self.n_classes-1}], got [{y.min()}, {y.max()}]")
-        
+
+        # MED-9: Validate inputs
+        X = validate_X(X, allow_nan=True, context="fit")
+
         # Bin the data
         if isinstance(X, BinnedArray):
             self.X_binned_ = X

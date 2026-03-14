@@ -208,7 +208,13 @@ class PersistenceMixin:
         """
         # Get all attributes from dataclass fields
         if hasattr(self, "__dataclass_fields__"):
-            return list(self.__dataclass_fields__.keys())
+            attrs = list(self.__dataclass_fields__.keys())
+            # Also include fitted attributes (sklearn convention: trailing _)
+            # and other instance attributes not in dataclass fields
+            for k in vars(self).keys():
+                if k not in attrs and not k.startswith("_"):
+                    attrs.append(k)
+            return attrs
         # Fallback: all non-private attributes
         return [k for k in vars(self).keys() if not k.startswith("_")]
 
