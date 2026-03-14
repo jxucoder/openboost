@@ -525,6 +525,7 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
                 subsample_strategy=self.subsample_strategy,
                 goss_top_rate=self.goss_top_rate,
                 goss_other_rate=self.goss_other_rate,
+                batch_size=self.batch_size,
             )
             import warnings
             unsupported = []
