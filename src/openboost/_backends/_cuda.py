@@ -2198,6 +2198,14 @@ def _zero_float_array_kernel(arr, n):
 
 
 @cuda.jit
+def _copy_to_slot_kernel(src, dst, slot_offset, n):
+    """Copy n elements from src to dst[slot_offset:slot_offset+n]."""
+    idx = cuda.grid(1)
+    if idx < n:
+        dst[slot_offset + idx] = src[idx]
+
+
+@cuda.jit
 def _init_tree_nodes_kernel(features, thresholds, left, right, max_n):
     """Initialize all tree nodes as leaves.
     
@@ -3048,6 +3056,13 @@ def _get_tree_workspace(n_samples: int, n_features: int, max_depth: int) -> dict
         'node_sum_grad': cuda.device_array(max_nodes, dtype=np.float32),
         'node_sum_hess': cuda.device_array(max_nodes, dtype=np.float32),
         'node_left_hess': cuda.device_array(max_nodes, dtype=np.float32),
+        # Output arrays reused across tree builds to avoid cudaMalloc overhead
+        # (~2.5ms per cudaMalloc × 5 arrays × 200 trees = 2.5s saved)
+        'out_features': cuda.device_array(max_nodes, dtype=np.int32),
+        'out_thresholds': cuda.device_array(max_nodes, dtype=np.int32),
+        'out_values': cuda.device_array(max_nodes, dtype=np.float32),
+        'out_left': cuda.device_array(max_nodes, dtype=np.int32),
+        'out_right': cuda.device_array(max_nodes, dtype=np.int32),
     }
     return _tree_workspace_cache
 
@@ -3096,13 +3111,13 @@ def build_tree_gpu_native(
     node_sum_grad = ws['node_sum_grad']
     node_sum_hess = ws['node_sum_hess']
 
-    # Return arrays are allocated fresh (small: ~2KB each) since the caller
-    # stores references to them in the Tree object.
-    node_features = cuda.device_array(max_nodes, dtype=np.int32)
-    node_thresholds = cuda.device_array(max_nodes, dtype=np.int32)
-    node_values = cuda.device_array(max_nodes, dtype=np.float32)
-    node_left = cuda.device_array(max_nodes, dtype=np.int32)
-    node_right = cuda.device_array(max_nodes, dtype=np.int32)
+    # Reuse output arrays from workspace to avoid cudaMalloc overhead.
+    # Caller must copy data out before the next call overwrites them.
+    node_features = ws['out_features']
+    node_thresholds = ws['out_thresholds']
+    node_values = ws['out_values']
+    node_left = ws['out_left']
+    node_right = ws['out_right']
     
     # Initialize all nodes as leaves (Phase 3.6: use module-level kernel)
     threads = 256

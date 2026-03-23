@@ -624,6 +624,45 @@ class GradientBoosting(PersistenceMixin):
         use_goss = self.subsample_strategy == 'goss'
         use_random_sampling = self.subsample_strategy == 'random' and self.subsample < 1.0
 
+        # Pre-compute GPU-native eligibility (constant across iterations)
+        _use_gpu_native = False
+        if not use_goss and not use_random_sampling:
+            has_missing = (
+                hasattr(self.X_binned_, 'has_missing')
+                and len(self.X_binned_.has_missing) > 0
+                and np.any(self.X_binned_.has_missing)
+            )
+            has_categorical = (
+                hasattr(self.X_binned_, 'is_categorical')
+                and len(self.X_binned_.is_categorical) > 0
+                and np.any(self.X_binned_.is_categorical)
+            )
+            _use_gpu_native = (
+                is_cuda()
+                and self.reg_alpha == 0.0
+                and self.colsample_bytree >= 1.0
+                and self.subsample >= 1.0
+                and not has_missing
+                and not has_categorical
+            )
+        if _use_gpu_native:
+            from .._core._tree import fit_tree_gpu_native
+            from .._core._predict import predict_tree_add_gpu
+            max_nodes = 2**(self.max_depth + 1) - 1
+            # Use async D2D copies when callbacks don't need self.trees_
+            # during training (avoids BOTH cudaMalloc AND copy_to_host sync)
+            _use_d2d = not (cb_manager.callbacks and eval_set)
+            if _use_d2d:
+                _buf_features = cuda.device_array(self.n_trees * max_nodes, dtype=np.int32)
+                _buf_thresholds = cuda.device_array(self.n_trees * max_nodes, dtype=np.int32)
+                _buf_values = cuda.device_array(self.n_trees * max_nodes, dtype=np.float32)
+                _buf_left = cuda.device_array(self.n_trees * max_nodes, dtype=np.int32)
+                _buf_right = cuda.device_array(self.n_trees * max_nodes, dtype=np.int32)
+                from .._backends._cuda import _copy_to_slot_kernel
+                _copy_threads = 256
+                _copy_blocks = (max_nodes + _copy_threads - 1) // _copy_threads
+            _n_trees_built = 0
+
         # Train trees
         for i in range(self.n_trees):
             state.round_idx = i
@@ -709,47 +748,31 @@ class GradientBoosting(PersistenceMixin):
                     subsample=self.subsample,
                     colsample_bytree=self.colsample_bytree,
                 )
-            else:
-                # Use GPU-native tree builder when no features require the
-                # growth-strategy path (reg_alpha, colsample, subsample, etc.)
-                # Also skip GPU-native when data has missing values or
-                # categorical features, which it doesn't support.
-                has_missing = (
-                    hasattr(self.X_binned_, 'has_missing')
-                    and len(self.X_binned_.has_missing) > 0
-                    and np.any(self.X_binned_.has_missing)
+            elif _use_gpu_native:
+                legacy_tree = fit_tree_gpu_native(
+                    self.X_binned_,
+                    grad_gpu,
+                    hess_gpu,
+                    max_depth=self.max_depth,
+                    min_child_weight=self.min_child_weight,
+                    reg_lambda=self.reg_lambda,
+                    min_gain=self.gamma,
                 )
-                has_categorical = (
-                    hasattr(self.X_binned_, 'is_categorical')
-                    and len(self.X_binned_.is_categorical) > 0
-                    and np.any(self.X_binned_.is_categorical)
+                predict_tree_add_gpu(
+                    legacy_tree, self.X_binned_, pred_gpu, self.learning_rate
                 )
-                use_gpu_native = (
-                    is_cuda()
-                    and self.reg_alpha == 0.0
-                    and self.colsample_bytree >= 1.0
-                    and self.subsample >= 1.0
-                    and not has_missing
-                    and not has_categorical
-                )
-                if use_gpu_native:
-                    from .._core._tree import fit_tree_gpu_native
-                    legacy_tree = fit_tree_gpu_native(
-                        self.X_binned_,
-                        grad_gpu,
-                        hess_gpu,
-                        max_depth=self.max_depth,
-                        min_child_weight=self.min_child_weight,
-                        reg_lambda=self.reg_lambda,
-                        min_gain=self.gamma,
-                    )
-                    # Use fused prediction before converting to TreeStructure
-                    from .._core._predict import predict_tree_add_gpu
-                    predict_tree_add_gpu(
-                        legacy_tree, self.X_binned_, pred_gpu, self.learning_rate
-                    )
-                    # Convert legacy Tree to TreeStructure for compatibility
-                    # with feature importance, persistence, and sklearn wrappers
+                if _use_d2d:
+                    # Async D2D copy from workspace → pre-allocated buffer.
+                    # No sync barrier; next tree build starts immediately.
+                    slot = _n_trees_built * max_nodes
+                    f_gpu, t_gpu, v_gpu, l_gpu, r_gpu = legacy_tree.to_gpu_arrays()
+                    _copy_to_slot_kernel[_copy_blocks, _copy_threads](f_gpu, _buf_features, slot, max_nodes)
+                    _copy_to_slot_kernel[_copy_blocks, _copy_threads](t_gpu, _buf_thresholds, slot, max_nodes)
+                    _copy_to_slot_kernel[_copy_blocks, _copy_threads](v_gpu, _buf_values, slot, max_nodes)
+                    _copy_to_slot_kernel[_copy_blocks, _copy_threads](l_gpu, _buf_left, slot, max_nodes)
+                    _copy_to_slot_kernel[_copy_blocks, _copy_threads](r_gpu, _buf_right, slot, max_nodes)
+                else:
+                    # Fallback: sync copy for callbacks needing self.trees_
                     features, thresholds, values, left, right = legacy_tree.to_arrays()
                     tree = TreeStructure(
                         features=features,
@@ -762,31 +785,32 @@ class GradientBoosting(PersistenceMixin):
                         n_features=legacy_tree.n_features,
                     )
                     self.trees_.append(tree)
+                _n_trees_built += 1
+            else:
+                tree = fit_tree(
+                    self.X_binned_,
+                    grad_gpu,
+                    hess_gpu,
+                    max_depth=self.max_depth,
+                    min_child_weight=self.min_child_weight,
+                    reg_lambda=self.reg_lambda,
+                    reg_alpha=self.reg_alpha,
+                    gamma=self.gamma,
+                    subsample=self.subsample,
+                    colsample_bytree=self.colsample_bytree,
+                )
+                # Update predictions on GPU
+                tree_pred = tree(self.X_binned_)
+                if hasattr(tree_pred, '__cuda_array_interface__'):
+                    from .._core._predict import _add_inplace_cuda
+                    _add_inplace_cuda(pred_gpu, tree_pred, self.learning_rate)
                 else:
-                    tree = fit_tree(
-                        self.X_binned_,
-                        grad_gpu,
-                        hess_gpu,
-                        max_depth=self.max_depth,
-                        min_child_weight=self.min_child_weight,
-                        reg_lambda=self.reg_lambda,
-                        reg_alpha=self.reg_alpha,
-                        gamma=self.gamma,
-                        subsample=self.subsample,
-                        colsample_bytree=self.colsample_bytree,
-                    )
-                    # Update predictions on GPU
-                    tree_pred = tree(self.X_binned_)
-                    if hasattr(tree_pred, '__cuda_array_interface__'):
-                        from .._core._predict import _add_inplace_cuda
-                        _add_inplace_cuda(pred_gpu, tree_pred, self.learning_rate)
-                    else:
-                        if hasattr(tree_pred, 'copy_to_host'):
-                            tree_pred = tree_pred.copy_to_host()
-                        pred_cpu = pred_gpu.copy_to_host()
-                        pred_cpu += self.learning_rate * tree_pred
-                        cuda.to_device(pred_cpu, to=pred_gpu)
-                    self.trees_.append(tree)
+                    if hasattr(tree_pred, 'copy_to_host'):
+                        tree_pred = tree_pred.copy_to_host()
+                    pred_cpu = pred_gpu.copy_to_host()
+                    pred_cpu += self.learning_rate * tree_pred
+                    cuda.to_device(pred_cpu, to=pred_gpu)
+                self.trees_.append(tree)
 
             # Only compute loss and copy to CPU when callbacks need it
             if cb_manager.callbacks:
@@ -801,6 +825,29 @@ class GradientBoosting(PersistenceMixin):
                 # Check if callbacks want to stop
                 if not cb_manager.on_round_end(state):
                     break
+
+        # Batch-convert GPU tree buffers to TreeStructure on CPU
+        if _use_gpu_native and _use_d2d and _n_trees_built > 0:
+            all_f = _buf_features.copy_to_host()
+            all_t = _buf_thresholds.copy_to_host()
+            all_v = _buf_values.copy_to_host()
+            all_l = _buf_left.copy_to_host()
+            all_r = _buf_right.copy_to_host()
+            n_feat = self.X_binned_.n_features
+            for j in range(_n_trees_built):
+                s = j * max_nodes
+                e = s + max_nodes
+                tree = TreeStructure(
+                    features=all_f[s:e].copy(),
+                    thresholds=all_t[s:e].copy(),
+                    left_children=all_l[s:e].copy(),
+                    right_children=all_r[s:e].copy(),
+                    values=all_v[s:e].copy(),
+                    n_nodes=max_nodes,
+                    depth=self.max_depth,
+                    n_features=n_feat,
+                )
+                self.trees_.append(tree)
 
         cb_manager.on_train_end(state)
 
