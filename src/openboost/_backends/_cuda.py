@@ -3097,6 +3097,12 @@ def build_tree_gpu_native(
         node_values: (max_nodes,) float32 - leaf values
         node_left: (max_nodes,) int32 - left child index
         node_right: (max_nodes,) int32 - right child index
+
+    Note:
+        Returned arrays are aliased to a shared workspace cache for
+        performance. A subsequent call with the same (n_samples, n_features,
+        max_depth) will overwrite them. Callers must copy data out (D2D or
+        copy_to_host) before the next call.
     """
     n_features, n_samples = binned.shape
     max_nodes = 2**(max_depth + 1) - 1

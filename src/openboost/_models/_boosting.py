@@ -649,9 +649,11 @@ class GradientBoosting(PersistenceMixin):
             from .._core._predict import predict_tree_add_gpu
             from .._core._tree import fit_tree_gpu_native
             max_nodes = 2**(self.max_depth + 1) - 1
-            # Use async D2D copies when callbacks don't need self.trees_
-            # during training (avoids BOTH cudaMalloc AND copy_to_host sync)
-            _use_d2d = not (cb_manager.callbacks and eval_set)
+            # Use async D2D copies when no callbacks need self.trees_
+            # during training (avoids BOTH cudaMalloc AND copy_to_host sync).
+            # Any callback (ModelCheckpoint, EarlyStopping, etc.) may inspect
+            # state.model.trees_, so materialize trees per-round when present.
+            _use_d2d = not cb_manager.callbacks
             if _use_d2d:
                 _buf_features = cuda.device_array(self.n_trees * max_nodes, dtype=np.int32)
                 _buf_thresholds = cuda.device_array(self.n_trees * max_nodes, dtype=np.int32)
