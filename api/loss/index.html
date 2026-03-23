@@ -2471,9 +2471,11 @@
     <div class="doc doc-contents first">
 
         <p>Compute MSE gradient and hessian.</p>
-<p>Loss: L = (pred - y)^2
-Gradient: dL/dpred = 2 * (pred - y)
-Hessian: d²L/dpred² = 2</p>
+<p>Loss: L = 0.5 * (pred - y)^2
+Gradient: dL/dpred = (pred - y)
+Hessian: d²L/dpred² = 1</p>
+<p>Uses the 0.5 * MSE convention (matching XGBoost) so that
+reg_lambda has equivalent effect across libraries.</p>
 
 
     </div>
