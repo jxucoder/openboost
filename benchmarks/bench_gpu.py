@@ -476,6 +476,7 @@ try:
             "numba>=0.60",
             "joblib>=1.3",
             "xgboost>=2.0",
+            "scikit-learn>=1.3",
         )
         .add_local_dir(
             str(PROJECT_ROOT / "src" / "openboost"),

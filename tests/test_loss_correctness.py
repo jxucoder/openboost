@@ -55,15 +55,15 @@ class TestAnalyticalGradients:
     """Verify gradients against independently computed formulas."""
 
     def test_mse_gradient_analytical(self):
-        """MSE: grad = 2*(pred - y), hess = 2."""
+        """MSE: grad = (pred - y), hess = 1 (0.5*MSE convention, matching XGBoost)."""
         pred = np.array([1.0, 2.0, 3.0], dtype=np.float32)
         y = np.array([0.5, 2.5, 1.0], dtype=np.float32)
 
         grad, hess = mse_gradient(pred, y)
 
-        expected_grad = 2.0 * (pred - y)
+        expected_grad = pred - y
         np.testing.assert_allclose(grad, expected_grad, atol=1e-6)
-        np.testing.assert_allclose(hess, 2.0, atol=1e-6)
+        np.testing.assert_allclose(hess, 1.0, atol=1e-6)
 
     def test_mse_gradient_zero_at_match(self):
         """MSE gradient should be zero when pred == y."""
@@ -142,9 +142,23 @@ class TestNumericalGradients:
         )
 
     def test_mse_gradient_numerical(self):
+        """MSE optimizes 0.5*(pred-y)^2 but compute_loss_value reports (pred-y)^2.
+
+        Numerical gradient of sum((pred-y)^2) is 2*(pred-y), but the analytical
+        gradient is (pred-y) because we optimize 0.5*MSE (XGBoost convention).
+        We verify the 2x relationship directly.
+        """
         pred = np.array([1.0, 2.5, -0.3])
         y = np.array([0.5, 3.0, 1.0])
-        self._check_gradient('mse', pred, y)
+        grad, _ = mse_gradient(
+            np.asarray(pred, dtype=np.float32),
+            np.asarray(y, dtype=np.float32),
+        )
+        num_grad = _numerical_gradient('mse', pred, y)
+        np.testing.assert_allclose(
+            grad, 0.5 * num_grad, atol=1e-3,
+            err_msg="MSE gradient should be 0.5x numerical (0.5*MSE convention)"
+        )
 
     def test_logloss_gradient_numerical(self):
         pred = np.array([0.5, -1.0, 2.0])

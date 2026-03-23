@@ -2191,10 +2191,10 @@ def _init_sample_nodes_kernel(sample_node_ids, n_samples):
 
 @cuda.jit
 def _zero_float_array_kernel(arr, n):
-    """Zero out a float32 array."""
+    """Zero out a float array (works with both float32 and float64)."""
     idx = cuda.grid(1)
     if idx < n:
-        arr[idx] = float32(0.0)
+        arr[idx] = 0.0
 
 
 @cuda.jit
@@ -2351,8 +2351,8 @@ def _zero_level_histograms_kernel(
     if node_idx >= level_end or feature_idx >= n_features or bin_idx >= 256:
         return
     
-    histograms[node_idx, feature_idx, bin_idx, 0] = float32(0.0)
-    histograms[node_idx, feature_idx, bin_idx, 1] = float32(0.0)
+    histograms[node_idx, feature_idx, bin_idx, 0] = 0.0
+    histograms[node_idx, feature_idx, bin_idx, 1] = 0.0
 
 
 @cuda.jit
@@ -2488,10 +2488,11 @@ def _build_histogram_shared_kernel(
             val_grad = local_hist[hist_idx_grad]
             val_hess = local_hist[hist_idx_hess]
             # Only write non-zero values to reduce atomic contention
+            # Cast float32 shared memory values to float64 for global accumulation
             if val_grad != float32(0.0):
-                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), val_grad)
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), float64(val_grad))
             if val_hess != float32(0.0):
-                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 1), val_hess)
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 1), float64(val_hess))
 
 
 @cuda.jit
@@ -2567,10 +2568,11 @@ def _build_histogram_left_only_shared_kernel(
             hist_idx_hess = local_node * 512 + bin_idx * 2 + 1
             val_grad = local_hist[hist_idx_grad]
             val_hess = local_hist[hist_idx_hess]
+            # Cast float32 shared memory values to float64 for global accumulation
             if val_grad != float32(0.0):
-                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), val_grad)
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), float64(val_grad))
             if val_hess != float32(0.0):
-                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 1), val_hess)
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 1), float64(val_hess))
 
 
 @cuda.jit
@@ -2637,10 +2639,10 @@ def _build_left_children_histograms_kernel(
             cuda.atomic.add(local_hess, bin_val, h)
     cuda.syncthreads()
     
-    # Write to global memory
+    # Write to global memory (promote float32 shared → float64 global)
     for i in range(thread_idx, 256, block_size):
-        histograms[left_child_idx, feature_idx, i, 0] = local_grad[i]
-        histograms[left_child_idx, feature_idx, i, 1] = local_hess[i]
+        histograms[left_child_idx, feature_idx, i, 0] = float64(local_grad[i])
+        histograms[left_child_idx, feature_idx, i, 1] = float64(local_hess[i])
 
 
 @cuda.jit
@@ -2695,18 +2697,18 @@ def _subtract_histograms_for_right_children_kernel(
 
 @cuda.jit
 def _find_level_splits_kernel(
-    histograms,       # (max_nodes, n_features, 256, 2) float32
+    histograms,       # (max_nodes, n_features, 256, 2) float64
     level_start,      # int32 - first node at this level
     level_end,        # int32 - last node + 1 at this level
-    reg_lambda,       # float32
-    min_child_weight, # float32
-    min_gain,         # float32
+    reg_lambda,       # float64
+    min_child_weight, # float64
+    min_gain,         # float64
     # Outputs:
     node_features,    # (max_nodes,) int32 - best feature per node
     node_thresholds,  # (max_nodes,) int32 - best bin per node
     node_gains,       # (max_nodes,) float32 - best gain per node
-    node_sum_grad,    # (max_nodes,) float32 - total grad per node
-    node_sum_hess,    # (max_nodes,) float32 - total hess per node
+    node_sum_grad,    # (max_nodes,) float64 - total grad per node
+    node_sum_hess,    # (max_nodes,) float64 - total hess per node
     node_left_hess,   # (max_nodes,) float32 - hess going left at best split
 ):
     """Find best split for each node at current level.
@@ -2714,19 +2716,19 @@ def _find_level_splits_kernel(
     Thread layout:
     - blockIdx.x = node offset within level
     - threads handle features in parallel, then reduce
-    Phase 3.3: All computations in float32.
+    Prefix sums and gain computation in float64 to match CPU precision.
     """
     node_offset = cuda.blockIdx.x
     thread_idx = cuda.threadIdx.x
     block_size = cuda.blockDim.x
-    
+
     node_idx = level_start + node_offset
     if node_idx >= level_end:
         return
-    
+
     n_features = histograms.shape[1]
-    
-    # Shared memory for reduction (Phase 3.3: float32)
+
+    # Shared memory for reduction (float32 for final results)
     shared_gains = cuda.shared.array(256, dtype=float32)
     shared_bins = cuda.shared.array(256, dtype=int32)
     shared_features = cuda.shared.array(256, dtype=int32)
@@ -2735,7 +2737,8 @@ def _find_level_splits_kernel(
     # Shared memory for broadcasting total_grad / total_hess from feature 0
     # so all features use the same values (avoids per-feature divergence
     # from floating-point accumulation order differences).
-    shared_total = cuda.shared.array(2, dtype=float32)  # [0]=grad, [1]=hess
+    # Use float64 for precision in the prefix sum.
+    shared_total = cuda.shared.array(2, dtype=float64)  # [0]=grad, [1]=hess
 
     # Initialize
     shared_gains[thread_idx] = float32(-1e30)
@@ -2745,43 +2748,45 @@ def _find_level_splits_kernel(
 
     # Step 1: Thread 0 computes total_grad/total_hess from feature 0's histogram
     if thread_idx == 0:
-        tg = float32(0.0)
-        th = float32(0.0)
+        tg = float64(0.0)
+        th = float64(0.0)
         for b in range(256):
-            tg += histograms[node_idx, 0, b, 0]
-            th += histograms[node_idx, 0, b, 1]
+            tg += float64(histograms[node_idx, 0, b, 0])
+            th += float64(histograms[node_idx, 0, b, 1])
         shared_total[0] = tg
         shared_total[1] = th
         node_sum_grad[node_idx] = tg
         node_sum_hess[node_idx] = th
     cuda.syncthreads()
 
-    # All threads read the same total values
+    # All threads read the same total values (float64)
     total_grad = shared_total[0]
     total_hess = shared_total[1]
 
-    # Parent gain (same for all features)
-    parent_gain = total_grad * total_grad / (total_hess + reg_lambda)
+    # Parent gain in float64
+    reg_lambda_64 = float64(reg_lambda)
+    min_cw_64 = float64(min_child_weight)
+    parent_gain = total_grad * total_grad / (total_hess + reg_lambda_64)
 
     # Each thread handles multiple features
     for feature_idx in range(thread_idx, n_features, block_size):
-        # Scan bins to find best split for this feature
-        left_grad = float32(0.0)
-        left_hess = float32(0.0)
+        # Scan bins to find best split for this feature (float64 prefix sums)
+        left_grad = float64(0.0)
+        left_hess = float64(0.0)
         best_bin = int32(-1)
-        best_gain = float32(-1e30)
-        best_left_hess = float32(0.0)
+        best_gain = float64(-1e30)
+        best_left_hess = float64(0.0)
 
         for bin_idx in range(255):
-            left_grad += histograms[node_idx, feature_idx, bin_idx, 0]
-            left_hess += histograms[node_idx, feature_idx, bin_idx, 1]
+            left_grad += float64(histograms[node_idx, feature_idx, bin_idx, 0])
+            left_hess += float64(histograms[node_idx, feature_idx, bin_idx, 1])
             right_grad = total_grad - left_grad
             right_hess = total_hess - left_hess
 
-            if left_hess >= min_child_weight and right_hess >= min_child_weight:
-                left_gain = left_grad * left_grad / (left_hess + reg_lambda)
-                right_gain = right_grad * right_grad / (right_hess + reg_lambda)
-                gain = left_gain + right_gain - parent_gain
+            if left_hess >= min_cw_64 and right_hess >= min_cw_64:
+                left_score = left_grad * left_grad / (left_hess + reg_lambda_64)
+                right_score = right_grad * right_grad / (right_hess + reg_lambda_64)
+                gain = left_score + right_score - parent_gain
 
                 if gain > best_gain:
                     best_gain = gain
@@ -2789,11 +2794,11 @@ def _find_level_splits_kernel(
                     best_left_hess = left_hess
 
         # Update shared memory if this feature is better
-        if best_gain > shared_gains[thread_idx]:
-            shared_gains[thread_idx] = best_gain
+        if best_gain > float64(shared_gains[thread_idx]):
+            shared_gains[thread_idx] = float32(best_gain)
             shared_bins[thread_idx] = best_bin
             shared_features[thread_idx] = feature_idx
-            shared_left_hess[thread_idx] = best_left_hess
+            shared_left_hess[thread_idx] = float32(best_left_hess)
     
     cuda.syncthreads()
     
@@ -2936,8 +2941,8 @@ def _compute_leaf_sums_kernel(
     grad,             # (n_samples,) float32
     hess,             # (n_samples,) float32
     sample_node_ids,  # (n_samples,) int32 - final node for each sample
-    node_sum_grad,    # (max_nodes,) float32 - output (atomic add)
-    node_sum_hess,    # (max_nodes,) float32 - output (atomic add)
+    node_sum_grad,    # (max_nodes,) float64 - output (atomic add)
+    node_sum_hess,    # (max_nodes,) float64 - output (atomic add)
 ):
     """Compute sum of grad/hess for each leaf node from samples.
     
@@ -2952,37 +2957,36 @@ def _compute_leaf_sums_kernel(
         return
     
     node_idx = sample_node_ids[sample_idx]
-    # NOTE: Known non-determinism -- float32 atomic adds are not
-    # associative due to floating-point rounding.  The order in which
-    # threads accumulate into node_sum_grad / node_sum_hess varies
-    # across runs, producing slightly different sums each time.
-    cuda.atomic.add(node_sum_grad, node_idx, grad[sample_idx])
-    cuda.atomic.add(node_sum_hess, node_idx, hess[sample_idx])
+    # Promote float32 grad/hess to float64 for accumulation precision.
+    # NOTE: float64 atomic adds reduce but don't eliminate non-determinism
+    # from thread execution order; rounding errors are ~1e-15 vs ~1e-7.
+    cuda.atomic.add(node_sum_grad, node_idx, float64(grad[sample_idx]))
+    cuda.atomic.add(node_sum_hess, node_idx, float64(hess[sample_idx]))
 
 
 @cuda.jit  
 def _compute_leaf_values_kernel(
     node_features,    # (max_nodes,) int32 - -1 for leaves
-    node_sum_grad,    # (max_nodes,) float32
-    node_sum_hess,    # (max_nodes,) float32
-    reg_lambda,       # float32
+    node_sum_grad,    # (max_nodes,) float64
+    node_sum_hess,    # (max_nodes,) float64
+    reg_lambda,       # float64
     node_values,      # (max_nodes,) float32 - output
     max_nodes,        # int32
 ):
     """Compute leaf values for all leaf nodes.
-    
-    Phase 3.3: All computations in float32.
+
+    Reads float64 sums, computes in float64, outputs float32 leaf values.
     """
     node_idx = cuda.grid(1)
-    
+
     if node_idx >= max_nodes:
         return
-    
+
     if node_features[node_idx] < 0:
         # Leaf node: value = -sum_grad / (sum_hess + lambda)
         sum_grad = node_sum_grad[node_idx]
         sum_hess = node_sum_hess[node_idx]
-        if sum_hess + reg_lambda > float32(0.0):
+        if sum_hess + reg_lambda > 0.0:
             node_values[node_idx] = float32(-sum_grad / (sum_hess + reg_lambda))
         else:
             node_values[node_idx] = float32(0.0)
@@ -3003,13 +3007,13 @@ def _compute_leaf_values_kernel(
 
 @cuda.jit
 def _mse_grad_inplace_kernel(pred, y, grad, n):
-    """Compute MSE gradient in-place: grad = 2 * (pred - y).
+    """Compute MSE gradient in-place: grad = pred - y.
 
-    Hessian is skipped — caller pre-fills it once with 2.0.
+    Hessian is skipped — caller pre-fills it once with 1.0.
     """
     idx = cuda.grid(1)
     if idx < n:
-        grad[idx] = float32(2.0) * (pred[idx] - y[idx])
+        grad[idx] = pred[idx] - y[idx]
 
 
 def mse_grad_inplace_gpu(pred, y, grad):
@@ -3051,10 +3055,10 @@ def _get_tree_workspace(n_samples: int, n_features: int, max_depth: int) -> dict
     _tree_workspace_cache = {
         '_key': key,
         'sample_node_ids': cuda.device_array(n_samples, dtype=np.int32),
-        'histograms': cuda.device_array((max_nodes, n_features, 256, 2), dtype=np.float32),
+        'histograms': cuda.device_array((max_nodes, n_features, 256, 2), dtype=np.float64),
         'node_gains': cuda.device_array(max_nodes, dtype=np.float32),
-        'node_sum_grad': cuda.device_array(max_nodes, dtype=np.float32),
-        'node_sum_hess': cuda.device_array(max_nodes, dtype=np.float32),
+        'node_sum_grad': cuda.device_array(max_nodes, dtype=np.float64),
+        'node_sum_hess': cuda.device_array(max_nodes, dtype=np.float64),
         'node_left_hess': cuda.device_array(max_nodes, dtype=np.float32),
         # Output arrays reused across tree builds to avoid cudaMalloc overhead
         # (~2.5ms per cudaMalloc × 5 arrays × 200 trees = 2.5s saved)
@@ -3079,7 +3083,7 @@ def build_tree_gpu_native(
     """Build a tree entirely on GPU with minimal Python orchestration.
 
     Phase 3.2: O(depth) kernel launches instead of O(nodes).
-    Phase 3.3: All computations in float32 for 2x throughput.
+    Histograms and node sums in float64 for precision; leaf values in float32.
     ZERO copy_to_host() during building.
 
     Args:
@@ -3134,10 +3138,10 @@ def build_tree_gpu_native(
     sample_blocks = math.ceil(n_samples / threads)
     _init_sample_nodes_kernel[sample_blocks, threads](sample_node_ids, n_samples)
     
-    # Convert parameters to float32 for kernel (Phase 3.3)
-    reg_lambda_f32 = np.float32(reg_lambda)
-    min_child_weight_f32 = np.float32(min_child_weight)
-    min_gain_f32 = np.float32(min_gain)
+    # Convert parameters to float64 for kernel precision
+    reg_lambda_f64 = np.float64(reg_lambda)
+    min_child_weight_f64 = np.float64(min_child_weight)
+    min_gain_f64 = np.float64(min_gain)
 
     # Profiling hook: when _gpu_profile_timers is set, record per-phase times
     _prof = _gpu_profile_timers
@@ -3204,7 +3208,7 @@ def build_tree_gpu_native(
         split_block = 256
         _find_level_splits_kernel[split_grid, split_block](
             histograms, level_start, level_end,
-            reg_lambda_f32, min_child_weight_f32, min_gain_f32,
+            reg_lambda_f64, min_child_weight_f64, min_gain_f64,
             node_features, node_thresholds, node_gains,
             node_sum_grad, node_sum_hess, node_left_hess
         )
@@ -3252,7 +3256,7 @@ def build_tree_gpu_native(
     )
     _compute_leaf_values_kernel[blocks, threads](
         node_features, node_sum_grad, node_sum_hess,
-        reg_lambda_f32, node_values, max_nodes
+        reg_lambda_f64, node_values, max_nodes
     )
 
     if _prof is not None:

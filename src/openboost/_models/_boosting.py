@@ -611,12 +611,12 @@ class GradientBoosting(PersistenceMixin):
             grad_gpu = cuda.device_array(n_samples, dtype=np.float32)
             hess_gpu = cuda.device_array(n_samples, dtype=np.float32)
 
-        # Fast MSE path: hessian is constant 2.0 — fill once, reuse every
+        # Fast MSE path: hessian is constant 1.0 — fill once, reuse every
         # iteration.  Use in-place gradient kernel to avoid cudaMalloc each round.
         _use_fast_mse = not is_custom_loss and self.loss == 'mse'
         if _use_fast_mse:
             cuda.to_device(
-                np.full(n_samples, 2.0, dtype=np.float32), to=hess_gpu
+                np.full(n_samples, 1.0, dtype=np.float32), to=hess_gpu
             )
             from .._backends._cuda import mse_grad_inplace_gpu
 
