@@ -14,12 +14,18 @@ uv sync                                         # Install/sync dependencies
 uv sync --extra cuda                            # With GPU support
 uv sync --extra dev                             # With dev tools (test + bench + sklearn + ruff)
 
-# Testing
-uv run pytest tests/ -v --tb=short              # All tests (CPU)
+# Testing (parallelized with pytest-xdist, -n auto is in addopts)
+uv run pytest tests/ -v --tb=short              # All tests (CPU, parallel)
 uv run pytest tests/test_core.py -v             # Single test file
 uv run pytest tests/test_core.py::test_name -v  # Single test
+uv run pytest tests/ -n 0                       # Force serial (debugging)
 OPENBOOST_BACKEND=cuda uv run pytest tests/     # GPU tests
 OPENBOOST_BACKEND=cpu uv run pytest tests/      # Force CPU
+
+# Profiling
+uv run python benchmarks/profile_loop.py                # Profile training (50K samples default)
+uv run python benchmarks/profile_loop.py --summarize    # Machine-readable bottleneck summary
+OPENBOOST_PROFILE=1 uv run python script.py             # Profile any training run via env var
 
 # Linting
 uv run ruff check src/openboost/               # Lint
@@ -63,6 +69,9 @@ DART, LinearLeaf     growth strategies
 - **`_distributional.py`** — `NaturalBoost`: distributional GBDT (natural gradient boosting)
 - **`_dart.py`**, **`_linear_leaf.py`**, **`_gam.py`** — Specialized model variants
 
+### Profiling (`_profiler.py`)
+`ProfilingCallback` instruments training by wrapping core primitives (`build_node_histograms`, `find_node_splits`, `partition_samples`, `compute_leaf_values`, `fit_tree`) with timers. Outputs JSON reports to `logs/` with per-phase breakdown, bottleneck identification, and run-over-run comparison. CLI runner: `benchmarks/profile_loop.py`.
+
 ### Loss Functions (`_loss.py`)
 50+ loss implementations. Each returns `(gradient, hessian)`. Custom losses are callables with signature `fn(pred, y) -> (grad, hess)`.
 
@@ -71,10 +80,13 @@ DART, LinearLeaf     growth strategies
 
 ## Key Conventions
 
-- **Python 3.10+** target. Ruff rules: E, F, I, UP, B, SIM (line length 100, E501 ignored).
+- **Python 3.10+** target. Ruff rules: E, F, I, UP, B, SIM (line length 100; E501, E402, F821 ignored).
 - **uv only** for package management — never `pip install` or `conda`.
 - All Numba-jitted functions use `@njit` or `@cuda.jit`. CPU kernels are in `_backends/_cpu.py`, CUDA in `_backends/_cuda.py`.
 - Test environment variable `OPENBOOST_BACKEND=cpu` forces CPU backend in CI.
+- Tests use `pytest-xdist` (`-n auto --dist loadfile`) for parallel execution. Shared fixtures are in `tests/conftest.py` (session-scoped datasets, function-scoped gradients).
+- **GPU-native builder** (`fit_tree_gpu_native`) does not support missing values or categorical features. The training loop in `_boosting.py` auto-falls back to `fit_tree()` when the data has NaN or categorical columns.
+- **Profiling**: `ProfilingCallback` wraps core primitives with timers. Enable via callback or `OPENBOOST_PROFILE=1` env var. Reports go to `logs/` as JSON.
 
 ## Working Style
 
