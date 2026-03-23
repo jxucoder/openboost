@@ -25,8 +25,8 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from .._backends import is_cuda
 from .._array import MISSING_BIN
+from .._backends import is_cuda
 from ._split import SplitInfo
 
 if TYPE_CHECKING:
@@ -174,12 +174,6 @@ def _build_node_histograms_gpu(
     
     Uses the optimized shared memory histogram kernel from Phase 6.3.
     """
-    from numba import cuda
-    import math
-    from .._backends._cuda import (
-        _build_histogram_shared_kernel,
-        _zero_level_histograms_kernel,
-    )
     
     n_features, n_samples = binned.shape
     
@@ -216,8 +210,10 @@ def _build_node_histograms_gpu_contiguous(
     n_nodes: int,
 ) -> dict[int, NodeHistogram]:
     """GPU histogram building for contiguous node range."""
-    from numba import cuda
     import math
+
+    from numba import cuda
+
     from .._backends._cuda import (
         _build_histogram_shared_kernel,
         _zero_level_histograms_kernel,
@@ -267,7 +263,7 @@ def _build_node_histograms_gpu_contiguous(
     sample_node_ids_cpu = sample_node_ids.copy_to_host()
     
     result = {}
-    for i, node_id in enumerate(range(level_start, level_end)):
+    for _i, node_id in enumerate(range(level_start, level_end)):
         node_hist = histograms_cpu[node_id]
         hist_grad = node_hist[:, :, 0]  # (n_features, 256)
         hist_hess = node_hist[:, :, 1]
@@ -297,6 +293,7 @@ def _build_node_histograms_gpu_sparse(
 ) -> dict[int, NodeHistogram]:
     """GPU histogram building for non-contiguous nodes (leaf-wise)."""
     from numba import cuda
+
     from .._backends._cuda import build_histogram_cuda, gather_cuda
     
     # For sparse node sets, build each node separately
@@ -426,7 +423,11 @@ def find_node_splits(
         >>> for node_id, split in splits.items():
         ...     print(f"Node {node_id}: split on feature {split.split.feature}")
     """
-    from ._split import find_best_split, find_best_split_with_missing, find_best_split_with_categorical
+    from ._split import (
+        find_best_split,
+        find_best_split_with_categorical,
+        find_best_split_with_missing,
+    )
     
     result = {}
     
@@ -596,13 +597,14 @@ def _partition_samples_gpu(
     sample_node_ids,
     splits: dict[int, NodeSplit],
     missing_go_left: NDArray | None = None,
-) -> "DeviceNDArray":
+) -> DeviceNDArray:
     """GPU implementation of sample partitioning.
     
     Phase 14: Handles missing values (bin 255) using learned direction.
     """
-    from numba import cuda
     import math
+
+    from numba import cuda
     
     n_samples = sample_node_ids.shape[0]
     
@@ -660,7 +662,7 @@ def _init_partition_kernel_with_missing():
     if _partition_kernel_with_missing is not None:
         return
     
-    from numba import cuda, int32, uint8
+    from numba import cuda, int32
     
     @cuda.jit
     def kernel(binned, old_node_ids, new_node_ids, 

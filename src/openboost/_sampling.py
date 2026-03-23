@@ -11,9 +11,10 @@ maintaining model quality:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from collections.abc import Callable
+from dataclasses import dataclass
 from enum import Enum
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -167,10 +168,7 @@ def goss_sample(
     n_samples = len(grad)
     
     # Handle multi-dimensional gradients (e.g., distributional GBDT)
-    if grad.ndim > 1:
-        abs_grad = np.sum(np.abs(grad), axis=1)
-    else:
-        abs_grad = np.abs(grad)
+    abs_grad = np.sum(np.abs(grad), axis=1) if grad.ndim > 1 else np.abs(grad)
     
     # Number of samples to keep from each group
     n_top = int(n_samples * top_rate)
@@ -523,10 +521,7 @@ def create_memmap_binned(
     binned = ob_array(X, n_bins=n_bins, device='cpu')
     
     # Get the binned data
-    if hasattr(binned.data, 'copy_to_host'):
-        data = binned.data.copy_to_host()
-    else:
-        data = binned.data
+    data = binned.data.copy_to_host() if hasattr(binned.data, 'copy_to_host') else binned.data
     
     # Create memory-mapped file
     mmap = np.memmap(path, dtype=np.uint8, mode='w+', shape=data.shape)

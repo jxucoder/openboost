@@ -27,10 +27,8 @@ from abc import ABC
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
-import numpy as np
-
 if TYPE_CHECKING:
-    from numpy.typing import NDArray
+    pass
 
 
 @dataclass
@@ -56,7 +54,7 @@ class TrainingState:
     extra: dict = field(default_factory=dict)
 
 
-class Callback(ABC):
+class Callback(ABC):  # noqa: B024
     """Base class for training callbacks.
     
     Subclass this to create custom callbacks for training hooks.
@@ -77,22 +75,22 @@ class Callback(ABC):
         >>> plt.plot(tracker.grad_norms)
     """
     
-    def on_train_begin(self, state: TrainingState) -> None:
+    def on_train_begin(self, state: TrainingState) -> None:  # noqa: B027
         """Called at the start of training.
-        
+
         Args:
             state: Current training state.
         """
         pass
-    
-    def on_round_begin(self, state: TrainingState) -> None:
+
+    def on_round_begin(self, state: TrainingState) -> None:  # noqa: B027
         """Called at the start of each boosting round.
-        
+
         Args:
             state: Current training state.
         """
         pass
-    
+
     def on_round_end(self, state: TrainingState) -> bool:
         """Called at the end of each boosting round.
         
@@ -104,9 +102,9 @@ class Callback(ABC):
         """
         return True
     
-    def on_train_end(self, state: TrainingState) -> None:
+    def on_train_end(self, state: TrainingState) -> None:  # noqa: B027
         """Called at the end of training.
-        
+
         Args:
             state: Current training state.
         """

@@ -20,10 +20,9 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from .._array import BinnedArray, array
-from .._backends import is_cuda
-from .._core._growth import TreeStructure, GrowthConfig
-from .._loss import get_loss_function, LossFunction
+from .._core._growth import TreeStructure
 from .._core._tree import fit_tree
+from .._loss import LossFunction, get_loss_function
 from .._persistence import PersistenceMixin
 
 if TYPE_CHECKING:
@@ -86,7 +85,7 @@ class DART(PersistenceMixin):
     _loss_fn: LossFunction | None = field(default=None, init=False, repr=False)
     _rng: np.random.Generator | None = field(default=None, init=False, repr=False)
     
-    def fit(self, X: NDArray, y: NDArray) -> "DART":
+    def fit(self, X: NDArray, y: NDArray) -> DART:
         """Fit the DART model.
         
         Args:
@@ -125,7 +124,7 @@ class DART(PersistenceMixin):
         pred = np.full(n_samples, self.base_score_, dtype=np.float32)
         
         # Train trees
-        for i in range(self.n_trees):
+        for _i in range(self.n_trees):
             # Decide whether to apply dropout this round
             apply_dropout = (
                 len(self.trees_) > 0 and
@@ -176,7 +175,7 @@ class DART(PersistenceMixin):
                 base = getattr(self, 'base_score_', np.float32(0.0))
                 pred = np.full(n_samples_tmp, base, dtype=np.float32)
                 excluded_set = set(dropped_indices)
-                for t_i, (t, w) in enumerate(zip(self.trees_, self.tree_weights_)):
+                for t_i, (t, w) in enumerate(zip(self.trees_, self.tree_weights_, strict=False)):
                     t_pred = t(self.X_binned_)
                     if hasattr(t_pred, 'copy_to_host'):
                         t_pred = t_pred.copy_to_host()
@@ -231,7 +230,7 @@ class DART(PersistenceMixin):
         
         excluded_set = set(excluded_indices)
         
-        for i, (tree, weight) in enumerate(zip(self.trees_, self.tree_weights_)):
+        for i, (tree, weight) in enumerate(zip(self.trees_, self.tree_weights_, strict=False)):
             if i in excluded_set:
                 continue
             tree_pred = tree(X)
@@ -247,7 +246,7 @@ class DART(PersistenceMixin):
         base = getattr(self, 'base_score_', np.float32(0.0))
         pred = np.full(n_samples, base, dtype=np.float32)
 
-        for tree, weight in zip(self.trees_, self.tree_weights_):
+        for tree, weight in zip(self.trees_, self.tree_weights_, strict=False):
             tree_pred = tree(X)
             if hasattr(tree_pred, 'copy_to_host'):
                 tree_pred = tree_pred.copy_to_host()

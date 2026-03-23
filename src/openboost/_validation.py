@@ -14,7 +14,7 @@ import numpy as np
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
-    from ._array import BinnedArray
+
 
 
 class ValidationError(ValueError):
@@ -191,7 +191,7 @@ def validate_y(
     # Check for infinity
     if np.any(np.isinf(y)):
         raise ValueError(
-            f"y contains infinite values. Replace with finite values."
+            "y contains infinite values. Replace with finite values."
         )
 
     # Task-specific validation
@@ -213,12 +213,11 @@ def validate_y(
 
     elif task == "multiclass":
         unique_values = np.unique(y)
-        if not np.issubdtype(y.dtype, np.integer):
-            if not np.allclose(y, y.astype(int)):
-                raise ValueError(
-                    f"Multi-class classification expects integer class labels, "
-                    f"got non-integer values. Convert y to integers."
-                )
+        if not np.issubdtype(y.dtype, np.integer) and not np.allclose(y, y.astype(int)):
+            raise ValueError(
+                "Multi-class classification expects integer class labels, "
+                "got non-integer values. Convert y to integers."
+            )
         if np.min(y) != 0:
             warnings.warn(
                 f"Multi-class labels should start from 0, "

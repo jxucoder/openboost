@@ -54,6 +54,7 @@ sklearn = [
 test = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
+    "pytest-xdist>=3.0",
 ]
 # Benchmarking
 bench = [
@@ -88,11 +89,24 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
-ignore = ["E501"]  # Line length handled separately
+ignore = [
+    "E501",   # Line length handled separately
+    "E402",   # Imports organized by section in __init__.py
+    "F821",   # DeviceNDArray type hints for optional CUDA (not available at lint time)
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-v --tb=short"
+addopts = "-v --tb=short -n auto --dist loadfile"
+markers = [
+    "slow: marks tests that take >10s (deselect with '-m \"not slow\"')",
+    "gpu: marks tests requiring CUDA GPU",
+    "xgboost: marks tests requiring xgboost package",
+    "lightgbm: marks tests requiring lightgbm package",
+    "numerical: marks numerical agreement tests against reference implementations",
+    "parity: marks CPU/GPU parity tests",
+    "benchmark: marks performance benchmark tests (not run in CI)",
+]
 
 [dependency-groups]
 dev = [
@@ -104,6 +118,7 @@ dev = [
     "mypy>=1.19.1",
     "pytest>=7.0",
     "pytest-cov>=4.0",
+    "pytest-xdist>=3.0",
     "ruff>=0.4",
     "xgboost>=2.0",
 ]

@@ -6,6 +6,7 @@ Single-tree prediction is in _tree.py.
 
 from __future__ import annotations
 
+import contextlib
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -14,8 +15,9 @@ from .._array import BinnedArray
 from .._backends import is_cuda
 
 if TYPE_CHECKING:
-    from ._tree import Tree
     from numpy.typing import NDArray
+
+    from ._tree import Tree
 
 
 def predict_ensemble(
@@ -203,10 +205,7 @@ def _get_predict_tree_add_kernel():
             while node_features[node] >= 0:  # Not a leaf
                 feat = node_features[node]
                 val = X_binned[feat, idx]  # Feature-major layout
-                if val <= node_thresholds[node]:
-                    node = node_left[node]
-                else:
-                    node = node_right[node]
+                node = node_left[node] if val <= node_thresholds[node] else node_right[node]
             
             # Add leaf value to prediction
             pred[idx] += learning_rate * node_values[node]
@@ -217,8 +216,6 @@ def _get_predict_tree_add_kernel():
 
 # Initialize kernel at module load if CUDA available
 if is_cuda():
-    try:
+    with contextlib.suppress(Exception):
         _predict_tree_add_kernel = _get_predict_tree_add_kernel()
-    except Exception:
-        pass
 

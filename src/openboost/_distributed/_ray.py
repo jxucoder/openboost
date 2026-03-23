@@ -3,7 +3,8 @@
 Phase 12: Implements distributed training using Ray for multi-GPU/multi-node.
 """
 
-from typing import Any, List, Dict
+from typing import Any
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -42,7 +43,7 @@ class RayWorker:
         self.pred = np.zeros(self.n_samples, dtype=np.float32)
     
     def compute_histograms(self, grad: NDArray, hess: NDArray, 
-                           node_ids: List[int]) -> Dict[int, Any]:
+                           node_ids: list[int]) -> dict[int, Any]:
         """Compute local histograms for this shard."""
         histograms = build_node_histograms(
             self.X_binned.data if hasattr(self.X_binned, 'data') else self.X_binned,
@@ -120,10 +121,10 @@ class RayDistributedContext:
 
         self.workers = [
             RayWorker.remote(s, ys, n_bins, bin_edges=global_bin_edges)
-            for s, ys in zip(shards, y_shards)
+            for s, ys in zip(shards, y_shards, strict=False)
         ]
     
-    def allreduce_histograms(self, local_hists_refs: List[Any]) -> Dict[int, Any]:
+    def allreduce_histograms(self, local_hists_refs: list[Any]) -> dict[int, Any]:
         """Sum histograms from all workers."""
         local_hists = ray.get(local_hists_refs)
         

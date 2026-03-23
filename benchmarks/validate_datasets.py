@@ -3,19 +3,19 @@
 Pre-release validation of OpenBoost vs XGBoost performance on real-world datasets.
 
 Run on Modal (GPU):
-    uv run modal run benchmarks/openml_integration.py
+    uv run modal run benchmarks/validate_datasets.py
 
 Run locally (small datasets only):
-    uv run python benchmarks/openml_integration.py --local
+    uv run python benchmarks/validate_datasets.py --local
 
 Run specific datasets:
-    uv run modal run benchmarks/openml_integration.py --datasets cpu_act higgs
+    uv run modal run benchmarks/validate_datasets.py --datasets cpu_act higgs
 
 Run specific configs:
-    uv run modal run benchmarks/openml_integration.py --configs baseline deep_tree
+    uv run modal run benchmarks/validate_datasets.py --configs baseline deep_tree
 
 Run extended suite:
-    uv run modal run benchmarks/openml_integration.py --extended
+    uv run modal run benchmarks/validate_datasets.py --extended
 """
 
 from __future__ import annotations
@@ -1269,8 +1269,8 @@ if __name__ == "__main__":
         print(f"\nResults saved to: {results_file}")
     else:
         print("Usage:")
-        print("  Modal:  uv run modal run benchmarks/openml_integration.py")
-        print("  Local:  uv run python benchmarks/openml_integration.py --local")
+        print("  Modal:  uv run modal run benchmarks/validate_datasets.py")
+        print("  Local:  uv run python benchmarks/validate_datasets.py --local")
         print("")
         print("Options:")
         print("  --datasets cpu_act higgs     Run specific datasets")

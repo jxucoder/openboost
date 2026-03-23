@@ -4,9 +4,9 @@ Phase 12: Adds Ray-based distributed training capability.
 Phase 18: Adds multi-GPU support via Ray actors.
 """
 
-from typing import Protocol, Any
+from typing import Any, Protocol
+
 from numpy.typing import NDArray
-import numpy as np
 
 
 class DistributedContext(Protocol):
@@ -29,12 +29,11 @@ class DistributedContext(Protocol):
 
 # Phase 18: Multi-GPU support
 from ._multigpu import (
-    GPUWorkerBase,
     GPUWorker,
+    GPUWorkerBase,
     MultiGPUContext,
     fit_tree_multigpu,
 )
-
 
 __all__ = [
     "DistributedContext",

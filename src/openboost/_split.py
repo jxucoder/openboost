@@ -3,7 +3,7 @@
 import numpy as np
 from numba import cuda
 
-from ._kernels import find_best_split_kernel, HIST_BLOCK_SIZE
+from ._kernels import HIST_BLOCK_SIZE, find_best_split_kernel
 
 
 def find_best_splits(

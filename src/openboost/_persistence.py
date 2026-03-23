@@ -144,7 +144,7 @@ def _dict_to_tree(data: dict[str, Any]) -> TreeStructure:
     Returns:
         TreeStructure instance
     """
-    from ._core._growth import TreeStructure, ScalarLeaves, VectorLeaves
+    from ._core._growth import ScalarLeaves, TreeStructure, VectorLeaves
 
     # Handle leaf values based on type
     values_type = data.get("values_type", "array")
@@ -211,12 +211,12 @@ class PersistenceMixin:
             attrs = list(self.__dataclass_fields__.keys())
             # Also include fitted attributes (sklearn convention: trailing _)
             # and other instance attributes not in dataclass fields
-            for k in vars(self).keys():
+            for k in vars(self):
                 if k not in attrs and not k.startswith("_"):
                     attrs.append(k)
             return attrs
         # Fallback: all non-private attributes
-        return [k for k in vars(self).keys() if not k.startswith("_")]
+        return [k for k in vars(self) if not k.startswith("_")]
 
     def _to_state_dict(self) -> dict[str, Any]:
         """Convert model to a serializable state dictionary.
@@ -285,7 +285,7 @@ class PersistenceMixin:
         import warnings
 
         _CURRENT_SERIALIZATION_VERSION = 1
-        saved_version = state.get("_serialization_version", None)
+        saved_version = state.get("_serialization_version")
         if saved_version is None:
             warnings.warn(
                 "Loading a model saved without a serialization version number. "
@@ -341,8 +341,9 @@ class PersistenceMixin:
 
         # Restore bin edges for transform
         if "_bin_edges" in state:
-            from ._array import BinnedArray
             import numpy as np
+
+            from ._array import BinnedArray
             
             # Create a minimal BinnedArray with just bin edges for transform
             n_features = state.get("_n_features", len(state["_bin_edges"]))
@@ -425,6 +426,7 @@ class PersistenceMixin:
             >>> predictions = model.predict(X_test)
         """
         import warnings
+
         import joblib
 
         warnings.warn(

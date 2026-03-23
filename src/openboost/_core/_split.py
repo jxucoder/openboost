@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING, NamedTuple
 import numpy as np
 
 from .._backends import is_cuda
-from .._array import MISSING_BIN
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -184,7 +183,7 @@ def find_best_split_with_missing(
         total_hess = float(_sum_histogram(hist_hess))
     
     # Check if any feature has missing values
-    n_features = hist_grad.shape[0]
+    hist_grad.shape[0]
     any_missing = has_missing is not None and np.any(has_missing)
     
     # If no missing values, use standard split finding

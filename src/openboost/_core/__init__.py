@@ -6,49 +6,46 @@ This module contains the foundation for tree building:
 - fit_tree: main entry point for building trees
 """
 
+from ._growth import (
+    GrowthConfig,
+    GrowthStrategy,
+    LeafValues,
+    LeafWiseGrowth,
+    LevelWiseGrowth,
+    ScalarLeaves,
+    SymmetricGrowth,
+    TreeStructure,
+    VectorLeaves,
+    get_growth_strategy,
+)
+from ._histogram import build_histogram
+from ._predict import predict_ensemble
 from ._primitives import (
     NodeHistogram,
     NodeSplit,
     build_node_histograms,
-    subtract_histogram,
-    find_node_splits,
-    partition_samples,
     compute_leaf_values,
-    init_sample_node_ids,
-    get_nodes_at_depth,
+    find_node_splits,
     get_children,
+    get_nodes_at_depth,
     get_parent,
+    init_sample_node_ids,
+    partition_samples,
+    subtract_histogram,
 )
-
-from ._growth import (
-    GrowthConfig,
-    GrowthStrategy,
-    TreeStructure,
-    LevelWiseGrowth,
-    LeafWiseGrowth,
-    SymmetricGrowth,
-    get_growth_strategy,
-    LeafValues,
-    ScalarLeaves,
-    VectorLeaves,
-)
-
+from ._split import SplitInfo, compute_leaf_value, find_best_split
 from ._tree import (
-    fit_tree,
-    fit_trees_batch,
+    SymmetricTree,
     Tree,
     TreeNode,
-    SymmetricTree,
+    fit_tree,
+    fit_tree_gpu_native,
     fit_tree_symmetric,
     fit_tree_symmetric_gpu_native,
-    fit_tree_gpu_native,
-    predict_tree,
+    fit_trees_batch,
     predict_symmetric_tree,
+    predict_tree,
 )
-
-from ._histogram import build_histogram, subtract_histogram as hist_subtract
-from ._split import find_best_split, compute_leaf_value, SplitInfo
-from ._predict import predict_ensemble
 
 __all__ = [
     # Primitives

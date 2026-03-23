@@ -17,15 +17,12 @@ from ._growth import (
     GrowthConfig,
     GrowthStrategy,
     TreeStructure,
-    LevelWiseGrowth,
-    LeafWiseGrowth,
-    SymmetricGrowth,
     get_growth_strategy,
 )
 
 # Legacy imports for backward compatibility with internal code
 from ._histogram import build_histogram, subtract_histogram
-from ._split import SplitInfo, compute_leaf_value, find_best_split
+from ._split import compute_leaf_value, find_best_split
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -74,11 +71,11 @@ class Tree:
     _right: NDArray | None = field(default=None, repr=False)
     
     # GPU arrays for fast GPU training (Phase 5.1)
-    _features_gpu: "DeviceNDArray | None" = field(default=None, repr=False)
-    _thresholds_gpu: "DeviceNDArray | None" = field(default=None, repr=False)
-    _values_gpu: "DeviceNDArray | None" = field(default=None, repr=False)
-    _left_gpu: "DeviceNDArray | None" = field(default=None, repr=False)
-    _right_gpu: "DeviceNDArray | None" = field(default=None, repr=False)
+    _features_gpu: DeviceNDArray | None = field(default=None, repr=False)
+    _thresholds_gpu: DeviceNDArray | None = field(default=None, repr=False)
+    _values_gpu: DeviceNDArray | None = field(default=None, repr=False)
+    _left_gpu: DeviceNDArray | None = field(default=None, repr=False)
+    _right_gpu: DeviceNDArray | None = field(default=None, repr=False)
     
     @property
     def on_gpu(self) -> bool:
@@ -395,10 +392,7 @@ def fit_tree(
         subsample_mask = None
     
     # Get growth strategy
-    if isinstance(growth, str):
-        strategy = get_growth_strategy(growth)
-    else:
-        strategy = growth
+    strategy = get_growth_strategy(growth) if isinstance(growth, str) else growth
     
     # Build config
     config = GrowthConfig(
@@ -835,7 +829,7 @@ def fit_trees_batch(
         >>> 
         >>> # all_trees[0] contains trees for first config, etc.
     """
-    from .._models._batch import ConfigBatch, BatchTrainingState
+    from .._models._batch import BatchTrainingState, ConfigBatch
     
     if not isinstance(configs, ConfigBatch):
         raise TypeError(f"configs must be ConfigBatch, got {type(configs)}")
@@ -854,7 +848,6 @@ def fit_trees_batch(
     hess = as_numba_array(hess)
     
     n_configs = configs.n_configs
-    n_rounds = configs.n_rounds
     
     # Initialize training state
     state = BatchTrainingState.create(n_configs, n_samples)
@@ -892,7 +885,7 @@ def _fit_trees_batch_cpu(
         for round_idx in range(n_rounds):
             # Compute gradients from current predictions
             # Note: User provides initial grad/hess, subsequent rounds recompute
-            if round_idx > 0:
+            if round_idx > 0:  # noqa: SIM108
                 # Recompute MSE gradients from current predictions.
                 # Initial grad = 2*(0 - y) = -2y, so for MSE:
                 #   grad_new = 2*(pred - y) = 2*pred + initial_grad
@@ -934,13 +927,7 @@ def _fit_trees_batch_cuda(
 ) -> list[list[Tree]]:
     """CUDA batch training using fused kernels."""
     from numba import cuda
-    from .._backends._cuda import (
-        build_histogram_batch_cuda,
-        find_best_split_batch_cuda,
-        compute_split_masks_batch_cuda,
-        reduce_sum_cuda,
-        to_device,
-    )
+
     
     n_configs = configs.n_configs
     n_rounds = configs.n_rounds
@@ -1222,10 +1209,7 @@ def predict_symmetric_tree(tree: SymmetricTree, X: BinnedArray | NDArray) -> NDA
     
     Prediction is just bit operations - very fast!
     """
-    if isinstance(X, BinnedArray):
-        binned = X.data
-    else:
-        binned = X
+    binned = X.data if isinstance(X, BinnedArray) else X
     
     use_gpu = is_cuda() and hasattr(binned, '__cuda_array_interface__')
     

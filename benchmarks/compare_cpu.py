@@ -4,11 +4,11 @@ A single, self-contained benchmark that works locally with zero external
 dependencies beyond the project's [bench] extras.
 
 Usage:
-    uv run python benchmarks/run.py
-    uv run python benchmarks/run.py --quick
-    uv run python benchmarks/run.py --task regression
-    uv run python benchmarks/run.py --trials 5
-    uv run python benchmarks/run.py --n-samples 100000
+    uv run python benchmarks/compare_cpu.py
+    uv run python benchmarks/compare_cpu.py --quick
+    uv run python benchmarks/compare_cpu.py --task regression
+    uv run python benchmarks/compare_cpu.py --trials 5
+    uv run python benchmarks/compare_cpu.py --n-samples 100000
 
 Options:
     --task          Run a specific task: regression, binary, multiclass, all (default: all)

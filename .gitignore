@@ -214,6 +214,7 @@ __marimo__/
 repos/
 
 # Project-specific
+.claude/
 .cursor/
 agent_space/
 logs/

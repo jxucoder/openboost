@@ -118,11 +118,10 @@ def find_best_split_kernel(
     # Tree reduction to find best
     s = cuda.blockDim.x // 2
     while s > 0:
-        if tid < s:
-            if shared_gain[tid + s] > shared_gain[tid]:
-                shared_gain[tid] = shared_gain[tid + s]
-                shared_feature[tid] = shared_feature[tid + s]
-                shared_bin[tid] = shared_bin[tid + s]
+        if tid < s and shared_gain[tid + s] > shared_gain[tid]:
+            shared_gain[tid] = shared_gain[tid + s]
+            shared_feature[tid] = shared_feature[tid + s]
+            shared_bin[tid] = shared_bin[tid + s]
         cuda.syncthreads()
         s //= 2
     
@@ -185,10 +184,7 @@ def predict_kernel(
     node = 0
     while not tree_is_leaf[node]:
         feature = tree_features[node]
-        if X_binned[feature, idx] <= tree_bins[node]:
-            node = 2 * node + 1
-        else:
-            node = 2 * node + 2
+        node = 2 * node + 1 if X_binned[feature, idx] <= tree_bins[node] else 2 * node + 2
     
     predictions[idx] += learning_rate * tree_values[node]
 

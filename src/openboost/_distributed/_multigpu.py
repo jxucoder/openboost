@@ -22,7 +22,7 @@ Usage:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Callable, List, Optional
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -59,7 +59,7 @@ class GPUWorkerBase:
         X_shard: NDArray,
         y_shard: NDArray,
         n_bins: int,
-        bin_edges: Optional[NDArray] = None,
+        bin_edges: NDArray | None = None,
     ):
         """Initialize worker with data shard on assigned GPU.
         
@@ -164,7 +164,7 @@ class GPUWorkerBase:
         self,
         grad: NDArray,
         hess: NDArray,
-        node_ids: Optional[List[int]] = None,
+        node_ids: list[int] | None = None,
     ) -> tuple[NDArray, NDArray]:
         """Build local histogram for this shard.
         
@@ -180,7 +180,6 @@ class GPUWorkerBase:
                    or dict mapping node_id to histogram
         """
         from .._core._histogram import build_histogram
-        from .._array import as_numba_array
         
         # Get binned data
         binned = self.X_binned.data
@@ -240,7 +239,7 @@ class GPUWorkerBase:
         """Get number of samples in this shard."""
         return self.n_samples
     
-    def get_bin_edges(self) -> Optional[NDArray]:
+    def get_bin_edges(self) -> NDArray | None:
         """Get bin edges used by this worker (for consistent binning)."""
         if hasattr(self.X_binned, 'bin_edges'):
             return self.X_binned.bin_edges
@@ -248,10 +247,7 @@ class GPUWorkerBase:
 
 
 # Create Ray remote version if Ray is available
-if ray is not None:
-    GPUWorker = ray.remote(num_gpus=1)(GPUWorkerBase)
-else:
-    GPUWorker = GPUWorkerBase
+GPUWorker = ray.remote(num_gpus=1)(GPUWorkerBase) if ray is not None else GPUWorkerBase
 
 
 # =============================================================================
@@ -291,11 +287,11 @@ class MultiGPUContext:
     """
     
     n_gpus: int = None
-    devices: List[int] = None
-    workers: List[Any] = None
+    devices: list[int] = None
+    workers: list[Any] = None
     n_features: int = None
     n_samples: int = None
-    shard_sizes: List[int] = None
+    shard_sizes: list[int] = None
     bin_edges: NDArray = None
     
     def __post_init__(self):
@@ -334,7 +330,7 @@ class MultiGPUContext:
         X: NDArray,
         y: NDArray,
         n_bins: int = 256,
-        bin_edges: Optional[NDArray] = None,
+        bin_edges: NDArray | None = None,
     ):
         """Shard data and create GPU workers.
         
@@ -377,7 +373,7 @@ class MultiGPUContext:
         
         # Create workers
         self.workers = []
-        for gpu_id, shard_indices in zip(self.devices, indices):
+        for gpu_id, shard_indices in zip(self.devices, indices, strict=False):
             X_shard = X[shard_indices]
             y_shard = y[shard_indices]
             
@@ -393,7 +389,7 @@ class MultiGPUContext:
     def compute_all_gradients(
         self,
         loss_fn: LossFunction,
-    ) -> List[tuple[NDArray, NDArray]]:
+    ) -> list[tuple[NDArray, NDArray]]:
         """Compute gradients on all workers in parallel.
         
         Args:
@@ -410,8 +406,8 @@ class MultiGPUContext:
     
     def build_all_histograms(
         self,
-        grads_hess: List[tuple[NDArray, NDArray]],
-    ) -> List[tuple[NDArray, NDArray]]:
+        grads_hess: list[tuple[NDArray, NDArray]],
+    ) -> list[tuple[NDArray, NDArray]]:
         """Build local histograms on all workers in parallel.
         
         Args:
@@ -422,13 +418,13 @@ class MultiGPUContext:
         """
         hist_refs = [
             worker.build_histogram.remote(grad, hess)
-            for worker, (grad, hess) in zip(self.workers, grads_hess)
+            for worker, (grad, hess) in zip(self.workers, grads_hess, strict=False)
         ]
         return ray.get(hist_refs)
     
     def aggregate_histograms(
         self,
-        local_histograms: List[tuple[NDArray, NDArray]],
+        local_histograms: list[tuple[NDArray, NDArray]],
     ) -> tuple[NDArray, NDArray]:
         """Sum histograms from all workers (AllReduce).
         
@@ -492,7 +488,7 @@ class MultiGPUContext:
 
 def fit_tree_multigpu(
     ctx: MultiGPUContext,
-    grads_hess: List[tuple[NDArray, NDArray]],
+    grads_hess: list[tuple[NDArray, NDArray]],
     *,
     max_depth: int = 6,
     min_child_weight: float = 1.0,
@@ -522,9 +518,6 @@ def fit_tree_multigpu(
     Returns:
         Fitted TreeStructure
     """
-    from .._core._tree import fit_tree
-    from .._array import BinnedArray
-    import openboost as ob
     
     # Build local histograms on each GPU
     local_histograms = ctx.build_all_histograms(grads_hess)
@@ -541,7 +534,7 @@ def fit_tree_multigpu(
     total_hess = np.zeros(ctx.n_samples, dtype=np.float32)
     
     offset = 0
-    for (grad, hess), size in zip(grads_hess, ctx.shard_sizes):
+    for (grad, hess), size in zip(grads_hess, ctx.shard_sizes, strict=False):
         total_grad[offset:offset + size] = grad
         total_hess[offset:offset + size] = hess
         offset += size
@@ -549,7 +542,7 @@ def fit_tree_multigpu(
     # Create a dummy BinnedArray for tree fitting
     # In practice, we'd want to do distributed tree building
     # For now, collect data to driver and fit there
-    all_preds = ray.get([w.get_predictions.remote() for w in ctx.workers])
+    ray.get([w.get_predictions.remote() for w in ctx.workers])
     
     # Use the global histogram for tree building
     # This is where we'd integrate with fit_tree_from_histogram
@@ -558,11 +551,10 @@ def fit_tree_multigpu(
     # Get binned data from first worker for structure
     # NOTE: This is a simplification - full implementation would do
     # distributed tree building with sample partitioning
-    first_worker_bin_edges = ray.get(ctx.workers[0].get_bin_edges.remote())
+    ray.get(ctx.workers[0].get_bin_edges.remote())
     
     # Build tree using growth strategy with global histogram
-    from .._core._growth import LevelWiseGrowth, GrowthConfig
-    from .._core._primitives import NodeHistogram
+    from .._core._growth import GrowthConfig
     
     config = GrowthConfig(
         max_depth=max_depth,
@@ -604,9 +596,9 @@ def _build_tree_from_global_histogram(
         TreeStructure
     """
     from .._core._growth import TreeStructure
-    from .._core._split import find_best_split, compute_leaf_value
+    from .._core._split import compute_leaf_value, find_best_split
 
-    n_bins = hist_grad.shape[1]
+    hist_grad.shape[1]
     max_nodes = 2**(config.max_depth + 1) - 1
 
     # Initialize tree arrays
@@ -695,7 +687,7 @@ def _build_tree_from_global_histogram(
             left_hist_grad = np.zeros_like(h_grad)
             left_hist_hess = np.zeros_like(h_hess)
 
-            for f in range(n_features):
+            for _f in range(n_features):
                 # For the split feature, partition bins at the threshold
                 # For all other features, we need the full histogram
                 # conditioned on left/right.  With only histogram information
@@ -716,8 +708,8 @@ def _build_tree_from_global_histogram(
             # Left child: bins <= threshold for the split feature
             left_sf_grad = float(np.sum(h_grad[sf, :t + 1]))
             left_sf_hess = float(np.sum(h_hess[sf, :t + 1]))
-            right_sf_grad = s_grad - left_sf_grad
-            right_sf_hess = s_hess - left_sf_hess
+            s_grad - left_sf_grad
+            s_hess - left_sf_hess
 
             # For each feature, split histogram bins proportionally based on
             # the split feature's left/right ratio.

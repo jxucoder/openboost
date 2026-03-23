@@ -3,7 +3,7 @@
 import numpy as np
 from numba import cuda
 
-from ._kernels import histogram_kernel, HIST_BLOCK_SIZE, MAX_BINS
+from ._kernels import HIST_BLOCK_SIZE, MAX_BINS, histogram_kernel
 
 
 def build_histograms(

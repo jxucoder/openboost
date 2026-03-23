@@ -14,12 +14,18 @@ uv sync                                         # Install/sync dependencies
 uv sync --extra cuda                            # With GPU support
 uv sync --extra dev                             # With dev tools (test + bench + sklearn + ruff)
 
-# Testing
-uv run pytest tests/ -v --tb=short              # All tests (CPU)
+# Testing (parallelized with pytest-xdist, -n auto is in addopts)
+uv run pytest tests/ -v --tb=short              # All tests (CPU, parallel)
 uv run pytest tests/test_core.py -v             # Single test file
 uv run pytest tests/test_core.py::test_name -v  # Single test
+uv run pytest tests/ -n 0                       # Force serial (debugging)
 OPENBOOST_BACKEND=cuda uv run pytest tests/     # GPU tests
 OPENBOOST_BACKEND=cpu uv run pytest tests/      # Force CPU
+
+# Profiling
+uv run python benchmarks/profile_loop.py                # Profile training (50K samples default)
+uv run python benchmarks/profile_loop.py --summarize    # Machine-readable bottleneck summary
+OPENBOOST_PROFILE=1 uv run python script.py             # Profile any training run via env var
 
 # Linting
 uv run ruff check src/openboost/               # Lint
@@ -63,6 +69,9 @@ DART, LinearLeaf     growth strategies
 - **`_distributional.py`** — `NaturalBoost`: distributional GBDT (natural gradient boosting)
 - **`_dart.py`**, **`_linear_leaf.py`**, **`_gam.py`** — Specialized model variants
 
+### Profiling (`_profiler.py`)
+`ProfilingCallback` instruments training by wrapping core primitives (`build_node_histograms`, `find_node_splits`, `partition_samples`, `compute_leaf_values`, `fit_tree`) with timers. Outputs JSON reports to `logs/` with per-phase breakdown, bottleneck identification, and run-over-run comparison. CLI runner: `benchmarks/profile_loop.py`.
+
 ### Loss Functions (`_loss.py`)
 50+ loss implementations. Each returns `(gradient, hessian)`. Custom losses are callables with signature `fn(pred, y) -> (grad, hess)`.
 
@@ -71,7 +80,62 @@ DART, LinearLeaf     growth strategies
 
 ## Key Conventions
 
-- **Python 3.10+** target. Ruff rules: E, F, I, UP, B, SIM (line length 100, E501 ignored).
+- **Python 3.10+** target. Ruff rules: E, F, I, UP, B, SIM (line length 100; E501, E402, F821 ignored).
 - **uv only** for package management — never `pip install` or `conda`.
 - All Numba-jitted functions use `@njit` or `@cuda.jit`. CPU kernels are in `_backends/_cpu.py`, CUDA in `_backends/_cuda.py`.
 - Test environment variable `OPENBOOST_BACKEND=cpu` forces CPU backend in CI.
+- Tests use `pytest-xdist` (`-n auto --dist loadfile`) for parallel execution. Shared fixtures are in `tests/conftest.py` (session-scoped datasets, function-scoped gradients).
+- **GPU-native builder** (`fit_tree_gpu_native`) does not support missing values or categorical features. The training loop in `_boosting.py` auto-falls back to `fit_tree()` when the data has NaN or categorical columns.
+- **Profiling**: `ProfilingCallback` wraps core primitives with timers. Enable via callback or `OPENBOOST_PROFILE=1` env var. Reports go to `logs/` as JSON.
+
+## Working Style
+
+### 1. Plan Mode Default
+- Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)
+- If something goes sideways, STOP and re-plan immediately -- don't keep pushing
+- Use plan mode for verification steps, not just building
+- Write detailed specs upfront to reduce ambiguity
+
+### 2. Subagent Strategy
+- Use subagents liberally to keep main context window clean
+- Offload research, exploration, and parallel analysis to subagents
+- For complex problems, throw more compute at it via subagents
+- One task per subagent for focused execution
+
+### 3. Self-Improvement Loop
+- After ANY correction from the user: update `tasks/lessons.md` with the pattern
+- Write rules for yourself that prevent the same mistake
+- Ruthlessly iterate on these lessons until mistake rate drops
+- Review lessons at session start for relevant project
+
+### 4. Verification Before Done
+- Never mark a task complete without proving it works
+- Diff behavior between main and your changes when relevant
+- Ask yourself: "Would a staff engineer approve this?"
+- Run tests, check logs, demonstrate correctness
+
+### 5. Demand Elegance (Balanced)
+- For non-trivial changes: pause and ask "is there a more elegant way?"
+- If a fix feels hacky: "Knowing everything I know now, implement the elegant solution"
+- Skip this for simple, obvious fixes -- don't over-engineer
+- Challenge your own work before presenting it
+
+### 6. Autonomous Bug Fixing
+- When given a bug report: just fix it. Don't ask for hand-holding
+- Point at logs, errors, failing tests -- then resolve them
+- Zero context switching required from the user
+- Go fix failing CI tests without being told how
+
+## Task Management
+
+1. **Plan First**: Write plan to `tasks/todo.md` with checkable items
+2. **Verify Plan**: Check in before starting implementation
+3. **Track Progress**: Mark items complete as you go
+4. **Explain Changes**: High-level summary at each step
+5. **Document Results**: Add review section to `tasks/todo.md`
+6. **Capture Lessons**: Update `tasks/lessons.md` after corrections
+
+## Core Principles
+
+- **Simplicity First**: Make every change as simple as possible. Impact minimal code.
+- **No Laziness**: Find root causes. No temporary fixes. Senior developer standards.

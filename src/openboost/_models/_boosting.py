@@ -14,34 +14,30 @@ Phase 18: Added multi-GPU support via Ray for data-parallel training.
 
 from __future__ import annotations
 
+import os
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Literal
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
 from .._array import BinnedArray, array
 from .._backends import is_cuda
-from .._loss import get_loss_function, compute_loss_value, LossFunction
-from .._core._tree import fit_tree
-from .._core._growth import TreeStructure
 from .._callbacks import Callback, CallbackManager, TrainingState
-from .._sampling import (
-    SamplingStrategy,
-    goss_sample,
-    random_sample,
-    apply_sampling,
-    MiniBatchIterator,
-    accumulate_histograms_minibatch,
-)
+from .._core._growth import TreeStructure
+from .._core._tree import fit_tree
+from .._loss import LossFunction, compute_loss_value, get_loss_function
 from .._persistence import PersistenceMixin
+from .._sampling import (
+    goss_sample,
+)
 from .._validation import (
-    validate_X,
-    validate_y,
-    validate_sample_weight,
     validate_eval_set,
     validate_hyperparameters,
     validate_predict_input,
+    validate_sample_weight,
+    validate_X,
+    validate_y,
 )
 
 try:
@@ -227,6 +223,12 @@ class GradientBoosting(PersistenceMixin):
         """
         # Clear any previous fit
         self.trees_ = []
+
+        # Auto-enable profiling via env var
+        if os.environ.get("OPENBOOST_PROFILE"):
+            from .._profiler import ProfilingCallback
+            _profile_dir = os.environ.get("OPENBOOST_PROFILE_DIR", "logs/")
+            callbacks = list(callbacks or []) + [ProfilingCallback(output_dir=_profile_dir)]
         
         # Validate inputs (Phase 20.3)
         X = validate_X(X, allow_nan=True, context="fit")
@@ -303,9 +305,8 @@ class GradientBoosting(PersistenceMixin):
         
         ctx.setup(X_data, y, self.n_bins)
         
-        import ray
         
-        for i in range(self.n_trees):
+        for _i in range(self.n_trees):
             # Compute gradients on each worker
             grad_hess_refs = [
                 w.compute_gradients.options(num_returns=2).remote(self._loss_fn) 
@@ -378,7 +379,6 @@ class GradientBoosting(PersistenceMixin):
         ctx.setup(X_data, y, n_bins=self.n_bins)
         
         try:
-            import ray
             
             # Training loop
             for i in range(self.n_trees):
@@ -401,8 +401,6 @@ class GradientBoosting(PersistenceMixin):
                 
                 # For proper tree building, we need the full binned data
                 # Use a simplified approach: fit tree on driver with full histogram info
-                from .._core._growth import TreeStructure, GrowthConfig
-                from .._core._split import find_best_split, compute_leaf_value
                 
                 tree = self._build_tree_from_histogram(
                     global_hist_grad,
@@ -450,7 +448,7 @@ class GradientBoosting(PersistenceMixin):
         Uses recursive histogram-based tree building similar to LightGBM.
         """
         from .._core._growth import TreeStructure
-        from .._core._split import find_best_split, compute_leaf_value
+        from .._core._split import compute_leaf_value, find_best_split
         
         max_nodes = 2**(self.max_depth + 1) - 1
         features = np.full(max_nodes, -1, dtype=np.int32)
@@ -700,45 +698,97 @@ class GradientBoosting(PersistenceMixin):
                     colsample_bytree=self.colsample_bytree,
                 )
             else:
-                # Standard training (with optional row/col subsampling in fit_tree)
-                tree = fit_tree(
-                    self.X_binned_,
-                    grad_gpu,
-                    hess_gpu,
-                    max_depth=self.max_depth,
-                    min_child_weight=self.min_child_weight,
-                    reg_lambda=self.reg_lambda,
-                    reg_alpha=self.reg_alpha,
-                    gamma=self.gamma,
-                    subsample=self.subsample,
-                    colsample_bytree=self.colsample_bytree,
+                # Use GPU-native tree builder when no features require the
+                # growth-strategy path (reg_alpha, colsample, subsample, etc.)
+                # Also skip GPU-native when data has missing values or
+                # categorical features, which it doesn't support.
+                has_missing = (
+                    hasattr(self.X_binned_, 'has_missing')
+                    and len(self.X_binned_.has_missing) > 0
+                    and np.any(self.X_binned_.has_missing)
                 )
-            
-            # Update predictions
-            tree_pred = tree(self.X_binned_)
-            if hasattr(tree_pred, 'copy_to_host'):
-                tree_pred_cpu = tree_pred.copy_to_host()
-            else:
-                tree_pred_cpu = tree_pred
-            
-            # Update GPU predictions
-            pred_cpu = pred_gpu.copy_to_host()
-            pred_cpu += self.learning_rate * tree_pred_cpu
-            cuda.to_device(pred_cpu, to=pred_gpu)
-            
-            self.trees_.append(tree)
-            
-            # Compute losses for callbacks using actual loss function
-            state.train_loss = _compute_loss_value(self.loss, pred_cpu, y, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
+                has_categorical = (
+                    hasattr(self.X_binned_, 'is_categorical')
+                    and len(self.X_binned_.is_categorical) > 0
+                    and np.any(self.X_binned_.is_categorical)
+                )
+                use_gpu_native = (
+                    is_cuda()
+                    and self.reg_alpha == 0.0
+                    and self.colsample_bytree >= 1.0
+                    and self.subsample >= 1.0
+                    and not has_missing
+                    and not has_categorical
+                )
+                if use_gpu_native:
+                    from .._core._tree import fit_tree_gpu_native
+                    legacy_tree = fit_tree_gpu_native(
+                        self.X_binned_,
+                        grad_gpu,
+                        hess_gpu,
+                        max_depth=self.max_depth,
+                        min_child_weight=self.min_child_weight,
+                        reg_lambda=self.reg_lambda,
+                        min_gain=self.gamma,
+                    )
+                    # Use fused prediction before converting to TreeStructure
+                    from .._core._predict import predict_tree_add_gpu
+                    predict_tree_add_gpu(
+                        legacy_tree, self.X_binned_, pred_gpu, self.learning_rate
+                    )
+                    # Convert legacy Tree to TreeStructure for compatibility
+                    # with feature importance, persistence, and sklearn wrappers
+                    features, thresholds, values, left, right = legacy_tree.to_arrays()
+                    tree = TreeStructure(
+                        features=features,
+                        thresholds=thresholds,
+                        left_children=left,
+                        right_children=right,
+                        values=values,
+                        n_nodes=len(features),
+                        depth=legacy_tree.depth,
+                        n_features=legacy_tree.n_features,
+                    )
+                    self.trees_.append(tree)
+                else:
+                    tree = fit_tree(
+                        self.X_binned_,
+                        grad_gpu,
+                        hess_gpu,
+                        max_depth=self.max_depth,
+                        min_child_weight=self.min_child_weight,
+                        reg_lambda=self.reg_lambda,
+                        reg_alpha=self.reg_alpha,
+                        gamma=self.gamma,
+                        subsample=self.subsample,
+                        colsample_bytree=self.colsample_bytree,
+                    )
+                    # Update predictions on GPU
+                    tree_pred = tree(self.X_binned_)
+                    if hasattr(tree_pred, '__cuda_array_interface__'):
+                        from .._core._predict import _add_inplace_cuda
+                        _add_inplace_cuda(pred_gpu, tree_pred, self.learning_rate)
+                    else:
+                        if hasattr(tree_pred, 'copy_to_host'):
+                            tree_pred = tree_pred.copy_to_host()
+                        pred_cpu = pred_gpu.copy_to_host()
+                        pred_cpu += self.learning_rate * tree_pred
+                        cuda.to_device(pred_cpu, to=pred_gpu)
+                    self.trees_.append(tree)
 
-            if eval_set:
-                X_val, y_val = eval_set[0]
-                val_pred = self.predict(X_val)
-                state.val_loss = _compute_loss_value(self.loss, val_pred, y_val, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
+            # Only compute loss and copy to CPU when callbacks need it
+            if cb_manager.callbacks:
+                pred_cpu = pred_gpu.copy_to_host()
+                state.train_loss = _compute_loss_value(self.loss, pred_cpu, y, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
 
-            # Check if callbacks want to stop
-            if not cb_manager.on_round_end(state):
-                break
+                if eval_set:
+                    X_val, y_val = eval_set[0]
+                    val_pred = self.predict(X_val)
+                    state.val_loss = _compute_loss_value(self.loss, val_pred, y_val, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
+
+                # Check if callbacks want to stop
+                if not cb_manager.on_round_end(state):
+                    break
 
         cb_manager.on_train_end(state)
 
@@ -766,7 +816,6 @@ class GradientBoosting(PersistenceMixin):
         # Determine sampling strategy
         use_goss = self.subsample_strategy == 'goss'
         use_random_sampling = self.subsample_strategy == 'random' and self.subsample < 1.0
-        use_minibatch = self.batch_size is not None and self.batch_size < n_samples
         
         # Train trees
         for i in range(self.n_trees):
@@ -907,6 +956,19 @@ class GradientBoosting(PersistenceMixin):
         
         # Accumulate tree predictions with base score
         base = getattr(self, 'base_score_', np.float32(0.0))
+
+        # Use GPU accumulation when data is on GPU
+        if is_cuda() and hasattr(X_binned.data, '__cuda_array_interface__'):
+            from numba import cuda
+
+            from .._core._predict import _add_inplace_cuda, _fill_cuda
+            pred_gpu = cuda.device_array(n_samples, dtype=np.float32)
+            _fill_cuda(pred_gpu, float(base))
+            for tree in self.trees_:
+                tree_pred = tree(X_binned)
+                _add_inplace_cuda(pred_gpu, tree_pred, self.learning_rate)
+            return pred_gpu.copy_to_host()
+
         pred = np.full(n_samples, base, dtype=np.float32)
         for tree in self.trees_:
             tree_pred = tree(X_binned)
@@ -1033,7 +1095,7 @@ class MultiClassGradientBoosting(PersistenceMixin):
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
 
-    def fit(self, X: NDArray, y: NDArray) -> "MultiClassGradientBoosting":
+    def fit(self, X: NDArray, y: NDArray) -> MultiClassGradientBoosting:
         """Fit the multi-class gradient boosting model.
 
         Args:

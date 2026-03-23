@@ -21,16 +21,12 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
 
-from ._backends import is_cuda
-
-
 # Type alias for gradient/hessian tuple
-GradHess = Tuple[NDArray, NDArray]
+GradHess = tuple[NDArray, NDArray]
 
 
 @dataclass
@@ -42,7 +38,7 @@ class DistributionOutput:
         distribution: The Distribution instance used
     """
     params: dict[str, NDArray]
-    distribution: "Distribution"
+    distribution: Distribution
     
     def mean(self) -> NDArray:
         """Expected value E[Y|X]."""
@@ -60,7 +56,7 @@ class DistributionOutput:
         """q-th quantile (0 < q < 1)."""
         return self.distribution.quantile(self.params, q)
     
-    def interval(self, alpha: float = 0.1) -> Tuple[NDArray, NDArray]:
+    def interval(self, alpha: float = 0.1) -> tuple[NDArray, NDArray]:
         """(1-alpha) prediction interval.
         
         Args:
@@ -1272,7 +1268,7 @@ class NegativeBinomial(Distribution):
         var_y = float(np.var(y_clip)) + 1e-6
         
         # Estimate r from method of moments
-        if var_y > mu_init:
+        if var_y > mu_init:  # noqa: SIM108
             r_init = mu_init ** 2 / (var_y - mu_init)
         else:
             r_init = 10.0  # Default if not overdispersed
@@ -1570,7 +1566,7 @@ class CustomDistribution(Distribution):
         """
         results = {}
         eps = self._eps
-        n = len(y)
+        len(y)
 
         # Compute center NLL once
         nll_center = self._nll_fn(y, params)
@@ -1617,7 +1613,7 @@ class CustomDistribution(Distribution):
 
         # Define loss for a single sample
         def single_nll(param_values, y_single):
-            params_dict = {name: jnp.array([val]) for name, val in zip(self._param_names, param_values)}
+            params_dict = {name: jnp.array([val]) for name, val in zip(self._param_names, param_values, strict=False)}
             return self._nll_fn(jnp.array([y_single]), params_dict)[0]
 
         # Create grad and hessian functions once (cached pattern)
@@ -1662,7 +1658,7 @@ class CustomDistribution(Distribution):
                         results[name][0][i] = float(g[j])
                         results[name][1][i] = max(float(h[j, j]), 1e-6)
                 except Exception:
-                    for j, name in enumerate(self._param_names):
+                    for _j, name in enumerate(self._param_names):
                         results[name][0][i] = 0.0
                         results[name][1][i] = 1.0
 
