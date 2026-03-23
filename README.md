@@ -2,16 +2,18 @@
 
 **A GPU-native, all-Python platform for tree-based machine learning.**
 
+> **Note:** OpenBoost is in active development. APIs may change between releases. Use at your own risk.
+
 ## Why OpenBoost?
 
-For standard GBDT, use XGBoost/LightGBM—they're highly optimized C++.
+For standard GBDT, use XGBoost/LightGBM — they're highly optimized C++.
 
 For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:
 
 - **NaturalBoost**: 1.3-2x faster than NGBoost
 - **OpenBoostGAM**: 10-40x faster than InterpretML EBM
 
-Plus: ~20K lines of readable Python. Modify, extend, and build on—no C++ required.
+Plus: ~20K lines of readable Python. Modify, extend, and build on — no C++ required.
 
 | | XGBoost / LightGBM | OpenBoost |
 |---|---|---|
@@ -76,6 +78,49 @@ Full docs, tutorials, and API reference: **[jxucoder.github.io/openboost](https:
 - [User Guide](https://jxucoder.github.io/openboost/user-guide/models/gradient-boosting/)
 - [API Reference](https://jxucoder.github.io/openboost/api/openboost/)
 - [Examples](./examples/)
+
+## Benchmarks
+
+### GPU: OpenBoost vs XGBoost
+
+On standard GBDT, OpenBoost's GPU-native tree builder is **3-4x faster** than XGBoost's GPU histogram method on an A100, with comparable accuracy:
+
+| Task | Data | Trees | OpenBoost | XGBoost | Speedup |
+|---|---|---|---|---|---|
+| Regression | 2M x 80 | 300 | 10.0s | 45.5s | **4.6x** |
+| Binary | 2M x 80 | 300 | 11.8s | 40.9s | **3.5x** |
+
+<details>
+<summary>Benchmark details</summary>
+
+- **Hardware**: NVIDIA A100 (Modal)
+- **Fairness controls**: both receive raw numpy arrays (no pre-built DMatrix), `cuda.synchronize()` after OpenBoost `fit()`, both at default threading, XGBoost `max_bin=256` to match OpenBoost, JIT/GPU warmup before timing
+- **Metric**: median of 3 trials, timing `fit()` only
+- **XGBoost config**: `tree_method="hist"`, `device="cuda"`
+
+Reproduce with:
+```bash
+# Local (requires CUDA GPU)
+uv run python benchmarks/bench_gpu.py --task all --scale medium
+
+# On Modal A100
+uv run modal run benchmarks/bench_gpu.py --task all --scale medium
+```
+
+Available scales: `small` (500K), `medium` (2M), `large` (5M), `xlarge` (10M).
+
+</details>
+
+### Variant models
+
+Where OpenBoost really shines is on GBDT variants that don't exist in XGBoost/LightGBM:
+
+| Model | vs. | Speedup |
+|---|---|---|
+| NaturalBoost (GPU) | NGBoost | 1.3-2x |
+| OpenBoostGAM (GPU) | InterpretML EBM | 10-40x |
+
+> **Note:** Benchmarks reflect the current state of development and may change as both OpenBoost and comparison libraries evolve.
 
 ## Roadmap
 
