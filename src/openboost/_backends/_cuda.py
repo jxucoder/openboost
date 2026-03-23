@@ -2413,13 +2413,13 @@ def _build_histogram_shared_kernel(
     global_histograms,# (max_nodes, n_features, 256, 2) float32 - output
 ):
     """Phase 6.3: Shared memory histogram with 100x fewer global atomics.
-    
+
     Key insight: Use shared memory for local histogram building (fast ~5 cycle atomics),
     then reduce to global memory (only 512 atomics per block instead of 8K).
-    
+
     Grid: (n_features, n_sample_chunks)
     Block: 256 threads
-    
+
     Shared memory: 16 nodes × 256 bins × 2 values = 32KB (fits in 48KB limit)
     For depth 5 (32 nodes), we do two passes (nodes 0-15, then 16-31).
     """
@@ -2438,7 +2438,7 @@ def _build_histogram_shared_kernel(
     # Using flat array to avoid Numba 3D shared array issues
     # Layout: [node * 512 + bin * 2 + 0/1]
     local_hist = cuda.shared.array(16 * 256 * 2, dtype=float32)
-    
+
     # === Phase 1: Initialize shared memory ===
     # 16 * 256 * 2 = 8192 elements, 256 threads → 32 elements per thread
     for i in range(thread_idx, 16 * 256 * 2, block_size):
@@ -2479,6 +2479,85 @@ def _build_histogram_shared_kernel(
             val_grad = local_hist[hist_idx_grad]
             val_hess = local_hist[hist_idx_hess]
             # Only write non-zero values to reduce atomic contention
+            if val_grad != float32(0.0):
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), val_grad)
+            if val_hess != float32(0.0):
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 1), val_hess)
+
+
+@cuda.jit
+def _build_histogram_left_only_shared_kernel(
+    binned,           # (n_features, n_samples) uint8
+    grad,             # (n_samples,) float32
+    hess,             # (n_samples,) float32
+    sample_node_ids,  # (n_samples,) int32
+    level_start,      # int32 - first node at current level
+    n_left_in_pass,   # int32 - how many left children in this pass (<=16)
+    left_offset,      # int32 - offset among left children for multi-pass
+    global_histograms,# (max_nodes, n_features, 256, 2) float32 - output
+):
+    """Shared memory histogram for LEFT children only (histogram subtraction).
+
+    Left children occupy even positions (0, 2, 4, ...) within the level.
+    Building only left children halves passes at each depth; right children
+    are computed via subtraction (parent - left).
+
+    Grid: (n_features, n_sample_chunks)
+    Block: 256 threads
+    """
+    feature_idx = cuda.blockIdx.x
+    chunk_idx = cuda.blockIdx.y
+    thread_idx = cuda.threadIdx.x
+    block_size = cuda.blockDim.x
+
+    n_features = binned.shape[0]
+    n_samples = binned.shape[1]
+
+    if feature_idx >= n_features:
+        return
+
+    # Shared memory: 16 left children × 256 bins × 2 (grad, hess) = 32KB
+    local_hist = cuda.shared.array(16 * 256 * 2, dtype=float32)
+
+    # Initialize shared memory
+    for i in range(thread_idx, 16 * 256 * 2, block_size):
+        local_hist[i] = float32(0.0)
+    cuda.syncthreads()
+
+    # Build local histogram for left children only
+    CHUNK_SIZE = 4096
+    chunk_start = chunk_idx * CHUNK_SIZE
+    chunk_end = chunk_start + CHUNK_SIZE
+    if chunk_end > n_samples:
+        chunk_end = n_samples
+
+    for sample_idx in range(chunk_start + thread_idx, chunk_end, block_size):
+        node_id = sample_node_ids[sample_idx]
+        relative = node_id - level_start
+
+        # Only process left children (even positions within level)
+        if relative >= 0 and (relative & 1) == 0:
+            left_idx = relative >> 1  # index among left children
+            local_node = left_idx - left_offset
+            if 0 <= local_node < n_left_in_pass:
+                bin_val = int32(binned[feature_idx, sample_idx])
+                g = grad[sample_idx]
+                h = hess[sample_idx]
+                hist_idx_grad = local_node * 512 + bin_val * 2 + 0
+                hist_idx_hess = local_node * 512 + bin_val * 2 + 1
+                cuda.atomic.add(local_hist, hist_idx_grad, g)
+                cuda.atomic.add(local_hist, hist_idx_hess, h)
+
+    cuda.syncthreads()
+
+    # Reduce to global — map local_node back to actual node index
+    for local_node in range(n_left_in_pass):
+        global_node = level_start + (left_offset + local_node) * 2  # even pos
+        for bin_idx in range(thread_idx, 256, block_size):
+            hist_idx_grad = local_node * 512 + bin_idx * 2 + 0
+            hist_idx_hess = local_node * 512 + bin_idx * 2 + 1
+            val_grad = local_hist[hist_idx_grad]
+            val_hess = local_hist[hist_idx_hess]
             if val_grad != float32(0.0):
                 cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), val_grad)
             if val_hess != float32(0.0):
@@ -2861,6 +2940,31 @@ def _compute_leaf_values_kernel(
 # See logs/2026-01-03-phase-7-final.md for details.
 
 
+# =============================================================================
+# Workspace cache: avoids repeated cudaMalloc for large arrays (histograms
+# ~100MB, sample_node_ids ~4MB) across 200+ tree builds per training run.
+# =============================================================================
+_tree_workspace_cache: dict | None = None
+
+
+def _get_tree_workspace(n_samples: int, n_features: int, max_depth: int) -> dict:
+    """Return cached workspace arrays, allocating only on first call or shape change."""
+    global _tree_workspace_cache
+    key = (n_samples, n_features, max_depth)
+    if _tree_workspace_cache is not None and _tree_workspace_cache.get('_key') == key:
+        return _tree_workspace_cache
+    max_nodes = 2**(max_depth + 1) - 1
+    _tree_workspace_cache = {
+        '_key': key,
+        'sample_node_ids': cuda.device_array(n_samples, dtype=np.int32),
+        'histograms': cuda.device_array((max_nodes, n_features, 256, 2), dtype=np.float32),
+        'node_gains': cuda.device_array(max_nodes, dtype=np.float32),
+        'node_sum_grad': cuda.device_array(max_nodes, dtype=np.float32),
+        'node_sum_hess': cuda.device_array(max_nodes, dtype=np.float32),
+    }
+    return _tree_workspace_cache
+
+
 def build_tree_gpu_native(
     binned: DeviceNDArray,
     grad: DeviceNDArray,
@@ -2871,11 +2975,11 @@ def build_tree_gpu_native(
     min_gain: float = 0.0,
 ) -> tuple[DeviceNDArray, DeviceNDArray, DeviceNDArray, DeviceNDArray, DeviceNDArray]:
     """Build a tree entirely on GPU with minimal Python orchestration.
-    
+
     Phase 3.2: O(depth) kernel launches instead of O(nodes).
     Phase 3.3: All computations in float32 for 2x throughput.
     ZERO copy_to_host() during building.
-    
+
     Args:
         binned: Binned feature matrix, shape (n_features, n_samples), uint8
         grad: Gradient vector, shape (n_samples,), float32
@@ -2884,7 +2988,7 @@ def build_tree_gpu_native(
         reg_lambda: L2 regularization
         min_child_weight: Minimum hessian sum in child
         min_gain: Minimum gain to split
-        
+
     Returns:
         node_features: (max_nodes,) int32 - split feature (-1 = leaf)
         node_thresholds: (max_nodes,) int32 - split bin
@@ -2894,19 +2998,23 @@ def build_tree_gpu_native(
     """
     n_features, n_samples = binned.shape
     max_nodes = 2**(max_depth + 1) - 1
-    
-    # Allocate all GPU memory upfront (Phase 3.3: float32)
-    sample_node_ids = cuda.device_array(n_samples, dtype=np.int32)
-    histograms = cuda.device_array((max_nodes, n_features, 256, 2), dtype=np.float32)
-    
+
+    # Reuse workspace arrays (histograms ~100MB, sample_node_ids ~4MB)
+    # to avoid cudaMalloc/cudaFree overhead across 200+ tree builds.
+    ws = _get_tree_workspace(n_samples, n_features, max_depth)
+    sample_node_ids = ws['sample_node_ids']
+    histograms = ws['histograms']
+    node_gains = ws['node_gains']
+    node_sum_grad = ws['node_sum_grad']
+    node_sum_hess = ws['node_sum_hess']
+
+    # Return arrays are allocated fresh (small: ~2KB each) since the caller
+    # stores references to them in the Tree object.
     node_features = cuda.device_array(max_nodes, dtype=np.int32)
     node_thresholds = cuda.device_array(max_nodes, dtype=np.int32)
     node_values = cuda.device_array(max_nodes, dtype=np.float32)
     node_left = cuda.device_array(max_nodes, dtype=np.int32)
     node_right = cuda.device_array(max_nodes, dtype=np.int32)
-    node_gains = cuda.device_array(max_nodes, dtype=np.float32)
-    node_sum_grad = cuda.device_array(max_nodes, dtype=np.float32)
-    node_sum_hess = cuda.device_array(max_nodes, dtype=np.float32)
     
     # Initialize all nodes as leaves (Phase 3.6: use module-level kernel)
     threads = 256
@@ -2930,31 +3038,43 @@ def build_tree_gpu_native(
         
         # Kernel 1: Build histograms
         # Phase 6.3: Shared memory approach - 100x fewer global atomics
-        # Use local shared memory histograms, then reduce to global
-        
+        CHUNK_SIZE = 4096
+        n_chunks = math.ceil(n_samples / CHUNK_SIZE)
+        hist_grid = (n_features, n_chunks)
+        _NODES_PER_PASS = 16
+
         # Step 1: Zero histograms for this level
         zero_grid = (n_nodes_at_level, n_features)
         _zero_level_histograms_kernel[zero_grid, 256](
             histograms, level_start, level_end, n_features
         )
-        
-        # Step 2: Build histograms using shared memory kernel
-        CHUNK_SIZE = 4096
-        n_chunks = math.ceil(n_samples / CHUNK_SIZE)
-        hist_grid = (n_features, n_chunks)
-        
-        # Dynamic number of passes: each pass handles up to 16 nodes
-        # in shared memory (16 * 256 * 2 = 32KB fits in 48KB limit).
-        # This correctly supports any max_depth (previously hardcoded
-        # to 2 passes which caused OOB for max_depth > 6).
-        n_passes = (n_nodes_at_level + 15) // 16
-        for pass_idx in range(n_passes):
-            node_offset = pass_idx * 16
-            nodes_this_pass = min(16, n_nodes_at_level - node_offset)
+
+        if depth == 0:
+            # Root: build from scratch (1 node, 1 pass)
             _build_histogram_shared_kernel[hist_grid, 256](
                 binned, grad, hess, sample_node_ids,
-                level_start, nodes_this_pass, node_offset,
-                histograms
+                level_start, 1, 0, histograms
+            )
+        else:
+            # Histogram subtraction: build LEFT children only, then
+            # right = parent - left. Halves passes at each depth.
+            n_left_children = n_nodes_at_level // 2
+            n_passes = (n_left_children + _NODES_PER_PASS - 1) // _NODES_PER_PASS
+            for pass_idx in range(n_passes):
+                left_offset = pass_idx * _NODES_PER_PASS
+                n_left_this_pass = min(_NODES_PER_PASS, n_left_children - left_offset)
+                _build_histogram_left_only_shared_kernel[hist_grid, 256](
+                    binned, grad, hess, sample_node_ids,
+                    level_start, n_left_this_pass, left_offset,
+                    histograms
+                )
+            # Subtract parent - left = right for all right children
+            parent_level_start = 2**(depth - 1) - 1
+            parent_level_end = 2**depth - 1
+            n_parents = parent_level_end - parent_level_start
+            _subtract_histograms_for_right_children_kernel[n_parents, 256](
+                parent_level_start, parent_level_end,
+                node_features, histograms, n_features
             )
         
         # Kernel 2: Find best splits for all nodes at this level
