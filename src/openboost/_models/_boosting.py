@@ -700,15 +700,29 @@ class GradientBoosting(PersistenceMixin):
             else:
                 # Use GPU-native tree builder when no features require the
                 # growth-strategy path (reg_alpha, colsample, subsample, etc.)
+                # Also skip GPU-native when data has missing values or
+                # categorical features, which it doesn't support.
+                has_missing = (
+                    hasattr(self.X_binned_, 'has_missing')
+                    and len(self.X_binned_.has_missing) > 0
+                    and np.any(self.X_binned_.has_missing)
+                )
+                has_categorical = (
+                    hasattr(self.X_binned_, 'is_categorical')
+                    and len(self.X_binned_.is_categorical) > 0
+                    and np.any(self.X_binned_.is_categorical)
+                )
                 use_gpu_native = (
                     is_cuda()
                     and self.reg_alpha == 0.0
                     and self.colsample_bytree >= 1.0
                     and self.subsample >= 1.0
+                    and not has_missing
+                    and not has_categorical
                 )
                 if use_gpu_native:
                     from .._core._tree import fit_tree_gpu_native
-                    tree = fit_tree_gpu_native(
+                    legacy_tree = fit_tree_gpu_native(
                         self.X_binned_,
                         grad_gpu,
                         hess_gpu,
@@ -717,6 +731,25 @@ class GradientBoosting(PersistenceMixin):
                         reg_lambda=self.reg_lambda,
                         min_gain=self.gamma,
                     )
+                    # Use fused prediction before converting to TreeStructure
+                    from .._core._predict import predict_tree_add_gpu
+                    predict_tree_add_gpu(
+                        legacy_tree, self.X_binned_, pred_gpu, self.learning_rate
+                    )
+                    # Convert legacy Tree to TreeStructure for compatibility
+                    # with feature importance, persistence, and sklearn wrappers
+                    features, thresholds, values, left, right = legacy_tree.to_arrays()
+                    tree = TreeStructure(
+                        features=features,
+                        thresholds=thresholds,
+                        left_children=left,
+                        right_children=right,
+                        values=values,
+                        n_nodes=len(features),
+                        depth=legacy_tree.depth,
+                        n_features=legacy_tree.n_features,
+                    )
+                    self.trees_.append(tree)
                 else:
                     tree = fit_tree(
                         self.X_binned_,
@@ -730,26 +763,18 @@ class GradientBoosting(PersistenceMixin):
                         subsample=self.subsample,
                         colsample_bytree=self.colsample_bytree,
                     )
-            
-            # Update predictions on GPU
-            from .._core._tree import Tree
-            if isinstance(tree, Tree) and tree.on_gpu:
-                # Fused traversal + add: single kernel, no intermediate array
-                from .._core._predict import predict_tree_add_gpu
-                predict_tree_add_gpu(tree, self.X_binned_, pred_gpu, self.learning_rate)
-            else:
-                tree_pred = tree(self.X_binned_)
-                if hasattr(tree_pred, '__cuda_array_interface__'):
-                    from .._core._predict import _add_inplace_cuda
-                    _add_inplace_cuda(pred_gpu, tree_pred, self.learning_rate)
-                else:
-                    if hasattr(tree_pred, 'copy_to_host'):
-                        tree_pred = tree_pred.copy_to_host()
-                    pred_cpu = pred_gpu.copy_to_host()
-                    pred_cpu += self.learning_rate * tree_pred
-                    cuda.to_device(pred_cpu, to=pred_gpu)
-
-            self.trees_.append(tree)
+                    # Update predictions on GPU
+                    tree_pred = tree(self.X_binned_)
+                    if hasattr(tree_pred, '__cuda_array_interface__'):
+                        from .._core._predict import _add_inplace_cuda
+                        _add_inplace_cuda(pred_gpu, tree_pred, self.learning_rate)
+                    else:
+                        if hasattr(tree_pred, 'copy_to_host'):
+                            tree_pred = tree_pred.copy_to_host()
+                        pred_cpu = pred_gpu.copy_to_host()
+                        pred_cpu += self.learning_rate * tree_pred
+                        cuda.to_device(pred_cpu, to=pred_gpu)
+                    self.trees_.append(tree)
 
             # Only compute loss and copy to CPU when callbacks need it
             if cb_manager.callbacks:
