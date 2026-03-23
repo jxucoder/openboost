@@ -2699,9 +2699,10 @@ def _find_level_splits_kernel(
     node_gains,       # (max_nodes,) float32 - best gain per node
     node_sum_grad,    # (max_nodes,) float32 - total grad per node
     node_sum_hess,    # (max_nodes,) float32 - total hess per node
+    node_left_hess,   # (max_nodes,) float32 - hess going left at best split
 ):
     """Find best split for each node at current level.
-    
+
     Thread layout:
     - blockIdx.x = node offset within level
     - threads handle features in parallel, then reduce
@@ -2721,6 +2722,7 @@ def _find_level_splits_kernel(
     shared_gains = cuda.shared.array(256, dtype=float32)
     shared_bins = cuda.shared.array(256, dtype=int32)
     shared_features = cuda.shared.array(256, dtype=int32)
+    shared_left_hess = cuda.shared.array(256, dtype=float32)
 
     # Shared memory for broadcasting total_grad / total_hess from feature 0
     # so all features use the same values (avoids per-feature divergence
@@ -2731,6 +2733,7 @@ def _find_level_splits_kernel(
     shared_gains[thread_idx] = float32(-1e30)
     shared_bins[thread_idx] = int32(-1)
     shared_features[thread_idx] = int32(-1)
+    shared_left_hess[thread_idx] = float32(0.0)
 
     # Step 1: Thread 0 computes total_grad/total_hess from feature 0's histogram
     if thread_idx == 0:
@@ -2759,6 +2762,7 @@ def _find_level_splits_kernel(
         left_hess = float32(0.0)
         best_bin = int32(-1)
         best_gain = float32(-1e30)
+        best_left_hess = float32(0.0)
 
         for bin_idx in range(255):
             left_grad += histograms[node_idx, feature_idx, bin_idx, 0]
@@ -2774,12 +2778,14 @@ def _find_level_splits_kernel(
                 if gain > best_gain:
                     best_gain = gain
                     best_bin = bin_idx
+                    best_left_hess = left_hess
 
         # Update shared memory if this feature is better
         if best_gain > shared_gains[thread_idx]:
             shared_gains[thread_idx] = best_gain
             shared_bins[thread_idx] = best_bin
             shared_features[thread_idx] = feature_idx
+            shared_left_hess[thread_idx] = best_left_hess
     
     cuda.syncthreads()
     
@@ -2790,19 +2796,22 @@ def _find_level_splits_kernel(
             shared_gains[thread_idx] = shared_gains[thread_idx + s]
             shared_bins[thread_idx] = shared_bins[thread_idx + s]
             shared_features[thread_idx] = shared_features[thread_idx + s]
+            shared_left_hess[thread_idx] = shared_left_hess[thread_idx + s]
         cuda.syncthreads()
         s //= 2
-    
+
     # Thread 0 writes final result
     if thread_idx == 0:
         if shared_gains[0] > min_gain:
             node_features[node_idx] = shared_features[0]
             node_thresholds[node_idx] = shared_bins[0]
             node_gains[node_idx] = shared_gains[0]
+            node_left_hess[node_idx] = shared_left_hess[0]
         else:
             node_features[node_idx] = int32(-1)  # Leaf
             node_thresholds[node_idx] = int32(-1)
             node_gains[node_idx] = float32(-1e30)
+            node_left_hess[node_idx] = float32(0.0)
 
 
 @cuda.jit
@@ -2833,6 +2842,43 @@ def _create_children_kernel(
         # Leaf node - no children
         node_left[node_idx] = int32(-1)
         node_right[node_idx] = int32(-1)
+
+
+@cuda.jit
+def _swap_children_for_smaller_child_kernel(
+    level_start,      # int32
+    level_end,        # int32
+    node_features,    # (max_nodes,) int32
+    node_left_hess,   # (max_nodes,) float32 — hess going left at best split
+    node_sum_hess,    # (max_nodes,) float32 — total hess per node
+    node_left,        # (max_nodes,) int32 — swapped in-place
+    node_right,       # (max_nodes,) int32 — swapped in-place
+):
+    """Swap left/right children so the SMALLER child is at the even position.
+
+    The left-only histogram kernel always builds even-position children
+    (2*parent+1). By swapping node_left/node_right when left is the larger
+    child, the partition kernel sends fewer samples to the even position,
+    reducing histogram atomic contention and memory reads.
+
+    Prediction stays correct because node_left/node_right always point to
+    the side matching ``binned <= threshold`` / ``binned > threshold``.
+    """
+    node_offset = cuda.grid(1)
+    node_idx = level_start + node_offset
+    if node_idx >= level_end:
+        return
+    if node_features[node_idx] < 0:
+        return  # leaf — no children
+
+    left_h = node_left_hess[node_idx]
+    right_h = node_sum_hess[node_idx] - left_h
+
+    if left_h > right_h:
+        # Left child has more samples → swap so smaller goes to even pos
+        tmp = node_left[node_idx]
+        node_left[node_idx] = node_right[node_idx]
+        node_right[node_idx] = tmp
 
 
 @cuda.jit
@@ -3001,6 +3047,7 @@ def _get_tree_workspace(n_samples: int, n_features: int, max_depth: int) -> dict
         'node_gains': cuda.device_array(max_nodes, dtype=np.float32),
         'node_sum_grad': cuda.device_array(max_nodes, dtype=np.float32),
         'node_sum_hess': cuda.device_array(max_nodes, dtype=np.float32),
+        'node_left_hess': cuda.device_array(max_nodes, dtype=np.float32),
     }
     return _tree_workspace_cache
 
@@ -3045,6 +3092,7 @@ def build_tree_gpu_native(
     sample_node_ids = ws['sample_node_ids']
     histograms = ws['histograms']
     node_gains = ws['node_gains']
+    node_left_hess = ws['node_left_hess']
     node_sum_grad = ws['node_sum_grad']
     node_sum_hess = ws['node_sum_hess']
 
@@ -3137,7 +3185,7 @@ def build_tree_gpu_native(
             histograms, level_start, level_end,
             reg_lambda_f32, min_child_weight_f32, min_gain_f32,
             node_features, node_thresholds, node_gains,
-            node_sum_grad, node_sum_hess
+            node_sum_grad, node_sum_hess, node_left_hess
         )
 
         if _prof is not None:
@@ -3151,6 +3199,15 @@ def build_tree_gpu_native(
         children_blocks = math.ceil(n_nodes_at_level / threads)
         _create_children_kernel[children_blocks, threads](
             level_start, level_end, node_features,
+            node_left, node_right
+        )
+        # Smaller-child trick: swap left/right so the child with fewer
+        # samples lands at the even position.  The left-only histogram
+        # kernel at the NEXT depth then builds the smaller child,
+        # reducing atomic contention and wasted memory reads.
+        _swap_children_for_smaller_child_kernel[children_blocks, threads](
+            level_start, level_end, node_features,
+            node_left_hess, node_sum_hess,
             node_left, node_right
         )
         _partition_samples_kernel[sample_blocks, threads](
