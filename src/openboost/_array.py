@@ -332,10 +332,7 @@ def _bin_features(
         col = X[:, f]
         is_cat = f in categorical_set
 
-        if is_cat:
-            result = _bin_categorical_feature(col)
-        else:
-            result = _bin_numeric_feature(col, percentiles)
+        result = _bin_categorical_feature(col) if is_cat else _bin_numeric_feature(col, percentiles)
         # Write binned values directly into feature-major row
         binned[f, :] = result[0]
         return result[1:]  # edges, has_nan, is_cat, category_map, n_categories

@@ -646,8 +646,8 @@ class GradientBoosting(PersistenceMixin):
                 and not has_categorical
             )
         if _use_gpu_native:
-            from .._core._tree import fit_tree_gpu_native
             from .._core._predict import predict_tree_add_gpu
+            from .._core._tree import fit_tree_gpu_native
             max_nodes = 2**(self.max_depth + 1) - 1
             # Use async D2D copies when callbacks don't need self.trees_
             # during training (avoids BOTH cudaMalloc AND copy_to_host sync)

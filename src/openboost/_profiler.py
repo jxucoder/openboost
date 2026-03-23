@@ -276,6 +276,7 @@ class ProfilingCallback(Callback):
     def _setup_gpu_native_profiling(self, make_wrapper) -> None:
         """Instrument GPU-native tree builder for per-phase profiling."""
         import sys
+
         import openboost._backends._cuda as cuda_mod
 
         # Activate per-phase timers inside build_tree_gpu_native
