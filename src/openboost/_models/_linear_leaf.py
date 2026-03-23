@@ -32,10 +32,9 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from .._array import BinnedArray, array
-from .._backends import is_cuda
-from .._loss import get_loss_function, LossFunction
-from .._core._tree import fit_tree
 from .._core._growth import TreeStructure
+from .._core._tree import fit_tree
+from .._loss import LossFunction, get_loss_function
 from .._persistence import PersistenceMixin
 
 if TYPE_CHECKING:
@@ -89,7 +88,7 @@ class LinearLeafTree:
             node_id = int(leaf_node_ids[sample_idx])
 
             # Look up leaf index using integer node index as key.
-            if node_id in self.leaf_ids:
+            if node_id in self.leaf_ids:  # noqa: SIM108
                 leaf_idx = self.leaf_ids[node_id]
             else:
                 # Fallback: use the constant term from first leaf
@@ -119,10 +118,7 @@ class LinearLeafTree:
 
         # Get binned data for tree traversal
         from .._array import BinnedArray as BA
-        if isinstance(X_binned, BA):
-            binned = X_binned.data
-        else:
-            binned = X_binned
+        binned = X_binned.data if isinstance(X_binned, BA) else X_binned
 
         if hasattr(binned, 'copy_to_host'):
             binned = binned.copy_to_host()
@@ -206,7 +202,7 @@ class LinearLeafGBDT(PersistenceMixin):
     _loss_fn: LossFunction | None = field(default=None, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
     
-    def fit(self, X: NDArray, y: NDArray) -> "LinearLeafGBDT":
+    def fit(self, X: NDArray, y: NDArray) -> LinearLeafGBDT:
         """Fit the linear leaf GBDT model.
         
         Args:
@@ -255,7 +251,7 @@ class LinearLeafGBDT(PersistenceMixin):
             self.base_score_ = np.float32(np.mean(y))
         pred = np.full(n_samples, self.base_score_, dtype=np.float32)
         
-        for round_idx in range(self.n_trees):
+        for _round_idx in range(self.n_trees):
             # Compute gradients
             grad, hess = self._loss_fn(pred, y)
             grad = np.asarray(grad, dtype=np.float32)

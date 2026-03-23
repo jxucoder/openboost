@@ -15,34 +15,29 @@ Phase 18: Added multi-GPU support via Ray for data-parallel training.
 from __future__ import annotations
 
 import os
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Literal
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
 from .._array import BinnedArray, array
 from .._backends import is_cuda
-from .._loss import get_loss_function, compute_loss_value, LossFunction
-from .._core._tree import fit_tree
-from .._core._growth import TreeStructure
 from .._callbacks import Callback, CallbackManager, TrainingState
-from .._sampling import (
-    SamplingStrategy,
-    goss_sample,
-    random_sample,
-    apply_sampling,
-    MiniBatchIterator,
-    accumulate_histograms_minibatch,
-)
+from .._core._growth import TreeStructure
+from .._core._tree import fit_tree
+from .._loss import LossFunction, compute_loss_value, get_loss_function
 from .._persistence import PersistenceMixin
+from .._sampling import (
+    goss_sample,
+)
 from .._validation import (
-    validate_X,
-    validate_y,
-    validate_sample_weight,
     validate_eval_set,
     validate_hyperparameters,
     validate_predict_input,
+    validate_sample_weight,
+    validate_X,
+    validate_y,
 )
 
 try:
@@ -310,9 +305,8 @@ class GradientBoosting(PersistenceMixin):
         
         ctx.setup(X_data, y, self.n_bins)
         
-        import ray
         
-        for i in range(self.n_trees):
+        for _i in range(self.n_trees):
             # Compute gradients on each worker
             grad_hess_refs = [
                 w.compute_gradients.options(num_returns=2).remote(self._loss_fn) 
@@ -385,7 +379,6 @@ class GradientBoosting(PersistenceMixin):
         ctx.setup(X_data, y, n_bins=self.n_bins)
         
         try:
-            import ray
             
             # Training loop
             for i in range(self.n_trees):
@@ -408,8 +401,6 @@ class GradientBoosting(PersistenceMixin):
                 
                 # For proper tree building, we need the full binned data
                 # Use a simplified approach: fit tree on driver with full histogram info
-                from .._core._growth import TreeStructure, GrowthConfig
-                from .._core._split import find_best_split, compute_leaf_value
                 
                 tree = self._build_tree_from_histogram(
                     global_hist_grad,
@@ -457,7 +448,7 @@ class GradientBoosting(PersistenceMixin):
         Uses recursive histogram-based tree building similar to LightGBM.
         """
         from .._core._growth import TreeStructure
-        from .._core._split import find_best_split, compute_leaf_value
+        from .._core._split import compute_leaf_value, find_best_split
         
         max_nodes = 2**(self.max_depth + 1) - 1
         features = np.full(max_nodes, -1, dtype=np.int32)
@@ -800,7 +791,6 @@ class GradientBoosting(PersistenceMixin):
         # Determine sampling strategy
         use_goss = self.subsample_strategy == 'goss'
         use_random_sampling = self.subsample_strategy == 'random' and self.subsample < 1.0
-        use_minibatch = self.batch_size is not None and self.batch_size < n_samples
         
         # Train trees
         for i in range(self.n_trees):
@@ -1080,7 +1070,7 @@ class MultiClassGradientBoosting(PersistenceMixin):
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
 
-    def fit(self, X: NDArray, y: NDArray) -> "MultiClassGradientBoosting":
+    def fit(self, X: NDArray, y: NDArray) -> MultiClassGradientBoosting:
         """Fit the multi-class gradient boosting model.
 
         Args:

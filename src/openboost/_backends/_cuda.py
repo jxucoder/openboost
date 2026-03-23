@@ -406,10 +406,9 @@ def _argmax_with_values_kernel(
     # Tree reduction to find global max
     s = block_size // 2
     while s > 0:
-        if thread_idx < s:
-            if shared_vals[thread_idx + s] > shared_vals[thread_idx]:
-                shared_vals[thread_idx] = shared_vals[thread_idx + s]
-                shared_idxs[thread_idx] = shared_idxs[thread_idx + s]
+        if thread_idx < s and shared_vals[thread_idx + s] > shared_vals[thread_idx]:
+            shared_vals[thread_idx] = shared_vals[thread_idx + s]
+            shared_idxs[thread_idx] = shared_idxs[thread_idx + s]
         cuda.syncthreads()
         s //= 2
     
@@ -1148,10 +1147,7 @@ def _predict_kernel(
         threshold = tree_thresholds[node]
         bin_value = binned[feature, sample_idx]
         
-        if bin_value <= threshold:
-            node = tree_left[node]
-        else:
-            node = tree_right[node]
+        node = tree_left[node] if bin_value <= threshold else tree_right[node]
     
     predictions[sample_idx] = tree_values[node]
 
@@ -1235,10 +1231,7 @@ def _predict_with_missing_kernel(
         
         # Phase 14.2: Check for missing value
         if bin_value == 255:  # MISSING_BIN
-            if tree_missing_left[node]:
-                node = tree_left[node]
-            else:
-                node = tree_right[node]
+            node = tree_left[node] if tree_missing_left[node] else tree_right[node]
         elif bin_value <= threshold:
             node = tree_left[node]
         else:
@@ -1279,24 +1272,15 @@ def _predict_with_categorical_kernel(
         
         # Check for missing value first
         if bin_value == 255:  # MISSING_BIN
-            if tree_missing_left[node]:
-                node = tree_left[node]
-            else:
-                node = tree_right[node]
+            node = tree_left[node] if tree_missing_left[node] else tree_right[node]
         elif is_categorical_split[node]:
             # Categorical split: use bitmask
             bitset = cat_bitsets[node]
-            if (int64(1) << bin_value) & bitset:
-                node = tree_left[node]
-            else:
-                node = tree_right[node]
+            node = tree_left[node] if int64(1) << bin_value & bitset else tree_right[node]
         else:
             # Numeric split: use threshold
             threshold = tree_thresholds[node]
-            if bin_value <= threshold:
-                node = tree_left[node]
-            else:
-                node = tree_right[node]
+            node = tree_left[node] if bin_value <= threshold else tree_right[node]
     
     predictions[sample_idx] = tree_values[node]
 
@@ -1949,7 +1933,6 @@ def _find_split_batch_kernel(
     feature_idx = cuda.blockIdx.x
     config_idx = cuda.blockIdx.y
     thread_idx = cuda.threadIdx.x
-    block_size = cuda.blockDim.x
     
     n_features = hist_grad.shape[1]
     n_configs = hist_grad.shape[0]
@@ -2723,11 +2706,10 @@ def _find_level_splits_kernel(
     # Tree reduction to find global best
     s = block_size // 2
     while s > 0:
-        if thread_idx < s:
-            if shared_gains[thread_idx + s] > shared_gains[thread_idx]:
-                shared_gains[thread_idx] = shared_gains[thread_idx + s]
-                shared_bins[thread_idx] = shared_bins[thread_idx + s]
-                shared_features[thread_idx] = shared_features[thread_idx + s]
+        if thread_idx < s and shared_gains[thread_idx + s] > shared_gains[thread_idx]:
+            shared_gains[thread_idx] = shared_gains[thread_idx + s]
+            shared_bins[thread_idx] = shared_bins[thread_idx + s]
+            shared_features[thread_idx] = shared_features[thread_idx + s]
         cuda.syncthreads()
         s //= 2
     
@@ -3218,10 +3200,9 @@ def _find_symmetric_split_kernel(
     # Parallel reduction to find max gain within this feature
     stride = 128
     while stride > 0:
-        if tid < stride:
-            if shared_gains[tid + stride] > shared_gains[tid]:
-                shared_gains[tid] = shared_gains[tid + stride]
-                shared_thresholds[tid] = shared_thresholds[tid + stride]
+        if tid < stride and shared_gains[tid + stride] > shared_gains[tid]:
+            shared_gains[tid] = shared_gains[tid + stride]
+            shared_thresholds[tid] = shared_thresholds[tid + stride]
         cuda.syncthreads()
         stride //= 2
     
@@ -3418,7 +3399,7 @@ def build_tree_symmetric_gpu_native(
     # Convert params to float32
     reg_lambda_f32 = np.float32(reg_lambda)
     min_child_weight_f32 = np.float32(min_child_weight)
-    min_gain_f32 = np.float32(min_gain)
+    np.float32(min_gain)
     
     # Initialize GPU arrays (using module-level kernel to avoid JIT overhead)
     init_blocks = max(sample_blocks, leaf_blocks, 1)

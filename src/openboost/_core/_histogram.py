@@ -13,6 +13,7 @@ from .._backends import is_cuda
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
+
     from .._array import BinnedArray
 
 

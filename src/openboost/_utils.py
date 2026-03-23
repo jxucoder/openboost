@@ -29,7 +29,7 @@ Example:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 import numpy as np
 
@@ -44,13 +44,13 @@ if TYPE_CHECKING:
 def _check_sklearn():
     """Check if sklearn is available."""
     try:
-        import sklearn
+        import sklearn  # noqa: F401
         return True
-    except ImportError:
+    except ImportError as err:
         raise ImportError(
             "scikit-learn is required for evaluation metrics. "
             "Install with: pip install scikit-learn"
-        )
+        ) from err
 
 
 def roc_auc_score(
@@ -474,7 +474,7 @@ def crps_empirical(
     if samples.ndim == 1:
         samples = samples.reshape(-1, 1)
     
-    n_samples = samples.shape[0]
+    samples.shape[0]
     n_mc = samples.shape[1]
     
     # E|X - y| term
@@ -924,7 +924,6 @@ def suggest_params(
     n_unique = len(unique_y)
 
     # Detect task type from y if classification
-    is_binary = n_unique == 2
     is_multiclass = n_unique > 2 and n_unique <= 50 and task == 'classification'
     is_imbalanced = False
     if task == 'classification' and n_unique <= 50:
@@ -1030,13 +1029,13 @@ def cross_val_predict(
         >>> meta_model.fit(oof_pred.reshape(-1, 1), y)
     """
     try:
-        from sklearn.model_selection import KFold
         from sklearn.base import clone
-    except ImportError:
+        from sklearn.model_selection import KFold
+    except ImportError as err:
         raise ImportError(
             "sklearn is required for cross_val_predict. "
             "Install with: pip install scikit-learn"
-        )
+        ) from err
     
     X = np.asarray(X)
     y = np.asarray(y)
@@ -1105,13 +1104,13 @@ def cross_val_predict_proba(
         AttributeError: If model doesn't have predict_proba method.
     """
     try:
-        from sklearn.model_selection import StratifiedKFold
         from sklearn.base import clone
-    except ImportError:
+        from sklearn.model_selection import StratifiedKFold
+    except ImportError as err:
         raise ImportError(
             "sklearn is required for cross_val_predict_proba. "
             "Install with: pip install scikit-learn"
-        )
+        ) from err
 
     if not hasattr(model, 'predict_proba'):
         raise AttributeError(
@@ -1185,13 +1184,13 @@ def cross_val_predict_interval(
         AttributeError: If model doesn't have predict_interval method.
     """
     try:
-        from sklearn.model_selection import KFold
         from sklearn.base import clone
-    except ImportError:
+        from sklearn.model_selection import KFold
+    except ImportError as err:
         raise ImportError(
             "sklearn is required for cross_val_predict_interval. "
             "Install with: pip install scikit-learn"
-        )
+        ) from err
     
     if not hasattr(model, 'predict_interval'):
         raise AttributeError(

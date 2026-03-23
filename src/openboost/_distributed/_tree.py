@@ -3,7 +3,8 @@
 Phase 12: Implements distributed tree building using histogram aggregation.
 """
 
-from typing import Any, List, Optional
+from typing import Any
+
 import numpy as np
 
 try:
@@ -11,20 +12,15 @@ try:
 except ImportError:
     ray = None
 
-from openboost._core._growth import TreeStructure, GrowthConfig
-from openboost._core._primitives import (
-    find_node_splits, 
-    compute_leaf_values,
-    NodeHistogram,
-    NodeSplit
-)
+from openboost._core._growth import TreeStructure
+from openboost._core._primitives import find_node_splits
 
 
 def fit_tree_distributed(
     ctx: Any,  # DistributedContext
-    workers: List[Any],
-    grad_refs: List[Any],  # Ray object refs
-    hess_refs: List[Any],
+    workers: list[Any],
+    grad_refs: list[Any],  # Ray object refs
+    hess_refs: list[Any],
     *,
     max_depth: int = 6,
     min_child_weight: float = 1.0,
@@ -42,7 +38,7 @@ def fit_tree_distributed(
         )
     
     # 1. Initialize
-    sample_node_ids_refs = [w.init_node_ids.remote() for w in workers]
+    [w.init_node_ids.remote() for w in workers]
     
     n_features = get_worker_n_features(workers[0])
     
@@ -67,7 +63,7 @@ def fit_tree_distributed(
         # 3. Compute local histograms
         local_hists_refs = [
             w.compute_histograms.remote(g, h, active_nodes)
-            for w, g, h in zip(workers, grad_refs, hess_refs)
+            for w, g, h in zip(workers, grad_refs, hess_refs, strict=False)
         ]
         
         # 4. Aggregate histograms
@@ -103,14 +99,13 @@ def fit_tree_distributed(
     # 8. Compute leaf values
     leaf_nodes = []
     for i in range(max_nodes):
-        if left_children[i] == -1:
-             if i == 0 or features[(i-1)//2] >= 0:
-                 leaf_nodes.append(i)
+        if left_children[i] == -1 and (i == 0 or features[(i-1)//2] >= 0):
+            leaf_nodes.append(i)
     
     if leaf_nodes:
         local_hists_refs = [
             w.compute_histograms.remote(g, h, leaf_nodes)
-            for w, g, h in zip(workers, grad_refs, hess_refs)
+            for w, g, h in zip(workers, grad_refs, hess_refs, strict=False)
         ]
         leaf_histograms = ctx.allreduce_histograms(local_hists_refs)
         

@@ -9,8 +9,9 @@ Phase 14.3: Added native categorical feature support.
 from __future__ import annotations
 
 import warnings
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -70,7 +71,7 @@ class BinnedArray:
         """Check if any feature is categorical."""
         return len(self.is_categorical) > 0 and np.any(self.is_categorical)
     
-    def transform(self, X: ArrayLike) -> "BinnedArray":
+    def transform(self, X: ArrayLike) -> BinnedArray:
         """Transform new data using the bin edges from this BinnedArray.
         
         Use this method to transform test/validation data using the same
@@ -420,10 +421,7 @@ def _bin_categorical_feature(
     has_nan = bool(np.any(nan_mask))
     
     # Get unique non-missing values
-    if has_nan:
-        valid_values = col[~nan_mask]
-    else:
-        valid_values = col
+    valid_values = col[~nan_mask] if has_nan else col
     
     unique_vals = np.unique(valid_values)
     n_categories = len(unique_vals)

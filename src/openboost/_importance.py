@@ -21,9 +21,8 @@ Example:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
-
 import warnings
+from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
 import numpy as np
 
@@ -237,7 +236,7 @@ def get_feature_importance_dict(
         feature_names = [f"feature_{i}" for i in range(len(importances))]
     
     # Create dict and sort by importance
-    importance_dict = dict(zip(feature_names, importances))
+    importance_dict = dict(zip(feature_names, importances, strict=False))
     sorted_dict = dict(sorted(importance_dict.items(), key=lambda x: x[1], reverse=True))
     
     # Limit to top N if requested
@@ -274,8 +273,8 @@ def plot_feature_importances(
     """
     try:
         import matplotlib.pyplot as plt
-    except ImportError:
-        raise ImportError("matplotlib is required for plotting. Install with: pip install matplotlib")
+    except ImportError as err:
+        raise ImportError("matplotlib is required for plotting. Install with: pip install matplotlib") from err
     
     importances = compute_feature_importances(model, importance_type, normalize=True)
     

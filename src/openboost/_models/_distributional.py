@@ -36,20 +36,18 @@ Example:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
 from .._array import BinnedArray, array
-from .._backends import is_cuda
+from .._core._growth import TreeStructure
+from .._core._tree import fit_tree
 from .._distributions import (
     Distribution,
     DistributionOutput,
     get_distribution,
 )
-from .._core._tree import fit_tree
-from .._core._growth import TreeStructure
 from .._persistence import PersistenceMixin
 
 if TYPE_CHECKING:
@@ -118,7 +116,7 @@ class DistributionalGBDT(PersistenceMixin):
     _base_scores: dict[str, float] = field(default_factory=dict, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
     
-    def fit(self, X: NDArray, y: NDArray) -> "DistributionalGBDT":
+    def fit(self, X: NDArray, y: NDArray) -> DistributionalGBDT:
         """Fit the distributional gradient boosting model.
         
         Args:
@@ -159,7 +157,7 @@ class DistributionalGBDT(PersistenceMixin):
             params[param_name] = self.distribution_.link(param_name, raw_preds[param_name])
         
         # Training loop
-        for round_idx in range(self.n_trees):
+        for _round_idx in range(self.n_trees):
             # Update params from raw predictions (apply link functions)
             for param_name in self.distribution_.param_names:
                 params[param_name] = self.distribution_.link(

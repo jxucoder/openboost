@@ -89,7 +89,11 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
-ignore = ["E501"]  # Line length handled separately
+ignore = [
+    "E501",   # Line length handled separately
+    "E402",   # Imports organized by section in __init__.py
+    "F821",   # DeviceNDArray type hints for optional CUDA (not available at lint time)
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

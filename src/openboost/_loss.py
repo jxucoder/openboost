@@ -7,7 +7,8 @@ of common loss functions, enabling fully batched training.
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -288,8 +289,9 @@ def _logloss_gradient_gpu(pred, y):
 
 def _get_logloss_kernel():
     """Lazily compile LogLoss gradient kernel."""
-    from numba import cuda
     import math
+
+    from numba import cuda
     
     @cuda.jit
     def kernel(pred, y, grad, hess, n):
@@ -669,8 +671,9 @@ def _poisson_gradient_gpu(pred, y):
 
 def _get_poisson_kernel():
     """Lazily compile Poisson gradient kernel."""
-    from numba import cuda
     import math
+
+    from numba import cuda
     
     @cuda.jit
     def kernel(pred, y, grad, hess, n):
@@ -759,8 +762,9 @@ def _gamma_gradient_gpu(pred, y):
 
 def _get_gamma_kernel():
     """Lazily compile Gamma gradient kernel."""
-    from numba import cuda
     import math
+
+    from numba import cuda
     
     @cuda.jit
     def kernel(pred, y, grad, hess, n):
@@ -863,8 +867,9 @@ def _tweedie_gradient_gpu(pred, y, rho: float = 1.5):
 
 def _get_tweedie_kernel():
     """Lazily compile Tweedie gradient kernel."""
-    from numba import cuda
     import math
+
+    from numba import cuda
     
     @cuda.jit
     def kernel(pred, y, grad, hess, n, rho):
@@ -876,7 +881,7 @@ def _get_tweedie_kernel():
             elif p < -20:
                 p = -20.0
             
-            mu = math.exp(p)
+            math.exp(p)
             
             # mu^(2-rho) and mu^(1-rho) via exp
             mu_2_rho = math.exp(p * (2.0 - rho))
@@ -955,10 +960,7 @@ def _softmax_gradient_gpu(pred, y, n_classes: int):
     else:
         pred_cpu = np.asarray(pred, dtype=np.float32)
     
-    if hasattr(y, 'copy_to_host'):
-        y_cpu = y.copy_to_host()
-    else:
-        y_cpu = np.asarray(y)
+    y_cpu = y.copy_to_host() if hasattr(y, 'copy_to_host') else np.asarray(y)
     
     return _softmax_gradient_cpu(pred_cpu, y_cpu, n_classes)
 

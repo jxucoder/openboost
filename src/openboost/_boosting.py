@@ -4,10 +4,10 @@ import numpy as np
 from numba import cuda
 
 from ._array import _quantile_bin
-from ._tree import Tree
 from ._histogram import build_histograms
-from ._split import find_best_splits, compute_leaf_values
-from ._kernels import update_sample_nodes_kernel, predict_kernel
+from ._kernels import predict_kernel, update_sample_nodes_kernel
+from ._split import compute_leaf_values, find_best_splits
+from ._tree import Tree
 
 
 class GradientBoosting:

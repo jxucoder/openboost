@@ -5,7 +5,6 @@ from __future__ import annotations
 import numpy as np
 from numba import jit, prange
 
-
 # =============================================================================
 # Histogram Functions
 # =============================================================================
@@ -589,10 +588,7 @@ def _predict_cpu(
             threshold = tree_thresholds[node]
             bin_value = binned[feature, i]
             
-            if bin_value <= threshold:
-                node = tree_left[node]
-            else:
-                node = tree_right[node]
+            node = tree_left[node] if bin_value <= threshold else tree_right[node]
         
         predictions[i] = tree_values[node]
 
@@ -671,10 +667,7 @@ def _predict_cpu_with_missing(
             # Check for missing value
             if bin_value == MISSING_BIN:
                 # Use learned direction
-                if tree_missing_left[node]:
-                    node = tree_left[node]
-                else:
-                    node = tree_right[node]
+                node = tree_left[node] if tree_missing_left[node] else tree_right[node]
             elif bin_value <= threshold:
                 node = tree_left[node]
             else:
@@ -716,24 +709,15 @@ def _predict_cpu_with_categorical(
 
             # Check for missing value
             if bin_value == MISSING_BIN:
-                if tree_missing_left[node]:
-                    node = tree_left[node]
-                else:
-                    node = tree_right[node]
+                node = tree_left[node] if tree_missing_left[node] else tree_right[node]
             elif is_categorical_split[node]:
                 # Categorical split: use bitmask
                 bitset = cat_bitsets[node]
-                if (np.int64(1) << bin_value) & bitset:
-                    node = tree_left[node]
-                else:
-                    node = tree_right[node]
+                node = tree_left[node] if np.int64(1) << bin_value & bitset else tree_right[node]
             else:
                 # Numeric split: use threshold
                 threshold = tree_thresholds[node]
-                if bin_value <= threshold:
-                    node = tree_left[node]
-                else:
-                    node = tree_right[node]
+                node = tree_left[node] if bin_value <= threshold else tree_right[node]
 
         predictions[i] = tree_values[node]
 

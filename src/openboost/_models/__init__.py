@@ -8,42 +8,42 @@ Phase 15: Added distributional GBDT, NaturalBoost, and linear leaf GBDT.
 Phase 16: Renamed NGBoost -> NaturalBoost for clarity.
 """
 
+from ._batch import BatchTrainingState, ConfigBatch
 from ._boosting import GradientBoosting, MultiClassGradientBoosting
 from ._dart import DART
-from ._gam import OpenBoostGAM
-from ._batch import ConfigBatch, BatchTrainingState
-from ._sklearn import (
-    OpenBoostRegressor,
-    OpenBoostClassifier,
-    OpenBoostDistributionalRegressor,
-    OpenBoostLinearLeafRegressor,
-)
 
 # Phase 15/16: Distributional GBDT and NaturalBoost
 from ._distributional import (
     DistributionalGBDT,
     # Primary names (Phase 16)
     NaturalBoost,
-    NaturalBoostNormal,
-    NaturalBoostLogNormal,
     NaturalBoostGamma,
+    NaturalBoostLogNormal,
+    NaturalBoostNegBin,
+    NaturalBoostNormal,
     NaturalBoostPoisson,
     NaturalBoostStudentT,
     NaturalBoostTweedie,
-    NaturalBoostNegBin,
     # Backward compatibility aliases
     NGBoost,
-    NGBoostNormal,
-    NGBoostLogNormal,
     NGBoostGamma,
+    NGBoostLogNormal,
+    NGBoostNegBin,
+    NGBoostNormal,
     NGBoostPoisson,
     NGBoostStudentT,
     NGBoostTweedie,
-    NGBoostNegBin,
 )
+from ._gam import OpenBoostGAM
 
 # Phase 15: Linear Leaf GBDT
 from ._linear_leaf import LinearLeafGBDT, LinearLeafTree
+from ._sklearn import (
+    OpenBoostClassifier,
+    OpenBoostDistributionalRegressor,
+    OpenBoostLinearLeafRegressor,
+    OpenBoostRegressor,
+)
 
 __all__ = [
     # Standard GBDT

@@ -19,7 +19,7 @@ import numpy as np
 
 from .._array import BinnedArray, array
 from .._backends import is_cuda
-from .._loss import get_loss_function, LossFunction
+from .._loss import LossFunction, get_loss_function
 from .._persistence import PersistenceMixin
 
 if TYPE_CHECKING:
@@ -67,7 +67,7 @@ class OpenBoostGAM(PersistenceMixin):
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     _loss_fn: LossFunction | None = field(default=None, init=False, repr=False)
     
-    def fit(self, X: NDArray, y: NDArray) -> "OpenBoostGAM":
+    def fit(self, X: NDArray, y: NDArray) -> OpenBoostGAM:
         """Fit the GAM model.
         
         Args:
@@ -107,6 +107,7 @@ class OpenBoostGAM(PersistenceMixin):
     def _fit_gpu(self, y: NDArray):
         """GPU training path - all features in parallel."""
         from numba import cuda
+
         from .._backends._cuda import build_histogram_cuda
         
         n_features = self.X_binned_.n_features
@@ -287,8 +288,8 @@ class OpenBoostGAM(PersistenceMixin):
         """
         try:
             import matplotlib.pyplot as plt
-        except ImportError:
-            raise ImportError("matplotlib required for plotting. Install with: pip install matplotlib")
+        except ImportError as err:
+            raise ImportError("matplotlib required for plotting. Install with: pip install matplotlib") from err
         
         if self.shape_values_ is None:
             raise RuntimeError("Model not fitted.")

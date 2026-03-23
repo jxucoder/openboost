@@ -20,19 +20,18 @@ from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 import numpy as np
 
-from .._backends import is_cuda
 from .._array import MISSING_BIN
+from .._backends import is_cuda
 from ._primitives import (
     NodeHistogram,
     NodeSplit,
     build_node_histograms,
-    subtract_histogram,
-    find_node_splits,
-    partition_samples,
     compute_leaf_values,
-    init_sample_node_ids,
+    find_node_splits,
     get_nodes_at_depth,
-    get_children,
+    init_sample_node_ids,
+    partition_samples,
+    subtract_histogram,
 )
 
 if TYPE_CHECKING:
@@ -94,7 +93,7 @@ class ScalarLeaves:
         return self._values
     
     @classmethod
-    def zeros(cls, n_nodes: int) -> "ScalarLeaves":
+    def zeros(cls, n_nodes: int) -> ScalarLeaves:
         """Create zero-initialized scalar leaves."""
         return cls(_values=np.zeros(n_nodes, dtype=np.float32))
 
@@ -127,7 +126,7 @@ class VectorLeaves:
         return self._values
     
     @classmethod
-    def zeros(cls, n_nodes: int, n_outputs: int) -> "VectorLeaves":
+    def zeros(cls, n_nodes: int, n_outputs: int) -> VectorLeaves:
         """Create zero-initialized vector leaves."""
         return cls(
             _values=np.zeros((n_nodes, n_outputs), dtype=np.float32),
@@ -277,10 +276,7 @@ class TreeStructure:
         """
         # Handle BinnedArray
         from .._array import BinnedArray
-        if isinstance(X, BinnedArray):
-            binned = X.data
-        else:
-            binned = X
+        binned = X.data if isinstance(X, BinnedArray) else X
         return self.predict(binned)
     
     def _predict_standard(self, binned: NDArray) -> NDArray:
@@ -324,10 +320,7 @@ class TreeStructure:
                     # Check bitmask membership: bit[bin_value] == 1 means go left
                     bitset = self.cat_bitsets[node]
                     goes_left = (bitset >> bin_value) & 1
-                    if goes_left:
-                        node = self.left_children[node]
-                    else:
-                        node = self.right_children[node]
+                    node = self.left_children[node] if goes_left else self.right_children[node]
                 # Standard ordinal split
                 elif bin_value <= threshold:
                     node = self.left_children[node]

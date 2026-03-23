@@ -39,9 +39,9 @@ from typing import TYPE_CHECKING, Literal
 import numpy as np
 
 try:
-    from sklearn.base import BaseEstimator, RegressorMixin, ClassifierMixin
-    from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
+    from sklearn.base import BaseEstimator, ClassifierMixin, RegressorMixin
     from sklearn.preprocessing import LabelEncoder
+    from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
     SKLEARN_AVAILABLE = True
 except ImportError:
     SKLEARN_AVAILABLE = False
@@ -53,9 +53,9 @@ except ImportError:
     class ClassifierMixin:
         pass
 
-from ._boosting import GradientBoosting, MultiClassGradientBoosting
-from .._callbacks import EarlyStopping, Logger, Callback
+from .._callbacks import EarlyStopping
 from .._importance import compute_feature_importances
+from ._boosting import GradientBoosting, MultiClassGradientBoosting
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -204,7 +204,7 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
         y: NDArray,
         sample_weight: NDArray | None = None,
         eval_set: list[tuple[NDArray, NDArray]] | None = None,
-    ) -> "OpenBoostRegressor":
+    ) -> OpenBoostRegressor:
         """Fit the gradient boosting regressor.
         
         Parameters
@@ -435,7 +435,7 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         y: NDArray,
         sample_weight: NDArray | None = None,
         eval_set: list[tuple[NDArray, NDArray]] | None = None,
-    ) -> "OpenBoostClassifier":
+    ) -> OpenBoostClassifier:
         """Fit the gradient boosting classifier.
         
         Parameters
@@ -698,7 +698,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         X: NDArray,
         y: NDArray,
         **kwargs,
-    ) -> "OpenBoostDistributionalRegressor":
+    ) -> OpenBoostDistributionalRegressor:
         """Fit the distributional regressor.
         
         Parameters
@@ -719,7 +719,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         self.n_features_in_ = X.shape[1]
         
         # Import here to avoid circular imports
-        from ._distributional import NGBoost, DistributionalGBDT
+        from ._distributional import DistributionalGBDT, NGBoost
         
         ModelClass = NGBoost if self.use_natural_gradient else DistributionalGBDT
         
@@ -961,7 +961,7 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
         X: NDArray,
         y: NDArray,
         **kwargs,
-    ) -> "OpenBoostLinearLeafRegressor":
+    ) -> OpenBoostLinearLeafRegressor:
         """Fit the linear leaf regressor.
         
         Parameters

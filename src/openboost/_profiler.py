@@ -30,7 +30,6 @@ from typing import Any
 
 from ._callbacks import Callback, TrainingState
 
-
 # =============================================================================
 # Phase timer
 # =============================================================================
@@ -233,8 +232,9 @@ class ProfilingCallback(Callback):
 
     def _wrap_primitives(self) -> None:
         import sys
-        import openboost._core._primitives as prims_mod
+
         import openboost._core._growth as growth_mod
+        import openboost._core._primitives as prims_mod
 
         # Wrap the 4 core primitives
         for func_name in _PRIMITIVES_TO_WRAP:
@@ -261,15 +261,16 @@ class ProfilingCallback(Callback):
         for mod_name in _FIT_TREE_MODULES:
             mod = sys.modules.get(mod_name)
             if mod and hasattr(mod, "fit_tree"):
-                original_ft = getattr(mod, "fit_tree")
+                original_ft = mod.fit_tree
                 self._originals[("fit_tree", mod_name)] = original_ft
                 wrapped_ft = make_wrapper(original_ft, fit_tree_timer)
-                setattr(mod, "fit_tree", wrapped_ft)
+                mod.fit_tree = wrapped_ft
 
     def _unwrap_primitives(self) -> None:
         import sys
-        import openboost._core._primitives as prims_mod
+
         import openboost._core._growth as growth_mod
+        import openboost._core._primitives as prims_mod
 
         for key, original in self._originals.items():
             kind, name = key
@@ -280,7 +281,7 @@ class ProfilingCallback(Callback):
             elif kind == "fit_tree":
                 mod = sys.modules.get(name)
                 if mod:
-                    setattr(mod, "fit_tree", original)
+                    mod.fit_tree = original
         self._originals.clear()
 
     # ----- callback hooks -----
