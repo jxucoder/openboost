@@ -610,16 +610,25 @@ class GradientBoosting(PersistenceMixin):
         if not is_custom_loss:
             grad_gpu = cuda.device_array(n_samples, dtype=np.float32)
             hess_gpu = cuda.device_array(n_samples, dtype=np.float32)
-        
+
+        # Fast MSE path: hessian is constant 2.0 — fill once, reuse every
+        # iteration.  Use in-place gradient kernel to avoid cudaMalloc each round.
+        _use_fast_mse = not is_custom_loss and self.loss == 'mse'
+        if _use_fast_mse:
+            cuda.to_device(
+                np.full(n_samples, 2.0, dtype=np.float32), to=hess_gpu
+            )
+            from .._backends._cuda import mse_grad_inplace_gpu
+
         # Determine sampling strategy
         use_goss = self.subsample_strategy == 'goss'
         use_random_sampling = self.subsample_strategy == 'random' and self.subsample < 1.0
-        
+
         # Train trees
         for i in range(self.n_trees):
             state.round_idx = i
             cb_manager.on_round_begin(state)
-            
+
             # Compute gradients
             if is_custom_loss:
                 # Custom loss: need to copy pred to CPU, call Python, copy back
@@ -627,6 +636,9 @@ class GradientBoosting(PersistenceMixin):
                 grad_cpu, hess_cpu = self._loss_fn(pred_cpu, y)
                 grad_gpu = cuda.to_device(grad_cpu.astype(np.float32))
                 hess_gpu = cuda.to_device(hess_cpu.astype(np.float32))
+            elif _use_fast_mse:
+                # Fast MSE: in-place grad, constant hess (zero allocation)
+                mse_grad_inplace_gpu(pred_gpu, y_gpu, grad_gpu)
             else:
                 # Built-in loss: compute entirely on GPU
                 grad_gpu, hess_gpu = self._loss_fn(pred_gpu, y_gpu)

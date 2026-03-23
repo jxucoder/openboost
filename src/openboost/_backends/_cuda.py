@@ -2381,7 +2381,7 @@ def _build_histograms_sample_centric_kernel(
     if feature_idx >= n_features:
         return
     
-    CHUNK_SIZE = 4096
+    CHUNK_SIZE = 8192
     chunk_start = chunk_idx * CHUNK_SIZE
     chunk_end = chunk_start + CHUNK_SIZE
     if chunk_end > n_samples:
@@ -2447,7 +2447,7 @@ def _build_histogram_shared_kernel(
     cuda.syncthreads()
     
     # === Phase 2: Build local histogram (FAST local atomics ~5 cycles) ===
-    CHUNK_SIZE = 4096
+    CHUNK_SIZE = 8192
     chunk_start = chunk_idx * CHUNK_SIZE
     chunk_end = chunk_start + CHUNK_SIZE
     if chunk_end > n_samples:
@@ -2526,7 +2526,7 @@ def _build_histogram_left_only_shared_kernel(
     cuda.syncthreads()
 
     # Build local histogram for left children only
-    CHUNK_SIZE = 4096
+    CHUNK_SIZE = 8192
     chunk_start = chunk_idx * CHUNK_SIZE
     chunk_end = chunk_start + CHUNK_SIZE
     if chunk_end > n_samples:
@@ -2942,6 +2942,37 @@ def _compute_leaf_values_kernel(
 
 
 # =============================================================================
+# Fast MSE gradient kernel: writes to pre-allocated arrays, skips hessian
+# (MSE hessian is constant 2.0). Eliminates cudaMalloc/cudaFree overhead
+# that _mse_gradient_gpu incurs every iteration.
+# =============================================================================
+
+@cuda.jit
+def _mse_grad_inplace_kernel(pred, y, grad, n):
+    """Compute MSE gradient in-place: grad = 2 * (pred - y).
+
+    Hessian is skipped — caller pre-fills it once with 2.0.
+    """
+    idx = cuda.grid(1)
+    if idx < n:
+        grad[idx] = float32(2.0) * (pred[idx] - y[idx])
+
+
+def mse_grad_inplace_gpu(pred, y, grad):
+    """Compute MSE gradient into pre-allocated grad array (zero allocation).
+
+    Args:
+        pred: Device array (n_samples,) float32 — current predictions
+        y: Device array (n_samples,) float32 — targets
+        grad: Device array (n_samples,) float32 — output (written in-place)
+    """
+    n = pred.shape[0]
+    threads = 256
+    blocks = (n + threads - 1) // threads
+    _mse_grad_inplace_kernel[blocks, threads](pred, y, grad, n)
+
+
+# =============================================================================
 # GPU-native profiling hook: set by ProfilingCallback to collect per-phase
 # timings inside build_tree_gpu_native (which bypasses the shared primitives).
 # When None, no profiling overhead is added.
@@ -3043,7 +3074,7 @@ def build_tree_gpu_native(
     _prof = _gpu_profile_timers
 
     # Build tree level by level
-    CHUNK_SIZE = 4096
+    CHUNK_SIZE = 8192
     n_chunks = math.ceil(n_samples / CHUNK_SIZE)
     hist_grid = (n_features, n_chunks)
     _NODES_PER_PASS = 16
