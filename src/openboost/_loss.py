@@ -149,10 +149,13 @@ def _grad_hess_proxy(loss_name, pred, y, **kwargs):
 
 def mse_gradient(pred: NDArray, y: NDArray) -> tuple[NDArray, NDArray]:
     """Compute MSE gradient and hessian.
-    
-    Loss: L = (pred - y)^2
-    Gradient: dL/dpred = 2 * (pred - y)
-    Hessian: d²L/dpred² = 2
+
+    Loss: L = 0.5 * (pred - y)^2
+    Gradient: dL/dpred = (pred - y)
+    Hessian: d²L/dpred² = 1
+
+    Uses the 0.5 * MSE convention (matching XGBoost) so that
+    reg_lambda has equivalent effect across libraries.
     """
     if is_cuda():
         return _mse_gradient_gpu(pred, y)
@@ -161,9 +164,9 @@ def mse_gradient(pred: NDArray, y: NDArray) -> tuple[NDArray, NDArray]:
 
 def _mse_gradient_cpu(pred: NDArray, y: NDArray) -> tuple[NDArray, NDArray]:
     """CPU implementation of MSE gradient."""
-    grad = 2.0 * (pred - y)
-    hess = np.full_like(pred, 2.0, dtype=np.float32)
-    return grad.astype(np.float32), hess
+    grad = (pred - y).astype(np.float32)
+    hess = np.full_like(pred, 1.0, dtype=np.float32)
+    return grad, hess
 
 
 def _mse_gradient_gpu(pred, y):
@@ -199,8 +202,8 @@ def _get_mse_kernel():
     def kernel(pred, y, grad, hess, n):
         idx = cuda.grid(1)
         if idx < n:
-            grad[idx] = 2.0 * (pred[idx] - y[idx])
-            hess[idx] = 2.0
+            grad[idx] = pred[idx] - y[idx]
+            hess[idx] = 1.0
     
     return kernel
 

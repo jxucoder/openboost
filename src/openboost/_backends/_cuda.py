@@ -3006,13 +3006,13 @@ def _compute_leaf_values_kernel(
 
 @cuda.jit
 def _mse_grad_inplace_kernel(pred, y, grad, n):
-    """Compute MSE gradient in-place: grad = 2 * (pred - y).
+    """Compute MSE gradient in-place: grad = pred - y.
 
-    Hessian is skipped — caller pre-fills it once with 2.0.
+    Hessian is skipped — caller pre-fills it once with 1.0.
     """
     idx = cuda.grid(1)
     if idx < n:
-        grad[idx] = float32(2.0) * (pred[idx] - y[idx])
+        grad[idx] = pred[idx] - y[idx]
 
 
 def mse_grad_inplace_gpu(pred, y, grad):
