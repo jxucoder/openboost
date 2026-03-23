@@ -2714,19 +2714,19 @@ def _find_level_splits_kernel(
     Thread layout:
     - blockIdx.x = node offset within level
     - threads handle features in parallel, then reduce
-    Phase 3.3: All computations in float32.
+    Prefix sums and gain computation in float64 to match CPU precision.
     """
     node_offset = cuda.blockIdx.x
     thread_idx = cuda.threadIdx.x
     block_size = cuda.blockDim.x
-    
+
     node_idx = level_start + node_offset
     if node_idx >= level_end:
         return
-    
+
     n_features = histograms.shape[1]
-    
-    # Shared memory for reduction (Phase 3.3: float32)
+
+    # Shared memory for reduction (float32 for final results)
     shared_gains = cuda.shared.array(256, dtype=float32)
     shared_bins = cuda.shared.array(256, dtype=int32)
     shared_features = cuda.shared.array(256, dtype=int32)
@@ -2735,7 +2735,8 @@ def _find_level_splits_kernel(
     # Shared memory for broadcasting total_grad / total_hess from feature 0
     # so all features use the same values (avoids per-feature divergence
     # from floating-point accumulation order differences).
-    shared_total = cuda.shared.array(2, dtype=float32)  # [0]=grad, [1]=hess
+    # Use float64 for precision in the prefix sum.
+    shared_total = cuda.shared.array(2, dtype=float64)  # [0]=grad, [1]=hess
 
     # Initialize
     shared_gains[thread_idx] = float32(-1e30)
@@ -2745,55 +2746,57 @@ def _find_level_splits_kernel(
 
     # Step 1: Thread 0 computes total_grad/total_hess from feature 0's histogram
     if thread_idx == 0:
-        tg = float32(0.0)
-        th = float32(0.0)
+        tg = float64(0.0)
+        th = float64(0.0)
         for b in range(256):
-            tg += histograms[node_idx, 0, b, 0]
-            th += histograms[node_idx, 0, b, 1]
+            tg += float64(histograms[node_idx, 0, b, 0])
+            th += float64(histograms[node_idx, 0, b, 1])
         shared_total[0] = tg
         shared_total[1] = th
-        node_sum_grad[node_idx] = tg
-        node_sum_hess[node_idx] = th
+        node_sum_grad[node_idx] = float32(tg)
+        node_sum_hess[node_idx] = float32(th)
     cuda.syncthreads()
 
-    # All threads read the same total values
+    # All threads read the same total values (float64)
     total_grad = shared_total[0]
     total_hess = shared_total[1]
 
-    # Parent gain (same for all features)
-    parent_gain = total_grad * total_grad / (total_hess + reg_lambda)
+    # Parent gain in float64
+    reg_lambda_64 = float64(reg_lambda)
+    min_cw_64 = float64(min_child_weight)
+    parent_gain = total_grad * total_grad / (total_hess + reg_lambda_64)
 
     # Each thread handles multiple features
     for feature_idx in range(thread_idx, n_features, block_size):
-        # Scan bins to find best split for this feature
-        left_grad = float32(0.0)
-        left_hess = float32(0.0)
+        # Scan bins to find best split for this feature (float64 prefix sums)
+        left_grad = float64(0.0)
+        left_hess = float64(0.0)
         best_bin = int32(-1)
-        best_gain = float32(-1e30)
-        best_left_hess = float32(0.0)
+        best_gain = float64(-1e30)
+        best_left_hess = float64(0.0)
 
         for bin_idx in range(255):
-            left_grad += histograms[node_idx, feature_idx, bin_idx, 0]
-            left_hess += histograms[node_idx, feature_idx, bin_idx, 1]
+            left_grad += float64(histograms[node_idx, feature_idx, bin_idx, 0])
+            left_hess += float64(histograms[node_idx, feature_idx, bin_idx, 1])
             right_grad = total_grad - left_grad
             right_hess = total_hess - left_hess
 
-            if left_hess >= min_child_weight and right_hess >= min_child_weight:
-                left_gain = left_grad * left_grad / (left_hess + reg_lambda)
-                right_gain = right_grad * right_grad / (right_hess + reg_lambda)
-                gain = left_gain + right_gain - parent_gain
+            if left_hess >= min_cw_64 and right_hess >= min_cw_64:
+                left_score = left_grad * left_grad / (left_hess + reg_lambda_64)
+                right_score = right_grad * right_grad / (right_hess + reg_lambda_64)
+                gain = left_score + right_score - parent_gain
 
                 if gain > best_gain:
                     best_gain = gain
                     best_bin = bin_idx
                     best_left_hess = left_hess
 
-        # Update shared memory if this feature is better
-        if best_gain > shared_gains[thread_idx]:
-            shared_gains[thread_idx] = best_gain
+        # Update shared memory if this feature is better (downcast to float32)
+        if float32(best_gain) > shared_gains[thread_idx]:
+            shared_gains[thread_idx] = float32(best_gain)
             shared_bins[thread_idx] = best_bin
             shared_features[thread_idx] = feature_idx
-            shared_left_hess[thread_idx] = best_left_hess
+            shared_left_hess[thread_idx] = float32(best_left_hess)
     
     cuda.syncthreads()
     
