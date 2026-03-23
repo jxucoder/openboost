@@ -7,6 +7,7 @@ This matches XGBoost/LightGBM defaults.
 from __future__ import annotations
 
 import math
+import time as _time
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -2941,6 +2942,14 @@ def _compute_leaf_values_kernel(
 
 
 # =============================================================================
+# GPU-native profiling hook: set by ProfilingCallback to collect per-phase
+# timings inside build_tree_gpu_native (which bypasses the shared primitives).
+# When None, no profiling overhead is added.
+# =============================================================================
+_gpu_profile_timers: dict | None = None
+
+
+# =============================================================================
 # Workspace cache: avoids repeated cudaMalloc for large arrays (histograms
 # ~100MB, sample_node_ids ~4MB) across 200+ tree builds per training run.
 # =============================================================================
@@ -3029,21 +3038,27 @@ def build_tree_gpu_native(
     reg_lambda_f32 = np.float32(reg_lambda)
     min_child_weight_f32 = np.float32(min_child_weight)
     min_gain_f32 = np.float32(min_gain)
-    
+
+    # Profiling hook: when _gpu_profile_timers is set, record per-phase times
+    _prof = _gpu_profile_timers
+
     # Build tree level by level
+    CHUNK_SIZE = 4096
+    n_chunks = math.ceil(n_samples / CHUNK_SIZE)
+    hist_grid = (n_features, n_chunks)
+    _NODES_PER_PASS = 16
+
     for depth in range(max_depth):
         level_start = 2**depth - 1      # First node at this depth
         level_end = 2**(depth + 1) - 1  # First node at next depth
         n_nodes_at_level = level_end - level_start
-        
-        # Kernel 1: Build histograms
-        # Phase 6.3: Shared memory approach - 100x fewer global atomics
-        CHUNK_SIZE = 4096
-        n_chunks = math.ceil(n_samples / CHUNK_SIZE)
-        hist_grid = (n_features, n_chunks)
-        _NODES_PER_PASS = 16
 
-        # Step 1: Zero histograms for this level
+        # --- Histogram building ---
+        if _prof is not None:
+            cuda.synchronize()
+            _t0 = _time.perf_counter()
+
+        # Zero histograms for this level
         zero_grid = (n_nodes_at_level, n_features)
         _zero_level_histograms_kernel[zero_grid, 256](
             histograms, level_start, level_end, n_features
@@ -3076,8 +3091,15 @@ def build_tree_gpu_native(
                 parent_level_start, parent_level_end,
                 node_features, histograms, n_features
             )
-        
-        # Kernel 2: Find best splits for all nodes at this level
+
+        if _prof is not None:
+            cuda.synchronize()
+            _prof['histogram_build'] += _time.perf_counter() - _t0
+
+        # --- Split finding ---
+        if _prof is not None:
+            _t0 = _time.perf_counter()
+
         split_grid = n_nodes_at_level
         split_block = 256
         _find_level_splits_kernel[split_grid, split_block](
@@ -3086,39 +3108,47 @@ def build_tree_gpu_native(
             node_features, node_thresholds, node_gains,
             node_sum_grad, node_sum_hess
         )
-        
-        # Kernel 3: Create children for nodes that will split
+
+        if _prof is not None:
+            cuda.synchronize()
+            _prof['split_find'] += _time.perf_counter() - _t0
+
+        # --- Partition ---
+        if _prof is not None:
+            _t0 = _time.perf_counter()
+
         children_blocks = math.ceil(n_nodes_at_level / threads)
         _create_children_kernel[children_blocks, threads](
             level_start, level_end, node_features,
             node_left, node_right
         )
-        
-        # Kernel 4: Partition samples to their new nodes
         _partition_samples_kernel[sample_blocks, threads](
             binned, sample_node_ids, node_features, node_thresholds,
             node_left, node_right, level_start, level_end
         )
-    
-    # CRITICAL FIX: Recompute leaf sums from samples
-    # The _find_level_splits_kernel only computes sums for nodes at depths 0 to max_depth-1.
-    # Leaves at max_depth (children of nodes that split at depth max_depth-1) never have
-    # their sums computed. We must compute them from samples after all partitioning is done.
-    
-    # Zero out sum arrays (they have partial sums from _find_level_splits_kernel)
+
+        if _prof is not None:
+            cuda.synchronize()
+            _prof['partition'] += _time.perf_counter() - _t0
+
+    # --- Leaf computation ---
+    if _prof is not None:
+        cuda.synchronize()
+        _t0 = _time.perf_counter()
+
     _zero_float_array_kernel[blocks, threads](node_sum_grad, max_nodes)
     _zero_float_array_kernel[blocks, threads](node_sum_hess, max_nodes)
-    
-    # Compute leaf sums by iterating over all samples
     _compute_leaf_sums_kernel[sample_blocks, threads](
         grad, hess, sample_node_ids, node_sum_grad, node_sum_hess
     )
-    
-    # Final kernel: Compute leaf values for all leaf nodes
     _compute_leaf_values_kernel[blocks, threads](
         node_features, node_sum_grad, node_sum_hess,
         reg_lambda_f32, node_values, max_nodes
     )
+
+    if _prof is not None:
+        cuda.synchronize()
+        _prof['leaf_values'] += _time.perf_counter() - _t0
     
     return node_features, node_thresholds, node_values, node_left, node_right
 
