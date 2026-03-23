@@ -214,6 +214,9 @@ class TreeStructure:
     # Phase 14.3: Categorical split support
     is_categorical_split: NDArray | None = None  # (n_nodes,) bool - True if categorical split
     cat_bitsets: NDArray | None = None           # (n_nodes,) uint64 - bitmask for categories going left
+
+    # Cached GPU arrays for fast repeated prediction (avoids re-transferring)
+    _gpu_arrays: dict | None = field(default=None, repr=False)
     
     def get_leaf_values(self, leaf_ids: NDArray) -> NDArray:
         """Get leaf values for given leaf IDs.
@@ -335,38 +338,51 @@ class TreeStructure:
         # Get leaf values (works with both NDArray and LeafValues)
         return self.get_leaf_values(leaf_ids)
     
-    def _predict_standard_gpu(self, binned) -> NDArray:
-        """GPU prediction for standard trees."""
-        from numba import cuda
-        from .._backends._cuda import predict_cuda, predict_with_categorical_cuda, to_device
+    def _ensure_gpu_arrays(self):
+        """Cache tree structure arrays on GPU to avoid repeated transfers."""
+        if self._gpu_arrays is not None:
+            return self._gpu_arrays
+        from .._backends._cuda import to_device
 
+        self._gpu_arrays = {
+            'features': to_device(self.features),
+            'thresholds': to_device(self.thresholds.astype(np.uint8)),
+            'values': to_device(self.values if isinstance(self.values, np.ndarray) else self.leaf_values_array),
+            'left': to_device(self.left_children),
+            'right': to_device(self.right_children),
+            'missing_left': to_device(self.missing_go_left) if self.missing_go_left is not None else None,
+        }
         has_categorical = (
             self.is_categorical_split is not None
             and self.cat_bitsets is not None
             and np.any(self.is_categorical_split)
         )
-
         if has_categorical:
+            self._gpu_arrays['is_categorical'] = to_device(self.is_categorical_split)
+            self._gpu_arrays['cat_bitsets'] = to_device(self.cat_bitsets)
+        return self._gpu_arrays
+
+    def _predict_standard_gpu(self, binned) -> NDArray:
+        """GPU prediction for standard trees."""
+        from .._backends._cuda import predict_cuda, predict_with_categorical_cuda
+
+        ga = self._ensure_gpu_arrays()
+
+        if 'is_categorical' in ga:
             return predict_with_categorical_cuda(
                 binned,
-                to_device(self.features),
-                to_device(self.thresholds.astype(np.uint8)),
-                to_device(self.values),
-                to_device(self.left_children),
-                to_device(self.right_children),
-                tree_missing_left=to_device(self.missing_go_left) if self.missing_go_left is not None else None,
-                is_categorical_split=to_device(self.is_categorical_split),
-                cat_bitsets=to_device(self.cat_bitsets),
+                ga['features'], ga['thresholds'], ga['values'],
+                ga['left'], ga['right'],
+                tree_missing_left=ga['missing_left'],
+                is_categorical_split=ga['is_categorical'],
+                cat_bitsets=ga['cat_bitsets'],
             )
 
         return predict_cuda(
             binned,
-            to_device(self.features),
-            to_device(self.thresholds.astype(np.uint8)),
-            to_device(self.values),
-            to_device(self.left_children),
-            to_device(self.right_children),
-            tree_missing_left=to_device(self.missing_go_left) if self.missing_go_left is not None else None,
+            ga['features'], ga['thresholds'], ga['values'],
+            ga['left'], ga['right'],
+            tree_missing_left=ga['missing_left'],
         )
     
     def _predict_symmetric(self, binned: NDArray) -> NDArray:
@@ -517,20 +533,34 @@ class LevelWiseGrowth(GrowthStrategy):
         # Build level by level
         for depth in range(config.max_depth):
             nodes_at_level = get_nodes_at_depth(depth)
-            
+
             # Filter to nodes that have samples
             active_nodes = self._get_active_nodes(sample_node_ids, nodes_at_level)
             if not active_nodes:
                 break
 
-            # Build histograms for active nodes
-            histograms = build_node_histograms(
-                binned, grad, hess, sample_node_ids, active_nodes
-            )
+            # Histogram subtraction: build only smaller children, subtract for larger
+            if depth > 0 and parent_histograms:
+                build_nodes, subtract_info = self._plan_histogram_subtraction(
+                    active_nodes, sample_node_ids, parent_histograms
+                )
+                # Build histograms only for the subset that needs full computation
+                histograms = build_node_histograms(
+                    binned, grad, hess, sample_node_ids, build_nodes
+                ) if build_nodes else {}
+                # Derive larger children's histograms via subtraction (O(features*bins))
+                for child_id, (parent_hist, sibling_id) in subtract_info.items():
+                    histograms[child_id] = subtract_histogram(
+                        parent_hist, histograms[sibling_id], child_id
+                    )
+            else:
+                histograms = build_node_histograms(
+                    binned, grad, hess, sample_node_ids, active_nodes
+                )
 
             # Column subsampling: zero out non-selected feature histograms
             if col_mask is not None:
-                for node_id, hist in histograms.items():
+                for _node_id, hist in histograms.items():
                     hist.hist_grad[~col_mask] = 0.0
                     hist.hist_hess[~col_mask] = 0.0
 
@@ -544,7 +574,7 @@ class LevelWiseGrowth(GrowthStrategy):
                 is_categorical=is_categorical,  # Phase 14.3
                 n_categories=n_categories,      # Phase 14.3
             )
-            
+
             # Only update depth if at least one valid split was found
             if splits:
                 actual_depth = depth + 1
@@ -558,15 +588,15 @@ class LevelWiseGrowth(GrowthStrategy):
                 missing_go_left[node_id] = node_split.missing_go_left      # Phase 14
                 is_categorical_split[node_id] = node_split.is_categorical  # Phase 14.3
                 cat_bitsets[node_id] = node_split.cat_bitset               # Phase 14.3
-            
+
             # Partition samples (handles missing via learned direction)
             if splits:
                 sample_node_ids = partition_samples(
-                    binned, sample_node_ids, splits, 
+                    binned, sample_node_ids, splits,
                     missing_go_left=missing_go_left  # Phase 14
                 )
-            
-            # Store histograms for potential subtraction (future optimization)
+
+            # Store histograms for subtraction at next level
             parent_histograms = histograms
         
         # Compute leaf values for all leaf nodes
@@ -598,6 +628,69 @@ class LevelWiseGrowth(GrowthStrategy):
             cat_bitsets=cat_bitsets[:n_nodes] if any_cat else None,                    # Phase 14.3
         )
     
+    def _plan_histogram_subtraction(
+        self,
+        active_nodes: list[int],
+        sample_node_ids,
+        parent_histograms: dict[int, NodeHistogram],
+    ) -> tuple[list[int], dict[int, tuple[NodeHistogram, int]]]:
+        """Plan which children to build vs subtract.
+
+        For each parent that split, build the histogram for the smaller child
+        and derive the larger child via subtraction: larger = parent - smaller.
+        This halves histogram computation on average.
+
+        Returns:
+            build_nodes: Nodes whose histograms must be built from samples.
+            subtract_info: {child_id: (parent_histogram, sibling_id_to_subtract_from)}
+        """
+        if hasattr(sample_node_ids, 'copy_to_host'):
+            ids_cpu = sample_node_ids.copy_to_host()
+        else:
+            ids_cpu = np.asarray(sample_node_ids)
+
+        # Count samples per node
+        node_counts: dict[int, int] = {}
+        for nid in active_nodes:
+            node_counts[nid] = int(np.sum(ids_cpu == nid))
+
+        build_nodes: list[int] = []
+        subtract_info: dict[int, tuple[NodeHistogram, int]] = {}
+
+        # Group children by parent
+        processed_parents: set[int] = set()
+        for nid in active_nodes:
+            parent_id = (nid - 1) // 2
+            if parent_id in processed_parents:
+                continue
+            if parent_id not in parent_histograms:
+                # No parent histogram — must build from samples
+                build_nodes.append(nid)
+                continue
+
+            # Find sibling
+            left_child = 2 * parent_id + 1
+            right_child = 2 * parent_id + 2
+            sibling = right_child if nid == left_child else left_child
+
+            # Both children must be active for subtraction
+            if sibling not in node_counts:
+                build_nodes.append(nid)
+                continue
+
+            processed_parents.add(parent_id)
+            parent_hist = parent_histograms[parent_id]
+
+            # Build the smaller child, subtract for the larger
+            if node_counts[left_child] <= node_counts[right_child]:
+                build_nodes.append(left_child)
+                subtract_info[right_child] = (parent_hist, left_child)
+            else:
+                build_nodes.append(right_child)
+                subtract_info[left_child] = (parent_hist, right_child)
+
+        return build_nodes, subtract_info
+
     def _get_active_nodes(self, sample_node_ids, candidate_nodes: list[int]) -> list[int]:
         """Get nodes that have samples assigned to them."""
         if hasattr(sample_node_ids, 'copy_to_host'):

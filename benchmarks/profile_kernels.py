@@ -2,7 +2,7 @@
 
 Run from Mac with:
     cd openboost
-    uv run modal run benchmarks/modal_bench.py
+    uv run modal run benchmarks/profile_kernels.py
 
 This will execute benchmarks on a cloud A100 GPU.
 """

@@ -161,6 +161,7 @@ from ._callbacks import (
     CallbackManager,
     TrainingState,
 )
+from ._profiler import ProfilingCallback
 
 # =============================================================================
 # Feature Importance (Phase 13)
@@ -352,6 +353,7 @@ __all__ = [
     "HistoryCallback",
     "CallbackManager",
     "TrainingState",
+    "ProfilingCallback",
     # Feature importance (Phase 13)
     "compute_feature_importances",
     "get_feature_importance_dict",

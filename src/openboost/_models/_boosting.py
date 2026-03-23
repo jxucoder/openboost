@@ -14,6 +14,7 @@ Phase 18: Added multi-GPU support via Ray for data-parallel training.
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Literal
@@ -227,6 +228,12 @@ class GradientBoosting(PersistenceMixin):
         """
         # Clear any previous fit
         self.trees_ = []
+
+        # Auto-enable profiling via env var
+        if os.environ.get("OPENBOOST_PROFILE"):
+            from .._profiler import ProfilingCallback
+            _profile_dir = os.environ.get("OPENBOOST_PROFILE_DIR", "logs/")
+            callbacks = list(callbacks or []) + [ProfilingCallback(output_dir=_profile_dir)]
         
         # Validate inputs (Phase 20.3)
         X = validate_X(X, allow_nan=True, context="fit")
@@ -700,45 +707,72 @@ class GradientBoosting(PersistenceMixin):
                     colsample_bytree=self.colsample_bytree,
                 )
             else:
-                # Standard training (with optional row/col subsampling in fit_tree)
-                tree = fit_tree(
-                    self.X_binned_,
-                    grad_gpu,
-                    hess_gpu,
-                    max_depth=self.max_depth,
-                    min_child_weight=self.min_child_weight,
-                    reg_lambda=self.reg_lambda,
-                    reg_alpha=self.reg_alpha,
-                    gamma=self.gamma,
-                    subsample=self.subsample,
-                    colsample_bytree=self.colsample_bytree,
+                # Use GPU-native tree builder when no features require the
+                # growth-strategy path (reg_alpha, colsample, subsample, etc.)
+                use_gpu_native = (
+                    is_cuda()
+                    and self.reg_alpha == 0.0
+                    and self.colsample_bytree >= 1.0
+                    and self.subsample >= 1.0
                 )
+                if use_gpu_native:
+                    from .._core._tree import fit_tree_gpu_native
+                    tree = fit_tree_gpu_native(
+                        self.X_binned_,
+                        grad_gpu,
+                        hess_gpu,
+                        max_depth=self.max_depth,
+                        min_child_weight=self.min_child_weight,
+                        reg_lambda=self.reg_lambda,
+                        min_gain=self.gamma,
+                    )
+                else:
+                    tree = fit_tree(
+                        self.X_binned_,
+                        grad_gpu,
+                        hess_gpu,
+                        max_depth=self.max_depth,
+                        min_child_weight=self.min_child_weight,
+                        reg_lambda=self.reg_lambda,
+                        reg_alpha=self.reg_alpha,
+                        gamma=self.gamma,
+                        subsample=self.subsample,
+                        colsample_bytree=self.colsample_bytree,
+                    )
             
-            # Update predictions
-            tree_pred = tree(self.X_binned_)
-            if hasattr(tree_pred, 'copy_to_host'):
-                tree_pred_cpu = tree_pred.copy_to_host()
+            # Update predictions on GPU
+            from .._core._tree import Tree
+            if isinstance(tree, Tree) and tree.on_gpu:
+                # Fused traversal + add: single kernel, no intermediate array
+                from .._core._predict import predict_tree_add_gpu
+                predict_tree_add_gpu(tree, self.X_binned_, pred_gpu, self.learning_rate)
             else:
-                tree_pred_cpu = tree_pred
-            
-            # Update GPU predictions
-            pred_cpu = pred_gpu.copy_to_host()
-            pred_cpu += self.learning_rate * tree_pred_cpu
-            cuda.to_device(pred_cpu, to=pred_gpu)
-            
+                tree_pred = tree(self.X_binned_)
+                if hasattr(tree_pred, '__cuda_array_interface__'):
+                    from .._core._predict import _add_inplace_cuda
+                    _add_inplace_cuda(pred_gpu, tree_pred, self.learning_rate)
+                else:
+                    if hasattr(tree_pred, 'copy_to_host'):
+                        tree_pred = tree_pred.copy_to_host()
+                    pred_cpu = pred_gpu.copy_to_host()
+                    pred_cpu += self.learning_rate * tree_pred
+                    cuda.to_device(pred_cpu, to=pred_gpu)
+
             self.trees_.append(tree)
-            
-            # Compute losses for callbacks using actual loss function
-            state.train_loss = _compute_loss_value(self.loss, pred_cpu, y, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
 
-            if eval_set:
-                X_val, y_val = eval_set[0]
-                val_pred = self.predict(X_val)
-                state.val_loss = _compute_loss_value(self.loss, val_pred, y_val, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
+            # Only compute loss and copy to CPU when callbacks need it
+            if cb_manager.callbacks:
+                pred_cpu = pred_gpu.copy_to_host()
+                state.train_loss = _compute_loss_value(self.loss, pred_cpu, y, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
 
-            # Check if callbacks want to stop
-            if not cb_manager.on_round_end(state):
-                break
+                if eval_set:
+                    X_val, y_val = eval_set[0]
+                    val_pred = self.predict(X_val)
+                    state.val_loss = _compute_loss_value(self.loss, val_pred, y_val, quantile_alpha=self.quantile_alpha, tweedie_rho=self.tweedie_rho)
+
+                # Check if callbacks want to stop
+                if not cb_manager.on_round_end(state):
+                    break
 
         cb_manager.on_train_end(state)
 
@@ -907,6 +941,19 @@ class GradientBoosting(PersistenceMixin):
         
         # Accumulate tree predictions with base score
         base = getattr(self, 'base_score_', np.float32(0.0))
+
+        # Use GPU accumulation when data is on GPU
+        if is_cuda() and hasattr(X_binned.data, '__cuda_array_interface__'):
+            from numba import cuda
+
+            from .._core._predict import _add_inplace_cuda, _fill_cuda
+            pred_gpu = cuda.device_array(n_samples, dtype=np.float32)
+            _fill_cuda(pred_gpu, float(base))
+            for tree in self.trees_:
+                tree_pred = tree(X_binned)
+                _add_inplace_cuda(pred_gpu, tree_pred, self.learning_rate)
+            return pred_gpu.copy_to_host()
+
         pred = np.full(n_samples, base, dtype=np.float32)
         for tree in self.trees_:
             tree_pred = tree(X_binned)
