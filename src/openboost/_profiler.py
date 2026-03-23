@@ -190,7 +190,10 @@ _PHASE_NAMES = {
     "compute_leaf_values": "leaf_values",
 }
 
-# Modules where fit_tree is imported and needs wrapping
+# GPU-native profiling phases (must match keys in _cuda._gpu_profile_timers)
+_GPU_NATIVE_PHASES = ["histogram_build", "split_find", "partition", "leaf_values"]
+
+# Modules where fit_tree / fit_tree_gpu_native are imported and need wrapping
 _FIT_TREE_MODULES = [
     "openboost._core._tree",
     "openboost._models._boosting",
@@ -236,21 +239,20 @@ class ProfilingCallback(Callback):
         import openboost._core._growth as growth_mod
         import openboost._core._primitives as prims_mod
 
-        # Wrap the 4 core primitives
+        def make_wrapper(orig, tmr):
+            def wrapper(*args, **kwargs):
+                tmr.start()
+                result = orig(*args, **kwargs)
+                tmr.stop()
+                return result
+            return wrapper
+
+        # Wrap the 4 core primitives (used by CPU path and growth strategies)
         for func_name in _PRIMITIVES_TO_WRAP:
             original = getattr(prims_mod, func_name)
             self._originals[("prim", func_name)] = original
             phase_name = _PHASE_NAMES[func_name]
             timer = self._get_timer(phase_name)
-
-            def make_wrapper(orig, tmr):
-                def wrapper(*args, **kwargs):
-                    tmr.start()
-                    result = orig(*args, **kwargs)
-                    tmr.stop()
-                    return result
-                return wrapper
-
             wrapped = make_wrapper(original, timer)
             setattr(prims_mod, func_name, wrapped)
             if hasattr(growth_mod, func_name):
@@ -263,14 +265,59 @@ class ProfilingCallback(Callback):
             if mod and hasattr(mod, "fit_tree"):
                 original_ft = mod.fit_tree
                 self._originals[("fit_tree", mod_name)] = original_ft
-                wrapped_ft = make_wrapper(original_ft, fit_tree_timer)
-                mod.fit_tree = wrapped_ft
+                mod.fit_tree = make_wrapper(original_ft, fit_tree_timer)
+
+        # Wrap fit_tree_gpu_native — the GPU-native path bypasses shared
+        # primitives, so we wrap it separately and use _gpu_profile_timers
+        # inside build_tree_gpu_native for per-phase breakdown.
+        if self._use_cuda:
+            self._setup_gpu_native_profiling(make_wrapper)
+
+    def _setup_gpu_native_profiling(self, make_wrapper) -> None:
+        """Instrument GPU-native tree builder for per-phase profiling."""
+        import sys
+
+        import openboost._backends._cuda as cuda_mod
+
+        # Activate per-phase timers inside build_tree_gpu_native
+        cuda_mod._gpu_profile_timers = {p: 0.0 for p in _GPU_NATIVE_PHASES}
+        self._originals[("gpu_timers", "_cuda")] = None  # sentinel for teardown
+
+        # Wrap fit_tree_gpu_native as fit_tree equivalent
+        fit_tree_timer = self._get_timer("fit_tree")
+        for mod_name in _FIT_TREE_MODULES:
+            mod = sys.modules.get(mod_name)
+            if mod and hasattr(mod, "fit_tree_gpu_native"):
+                original = mod.fit_tree_gpu_native
+                self._originals[("fit_tree_gpu_native", mod_name)] = original
+                mod.fit_tree_gpu_native = make_wrapper(original, fit_tree_timer)
+
+    def _teardown_gpu_native_profiling(self) -> None:
+        """Collect GPU-native phase timers and reset hook."""
+        import openboost._backends._cuda as cuda_mod
+
+        timers = cuda_mod._gpu_profile_timers
+        if timers:
+            # Transfer accumulated times into PhaseTimers.
+            # Distribute total time across n_trees so call count is correct.
+            n_trees = self._timers["fit_tree"].count if "fit_tree" in self._timers else 1
+            for phase in _GPU_NATIVE_PHASES:
+                accum = timers.get(phase, 0.0)
+                if accum > 0:
+                    timer = self._get_timer(phase)
+                    per_tree = accum / n_trees
+                    timer._times.extend([per_tree] * n_trees)
+        cuda_mod._gpu_profile_timers = None
 
     def _unwrap_primitives(self) -> None:
         import sys
 
         import openboost._core._growth as growth_mod
         import openboost._core._primitives as prims_mod
+
+        # Collect GPU-native timers before unwrapping
+        if ("gpu_timers", "_cuda") in self._originals:
+            self._teardown_gpu_native_profiling()
 
         for key, original in self._originals.items():
             kind, name = key
@@ -282,6 +329,10 @@ class ProfilingCallback(Callback):
                 mod = sys.modules.get(name)
                 if mod:
                     mod.fit_tree = original
+            elif kind == "fit_tree_gpu_native":
+                mod = sys.modules.get(name)
+                if mod:
+                    mod.fit_tree_gpu_native = original
         self._originals.clear()
 
     # ----- callback hooks -----

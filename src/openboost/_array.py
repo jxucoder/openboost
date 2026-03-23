@@ -244,12 +244,10 @@ def array(
             raise ValueError(f"categorical_features index {idx} out of range [0, {n_features})")
     
     # Process features (numeric vs categorical)
+    # Returns feature-major layout: (n_features, n_samples) — no transpose needed
     binned, bin_edges, has_missing, is_categorical, category_maps, n_categories = _bin_features(
         X_np, n_bins, categorical_set
     )
-    
-    # Transpose to feature-major layout: (n_features, n_samples)
-    binned = np.ascontiguousarray(binned.T)
     
     # Determine device
     if device is None:
@@ -302,17 +300,17 @@ def _bin_features(
     X: NDArray,
     n_bins: int,
     categorical_set: set[int],
-) -> tuple[NDArray[np.uint8], list[NDArray[np.float64]], NDArray[np.bool_], 
+) -> tuple[NDArray[np.uint8], list[NDArray[np.float64]], NDArray[np.bool_],
            NDArray[np.bool_], list[dict | None], NDArray[np.int32]]:
     """Bin features (numeric and categorical) with missing value handling.
-    
+
     Args:
         X: Input data, shape (n_samples, n_features)
         n_bins: Number of bins for numeric features
         categorical_set: Set of indices for categorical features
-        
+
     Returns:
-        binned: Binned data, shape (n_samples, n_features), uint8
+        binned: Binned data, shape (n_features, n_samples), uint8 (feature-major)
         bin_edges: List of bin edges per feature (empty for categorical)
         has_missing: Boolean array (n_features,) for missing values
         is_categorical: Boolean array (n_features,) for categorical features
@@ -320,35 +318,37 @@ def _bin_features(
         n_categories: Number of categories per feature (0 for numeric)
     """
     from joblib import Parallel, delayed
-    
+
     n_samples, n_features = X.shape
-    
+
     # Pre-compute percentiles for numeric features
     percentiles = np.linspace(0, 100, n_bins + 1)[1:-1]
-    
+
+    # Pre-allocate in feature-major layout to avoid column_stack + transpose
+    binned = np.empty((n_features, n_samples), dtype=np.uint8)
+
     def bin_single_feature(f: int):
-        """Bin a single feature column."""
+        """Bin a single feature column, writing directly to pre-allocated output."""
         col = X[:, f]
         is_cat = f in categorical_set
-        
-        if is_cat:
-            return _bin_categorical_feature(col)
-        else:
-            return _bin_numeric_feature(col, percentiles)
-    
+
+        result = _bin_categorical_feature(col) if is_cat else _bin_numeric_feature(col, percentiles)
+        # Write binned values directly into feature-major row
+        binned[f, :] = result[0]
+        return result[1:]  # edges, has_nan, is_cat, category_map, n_categories
+
     # Parallel processing across features
     results = Parallel(n_jobs=-1, prefer="threads")(
         delayed(bin_single_feature)(f) for f in range(n_features)
     )
-    
-    # Combine results
-    binned = np.column_stack([r[0] for r in results])
-    bin_edges = [r[1] for r in results]
-    has_missing = np.array([r[2] for r in results], dtype=np.bool_)
-    is_categorical = np.array([r[3] for r in results], dtype=np.bool_)
-    category_maps = [r[4] for r in results]
-    n_categories = np.array([r[5] for r in results], dtype=np.int32)
-    
+
+    # Combine metadata (binned data already written in-place)
+    bin_edges = [r[0] for r in results]
+    has_missing = np.array([r[1] for r in results], dtype=np.bool_)
+    is_categorical = np.array([r[2] for r in results], dtype=np.bool_)
+    category_maps = [r[3] for r in results]
+    n_categories = np.array([r[4] for r in results], dtype=np.int32)
+
     return binned, bin_edges, has_missing, is_categorical, category_maps, n_categories
 
 
@@ -357,39 +357,42 @@ def _bin_numeric_feature(
     percentiles: NDArray,
 ) -> tuple[NDArray[np.uint8], NDArray[np.float64], bool, bool, dict | None, int]:
     """Bin a numeric feature using quantiles.
-    
+
     Returns:
         binned_col, bin_edges, has_nan, is_categorical, category_map, n_categories
     """
-    col = col.astype(np.float64)
-    
+    # Work in the input dtype (typically float32) — avoids float64 copy
+    if not np.issubdtype(col.dtype, np.floating):
+        col = col.astype(np.float32)
+
     # Detect missing values
     nan_mask = np.isnan(col)
     has_nan = bool(np.any(nan_mask))
-    
+
     # Initialize output
     binned_col = np.zeros(len(col), dtype=np.uint8)
-    
+
     if has_nan:
         valid_col = col[~nan_mask]
-        
+
         if len(valid_col) == 0:
             edges = np.array([], dtype=np.float64)
             binned_col[:] = MISSING_BIN
         else:
             edges = np.nanpercentile(valid_col, percentiles)
             edges = np.unique(edges)
-            bin_idx = np.digitize(valid_col, edges)
-            bin_idx = np.clip(bin_idx, 0, len(edges) - 1)
+            # searchsorted is what digitize calls internally, minus overhead
+            bin_idx = np.searchsorted(edges, valid_col, side='right')
+            np.clip(bin_idx, 0, len(edges) - 1, out=bin_idx)
             binned_col[~nan_mask] = bin_idx.astype(np.uint8)
             binned_col[nan_mask] = MISSING_BIN
     else:
         edges = np.percentile(col, percentiles)
         edges = np.unique(edges)
-        bin_idx = np.digitize(col, edges)
-        bin_idx = np.clip(bin_idx, 0, len(edges) - 1)
+        bin_idx = np.searchsorted(edges, col, side='right')
+        np.clip(bin_idx, 0, len(edges) - 1, out=bin_idx)
         binned_col = bin_idx.astype(np.uint8)
-    
+
     return binned_col, edges, has_nan, False, None, 0
 
 
