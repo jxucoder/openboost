@@ -2942,7 +2942,92 @@ def _partition_samples_kernel(
         sample_node_ids[sample_idx] = node_right[node_idx]
 
 
-@cuda.jit  
+@cuda.jit
+def _partition_samples_inline_kernel(
+    binned,           # (n_features, n_samples) uint8
+    sample_node_ids,  # (n_samples,) int32 - input/output
+    node_features,    # (max_nodes,) int32 - split feature (-1 = leaf)
+    node_thresholds,  # (max_nodes,) int32 - split bin
+    node_left_hess,   # (max_nodes,) float32 - hess going left at best split
+    node_sum_hess,    # (max_nodes,) float64 - total hess per node
+    level_start,      # int32 - first node at this level
+    level_end,        # int32 - last node + 1 at this level
+):
+    """Partition samples with inline children computation.
+
+    Computes left/right child indices on the fly (2*i+1, 2*i+2) with the
+    smaller-child swap, eliminating separate create_children and
+    swap_children kernel launches per depth.
+    """
+    sample_idx = cuda.grid(1)
+    n_samples = sample_node_ids.shape[0]
+
+    if sample_idx >= n_samples:
+        return
+
+    node_idx = sample_node_ids[sample_idx]
+
+    if node_idx < level_start or node_idx >= level_end:
+        return
+
+    feature = node_features[node_idx]
+
+    if feature < 0:
+        return
+
+    threshold = node_thresholds[node_idx]
+    sample_bin = int32(binned[feature, sample_idx])
+
+    # Compute children inline
+    left_child = 2 * node_idx + 1
+    right_child = 2 * node_idx + 2
+
+    # Smaller-child swap: put smaller child at even position
+    left_h = float64(node_left_hess[node_idx])
+    if left_h > node_sum_hess[node_idx] - left_h:
+        left_child = 2 * node_idx + 2
+        right_child = 2 * node_idx + 1
+
+    if sample_bin <= threshold:
+        sample_node_ids[sample_idx] = left_child
+    else:
+        sample_node_ids[sample_idx] = right_child
+
+
+@cuda.jit
+def _create_all_children_kernel(
+    node_features,    # (max_nodes,) int32
+    node_left_hess,   # (max_nodes,) float32
+    node_sum_hess,    # (max_nodes,) float64
+    node_left,        # (max_nodes,) int32 - output
+    node_right,       # (max_nodes,) int32 - output
+    max_nodes,        # int32
+):
+    """Batch-create child indices for all internal nodes after the depth loop.
+
+    Combines create_children + swap_children into a single post-loop pass.
+    """
+    node_idx = cuda.grid(1)
+    if node_idx >= max_nodes:
+        return
+
+    if node_features[node_idx] < 0:
+        node_left[node_idx] = int32(-1)
+        node_right[node_idx] = int32(-1)
+        return
+
+    left = 2 * node_idx + 1
+    right = 2 * node_idx + 2
+
+    left_h = float64(node_left_hess[node_idx])
+    if left_h > node_sum_hess[node_idx] - left_h:
+        left, right = right, left
+
+    node_left[node_idx] = left
+    node_right[node_idx] = right
+
+
+@cuda.jit
 def _compute_leaf_sums_kernel(
     grad,             # (n_samples,) float32
     hess,             # (n_samples,) float32
@@ -3349,23 +3434,11 @@ def build_tree_gpu_native(
         if _prof is not None:
             _t0 = _time.perf_counter()
 
-        children_blocks = math.ceil(n_nodes_at_level / threads)
-        _create_children_kernel[children_blocks, threads](
-            level_start, level_end, node_features,
-            node_left, node_right
-        )
-        # Smaller-child trick: swap left/right so the child with fewer
-        # samples lands at the even position.  The left-only histogram
-        # kernel at the NEXT depth then builds the smaller child,
-        # reducing atomic contention and wasted memory reads.
-        _swap_children_for_smaller_child_kernel[children_blocks, threads](
-            level_start, level_end, node_features,
-            node_left_hess, node_sum_hess,
-            node_left, node_right
-        )
-        _partition_samples_kernel[sample_blocks, threads](
+        # Fused partition: compute children inline (2*i+1, 2*i+2) with
+        # smaller-child swap, eliminating 2 kernel launches per depth.
+        _partition_samples_inline_kernel[sample_blocks, threads](
             binned, sample_node_ids, node_features, node_thresholds,
-            node_left, node_right, level_start, level_end
+            node_left_hess, node_sum_hess, level_start, level_end
         )
 
         if _prof is not None:
@@ -3376,6 +3449,13 @@ def build_tree_gpu_native(
     if _prof is not None:
         cuda.synchronize()
         _t0 = _time.perf_counter()
+
+    # Batch-create all children after the depth loop (replaces per-depth
+    # create_children + swap_children kernels, saving 2 launches × depth).
+    _create_all_children_kernel[blocks, threads](
+        node_features, node_left_hess, node_sum_hess,
+        node_left, node_right, max_nodes
+    )
 
     # node_sum_grad/hess already set for depths 0..max_depth-1 by split
     # finding.  Only depth-max_depth children (the deepest leaves) need
