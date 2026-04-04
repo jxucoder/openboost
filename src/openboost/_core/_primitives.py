@@ -260,7 +260,11 @@ def _build_node_histograms_gpu_contiguous(
     
     # Copy histograms to host and create NodeHistogram objects
     histograms_cpu = histograms.copy_to_host()
-    sample_node_ids_cpu = sample_node_ids.copy_to_host()
+    sample_node_ids_cpu = (
+        sample_node_ids.copy_to_host()
+        if hasattr(sample_node_ids, 'copy_to_host')
+        else np.asarray(sample_node_ids)
+    )
     
     result = {}
     for _i, node_id in enumerate(range(level_start, level_end)):
@@ -299,8 +303,12 @@ def _build_node_histograms_gpu_sparse(
     # For sparse node sets, build each node separately
     # This is less efficient but works for any node configuration
     
-    sample_node_ids_cpu = sample_node_ids.copy_to_host()
-    
+    sample_node_ids_cpu = (
+        sample_node_ids.copy_to_host()
+        if hasattr(sample_node_ids, 'copy_to_host')
+        else np.asarray(sample_node_ids)
+    )
+
     result = {}
     for node_id in node_ids:
         mask = sample_node_ids_cpu == node_id
@@ -612,7 +620,12 @@ def _partition_samples_gpu(
     new_node_ids = cuda.device_array(n_samples, dtype=np.int32)
     
     # Copy current node IDs
-    cuda.to_device(sample_node_ids.copy_to_host(), to=new_node_ids)
+    ids_cpu = (
+        sample_node_ids.copy_to_host()
+        if hasattr(sample_node_ids, 'copy_to_host')
+        else np.asarray(sample_node_ids)
+    )
+    cuda.to_device(ids_cpu, to=new_node_ids)
     
     # Build arrays for kernel
     if not splits:
@@ -784,9 +797,13 @@ def _compute_leaf_values_gpu(
     """GPU implementation of leaf value computation."""
     # For simplicity, copy to CPU and compute there
     # Future optimization: use GPU reduction kernel
-    grad_cpu = grad.copy_to_host()
-    hess_cpu = hess.copy_to_host()
-    sample_node_ids_cpu = sample_node_ids.copy_to_host()
+    grad_cpu = grad.copy_to_host() if hasattr(grad, 'copy_to_host') else np.asarray(grad)
+    hess_cpu = hess.copy_to_host() if hasattr(hess, 'copy_to_host') else np.asarray(hess)
+    sample_node_ids_cpu = (
+        sample_node_ids.copy_to_host()
+        if hasattr(sample_node_ids, 'copy_to_host')
+        else np.asarray(sample_node_ids)
+    )
     
     return _compute_leaf_values_cpu(
         grad_cpu, hess_cpu, sample_node_ids_cpu, leaf_node_ids, reg_lambda, reg_alpha
