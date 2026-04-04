@@ -668,6 +668,13 @@ class GradientBoosting(PersistenceMixin):
                 _copy_threads = 256
                 _copy_blocks = (max_nodes + _copy_threads - 1) // _copy_threads
             _n_trees_built = 0
+            # Pre-transfer binned data to GPU once to avoid repeated H2D
+            # copies (Numba auto-transfers numpy arrays on every kernel call).
+            _binned_data = self.X_binned_.data
+            if not hasattr(_binned_data, '__cuda_array_interface__'):
+                _binned_gpu = cuda.to_device(_binned_data)
+            else:
+                _binned_gpu = _binned_data
 
         # Train trees
         for i in range(self.n_trees):
@@ -759,7 +766,7 @@ class GradientBoosting(PersistenceMixin):
                 )
             elif _use_gpu_native:
                 legacy_tree = fit_tree_gpu_native(
-                    self.X_binned_,
+                    _binned_gpu,
                     grad_gpu,
                     hess_gpu,
                     max_depth=self.max_depth,
