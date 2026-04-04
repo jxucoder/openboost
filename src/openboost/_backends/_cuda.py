@@ -2389,7 +2389,7 @@ def _build_histograms_sample_centric_kernel(
     if feature_idx >= n_features:
         return
     
-    CHUNK_SIZE = 16384
+    CHUNK_SIZE = 32768
     chunk_start = chunk_idx * CHUNK_SIZE
     chunk_end = chunk_start + CHUNK_SIZE
     if chunk_end > n_samples:
@@ -2456,7 +2456,7 @@ def _build_histogram_shared_kernel(
     cuda.syncthreads()
     
     # === Phase 2: Build local histogram (FAST local atomics ~5 cycles) ===
-    CHUNK_SIZE = 16384
+    CHUNK_SIZE = 32768
     chunk_start = chunk_idx * CHUNK_SIZE
     chunk_end = chunk_start + CHUNK_SIZE
     if chunk_end > n_samples:
@@ -2539,7 +2539,7 @@ def _build_histogram_left_only_shared_kernel(
     cuda.syncthreads()
 
     # Build local histogram for left children only
-    CHUNK_SIZE = 16384
+    CHUNK_SIZE = 32768
     chunk_start = chunk_idx * CHUNK_SIZE
     chunk_end = chunk_start + CHUNK_SIZE
     if chunk_end > n_samples:
@@ -3359,7 +3359,7 @@ def build_tree_gpu_native(
     _prof = _gpu_profile_timers
 
     # Build tree level by level
-    CHUNK_SIZE = 16384
+    CHUNK_SIZE = 32768
     n_chunks = math.ceil(n_samples / CHUNK_SIZE)
     hist_grid = (n_features, n_chunks)
     _NODES_PER_PASS = 16
