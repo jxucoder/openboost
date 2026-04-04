@@ -238,24 +238,25 @@ def _build_node_histograms_gpu_contiguous(
     n_chunks = math.ceil(n_samples / CHUNK_SIZE)
     hist_grid = (n_features, n_chunks)
     
+    _no_const_hess = np.float32(0.0)
     if n_nodes <= 16:
         _build_histogram_shared_kernel[hist_grid, 256](
             binned, grad, hess, sample_node_ids,
             level_start, n_nodes, 0,
-            histograms
+            histograms, _no_const_hess
         )
     else:
         # Two passes for >16 nodes
         _build_histogram_shared_kernel[hist_grid, 256](
             binned, grad, hess, sample_node_ids,
             level_start, 16, 0,
-            histograms
+            histograms, _no_const_hess
         )
         remaining = n_nodes - 16
         _build_histogram_shared_kernel[hist_grid, 256](
             binned, grad, hess, sample_node_ids,
             level_start, remaining, 16,
-            histograms
+            histograms, _no_const_hess
         )
     
     # Copy histograms to host and create NodeHistogram objects

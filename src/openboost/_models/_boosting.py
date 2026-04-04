@@ -768,6 +768,7 @@ class GradientBoosting(PersistenceMixin):
                     min_gain=self.gamma,
                     pred_gpu=pred_gpu,
                     learning_rate=self.learning_rate,
+                    const_hess=1.0 if _use_fast_mse else 0.0,
                 )
                 if _use_d2d:
                     # Async D2D copy from workspace → pre-allocated buffer.

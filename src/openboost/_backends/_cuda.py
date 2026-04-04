@@ -2420,6 +2420,7 @@ def _build_histogram_shared_kernel(
     n_nodes_in_pass,  # int32 - how many nodes in this pass (≤16)
     node_offset,      # int32 - which nodes this pass handles (0 or 16)
     global_histograms,# (max_nodes, n_features, 256, 2) float32 - output
+    const_hess,       # float32 - >0: use this instead of reading hess array (saves bandwidth)
 ):
     """Phase 6.3: Shared memory histogram with 100x fewer global atomics.
 
@@ -2464,18 +2465,21 @@ def _build_histogram_shared_kernel(
     for sample_idx in range(chunk_start + thread_idx, chunk_end, block_size):
         node_id = sample_node_ids[sample_idx]
         local_node = node_id - level_start - node_offset
-        
+
         # Only process if sample belongs to nodes in this pass
         if 0 <= local_node < n_nodes_in_pass:
             bin_val = int32(binned[feature_idx, sample_idx])
             g = grad[sample_idx]
-            h = hess[sample_idx]
+            if const_hess > float32(0.0):
+                h = const_hess
+            else:
+                h = hess[sample_idx]
             # Local atomics to shared memory (~5 cycles vs ~15 for global)
             hist_idx_grad = local_node * 512 + bin_val * 2 + 0
             hist_idx_hess = local_node * 512 + bin_val * 2 + 1
             cuda.atomic.add(local_hist, hist_idx_grad, g)
             cuda.atomic.add(local_hist, hist_idx_hess, h)
-    
+
     cuda.syncthreads()
     
     # === Phase 3: Reduce to global (only ~512 atomics per block per node) ===
@@ -2504,6 +2508,7 @@ def _build_histogram_left_only_shared_kernel(
     n_left_in_pass,   # int32 - how many left children in this pass (<=16)
     left_offset,      # int32 - offset among left children for multi-pass
     global_histograms,# (max_nodes, n_features, 256, 2) float32 - output
+    const_hess,       # float32 - >0: use this instead of reading hess array (saves bandwidth)
 ):
     """Shared memory histogram for LEFT children only (histogram subtraction).
 
@@ -2551,7 +2556,10 @@ def _build_histogram_left_only_shared_kernel(
             if 0 <= local_node < n_left_in_pass:
                 bin_val = int32(binned[feature_idx, sample_idx])
                 g = grad[sample_idx]
-                h = hess[sample_idx]
+                if const_hess > float32(0.0):
+                    h = const_hess
+                else:
+                    h = hess[sample_idx]
                 hist_idx_grad = local_node * 512 + bin_val * 2 + 0
                 hist_idx_hess = local_node * 512 + bin_val * 2 + 1
                 cuda.atomic.add(local_hist, hist_idx_grad, g)
@@ -3193,6 +3201,7 @@ def build_tree_gpu_native(
     min_gain: float = 0.0,
     pred_gpu: DeviceNDArray | None = None,
     learning_rate: float = 0.0,
+    const_hess: float = 0.0,
 ) -> tuple[DeviceNDArray, DeviceNDArray, DeviceNDArray, DeviceNDArray, DeviceNDArray]:
     """Build a tree entirely on GPU with minimal Python orchestration.
 
@@ -3269,6 +3278,7 @@ def build_tree_gpu_native(
     n_chunks = math.ceil(n_samples / CHUNK_SIZE)
     hist_grid = (n_features, n_chunks)
     _NODES_PER_PASS = 16
+    const_hess_f32 = np.float32(const_hess)
 
     for depth in range(max_depth):
         level_start = 2**depth - 1      # First node at this depth
@@ -3290,7 +3300,7 @@ def build_tree_gpu_native(
             # Root: build from scratch (1 node, 1 pass)
             _build_histogram_shared_kernel[hist_grid, 256](
                 binned, grad, hess, sample_node_ids,
-                level_start, 1, 0, histograms
+                level_start, 1, 0, histograms, const_hess_f32
             )
         else:
             # Histogram subtraction: build LEFT children only, then
@@ -3303,7 +3313,7 @@ def build_tree_gpu_native(
                 _build_histogram_left_only_shared_kernel[hist_grid, 256](
                     binned, grad, hess, sample_node_ids,
                     level_start, n_left_this_pass, left_offset,
-                    histograms
+                    histograms, const_hess_f32
                 )
             # Subtract parent - left = right for all right children
             parent_level_start = 2**(depth - 1) - 1
