@@ -3031,6 +3031,52 @@ def mse_grad_inplace_gpu(pred, y, grad):
 
 
 # =============================================================================
+# Fast LogLoss gradient kernel: writes to pre-allocated arrays, eliminating
+# cudaMalloc/cudaFree overhead that _logloss_gradient_gpu incurs every
+# iteration (~0.5-2ms per alloc × 2 arrays × 200 trees = significant).
+# =============================================================================
+
+@cuda.jit
+def _logloss_grad_inplace_kernel(pred, y, grad, hess, n):
+    """Compute logloss gradient and hessian in-place.
+
+    grad = sigmoid(pred) - y
+    hess = sigmoid(pred) * (1 - sigmoid(pred)), clipped to [1e-6, 1-1e-6]
+    """
+    idx = cuda.grid(1)
+    if idx < n:
+        x = pred[idx]
+        # Numerically stable sigmoid
+        if x >= 0.0:
+            p = 1.0 / (1.0 + math.exp(-x))
+        else:
+            exp_x = math.exp(x)
+            p = exp_x / (1.0 + exp_x)
+        grad[idx] = float32(p - y[idx])
+        h = p * (1.0 - p)
+        if h < 1e-6:
+            h = 1e-6
+        elif h > 1.0 - 1e-6:
+            h = 1.0 - 1e-6
+        hess[idx] = float32(h)
+
+
+def logloss_grad_inplace_gpu(pred, y, grad, hess):
+    """Compute logloss gradient into pre-allocated arrays (zero allocation).
+
+    Args:
+        pred: Device array (n_samples,) float32 - current predictions (log-odds)
+        y: Device array (n_samples,) float32 - targets (0/1)
+        grad: Device array (n_samples,) float32 - output gradient (in-place)
+        hess: Device array (n_samples,) float32 - output hessian (in-place)
+    """
+    n = pred.shape[0]
+    threads = 256
+    blocks = (n + threads - 1) // threads
+    _logloss_grad_inplace_kernel[blocks, threads](pred, y, grad, hess, n)
+
+
+# =============================================================================
 # GPU-native profiling hook: set by ProfilingCallback to collect per-phase
 # timings inside build_tree_gpu_native (which bypasses the shared primitives).
 # When None, no profiling overhead is added.

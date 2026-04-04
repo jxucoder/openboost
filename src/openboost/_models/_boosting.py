@@ -620,6 +620,11 @@ class GradientBoosting(PersistenceMixin):
             )
             from .._backends._cuda import mse_grad_inplace_gpu
 
+        # Fast logloss path: use in-place kernel to avoid cudaMalloc each round.
+        _use_fast_logloss = not is_custom_loss and self.loss in ('logloss', 'binary_crossentropy')
+        if _use_fast_logloss:
+            from .._backends._cuda import logloss_grad_inplace_gpu
+
         # Determine sampling strategy
         use_goss = self.subsample_strategy == 'goss'
         use_random_sampling = self.subsample_strategy == 'random' and self.subsample < 1.0
@@ -679,6 +684,9 @@ class GradientBoosting(PersistenceMixin):
             elif _use_fast_mse:
                 # Fast MSE: in-place grad, constant hess (zero allocation)
                 mse_grad_inplace_gpu(pred_gpu, y_gpu, grad_gpu)
+            elif _use_fast_logloss:
+                # Fast logloss: in-place grad+hess (zero allocation)
+                logloss_grad_inplace_gpu(pred_gpu, y_gpu, grad_gpu, hess_gpu)
             else:
                 # Built-in loss: compute entirely on GPU
                 grad_gpu, hess_gpu = self._loss_fn(pred_gpu, y_gpu)
