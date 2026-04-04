@@ -2488,11 +2488,10 @@ def _build_histogram_shared_kernel(
             val_grad = local_hist[hist_idx_grad]
             val_hess = local_hist[hist_idx_hess]
             # Only write non-zero values to reduce atomic contention
-            # Cast float32 shared memory values to float64 for global accumulation
             if val_grad != float32(0.0):
-                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), float64(val_grad))
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), val_grad)
             if val_hess != float32(0.0):
-                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 1), float64(val_hess))
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 1), val_hess)
 
 
 @cuda.jit
@@ -2568,11 +2567,10 @@ def _build_histogram_left_only_shared_kernel(
             hist_idx_hess = local_node * 512 + bin_idx * 2 + 1
             val_grad = local_hist[hist_idx_grad]
             val_hess = local_hist[hist_idx_hess]
-            # Cast float32 shared memory values to float64 for global accumulation
             if val_grad != float32(0.0):
-                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), float64(val_grad))
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 0), val_grad)
             if val_hess != float32(0.0):
-                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 1), float64(val_hess))
+                cuda.atomic.add(global_histograms, (global_node, feature_idx, bin_idx, 1), val_hess)
 
 
 @cuda.jit
@@ -2639,10 +2637,10 @@ def _build_left_children_histograms_kernel(
             cuda.atomic.add(local_hess, bin_val, h)
     cuda.syncthreads()
     
-    # Write to global memory (promote float32 shared → float64 global)
+    # Write to global memory
     for i in range(thread_idx, 256, block_size):
-        histograms[left_child_idx, feature_idx, i, 0] = float64(local_grad[i])
-        histograms[left_child_idx, feature_idx, i, 1] = float64(local_hess[i])
+        histograms[left_child_idx, feature_idx, i, 0] = local_grad[i]
+        histograms[left_child_idx, feature_idx, i, 1] = local_hess[i]
 
 
 @cuda.jit
@@ -2697,7 +2695,7 @@ def _subtract_histograms_for_right_children_kernel(
 
 @cuda.jit
 def _find_level_splits_kernel(
-    histograms,       # (max_nodes, n_features, 256, 2) float64
+    histograms,       # (max_nodes, n_features, 256, 2) float32
     level_start,      # int32 - first node at this level
     level_end,        # int32 - last node + 1 at this level
     reg_lambda,       # float64
@@ -3001,7 +2999,7 @@ def _compute_leaf_values_kernel(
 
 @cuda.jit
 def _derive_leaf_sums_from_histogram(
-    histograms,          # (max_nodes, n_features, 256, 2) float64
+    histograms,          # (max_nodes, n_features, 256, 2) float32
     node_features,       # (max_nodes,) int32 — split feature per node
     node_thresholds,     # (max_nodes,) int32 — split threshold per node
     node_left,           # (max_nodes,) int32 — left child idx
@@ -3169,7 +3167,7 @@ def _get_tree_workspace(n_samples: int, n_features: int, max_depth: int) -> dict
     _tree_workspace_cache = {
         '_key': key,
         'sample_node_ids': cuda.device_array(n_samples, dtype=np.int32),
-        'histograms': cuda.device_array((max_nodes, n_features, 256, 2), dtype=np.float64),
+        'histograms': cuda.device_array((max_nodes, n_features, 256, 2), dtype=np.float32),
         'node_gains': cuda.device_array(max_nodes, dtype=np.float32),
         'node_sum_grad': cuda.device_array(max_nodes, dtype=np.float64),
         'node_sum_hess': cuda.device_array(max_nodes, dtype=np.float64),
@@ -3199,7 +3197,8 @@ def build_tree_gpu_native(
     """Build a tree entirely on GPU with minimal Python orchestration.
 
     Phase 3.2: O(depth) kernel launches instead of O(nodes).
-    Histograms and node sums in float64 for precision; leaf values in float32.
+    Histograms in float32 for fast atomics; split finding uses float64 prefix
+    sums for precision; leaf values in float32.
     ZERO copy_to_host() during building.
 
     Args:
