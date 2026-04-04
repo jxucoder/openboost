@@ -2582,6 +2582,58 @@ def _build_histogram_left_only_shared_kernel(
 
 
 @cuda.jit
+def _build_histogram_left_global_kernel(
+    binned,           # (n_features, n_samples) uint8
+    grad,             # (n_samples,) float32
+    hess,             # (n_samples,) float32
+    sample_node_ids,  # (n_samples,) int32
+    level_start,      # int32 - first node at current level
+    global_histograms,# (max_nodes, n_features, 256, 2) float32 - output
+    const_hess,       # float32 - >0: use this instead of reading hess array
+):
+    """Direct global-atomic histogram for ALL left children in one pass.
+
+    Replaces multi-pass shared-memory approach at deep levels where
+    n_left_children > _NODES_PER_PASS.  One pass over the data instead of
+    ceil(n_left / 16) passes eliminates redundant sample reads.
+
+    Grid: (n_features, n_sample_chunks)
+    Block: 256 threads
+    """
+    feature_idx = cuda.blockIdx.x
+    chunk_idx = cuda.blockIdx.y
+    thread_idx = cuda.threadIdx.x
+    block_size = cuda.blockDim.x
+
+    n_features = binned.shape[0]
+    n_samples = binned.shape[1]
+
+    if feature_idx >= n_features:
+        return
+
+    CHUNK_SIZE = 32768
+    chunk_start = chunk_idx * CHUNK_SIZE
+    chunk_end = chunk_start + CHUNK_SIZE
+    if chunk_end > n_samples:
+        chunk_end = n_samples
+
+    for sample_idx in range(chunk_start + thread_idx, chunk_end, block_size):
+        node_id = sample_node_ids[sample_idx]
+        relative = node_id - level_start
+
+        # Only process left children (even positions within level)
+        if relative >= 0 and (relative & 1) == 0:
+            bin_val = int32(binned[feature_idx, sample_idx])
+            g = grad[sample_idx]
+            cuda.atomic.add(global_histograms, (node_id, feature_idx, bin_val, 0), g)
+            if const_hess > float32(0.0):
+                cuda.atomic.add(global_histograms, (node_id, feature_idx, bin_val, 1), const_hess)
+            else:
+                h = hess[sample_idx]
+                cuda.atomic.add(global_histograms, (node_id, feature_idx, bin_val, 1), h)
+
+
+@cuda.jit
 def _build_left_children_histograms_kernel(
     binned,           # (n_features, n_samples) uint8
     grad,             # (n_samples,) float32
@@ -3391,15 +3443,24 @@ def build_tree_gpu_native(
             # Histogram subtraction: build LEFT children only, then
             # right = parent - left. Halves passes at each depth.
             n_left_children = n_nodes_at_level // 2
-            n_passes = (n_left_children + _NODES_PER_PASS - 1) // _NODES_PER_PASS
-            for pass_idx in range(n_passes):
-                left_offset = pass_idx * _NODES_PER_PASS
-                n_left_this_pass = min(_NODES_PER_PASS, n_left_children - left_offset)
-                _build_histogram_left_only_shared_kernel[hist_grid, 256](
+            if n_left_children > _NODES_PER_PASS:
+                # Deep level: single-pass global atomics instead of
+                # multi-pass shared-memory.  Eliminates redundant reads
+                # of all samples on each extra pass.
+                _build_histogram_left_global_kernel[hist_grid, 256](
                     binned, grad, hess, sample_node_ids,
-                    level_start, n_left_this_pass, left_offset,
-                    histograms, const_hess_f32
+                    level_start, histograms, const_hess_f32
                 )
+            else:
+                n_passes = (n_left_children + _NODES_PER_PASS - 1) // _NODES_PER_PASS
+                for pass_idx in range(n_passes):
+                    left_offset = pass_idx * _NODES_PER_PASS
+                    n_left_this_pass = min(_NODES_PER_PASS, n_left_children - left_offset)
+                    _build_histogram_left_only_shared_kernel[hist_grid, 256](
+                        binned, grad, hess, sample_node_ids,
+                        level_start, n_left_this_pass, left_offset,
+                        histograms, const_hess_f32
+                    )
             # Subtract parent - left = right for all right children
             parent_level_start = 2**(depth - 1) - 1
             parent_level_end = 2**depth - 1
