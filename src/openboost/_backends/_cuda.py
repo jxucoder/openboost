@@ -2999,6 +2999,56 @@ def _compute_leaf_values_kernel(
 # See logs/2026-01-03-phase-7-final.md for details.
 
 
+@cuda.jit
+def _derive_leaf_sums_from_histogram(
+    histograms,          # (max_nodes, n_features, 256, 2) float64
+    node_features,       # (max_nodes,) int32 — split feature per node
+    node_thresholds,     # (max_nodes,) int32 — split threshold per node
+    node_left,           # (max_nodes,) int32 — left child idx
+    node_right,          # (max_nodes,) int32 — right child idx
+    node_sum_grad,       # (max_nodes,) float64 — output for children
+    node_sum_hess,       # (max_nodes,) float64 — output for children
+    last_internal_start, # int32 — first node at depth max_depth-1
+    last_internal_end,   # int32 — first node at depth max_depth
+):
+    """Derive grad/hess sums for final-depth leaves from parent histograms.
+
+    The split finding kernel already sets node_sum_grad/hess for all nodes
+    at depths 0..max_depth-1.  Only the children at depth max_depth are
+    missing.  For each parent at depth max_depth-1 that split, compute
+    children sums via a prefix sum over the parent's histogram for the
+    split feature.  This replaces the O(n_samples) atomic-add scan.
+    """
+    node_offset = cuda.grid(1)
+    parent = last_internal_start + node_offset
+    if parent >= last_internal_end:
+        return
+
+    feature = node_features[parent]
+    if feature < 0:
+        return  # Parent is a leaf — no children to compute
+
+    threshold = node_thresholds[parent]
+
+    # Prefix sum over parent histogram for split feature → left child sums
+    left_g = float64(0.0)
+    left_h = float64(0.0)
+    for b in range(threshold + 1):
+        left_g += histograms[parent, feature, b, 0]
+        left_h += histograms[parent, feature, b, 1]
+
+    # Right child = parent total − left
+    total_g = node_sum_grad[parent]
+    total_h = node_sum_hess[parent]
+
+    left_child = node_left[parent]
+    right_child = node_right[parent]
+    node_sum_grad[left_child] = left_g
+    node_sum_hess[left_child] = left_h
+    node_sum_grad[right_child] = total_g - left_g
+    node_sum_hess[right_child] = total_h - left_h
+
+
 # =============================================================================
 # Fast MSE gradient kernel: writes to pre-allocated arrays, skips hessian
 # (MSE hessian is constant 2.0). Eliminates cudaMalloc/cudaFree overhead
@@ -3318,11 +3368,21 @@ def build_tree_gpu_native(
         cuda.synchronize()
         _t0 = _time.perf_counter()
 
-    _zero_float_array_kernel[blocks, threads](node_sum_grad, max_nodes)
-    _zero_float_array_kernel[blocks, threads](node_sum_hess, max_nodes)
-    _compute_leaf_sums_kernel[sample_blocks, threads](
-        grad, hess, sample_node_ids, node_sum_grad, node_sum_hess
-    )
+    # node_sum_grad/hess already set for depths 0..max_depth-1 by split
+    # finding.  Only depth-max_depth children (the deepest leaves) need
+    # their sums derived — do that from the parent's histogram rather than
+    # an expensive O(n_samples) atomic scan.
+    last_internal_start = 2**(max_depth - 1) - 1
+    last_internal_end = 2**max_depth - 1
+    n_last_internal = last_internal_end - last_internal_start
+    if n_last_internal > 0:
+        last_blocks = math.ceil(n_last_internal / threads)
+        _derive_leaf_sums_from_histogram[last_blocks, threads](
+            histograms, node_features, node_thresholds,
+            node_left, node_right,
+            node_sum_grad, node_sum_hess,
+            last_internal_start, last_internal_end,
+        )
     _compute_leaf_values_kernel[blocks, threads](
         node_features, node_sum_grad, node_sum_hess,
         reg_lambda_f64, node_values, max_nodes
