@@ -3045,6 +3045,24 @@ _gpu_profile_timers: dict | None = None
 _tree_workspace_cache: dict | None = None
 
 
+@cuda.jit
+def _predict_from_node_ids_kernel(
+    sample_node_ids,  # (n_samples,) int32 - leaf node for each sample
+    node_values,      # (max_nodes,) float32 - leaf values
+    pred,             # (n_samples,) float32 - predictions to update
+    learning_rate,    # float32
+    n_samples,        # int32
+):
+    """Fused prediction: pred[i] += lr * node_values[sample_node_ids[i]].
+
+    Avoids a separate tree traversal by using already-computed sample-to-leaf
+    mapping. Only 2 memory reads per sample vs O(depth) for tree traversal.
+    """
+    idx = cuda.grid(1)
+    if idx < n_samples:
+        pred[idx] += learning_rate * node_values[sample_node_ids[idx]]
+
+
 def _get_tree_workspace(n_samples: int, n_features: int, max_depth: int) -> dict:
     """Return cached workspace arrays, allocating only on first call or shape change."""
     global _tree_workspace_cache
@@ -3079,6 +3097,8 @@ def build_tree_gpu_native(
     reg_lambda: float = 1.0,
     min_child_weight: float = 1.0,
     min_gain: float = 0.0,
+    pred_gpu: DeviceNDArray | None = None,
+    learning_rate: float = 0.0,
 ) -> tuple[DeviceNDArray, DeviceNDArray, DeviceNDArray, DeviceNDArray, DeviceNDArray]:
     """Build a tree entirely on GPU with minimal Python orchestration.
 
@@ -3094,6 +3114,9 @@ def build_tree_gpu_native(
         reg_lambda: L2 regularization
         min_child_weight: Minimum hessian sum in child
         min_gain: Minimum gain to split
+        pred_gpu: If provided, fuse prediction update into leaf computation
+                  (avoids separate tree traversal).
+        learning_rate: Scale factor for fused prediction update.
 
     Returns:
         node_features: (max_nodes,) int32 - split feature (-1 = leaf)
@@ -3259,10 +3282,18 @@ def build_tree_gpu_native(
         reg_lambda_f64, node_values, max_nodes
     )
 
+    # Fused prediction: use sample_node_ids to update predictions directly,
+    # avoiding a separate tree traversal (saves O(n_samples × depth) reads).
+    if pred_gpu is not None:
+        _predict_from_node_ids_kernel[sample_blocks, threads](
+            sample_node_ids, node_values, pred_gpu,
+            np.float32(learning_rate), n_samples,
+        )
+
     if _prof is not None:
         cuda.synchronize()
         _prof['leaf_values'] += _time.perf_counter() - _t0
-    
+
     return node_features, node_thresholds, node_values, node_left, node_right
 
 

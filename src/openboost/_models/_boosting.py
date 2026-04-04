@@ -646,7 +646,6 @@ class GradientBoosting(PersistenceMixin):
                 and not has_categorical
             )
         if _use_gpu_native:
-            from .._core._predict import predict_tree_add_gpu
             from .._core._tree import fit_tree_gpu_native
             max_nodes = 2**(self.max_depth + 1) - 1
             # Use async D2D copies when no callbacks need self.trees_
@@ -759,9 +758,8 @@ class GradientBoosting(PersistenceMixin):
                     min_child_weight=self.min_child_weight,
                     reg_lambda=self.reg_lambda,
                     min_gain=self.gamma,
-                )
-                predict_tree_add_gpu(
-                    legacy_tree, self.X_binned_, pred_gpu, self.learning_rate
+                    pred_gpu=pred_gpu,
+                    learning_rate=self.learning_rate,
                 )
                 if _use_d2d:
                     # Async D2D copy from workspace → pre-allocated buffer.

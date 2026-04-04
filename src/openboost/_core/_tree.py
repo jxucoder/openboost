@@ -203,6 +203,8 @@ def fit_tree_gpu_native(
     min_child_weight: float = 1.0,
     reg_lambda: float = 1.0,
     min_gain: float = 0.0,
+    pred_gpu=None,
+    learning_rate: float = 0.0,
 ) -> Tree:
     """Fit a tree using GPU-native building (Phase 3.2).
     
@@ -258,6 +260,8 @@ def fit_tree_gpu_native(
         reg_lambda=reg_lambda,
         min_child_weight=min_child_weight,
         min_gain=min_gain,
+        pred_gpu=pred_gpu,
+        learning_rate=learning_rate,
     )
     
     # Phase 5.1: Keep arrays on GPU for fast training
