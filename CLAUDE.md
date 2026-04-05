@@ -53,7 +53,7 @@ DART, LinearLeaf     growth strategies
 ```
 
 ### Data Layer (`_array.py`)
-`BinnedArray` is the fundamental data structure — quantile-bins continuous features into uint8 (max 255 bins). Missing values encode as `MISSING_BIN = 255`. Native categorical feature support. All tree-building operates on binned data.
+`BinnedArray` is the fundamental data structure — quantile-bins continuous features into uint8 (max 255 bins). Missing values encode as `MISSING_BIN = 255`. Native categorical feature support with auto-detection of string/object columns. All tree-building operates on binned data.
 
 ### Core (`_core/`)
 - **`_tree.py`** — `fit_tree()`, `fit_tree_gpu_native()`, `fit_tree_symmetric()`: the main tree-fitting entry points
@@ -61,13 +61,17 @@ DART, LinearLeaf     growth strategies
 - **`_growth.py`** — Three growth strategies: `LevelWiseGrowth` (XGBoost-style), `LeafWiseGrowth` (LightGBM-style), `SymmetricGrowth` (CatBoost-style)
 
 ### Backend Dispatch (`_backends/`)
-`get_backend()` / `set_backend()` switch between CPU and CUDA implementations. Same interface, different kernels. Control via `OPENBOOST_BACKEND` env var or `set_backend('cuda')`.
+`get_backend()` / `set_backend()` switch between CPU and CUDA implementations. Same interface, different kernels. Control via `OPENBOOST_BACKEND` env var or `set_backend('cuda')`. Use `backend_context('cpu')` context manager for temporary switches.
 
 ### Models (`_models/`)
-- **`_boosting.py`** — `GradientBoosting`: main model class, owns the training loop
-- **`_sklearn.py`** — sklearn-compatible wrappers (`OpenBoostRegressor`, `OpenBoostClassifier`)
-- **`_distributional.py`** — `NaturalBoost`: distributional GBDT (natural gradient boosting)
-- **`_dart.py`**, **`_linear_leaf.py`**, **`_gam.py`** — Specialized model variants
+- **`_boosting.py`** — `GradientBoosting`, `MultiClassGradientBoosting`: main model classes with full callback/eval_set support
+- **`_sklearn.py`** — sklearn-compatible wrappers (`OpenBoostRegressor`, `OpenBoostClassifier`, `OpenBoostDARTRegressor`, `OpenBoostGAMRegressor`, `OpenBoostDistributionalRegressor`, `OpenBoostLinearLeafRegressor`)
+- **`_distributional.py`** — `NaturalBoost`: distributional GBDT with callbacks/eval_set support
+- **`_dart.py`** — `DART`: dropout boosting with callbacks/eval_set support
+- **`_linear_leaf.py`**, **`_gam.py`** — Specialized model variants (callbacks not yet supported)
+
+### Persistence (`_persistence.py`)
+`PersistenceMixin` provides `save()`/`load()` on all models. Generic `ob.load(path)` auto-detects model class from saved state.
 
 ### Profiling (`_profiler.py`)
 `ProfilingCallback` instruments training by wrapping core primitives (`build_node_histograms`, `find_node_splits`, `partition_samples`, `compute_leaf_values`, `fit_tree`) with timers. Outputs JSON reports to `logs/` with per-phase breakdown, bottleneck identification, and run-over-run comparison. CLI runner: `benchmarks/profile_loop.py`.
@@ -85,7 +89,10 @@ DART, LinearLeaf     growth strategies
 - All Numba-jitted functions use `@njit` or `@cuda.jit`. CPU kernels are in `_backends/_cpu.py`, CUDA in `_backends/_cuda.py`.
 - Test environment variable `OPENBOOST_BACKEND=cpu` forces CPU backend in CI.
 - Tests use `pytest-xdist` (`-n auto --dist loadfile`) for parallel execution. Shared fixtures are in `tests/conftest.py` (session-scoped datasets, function-scoped gradients).
-- **GPU-native builder** (`fit_tree_gpu_native`) does not support missing values or categorical features. The training loop in `_boosting.py` auto-falls back to `fit_tree()` when the data has NaN or categorical columns.
+- **GPU-native builder** (`fit_tree_gpu_native`) does not support missing values or categorical features. The training loop in `_boosting.py` auto-falls back to `fit_tree()` with a warning when the data has NaN or categorical columns.
+- **Callbacks**: `GradientBoosting`, `MultiClassGradientBoosting`, `DART`, and `NaturalBoost`/`DistributionalGBDT` all support `callbacks` and `eval_set` in `fit()`. `LinearLeafGBDT` and `OpenBoostGAM` do not yet.
+- **`random_state`**: `GradientBoosting` and `DART` accept `random_state` for reproducibility. Sklearn wrappers pass it through. DART also accepts `seed` (alias).
+- **`suggest_params()`**: Returns sklearn-style names by default (`n_estimators`). Pass `style='core'` to get core API names (`n_trees`).
 - **Profiling**: `ProfilingCallback` wraps core primitives with timers. Enable via callback or `OPENBOOST_PROFILE=1` env var. Reports go to `logs/` as JSON.
 
 ## Working Style

@@ -25,14 +25,14 @@ Plus: ~20K lines of readable Python. Modify, extend, and build on — no C++ req
 
 OpenBoost provides primitives (histograms, binning, tree fitting) that you combine into algorithms:
 
-- **Standard GBDT** — drop-in gradient boosting with multiple growth strategies
+- **Standard GBDT** — drop-in gradient boosting with multiple growth strategies, early stopping, and callbacks
 - **Distributional GBDT** — predict full probability distributions with [NGBoost](https://arxiv.org/abs/1910.03225)-style natural gradient boosting
 - **Interpretable GAMs** — explainable feature effects inspired by [EBM](https://arxiv.org/abs/1909.09223)
 - **DART** — [dropout regularization](https://arxiv.org/abs/1505.01866) for reduced overfitting
 - **Linear-leaf models** — linear models in tree leaves for better extrapolation
 - **Your own algorithms** — custom losses, distributions, or entirely new methods
 
-All run on GPU with the same Python code.
+All run on GPU with the same Python code. All models support `save()`/`load()` persistence, and most support callbacks and early stopping.
 
 ## Quick Start
 
@@ -41,9 +41,34 @@ All run on GPU with the same Python code.
 ```python
 import openboost as ob
 
-model = ob.GradientBoosting(n_trees=100, max_depth=6)
-model.fit(X_train, y_train)
+model = ob.GradientBoosting(n_trees=100, max_depth=6, random_state=42)
+model.fit(X_train, y_train,
+          eval_set=[(X_val, y_val)],
+          callbacks=[ob.EarlyStopping(patience=10)])
 predictions = model.predict(X_test)
+```
+
+**sklearn-compatible:**
+
+```python
+from openboost import OpenBoostRegressor
+from sklearn.model_selection import GridSearchCV
+
+# Works with GridSearchCV, Pipeline, cross_val_score, etc.
+model = OpenBoostRegressor(n_estimators=100, random_state=42)
+search = GridSearchCV(model, {"max_depth": [4, 6, 8]}, cv=5)
+search.fit(X_train, y_train)
+
+# Also available: OpenBoostClassifier, OpenBoostDARTRegressor,
+# OpenBoostGAMRegressor, OpenBoostDistributionalRegressor
+```
+
+**Hyperparameter suggestions:**
+
+```python
+# Auto-suggest params based on dataset characteristics
+params = ob.suggest_params(X_train, y_train, task='regression', style='core')
+model = ob.GradientBoosting(**params)
 ```
 
 **Low-level API** (full control over the training loop):
@@ -68,6 +93,9 @@ pip install openboost
 
 # With GPU support
 pip install openboost[cuda]
+
+# With sklearn integration
+pip install openboost[sklearn]
 ```
 
 ## Documentation
