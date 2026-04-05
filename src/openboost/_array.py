@@ -128,10 +128,10 @@ class BinnedArray:
                                 binned[i, j] = cat_map[key]
                             else:
                                 warnings.warn(
-                                    f"Unseen category {key!r} in feature {j}; mapping to bin 0",
+                                    f"Unseen category {key!r} in feature {j}; mapping to MISSING_BIN",
                                     stacklevel=2,
                                 )
-                                binned[i, j] = 0
+                                binned[i, j] = MISSING_BIN
                 else:
                     binned[:, j] = 0
             else:

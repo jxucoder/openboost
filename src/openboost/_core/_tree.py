@@ -25,6 +25,7 @@ from ._histogram import build_histogram, subtract_histogram
 from ._split import compute_leaf_value, find_best_split
 
 if TYPE_CHECKING:
+    from numba.cuda.cudadrv.devicearray import DeviceNDArray
     from numpy.typing import NDArray
 
 

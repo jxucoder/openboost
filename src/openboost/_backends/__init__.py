@@ -16,24 +16,25 @@ _BACKEND_LOCK = threading.Lock()
 
 def get_backend() -> Literal["cuda", "cpu"]:
     """Get the current compute backend.
-    
+
     Returns:
         "cuda" if NVIDIA GPU is available, "cpu" otherwise.
     """
     global _BACKEND
-    
-    if _BACKEND is not None:
+
+    with _BACKEND_LOCK:
+        if _BACKEND is not None:
+            return _BACKEND
+
+        # Allow override via environment variable
+        env_backend = os.environ.get("OPENBOOST_BACKEND", "").lower()
+        if env_backend in ("cuda", "cpu"):
+            _BACKEND = env_backend
+            return _BACKEND
+
+        # Auto-detect CUDA
+        _BACKEND = "cuda" if _cuda_available() else "cpu"
         return _BACKEND
-    
-    # Allow override via environment variable
-    env_backend = os.environ.get("OPENBOOST_BACKEND", "").lower()
-    if env_backend in ("cuda", "cpu"):
-        _BACKEND = env_backend
-        return _BACKEND
-    
-    # Auto-detect CUDA
-    _BACKEND = "cuda" if _cuda_available() else "cpu"
-    return _BACKEND
 
 
 def _cuda_available() -> bool:

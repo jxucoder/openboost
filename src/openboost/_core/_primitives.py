@@ -574,9 +574,12 @@ def _partition_samples_cpu(
         
         # Phase 14.3: Determine routing based on split type
         if node_split.is_categorical:
-            # Categorical split: use bitmask membership
+            # Categorical split: use bitmask membership (int64 supports bins 0-63)
             bitset = node_split.cat_bitset
-            goes_left = np.array([(bitset >> fv) & 1 for fv in feature_values], dtype=np.bool_)
+            goes_left = np.array(
+                [(bitset >> fv) & 1 if fv < 64 else 0 for fv in feature_values],
+                dtype=np.bool_,
+            )
         else:
             # Ordinal split: use threshold
             goes_left = feature_values <= threshold
@@ -654,6 +657,10 @@ def _partition_samples_gpu(
     right_children_gpu = cuda.to_device(right_children)
     split_missing_left_gpu = cuda.to_device(split_missing_left)
     
+    # Ensure kernel is compiled (lazy init if module-load compilation failed)
+    if _partition_kernel_with_missing is None:
+        _init_partition_kernel_with_missing()
+
     # Launch kernel
     threads = 256
     blocks = math.ceil(n_samples / threads)

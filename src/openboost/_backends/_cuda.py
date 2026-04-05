@@ -3194,7 +3194,7 @@ def _derive_leaf_sums_from_histogram(
 
 # =============================================================================
 # Fast MSE gradient kernel: writes to pre-allocated arrays, skips hessian
-# (MSE hessian is constant 2.0). Eliminates cudaMalloc/cudaFree overhead
+# (MSE hessian is constant 1.0 for L=0.5*(pred-y)^2). Eliminates cudaMalloc/cudaFree overhead
 # that _mse_gradient_gpu incurs every iteration.
 # =============================================================================
 
@@ -3282,6 +3282,16 @@ _gpu_profile_timers: dict | None = None
 # ~100MB, sample_node_ids ~4MB) across 200+ tree builds per training run.
 # =============================================================================
 _tree_workspace_cache: dict | None = None
+
+
+def clear_tree_workspace_cache() -> None:
+    """Free cached GPU workspace arrays.
+
+    Call this between training runs with different data shapes to avoid
+    accumulating stale GPU allocations.
+    """
+    global _tree_workspace_cache
+    _tree_workspace_cache = None
 
 
 @cuda.jit

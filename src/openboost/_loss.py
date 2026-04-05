@@ -884,8 +884,6 @@ def _get_tweedie_kernel():
             elif p < -20:
                 p = -20.0
             
-            math.exp(p)
-            
             # mu^(2-rho) and mu^(1-rho) via exp
             mu_2_rho = math.exp(p * (2.0 - rho))
             mu_1_rho = math.exp(p * (1.0 - rho))

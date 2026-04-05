@@ -890,7 +890,8 @@ class LeafWiseGrowth(GrowthStrategy):
             grad = grad.copy_to_host()
             hess = hess.copy_to_host()
         
-        leaf_value = -float(np.sum(grad)) / (float(np.sum(hess)) + config.reg_lambda)
+        denom = float(np.sum(hess)) + config.reg_lambda
+        leaf_value = -float(np.sum(grad)) / denom if denom != 0.0 else 0.0
         
         return TreeStructure(
             features=np.array([-1], dtype=np.int32),
