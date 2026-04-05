@@ -1668,6 +1668,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#openboost.suggest_params--for-sklearn-wrappers-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For sklearn wrappers (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openboost.suggest_params--for-core-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For core API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#get_param_grid" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2652,6 +2674,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#openboost.suggest_params--for-sklearn-wrappers-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For sklearn wrappers (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openboost.suggest_params--for-core-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For core API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#get_param_grid" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3474,8 +3518,12 @@
 
 <a href="#openboost.suggest_params" class="headerlink" title="Permanent link">&para;</a></h2>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">suggest_params</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">,</span> <span class="n">n_estimators_cap</span><span class="o">=</span><span class="mi">500</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">X</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">y</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">n_estimators_cap</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">style</span><span class="o">=</span><span class="s2">&quot;sklearn&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
@@ -3565,6 +3613,28 @@ results, use these as initial values and tune with cross-validation.</p>
               </p>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>style</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Parameter naming style. 'sklearn' returns names like
+<code>n_estimators</code> for use with sklearn wrappers. 'core' returns
+names like <code>n_trees</code> for use with GradientBoosting directly.</p>
+              </div>
+              <p>
+                  <span class="doc-param-annotation">
+                    <b>TYPE:</b>
+                      <code><span title="typing.Literal">Literal</span>[&#39;sklearn&#39;, &#39;core&#39;]</code>
+                  </span>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>&#39;sklearn&#39;</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -3585,19 +3655,7 @@ results, use these as initial values and tune with cross-validation.</p>
             </td>
             <td class="doc-returns-details">
               <div class="doc-md-description">
-                <p>Dictionary of suggested hyperparameters suitable for passing to</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <span class="doc-returns-annotation">
-                    <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
-                </span>
-            </td>
-            <td class="doc-returns-details">
-              <div class="doc-md-description">
-                <p>OpenBoostRegressor, OpenBoostClassifier, etc.</p>
+                <p>Dictionary of suggested hyperparameters.</p>
               </div>
             </td>
           </tr>
@@ -3610,8 +3668,13 @@ results, use these as initial values and tune with cross-validation.</p>
   <blockquote>
 <blockquote>
 <blockquote>
+<h3 id="openboost.suggest_params--for-sklearn-wrappers-default">For sklearn wrappers (default)<a class="headerlink" href="#openboost.suggest_params--for-sklearn-wrappers-default" title="Permanent link">&para;</a></h3>
 <p>params = suggest_params(X_train, y_train, task='regression')
 model = OpenBoostRegressor(**params)
+model.fit(X_train, y_train)</p>
+<h3 id="openboost.suggest_params--for-core-api">For core API<a class="headerlink" href="#openboost.suggest_params--for-core-api" title="Permanent link">&para;</a></h3>
+<p>params = suggest_params(X_train, y_train, style='core')
+model = GradientBoosting(**params)
 model.fit(X_train, y_train)</p>
 </blockquote>
 </blockquote>

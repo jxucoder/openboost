@@ -2280,7 +2280,8 @@
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">n_gpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">devices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
@@ -2812,8 +2813,19 @@ training is fully batched for maximum performance.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Generate predictions for X.</p>
+        <p>Generate raw predictions for X.</p>
+<p>For regression losses (mse, mae, huber, quantile): returns predicted
+values directly.</p>
+<p>For classification losses (logloss): returns raw logits (log-odds),
+not probabilities. Use <code>predict_proba()</code> for class probabilities
+or <code>predict_label()</code> for 0/1 class labels.</p>
 
+
+<details class="note" open>
+  <summary>Note</summary>
+  <p>This matches XGBoost's <code>Booster.predict()</code> behavior. The sklearn
+wrapper <code>OpenBoostClassifier.predict()</code> returns class labels.</p>
+</details>
 
 <table>
       <thead>
@@ -2863,7 +2875,7 @@ Can be raw numpy array or pre-binned BinnedArray.</p>
             </td>
             <td class="doc-returns-details">
               <div class="doc-md-description">
-                <p>Shape (n_samples,).</p>
+                <p>Shape (n_samples,). Raw scores/logits.</p>
               </div>
                 <p>
                   <span class="doc-returns-annotation">
