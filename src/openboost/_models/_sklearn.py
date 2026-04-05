@@ -56,6 +56,8 @@ except ImportError:
 from .._callbacks import EarlyStopping
 from .._importance import compute_feature_importances
 from ._boosting import GradientBoosting, MultiClassGradientBoosting
+from ._dart import DART
+from ._gam import OpenBoostGAM
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -268,6 +270,7 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
             goss_top_rate=self.goss_top_rate,
             goss_other_rate=self.goss_other_rate,
             batch_size=self.batch_size,
+            random_state=self.random_state,
         )
         
         # Fit with callbacks
@@ -505,6 +508,7 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
                 goss_top_rate=self.goss_top_rate,
                 goss_other_rate=self.goss_other_rate,
                 batch_size=self.batch_size,
+                random_state=self.random_state,
             )
             self.booster_.fit(
                 X, y_encoded.astype(np.float32),
@@ -533,21 +537,18 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
                 batch_size=self.batch_size,
             )
             import warnings
-            unsupported = []
             if sample_weight is not None:
-                unsupported.append("sample_weight")
-            if eval_set is not None:
-                unsupported.append("eval_set")
-            if callbacks:
-                unsupported.append("callbacks/early_stopping_rounds")
-            if unsupported:
                 warnings.warn(
-                    f"MultiClassGradientBoosting does not yet support "
-                    f"{', '.join(unsupported)}. These arguments are ignored.",
+                    "MultiClassGradientBoosting does not yet support "
+                    "sample_weight. This argument is ignored.",
                     UserWarning,
                     stacklevel=2,
                 )
-            self.booster_.fit(X, y_encoded)
+            self.booster_.fit(
+                X, y_encoded,
+                callbacks=callbacks if callbacks else None,
+                eval_set=eval_set,
+            )
         
         # Copy early stopping attributes
         if hasattr(self.booster_, 'best_iteration_'):
@@ -1025,4 +1026,210 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
         
         return self.booster_.predict(X)
     
+    # score() inherited from RegressorMixin (R² score)
+
+
+class OpenBoostDARTRegressor(BaseEstimator, RegressorMixin):
+    """DART Regressor with sklearn-compatible interface.
+
+    Wraps :class:`DART` for use with GridSearchCV, Pipeline, etc.
+
+    Parameters
+    ----------
+    n_estimators : int, default=100
+        Number of boosting rounds.
+    max_depth : int, default=6
+        Maximum tree depth.
+    learning_rate : float, default=0.1
+        Shrinkage factor.
+    loss : str, default='squared_error'
+        Loss function. 'squared_error', 'absolute_error', 'huber'.
+    dropout_rate : float, default=0.1
+        Probability of dropping a tree each round.
+    skip_drop : float, default=0.0
+        Probability of skipping dropout entirely.
+    normalize : bool, default=True
+        Normalize tree weights after dropout.
+    min_child_weight : float, default=1.0
+        Minimum sum of hessian in a leaf.
+    reg_lambda : float, default=1.0
+        L2 regularization.
+    n_bins : int, default=256
+        Number of histogram bins.
+    early_stopping_rounds : int or None, default=None
+        Stop if validation loss doesn't improve for this many rounds.
+    verbose : int, default=0
+        Logging verbosity.
+    random_state : int or None, default=None
+        Random seed for reproducibility.
+    """
+
+    def __init__(
+        self,
+        n_estimators: int = 100,
+        max_depth: int = 6,
+        learning_rate: float = 0.1,
+        loss: Literal['squared_error', 'absolute_error', 'huber'] = 'squared_error',
+        dropout_rate: float = 0.1,
+        skip_drop: float = 0.0,
+        normalize: bool = True,
+        min_child_weight: float = 1.0,
+        reg_lambda: float = 1.0,
+        n_bins: int = 256,
+        early_stopping_rounds: int | None = None,
+        verbose: int = 0,
+        random_state: int | None = None,
+    ) -> None:
+        self.n_estimators = n_estimators
+        self.max_depth = max_depth
+        self.learning_rate = learning_rate
+        self.loss = loss
+        self.dropout_rate = dropout_rate
+        self.skip_drop = skip_drop
+        self.normalize = normalize
+        self.min_child_weight = min_child_weight
+        self.reg_lambda = reg_lambda
+        self.n_bins = n_bins
+        self.early_stopping_rounds = early_stopping_rounds
+        self.verbose = verbose
+        self.random_state = random_state
+
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+    ) -> OpenBoostDARTRegressor:
+        """Fit the DART regressor."""
+        _check_sklearn()
+        X, y = check_X_y(X, y, dtype=np.float32, y_numeric=True)
+        self.n_features_in_ = X.shape[1]
+
+        loss_map = {'squared_error': 'mse', 'absolute_error': 'mae', 'huber': 'huber'}
+        internal_loss = loss_map.get(self.loss, self.loss)
+
+        self.booster_ = DART(
+            n_trees=self.n_estimators,
+            max_depth=self.max_depth,
+            learning_rate=self.learning_rate,
+            loss=internal_loss,
+            dropout_rate=self.dropout_rate,
+            skip_drop=self.skip_drop,
+            normalize=self.normalize,
+            min_child_weight=self.min_child_weight,
+            reg_lambda=self.reg_lambda,
+            n_bins=self.n_bins,
+            random_state=self.random_state,
+        )
+
+        callbacks = []
+        if self.early_stopping_rounds is not None:
+            callbacks.append(EarlyStopping(
+                patience=self.early_stopping_rounds, restore_best=True,
+            ))
+        if self.verbose > 0:
+            from .._callbacks import Logger
+            callbacks.append(Logger(period=max(1, self.n_estimators // 10)))
+
+        self.booster_.fit(
+            X, y,
+            callbacks=callbacks if callbacks else None,
+            eval_set=eval_set,
+        )
+
+        if hasattr(self.booster_, 'best_iteration_'):
+            self.best_iteration_ = self.booster_.best_iteration_
+        if hasattr(self.booster_, 'best_score_'):
+            self.best_score_ = self.booster_.best_score_
+
+        self._cached_feature_importances = compute_feature_importances(
+            self.booster_, importance_type='frequency'
+        )
+        return self
+
+    def predict(self, X: NDArray) -> NDArray:
+        """Predict target values."""
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        return self.booster_.predict(X)
+
+    @property
+    def feature_importances_(self) -> NDArray:
+        """Feature importances (frequency-based)."""
+        check_is_fitted(self, '_cached_feature_importances')
+        return self._cached_feature_importances
+
+    # score() inherited from RegressorMixin (R² score)
+
+
+class OpenBoostGAMRegressor(BaseEstimator, RegressorMixin):
+    """GAM Regressor with sklearn-compatible interface.
+
+    Wraps :class:`OpenBoostGAM` for use with GridSearchCV, Pipeline, etc.
+
+    Parameters
+    ----------
+    n_estimators : int, default=1000
+        Number of boosting rounds.
+    learning_rate : float, default=0.01
+        Shrinkage factor.
+    reg_lambda : float, default=1.0
+        L2 regularization.
+    loss : str, default='squared_error'
+        Loss function. 'squared_error' or 'absolute_error'.
+    n_bins : int, default=256
+        Number of histogram bins.
+    verbose : int, default=0
+        Logging verbosity.
+    """
+
+    def __init__(
+        self,
+        n_estimators: int = 1000,
+        learning_rate: float = 0.01,
+        reg_lambda: float = 1.0,
+        loss: Literal['squared_error', 'absolute_error'] = 'squared_error',
+        n_bins: int = 256,
+        verbose: int = 0,
+    ) -> None:
+        self.n_estimators = n_estimators
+        self.learning_rate = learning_rate
+        self.reg_lambda = reg_lambda
+        self.loss = loss
+        self.n_bins = n_bins
+        self.verbose = verbose
+
+    def fit(self, X: NDArray, y: NDArray) -> OpenBoostGAMRegressor:
+        """Fit the GAM regressor."""
+        _check_sklearn()
+        X, y = check_X_y(X, y, dtype=np.float32, y_numeric=True)
+        self.n_features_in_ = X.shape[1]
+
+        loss_map = {'squared_error': 'mse', 'absolute_error': 'mae'}
+        internal_loss = loss_map.get(self.loss, self.loss)
+
+        self.booster_ = OpenBoostGAM(
+            n_trees=self.n_estimators,
+            learning_rate=self.learning_rate,
+            reg_lambda=self.reg_lambda,
+            loss=internal_loss,
+            n_bins=self.n_bins,
+        )
+        self.booster_.fit(X, y)
+        return self
+
+    def predict(self, X: NDArray) -> NDArray:
+        """Predict target values."""
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        return self.booster_.predict(X)
+
+    @property
+    def shape_values_(self) -> NDArray:
+        """Shape function values from the underlying GAM."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.shape_values_
+
     # score() inherited from RegressorMixin (R² score)

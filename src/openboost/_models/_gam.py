@@ -61,7 +61,18 @@ class OpenBoostGAM(PersistenceMixin):
     reg_lambda: float = 1.0
     loss: str | LossFunction = 'mse'
     n_bins: int = 256
-    
+    n_trees: int | None = field(default=None, repr=False)
+
+    def __post_init__(self) -> None:
+        if self.n_trees is not None:
+            if self.n_rounds != 1000:
+                warnings.warn(
+                    "Both n_trees and n_rounds specified. Using n_trees.",
+                    UserWarning,
+                    stacklevel=2,
+                )
+            self.n_rounds = self.n_trees
+
     # Fitted attributes
     shape_values_: NDArray | None = field(default=None, init=False, repr=False)
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)

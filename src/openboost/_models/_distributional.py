@@ -41,6 +41,7 @@ from typing import TYPE_CHECKING, Literal
 import numpy as np
 
 from .._array import BinnedArray, array
+from .._callbacks import Callback, CallbackManager, EarlyStopping, TrainingState
 from .._core._growth import TreeStructure
 from .._core._tree import fit_tree
 from .._distributions import (
@@ -49,6 +50,7 @@ from .._distributions import (
     get_distribution,
 )
 from .._persistence import PersistenceMixin
+from .._validation import validate_eval_set
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -116,13 +118,21 @@ class DistributionalGBDT(PersistenceMixin):
     _base_scores: dict[str, float] = field(default_factory=dict, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
     
-    def fit(self, X: NDArray, y: NDArray) -> DistributionalGBDT:
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        callbacks: list[Callback] | None = None,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+    ) -> DistributionalGBDT:
         """Fit the distributional gradient boosting model.
-        
+
         Args:
             X: Training features, shape (n_samples, n_features)
             y: Training targets, shape (n_samples,)
-            
+            callbacks: List of Callback instances (e.g. EarlyStopping, Logger).
+            eval_set: Validation set(s) as list of (X_val, y_val) tuples.
+
         Returns:
             self: Fitted model
         """
@@ -156,6 +166,24 @@ class DistributionalGBDT(PersistenceMixin):
             raw_preds[param_name] = np.full(n_samples, raw_init, dtype=np.float32)
             params[param_name] = self.distribution_.link(param_name, raw_preds[param_name])
         
+        # Setup callbacks
+        cb_manager = CallbackManager(callbacks)
+        state = TrainingState(model=self, n_rounds=self.n_trees)
+        cb_manager.on_train_begin(state)
+
+        eval_set = validate_eval_set(eval_set, self.X_binned_.n_features)
+        if eval_set is None:
+            for cb in (callbacks or []):
+                if isinstance(cb, EarlyStopping):
+                    warnings.warn(
+                        "EarlyStopping callback provided but eval_set is None. "
+                        "Early stopping requires eval_set to compute validation "
+                        "loss and will have no effect.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
+                    break
+
         # Training loop
         for _round_idx in range(self.n_trees):
             # Update params from raw predictions (apply link functions)
@@ -192,7 +220,20 @@ class DistributionalGBDT(PersistenceMixin):
                     tree_pred = tree_pred.copy_to_host()
                 
                 raw_preds[param_name] += self.learning_rate * tree_pred
-        
+
+            # Callbacks
+            state.round_idx = _round_idx
+            if cb_manager.callbacks:
+                # Use NLL as loss metric
+                state.train_loss = float(np.mean(
+                    self.distribution_.nll(y, params)
+                ))
+                if eval_set:
+                    state.val_loss = float(self.nll(eval_set[0][0], eval_set[0][1]))
+                if not cb_manager.on_round_end(state):
+                    break
+
+        cb_manager.on_train_end(state)
         return self
     
     def _compute_gradients(

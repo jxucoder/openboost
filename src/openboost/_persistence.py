@@ -475,3 +475,98 @@ class PersistenceMixin:
     def __setstate__(self, state: dict[str, Any]) -> None:
         """Support for pickle deserialization."""
         self._from_state_dict(state)
+
+
+def load(path: str | Path) -> PersistenceMixin:
+    """Load any OpenBoost model from file, auto-detecting the model class.
+
+    This is a convenience function that reads the saved class name from the
+    state dict and dispatches to the correct class loader.
+
+    .. warning::
+        This method uses joblib/pickle deserialization which can execute
+        arbitrary code. Never load models from untrusted or unverified sources.
+
+    Args:
+        path: File path to load from.
+
+    Returns:
+        Loaded model instance (GradientBoosting, DART, NaturalBoost, etc.)
+
+    Example:
+        >>> model = ob.load('my_model.joblib')
+        >>> predictions = model.predict(X_test)
+    """
+    import warnings
+
+    import joblib
+
+    warnings.warn(
+        "Loading a model with joblib/pickle can execute arbitrary code. "
+        "Only load models from trusted sources.",
+        UserWarning,
+        stacklevel=2,
+    )
+
+    path = Path(path)
+    state = joblib.load(path)
+    saved_class = state.get("__class__", "")
+
+    # Lazy imports to avoid circular dependencies
+    from ._models._boosting import GradientBoosting, MultiClassGradientBoosting
+    from ._models._dart import DART
+    from ._models._distributional import (
+        DistributionalGBDT,
+        NaturalBoost,
+        NaturalBoostGamma,
+        NaturalBoostLogNormal,
+        NaturalBoostNegBin,
+        NaturalBoostNormal,
+        NaturalBoostPoisson,
+        NaturalBoostStudentT,
+        NaturalBoostTweedie,
+    )
+    from ._models._gam import OpenBoostGAM
+    from ._models._linear_leaf import LinearLeafGBDT
+
+    _CLASS_MAP: dict[str, type[PersistenceMixin]] = {
+        cls.__name__: cls
+        for cls in [
+            GradientBoosting,
+            MultiClassGradientBoosting,
+            DART,
+            OpenBoostGAM,
+            DistributionalGBDT,
+            NaturalBoost,
+            NaturalBoostNormal,
+            NaturalBoostLogNormal,
+            NaturalBoostGamma,
+            NaturalBoostPoisson,
+            NaturalBoostStudentT,
+            NaturalBoostTweedie,
+            NaturalBoostNegBin,
+            LinearLeafGBDT,
+        ]
+    }
+
+    if saved_class not in _CLASS_MAP:
+        raise ValueError(
+            f"Unknown model class: {saved_class!r}. "
+            f"Known classes: {sorted(_CLASS_MAP.keys())}"
+        )
+
+    cls = _CLASS_MAP[saved_class]
+
+    # Create instance and restore state (same logic as PersistenceMixin.load
+    # but without the redundant joblib.load)
+    model = cls.__new__(cls)
+    if hasattr(cls, "__dataclass_fields__"):
+        from dataclasses import MISSING
+
+        for name, field_info in cls.__dataclass_fields__.items():
+            if field_info.default is not MISSING:
+                setattr(model, name, field_info.default)
+            elif field_info.default_factory is not MISSING:
+                setattr(model, name, field_info.default_factory())
+    model._from_state_dict(state)
+    return model

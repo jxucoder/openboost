@@ -20,10 +20,13 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from .._array import BinnedArray, array
+from .._callbacks import Callback, CallbackManager, EarlyStopping, TrainingState
 from .._core._growth import TreeStructure
 from .._core._tree import fit_tree
 from .._loss import LossFunction, get_loss_function
 from .._persistence import PersistenceMixin
+from .._validation import validate_eval_set
+from ._boosting import _compute_loss_value
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -77,7 +80,13 @@ class DART(PersistenceMixin):
     reg_lambda: float = 1.0
     n_bins: int = 256
     seed: int | None = None
-    
+    random_state: int | None = field(default=None, repr=False)
+
+    def __post_init__(self) -> None:
+        # Allow random_state as alias for seed (consistency with other models)
+        if self.random_state is not None and self.seed is None:
+            self.seed = self.random_state
+
     # Fitted attributes (not init)
     trees_: list[TreeStructure] = field(default_factory=list, init=False, repr=False)
     tree_weights_: list[float] = field(default_factory=list, init=False, repr=False)
@@ -85,13 +94,21 @@ class DART(PersistenceMixin):
     _loss_fn: LossFunction | None = field(default=None, init=False, repr=False)
     _rng: np.random.Generator | None = field(default=None, init=False, repr=False)
     
-    def fit(self, X: NDArray, y: NDArray) -> DART:
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        callbacks: list[Callback] | None = None,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+    ) -> DART:
         """Fit the DART model.
-        
+
         Args:
             X: Training features, shape (n_samples, n_features).
             y: Training targets, shape (n_samples,).
-            
+            callbacks: List of Callback instances (e.g. EarlyStopping, Logger).
+            eval_set: Validation set(s) as list of (X_val, y_val) tuples.
+
         Returns:
             self: The fitted model.
         """
@@ -122,7 +139,26 @@ class DART(PersistenceMixin):
         else:
             self.base_score_ = np.float32(np.mean(y))
         pred = np.full(n_samples, self.base_score_, dtype=np.float32)
-        
+
+        # Setup callbacks
+        cb_manager = CallbackManager(callbacks)
+        state = TrainingState(model=self, n_rounds=self.n_trees)
+        cb_manager.on_train_begin(state)
+
+        # Warn if EarlyStopping without eval_set
+        eval_set = validate_eval_set(eval_set, self.X_binned_.n_features)
+        if eval_set is None:
+            for cb in (callbacks or []):
+                if isinstance(cb, EarlyStopping):
+                    warnings.warn(
+                        "EarlyStopping callback provided but eval_set is None. "
+                        "Early stopping requires eval_set to compute validation "
+                        "loss and will have no effect.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
+                    break
+
         # Train trees
         for _i in range(self.n_trees):
             # Decide whether to apply dropout this round
@@ -190,7 +226,21 @@ class DART(PersistenceMixin):
             else:
                 # No dropout this round: full prediction from all trees
                 pred = self._predict_internal(self.X_binned_)
-        
+
+            # Callbacks
+            state.round_idx = _i
+            if cb_manager.callbacks:
+                state.train_loss = _compute_loss_value(self.loss, pred, y)
+                if eval_set:
+                    val_pred = self.predict(eval_set[0][0])
+                    y_val = np.asarray(eval_set[0][1], dtype=np.float32).ravel()
+                    state.val_loss = _compute_loss_value(
+                        self.loss, val_pred, y_val
+                    )
+                if not cb_manager.on_round_end(state):
+                    break
+
+        cb_manager.on_train_end(state)
         return self
     
     def _select_dropped_trees(self) -> list[int]:

@@ -23,7 +23,7 @@ import numpy as np
 
 from .._array import BinnedArray, array
 from .._backends import is_cuda
-from .._callbacks import Callback, CallbackManager, TrainingState
+from .._callbacks import Callback, CallbackManager, EarlyStopping, TrainingState
 from .._core._growth import TreeStructure
 from .._core._tree import fit_tree
 from .._loss import LossFunction, compute_loss_value, get_loss_function
@@ -181,7 +181,8 @@ class GradientBoosting(PersistenceMixin):
     batch_size: int | None = None
     n_gpus: int | None = None
     devices: list[int] | None = None
-    
+    random_state: int | None = None
+
     # Fitted attributes (not init)
     trees_: list[TreeStructure] = field(default_factory=list, init=False, repr=False)
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
@@ -248,9 +249,12 @@ class GradientBoosting(PersistenceMixin):
             n_samples=n_samples,
         )
         
+        # Initialize RNG for reproducibility
+        self._rng = np.random.default_rng(self.random_state)
+
         # Get loss function (pass parameters for parameterized losses)
         self._loss_fn = get_loss_function(
-            self.loss, 
+            self.loss,
             quantile_alpha=self.quantile_alpha,
             tweedie_rho=self.tweedie_rho,
         )
@@ -594,7 +598,20 @@ class GradientBoosting(PersistenceMixin):
         cb_manager = CallbackManager(callbacks)
         state = TrainingState(model=self, n_rounds=self.n_trees)
         cb_manager.on_train_begin(state)
-        
+
+        # Warn if EarlyStopping is used without eval_set
+        if eval_set is None:
+            for cb in (callbacks or []):
+                if isinstance(cb, EarlyStopping):
+                    warnings.warn(
+                        "EarlyStopping callback provided but eval_set is None. "
+                        "Early stopping requires eval_set to compute validation "
+                        "loss and will have no effect.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
+                    break
+
         # Move y to GPU
         y_gpu = cuda.to_device(y)
         
@@ -650,6 +667,26 @@ class GradientBoosting(PersistenceMixin):
                 and not has_missing
                 and not has_categorical
             )
+        if is_cuda() and not _use_gpu_native:
+            reasons = []
+            if self.reg_alpha != 0.0:
+                reasons.append("reg_alpha != 0")
+            if self.colsample_bytree < 1.0:
+                reasons.append("colsample_bytree < 1.0")
+            if self.subsample < 1.0:
+                reasons.append("subsample < 1.0")
+            if has_missing:
+                reasons.append("data contains missing values")
+            if has_categorical:
+                reasons.append("data contains categorical features")
+            if reasons:
+                warnings.warn(
+                    f"GPU-native tree builder not available ({', '.join(reasons)}). "
+                    "Falling back to standard fit_tree(). This is slower but "
+                    "functionally identical.",
+                    UserWarning,
+                    stacklevel=2,
+                )
         if _use_gpu_native:
             from .._core._tree import fit_tree_gpu_native
             max_nodes = 2**(self.max_depth + 1) - 1
@@ -721,7 +758,7 @@ class GradientBoosting(PersistenceMixin):
                     grad_cpu, hess_cpu,
                     top_rate=self.goss_top_rate,
                     other_rate=self.goss_other_rate,
-                    seed=i,
+                    seed=int(self._rng.integers(2**31)),
                 )
                 
                 # Create weighted gradient/hessian arrays
@@ -884,6 +921,19 @@ class GradientBoosting(PersistenceMixin):
         state = TrainingState(model=self, n_rounds=self.n_trees)
         cb_manager.on_train_begin(state)
 
+        # Warn if EarlyStopping is used without eval_set
+        if eval_set is None:
+            for cb in (callbacks or []):
+                if isinstance(cb, EarlyStopping):
+                    warnings.warn(
+                        "EarlyStopping callback provided but eval_set is None. "
+                        "Early stopping requires eval_set to compute validation "
+                        "loss and will have no effect.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
+                    break
+
         # Initialize predictions with base score
         base = getattr(self, 'base_score_', np.float32(0.0))
         pred = np.full(n_samples, base, dtype=np.float32)
@@ -915,7 +965,7 @@ class GradientBoosting(PersistenceMixin):
                     grad, hess,
                     top_rate=self.goss_top_rate,
                     other_rate=self.goss_other_rate,
-                    seed=i,  # Different seed per round
+                    seed=int(self._rng.integers(2**31)),
                 )
                 
                 # Create weighted gradient/hessian arrays
@@ -992,15 +1042,26 @@ class GradientBoosting(PersistenceMixin):
         cb_manager.on_train_end(state)
     
     def predict(self, X: NDArray | BinnedArray) -> NDArray:
-        """Generate predictions for X.
-        
+        """Generate raw predictions for X.
+
+        For regression losses (mse, mae, huber, quantile): returns predicted
+        values directly.
+
+        For classification losses (logloss): returns raw logits (log-odds),
+        not probabilities. Use ``predict_proba()`` for class probabilities
+        or ``predict_label()`` for 0/1 class labels.
+
+        Note:
+            This matches XGBoost's ``Booster.predict()`` behavior. The sklearn
+            wrapper ``OpenBoostClassifier.predict()`` returns class labels.
+
         Args:
             X: Features to predict on, shape (n_samples, n_features).
                Can be raw numpy array or pre-binned BinnedArray.
-               
+
         Returns:
-            predictions: Shape (n_samples,).
-            
+            predictions: Shape (n_samples,). Raw scores/logits.
+
         Raises:
             ValueError: If model is not fitted or X has wrong shape.
         """
@@ -1074,6 +1135,22 @@ class GradientBoosting(PersistenceMixin):
         prob_0 = 1 - prob_1
         
         return np.column_stack([prob_0, prob_1])
+
+    def predict_label(self, X: NDArray | BinnedArray, threshold: float = 0.5) -> NDArray:
+        """Predict class labels for binary classification.
+
+        Convenience method that applies sigmoid and thresholds. Only valid
+        when loss='logloss'.
+
+        Args:
+            X: Features to predict on.
+            threshold: Decision threshold (default 0.5).
+
+        Returns:
+            labels: Shape (n_samples,), integer values 0 or 1.
+        """
+        proba = self.predict_proba(X)
+        return (proba[:, 1] >= threshold).astype(np.int32)
 
 
 _fill_zeros_kernel = None
@@ -1170,12 +1247,20 @@ class MultiClassGradientBoosting(PersistenceMixin):
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
 
-    def fit(self, X: NDArray, y: NDArray) -> MultiClassGradientBoosting:
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        callbacks: list[Callback] | None = None,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+    ) -> MultiClassGradientBoosting:
         """Fit the multi-class gradient boosting model.
 
         Args:
             X: Training features, shape (n_samples, n_features).
             y: Training labels, shape (n_samples,). Integer class labels 0 to n_classes-1.
+            callbacks: List of Callback instances (e.g. EarlyStopping, Logger).
+            eval_set: Validation set(s) as list of (X_val, y_val) tuples.
 
         Returns:
             self: The fitted model.
@@ -1206,10 +1291,28 @@ class MultiClassGradientBoosting(PersistenceMixin):
 
         # Initialize predictions for each class
         pred = np.zeros((n_samples, self.n_classes), dtype=np.float32)
-        
+
+        # Setup callbacks
+        cb_manager = CallbackManager(callbacks)
+        state = TrainingState(model=self, n_rounds=self.n_trees)
+        cb_manager.on_train_begin(state)
+
+        eval_set = validate_eval_set(eval_set, self.X_binned_.n_features)
+        if eval_set is None:
+            for cb in (callbacks or []):
+                if isinstance(cb, EarlyStopping):
+                    warnings.warn(
+                        "EarlyStopping callback provided but eval_set is None. "
+                        "Early stopping requires eval_set to compute validation "
+                        "loss and will have no effect.",
+                        UserWarning,
+                        stacklevel=2,
+                    )
+                    break
+
         # Determine sampling strategy (Phase 17)
         use_goss = self.subsample_strategy == 'goss'
-        
+
         # Train trees
         for round_idx in range(self.n_trees):
             # Compute softmax gradients for all classes
@@ -1279,9 +1382,29 @@ class MultiClassGradientBoosting(PersistenceMixin):
                 pred[:, k] += self.learning_rate * tree_pred
             
             self.trees_.append(round_trees)
-        
+
+            # Callbacks
+            state.round_idx = round_idx
+            if cb_manager.callbacks:
+                # Cross-entropy loss
+                from scipy.special import log_softmax
+                log_probs = log_softmax(pred, axis=1)
+                state.train_loss = float(-np.mean(
+                    log_probs[np.arange(n_samples), y]
+                ))
+                if eval_set:
+                    val_proba = self.predict_proba(eval_set[0][0])
+                    y_val = np.asarray(eval_set[0][1], dtype=np.int32).ravel()
+                    val_proba_clipped = np.clip(val_proba, 1e-15, 1.0)
+                    state.val_loss = float(-np.mean(
+                        np.log(val_proba_clipped[np.arange(len(y_val)), y_val])
+                    ))
+                if not cb_manager.on_round_end(state):
+                    break
+
+        cb_manager.on_train_end(state)
         return self
-    
+
     def predict_raw(self, X: NDArray | BinnedArray) -> NDArray:
         """Get raw predictions (logits) for each class.
 

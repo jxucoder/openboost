@@ -887,25 +887,34 @@ def suggest_params(
     y: NDArray,
     task: Literal['regression', 'classification', 'distributional'] = 'regression',
     n_estimators_cap: int = 500,
+    style: Literal['sklearn', 'core'] = 'sklearn',
 ) -> dict[str, Any]:
     """Suggest hyperparameters based on dataset characteristics.
-    
+
     This provides reasonable starting points based on heuristics. For best
     results, use these as initial values and tune with cross-validation.
-    
+
     Args:
         X: Feature matrix, shape (n_samples, n_features).
         y: Target values, shape (n_samples,).
         task: Type of task - 'regression', 'classification', or 'distributional'.
         n_estimators_cap: Maximum number of estimators to suggest.
-        
+        style: Parameter naming style. 'sklearn' returns names like
+            ``n_estimators`` for use with sklearn wrappers. 'core' returns
+            names like ``n_trees`` for use with GradientBoosting directly.
+
     Returns:
-        Dictionary of suggested hyperparameters suitable for passing to
-        OpenBoostRegressor, OpenBoostClassifier, etc.
-        
+        Dictionary of suggested hyperparameters.
+
     Example:
+        >>> # For sklearn wrappers (default)
         >>> params = suggest_params(X_train, y_train, task='regression')
         >>> model = OpenBoostRegressor(**params)
+        >>> model.fit(X_train, y_train)
+        >>>
+        >>> # For core API
+        >>> params = suggest_params(X_train, y_train, style='core')
+        >>> model = GradientBoosting(**params)
         >>> model.fit(X_train, y_train)
         
     Notes:
@@ -989,6 +998,10 @@ def suggest_params(
     # Multiclass may benefit from shallower trees
     if is_multiclass and n_unique > 10:
         params['max_depth'] = min(params['max_depth'], 6)
+
+    if style == 'core':
+        _sklearn_to_core = {'n_estimators': 'n_trees'}
+        params = {_sklearn_to_core.get(k, k): v for k, v in params.items()}
 
     return params
 

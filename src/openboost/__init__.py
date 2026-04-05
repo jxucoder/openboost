@@ -96,7 +96,7 @@ Tree = TreeStructure  # Alias for backward compatibility
 # =============================================================================
 # Backend Control
 # =============================================================================
-from ._backends import get_backend, is_cpu, is_cuda, set_backend
+from ._backends import backend_context, get_backend, is_cpu, is_cuda, set_backend
 
 # =============================================================================
 # Callbacks (Phase 13)
@@ -186,9 +186,11 @@ from ._models import (
     NaturalBoostStudentT,
     NaturalBoostTweedie,
     OpenBoostClassifier,
-    # Phase 15: sklearn wrappers for new models
+    # Phase 15+: sklearn wrappers for new models
+    OpenBoostDARTRegressor,
     OpenBoostDistributionalRegressor,
     OpenBoostGAM,
+    OpenBoostGAMRegressor,
     OpenBoostLinearLeafRegressor,
     # Phase 13: sklearn-compatible wrappers
     OpenBoostRegressor,
@@ -218,6 +220,11 @@ from ._models import (
 from ._models import (
     NGBoostTweedie as _NGBoostTweedie,
 )
+
+# =============================================================================
+# Persistence
+# =============================================================================
+from ._persistence import load
 from ._profiler import ProfilingCallback
 
 # =============================================================================
@@ -354,6 +361,8 @@ __all__ = [
     # sklearn-compatible wrappers (Phase 13 + 15)
     "OpenBoostRegressor",
     "OpenBoostClassifier",
+    "OpenBoostDARTRegressor",
+    "OpenBoostGAMRegressor",
     "OpenBoostDistributionalRegressor",
     "OpenBoostLinearLeafRegressor",
     # Callbacks (Phase 13)
@@ -423,8 +432,11 @@ __all__ = [
     "predict_tree",
     "predict_ensemble",
     # Backend
+    "backend_context",
     "get_backend",
     "set_backend",
+    # Persistence
+    "load",
     "is_cuda",
     "is_cpu",
     # Sampling (Phase 17)

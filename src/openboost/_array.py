@@ -242,7 +242,22 @@ def array(
     for idx in categorical_set:
         if idx < 0 or idx >= n_features:
             raise ValueError(f"categorical_features index {idx} out of range [0, {n_features})")
-    
+
+    # Auto-detect string/object columns as categorical
+    if hasattr(X, 'dtypes'):
+        # DataFrame: check each column's dtype
+        for i, dtype in enumerate(X.dtypes):
+            if dtype is object or hasattr(dtype, 'categories'):
+                categorical_set.add(i)
+    elif X_np.dtype is np.dtype(object):
+        # Object array: check which columns are non-numeric
+        for i in range(n_features):
+            col = X_np[:, i]
+            try:
+                col.astype(np.float64)
+            except (ValueError, TypeError):
+                categorical_set.add(i)
+
     # Process features (numeric vs categorical)
     # Returns feature-major layout: (n_features, n_samples) — no transpose needed
     binned, bin_edges, has_missing, is_categorical, category_maps, n_categories = _bin_features(
@@ -273,21 +288,25 @@ def array(
 
 def _to_numpy(arr: ArrayLike) -> NDArray:
     """Convert various array types to numpy.
-    
-    Handles: numpy, PyTorch, JAX, CuPy
+
+    Handles: numpy, pandas DataFrame, PyTorch, JAX, CuPy
     """
     # Already numpy
     if isinstance(arr, np.ndarray):
         return arr
-    
+
+    # Pandas DataFrame — use .to_numpy() to preserve dtypes
+    if hasattr(arr, 'to_numpy') and hasattr(arr, 'dtypes'):
+        return arr.to_numpy()
+
     # PyTorch
     if hasattr(arr, 'cpu') and hasattr(arr, 'numpy'):
         return arr.cpu().numpy()
-    
+
     # JAX (has __array__ protocol)
     if hasattr(arr, '__array__'):
         return np.asarray(arr)
-    
+
     # CuPy
     if hasattr(arr, 'get'):
         return arr.get()

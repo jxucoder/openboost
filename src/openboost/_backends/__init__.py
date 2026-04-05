@@ -79,3 +79,30 @@ def is_cpu() -> bool:
     """Check if using CPU backend."""
     return get_backend() == "cpu"
 
+
+class backend_context:
+    """Context manager for temporarily switching the compute backend.
+
+    Restores the previous backend on exit, even if an exception occurs.
+
+    Example::
+
+        with backend_context('cpu'):
+            model.fit(X, y)  # Forces CPU
+        # Original backend is restored here
+    """
+
+    def __init__(self, backend: Literal["cuda", "cpu"]) -> None:
+        self._backend = backend
+        self._previous: Literal["cuda", "cpu"] | None = None
+
+    def __enter__(self) -> None:
+        with _BACKEND_LOCK:
+            self._previous = _BACKEND
+        set_backend(self._backend)
+
+    def __exit__(self, *exc: object) -> None:
+        global _BACKEND
+        with _BACKEND_LOCK:
+            _BACKEND = self._previous
+

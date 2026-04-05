@@ -40,7 +40,9 @@ from ._gam import OpenBoostGAM
 from ._linear_leaf import LinearLeafGBDT, LinearLeafTree
 from ._sklearn import (
     OpenBoostClassifier,
+    OpenBoostDARTRegressor,
     OpenBoostDistributionalRegressor,
+    OpenBoostGAMRegressor,
     OpenBoostLinearLeafRegressor,
     OpenBoostRegressor,
 )
@@ -56,7 +58,9 @@ __all__ = [
     # Phase 13: sklearn-compatible wrappers
     "OpenBoostRegressor",
     "OpenBoostClassifier",
-    # Phase 15: sklearn wrappers for new models
+    # Phase 15+: sklearn wrappers for new models
+    "OpenBoostDARTRegressor",
+    "OpenBoostGAMRegressor",
     "OpenBoostDistributionalRegressor",
     "OpenBoostLinearLeafRegressor",
     # Phase 15/16: Distributional GBDT - Primary names
