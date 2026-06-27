@@ -96,7 +96,14 @@ Tree = TreeStructure  # Alias for backward compatibility
 # =============================================================================
 # Backend Control
 # =============================================================================
-from ._backends import backend_context, get_backend, is_cpu, is_cuda, set_backend
+from ._backends import (
+    backend_context,
+    clear_tree_workspace_cache,
+    get_backend,
+    is_cpu,
+    is_cuda,
+    set_backend,
+)
 
 # =============================================================================
 # Callbacks (Phase 13)
@@ -433,6 +440,7 @@ __all__ = [
     "predict_ensemble",
     # Backend
     "backend_context",
+    "clear_tree_workspace_cache",
     "get_backend",
     "set_backend",
     # Persistence

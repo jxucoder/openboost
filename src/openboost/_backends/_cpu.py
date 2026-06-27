@@ -555,11 +555,15 @@ def _find_best_categorical_split(
                     best_split = i + 1
                     best_miss_left = True
     
-    # Build bitmask: categories in sorted order before split_point go left
+    # Build bitmask: categories in sorted order before split_point go left.
+    # cat_bitset is 64-bit, so category bins >= 64 cannot be represented; they
+    # are never placed in the left set here and are always routed right at
+    # partition/predict time (kept consistent across CPU and GPU).
     cat_bitset = 0
     for i in range(best_split):
         cat = sorted_cats[i]
-        cat_bitset |= (1 << cat)
+        if cat < 64:
+            cat_bitset |= (1 << cat)
     
     return best_gain, best_split, cat_bitset, best_miss_left
 
@@ -711,9 +715,13 @@ def _predict_cpu_with_categorical(
             if bin_value == MISSING_BIN:
                 node = tree_left[node] if tree_missing_left[node] else tree_right[node]
             elif is_categorical_split[node]:
-                # Categorical split: use bitmask
+                # Categorical split: use bitmask. Bins >= 64 are not
+                # representable in the 64-bit bitset and always go right.
                 bitset = cat_bitsets[node]
-                node = tree_left[node] if np.int64(1) << bin_value & bitset else tree_right[node]
+                goes_left = False
+                if bin_value < 64:
+                    goes_left = ((np.int64(1) << bin_value) & bitset) != 0
+                node = tree_left[node] if goes_left else tree_right[node]
             else:
                 # Numeric split: use threshold
                 threshold = tree_thresholds[node]

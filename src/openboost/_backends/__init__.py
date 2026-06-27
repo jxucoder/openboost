@@ -80,10 +80,30 @@ def is_cpu() -> bool:
     return get_backend() == "cpu"
 
 
+def clear_tree_workspace_cache() -> None:
+    """Free cached GPU tree-building workspace arrays (no-op on CPU).
+
+    Call this between training runs that use different data shapes to avoid
+    holding onto stale GPU allocations. Safe to call on CPU-only installs,
+    where it does nothing.
+    """
+    if get_backend() != "cuda":
+        return
+    from ._cuda import clear_tree_workspace_cache as _clear
+    _clear()
+
+
 class backend_context:
     """Context manager for temporarily switching the compute backend.
 
-    Restores the previous backend on exit, even if an exception occurs.
+    Restores the previous backend on exit, even if an exception occurs. If no
+    backend had been resolved yet on entry, exit restores the unresolved state
+    so the backend is auto-detected again on next use.
+
+    Note:
+        This mutates the **process-global** backend, not a thread-local one.
+        It is therefore not safe to use concurrently from multiple threads —
+        one thread's context will affect every other thread.
 
     Example::
 
@@ -103,6 +123,9 @@ class backend_context:
 
     def __exit__(self, *exc: object) -> None:
         global _BACKEND
+        # Restore by direct assignment (set_backend only writes the global and
+        # rejects None; direct assignment also lets us restore the
+        # "unresolved -> auto-detect" state when _previous is None).
         with _BACKEND_LOCK:
             _BACKEND = self._previous
 
