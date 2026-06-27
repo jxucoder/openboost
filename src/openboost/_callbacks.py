@@ -23,6 +23,7 @@ Example:
 from __future__ import annotations
 
 import copy
+import warnings
 from abc import ABC
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -418,3 +419,25 @@ class CallbackManager:
         """Call on_train_end for all callbacks."""
         for cb in self.callbacks:
             cb.on_train_end(state)
+
+
+def warn_if_early_stopping_without_eval_set(
+    callbacks: list[Callback] | None,
+    eval_set: object | None,
+) -> None:
+    """Warn if an ``EarlyStopping`` callback is set but no ``eval_set`` is given.
+
+    Early stopping needs a validation set to compute the monitored metric, so
+    without ``eval_set`` it silently has no effect. Shared by all model fit
+    paths to keep the message and behavior consistent.
+    """
+    if eval_set is not None or not callbacks:
+        return
+    if any(isinstance(cb, EarlyStopping) for cb in callbacks):
+        warnings.warn(
+            "EarlyStopping callback provided but eval_set is None. "
+            "Early stopping requires eval_set to compute validation "
+            "loss and will have no effect.",
+            UserWarning,
+            stacklevel=3,
+        )

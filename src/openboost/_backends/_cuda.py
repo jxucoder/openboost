@@ -1275,9 +1275,13 @@ def _predict_with_categorical_kernel(
         if bin_value == 255:  # MISSING_BIN
             node = tree_left[node] if tree_missing_left[node] else tree_right[node]
         elif is_categorical_split[node]:
-            # Categorical split: use bitmask
+            # Categorical split: use bitmask. Bins >= 64 are not representable
+            # in the 64-bit bitset and always go right.
             bitset = cat_bitsets[node]
-            node = tree_left[node] if int64(1) << bin_value & bitset else tree_right[node]
+            goes_left = False
+            if bin_value < 64:
+                goes_left = ((int64(1) << bin_value) & bitset) != 0
+            node = tree_left[node] if goes_left else tree_right[node]
         else:
             # Numeric split: use threshold
             threshold = tree_thresholds[node]
@@ -1648,11 +1652,14 @@ def _find_best_categorical_split_kernel(
                         best_split = i + 1
                         best_miss_left_cat = True
         
-        # Build bitmask: categories before split_point go left
+        # Build bitmask: categories before split_point go left.
+        # cat_bitset is 64-bit; category bins >= 64 cannot be represented and
+        # are always routed right (consistent with CPU split-finding/predict).
         cat_bitset = int64(0)
         for i in range(best_split):
             cat = sorted_cats[i]
-            cat_bitset |= (int64(1) << cat)
+            if cat < 64:
+                cat_bitset |= (int64(1) << cat)
         
         best_gains[feature_idx] = best_gain_cat
         best_thresholds[feature_idx] = best_split

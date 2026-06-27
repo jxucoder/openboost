@@ -41,7 +41,12 @@ from typing import TYPE_CHECKING, Literal
 import numpy as np
 
 from .._array import BinnedArray, array
-from .._callbacks import Callback, CallbackManager, EarlyStopping, TrainingState
+from .._callbacks import (
+    Callback,
+    CallbackManager,
+    TrainingState,
+    warn_if_early_stopping_without_eval_set,
+)
 from .._core._growth import TreeStructure
 from .._core._tree import fit_tree
 from .._distributions import (
@@ -172,17 +177,7 @@ class DistributionalGBDT(PersistenceMixin):
         cb_manager.on_train_begin(state)
 
         eval_set = validate_eval_set(eval_set, self.X_binned_.n_features)
-        if eval_set is None:
-            for cb in (callbacks or []):
-                if isinstance(cb, EarlyStopping):
-                    warnings.warn(
-                        "EarlyStopping callback provided but eval_set is None. "
-                        "Early stopping requires eval_set to compute validation "
-                        "loss and will have no effect.",
-                        UserWarning,
-                        stacklevel=2,
-                    )
-                    break
+        warn_if_early_stopping_without_eval_set(callbacks, eval_set)
 
         # Training loop
         for _round_idx in range(self.n_trees):

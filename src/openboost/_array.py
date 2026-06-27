@@ -243,14 +243,18 @@ def array(
         if idx < 0 or idx >= n_features:
             raise ValueError(f"categorical_features index {idx} out of range [0, {n_features})")
 
-    # Auto-detect string/object columns as categorical
+    # Auto-detect string/object columns as categorical.
+    # NOTE: test via dtype.kind, not `is object` — a numpy/pandas dtype is a
+    # distinct object from the builtin `object` (np.dtype('O') is object -> False),
+    # so an identity check silently misses string/object columns. dtype.kind is
+    # 'O' for object, 'U'/'S' for fixed-width unicode/bytes strings.
     if hasattr(X, 'dtypes'):
         # DataFrame: check each column's dtype
         for i, dtype in enumerate(X.dtypes):
-            if dtype is object or hasattr(dtype, 'categories'):
+            if getattr(dtype, 'kind', '') in ('O', 'U', 'S') or hasattr(dtype, 'categories'):
                 categorical_set.add(i)
-    elif X_np.dtype is np.dtype(object):
-        # Object array: check which columns are non-numeric
+    elif X_np.dtype.kind in ('O', 'U', 'S'):
+        # Object/string array: check which columns are non-numeric
         for i in range(n_features):
             col = X_np[:, i]
             try:

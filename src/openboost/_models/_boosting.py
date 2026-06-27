@@ -23,7 +23,12 @@ import numpy as np
 
 from .._array import BinnedArray, array
 from .._backends import is_cuda
-from .._callbacks import Callback, CallbackManager, EarlyStopping, TrainingState
+from .._callbacks import (
+    Callback,
+    CallbackManager,
+    TrainingState,
+    warn_if_early_stopping_without_eval_set,
+)
 from .._core._growth import TreeStructure
 from .._core._tree import fit_tree
 from .._loss import LossFunction, compute_loss_value, get_loss_function
@@ -599,18 +604,7 @@ class GradientBoosting(PersistenceMixin):
         state = TrainingState(model=self, n_rounds=self.n_trees)
         cb_manager.on_train_begin(state)
 
-        # Warn if EarlyStopping is used without eval_set
-        if eval_set is None:
-            for cb in (callbacks or []):
-                if isinstance(cb, EarlyStopping):
-                    warnings.warn(
-                        "EarlyStopping callback provided but eval_set is None. "
-                        "Early stopping requires eval_set to compute validation "
-                        "loss and will have no effect.",
-                        UserWarning,
-                        stacklevel=2,
-                    )
-                    break
+        warn_if_early_stopping_without_eval_set(callbacks, eval_set)
 
         # Move y to GPU
         y_gpu = cuda.to_device(y)
@@ -921,18 +915,7 @@ class GradientBoosting(PersistenceMixin):
         state = TrainingState(model=self, n_rounds=self.n_trees)
         cb_manager.on_train_begin(state)
 
-        # Warn if EarlyStopping is used without eval_set
-        if eval_set is None:
-            for cb in (callbacks or []):
-                if isinstance(cb, EarlyStopping):
-                    warnings.warn(
-                        "EarlyStopping callback provided but eval_set is None. "
-                        "Early stopping requires eval_set to compute validation "
-                        "loss and will have no effect.",
-                        UserWarning,
-                        stacklevel=2,
-                    )
-                    break
+        warn_if_early_stopping_without_eval_set(callbacks, eval_set)
 
         # Initialize predictions with base score
         base = getattr(self, 'base_score_', np.float32(0.0))
@@ -1298,17 +1281,7 @@ class MultiClassGradientBoosting(PersistenceMixin):
         cb_manager.on_train_begin(state)
 
         eval_set = validate_eval_set(eval_set, self.X_binned_.n_features)
-        if eval_set is None:
-            for cb in (callbacks or []):
-                if isinstance(cb, EarlyStopping):
-                    warnings.warn(
-                        "EarlyStopping callback provided but eval_set is None. "
-                        "Early stopping requires eval_set to compute validation "
-                        "loss and will have no effect.",
-                        UserWarning,
-                        stacklevel=2,
-                    )
-                    break
+        warn_if_early_stopping_without_eval_set(callbacks, eval_set)
 
         # Determine sampling strategy (Phase 17)
         use_goss = self.subsample_strategy == 'goss'

@@ -317,9 +317,11 @@ class TreeStructure:
                         node = self.right_children[node]
                 # Phase 14.3: Handle categorical splits
                 elif has_categorical and self.is_categorical_split[node]:
-                    # Check bitmask membership: bit[bin_value] == 1 means go left
+                    # Check bitmask membership: bit[bin_value] == 1 means go left.
+                    # Bins >= 64 are not representable in the 64-bit bitset and
+                    # always go right (consistent with CPU/GPU kernels).
                     bitset = self.cat_bitsets[node]
-                    goes_left = (bitset >> bin_value) & 1
+                    goes_left = ((bitset >> bin_value) & 1) if bin_value < 64 else 0
                     node = self.left_children[node] if goes_left else self.right_children[node]
                 # Standard ordinal split
                 elif bin_value <= threshold:
