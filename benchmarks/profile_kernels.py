@@ -740,11 +740,11 @@ def benchmark_phase2_kernels():
 
 @app.function(gpu="A100", image=image, timeout=3600)
 def benchmark_batch_training(n_configs: int = 100, n_samples: int = 50_000, n_features: int = 20, n_rounds: int = 10):
-    """Benchmark batch training of multiple configs (Phase 2 P2).
+    """Benchmark the correctness-first train-many API.
     
     Compares:
     1. Sequential training (one config at a time)
-    2. OpenBoost batch training (all configs in parallel)
+    2. OpenBoost train-many training with shared binned data
     """
     import sys
     sys.path.insert(0, "/root")
@@ -835,14 +835,11 @@ def benchmark_batch_training(n_configs: int = 100, n_samples: int = 50_000, n_fe
     results["sequential_ms_per_config"] = sequential_time / actual_n_configs * 1000
     
     # ========== Batch Training ==========
-    print("\n[3] Batch Training (Phase 2)...")
+    print("\n[3] Train-Many Reference...")
     cuda.synchronize()
     start = time.perf_counter()
     
-    grad_init = (2 * (np.zeros(n_samples, dtype=np.float32) - y)).astype(np.float32)
-    hess_init = np.ones(n_samples, dtype=np.float32) * 2
-    
-    batch_trees = ob.fit_trees_batch(X_binned, grad_init, hess_init, configs)
+    batch_trees = ob.fit_trees_batch(X_binned, configs=configs, y=y)
     
     cuda.synchronize()
     batch_time = time.perf_counter() - start
@@ -860,8 +857,8 @@ def benchmark_batch_training(n_configs: int = 100, n_samples: int = 50_000, n_fe
     print("SUMMARY")
     print(f"{'='*60}")
     print(f"Sequential: {sequential_time:.2f}s ({sequential_time/actual_n_configs*1000:.1f}ms per config)")
-    print(f"Batch:      {batch_time:.2f}s ({batch_time/actual_n_configs*1000:.1f}ms per config)")
-    print(f"Speedup:    {speedup:.2f}x")
+    print(f"Train-many: {batch_time:.2f}s ({batch_time/actual_n_configs*1000:.1f}ms per config)")
+    print(f"Time ratio: {speedup:.2f}x")
     
     results["speedup"] = speedup
     return results

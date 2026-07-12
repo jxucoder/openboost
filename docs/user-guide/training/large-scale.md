@@ -67,6 +67,33 @@ hist_grad, hist_hess = accumulate_histograms_minibatch(
 )
 ```
 
+## Train Many Configurations
+
+Bin a dataset once and fit a grid of configurations against the same target:
+
+```python
+import openboost as ob
+
+X_binned = ob.array(X_train)
+configs = ob.ConfigBatch.from_grid(
+    max_depth=[4, 6, 8],
+    reg_lambda=[0.1, 1.0],
+    learning_rate=[0.05, 0.1],
+    n_rounds=100,
+)
+
+trees_by_config = ob.fit_trees_batch(
+    X_binned,
+    configs=configs,
+    y=y_train,
+    loss="mse",
+)
+```
+
+The current implementation is a correctness reference: it shares binned input
+data but fits configurations sequentially. GPU kernel fusion is planned without
+changing this API's results.
+
 ## Multi-GPU Training
 
 Distribute training across multiple GPUs:

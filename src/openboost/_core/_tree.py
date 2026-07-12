@@ -28,6 +28,9 @@ if TYPE_CHECKING:
     from numba.cuda.cudadrv.devicearray import DeviceNDArray
     from numpy.typing import NDArray
 
+    from .._batch import ConfigBatch
+    from .._loss import LossFunction
+
 
 # =============================================================================
 # Legacy Tree Classes (kept for backward compatibility)
@@ -791,27 +794,32 @@ def predict_tree(tree: Tree, X: BinnedArray | NDArray) -> NDArray:
 
 def fit_trees_batch(
     X: BinnedArray | NDArray,
-    grad: NDArray,
-    hess: NDArray,
-    configs,  # ConfigBatch
+    grad: NDArray | None = None,
+    hess: NDArray | None = None,
+    configs: ConfigBatch | None = None,
     *,
+    y: NDArray | None = None,
+    loss: str | LossFunction = "mse",
     min_gain: float = 0.0,
 ) -> list[list[Tree]]:
-    """Fit multiple boosted tree ensembles with different hyperparameters in parallel.
+    """Fit multiple boosted tree ensembles while sharing binned input data.
     
-    This is the key Phase 2 optimization: train many models (for hyperparameter search)
-    in one GPU pass by sharing the binned data across all configurations.
+    This function is the correctness reference for train-many optimization.
+    Configurations currently train sequentially, but expensive input binning is
+    shared. Future GPU fusion can optimize this path without changing its results.
     
     Args:
         X: Binned feature data (BinnedArray from ob.array())
-        grad: Initial gradient vector, shape (n_samples,), float32
-        hess: Initial hessian vector, shape (n_samples,), float32
+        grad: Initial gradient vector for the legacy one-round API.
+        hess: Initial hessian vector for the legacy one-round API.
         configs: ConfigBatch with hyperparameter configurations
+        y: Training targets. Required when ``n_rounds`` is greater than one.
+        loss: Built-in loss name or gradient/hessian callable.
         min_gain: Minimum gain to make a split
         
     Returns:
         List of tree lists, one per configuration.
-        trees[config_idx][round_idx] gives the tree for config_idx at round round_idx.
+        ``trees[config_idx][round_idx]`` gives the corresponding round's tree.
         
     Example:
         >>> import openboost as ob
@@ -827,16 +835,13 @@ def fit_trees_batch(
         >>> # Bin data once
         >>> X_binned = ob.array(X_train)
         >>> 
-        >>> # Initial gradients (e.g., for MSE: grad = 2*(pred - y), hess = 2)
-        >>> grad = -2 * y_train  # Initial pred = 0
-        >>> hess = np.ones_like(y_train) * 2
-        >>> 
-        >>> # Train all configs in parallel
-        >>> all_trees = ob.fit_trees_batch(X_binned, grad, hess, configs)
+        >>> # Train all configs against the same target
+        >>> all_trees = ob.fit_trees_batch(X_binned, configs=configs, y=y_train)
         >>> 
         >>> # all_trees[0] contains trees for first config, etc.
     """
-    from .._models._batch import BatchTrainingState, ConfigBatch
+    from .._batch import BatchTrainingState, ConfigBatch
+    from .._loss import get_loss_function
     
     if not isinstance(configs, ConfigBatch):
         raise TypeError(f"configs must be ConfigBatch, got {type(configs)}")
@@ -844,43 +849,57 @@ def fit_trees_batch(
     # Extract binned data
     if isinstance(X, BinnedArray):
         binned = X.data
-        n_features = X.n_features
         n_samples = X.n_samples
     else:
         binned = X
-        n_features, n_samples = binned.shape
-    
-    # Convert grad/hess to appropriate format
-    grad = as_numba_array(grad)
-    hess = as_numba_array(hess)
-    
-    n_configs = configs.n_configs
+        _, n_samples = binned.shape
+
+    if y is None:
+        if grad is None or hess is None:
+            raise ValueError("Provide y for train-many fitting, or grad and hess for one round")
+        if configs.n_rounds != 1:
+            raise ValueError("y is required when configs.n_rounds is greater than one")
+        initial_grad = as_numba_array(grad)
+        initial_hess = as_numba_array(hess)
+        loss_fn = None
+    else:
+        if hasattr(y, "copy_to_host"):
+            y = y.copy_to_host()
+        y = np.asarray(y, dtype=np.float32)
+        if y.ndim != 1 or len(y) != n_samples:
+            raise ValueError(f"y must have shape ({n_samples},), got {y.shape}")
+        initial_grad = None
+        initial_hess = None
+        loss_fn = get_loss_function(loss)
     
     # Initialize training state
-    state = BatchTrainingState.create(n_configs, n_samples)
-    
-    # For CUDA, use batched kernels
-    if is_cuda() and hasattr(binned, '__cuda_array_interface__'):
-        return _fit_trees_batch_cuda(
-            binned, grad, hess, configs, state, min_gain, n_samples, n_features
-        )
-    else:
-        # CPU fallback: train configs sequentially (still faster than naive due to shared binning)
-        return _fit_trees_batch_cpu(
-            binned, grad, hess, configs, state, min_gain, n_samples
-        )
+    state = BatchTrainingState.create(configs.n_configs, n_samples)
+    return _fit_trees_batch_reference(
+        binned,
+        configs,
+        state,
+        min_gain,
+        n_samples,
+        y=y,
+        loss_fn=loss_fn,
+        initial_grad=initial_grad,
+        initial_hess=initial_hess,
+    )
 
 
-def _fit_trees_batch_cpu(
+def _fit_trees_batch_reference(
     binned: NDArray,
-    grad: NDArray,
-    hess: NDArray,
     configs,
     state,
     min_gain: float,
     n_samples: int,
+    *,
+    y: NDArray | None,
+    loss_fn,
+    initial_grad: NDArray | None,
+    initial_hess: NDArray | None,
 ) -> list[list[Tree]]:
-    """CPU fallback for batch training - trains configs sequentially."""
+    """Correct sequential reference used by CPU and CUDA tree builders."""
     n_configs = configs.n_configs
     n_rounds = configs.n_rounds
     
@@ -889,22 +908,18 @@ def _fit_trees_batch_cpu(
         config = configs[config_idx]
         pred = np.zeros(n_samples, dtype=np.float32)
         
-        for round_idx in range(n_rounds):
-            # Compute gradients from current predictions
-            # Note: User provides initial grad/hess, subsequent rounds recompute
-            if round_idx > 0:  # noqa: SIM108
-                # Recompute MSE gradients from current predictions.
-                # Initial grad = 2*(0 - y) = -2y, so for MSE:
-                #   grad_new = 2*(pred - y) = 2*pred + initial_grad
-                # Hessian is constant (2.0) for MSE, so we reuse the original.
-                current_grad = grad + 2.0 * pred
+        for _round_idx in range(n_rounds):
+            if y is None:
+                round_grad, round_hess = initial_grad, initial_hess
             else:
-                current_grad = grad
+                round_grad, round_hess = loss_fn(pred, y)
+                round_grad = as_numba_array(round_grad)
+                round_hess = as_numba_array(round_hess)
 
             tree = fit_tree(
                 binned,
-                current_grad,
-                hess,
+                round_grad,
+                round_hess,
                 max_depth=config['max_depth'],
                 min_child_weight=config['min_child_weight'],
                 reg_lambda=config['reg_lambda'],
@@ -920,105 +935,6 @@ def _fit_trees_batch_cpu(
             state.predictions[config_idx] = pred
     
     return state.trees
-
-
-def _fit_trees_batch_cuda(
-    binned: NDArray,
-    grad: NDArray,
-    hess: NDArray,
-    configs,
-    state,
-    min_gain: float,
-    n_samples: int,
-    n_features: int,
-) -> list[list[Tree]]:
-    """CUDA batch training using fused kernels."""
-    from numba import cuda
-
-    
-    n_configs = configs.n_configs
-    n_rounds = configs.n_rounds
-    
-    # Transfer config arrays to GPU
-    configs.to_device()
-    device_configs = configs.get_device_arrays()
-    
-    # Initialize per-config sample indices (all start with all samples)
-    # For batch training, we track active samples per config per tree level
-    # This is complex because different configs may have different tree structures
-    
-    # Simplified approach: train one round at a time, all configs in parallel
-    # Each round: build histograms for all configs, find splits, partition
-    
-    # Initialize predictions on GPU
-    predictions = cuda.device_array((n_configs, n_samples), dtype=np.float32)
-    
-    for round_idx in range(n_rounds):
-        # Build one tree per config for this round
-        round_trees = _build_trees_batch_one_round(
-            binned, grad, hess, configs, device_configs,
-            predictions, round_idx, min_gain, n_samples, n_features
-        )
-        
-        # Store trees and update predictions
-        for config_idx, tree in enumerate(round_trees):
-            state.trees[config_idx].append(tree)
-            
-            # Update predictions for this config
-            tree_pred = tree(binned)
-            lr = configs.learning_rates[config_idx]
-            
-            # predictions[config_idx] += lr * tree_pred
-            # Need a kernel for this, or do on CPU for simplicity
-            if hasattr(tree_pred, 'copy_to_host'):
-                tree_pred = tree_pred.copy_to_host()
-            
-            pred_cpu = predictions[config_idx].copy_to_host()
-            pred_cpu = pred_cpu + lr * tree_pred
-            cuda.to_device(pred_cpu, to=predictions[config_idx:config_idx+1].reshape(n_samples))
-    
-    return state.trees
-
-
-def _build_trees_batch_one_round(
-    binned: NDArray,
-    grad: NDArray,
-    hess: NDArray,
-    configs,
-    device_configs: dict,
-    predictions: NDArray,
-    round_idx: int,
-    min_gain: float,
-    n_samples: int,
-    n_features: int,
-) -> list[Tree]:
-    """Build one tree per config for a single boosting round.
-    
-    This uses the batched kernels but still builds trees sequentially
-    within each round (because tree structures can differ).
-    
-    A future optimization could batch across tree levels.
-    """
-    n_configs = configs.n_configs
-    trees = []
-    
-    for config_idx in range(n_configs):
-        config = configs[config_idx]
-        
-        # Use single-config tree building for now
-        # Full horizontal fusion would require same-depth batching
-        tree = fit_tree(
-            binned,
-            grad,
-            hess,
-            max_depth=config['max_depth'],
-            min_child_weight=config['min_child_weight'],
-            reg_lambda=config['reg_lambda'],
-            min_gain=min_gain,
-        )
-        trees.append(tree)
-    
-    return trees
 
 
 # =============================================================================
@@ -1334,4 +1250,3 @@ def fit_tree_symmetric_gpu_native(
         max_depth=max_depth,
         n_features=n_features,
     )
-

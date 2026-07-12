@@ -50,6 +50,14 @@ model = ob.OpenBoostGAM(n_rounds=500)
     options:
       show_root_heading: true
 
+::: openboost.fit_trees_batch
+    options:
+      show_root_heading: true
+
+::: openboost.ConfigBatch
+    options:
+      show_root_heading: true
+
 ::: openboost.predict_tree
     options:
       show_root_heading: true

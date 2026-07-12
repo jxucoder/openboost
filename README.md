@@ -152,7 +152,10 @@ Where OpenBoost really shines is on GBDT variants that don't exist in XGBoost/Li
 
 ## Roadmap
 
-**Train-many optimization**: Industry workloads often train many models (hyperparameter tuning, CV, per-segment models). XGBoost optimizes for one model fast. OpenBoost plans to enable native optimization for training many models efficiently.
+**Train-many optimization**: OpenBoost now has a correctness-first API that shares
+binned data across hyperparameter configurations. The next milestone is fusing
+histogram and split work across configurations on GPU, with the sequential path
+serving as the behavioral reference.
 
 ## References
 

@@ -2477,10 +2477,7 @@ def _build_histogram_shared_kernel(
         if 0 <= local_node < n_nodes_in_pass:
             bin_val = int32(binned[feature_idx, sample_idx])
             g = grad[sample_idx]
-            if const_hess > float32(0.0):
-                h = const_hess
-            else:
-                h = hess[sample_idx]
+            h = const_hess if const_hess > float32(0.0) else hess[sample_idx]
             # Local atomics to shared memory (~5 cycles vs ~15 for global)
             hist_idx_grad = local_node * 512 + bin_val * 2 + 0
             hist_idx_hess = local_node * 512 + bin_val * 2 + 1
@@ -2563,10 +2560,7 @@ def _build_histogram_left_only_shared_kernel(
             if 0 <= local_node < n_left_in_pass:
                 bin_val = int32(binned[feature_idx, sample_idx])
                 g = grad[sample_idx]
-                if const_hess > float32(0.0):
-                    h = const_hess
-                else:
-                    h = hess[sample_idx]
+                h = const_hess if const_hess > float32(0.0) else hess[sample_idx]
                 hist_idx_grad = local_node * 512 + bin_val * 2 + 0
                 hist_idx_hess = local_node * 512 + bin_val * 2 + 1
                 cuda.atomic.add(local_hist, hist_idx_grad, g)
@@ -4056,4 +4050,3 @@ def build_tree_symmetric_gpu_native(
     
     # Already on GPU - no transfer needed!
     return level_features_gpu, level_thresholds_gpu, leaf_values
-

@@ -40,6 +40,7 @@ __version__ = "1.0.0rc1"
 # Data Layer
 # =============================================================================
 from ._array import MISSING_BIN, BinnedArray, array, as_numba_array
+from ._batch import BatchTrainingState, ConfigBatch
 
 # =============================================================================
 # Core (Foundation)
@@ -176,8 +177,6 @@ from ._loss import (
 )
 from ._models import (
     DART,
-    BatchTrainingState,
-    ConfigBatch,
     # Phase 15/16: Distributional GBDT (NaturalBoost)
     DistributionalGBDT,
     GradientBoosting,

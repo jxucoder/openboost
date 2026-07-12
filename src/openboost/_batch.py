@@ -1,7 +1,8 @@
-"""Batch training structures for horizontal kernel fusion (Phase 2).
+"""Configuration and state objects for training multiple models.
 
-This module provides data structures and utilities for training multiple
-gradient boosting models with different hyperparameters in parallel.
+The CPU implementation is the correctness reference for future fused GPU
+kernels. It shares binned input data while keeping predictions and trees
+separate for each hyperparameter configuration.
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ if TYPE_CHECKING:
 
 @dataclass
 class ConfigBatch:
-    """Batch of hyperparameter configurations for parallel training.
+    """Batch of hyperparameter configurations for train-many fitting.
     
     All arrays must have the same length (n_configs).
     
@@ -52,9 +53,14 @@ class ConfigBatch:
         self.reg_lambdas = np.asarray(self.reg_lambdas, dtype=np.float32)
         self.min_child_weights = np.asarray(self.min_child_weights, dtype=np.float32)
         self.learning_rates = np.asarray(self.learning_rates, dtype=np.float32)
+
+        if self.n_rounds < 1:
+            raise ValueError("n_rounds must be at least 1")
         
         # Validate shapes
         n = len(self.max_depths)
+        if n == 0:
+            raise ValueError("At least one configuration is required")
         if not all(len(arr) == n for arr in [
             self.reg_lambdas, self.min_child_weights, self.learning_rates
         ]):
@@ -217,7 +223,7 @@ class ConfigBatch:
 
 @dataclass
 class BatchTrainingState:
-    """State for batch training of multiple models.
+    """Independent prediction and tree state for multiple models.
     
     Tracks per-config predictions and trees during training.
     
@@ -272,4 +278,3 @@ class BatchTrainingState:
         if hasattr(self.predictions, 'copy_to_host'):
             return self.predictions[config_idx].copy_to_host()
         return self.predictions[config_idx]
-

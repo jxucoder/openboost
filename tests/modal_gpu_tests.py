@@ -18,6 +18,7 @@ image = (
     .pip_install(
         "numpy>=1.24",
         "numba>=0.60",
+        "numba-cuda>=0.23",
         "pytest>=8.0",
         "scipy>=1.10",
         "joblib>=1.2",
@@ -36,8 +37,9 @@ def verify_cuda_available() -> dict:
     Returns:
         Dict with CUDA status and quick training test results.
     """
-    import numpy as np
     import sys
+
+    import numpy as np
     
     results = {
         "cuda_available": False,
@@ -51,8 +53,8 @@ def verify_cuda_available() -> dict:
     
     # Check numba CUDA
     try:
-        from numba import cuda
         import numba
+        from numba import cuda
         results["numba_version"] = numba.__version__
         results["cuda_available"] = cuda.is_available()
         if results["cuda_available"]:
@@ -161,10 +163,11 @@ def benchmark_gpu_vs_cpu() -> dict:
     Returns:
         Dict with timing results for different dataset sizes.
     """
-    import numpy as np
-    import time
     import sys
-    
+    import time
+
+    import numpy as np
+
     sys.path.insert(0, "/root/src")
     import openboost as ob
     
@@ -215,9 +218,10 @@ def test_all_models_gpu() -> dict:
     Returns:
         Dict with test results for each model type.
     """
-    import numpy as np
     import sys
-    
+
+    import numpy as np
+
     sys.path.insert(0, "/root/src")
     import openboost as ob
     
@@ -261,6 +265,37 @@ def test_all_models_gpu() -> dict:
             }
     
     return results
+
+
+@app.local_entrypoint()
+def ci():
+    """Run the CUDA test suite for CI and propagate failures to the caller."""
+    print("Verifying Modal CUDA environment...")
+    info = verify_cuda_available.remote()
+    print(f"GPU: {info['device_name']}")
+    print(f"CUDA available: {info['cuda_available']}")
+    print(f"OpenBoost backend: {info['openboost_backend']}")
+    print(f"Quick training: {info['training_successful']}")
+
+    environment_ok = all(
+        (
+            info["cuda_available"],
+            info["openboost_backend"] == "cuda",
+            info["training_successful"],
+        )
+    )
+    if not environment_ok:
+        raise RuntimeError(f"Modal CUDA environment verification failed: {info['error']}")
+
+    print("\nRunning CUDA verification tests...")
+    result = run_all_gpu_tests.remote()
+    print(result["stdout"])
+    if result["stderr"]:
+        print(result["stderr"])
+    if not result["passed"]:
+        raise RuntimeError(f"CUDA verification tests failed with exit code {result['returncode']}")
+
+    print("CUDA verification passed.")
 
 
 @app.local_entrypoint()
