@@ -1938,7 +1938,7 @@
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>GPU-accelerated GBDT variants in pure Python.
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>NGBoost, InterpretML EBM? Slow, CPU-only.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>OpenBoost brings them to GPU → 2-40x faster.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>OpenBoost brings them to GPU → 2-50x faster (benchmarks + caveats in the repo).
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Plus: fully readable, customizable. Built for the AI coding era.
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
@@ -1949,17 +1949,17 @@
 <h3 id="tweet-2">Tweet 2<a class="headerlink" href="#tweet-2" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>The problem with XGBoost/LightGBM:
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Want to add a custom split criterion? → Write C++, recompile
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Want to modify histogram building? → Understand CUDA kernels
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Want a custom loss? → Write C++, recompile
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Want a custom predictive distribution? → Not happening
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Want to debug training? → Good luck with C++ stack traces
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>With OpenBoost: it&#39;s all Python. Modify, reload, done.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>With OpenBoost: it&#39;s all Python. Custom losses, custom distributions, selectable growth strategies (levelwise/leafwise/symmetric). Modify, reload, done.
 </code></pre></div>
 <h3 id="tweet-3">Tweet 3<a class="headerlink" href="#tweet-3" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>What&#39;s included:
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>✅ NaturalBoost (NGBoost → GPU, 2x faster)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>✅ OpenBoostGAM (InterpretML EBM → GPU, 40x faster)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>✅ NaturalBoost (NGBoost → GPU, 1.6-11x faster)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>✅ OpenBoostGAM (InterpretML EBM → GPU, 56x faster on our run; accuracy tradeoff — see repo benchmarks)
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>✅ DART, LinearLeaf, multi-GPU
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>✅ Standard GBDT (use XGBoost if you need speed)
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>✅ Full sklearn compatibility
@@ -2005,14 +2005,14 @@
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>I&#39;ve been working on something different: GPU-accelerated gradient boosting written entirely in Python.
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>**The Problem**
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>XGBoost and LightGBM are incredible libraries, but they&#39;re 200K+ lines of C++. Want to customize the split criterion? Add a new distribution? Modify how histograms are built? You need C++ expertise and hours of build time.
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>XGBoost and LightGBM are incredible libraries, but they&#39;re 200K+ lines of C++. Want a custom loss? A new predictive distribution? A different tree growth strategy? You need C++ expertise and hours of build time.
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>**The Solution**
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>OpenBoost GPU-accelerates GBDT variants that were previously CPU-only and slow:
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>**What&#39;s Included**
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>• NaturalBoost - probabilistic predictions (NGBoost → GPU, 1.3-2x faster)
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>• OpenBoostGAM - interpretable models (InterpretML EBM → GPU, 10-40x faster)
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>• NaturalBoost - probabilistic predictions (NGBoost → GPU, 1.6-11x faster)
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>• OpenBoostGAM - interpretable models (InterpretML EBM → GPU, 56x faster on our benchmark, with an accuracy tradeoff — details in the repo)
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>• Standard GBDT, DART, LinearLeaf (for custom algorithms; use XGBoost for production speed)
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>• Full sklearn compatibility
 <a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
@@ -2044,8 +2044,8 @@
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>OpenBoost takes a different approach: ~20K lines of Python that GPU-accelerates GBDT variants that were previously slow and CPU-only.
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>**What&#39;s included:**
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>- NaturalBoost: NGBoost → GPU (1.3-2x faster)
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>- OpenBoostGAM: InterpretML EBM → GPU (10-40x faster)
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>- NaturalBoost: NGBoost → GPU (1.6-11x faster, dataset-dependent)
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>- OpenBoostGAM: InterpretML EBM → GPU (56x faster on our benchmark run, with an accuracy tradeoff; comparison details in the repo)
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>- DART, linear-leaf models, multi-GPU via Ray
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>- Standard GBDT (use XGBoost for production speed; OpenBoost for readability/customization)
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>- Full sklearn compatibility
@@ -2075,13 +2075,13 @@ pip install openboost[cuda]  # GPU support
 <h3 id="body_1">Body<a class="headerlink" href="#body_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>I built OpenBoost because I wanted to understand and modify gradient boosting algorithms without diving into C++.
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>XGBoost and LightGBM are incredible, but they&#39;re inaccessible to most practitioners. Want to add a custom loss function? Add a new distribution for probabilistic predictions? Modify the split criterion? You need C++ expertise.
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>XGBoost and LightGBM are incredible, but they&#39;re inaccessible to most practitioners. Want to add a custom loss function? Add a new distribution for probabilistic predictions? Switch tree growth strategy? You need C++ expertise. (OpenBoost supports all three today: custom losses, custom distributions with autodiff, and levelwise/leafwise/symmetric growth. A pluggable split-criterion API is roadmap, not shipped — though the split code is plain Python you can edit.)
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>OpenBoost is ~20K lines of Python using Numba for GPU acceleration. It brings GPU to GBDT variants that were previously CPU-only and slow.
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Key insight: NGBoost and InterpretML EBM are great algorithms trapped in slow Python implementations. OpenBoost GPU-accelerates them:
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>- NaturalBoost: 1.3-2x faster than NGBoost
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>- OpenBoostGAM: 10-40x faster than InterpretML EBM
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>- NaturalBoost: 1.6-11x faster than NGBoost (dataset-dependent)
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>- OpenBoostGAM: 56x faster than InterpretML EBM on our benchmark run, with an accuracy tradeoff (benchmark details and caveats in the repo)
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>For standard GBDT, use XGBoost/LightGBM. For variants and custom algorithms, OpenBoost fills the gap.
 <a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>

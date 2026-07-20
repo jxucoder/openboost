@@ -1920,7 +1920,7 @@
 <li><code>GradientBoosting</code> - Standard gradient boosting for regression/classification</li>
 <li><code>MultiClassGradientBoosting</code> - Multi-class classification with softmax</li>
 <li><code>DART</code> - Dropout regularized trees</li>
-<li><code>OpenBoostGAM</code> - GPU-accelerated interpretable GAM (10-40x faster than InterpretML EBM)</li>
+<li><code>OpenBoostGAM</code> - GPU-accelerated interpretable GAM (much faster than InterpretML EBM; see benchmark caveats in the GAM guide)</li>
 </ul>
 <h3 id="probabilistic-predictions-naturalboost">Probabilistic Predictions (NaturalBoost)<a class="headerlink" href="#probabilistic-predictions-naturalboost" title="Permanent link">&para;</a></h3>
 <p>Predict full probability distributions, not just point estimates:
@@ -1941,8 +1941,8 @@
 </ul>
 <h3 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h3>
 <p>OpenBoost GPU-accelerates GBDT variants that were previously slow:
-- <strong>NaturalBoost</strong>: 1.3-2x faster than NGBoost
-- <strong>OpenBoostGAM</strong>: 10-40x faster than InterpretML EBM</p>
+- <strong>NaturalBoost</strong>: 1.6-11x faster than NGBoost (dataset-dependent; committed benchmark run)
+- <strong>OpenBoostGAM</strong>: 56x faster than InterpretML EBM on the committed run, with lower accuracy (R² 0.66 vs 0.74; EBM interactions/bagging disabled) — see the GAM guide for the honest comparison</p>
 <p>For standard GBDT, XGBoost/LightGBM are faster. OpenBoost's value is in the variants.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>openboost

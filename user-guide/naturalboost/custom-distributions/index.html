@@ -1039,10 +1039,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parameter-transforms" class="md-nav__link">
+  <a href="#link-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parameter Transforms
+        Link Functions
       
     </span>
   </a>
@@ -1061,10 +1061,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-jax-autodiff" class="md-nav__link">
+  <a href="#gradient-computation-jax-or-numerical" class="md-nav__link">
     <span class="md-ellipsis">
       
-        With JAX Autodiff
+        Gradient Computation: JAX or Numerical
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fisher-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fisher Information
       
     </span>
   </a>
@@ -1866,10 +1877,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parameter-transforms" class="md-nav__link">
+  <a href="#link-functions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parameter Transforms
+        Link Functions
       
     </span>
   </a>
@@ -1888,10 +1899,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-jax-autodiff" class="md-nav__link">
+  <a href="#gradient-computation-jax-or-numerical" class="md-nav__link">
     <span class="md-ellipsis">
       
-        With JAX Autodiff
+        Gradient Computation: JAX or Numerical
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fisher-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fisher Information
       
     </span>
   </a>
@@ -1932,45 +1954,67 @@
 <h1 id="custom-distributions">Custom Distributions<a class="headerlink" href="#custom-distributions" title="Permanent link">&para;</a></h1>
 <p>Define your own probability distribution for NaturalBoost.</p>
 <h2 id="using-create_custom_distribution">Using <code>create_custom_distribution</code><a class="headerlink" href="#using-create_custom_distribution" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<p><code>ob.create_custom_distribution()</code> returns a ready-to-use <code>CustomDistribution</code>
+<strong>instance</strong> (not a class). Pass it directly as <code>distribution=</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Define a custom distribution</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">MyDist</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">create_custom_distribution</span><span class="p">(</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;MyDist&#39;</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">param_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">],</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">nll_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">params</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="p">(</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Gaussian with learned mean and scale</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">dist</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">create_custom_distribution</span><span class="p">(</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">param_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">],</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">link_functions</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="s1">&#39;identity&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;softplus&#39;</span><span class="p">},</span>  <span class="c1"># scale &gt; 0</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">nll_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="p">(</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="p">),</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">mean_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">params</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">],</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">param_transforms</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;softplus&#39;</span><span class="p">},</span>  <span class="c1"># Ensure scale &gt; 0</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">variance_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">params</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">)</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Use with NaturalBoost</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoost</span><span class="p">(</span><span class="n">distribution</span><span class="o">=</span><span class="n">MyDist</span><span class="p">(),</span> <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoost</span><span class="p">(</span><span class="n">distribution</span><span class="o">=</span><span class="n">dist</span><span class="p">,</span> <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="parameter-transforms">Parameter Transforms<a class="headerlink" href="#parameter-transforms" title="Permanent link">&para;</a></h2>
-<p>Transforms ensure parameters stay in valid ranges:</p>
+<p>The signature is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">ob</span><span class="o">.</span><span class="n">create_custom_distribution</span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">param_names</span><span class="p">,</span>          <span class="c1"># list[str]: names of the distribution parameters</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">link_functions</span><span class="p">,</span>       <span class="c1"># dict[str, str]: param name -&gt; link type</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">nll_fn</span><span class="p">,</span>               <span class="c1"># callable(y, params) -&gt; per-sample NLL array</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">mean_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>         <span class="c1"># optional callable(params) -&gt; mean prediction</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">variance_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>     <span class="c1"># optional callable(params) -&gt; variance</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">)</span>
+</code></pre></div>
+<p>Note the argument order of <code>nll_fn</code>: <strong><code>y</code> first, then the params dict</strong>. It
+must return the per-sample negative log-likelihood as an array, computed from
+the <em>constrained</em> (post-link) parameter values.</p>
+<h2 id="link-functions">Link Functions<a class="headerlink" href="#link-functions" title="Permanent link">&para;</a></h2>
+<p>Links map the unconstrained raw scores that the trees predict into valid
+parameter ranges. Gradients are taken with respect to the raw scores, with
+the chain rule through the link applied for you:</p>
 <table>
 <thead>
 <tr>
-<th>Transform</th>
+<th>Link</th>
 <th>Range</th>
 <th>Use For</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>'softplus'</code></td>
-<td>(0, ∞)</td>
-<td>Scale, variance</td>
+<td><code>'identity'</code></td>
+<td>(-∞, ∞)</td>
+<td>Location parameters</td>
 </tr>
 <tr>
 <td><code>'exp'</code></td>
 <td>(0, ∞)</td>
-<td>Rate parameters</td>
+<td>Rate/scale parameters</td>
+</tr>
+<tr>
+<td><code>'softplus'</code></td>
+<td>(0, ∞)</td>
+<td>Scale, variance (smoother than exp)</td>
 </tr>
 <tr>
 <td><code>'sigmoid'</code></td>
@@ -1978,72 +2022,79 @@
 <td>Probabilities</td>
 </tr>
 <tr>
-<td><code>None</code></td>
-<td>(-∞, ∞)</td>
-<td>Location parameters</td>
+<td><code>'square'</code></td>
+<td>[0, ∞)</td>
+<td>Non-negative parameters</td>
 </tr>
 </tbody>
 </table>
 <h2 id="full-example-laplace-distribution">Full Example: Laplace Distribution<a class="headerlink" href="#full-example-laplace-distribution" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">laplace_nll</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Negative log-likelihood for Laplace distribution.&quot;&quot;&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">loc</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">scale</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">loc</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">laplace_mean</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="k">return</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">laplace_std</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="k">return</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">LaplaceDist</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">create_custom_distribution</span><span class="p">(</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Laplace&#39;</span><span class="p">,</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="n">param_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">],</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="n">nll_fn</span><span class="o">=</span><span class="n">laplace_nll</span><span class="p">,</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="n">mean_fn</span><span class="o">=</span><span class="n">laplace_mean</span><span class="p">,</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="n">std_fn</span><span class="o">=</span><span class="n">laplace_std</span><span class="p">,</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="n">param_transforms</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;softplus&#39;</span><span class="p">},</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="p">)</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Train</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoost</span><span class="p">(</span><span class="n">distribution</span><span class="o">=</span><span class="n">LaplaceDist</span><span class="p">(),</span> <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="c1"># Predict</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="n">mean</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_interval</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">laplace_nll</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Negative log-likelihood for the Laplace distribution.&quot;&quot;&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">loc</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">scale</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">loc</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">laplace</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">create_custom_distribution</span><span class="p">(</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">param_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">],</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">link_functions</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="s1">&#39;identity&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;softplus&#39;</span><span class="p">},</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">nll_fn</span><span class="o">=</span><span class="n">laplace_nll</span><span class="p">,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">mean_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">params</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">],</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">variance_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">params</span><span class="p">:</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="p">)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Train</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoost</span><span class="p">(</span><span class="n">distribution</span><span class="o">=</span><span class="n">laplace</span><span class="p">,</span> <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Predict</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="n">mean</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_interval</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="with-jax-autodiff">With JAX Autodiff<a class="headerlink" href="#with-jax-autodiff" title="Permanent link">&para;</a></h2>
-<p>For automatic gradient computation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">custom_nll_jax</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;JAX-compatible NLL for autodiff.&quot;&quot;&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">loc</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">]</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">scale</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">scale</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">loc</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Gradients computed automatically via JAX</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">MyDist</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">create_custom_distribution</span><span class="p">(</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;MyDist&#39;</span><span class="p">,</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">param_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">],</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="n">nll_fn</span><span class="o">=</span><span class="n">custom_nll_jax</span><span class="p">,</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">autodiff</span><span class="o">=</span><span class="s1">&#39;jax&#39;</span><span class="p">,</span>  <span class="c1"># Use JAX for gradients</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">)</span>
+<h2 id="gradient-computation-jax-or-numerical">Gradient Computation: JAX or Numerical<a class="headerlink" href="#gradient-computation-jax-or-numerical" title="Permanent link">&para;</a></h2>
+<p>You do not provide gradients — they are computed automatically from <code>nll_fn</code>:</p>
+<ul>
+<li><strong>JAX</strong> (used automatically when <code>jax</code> is installed): exact autodiff of the
+  NLL composed with the link functions, vectorized with <code>jax.vmap</code>.</li>
+<li><strong>Numerical fallback</strong> (no extra dependency): central finite differences on
+  the constrained parameters with the exact chain rule through the link.</li>
+</ul>
+<p>For more control, construct <code>CustomDistribution</code> directly. It accepts the
+same arguments plus <code>init_fn</code> (initial raw parameter values from <code>y</code>),
+<code>use_jax</code> (set <code>False</code> to force the numerical path), and <code>eps</code> (finite
+difference step):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomDistribution</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">dist</span> <span class="o">=</span> <span class="n">CustomDistribution</span><span class="p">(</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">param_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">link_functions</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="s1">&#39;identity&#39;</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="s1">&#39;softplus&#39;</span><span class="p">},</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">nll_fn</span><span class="o">=</span><span class="n">laplace_nll</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">mean_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">params</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;loc&#39;</span><span class="p">],</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">init_fn</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">use_jax</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># force the numerical fallback</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">)</span>
 </code></pre></div>
+<p>Note: if you use JAX, write <code>nll_fn</code> with operations that JAX can trace
+(plain arithmetic and <code>numpy</code>-style ufuncs work; avoid in-place mutation).</p>
+<h2 id="fisher-information">Fisher Information<a class="headerlink" href="#fisher-information" title="Permanent link">&para;</a></h2>
+<p>NaturalBoost preconditions gradients with the Fisher information matrix.
+Custom distributions use an <strong>empirical diagonal approximation</strong> built from
+per-sample gradients (<code>F[j,j] = mean(g_j^2)</code>), so natural-gradient training
+works out of the box without deriving the Fisher matrix by hand. Built-in
+distributions use exact closed-form Fisher matrices.</p>
 <h2 id="available-built-in-distributions">Available Built-in Distributions<a class="headerlink" href="#available-built-in-distributions" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># List all available distributions</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">list_distributions</span><span class="p">())</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Get a distribution by name</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">normal</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s1">&#39;normal&#39;</span><span class="p">)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">gamma</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s1">&#39;gamma&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># List all available distributions</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">list_distributions</span><span class="p">())</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Get a distribution by name</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">normal</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s1">&#39;normal&#39;</span><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">gamma</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s1">&#39;gamma&#39;</span><span class="p">)</span>
 </code></pre></div>
 
 

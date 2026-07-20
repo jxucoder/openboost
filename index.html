@@ -2111,8 +2111,8 @@
 <p>For standard GBDT, use XGBoost/LightGBM—they're highly optimized C++.</p>
 <p>For GBDT <strong>variants</strong> (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:</p>
 <ul>
-<li><strong>NaturalBoost</strong>: 1.3-2x faster than NGBoost</li>
-<li><strong>OpenBoostGAM</strong>: 10-40x faster than InterpretML EBM</li>
+<li><strong>NaturalBoost</strong>: 1.6-11x faster than NGBoost (dataset-dependent)</li>
+<li><strong>OpenBoostGAM</strong>: much faster than InterpretML EBM (56x on our benchmark run), with an accuracy tradeoff — see the <a href="user-guide/models/gam/">GAM guide</a> for honest numbers</li>
 </ul>
 <p>Plus: ~20K lines of readable Python. Modify, extend, and build on—no C++ required.</p>
 <h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
@@ -2131,7 +2131,7 @@
 </code></pre></div>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <h3 id="rocket-gpu-accelerated">:rocket: GPU Accelerated<a class="headerlink" href="#rocket-gpu-accelerated" title="Permanent link">&para;</a></h3>
-<p>Numba CUDA kernels for histogram building and tree construction. 10-40x faster GAM training compared to CPU alternatives.</p>
+<p>Numba CUDA kernels for histogram building and tree construction. GAM training ran 56x faster than CPU-based EBM on our committed benchmark (with an accuracy tradeoff — see the <a href="user-guide/models/gam/">GAM guide</a>).</p>
 <h3 id="brain-probabilistic-predictions">:brain: Probabilistic Predictions<a class="headerlink" href="#brain-probabilistic-predictions" title="Permanent link">&para;</a></h3>
 <p>NaturalBoost provides full probability distributions with uncertainty quantification. 8 built-in distributions including Normal, Gamma, Tweedie, and Negative Binomial.</p>
 <h3 id="snake-all-python">:snake: All Python<a class="headerlink" href="#snake-all-python" title="Permanent link">&para;</a></h3>
@@ -2179,15 +2179,15 @@
 <tbody>
 <tr>
 <td>NaturalBoost vs NGBoost</td>
-<td><strong>1.3-2x faster</strong></td>
+<td><strong>1.6-11x faster</strong> (NLL slightly behind NGBoost)</td>
 </tr>
 <tr>
 <td>OpenBoostGAM vs InterpretML EBM</td>
-<td><strong>10-40x faster</strong></td>
+<td><strong>56x faster</strong> on the committed run, at lower accuracy (R² 0.66 vs 0.74; EBM interactions and bagging disabled)</td>
 </tr>
 </tbody>
 </table>
-<p>For standard GBDT, XGBoost/LightGBM are faster. OpenBoost's value is in the variants.</p>
+<p>For standard GBDT, XGBoost/LightGBM are faster on CPU (OpenBoost's GPU-native builder wins on A100 — see the README benchmarks). OpenBoost's value is in the variants.</p>
 <h2 id="who-is-openboost-for">Who Is OpenBoost For?<a class="headerlink" href="#who-is-openboost-for" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Kaggle Competitors</strong> - Probabilistic predictions that XGBoost can't do</li>

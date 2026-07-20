@@ -2410,6 +2410,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#openboost.Distribution.validate_target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;validate_target
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#distributionoutput" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3626,6 +3637,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#openboost.Distribution.validate_target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;validate_target
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#distributionoutput" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4796,7 +4818,14 @@ d(NLL)/dμ = (μ^(1-ρ) - y*μ^(-ρ)) / φ</p>
 
     <div class="doc doc-contents ">
 
-        <p>Approximate quantile using Normal approximation.</p>
+        <p>Quantile respecting the compound Poisson-Gamma support.</p>
+<p>For 1 &lt; power &lt; 2 the distribution has a point mass
+P(Y=0) = exp(-λ) with λ = μ^(2-ρ)/(φ(2-ρ)):
+- q &lt;= P(Y=0): the quantile is exactly 0
+- q &gt;  P(Y=0): the conditional positive part Y | Y &gt; 0 is
+  approximated by a Gamma matched to its conditional mean/variance
+  (derived from the unconditional mean μ, variance φμ^ρ, and the
+  zero mass).</p>
 
 
     </div>
@@ -4816,7 +4845,10 @@ d(NLL)/dμ = (μ^(1-ρ) - y*μ^(-ρ)) / φ</p>
 
     <div class="doc doc-contents ">
 
-        <p>Sample from Tweedie using compound Poisson-Gamma.</p>
+        <p>Sample from Tweedie using compound Poisson-Gamma (vectorized).</p>
+<p>Draws N ~ Poisson(λ) for every (observation, sample) cell at once,
+then uses the fact that a sum of N iid Gamma(α, scale) variables is
+Gamma(N·α, scale) — no per-cell Python loops.</p>
 
 
     </div>
@@ -4836,7 +4868,15 @@ d(NLL)/dμ = (μ^(1-ρ) - y*μ^(-ρ)) / φ</p>
 
     <div class="doc doc-contents ">
 
-        <p>Negative log-likelihood (deviance-based).</p>
+        <p>Proper negative log-likelihood (predict-time scoring).</p>
+<p>For 1 &lt; power &lt; 2, evaluates the exact compound Poisson-Gamma
+density: -log P(Y=0) = λ = μ^(2-ρ)/(φ(2-ρ)) at y == 0, and the
+Dunn &amp; Smyth (2005) series expansion of the density for y &gt; 0
+(logsumexp over the W_j terms, with the summation range sized from
+the dominant index j_max ≈ y^(2-ρ)/(φ(2-ρ))).</p>
+<p>Note: the TRAINING objective (nll_gradient) intentionally remains
+deviance-based — changing it would change model fits. This method is
+only used for evaluation/scoring.</p>
 
 
     </div>
@@ -5343,7 +5383,7 @@ the NLL to match the competition metric!</p>
 
     <div class="doc doc-contents ">
 
-        <p>Compute gradients (auto-selects JAX or numerical).</p>
+        <p>Compute gradients w.r.t. raw parameters (auto-selects JAX or numerical).</p>
 
 
     </div>
@@ -5358,12 +5398,22 @@ the NLL to match the competition metric!</p>
 
 
 <a href="#openboost.CustomDistribution.fisher_information" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">fisher_information</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">fisher_information</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Approximate Fisher information (diagonal).</p>
+        <p>Empirical Fisher information (diagonal approximation).</p>
+<p>The exact Fisher matrix is unknown for user-defined likelihoods, so
+this uses the empirical (outer-product) approximation restricted to
+its diagonal: F[j, j] = E_i[g_i[j]²], the batch mean of squared
+per-sample NLL gradients (JAX autodiff or numerical). The same
+diagonal is used for every sample, and a floor keeps the matrix
+invertible when gradients vanish.</p>
+<p>Gradients come from <code>y</code> when provided; otherwise from the most
+recent nll_gradient call (the natural_gradient code path computes
+gradients immediately before calling this). Falls back to identity
+when no gradient information is available.</p>
 
 
     </div>
@@ -6245,6 +6295,31 @@ leading to faster convergence. This is the key insight of NGBoost.</p>
     <div class="doc doc-contents ">
 
         <p>Negative log-likelihood (for evaluation).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="openboost.Distribution.validate_target" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">validate_target</span>
+
+
+<a href="#openboost.Distribution.validate_target" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">validate_target</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Validate that targets lie in the distribution's support.</p>
+<p>Called at fit-entry (each family's init_params invokes it before
+estimating starting values). Raises ValueError on out-of-support
+targets instead of silently clipping/rounding them. Internal epsilon
+clips remain for numerical safety only.</p>
+<p>Default: no restrictions (real-valued support).</p>
 
 
     </div>

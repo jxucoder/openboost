@@ -1980,19 +1980,23 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>prediction = f₁(x₁) + f₂(x₂) + ... + fₙ(xₙ) + intercept
 </code></pre></div>
 <p>This means you can visualize exactly how each feature affects the prediction.</p>
+<p><strong>Scope:</strong> OpenBoostGAM learns <em>main effects only</em> — one shape function per
+feature. Unlike InterpretML's EBM, it does not learn pairwise interaction
+terms. If your signal depends heavily on feature interactions, EBM (with
+interactions enabled) or a standard GBDT will fit better; OpenBoostGAM trades
+that capacity for speed and a simpler, fully additive explanation.</p>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">gam</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">OpenBoostGAM</span><span class="p">(</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">n_rounds</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># Shallow trees for smoothness</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">gam</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">gam</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Get feature importance</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">importance</span> <span class="o">=</span> <span class="n">gam</span><span class="o">.</span><span class="n">get_feature_importance</span><span class="p">()</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">gam</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">gam</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Get feature importance</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">importance</span> <span class="o">=</span> <span class="n">gam</span><span class="o">.</span><span class="n">get_feature_importance</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="visualizing-shape-functions">Visualizing Shape Functions<a class="headerlink" href="#visualizing-shape-functions" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Plot how each feature affects predictions</span>
@@ -2007,6 +2011,8 @@
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">gam</span><span class="o">.</span><span class="n">plot_shape_function</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">feature_name</span><span class="o">=</span><span class="n">feature_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </code></pre></div>
+<p><code>plot_shape_function(feature_idx, feature_name=None, ax=None)</code> returns the
+matplotlib Axes it drew on; pass <code>ax=</code> to compose subplot grids.</p>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2031,74 +2037,90 @@
 <td>Step size</td>
 </tr>
 <tr>
-<td><code>max_depth</code></td>
-<td>int</td>
-<td>3</td>
-<td>Tree depth (keep small for smoothness)</td>
+<td><code>reg_lambda</code></td>
+<td>float</td>
+<td>1.0</td>
+<td>L2 regularization on leaf values</td>
 </tr>
 <tr>
 <td><code>loss</code></td>
-<td>str</td>
+<td>str/callable</td>
 <td>'mse'</td>
-<td>Loss function</td>
+<td>Loss function (<code>'mse'</code>, <code>'logloss'</code>, or callable)</td>
+</tr>
+<tr>
+<td><code>n_bins</code></td>
+<td>int</td>
+<td>256</td>
+<td>Histogram bins (max 254 usable; bin 255 reserved for missing)</td>
 </tr>
 </tbody>
 </table>
+<p><code>n_trees</code> is accepted as an alias for <code>n_rounds</code>. There is no <code>max_depth</code>
+parameter: each round applies a regularized Newton update to every bin of
+every feature's shape function (a per-feature lookup table), so smoothness is
+controlled by <code>learning_rate</code>, <code>n_rounds</code>, and <code>reg_lambda</code> — not tree depth.</p>
 <h2 id="performance-vs-interpretml-ebm">Performance vs InterpretML EBM<a class="headerlink" href="#performance-vs-interpretml-ebm" title="Permanent link">&para;</a></h2>
+<p>One benchmark run is committed to the repo
+(<code>benchmarks/results/gpu_benchmark_20260322_153105.json</code>, produced by
+<code>benchmarks/compare_gpu.py --bench ebm</code> on a Modal A100):</p>
 <table>
 <thead>
 <tr>
-<th>Samples</th>
-<th>EBM (CPU)</th>
+<th>Dataset</th>
 <th>OpenBoostGAM (GPU)</th>
+<th>EBM (CPU)</th>
 <th>Speedup</th>
+<th>GAM R²</th>
+<th>EBM R²</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>10,000</td>
-<td>3.6s</td>
+<td>Synthetic, 50,000 x 20</td>
 <td>0.14s</td>
-<td><strong>25x</strong></td>
-</tr>
-<tr>
-<td>50,000</td>
-<td>6.3s</td>
-<td>0.16s</td>
-<td><strong>39x</strong></td>
-</tr>
-<tr>
-<td>100,000</td>
-<td>10.5s</td>
-<td>0.25s</td>
-<td><strong>43x</strong></td>
+<td>8.06s</td>
+<td><strong>56x</strong></td>
+<td>0.663</td>
+<td>0.738</td>
 </tr>
 </tbody>
 </table>
+<p>Read this honestly: OpenBoostGAM was much faster <strong>but less accurate</strong> on
+this run (R² 0.663 vs 0.738). Also note the comparison controls: both models
+ran 200 rounds at <code>learning_rate=0.05</code>, and EBM was configured with
+<code>interactions=0</code>, <code>outer_bags=1</code>, <code>inner_bags=0</code> — i.e. EBM's pairwise
+interactions and bagging (both defaults that improve its accuracy but slow it
+down) were disabled. With EBM defaults, expect the accuracy gap to widen and
+the speed gap to grow.</p>
+<p>Reproduce with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>run<span class="w"> </span>modal<span class="w"> </span>run<span class="w"> </span>benchmarks/compare_gpu.py<span class="w"> </span>--bench<span class="w"> </span>ebm
+</code></pre></div>
 <h2 id="example-credit-risk">Example: Credit Risk<a class="headerlink" href="#example-credit-risk" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Train interpretable model</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">gam</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">OpenBoostGAM</span><span class="p">(</span><span class="n">n_rounds</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">gam</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Explain predictions</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;income&#39;</span><span class="p">,</span> <span class="s1">&#39;debt_ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;credit_history&#39;</span><span class="p">]</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">)):</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">gam</span><span class="o">.</span><span class="n">plot_shape_function</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">feature_name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Effect of </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;gam_explanations.png&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Train interpretable model</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">gam</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">OpenBoostGAM</span><span class="p">(</span><span class="n">n_rounds</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">gam</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Explain predictions</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;income&#39;</span><span class="p">,</span> <span class="s1">&#39;debt_ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;credit_history&#39;</span><span class="p">]</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">)):</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">gam</span><span class="o">.</span><span class="n">plot_shape_function</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">feature_name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Effect of </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;gam_explanations.png&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Use shallow trees</strong> (<code>max_depth=3</code>) for smoother shape functions</li>
-<li><strong>Use more rounds</strong> with lower learning rate for better fits</li>
+<li><strong>Use more rounds</strong> with lower learning rate for smoother shape functions</li>
 <li><strong>Normalize features</strong> for easier interpretation</li>
 <li><strong>Check shape functions</strong> for unexpected patterns (data issues)</li>
+<li><strong>Compare against a standard GBDT</strong> — if it beats the GAM by a wide
+   margin, your data likely has interactions the GAM cannot capture</li>
 </ol>
 
 

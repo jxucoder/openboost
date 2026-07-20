@@ -4783,7 +4783,9 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">n_gpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">devices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">growth</span><span class="o">=</span><span class="s2">&quot;levelwise&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="n">max_leaves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
@@ -5066,6 +5068,50 @@ training is fully batched for maximum performance.</p>
             <td class="doc-param-details">
               <div class="doc-md-description">
                 <p>Mini-batch size for large datasets. If None, process all at once.</p>
+              </div>
+              <p>
+                  <span class="doc-param-annotation">
+                    <b>TYPE:</b>
+                      <code><span title="int">int</span> | None</code>
+                  </span>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>None</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>growth</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Tree growth strategy:
+- 'levelwise': XGBoost-style level-wise growth (default)
+- 'leafwise': LightGBM-style best-first growth (see max_leaves)
+- 'symmetric': CatBoost-style oblivious trees</p>
+              </div>
+              <p>
+                  <span class="doc-param-annotation">
+                    <b>TYPE:</b>
+                      <code><span title="str">str</span></code>
+                  </span>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>&#39;levelwise&#39;</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_leaves</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Maximum number of leaves per tree (used by 'leafwise'
+growth; defaults to 2**max_depth when None).</p>
               </div>
               <p>
                   <span class="doc-param-annotation">
@@ -5457,7 +5503,9 @@ Can be raw numpy array or pre-binned BinnedArray.</p>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">goss_top_rate</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">goss_other_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">growth</span><span class="o">=</span><span class="s2">&quot;levelwise&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">max_leaves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
@@ -5671,6 +5719,48 @@ following the XGBoost/LightGBM approach.</p>
                   <span class="doc-param-default">
                     <b>DEFAULT:</b>
                       <code>0.1</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>growth</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Tree growth strategy: 'levelwise' (default), 'leafwise', or
+'symmetric'.</p>
+              </div>
+              <p>
+                  <span class="doc-param-annotation">
+                    <b>TYPE:</b>
+                      <code><span title="str">str</span></code>
+                  </span>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>&#39;levelwise&#39;</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_leaves</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Maximum leaves per tree (used by 'leafwise' growth;
+defaults to 2**max_depth when None).</p>
+              </div>
+              <p>
+                  <span class="doc-param-annotation">
+                    <b>TYPE:</b>
+                      <code><span title="int">int</span> | None</code>
+                  </span>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>None</code>
                   </span>
               </p>
             </td>
@@ -6716,7 +6806,11 @@ to contribution scores. Trained via parallel gradient boosting.</p>
             </td>
             <td class="doc-param-details">
               <div class="doc-md-description">
-                <p>Number of bins for histogram building.</p>
+                <p>Number of bins for histogram building (2-256). Binned data is
+uint8 with bin 255 reserved for missing values, so at most 254
+usable bins; 255/256 are clamped to 254 by <code>ob.array</code>. Shape
+function tables are always allocated 256-wide so every uint8 bin
+index (including the missing-value bin) stays in bounds.</p>
               </div>
               <p>
                   <span class="doc-param-annotation">
@@ -7001,12 +7095,18 @@ to contribution scores. Trained via parallel gradient boosting.</p>
 
 
 <a href="#openboost.OpenBoostGAM.plot_shape_function" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">plot_shape_function</span><span class="p">(</span><span class="n">feature_idx</span><span class="p">,</span> <span class="n">feature_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">plot_shape_function</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">feature_idx</span><span class="p">,</span> <span class="n">feature_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Plot the shape function for a feature.</p>
+<p>The x-axis shows original feature values, recovered from the bin
+edges learned at fit time. Categorical or constant features (which
+have no numeric bin edges) fall back to raw bin indices. The
+contribution learned for the missing-value bin (255) is not shown.</p>
 
 
 <table>
@@ -7051,6 +7151,80 @@ to contribution scores. Trained via parallel gradient boosting.</p>
                       <code>None</code>
                   </span>
               </p>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ax</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Optional matplotlib Axes to draw on. When None, a new
+figure and axes are created.</p>
+              </div>
+              <p>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>None</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<table>
+      <thead>
+        <tr>
+          <th><span class="doc-section-title">RETURNS</span></th>
+          <th><span>DESCRIPTION</span></th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+            </td>
+            <td class="doc-returns-details">
+              <div class="doc-md-description">
+                <p>The matplotlib Axes containing the plot.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<table>
+      <thead>
+        <tr>
+          <th><span class="doc-section-title">RAISES</span></th>
+          <th><span>DESCRIPTION</span></th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+              <span class="doc-raises-annotation">
+                  <code><span title="RuntimeError">RuntimeError</span></code>
+              </span>
+            </td>
+            <td class="doc-raises-details">
+              <div class="doc-md-description">
+                <p>If the model is not fitted.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+              <span class="doc-raises-annotation">
+                  <code><span title="ValueError">ValueError</span></code>
+              </span>
+            </td>
+            <td class="doc-raises-details">
+              <div class="doc-md-description">
+                <p>If feature_idx is out of range.</p>
+              </div>
             </td>
           </tr>
       </tbody>
@@ -8474,8 +8648,9 @@ eval_set : list of (X, y) tuples, optional
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">reg_lambda</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">n_bins</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">use_natural_gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">early_stopping_rounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
@@ -8506,13 +8681,20 @@ n_bins : int, default=256
 use_natural_gradient : bool, default=True
     If True, use NGBoost (natural gradient). Recommended for faster
     convergence and better uncertainty calibration.
+early_stopping_rounds : int, optional
+    Stop training if validation NLL doesn't improve for this many rounds.
+    Requires eval_set to be passed to fit().
 verbose : int, default=0
     Verbosity level.</p>
 <h4 id="openboost.OpenBoostDistributionalRegressor--attributes">Attributes<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor--attributes" title="Permanent link">&para;</a></h4>
 <p>n_features_in_ : int
     Number of features seen during fit.
 booster_ : NGBoost or DistributionalGBDT
-    The underlying fitted model.</p>
+    The underlying fitted model.
+best_iteration_ : int
+    Iteration with best validation score (if early stopping used).
+best_score_ : float
+    Best validation score achieved (if early stopping used).</p>
 <h4 id="openboost.OpenBoostDistributionalRegressor--examples">Examples<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor--examples" title="Permanent link">&para;</a></h4>
 <blockquote>
 <blockquote>
@@ -8562,7 +8744,9 @@ mu, sigma = params['loc'], params['scale']</p>
 
 
 <a href="#openboost.OpenBoostDistributionalRegressor.fit" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">fit</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8572,7 +8756,14 @@ mu, sigma = params['loc'], params['scale']</p>
 <p>X : array-like of shape (n_samples, n_features)
     Training features.
 y : array-like of shape (n_samples,)
-    Target values.</p>
+    Target values.
+sample_weight : array-like, optional
+    Not supported for distributional models; raises NotImplementedError
+    if passed.
+eval_set : list of (X, y) tuples, optional
+    Validation sets for early stopping (NLL metric).
+callbacks : list of Callback, optional
+    Callbacks forwarded to the underlying booster's fit().</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.fit--returns">Returns<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.fit--returns" title="Permanent link">&para;</a></h5>
 <p>self : OpenBoostDistributionalRegressor
     Fitted estimator.</p>
@@ -8867,7 +9058,9 @@ y_pred = model.predict(X_test)</p>
 
 
 <a href="#openboost.OpenBoostLinearLeafRegressor.fit" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">fit</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8877,7 +9070,13 @@ y_pred = model.predict(X_test)</p>
 <p>X : array-like of shape (n_samples, n_features)
     Training features.
 y : array-like of shape (n_samples,)
-    Target values.</p>
+    Target values.
+sample_weight : array-like, optional
+    Not supported; raises NotImplementedError if passed.
+eval_set : list of (X, y) tuples, optional
+    Not supported; raises NotImplementedError if passed.
+callbacks : list of Callback, optional
+    Not supported; raises NotImplementedError if passed.</p>
 <h5 id="openboost.OpenBoostLinearLeafRegressor.fit--returns">Returns<a class="headerlink" href="#openboost.OpenBoostLinearLeafRegressor.fit--returns" title="Permanent link">&para;</a></h5>
 <p>self : OpenBoostLinearLeafRegressor
     Fitted estimator.</p>

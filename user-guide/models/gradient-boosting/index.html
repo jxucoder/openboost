@@ -2164,6 +2164,24 @@
 <td>256</td>
 <td>Number of histogram bins</td>
 </tr>
+<tr>
+<td><code>growth</code></td>
+<td>str</td>
+<td><code>'levelwise'</code></td>
+<td>Tree growth strategy: <code>'levelwise'</code>, <code>'leafwise'</code>, or <code>'symmetric'</code></td>
+</tr>
+<tr>
+<td><code>max_leaves</code></td>
+<td>int/None</td>
+<td>None</td>
+<td>Max leaves per tree for <code>'leafwise'</code> growth (defaults to <code>2**max_depth</code>)</td>
+</tr>
+<tr>
+<td><code>random_state</code></td>
+<td>int/None</td>
+<td>None</td>
+<td>Seed for reproducible training</td>
+</tr>
 </tbody>
 </table>
 <h2 id="loss-functions">Loss Functions<a class="headerlink" href="#loss-functions" title="Permanent link">&para;</a></h2>
@@ -2226,18 +2244,18 @@
 <h2 id="feature-importance">Feature Importance<a class="headerlink" href="#feature-importance" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Compute importance</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">importance</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">compute_feature_importances</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">trees_</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Compute importance (pass the fitted model, not model.trees_)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">importance</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">compute_feature_importances</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Plot</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">ob</span><span class="o">.</span><span class="n">plot_feature_importances</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">trees_</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">ob</span><span class="o">.</span><span class="n">plot_feature_importances</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="growth-strategies">Growth Strategies<a class="headerlink" href="#growth-strategies" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Level-wise (XGBoost-style, default)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;levelwise&#39;</span><span class="p">)</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Leaf-wise (LightGBM-style)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;leafwise&#39;</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Leaf-wise (LightGBM-style); cap leaf count with max_leaves</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;leafwise&#39;</span><span class="p">,</span> <span class="n">max_leaves</span><span class="o">=</span><span class="mi">31</span><span class="p">)</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Symmetric/Oblivious (CatBoost-style)</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;symmetric&#39;</span><span class="p">)</span>
@@ -2281,7 +2299,9 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">n_gpus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">devices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">growth</span><span class="o">=</span><span class="s2">&quot;levelwise&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="n">max_leaves</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
@@ -2564,6 +2584,50 @@ training is fully batched for maximum performance.</p>
             <td class="doc-param-details">
               <div class="doc-md-description">
                 <p>Mini-batch size for large datasets. If None, process all at once.</p>
+              </div>
+              <p>
+                  <span class="doc-param-annotation">
+                    <b>TYPE:</b>
+                      <code><span title="int">int</span> | None</code>
+                  </span>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>None</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>growth</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Tree growth strategy:
+- 'levelwise': XGBoost-style level-wise growth (default)
+- 'leafwise': LightGBM-style best-first growth (see max_leaves)
+- 'symmetric': CatBoost-style oblivious trees</p>
+              </div>
+              <p>
+                  <span class="doc-param-annotation">
+                    <b>TYPE:</b>
+                      <code><span title="str">str</span></code>
+                  </span>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>&#39;levelwise&#39;</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_leaves</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Maximum number of leaves per tree (used by 'leafwise'
+growth; defaults to 2**max_depth when None).</p>
               </div>
               <p>
                   <span class="doc-param-annotation">

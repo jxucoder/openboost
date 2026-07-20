@@ -1972,6 +1972,9 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<p><code>LinearLeafGBDT</code> has its own parameter set (it is not a <code>GradientBoosting</code>
+subclass, so standard parameters like <code>subsample</code> or <code>colsample_bytree</code> are
+not available):</p>
 <table>
 <thead>
 <tr>
@@ -1983,14 +1986,61 @@
 </thead>
 <tbody>
 <tr>
-<td><code>ridge_lambda</code></td>
+<td><code>n_trees</code></td>
+<td>int</td>
+<td>100</td>
+<td>Number of boosting rounds</td>
+</tr>
+<tr>
+<td><code>max_depth</code></td>
+<td>int</td>
+<td>4</td>
+<td>Maximum tree depth (typically 3-4, shallower than standard)</td>
+</tr>
+<tr>
+<td><code>learning_rate</code></td>
+<td>float</td>
+<td>0.1</td>
+<td>Shrinkage factor</td>
+</tr>
+<tr>
+<td><code>loss</code></td>
+<td>str/callable</td>
+<td><code>'mse'</code></td>
+<td>Loss function (<code>'mse'</code>, <code>'mae'</code>, <code>'huber'</code>, or callable)</td>
+</tr>
+<tr>
+<td><code>min_samples_leaf</code></td>
+<td>int</td>
+<td>20</td>
+<td>Minimum samples to fit a linear model in a leaf</td>
+</tr>
+<tr>
+<td><code>reg_lambda_tree</code></td>
 <td>float</td>
 <td>1.0</td>
+<td>L2 regularization for tree splits</td>
+</tr>
+<tr>
+<td><code>reg_lambda_linear</code></td>
+<td>float</td>
+<td>0.1</td>
 <td>Ridge regularization for leaf linear models</td>
+</tr>
+<tr>
+<td><code>max_features_linear</code></td>
+<td>int/str/None</td>
+<td><code>'sqrt'</code></td>
+<td>Features per leaf model: <code>None</code> (all), <code>'sqrt'</code>, <code>'log2'</code>, or an int</td>
+</tr>
+<tr>
+<td><code>n_bins</code></td>
+<td>int</td>
+<td>256</td>
+<td>Number of bins for histogram building</td>
 </tr>
 </tbody>
 </table>
-<p>Plus all standard <code>GradientBoosting</code> parameters.</p>
 <h2 id="when-to-use">When to Use<a class="headerlink" href="#when-to-use" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
