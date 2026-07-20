@@ -20,7 +20,7 @@ For standard GBDT, use XGBoost. For GBDT **variants** (probabilistic predictions
 - `GradientBoosting` - Standard gradient boosting for regression/classification
 - `MultiClassGradientBoosting` - Multi-class classification with softmax
 - `DART` - Dropout regularized trees
-- `OpenBoostGAM` - GPU-accelerated interpretable GAM (10-40x faster than InterpretML EBM)
+- `OpenBoostGAM` - GPU-accelerated interpretable GAM (much faster than InterpretML EBM; see benchmark caveats in the GAM guide)
 
 ### Probabilistic Predictions (NaturalBoost)
 Predict full probability distributions, not just point estimates:
@@ -43,8 +43,8 @@ lower, upper = model.predict_interval(X_test, alpha=0.1)  # 90% prediction inter
 
 ### Performance
 OpenBoost GPU-accelerates GBDT variants that were previously slow:
-- **NaturalBoost**: 1.3-2x faster than NGBoost
-- **OpenBoostGAM**: 10-40x faster than InterpretML EBM
+- **NaturalBoost**: 1.6-11x faster than NGBoost (dataset-dependent; committed benchmark run)
+- **OpenBoostGAM**: 56x faster than InterpretML EBM on the committed run, with lower accuracy (R² 0.66 vs 0.74; EBM interactions/bagging disabled) — see the GAM guide for the honest comparison
 
 For standard GBDT, XGBoost/LightGBM are faster. OpenBoost's value is in the variants.
 

@@ -30,6 +30,9 @@ predictions = model.predict(X_test)
 | `subsample` | float | 1.0 | Row subsampling ratio |
 | `colsample_bytree` | float | 1.0 | Column subsampling ratio |
 | `n_bins` | int | 256 | Number of histogram bins |
+| `growth` | str | `'levelwise'` | Tree growth strategy: `'levelwise'`, `'leafwise'`, or `'symmetric'` |
+| `max_leaves` | int/None | None | Max leaves per tree for `'leafwise'` growth (defaults to `2**max_depth`) |
+| `random_state` | int/None | None | Seed for reproducible training |
 
 ## Loss Functions
 
@@ -75,11 +78,11 @@ model.fit(
 ```python
 model.fit(X_train, y_train)
 
-# Compute importance
-importance = ob.compute_feature_importances(model.trees_)
+# Compute importance (pass the fitted model, not model.trees_)
+importance = ob.compute_feature_importances(model)
 
 # Plot
-ob.plot_feature_importances(model.trees_, feature_names)
+ob.plot_feature_importances(model, feature_names)
 ```
 
 ## Growth Strategies
@@ -88,8 +91,8 @@ ob.plot_feature_importances(model.trees_, feature_names)
 # Level-wise (XGBoost-style, default)
 model = ob.GradientBoosting(growth='levelwise')
 
-# Leaf-wise (LightGBM-style)
-model = ob.GradientBoosting(growth='leafwise')
+# Leaf-wise (LightGBM-style); cap leaf count with max_leaves
+model = ob.GradientBoosting(growth='leafwise', max_leaves=31)
 
 # Symmetric/Oblivious (CatBoost-style)
 model = ob.GradientBoosting(growth='symmetric')

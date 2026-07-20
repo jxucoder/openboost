@@ -26,11 +26,21 @@ predictions = model.predict(X_test)
 
 ## Parameters
 
+`LinearLeafGBDT` has its own parameter set (it is not a `GradientBoosting`
+subclass, so standard parameters like `subsample` or `colsample_bytree` are
+not available):
+
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `ridge_lambda` | float | 1.0 | Ridge regularization for leaf linear models |
-
-Plus all standard `GradientBoosting` parameters.
+| `n_trees` | int | 100 | Number of boosting rounds |
+| `max_depth` | int | 4 | Maximum tree depth (typically 3-4, shallower than standard) |
+| `learning_rate` | float | 0.1 | Shrinkage factor |
+| `loss` | str/callable | `'mse'` | Loss function (`'mse'`, `'mae'`, `'huber'`, or callable) |
+| `min_samples_leaf` | int | 20 | Minimum samples to fit a linear model in a leaf |
+| `reg_lambda_tree` | float | 1.0 | L2 regularization for tree splits |
+| `reg_lambda_linear` | float | 0.1 | Ridge regularization for leaf linear models |
+| `max_features_linear` | int/str/None | `'sqrt'` | Features per leaf model: `None` (all), `'sqrt'`, `'log2'`, or an int |
+| `n_bins` | int | 256 | Number of bins for histogram building |
 
 ## When to Use
 

@@ -194,20 +194,21 @@ Define your own distribution:
 import openboost as ob
 import numpy as np
 
-# Method 1: Use create_custom_distribution (with autodiff)
-MyDist = ob.create_custom_distribution(
-    name='MyDist',
+# create_custom_distribution returns a ready-to-use instance
+# (gradients computed automatically: JAX if installed, numerical otherwise)
+dist = ob.create_custom_distribution(
     param_names=['loc', 'scale'],
-    nll_fn=lambda params, y: (
+    link_functions={'loc': 'identity', 'scale': 'softplus'},  # scale > 0
+    nll_fn=lambda y, params: (  # note: y first, then params dict
         0.5 * np.log(2 * np.pi * params['scale']**2) +
         0.5 * ((y - params['loc']) / params['scale'])**2
     ),
     mean_fn=lambda params: params['loc'],
-    param_transforms={'scale': 'softplus'},  # Ensure scale > 0
+    variance_fn=lambda params: params['scale']**2,
 )
 
 # Use with NaturalBoost
-model = ob.NaturalBoost(distribution=MyDist(), n_trees=100)
+model = ob.NaturalBoost(distribution=dist, n_trees=100)
 model.fit(X_train, y_train)
 ```
 

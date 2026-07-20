@@ -347,7 +347,7 @@ OpenBoost includes these losses out of the box:
 | Huber | `'huber'` | Outlier-robust |
 | Quantile | `'quantile'` | Quantile regression |
 | LogLoss | `'logloss'` | Binary classification |
-| Softmax | `'softmax'` | Multi-class (use MultiClassGradientBoosting) |
+| Softmax | (automatic) | Multi-class — used internally by `MultiClassGradientBoosting`, not a `loss=` string |
 | Poisson | `'poisson'` | Count data |
 | Gamma | `'gamma'` | Positive continuous |
 | Tweedie | `'tweedie'` | Zero-inflated positive |

@@ -13,7 +13,7 @@ Releasing OpenBoost 1.0.0rc1 🚀
 GPU-accelerated GBDT variants in pure Python.
 
 NGBoost, InterpretML EBM? Slow, CPU-only.
-OpenBoost brings them to GPU → 2-40x faster.
+OpenBoost brings them to GPU → 2-50x faster (benchmarks + caveats in the repo).
 
 Plus: fully readable, customizable. Built for the AI coding era.
 
@@ -26,19 +26,19 @@ pip install openboost
 ```
 The problem with XGBoost/LightGBM:
 
-Want to add a custom split criterion? → Write C++, recompile
-Want to modify histogram building? → Understand CUDA kernels
+Want a custom loss? → Write C++, recompile
+Want a custom predictive distribution? → Not happening
 Want to debug training? → Good luck with C++ stack traces
 
-With OpenBoost: it's all Python. Modify, reload, done.
+With OpenBoost: it's all Python. Custom losses, custom distributions, selectable growth strategies (levelwise/leafwise/symmetric). Modify, reload, done.
 ```
 
 ### Tweet 3
 ```
 What's included:
 
-✅ NaturalBoost (NGBoost → GPU, 2x faster)
-✅ OpenBoostGAM (InterpretML EBM → GPU, 40x faster)
+✅ NaturalBoost (NGBoost → GPU, 1.6-11x faster)
+✅ OpenBoostGAM (InterpretML EBM → GPU, 56x faster on our run; accuracy tradeoff — see repo benchmarks)
 ✅ DART, LinearLeaf, multi-GPU
 ✅ Standard GBDT (use XGBoost if you need speed)
 ✅ Full sklearn compatibility
@@ -94,14 +94,14 @@ Feedback welcome! This is rc1 - looking for battle testing before 1.0.
 I've been working on something different: GPU-accelerated gradient boosting written entirely in Python.
 
 **The Problem**
-XGBoost and LightGBM are incredible libraries, but they're 200K+ lines of C++. Want to customize the split criterion? Add a new distribution? Modify how histograms are built? You need C++ expertise and hours of build time.
+XGBoost and LightGBM are incredible libraries, but they're 200K+ lines of C++. Want a custom loss? A new predictive distribution? A different tree growth strategy? You need C++ expertise and hours of build time.
 
 **The Solution**
 OpenBoost GPU-accelerates GBDT variants that were previously CPU-only and slow:
 
 **What's Included**
-• NaturalBoost - probabilistic predictions (NGBoost → GPU, 1.3-2x faster)
-• OpenBoostGAM - interpretable models (InterpretML EBM → GPU, 10-40x faster)
+• NaturalBoost - probabilistic predictions (NGBoost → GPU, 1.6-11x faster)
+• OpenBoostGAM - interpretable models (InterpretML EBM → GPU, 56x faster on our benchmark, with an accuracy tradeoff — details in the repo)
 • Standard GBDT, DART, LinearLeaf (for custom algorithms; use XGBoost for production speed)
 • Full sklearn compatibility
 
@@ -139,8 +139,8 @@ XGBoost and LightGBM are engineering marvels, but they're essentially black boxe
 OpenBoost takes a different approach: ~20K lines of Python that GPU-accelerates GBDT variants that were previously slow and CPU-only.
 
 **What's included:**
-- NaturalBoost: NGBoost → GPU (1.3-2x faster)
-- OpenBoostGAM: InterpretML EBM → GPU (10-40x faster)
+- NaturalBoost: NGBoost → GPU (1.6-11x faster, dataset-dependent)
+- OpenBoostGAM: InterpretML EBM → GPU (56x faster on our benchmark run, with an accuracy tradeoff; comparison details in the repo)
 - DART, linear-leaf models, multi-GPU via Ray
 - Standard GBDT (use XGBoost for production speed; OpenBoost for readability/customization)
 - Full sklearn compatibility
@@ -178,13 +178,13 @@ Show HN: OpenBoost – GPU gradient boosting in pure Python (20K lines vs XGBoos
 ```
 I built OpenBoost because I wanted to understand and modify gradient boosting algorithms without diving into C++.
 
-XGBoost and LightGBM are incredible, but they're inaccessible to most practitioners. Want to add a custom loss function? Add a new distribution for probabilistic predictions? Modify the split criterion? You need C++ expertise.
+XGBoost and LightGBM are incredible, but they're inaccessible to most practitioners. Want to add a custom loss function? Add a new distribution for probabilistic predictions? Switch tree growth strategy? You need C++ expertise. (OpenBoost supports all three today: custom losses, custom distributions with autodiff, and levelwise/leafwise/symmetric growth. A pluggable split-criterion API is roadmap, not shipped — though the split code is plain Python you can edit.)
 
 OpenBoost is ~20K lines of Python using Numba for GPU acceleration. It brings GPU to GBDT variants that were previously CPU-only and slow.
 
 Key insight: NGBoost and InterpretML EBM are great algorithms trapped in slow Python implementations. OpenBoost GPU-accelerates them:
-- NaturalBoost: 1.3-2x faster than NGBoost
-- OpenBoostGAM: 10-40x faster than InterpretML EBM
+- NaturalBoost: 1.6-11x faster than NGBoost (dataset-dependent)
+- OpenBoostGAM: 56x faster than InterpretML EBM on our benchmark run, with an accuracy tradeoff (benchmark details and caveats in the repo)
 
 For standard GBDT, use XGBoost/LightGBM. For variants and custom algorithms, OpenBoost fills the gap.
 

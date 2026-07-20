@@ -32,6 +32,11 @@ All models support save/load:
 
 ## Using joblib/pickle Directly
 
+> **Security warning:** joblib and pickle deserialization executes arbitrary
+> code. Only load model files from sources you trust — never from untrusted
+> uploads or downloads. The same caveat applies to `ob.load()` /
+> `Model.load()`, which emit a runtime `UserWarning` for this reason.
+
 ```python
 import joblib
 

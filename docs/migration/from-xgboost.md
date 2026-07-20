@@ -190,9 +190,9 @@ model.fit(
 model.fit(X_train, y_train)
 importance = model.feature_importances_
 
-# OpenBoost
+# OpenBoost (pass the fitted model)
 model.fit(X_train, y_train)
-importance = ob.compute_feature_importances(model.trees_)
+importance = ob.compute_feature_importances(model)
 
 # Or with sklearn wrapper
 from openboost import OpenBoostRegressor

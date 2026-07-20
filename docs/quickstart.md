@@ -149,7 +149,7 @@ print(f"Mean: {output.mean()[:5]}")
 print(f"Std:  {output.std()[:5]}")
 
 # Sample from predicted distribution
-samples = model.sample(X_test, n_samples=100)  # Shape: (n_samples, n_test)
+samples = model.sample(X_test, n_samples=100)  # Shape: (n_test, n_samples)
 ```
 
 ## Saving and Loading Models
@@ -210,16 +210,16 @@ import openboost as ob
 model = ob.GradientBoosting(n_trees=100)
 model.fit(X_train, y_train)
 
-# Compute importance (gain-based)
-importance = ob.compute_feature_importances(model.trees_)
+# Compute importance (pass the fitted model, not model.trees_)
+importance = ob.compute_feature_importances(model)
 print("Feature importances:", importance)
 
 # Get as dictionary with feature names
 feature_names = ['age', 'income', 'score', ...]
-importance_dict = ob.get_feature_importance_dict(model.trees_, feature_names)
+importance_dict = ob.get_feature_importance_dict(model, feature_names)
 
 # Plot (requires matplotlib)
-ob.plot_feature_importances(model.trees_, feature_names)
+ob.plot_feature_importances(model, feature_names)
 ```
 
 ## Large-Scale Training

@@ -10,8 +10,8 @@ For standard GBDT, use XGBoost/LightGBM — they're highly optimized C++.
 
 For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:
 
-- **NaturalBoost**: 1.3-2x faster than NGBoost
-- **OpenBoostGAM**: 10-40x faster than InterpretML EBM
+- **NaturalBoost**: 1.6-11x faster than NGBoost (dataset-dependent; tree build is GPU-accelerated, gradient/Fisher math stays on CPU)
+- **OpenBoostGAM**: much faster than InterpretML EBM on our committed run (56x), with an accuracy tradeoff — see [Benchmarks](#benchmarks) for the honest numbers
 
 Plus: ~20K lines of readable Python. Modify, extend, and build on — no C++ required.
 
@@ -25,7 +25,7 @@ Plus: ~20K lines of readable Python. Modify, extend, and build on — no C++ req
 
 OpenBoost provides primitives (histograms, binning, tree fitting) that you combine into algorithms:
 
-- **Standard GBDT** — drop-in gradient boosting with multiple growth strategies, early stopping, and callbacks
+- **Standard GBDT** — drop-in gradient boosting with selectable growth strategies (`growth='levelwise' | 'leafwise' | 'symmetric'`), early stopping, and callbacks
 - **Distributional GBDT** — predict full probability distributions with [NGBoost](https://arxiv.org/abs/1910.03225)-style natural gradient boosting
 - **Interpretable GAMs** — explainable feature effects inspired by [EBM](https://arxiv.org/abs/1909.09223)
 - **DART** — [dropout regularization](https://arxiv.org/abs/1505.01866) for reduced overfitting
@@ -141,12 +141,17 @@ Available scales: `small` (500K), `medium` (2M), `large` (5M), `xlarge` (10M).
 
 ### Variant models
 
-Where OpenBoost really shines is on GBDT variants that don't exist in XGBoost/LightGBM:
+Where OpenBoost really shines is on GBDT variants that don't exist in XGBoost/LightGBM. From the committed benchmark run (`benchmarks/results/gpu_benchmark_20260322_153105.json`, Modal A100):
 
-| Model | vs. | Speedup |
-|---|---|---|
-| NaturalBoost (GPU) | NGBoost | 1.3-2x |
-| OpenBoostGAM (GPU) | InterpretML EBM | 10-40x |
+| Model | vs. | Speedup | Accuracy |
+|---|---|---|---|
+| NaturalBoost (GPU) | NGBoost | 1.6x (California housing), 11.5x (synthetic 50K) | NLL slightly behind NGBoost on both datasets |
+| OpenBoostGAM (GPU) | InterpretML EBM | 56x (synthetic 50K) | **Lower**: R² 0.66 vs 0.74 |
+
+Caveats to read before quoting these numbers:
+
+- The EBM comparison disabled EBM's interactions and bagging (`interactions=0`, `outer_bags=1`, `inner_bags=0`) to isolate main-effect training; OpenBoostGAM is main-effects-only. On this run OpenBoostGAM was much faster but less accurate.
+- NaturalBoost's GPU acceleration applies to the histogram-based tree build. The per-round distribution gradient and Fisher/natural-gradient computations run on CPU (numpy), so distributional training is not GPU-accelerated end-to-end.
 
 > **Note:** Benchmarks reflect the current state of development and may change as both OpenBoost and comparison libraries evolve.
 
