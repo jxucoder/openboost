@@ -10,6 +10,91 @@ import pytest
 import openboost as ob
 
 
+def _reference_predict(model, X):
+    """Golden reference: per-sample Python loop predict.
+
+    This mirrors, operation for operation (including float32 accumulation
+    order), the original O(n_samples) implementation of
+    ``LinearLeafTree.predict`` / ``LinearLeafGBDT.predict`` that predated
+    vectorization. The vectorized implementation must match it exactly.
+    """
+    X = np.asarray(X, dtype=np.float32)
+    n_samples = X.shape[0]
+
+    base = getattr(model, "base_score_", np.float32(0.0))
+    pred = np.full(n_samples, base, dtype=np.float32)
+
+    for tree in model.trees_:
+        if tree.training_binned is not None:
+            binned = tree.training_binned.transform(X).data
+        else:
+            binned = ob.array(X).data
+        binned = np.asarray(binned)
+
+        ts = tree.tree_structure
+        tree_pred = np.zeros(n_samples, dtype=np.float32)
+        for i in range(n_samples):
+            node = 0
+            while ts.left_children[node] != -1:
+                if binned[ts.features[node], i] <= ts.thresholds[node]:
+                    node = ts.left_children[node]
+                else:
+                    node = ts.right_children[node]
+
+            leaf_idx = tree.leaf_ids.get(int(node), 0)
+            weights = tree.leaf_weights[leaf_idx]
+            feat_indices = tree.leaf_features[leaf_idx]
+
+            p = weights[0]
+            for j, feat_idx in enumerate(feat_indices):
+                if j + 1 < len(weights):
+                    p = p + weights[j + 1] * X[i, feat_idx]
+            tree_pred[i] = p
+
+        pred = pred + model.learning_rate * tree_pred
+
+    return pred
+
+
+class TestLinearLeafVectorizedPredict:
+    """Vectorized predict must match the original per-sample loop exactly."""
+
+    @pytest.mark.parametrize("max_features_linear", ["sqrt", None, 2])
+    def test_predict_matches_reference_loop(self, max_features_linear):
+        """Vectorized predictions equal the per-sample reference within 1e-10."""
+        rng = np.random.RandomState(7)
+        X = rng.randn(300, 8).astype(np.float32)
+        y = (2 * X[:, 0] - X[:, 3] + 0.5 * rng.randn(300)).astype(np.float32)
+
+        model = ob.LinearLeafGBDT(
+            n_trees=12, max_depth=3, max_features_linear=max_features_linear
+        )
+        model.fit(X, y)
+
+        # Includes values outside the training range (extrapolation bins)
+        X_new = (rng.randn(500, 8) * 2.0).astype(np.float32)
+        np.testing.assert_allclose(
+            model.predict(X_new), _reference_predict(model, X_new),
+            rtol=0, atol=1e-10,
+        )
+
+    def test_predict_matches_reference_with_missing(self):
+        """Equivalence must hold when prediction data contains NaN."""
+        rng = np.random.RandomState(11)
+        X = rng.randn(200, 5).astype(np.float32)
+        y = (X[:, 0] + 0.5 * X[:, 1]).astype(np.float32)
+
+        model = ob.LinearLeafGBDT(n_trees=8, max_depth=3)
+        model.fit(X, y)
+
+        X_new = rng.randn(300, 5).astype(np.float32)
+        X_new[::7, 2] = np.nan  # NaN routes through MISSING_BIN
+        np.testing.assert_allclose(
+            model.predict(X_new), _reference_predict(model, X_new),
+            rtol=0, atol=1e-10,
+        )
+
+
 class TestLinearLeafBasic:
     """Basic functionality tests."""
 
@@ -69,33 +154,38 @@ class TestLinearLeafExtrapolation:
     """Verify that linear leaves improve extrapolation."""
 
     def test_extrapolation_on_linear_target(self):
-        """LinearLeaf should extrapolate better than standard GBDT on linear data."""
+        """LinearLeaf must beat standard GBDT decisively out of the training range.
+
+        Standard GBDT predicts piecewise constants, so beyond the training
+        range it saturates at the boundary value. Linear leaves extrapolate
+        the local trend, so on y = 3x their out-of-range RMSE should be a
+        small fraction of standard GBDT's.
+        """
         rng = np.random.RandomState(42)
-        # Training: X in [-2, 2]
-        X_train = rng.uniform(-2, 2, (200, 3)).astype(np.float32)
-        y_train = (2 * X_train[:, 0] + X_train[:, 1]).astype(np.float32)
+        # Training: x in [-2, 2], y = 3x + small noise
+        X_train = rng.uniform(-2, 2, (400, 1)).astype(np.float32)
+        y_train = (3 * X_train[:, 0] + 0.1 * rng.randn(400)).astype(np.float32)
 
-        # Test: X in [3, 5] (extrapolation region)
-        X_test = rng.uniform(3, 5, (50, 3)).astype(np.float32)
-        y_test = (2 * X_test[:, 0] + X_test[:, 1]).astype(np.float32)
+        # Test: x in [3, 5], well outside the training range
+        X_test = rng.uniform(3, 5, (100, 1)).astype(np.float32)
+        y_test = (3 * X_test[:, 0]).astype(np.float32)
 
-        # Standard GBDT
         standard = ob.GradientBoosting(n_trees=50, max_depth=4, learning_rate=0.1)
         standard.fit(X_train, y_train)
-        std_pred = standard.predict(X_test)
-        _ = np.mean((std_pred - y_test) ** 2)
+        std_rmse = float(np.sqrt(np.mean((standard.predict(X_test) - y_test) ** 2)))
 
-        # Linear Leaf GBDT
         linear = ob.LinearLeafGBDT(n_trees=50, max_depth=3, learning_rate=0.1)
         linear.fit(X_train, y_train)
         lin_pred = linear.predict(X_test)
-        _ = np.mean((lin_pred - y_test) ** 2)
+        lin_rmse = float(np.sqrt(np.mean((lin_pred - y_test) ** 2)))
 
-        # Linear leaf should extrapolate better (or at least comparably)
-        # We don't assert strict superiority since it depends on the data
         assert np.all(np.isfinite(lin_pred)), "Linear leaf predictions should be finite"
-        # At minimum, linear leaf predictions should be in a reasonable range
-        assert np.max(np.abs(lin_pred)) < 100, "Predictions shouldn't explode"
+        # Standard GBDT saturates near y = 6 (boundary), giving RMSE ~6 here;
+        # linear leaves should track y = 3x closely. Factor 2 leaves margin.
+        assert lin_rmse <= 0.5 * std_rmse, (
+            f"LinearLeafGBDT should extrapolate at least 2x better: "
+            f"linear RMSE {lin_rmse:.4f} vs standard RMSE {std_rmse:.4f}"
+        )
 
 
 class TestLinearLeafEdgeCases:

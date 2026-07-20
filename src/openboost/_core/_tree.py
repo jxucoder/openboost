@@ -6,6 +6,8 @@ The main `fit_tree()` function now uses composable primitives and strategies.
 
 from __future__ import annotations
 
+import os
+import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -16,6 +18,7 @@ from .._backends import is_cuda
 from ._growth import (
     GrowthConfig,
     GrowthStrategy,
+    SymmetricGrowth,
     TreeStructure,
     get_growth_strategy,
 )
@@ -992,10 +995,12 @@ def fit_tree_symmetric(
     min_gain: float = 0.0,
 ) -> SymmetricTree:
     """Fit a symmetric (oblivious) tree.
-    
-    All nodes at the same depth use the same split.
-    Much faster on GPU due to simplified split finding and partitioning.
-    
+
+    All nodes at the same depth use the same split, chosen by aggregating
+    per-leaf gains across all leaves at that depth (CatBoost-style).
+    Delegates to ``SymmetricGrowth`` so this entry point and
+    ``fit_tree(..., growth='symmetric')`` share one implementation.
+
     Args:
         binned: BinnedArray or binned data (n_features, n_samples)
         grad: Gradients, shape (n_samples,)
@@ -1004,7 +1009,7 @@ def fit_tree_symmetric(
         min_child_weight: Minimum sum of hessian in child
         reg_lambda: L2 regularization
         min_gain: Minimum gain to make a split
-        
+
     Returns:
         SymmetricTree with level-wise splits
     """
@@ -1015,109 +1020,31 @@ def fit_tree_symmetric(
     else:
         binned_data = binned
         n_features = binned.shape[0]
-    
-    n_samples = binned_data.shape[1]
+
+    config = GrowthConfig(
+        max_depth=max_depth,
+        min_child_weight=min_child_weight,
+        reg_lambda=reg_lambda,
+        min_gain=min_gain,
+    )
+    # No categorical info here: this API treats all features as ordinal,
+    # which keeps SymmetricTree's ordinal-only prediction consistent.
+    ts = SymmetricGrowth().grow(binned_data, grad, hess, config)
+
     n_leaves = 2 ** max_depth
-    
-    # Initialize
     level_features = np.full(max_depth, -1, dtype=np.int32)
     level_thresholds = np.zeros(max_depth, dtype=np.uint8)
     leaf_values = np.zeros(n_leaves, dtype=np.float32)
-    
-    # Track which leaf each sample belongs to
-    sample_leaf_ids = np.zeros(n_samples, dtype=np.int32)
-    
-    # Ensure arrays are contiguous
-    grad = np.ascontiguousarray(grad, dtype=np.float32)
-    hess = np.ascontiguousarray(hess, dtype=np.float32)
-    
-    use_gpu = is_cuda() and hasattr(binned_data, '__cuda_array_interface__')
-    
-    # Build tree level by level
-    for depth in range(max_depth):
-        n_nodes_at_level = 2 ** depth
-        
-        # Build combined histogram for ALL nodes at this level
-        # For symmetric trees: just sum all histograms (all nodes use same split)
-        combined_hist_grad = None
-        combined_hist_hess = None
-        
-        for node_idx in range(n_nodes_at_level):
-            # Get samples belonging to this node
-            mask = sample_leaf_ids == node_idx
-            if not np.any(mask):
-                continue
-            
-            sample_indices = np.where(mask)[0].astype(np.int32)
-            
-            if use_gpu:
-                from numba import cuda
-                sample_indices_gpu = cuda.to_device(sample_indices)
-                node_hist_grad, node_hist_hess = build_histogram(
-                    binned_data, grad, hess, sample_indices_gpu
-                )
-                # Copy to CPU for aggregation
-                if hasattr(node_hist_grad, 'copy_to_host'):
-                    node_hist_grad = node_hist_grad.copy_to_host()
-                    node_hist_hess = node_hist_hess.copy_to_host()
-            else:
-                node_hist_grad, node_hist_hess = build_histogram(
-                    binned_data, grad, hess, sample_indices
-                )
-            
-            if combined_hist_grad is None:
-                combined_hist_grad = node_hist_grad.copy()
-                combined_hist_hess = node_hist_hess.copy()
-            else:
-                combined_hist_grad += node_hist_grad
-                combined_hist_hess += node_hist_hess
-        
-        if combined_hist_grad is None:
-            # No samples, stop building
-            break
-        
-        # Find ONE best split for the entire level
-        # Sum only feature 0 to get the true total (all features have the same
-        # total; summing across all features would give n_features * actual_total).
-        total_grad = float(np.sum(combined_hist_grad[0]))
-        total_hess = float(np.sum(combined_hist_hess[0]))
-        
-        split = find_best_split(
-            combined_hist_grad, combined_hist_hess,
-            total_grad, total_hess,
-            reg_lambda=reg_lambda,
-            min_child_weight=min_child_weight,
-            min_gain=min_gain,
-        )
-        
-        if not split.is_valid:
-            # Can't split anymore, compute leaf values
-            break
-        
-        # Store the split for this level
-        level_features[depth] = split.feature
-        level_thresholds[depth] = split.threshold
-        
-        # Partition ALL samples using this split
-        if use_gpu and hasattr(binned_data, 'copy_to_host'):
-            binned_cpu = binned_data.copy_to_host()
-        else:
-            binned_cpu = np.asarray(binned_data)
-        
-        feature_values = binned_cpu[split.feature, :]
-        goes_right = feature_values > split.threshold
-        
-        # Update leaf IDs: left child = 2*current, right child = 2*current + 1
-        sample_leaf_ids = 2 * sample_leaf_ids + goes_right.astype(np.int32)
-    
-    # Compute leaf values
-    for leaf_idx in range(n_leaves):
-        mask = sample_leaf_ids == leaf_idx
-        if np.any(mask):
-            leaf_grad = float(np.sum(grad[mask]))
-            leaf_hess = float(np.sum(hess[mask]))
-            leaf_values[leaf_idx] = compute_leaf_value(leaf_grad, leaf_hess, reg_lambda)
-    
+
+    d = ts.depth
+    if d > 0:
+        level_features[:d] = ts.level_features
+        level_thresholds[:d] = ts.level_thresholds.astype(np.uint8)
+    # SymmetricTree prediction stops at the first feature < 0, so leaf ids
+    # stay in [0, 2^d); map the TreeStructure leaf slots onto that range.
+    leaf_start = 2 ** d - 1
+    leaf_values[:2 ** d] = ts.leaf_values_array[leaf_start:leaf_start + 2 ** d]
+
     return SymmetricTree(
         level_features=level_features,
         level_thresholds=level_thresholds,
@@ -1187,9 +1114,17 @@ def fit_tree_symmetric_gpu_native(
     min_gain: float = 0.0,
 ) -> SymmetricTree:
     """Fit symmetric tree using GPU-native implementation.
-    
+
     Faster than fit_tree_symmetric() as it minimizes CPU-GPU transfers.
-    
+
+    Warning:
+        The GPU kernel is currently DISABLED pending a correctness fix:
+        ``_build_symmetric_histogram_kernel`` ignores per-leaf sample
+        assignments, so every depth rebuilds the identical root histogram
+        and the tree repeats one split per level (degenerate). Unless
+        ``OPENBOOST_EXPERIMENTAL_SYMMETRIC_GPU=1`` is set, this function
+        falls back to the correct (CPU-side) symmetric builder.
+
     Args:
         binned: BinnedArray or binned data (n_features, n_samples)
         grad: Gradients, shape (n_samples,)
@@ -1198,7 +1133,7 @@ def fit_tree_symmetric_gpu_native(
         min_child_weight: Minimum sum of hessian in child
         reg_lambda: L2 regularization
         min_gain: Minimum gain to make a split
-        
+
     Returns:
         SymmetricTree
     """
@@ -1210,7 +1145,30 @@ def fit_tree_symmetric_gpu_native(
             reg_lambda=reg_lambda,
             min_gain=min_gain,
         )
-    
+
+    # CRIT-5 gate: the GPU symmetric builder produces degenerate trees because
+    # its histogram kernel is not leaf-aware (see _backends/_cuda.py,
+    # _build_symmetric_histogram_kernel). Route to the correct CPU builder
+    # unless the experimental escape hatch is explicitly enabled.
+    if os.environ.get("OPENBOOST_EXPERIMENTAL_SYMMETRIC_GPU") != "1":
+        warnings.warn(
+            "symmetric GPU builder disabled pending correctness fix: its "
+            "histogram kernel ignores per-leaf sample assignments, so every "
+            "depth repeats the same split. Using the CPU symmetric builder "
+            "instead. Set OPENBOOST_EXPERIMENTAL_SYMMETRIC_GPU=1 to force "
+            "the (known-broken) GPU kernel.",
+            UserWarning,
+            stacklevel=2,
+        )
+        return fit_tree_symmetric(
+            binned, grad, hess,
+            max_depth=max_depth,
+            min_child_weight=min_child_weight,
+            reg_lambda=reg_lambda,
+            min_gain=min_gain,
+        )
+
+
     # Extract raw data
     if isinstance(binned, BinnedArray):
         binned_data = binned.data

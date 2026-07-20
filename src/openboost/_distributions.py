@@ -314,6 +314,17 @@ class Distribution(ABC):
         """Negative log-likelihood (for evaluation)."""
         raise NotImplementedError(f"nll not implemented for {self.__class__.__name__}")
 
+    def validate_target(self, y: NDArray) -> None:  # noqa: B027
+        """Validate that targets lie in the distribution's support.
+
+        Called at fit-entry (each family's init_params invokes it before
+        estimating starting values). Raises ValueError on out-of-support
+        targets instead of silently clipping/rounding them. Internal epsilon
+        clips remain for numerical safety only.
+
+        Default: no restrictions (real-valued support).
+        """
+
 
 # =============================================================================
 # Normal (Gaussian) Distribution
@@ -507,8 +518,17 @@ class LogNormal(Distribution):
             return np.log(np.clip(param, 1e-10, None))
         raise ValueError(f"Unknown parameter: {param_name}")
     
+    def validate_target(self, y: NDArray) -> None:
+        y = np.asarray(y)
+        if np.any(y <= 0):
+            raise ValueError(
+                "LogNormal distribution requires strictly positive targets; "
+                f"got min(y)={float(np.min(y))}. Remove or shift non-positive values."
+            )
+
     def init_params(self, y: NDArray) -> dict[str, float]:
         """Initialize from positive target values."""
+        self.validate_target(y)
         log_y = np.log(np.clip(y, 1e-10, None))
         loc_init = float(np.mean(log_y))
         scale_init = float(np.std(log_y)) + 1e-6
@@ -630,12 +650,21 @@ class Gamma(Distribution):
     def link_inv(self, param_name: str, param: NDArray) -> NDArray:
         return np.log(np.clip(param, 1e-10, None))
     
+    def validate_target(self, y: NDArray) -> None:
+        y = np.asarray(y)
+        if np.any(y <= 0):
+            raise ValueError(
+                "Gamma distribution requires strictly positive targets; "
+                f"got min(y)={float(np.min(y))}. Remove or shift non-positive values."
+            )
+
     def init_params(self, y: NDArray) -> dict[str, float]:
         """Initialize using method of moments.
-        
+
         mean = α/β, var = α/β²
         => β = mean/var, α = mean * β = mean²/var
         """
+        self.validate_target(y)
         y_clip = np.clip(y, 1e-10, None)
         mean_y = float(np.mean(y_clip))
         var_y = float(np.var(y_clip)) + 1e-6
@@ -748,6 +777,24 @@ class Gamma(Distribution):
 # Poisson Distribution
 # =============================================================================
 
+def _validate_count_target(y: NDArray, dist_name: str) -> None:
+    """Shared support check for count distributions (Poisson, NegativeBinomial)."""
+    y = np.asarray(y)
+    if np.any(y < 0):
+        raise ValueError(
+            f"{dist_name} distribution requires non-negative count targets; "
+            f"got min(y)={float(np.min(y))}."
+        )
+    # Allow tiny float noise (e.g. from float32 casts), reject genuine non-integers
+    tol = 1e-6 * np.maximum(1.0, np.abs(y))
+    if np.any(np.abs(y - np.round(y)) > tol):
+        bad = float(y[np.abs(y - np.round(y)) > tol].flat[0])
+        raise ValueError(
+            f"{dist_name} distribution requires integer count targets; "
+            f"got non-integer value {bad}."
+        )
+
+
 class Poisson(Distribution):
     """Poisson distribution for count data.
     
@@ -772,7 +819,11 @@ class Poisson(Distribution):
     def link_inv(self, param_name: str, param: NDArray) -> NDArray:
         return np.log(np.clip(param, 1e-10, None))
     
+    def validate_target(self, y: NDArray) -> None:
+        _validate_count_target(y, "Poisson")
+
     def init_params(self, y: NDArray) -> dict[str, float]:
+        self.validate_target(y)
         mean_y = float(np.mean(np.clip(y, 0, None))) + 1e-6
         return {'rate': float(np.log(mean_y))}
     
@@ -926,15 +977,18 @@ class StudentT(Distribution):
         grad_scale = 1 - w * z2
         hess_scale = 2.0 * np.ones_like(y)  # Approximation
         
-        # DF gradient: d(NLL)/d(log ν) with exp link
-        df_safe = np.maximum(ν, 1e-6)
-        z2 = z ** 2
-        grad_df = df_safe * 0.5 * (
-            -digamma(df_safe / 2) + digamma((df_safe + 1) / 2)
-            + np.log(df_safe) + 1
-            - np.log(df_safe + z2)
+        # DF gradient: exact chain rule through the softplus+2 link
+        # ν = 2 + softplus(raw)  =>  dν/d(raw) = sigmoid(raw) = 1 - exp(-(ν - 2))
+        # d(NLL)/dν = 0.5 * [ψ(ν/2) - ψ((ν+1)/2) + 1/ν + log(1 + z²/ν)
+        #                    - (ν+1)z² / (ν(ν+z²))]
+        df_safe = np.maximum(ν, 2.0 + 1e-6)
+        dnll_dnu = 0.5 * (
+            digamma(df_safe / 2) - digamma((df_safe + 1) / 2)
+            + 1.0 / df_safe
+            + np.log1p(z2 / df_safe)
             - (df_safe + 1) * z2 / (df_safe * (df_safe + z2))
         )
+        grad_df = dnll_dnu * (1.0 - np.exp(-(df_safe - 2.0)))
         hess_df = np.maximum(np.abs(grad_df), 0.1) * np.ones_like(y)
         
         return {
@@ -1058,11 +1112,20 @@ class Tweedie(Distribution):
     def link_inv(self, param_name: str, param: NDArray) -> NDArray:
         return np.log(np.clip(param, 1e-10, None))
     
+    def validate_target(self, y: NDArray) -> None:
+        y = np.asarray(y)
+        if np.any(y < 0):
+            raise ValueError(
+                "Tweedie distribution requires non-negative targets; "
+                f"got min(y)={float(np.min(y))}."
+            )
+
     def init_params(self, y: NDArray) -> dict[str, float]:
         """Initialize from target values.
-        
+
         For Tweedie, μ = E[Y], and φ is estimated from variance.
         """
+        self.validate_target(y)
         y_clip = np.clip(y, 1e-10, None)
         mu_init = float(np.mean(y_clip)) + 1e-6
         
@@ -1166,47 +1229,134 @@ class Tweedie(Distribution):
         return φ * np.power(μ, self.power)
     
     def quantile(self, params: dict[str, NDArray], q: float) -> NDArray:
-        """Approximate quantile using Normal approximation."""
-        μ = params['mu']
-        var = self.variance(params)
-        σ = np.sqrt(var)
+        """Quantile respecting the compound Poisson-Gamma support.
+
+        For 1 < power < 2 the distribution has a point mass
+        P(Y=0) = exp(-λ) with λ = μ^(2-ρ)/(φ(2-ρ)):
+        - q <= P(Y=0): the quantile is exactly 0
+        - q >  P(Y=0): the conditional positive part Y | Y > 0 is
+          approximated by a Gamma matched to its conditional mean/variance
+          (derived from the unconditional mean μ, variance φμ^ρ, and the
+          zero mass).
+        """
         from scipy import stats
-        return stats.norm.ppf(q, loc=μ, scale=σ)
-    
+        μ = params['mu']
+        φ = params['phi']
+        ρ = self.power
+
+        if not (1 < ρ < 2):
+            # Outside the compound Poisson-Gamma range: Normal approximation
+            # clipped to the non-negative support
+            σ = np.sqrt(self.variance(params))
+            return np.maximum(stats.norm.ppf(q, loc=μ, scale=σ), 0.0)
+
+        λ = np.power(μ, 2 - ρ) / (φ * (2 - ρ))
+        p0 = np.exp(-λ)
+
+        # Conditional moments of Y | Y > 0:
+        # E[Y] = (1-p0) * m₊  and  E[Y²] = (1-p0) * E[Y²|Y>0]
+        var = φ * np.power(μ, ρ)
+        one_minus_p0 = np.maximum(1.0 - p0, 1e-12)
+        mean_pos = μ / one_minus_p0
+        var_pos = (var + μ ** 2) / one_minus_p0 - mean_pos ** 2
+        var_pos = np.maximum(var_pos, 1e-12)
+
+        shape = mean_pos ** 2 / var_pos
+        scale = var_pos / mean_pos
+        q_adj = np.clip((q - p0) / one_minus_p0, 0.0, 1.0)
+        positive_part = stats.gamma.ppf(q_adj, a=shape, scale=scale)
+
+        return np.where(q <= p0, 0.0, positive_part)
+
     def sample(
-        self, 
-        params: dict[str, NDArray], 
+        self,
+        params: dict[str, NDArray],
         n_samples: int = 1,
         seed: int | None = None,
     ) -> NDArray:
-        """Sample from Tweedie using compound Poisson-Gamma."""
+        """Sample from Tweedie using compound Poisson-Gamma (vectorized).
+
+        Draws N ~ Poisson(λ) for every (observation, sample) cell at once,
+        then uses the fact that a sum of N iid Gamma(α, scale) variables is
+        Gamma(N·α, scale) — no per-cell Python loops.
+        """
         rng = np.random.default_rng(seed)
         μ = params['mu']
         φ = params['phi']
         ρ = self.power
         n_obs = μ.shape[0]
-        
-        samples = np.zeros((n_obs, n_samples), dtype=np.float32)
-        
-        # Compound Poisson-Gamma sampling
-        for i in range(n_obs):
-            λ = μ[i] ** (2 - ρ) / (φ[i] * (2 - ρ))  # Poisson rate
-            α = (2 - ρ) / (ρ - 1)  # Gamma shape
-            β = φ[i] * (ρ - 1) * μ[i] ** (ρ - 1)  # Gamma scale
-            
-            for j in range(n_samples):
-                n_claims = rng.poisson(λ)
-                if n_claims > 0:
-                    samples[i, j] = np.sum(rng.gamma(α, β, size=n_claims))
-        
-        return samples
-    
+
+        λ = np.power(μ, 2 - ρ) / (φ * (2 - ρ))  # Poisson rate
+        α = (2 - ρ) / (ρ - 1)  # Gamma shape per claim
+        scale = φ * (ρ - 1) * np.power(μ, ρ - 1)  # Gamma scale
+
+        counts = rng.poisson(λ[:, None], size=(n_obs, n_samples))
+        # shape=0 is invalid for rng.gamma; use a tiny floor, then zero out N=0 cells
+        shapes = np.maximum(counts * α, 1e-12)
+        samples = rng.gamma(shapes, np.broadcast_to(scale[:, None], (n_obs, n_samples)))
+        samples[counts == 0] = 0.0
+
+        return samples.astype(np.float32)
+
     def nll(self, y: NDArray, params: dict[str, NDArray]) -> NDArray:
-        """Negative log-likelihood (deviance-based)."""
-        μ = params['mu']
-        φ = params['phi']
-        deviance = self._compute_deviance(y, μ)
-        return deviance / (2 * φ)
+        """Proper negative log-likelihood (predict-time scoring).
+
+        For 1 < power < 2, evaluates the exact compound Poisson-Gamma
+        density: -log P(Y=0) = λ = μ^(2-ρ)/(φ(2-ρ)) at y == 0, and the
+        Dunn & Smyth (2005) series expansion of the density for y > 0
+        (logsumexp over the W_j terms, with the summation range sized from
+        the dominant index j_max ≈ y^(2-ρ)/(φ(2-ρ))).
+
+        Note: the TRAINING objective (nll_gradient) intentionally remains
+        deviance-based — changing it would change model fits. This method is
+        only used for evaluation/scoring.
+        """
+        from scipy.special import gammaln, logsumexp
+
+        μ = np.clip(np.asarray(params['mu'], dtype=np.float64), 1e-10, 1e10)
+        φ = np.clip(np.asarray(params['phi'], dtype=np.float64), 1e-10, 1e10)
+        ρ = self.power
+        y = np.asarray(y, dtype=np.float64)
+
+        if not (1 < ρ < 2):
+            # ρ=1 (Poisson lattice) and ρ=2 (Gamma) boundaries keep the
+            # historical deviance-based quantity
+            deviance = self._compute_deviance(np.clip(y, 0, None), μ)
+            return deviance / (2 * φ)
+
+        λ = np.power(μ, 2 - ρ) / (φ * (2 - ρ))
+        out = λ.copy()  # y == 0 case: NLL = -log P(Y=0) = λ
+
+        pos = y > 0
+        if np.any(pos):
+            yp = y[pos]
+            mp = μ[pos]
+            php = φ[pos]
+
+            α = (2 - ρ) / (ρ - 1)
+            θ = np.power(mp, 1 - ρ) / (1 - ρ)  # canonical parameter
+            κ = np.power(mp, 2 - ρ) / (2 - ρ)  # cumulant function
+
+            # log W_j = j*A - lgamma(j+1) - lgamma(j*α), per-sample A
+            A = (
+                α * np.log(yp)
+                - α * np.log(ρ - 1)
+                - (1 + α) * np.log(php)
+                - np.log(2 - ρ)
+            )
+            # Terms peak near j_max; sum well past the largest peak in the batch
+            j_max = np.maximum(np.power(yp, 2 - ρ) / (php * (2 - ρ)), 1.0)
+            n_terms = int(min(max(np.ceil(3 * j_max.max()) + 40, 60), 20000))
+            j = np.arange(1, n_terms + 1, dtype=np.float64)[:, None]
+
+            log_w = j * A[None, :] - gammaln(j + 1) - gammaln(j * α)
+            log_series = logsumexp(log_w, axis=0)
+
+            # log f(y) = -log(y) + log Σ_j W_j + (yθ - κ(θ))/φ
+            log_pdf = -np.log(yp) + log_series + (yp * θ - κ) / php
+            out[pos] = -log_pdf
+
+        return out
 
 
 # =============================================================================
@@ -1256,13 +1406,17 @@ class NegativeBinomial(Distribution):
     def link_inv(self, param_name: str, param: NDArray) -> NDArray:
         return np.log(np.clip(param, 1e-10, None))
     
+    def validate_target(self, y: NDArray) -> None:
+        _validate_count_target(y, "NegativeBinomial")
+
     def init_params(self, y: NDArray) -> dict[str, float]:
         """Initialize using method of moments.
-        
+
         Mean = μ
         Var = μ + μ²/r
         => r = μ² / (Var - μ)
         """
+        self.validate_target(y)
         y_clip = np.clip(y, 0, None)
         mu_init = float(np.mean(y_clip)) + 1e-6
         var_y = float(np.var(y_clip)) + 1e-6
@@ -1302,21 +1456,24 @@ class NegativeBinomial(Distribution):
         
         # Common terms
         p = r_safe / (r_safe + μ_safe)  # Success probability
-        
+
         # Gradient w.r.t. log(μ)
-        # d(NLL)/d(log μ) = μ * d(NLL)/dμ = μ * (μ/(r+μ) - y/μ * r/(r+μ))
-        #                 = μ²/(r+μ) - y*r/(r+μ) = (μ² - y*r)/(r+μ)
-        #                 = μ * (μ - y*r/μ)/(r+μ) = μ * (μ - y*r/μ) * (1-p)/μ
-        #                 = (μ - y) * (1-p) ... simplified
+        # d(loglik)/dμ = p*(y - μ)/μ  =>  d(NLL)/dμ = p*(μ - y)/μ
+        # d(NLL)/d(log μ) = μ * d(NLL)/dμ = (μ - y) * p
         grad_mu_raw = (μ_safe - y_safe) * p
-        
+
         # Expected hessian
         hess_mu = μ_safe * (1 - p)
         hess_mu = np.clip(hess_mu, 1e-6, 1e6)
-        
+
         # Gradient w.r.t. log(r) (dispersion)
-        # This is complex, use approximation
-        grad_r_raw = r_safe * (digamma(y_safe + r_safe) - digamma(r_safe) + np.log(p) + (1 - p))
+        # loglik = lgamma(y+r) - lgamma(r) + r*log(p) + y*log(1-p) + const
+        # d(loglik)/dr = digamma(y+r) - digamma(r) + log(p) + (1-p) - y/(r+μ)
+        # d(NLL)/d(log r) = -r * d(loglik)/dr
+        grad_r_raw = -r_safe * (
+            digamma(y_safe + r_safe) - digamma(r_safe)
+            + np.log(p) + (1 - p) - y_safe / (r_safe + μ_safe)
+        )
         hess_r = r_safe * polygamma(1, r_safe)  # Expected hessian
         hess_r = np.clip(hess_r, 0.1, 10)
         
@@ -1486,6 +1643,9 @@ class CustomDistribution(Distribution):
         self._init_fn = init_fn
         self._use_jax = use_jax
         self._eps = eps
+        # Per-sample gradient stack from the last nll_gradient call, used by
+        # the empirical Fisher approximation in fisher_information()
+        self._last_grad_stack: NDArray | None = None
         
         # Check for JAX availability
         self._jax_available = False
@@ -1554,6 +1714,30 @@ class CustomDistribution(Distribution):
         else:
             return np.ones_like(constrained)
 
+    def _link_second_derivative(self, param_name: str, constrained: NDArray) -> NDArray:
+        """Compute d²(constrained)/d(raw)² for the link function.
+
+        For exp link: d²(exp(raw))/d(raw)² = exp(raw) = constrained
+        For identity link: 0
+        For softplus link: sigmoid'(raw) = s*(1-s) with s = 1 - exp(-constrained)
+        For sigmoid link: c*(1-c)*(1-2c) with c = constrained
+        For square link: 2
+        """
+        link_type = self._link_functions.get(param_name, 'identity')
+        if link_type == 'exp':
+            return constrained
+        elif link_type == 'identity':
+            return np.zeros_like(constrained)
+        elif link_type == 'softplus':
+            s = 1.0 - np.exp(-constrained)
+            return s * (1.0 - s)
+        elif link_type == 'sigmoid':
+            return constrained * (1.0 - constrained) * (1.0 - 2.0 * constrained)
+        elif link_type == 'square':
+            return 2.0 * np.ones_like(constrained)
+        else:
+            return np.zeros_like(constrained)
+
     def _numerical_gradient(
         self,
         y: NDArray,
@@ -1561,12 +1745,12 @@ class CustomDistribution(Distribution):
     ) -> dict[str, GradHess]:
         """Compute gradients numerically (vectorized finite differences).
 
-        Perturbs constrained parameters and then multiplies by the Jacobian
-        of the link function to obtain gradients w.r.t. raw parameters.
+        Perturbs constrained parameters and then applies the chain rule
+        through the link function to obtain gradients/hessians w.r.t. raw
+        parameters.
         """
         results = {}
         eps = self._eps
-        len(y)
 
         # Compute center NLL once
         nll_center = self._nll_fn(y, params)
@@ -1588,11 +1772,13 @@ class CustomDistribution(Distribution):
             # Central difference for hessian w.r.t. constrained params
             hess_constrained = (nll_plus - 2 * nll_center + nll_minus) / (eps ** 2)
 
-            # Multiply by link function derivative to get gradient w.r.t. raw params
-            # grad_raw = grad_constrained * d(constrained)/d(raw)
+            # Chain rule through the link to get derivatives w.r.t. raw params:
+            # grad_raw = grad_c * link'
+            # hess_raw = hess_c * (link')² + grad_c * link''  (full second order)
             link_deriv = self._link_derivative(param_name, params[param_name])
+            link_second = self._link_second_derivative(param_name, params[param_name])
             grad = grad_constrained * link_deriv
-            hess = hess_constrained * link_deriv ** 2
+            hess = hess_constrained * link_deriv ** 2 + grad_constrained * link_second
 
             # Ensure positive hessian and clip extremes
             hess = np.clip(hess, 1e-6, 1e6)
@@ -1602,24 +1788,49 @@ class CustomDistribution(Distribution):
 
         return results
     
+    def _jax_link_fn(self, param_name: str):
+        """JAX-traceable link function (mirrors LINK_FUNCTIONS)."""
+        jnp = self._jnp
+        link_type = self._link_functions.get(param_name, 'identity')
+        if link_type == 'exp':
+            return lambda x: jnp.exp(jnp.clip(x, -20, 20))
+        elif link_type == 'softplus':
+            return lambda x: jnp.log1p(jnp.exp(jnp.clip(x, -20, 20)))
+        elif link_type == 'sigmoid':
+            return lambda x: 1.0 / (1.0 + jnp.exp(-jnp.clip(x, -20, 20)))
+        elif link_type == 'square':
+            return lambda x: x ** 2
+        return lambda x: x
+
     def _jax_gradient(
         self,
         y: NDArray,
         params: dict[str, NDArray],
     ) -> dict[str, GradHess]:
-        """Compute gradients using JAX autodiff (vectorized with vmap)."""
+        """Compute gradients w.r.t. RAW parameters using JAX autodiff.
+
+        The trainer keeps predictions in raw (link) space, so gradients must
+        be d(NLL)/d(raw). This differentiates the composition
+        nll(y, link(raw)) directly, which also yields the exact raw-space
+        Hessian (including the grad * link'' second-order term).
+        """
         jax = self._jax
         jnp = self._jnp
 
-        # Define loss for a single sample
-        def single_nll(param_values, y_single):
-            params_dict = {name: jnp.array([val]) for name, val in zip(self._param_names, param_values, strict=False)}
-            return self._nll_fn(jnp.array([y_single]), params_dict)[0]
-
         # Create grad and hessian functions once (cached pattern)
         if self._jax_grad_fn is None:
-            self._jax_grad_fn = jax.grad(single_nll)
-            self._jax_hess_fn = jax.hessian(single_nll)
+            link_fns = [self._jax_link_fn(name) for name in self._param_names]
+            param_names = self._param_names
+
+            def single_nll_raw(raw_values, y_single):
+                params_dict = {
+                    name: jnp.reshape(link_fns[j](raw_values[j]), (1,))
+                    for j, name in enumerate(param_names)
+                }
+                return self._nll_fn(jnp.reshape(y_single, (1,)), params_dict)[0]
+
+            self._jax_grad_fn = jax.grad(single_nll_raw)
+            self._jax_hess_fn = jax.hessian(single_nll_raw)
 
         grad_fn = self._jax_grad_fn
         hess_fn = self._jax_hess_fn
@@ -1629,13 +1840,17 @@ class CustomDistribution(Distribution):
         batched_hess_fn = jax.vmap(hess_fn, in_axes=(0, 0))
 
         n = len(y)
-        # Stack param values into array of shape (n, n_params)
-        param_values = jnp.stack([jnp.array(params[name]) for name in self._param_names], axis=-1)
+        # Recover raw values from the constrained params (links are monotone)
+        raw_values = jnp.stack(
+            [jnp.array(self.link_inv(name, np.asarray(params[name])))
+             for name in self._param_names],
+            axis=-1,
+        )
         y_jax = jnp.array(y)
 
         try:
-            grads = batched_grad_fn(param_values, y_jax)  # shape (n, n_params)
-            hess_matrices = batched_hess_fn(param_values, y_jax)  # shape (n, n_params, n_params)
+            grads = batched_grad_fn(raw_values, y_jax)  # shape (n, n_params)
+            hess_matrices = batched_hess_fn(raw_values, y_jax)  # shape (n, n_params, n_params)
 
             results = {}
             for j, name in enumerate(self._param_names):
@@ -1650,7 +1865,7 @@ class CustomDistribution(Distribution):
                        for name in self._param_names}
 
             for i in range(n):
-                pv = jnp.array([params[name][i] for name in self._param_names])
+                pv = raw_values[i]
                 try:
                     g = grad_fn(pv, y_jax[i])
                     h = hess_fn(pv, y_jax[i])
@@ -1669,28 +1884,70 @@ class CustomDistribution(Distribution):
         y: NDArray,
         params: dict[str, NDArray],
     ) -> dict[str, GradHess]:
-        """Compute gradients (auto-selects JAX or numerical)."""
+        """Compute gradients w.r.t. raw parameters (auto-selects JAX or numerical)."""
+        results = None
         if self._jax_available:
             try:
-                return self._jax_gradient(y, params)
+                results = self._jax_gradient(y, params)
             except Exception:
-                pass
-        
-        return self._numerical_gradient(y, params)
-    
+                results = None
+
+        if results is None:
+            results = self._numerical_gradient(y, params)
+
+        # Cache per-sample gradients for the empirical Fisher approximation
+        self._last_grad_stack = np.stack(
+            [results[name][0] for name in self._param_names], axis=1
+        )
+        return results
+
     def fisher_information(
         self,
         params: dict[str, NDArray],
+        y: NDArray | None = None,
     ) -> NDArray:
-        """Approximate Fisher information (diagonal)."""
-        n_samples = list(params.values())[0].shape[0]
+        """Empirical Fisher information (diagonal approximation).
+
+        The exact Fisher matrix is unknown for user-defined likelihoods, so
+        this uses the empirical (outer-product) approximation restricted to
+        its diagonal: F[j, j] = E_i[g_i[j]²], the batch mean of squared
+        per-sample NLL gradients (JAX autodiff or numerical). The same
+        diagonal is used for every sample, and a floor keeps the matrix
+        invertible when gradients vanish.
+
+        Gradients come from `y` when provided; otherwise from the most
+        recent nll_gradient call (the natural_gradient code path computes
+        gradients immediately before calling this). Falls back to identity
+        when no gradient information is available.
+        """
+        n_samples = next(iter(params.values())).shape[0]
         n_params = self.n_params
-        
-        # Default: identity matrix (no natural gradient scaling)
+
+        grad_stack = None
+        if y is not None:
+            grads = self.nll_gradient(y, params)
+            grad_stack = np.stack(
+                [grads[name][0] for name in self._param_names], axis=1
+            )
+        elif (
+            self._last_grad_stack is not None
+            and self._last_grad_stack.shape[0] == n_samples
+        ):
+            grad_stack = self._last_grad_stack
+
         F = np.zeros((n_samples, n_params, n_params), dtype=np.float32)
+        if grad_stack is None:
+            # No gradient information: identity (plain gradient descent)
+            for i in range(n_params):
+                F[:, i, i] = 1.0
+            return F
+
+        diag = np.maximum(
+            np.mean(grad_stack.astype(np.float64) ** 2, axis=0), 1e-6
+        )
         for i in range(n_params):
-            F[:, i, i] = 1.0
-        
+            F[:, i, i] = diag[i]
+
         return F
     
     def mean(self, params: dict[str, NDArray]) -> NDArray:

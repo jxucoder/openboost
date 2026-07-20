@@ -12,23 +12,25 @@ import pytest
 
 import openboost as ob
 from openboost import (
-    OpenBoostRegressor,
-    OpenBoostClassifier,
-    GradientBoosting,
     EarlyStopping,
-    Logger,
+    GradientBoosting,
     HistoryCallback,
+    OpenBoostClassifier,
+    OpenBoostDistributionalRegressor,
+    OpenBoostGAMRegressor,
+    OpenBoostLinearLeafRegressor,
+    OpenBoostRegressor,
     compute_feature_importances,
     get_feature_importance_dict,
 )
 
-
 # Skip tests if sklearn not installed
 sklearn = pytest.importorskip("sklearn")
+from sklearn.base import clone
+from sklearn.exceptions import NotFittedError
 from sklearn.model_selection import GridSearchCV, cross_val_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.base import clone
 
 
 class TestOpenBoostRegressor:
@@ -379,7 +381,7 @@ class TestFeatureImportance:
         )
         
         assert len(importance_dict) == 3
-        assert all(isinstance(k, str) for k in importance_dict.keys())
+        assert all(isinstance(k, str) for k in importance_dict)
         # Values are numpy float32, check they're numeric
         assert all(np.issubdtype(type(v), np.floating) for v in importance_dict.values())
     
@@ -399,6 +401,213 @@ class TestFeatureImportance:
         # Gain (falls back to frequency if not stored)
         imp_gain = compute_feature_importances(model, importance_type='gain')
         assert imp_gain.shape == (5,)
+
+
+class TestOpenBoostDistributionalRegressor:
+    """Tests for OpenBoostDistributionalRegressor fit kwargs and early stopping."""
+
+    def _make_data(self, n=200, seed=42):
+        rng = np.random.RandomState(seed)
+        X = rng.randn(n, 5).astype(np.float32)
+        y = X[:, 0] + rng.randn(n).astype(np.float32) * 0.1
+        return X, y
+
+    def test_fit_predict(self):
+        """Basic fit and predict works."""
+        X, y = self._make_data(100)
+        reg = OpenBoostDistributionalRegressor(n_estimators=10, max_depth=3)
+        reg.fit(X, y)
+        pred = reg.predict(X)
+        assert pred.shape == y.shape
+
+    def test_sample_weight_raises(self):
+        """sample_weight raises NotImplementedError instead of being ignored."""
+        X, y = self._make_data(100)
+        reg = OpenBoostDistributionalRegressor(n_estimators=5)
+        weights = np.ones(100, dtype=np.float32)
+        with pytest.raises(NotImplementedError, match="sample_weight"):
+            reg.fit(X, y, sample_weight=weights)
+
+    def test_unknown_kwarg_raises(self):
+        """Unknown fit kwargs raise TypeError, like sklearn."""
+        X, y = self._make_data(100)
+        reg = OpenBoostDistributionalRegressor(n_estimators=5)
+        with pytest.raises(TypeError):
+            reg.fit(X, y, not_a_real_kwarg=1)
+
+    def test_callbacks_and_eval_set_forwarded(self):
+        """callbacks and eval_set reach the underlying booster."""
+        X, y = self._make_data(150)
+        X_train, X_val = X[:100], X[100:]
+        y_train, y_val = y[:100], y[100:]
+
+        history = HistoryCallback()
+        reg = OpenBoostDistributionalRegressor(n_estimators=10, max_depth=3)
+        reg.fit(X_train, y_train,
+                eval_set=[(X_val, y_val)],
+                callbacks=[history])
+
+        assert len(history.history['train_loss']) == 10
+        assert len(history.history['val_loss']) == 10
+
+    def test_early_stopping(self):
+        """eval_set + early_stopping_rounds actually stops early."""
+        X, y = self._make_data(200)
+        X_train, X_val = X[:150], X[150:]
+        y_train, y_val = y[:150], y[150:]
+
+        n_estimators = 300
+        reg = OpenBoostDistributionalRegressor(
+            n_estimators=n_estimators,  # High number; val NLL plateaus long before
+            max_depth=2,
+            early_stopping_rounds=5,
+        )
+        reg.fit(X_train, y_train, eval_set=[(X_val, y_val)])
+
+        assert hasattr(reg, 'best_iteration_')
+        assert reg.best_iteration_ == reg.booster_.best_iteration_
+        # One ensemble per distribution parameter; each restored to best round
+        for trees in reg.booster_.trees_.values():
+            assert len(trees) < n_estimators
+            assert len(trees) == reg.best_iteration_ + 1
+
+
+class TestOpenBoostLinearLeafRegressorSklearnCompat:
+    """sklearn-compat tests for OpenBoostLinearLeafRegressor."""
+
+    def _make_data(self, n=80, seed=42):
+        rng = np.random.RandomState(seed)
+        X = rng.randn(n, 3).astype(np.float32)
+        y = 2.0 * X[:, 0] + X[:, 1] + rng.randn(n).astype(np.float32) * 0.1
+        return X, y
+
+    def test_clone(self):
+        """sklearn clone works."""
+        reg = OpenBoostLinearLeafRegressor(n_estimators=7, max_depth=2)
+        reg_clone = clone(reg)
+        assert reg_clone.n_estimators == 7
+        assert reg_clone.max_depth == 2
+        assert reg_clone is not reg
+
+    def test_get_set_params(self):
+        """get_params/set_params roundtrip works."""
+        reg = OpenBoostLinearLeafRegressor(n_estimators=7, learning_rate=0.2)
+        params = reg.get_params()
+        assert params['n_estimators'] == 7
+        assert params['learning_rate'] == 0.2
+
+        reg.set_params(**params)
+        assert reg.get_params() == params
+        reg.set_params(n_estimators=15)
+        assert reg.n_estimators == 15
+
+    def test_pipeline(self):
+        """fit/predict works in a Pipeline."""
+        X, y = self._make_data()
+        pipe = Pipeline([
+            ('scaler', StandardScaler()),
+            ('model', OpenBoostLinearLeafRegressor(n_estimators=5, max_depth=2)),
+        ])
+        pipe.fit(X, y)
+        pred = pipe.predict(X)
+        assert pred.shape == y.shape
+        assert isinstance(pipe.score(X, y), float)
+
+    def test_gridsearch(self):
+        """Works with GridSearchCV (2-point grid)."""
+        X, y = self._make_data()
+        search = GridSearchCV(
+            OpenBoostLinearLeafRegressor(max_depth=2),
+            {'n_estimators': [3, 5]},
+            cv=2,
+        )
+        search.fit(X, y)
+        assert search.best_params_['n_estimators'] in (3, 5)
+
+    def test_not_fitted_error(self):
+        """predict before fit raises NotFittedError."""
+        X, _ = self._make_data()
+        reg = OpenBoostLinearLeafRegressor(n_estimators=5)
+        with pytest.raises(NotFittedError):
+            reg.predict(X)
+
+    def test_unsupported_fit_kwargs_raise(self):
+        """Unsupported fit kwargs raise instead of being silently dropped."""
+        X, y = self._make_data()
+        reg = OpenBoostLinearLeafRegressor(n_estimators=5)
+        with pytest.raises(NotImplementedError, match="sample_weight"):
+            reg.fit(X, y, sample_weight=np.ones(len(y), dtype=np.float32))
+        with pytest.raises(NotImplementedError, match="eval_set"):
+            reg.fit(X, y, eval_set=[(X, y)])
+        with pytest.raises(TypeError):
+            reg.fit(X, y, not_a_real_kwarg=1)
+
+
+class TestOpenBoostGAMRegressorSklearnCompat:
+    """sklearn-compat tests for OpenBoostGAMRegressor."""
+
+    def _make_data(self, n=60, seed=42):
+        rng = np.random.RandomState(seed)
+        X = rng.randn(n, 3).astype(np.float32)
+        y = np.sin(X[:, 0]) + 0.5 * X[:, 1] + rng.randn(n).astype(np.float32) * 0.1
+        return X, y
+
+    def test_clone(self):
+        """sklearn clone works."""
+        reg = OpenBoostGAMRegressor(n_estimators=8, learning_rate=0.1)
+        reg_clone = clone(reg)
+        assert reg_clone.n_estimators == 8
+        assert reg_clone.learning_rate == 0.1
+        assert reg_clone is not reg
+
+    def test_get_set_params(self):
+        """get_params/set_params roundtrip works."""
+        reg = OpenBoostGAMRegressor(n_estimators=8, reg_lambda=2.0)
+        params = reg.get_params()
+        assert params['n_estimators'] == 8
+        assert params['reg_lambda'] == 2.0
+
+        reg.set_params(**params)
+        assert reg.get_params() == params
+        reg.set_params(n_estimators=12)
+        assert reg.n_estimators == 12
+
+    def test_pipeline(self):
+        """fit/predict works in a Pipeline."""
+        X, y = self._make_data()
+        pipe = Pipeline([
+            ('scaler', StandardScaler()),
+            ('model', OpenBoostGAMRegressor(n_estimators=10, learning_rate=0.1)),
+        ])
+        pipe.fit(X, y)
+        pred = pipe.predict(X)
+        assert pred.shape == y.shape
+        assert isinstance(pipe.score(X, y), float)
+
+    def test_gridsearch(self):
+        """Works with GridSearchCV (2-point grid)."""
+        X, y = self._make_data()
+        search = GridSearchCV(
+            OpenBoostGAMRegressor(learning_rate=0.1),
+            {'n_estimators': [5, 10]},
+            cv=2,
+        )
+        search.fit(X, y)
+        assert search.best_params_['n_estimators'] in (5, 10)
+
+    def test_not_fitted_error(self):
+        """predict before fit raises NotFittedError."""
+        X, _ = self._make_data()
+        reg = OpenBoostGAMRegressor(n_estimators=5)
+        with pytest.raises(NotFittedError):
+            reg.predict(X)
+
+    def test_unknown_fit_kwarg_raises(self):
+        """fit has an explicit signature: unknown kwargs raise TypeError."""
+        X, y = self._make_data()
+        reg = OpenBoostGAMRegressor(n_estimators=5)
+        with pytest.raises(TypeError):
+            reg.fit(X, y, sample_weight=np.ones(len(y), dtype=np.float32))
 
 
 class TestSampleWeight:

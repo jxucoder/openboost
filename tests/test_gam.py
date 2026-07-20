@@ -168,6 +168,119 @@ class TestGAMEdgeCases:
                                    err_msg="Should converge to constant target")
 
 
+class TestGAMNBins:
+    """n_bins validation and non-default bin counts."""
+
+    def test_n_bins_300_raises(self):
+        """n_bins above the uint8 contract should raise at construction."""
+        with pytest.raises(ValueError, match="n_bins"):
+            ob.OpenBoostGAM(n_bins=300)
+
+    def test_n_bins_1_raises(self):
+        """n_bins below 2 is meaningless and should raise."""
+        with pytest.raises(ValueError, match="n_bins"):
+            ob.OpenBoostGAM(n_bins=1)
+
+    def test_default_n_bins_valid(self):
+        """The default configuration must pass its own validation."""
+        gam = ob.OpenBoostGAM()
+        assert 2 <= gam.n_bins <= 256
+
+    def test_n_bins_64_trains_and_predicts(self, regression_200x10):
+        """A reduced bin count should train and predict correctly."""
+        X, y = regression_200x10
+
+        gam = ob.OpenBoostGAM(n_rounds=100, learning_rate=0.1, n_bins=64)
+        gam.fit(X, y)
+        pred = gam.predict(X)
+
+        assert pred.shape == y.shape
+        assert np.all(np.isfinite(pred))
+        mse = np.mean((pred - y) ** 2)
+        assert mse < 0.5 * np.var(y), f"MSE {mse:.4f} should beat baseline {np.var(y):.4f}"
+
+        # 64-bin request yields at most 63 edges (occupied bins 0..len(edges)-1)
+        assert all(len(e) <= 63 for e in gam.X_binned_.bin_edges)
+        # Storage stays 256-wide so uint8 bins (incl. MISSING_BIN) are in bounds
+        assert gam.shape_values_.shape == (10, 256)
+
+
+class TestGAMPlotting:
+    """plot_shape_function (skipped when matplotlib is not installed)."""
+
+    @pytest.fixture(autouse=True)
+    def _agg_backend(self):
+        matplotlib = pytest.importorskip("matplotlib")
+        matplotlib.use("Agg", force=True)
+        yield
+        import matplotlib.pyplot as plt
+
+        plt.close("all")
+
+    @pytest.fixture
+    def fitted(self, regression_100x5):
+        X, y = regression_100x5
+        gam = ob.OpenBoostGAM(n_rounds=10, learning_rate=0.05)
+        gam.fit(X, y)
+        return gam, X
+
+    @staticmethod
+    def _shape_line(ax):
+        """The step line for the shape function (axhline only has 2 points)."""
+        return max(ax.lines, key=lambda ln: len(ln.get_xdata()))
+
+    def test_plot_returns_new_axes(self, fitted):
+        """Without ax, a new axes is created, drawn on, and returned."""
+        gam, _ = fitted
+        ax = gam.plot_shape_function(0)
+
+        assert ax is not None
+        assert len(ax.lines) >= 1
+        assert ax.get_ylabel() == "Contribution to prediction"
+
+    def test_plot_draws_on_provided_ax(self, fitted):
+        """A provided ax is drawn on and returned unchanged."""
+        import matplotlib.pyplot as plt
+
+        gam, _ = fitted
+        fig, ax = plt.subplots()
+        returned = gam.plot_shape_function(1, feature_name="feat_1", ax=ax)
+
+        assert returned is ax
+        assert len(ax.lines) >= 1
+        assert "feat_1" in ax.get_xlabel()
+
+    def test_xaxis_uses_original_feature_scale(self, fitted):
+        """x values must span the feature's data range, not bin indices 0-255."""
+        gam, X = fitted
+        ax = gam.plot_shape_function(0)
+
+        xdata = np.asarray(self._shape_line(ax).get_xdata(), dtype=np.float64)
+        fmin, fmax = float(X[:, 0].min()), float(X[:, 0].max())
+        span = fmax - fmin
+
+        # Within the data range (bin edges are interior quantiles)...
+        assert xdata.min() >= fmin - 0.05 * span
+        assert xdata.max() <= fmax + 0.05 * span
+        # ...and covering most of it (rules out bin indices 0-255)
+        assert xdata.min() <= fmin + 0.25 * span
+        assert xdata.max() >= fmax - 0.25 * span
+
+    def test_plot_before_fit_raises(self):
+        """Plotting an unfitted model should raise a clear error."""
+        gam = ob.OpenBoostGAM(n_rounds=5)
+        with pytest.raises(RuntimeError, match="not fitted"):
+            gam.plot_shape_function(0)
+
+    def test_plot_bad_feature_idx_raises(self, fitted):
+        """Out-of-range feature_idx should raise ValueError."""
+        gam, _ = fitted
+        with pytest.raises(ValueError, match="feature_idx"):
+            gam.plot_shape_function(99)
+        with pytest.raises(ValueError, match="feature_idx"):
+            gam.plot_shape_function(-1)
+
+
 class TestGAMPersistence:
     """Save/load functionality."""
 

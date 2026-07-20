@@ -260,26 +260,108 @@ class TestSymmetricGrowth:
         np.random.seed(42)
         X = np.random.randn(200, 3).astype(np.float32)
         y = X[:, 0]
-        
+
         binned = ob.array(X)
         grad = (-2 * y).astype(np.float32)
         hess = np.ones(200, dtype=np.float32) * 2
-        
+
         config = ob.GrowthConfig(max_depth=3)
         strategy = ob.SymmetricGrowth()
         tree = strategy.grow(binned.data, grad, hess, config)
-        
+
         # Check that nodes at same depth have same feature/threshold
         for d in range(tree.depth):
             level_start = 2**d - 1
             level_end = 2**(d+1) - 1
-            
+
             features_at_level = tree.features[level_start:level_end]
             thresholds_at_level = tree.thresholds[level_start:level_end]
-            
+
             # All should be the same
             assert len(np.unique(features_at_level)) == 1
             assert len(np.unique(thresholds_at_level)) == 1
+
+    def test_symmetric_non_degenerate_splits(self):
+        """Levels must use DISTINCT splits when the data requires them.
+
+        Regression test for the degenerate symmetric builder: summing per-leaf
+        histograms into one pooled histogram makes every depth see the root
+        statistics and repeat the same split. The target below needs a split
+        on feature 0 first and then feature 1, so a correct oblivious tree
+        must use two distinct level splits.
+        """
+        rng = np.random.RandomState(0)
+        n = 1000
+        X = rng.randn(n, 3).astype(np.float32)
+        y = np.where(
+            X[:, 0] > 0,
+            np.where(X[:, 1] > 0, 3.0, 1.0),
+            np.where(X[:, 1] > 0, -1.0, -3.0),
+        ).astype(np.float32)
+
+        binned = ob.array(X, n_bins=254)
+        grad = (-2 * y).astype(np.float32)
+        hess = np.full(n, 2.0, dtype=np.float32)
+
+        config = ob.GrowthConfig(max_depth=3, reg_lambda=1.0)
+        tree = ob.SymmetricGrowth().grow(binned.data, grad, hess, config)
+
+        assert tree.depth >= 2
+        level_splits = {
+            (int(tree.level_features[d]), int(tree.level_thresholds[d]))
+            for d in range(tree.depth)
+        }
+        assert len(level_splits) >= 2, (
+            f"symmetric tree repeated one split per level: {level_splits}"
+        )
+        # Both informative features must appear
+        assert {0, 1} <= {int(f) for f in tree.level_features[:tree.depth]}
+
+        # A single depth-2 oblivious tree separates the 4 cells almost exactly
+        # (leaf value = -sum_grad/(sum_hess+lambda) with lr=1). The degenerate
+        # builder plateaus around MSE ~1.0 here.
+        pred = tree.predict(binned.data)
+        assert np.mean((pred - y) ** 2) < 0.1
+
+    def test_symmetric_categorical_passthrough(self):
+        """SymmetricGrowth must use categorical split info (category sets).
+
+        The category -> target mapping is non-monotonic in code order, so an
+        ordinal split cannot separate the groups but a category-set split can.
+        """
+        rng = np.random.RandomState(42)
+        n = 800
+        codes = rng.randint(0, 6, size=n)
+        cat_map = np.array([2.0, -2.0, -2.0, 2.0, -2.0, 2.0])  # {0,3,5} vs rest
+        y = (cat_map[codes] + 0.01 * rng.randn(n)).astype(np.float32)
+        X = np.column_stack([
+            codes.astype(np.float32),
+            rng.randn(n).astype(np.float32),
+        ])
+
+        binned = ob.array(X, categorical_features=[0])
+        grad = (-2 * y).astype(np.float32)
+        hess = np.full(n, 2.0, dtype=np.float32)
+
+        config = ob.GrowthConfig(max_depth=2, reg_lambda=1.0)
+        tree = ob.SymmetricGrowth().grow(
+            binned.data, grad, hess, config,
+            is_categorical=binned.is_categorical,
+            n_categories=binned.n_categories,
+        )
+
+        # The only informative feature is categorical -> the root level must
+        # be a categorical (bitset) split on feature 0.
+        assert tree.is_categorical_split is not None
+        assert bool(tree.is_categorical_split[0])
+        assert int(tree.features[0]) == 0
+        bitset = int(tree.cat_bitsets[0])
+        left_set = {c for c in range(6) if (bitset >> c) & 1}
+        assert left_set in ({0, 3, 5}, {1, 2, 4})
+
+        # Bitset routing must separate the two groups (ordinal cannot).
+        pred = tree.predict(binned.data)
+        assert np.mean((pred - y) ** 2) < 0.1
 
 
 class TestGetGrowthStrategy:

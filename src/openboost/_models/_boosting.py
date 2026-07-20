@@ -15,6 +15,7 @@ Phase 18: Added multi-GPU support via Ray for data-parallel training.
 from __future__ import annotations
 
 import os
+import warnings
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
@@ -29,7 +30,7 @@ from .._callbacks import (
     TrainingState,
     warn_if_early_stopping_without_eval_set,
 )
-from .._core._growth import TreeStructure
+from .._core._growth import TreeStructure, get_growth_strategy
 from .._core._tree import fit_tree
 from .._loss import LossFunction, compute_loss_value, get_loss_function
 from .._persistence import PersistenceMixin
@@ -60,6 +61,13 @@ except ImportError:
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
+
+
+def _is_levelwise_growth(growth) -> bool:
+    """True if *growth* names the level-wise strategy (any accepted alias)."""
+    return isinstance(growth, str) and growth.lower() in (
+        'levelwise', 'level_wise', 'level-wise'
+    )
 
 
 def _compute_loss_value(loss, pred, y, **kwargs) -> float:
@@ -127,7 +135,13 @@ class GradientBoosting(PersistenceMixin):
         goss_top_rate: Fraction of top-gradient samples to keep (for GOSS).
         goss_other_rate: Fraction of remaining samples to sample (for GOSS).
         batch_size: Mini-batch size for large datasets. If None, process all at once.
-        
+        growth: Tree growth strategy:
+            - 'levelwise': XGBoost-style level-wise growth (default)
+            - 'leafwise': LightGBM-style best-first growth (see max_leaves)
+            - 'symmetric': CatBoost-style oblivious trees
+        max_leaves: Maximum number of leaves per tree (used by 'leafwise'
+            growth; defaults to 2**max_depth when None).
+
     Examples:
         Basic regression:
         
@@ -187,6 +201,8 @@ class GradientBoosting(PersistenceMixin):
     n_gpus: int | None = None
     devices: list[int] | None = None
     random_state: int | None = None
+    growth: str = 'levelwise'
+    max_leaves: int | None = None
 
     # Fitted attributes (not init)
     trees_: list[TreeStructure] = field(default_factory=list, init=False, repr=False)
@@ -253,7 +269,11 @@ class GradientBoosting(PersistenceMixin):
             subsample=self.subsample,
             n_samples=n_samples,
         )
-        
+
+        # Validate growth strategy early (clear error before any training work)
+        if isinstance(self.growth, str):
+            get_growth_strategy(self.growth)
+
         # Initialize RNG for reproducibility
         self._rng = np.random.default_rng(self.random_state)
 
@@ -289,7 +309,15 @@ class GradientBoosting(PersistenceMixin):
         # Choose training path based on backend
         # Phase 18: Check for multi-GPU first
         use_multigpu = (self.n_gpus is not None and self.n_gpus > 1) or (self.devices is not None and len(self.devices) > 1)
-        
+
+        if (use_multigpu or self.distributed) and not _is_levelwise_growth(self.growth):
+            warnings.warn(
+                f"growth='{self.growth}' is not supported for distributed/"
+                "multi-GPU training; using levelwise growth instead.",
+                UserWarning,
+                stacklevel=2,
+            )
+
         if use_multigpu:
             self._fit_multigpu(X, y, n_samples, callbacks, eval_set)
         elif self.distributed:
@@ -641,26 +669,30 @@ class GradientBoosting(PersistenceMixin):
         use_random_sampling = self.subsample_strategy == 'random' and self.subsample < 1.0
 
         # Pre-compute GPU-native eligibility (constant across iterations)
-        _use_gpu_native = False
-        if not use_goss and not use_random_sampling:
-            has_missing = (
-                hasattr(self.X_binned_, 'has_missing')
-                and len(self.X_binned_.has_missing) > 0
-                and np.any(self.X_binned_.has_missing)
-            )
-            has_categorical = (
-                hasattr(self.X_binned_, 'is_categorical')
-                and len(self.X_binned_.is_categorical) > 0
-                and np.any(self.X_binned_.is_categorical)
-            )
-            _use_gpu_native = (
-                is_cuda()
-                and self.reg_alpha == 0.0
-                and self.colsample_bytree >= 1.0
-                and self.subsample >= 1.0
-                and not has_missing
-                and not has_categorical
-            )
+        has_missing = (
+            hasattr(self.X_binned_, 'has_missing')
+            and len(self.X_binned_.has_missing) > 0
+            and np.any(self.X_binned_.has_missing)
+        )
+        has_categorical = (
+            hasattr(self.X_binned_, 'is_categorical')
+            and len(self.X_binned_.is_categorical) > 0
+            and np.any(self.X_binned_.is_categorical)
+        )
+        # The GPU-native builder only implements level-wise growth; other
+        # strategies fall back to the standard fit_tree() path below.
+        growth_is_levelwise = _is_levelwise_growth(self.growth)
+        _use_gpu_native = (
+            not use_goss
+            and not use_random_sampling
+            and is_cuda()
+            and self.reg_alpha == 0.0
+            and self.colsample_bytree >= 1.0
+            and self.subsample >= 1.0
+            and not has_missing
+            and not has_categorical
+            and growth_is_levelwise
+        )
         if is_cuda() and not _use_gpu_native:
             reasons = []
             if self.reg_alpha != 0.0:
@@ -673,6 +705,10 @@ class GradientBoosting(PersistenceMixin):
                 reasons.append("data contains missing values")
             if has_categorical:
                 reasons.append("data contains categorical features")
+            if not growth_is_levelwise:
+                reasons.append(
+                    f"growth='{self.growth}' (GPU-native builder only supports levelwise)"
+                )
             if reasons:
                 warnings.warn(
                     f"GPU-native tree builder not available ({', '.join(reasons)}). "
@@ -735,7 +771,6 @@ class GradientBoosting(PersistenceMixin):
             # Workaround: Use CPU backend with ob.set_backend('cpu') for weighted training
             # TODO(v1.1): Implement GPU sample weighting via weighted histogram kernels
             if sample_weight is not None:
-                import warnings
                 warnings.warn(
                     "sample_weight is not supported on GPU backend and will be ignored",
                     UserWarning,
@@ -776,10 +811,12 @@ class GradientBoosting(PersistenceMixin):
                     reg_lambda=self.reg_lambda,
                     reg_alpha=self.reg_alpha,
                     gamma=self.gamma,
+                    growth=self.growth,
+                    max_leaves=self.max_leaves,
                     subsample=1.0,
                     colsample_bytree=self.colsample_bytree,
                 )
-                
+
                 state.extra['goss_sample_rate'] = sample_result.sample_rate
             elif use_random_sampling:
                 # Random subsampling (use built-in subsample parameter)
@@ -792,6 +829,8 @@ class GradientBoosting(PersistenceMixin):
                     reg_lambda=self.reg_lambda,
                     reg_alpha=self.reg_alpha,
                     gamma=self.gamma,
+                    growth=self.growth,
+                    max_leaves=self.max_leaves,
                     subsample=self.subsample,
                     colsample_bytree=self.colsample_bytree,
                 )
@@ -843,6 +882,8 @@ class GradientBoosting(PersistenceMixin):
                     reg_lambda=self.reg_lambda,
                     reg_alpha=self.reg_alpha,
                     gamma=self.gamma,
+                    growth=self.growth,
+                    max_leaves=self.max_leaves,
                     subsample=self.subsample,
                     colsample_bytree=self.colsample_bytree,
                 )
@@ -968,6 +1009,8 @@ class GradientBoosting(PersistenceMixin):
                     reg_lambda=self.reg_lambda,
                     reg_alpha=self.reg_alpha,
                     gamma=self.gamma,
+                    growth=self.growth,
+                    max_leaves=self.max_leaves,
                     subsample=1.0,  # Already sampled via GOSS
                     colsample_bytree=self.colsample_bytree,
                 )
@@ -982,6 +1025,8 @@ class GradientBoosting(PersistenceMixin):
                     reg_lambda=self.reg_lambda,
                     reg_alpha=self.reg_alpha,
                     gamma=self.gamma,
+                    growth=self.growth,
+                    max_leaves=self.max_leaves,
                     subsample=self.subsample,
                     colsample_bytree=self.colsample_bytree,
                 )
@@ -996,6 +1041,8 @@ class GradientBoosting(PersistenceMixin):
                     reg_lambda=self.reg_lambda,
                     reg_alpha=self.reg_alpha,
                     gamma=self.gamma,
+                    growth=self.growth,
+                    max_leaves=self.max_leaves,
                     subsample=self.subsample,
                     colsample_bytree=self.colsample_bytree,
                 )
@@ -1186,7 +1233,11 @@ class MultiClassGradientBoosting(PersistenceMixin):
         subsample_strategy: Sampling strategy (Phase 17): 'none', 'random', 'goss'.
         goss_top_rate: Fraction of top-gradient samples to keep (for GOSS).
         goss_other_rate: Fraction of remaining samples to sample (for GOSS).
-        
+        growth: Tree growth strategy: 'levelwise' (default), 'leafwise', or
+            'symmetric'.
+        max_leaves: Maximum leaves per tree (used by 'leafwise' growth;
+            defaults to 2**max_depth when None).
+
     Example:
         ```python
         import openboost as ob
@@ -1224,6 +1275,8 @@ class MultiClassGradientBoosting(PersistenceMixin):
     goss_top_rate: float = 0.2
     goss_other_rate: float = 0.1
     batch_size: int | None = None
+    growth: str = 'levelwise'
+    max_leaves: int | None = None
 
     # Fitted attributes
     trees_: list[list[TreeStructure]] = field(default_factory=list, init=False, repr=False)
@@ -1260,6 +1313,10 @@ class MultiClassGradientBoosting(PersistenceMixin):
         # Validate labels
         if y.min() < 0 or y.max() >= self.n_classes:
             raise ValueError(f"Labels must be in [0, {self.n_classes-1}], got [{y.min()}, {y.max()}]")
+
+        # Validate growth strategy early (clear error before any training work)
+        if isinstance(self.growth, str):
+            get_growth_strategy(self.growth)
 
         # MED-9: Validate inputs
         X = validate_X(X, allow_nan=True, context="fit")
@@ -1330,6 +1387,8 @@ class MultiClassGradientBoosting(PersistenceMixin):
                         reg_lambda=self.reg_lambda,
                         reg_alpha=self.reg_alpha,
                         gamma=self.gamma,
+                        growth=self.growth,
+                        max_leaves=self.max_leaves,
                         subsample=1.0,
                         colsample_bytree=self.colsample_bytree,
                     )
@@ -1343,6 +1402,8 @@ class MultiClassGradientBoosting(PersistenceMixin):
                         reg_lambda=self.reg_lambda,
                         reg_alpha=self.reg_alpha,
                         gamma=self.gamma,
+                        growth=self.growth,
+                        max_leaves=self.max_leaves,
                         subsample=self.subsample,
                         colsample_bytree=self.colsample_bytree,
                     )

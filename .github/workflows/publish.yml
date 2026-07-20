@@ -5,7 +5,37 @@ on:
     types: [published]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      OPENBOOST_BACKEND: cpu
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - run: uv sync --extra test --extra sklearn
+      - run: uv run pytest tests/ --tb=short
+
+  # Bare-install smoke test: no sklearn/test extras, so transitively-pulled
+  # dependencies (e.g. scipy via scikit-learn) cannot mask a missing runtime dep.
+  bare-install:
+    runs-on: ubuntu-latest
+    env:
+      OPENBOOST_BACKEND: cpu
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - run: uv venv && uv pip install .
+      - run: |
+          uv run --no-project python -c "
+          import numpy as np
+          import openboost as ob
+          X = np.random.rand(200, 5); y = X[:, 0] + np.random.rand(200)
+          m = ob.NaturalBoostNormal(n_trees=5); m.fit(X, y); m.predict_interval(X)
+          print('bare install OK')
+          "
+
   publish:
+    needs: [test, bare-install]
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -14,4 +44,3 @@ jobs:
       - uses: astral-sh/setup-uv@v4
       - run: uv build
       - uses: pypa/gh-action-pypi-publish@release/v1
-

@@ -3639,10 +3639,17 @@ def _build_symmetric_histogram_kernel(
     hist_hess: DeviceNDArray,    # (n_features, 256) float32 - output
 ):
     """Build GLOBAL histogram for symmetric tree.
-    
-    For symmetric trees, we only need ONE histogram of ALL samples,
-    since all nodes at a level use the same split.
-    
+
+    KNOWN DEFECT (CRIT-5): this kernel is NOT leaf-aware. It accumulates one
+    histogram over ALL samples and never consumes ``sample_leaf_ids``, so at
+    every depth ``build_tree_symmetric_gpu_native`` recomputes the identical
+    root histogram and selects the same split again — the resulting tree is
+    degenerate (one split repeated per level). A correct oblivious-tree level
+    split must aggregate PER-LEAF gains: accumulate one histogram per leaf
+    (indexed by sample_leaf_ids) and sum each candidate's gain across leaves,
+    as the CPU ``SymmetricGrowth._find_level_split`` does. Until then the
+    callers gate this path behind OPENBOOST_EXPERIMENTAL_SYMMETRIC_GPU=1.
+
     Thread layout:
     - blockIdx.x = feature index
     - threads cooperate to process all samples
@@ -3918,12 +3925,15 @@ def build_tree_symmetric_gpu_native(
     min_gain: float = 0.0,
 ) -> tuple[DeviceNDArray, DeviceNDArray, DeviceNDArray]:
     """Build symmetric tree entirely on GPU.
-    
+
     Phase 3.4: Oblivious trees with ONE split per level.
-    
-    Key optimization: For symmetric trees, we only need ONE global histogram
-    since all nodes at a level use the same split.
-    
+
+    KNOWN DEFECT (CRIT-5): produces degenerate trees. The histogram kernel
+    below ignores per-leaf sample assignments, so each depth sees the same
+    global histogram and repeats the same split. Callers
+    (``fit_tree_symmetric_gpu_native``) fall back to the correct CPU builder
+    unless OPENBOOST_EXPERIMENTAL_SYMMETRIC_GPU=1 is set.
+
     Args:
         binned: Binned feature matrix, shape (n_features, n_samples), uint8
         grad: Gradient vector, shape (n_samples,), float32
@@ -3977,14 +3987,17 @@ def build_tree_symmetric_gpu_native(
     level_features_gpu = cuda.to_device(level_features_cpu)
     level_thresholds_gpu = cuda.to_device(level_thresholds_cpu)
 
-    # At each depth, rebuild histograms from current leaf assignments
-    # so each level's split is computed from the correct per-leaf statistics.
-    # The original code reused one global histogram for all depths, which is
-    # incorrect because the population seen by each leaf changes after splitting.
+    # BROKEN (CRIT-5): _build_symmetric_histogram_kernel does not take
+    # sample_leaf_ids, so this loop rebuilds the IDENTICAL global histogram at
+    # every depth and picks the same split again. Aggregating one histogram
+    # (or summing histograms) over all samples is NOT equivalent to summing
+    # per-leaf split gains — the pooled histogram is invariant to the leaf
+    # partition, so the level-2+ splits carry no new information. The fix is
+    # to accumulate per-leaf histograms (indexed by sample_leaf_ids) and sum
+    # each candidate's gain across leaves, mirroring the CPU
+    # SymmetricGrowth._find_level_split. This path is gated behind
+    # OPENBOOST_EXPERIMENTAL_SYMMETRIC_GPU=1 until that fix lands.
     for depth in range(max_depth):
-        # Build global histogram over ALL samples for current split
-        # For a symmetric tree, all leaves at this depth use the same
-        # split feature/threshold, so a single aggregated histogram suffices.
         _build_symmetric_histogram_kernel[n_features, 256](
             binned, grad, hess, hist_grad, hist_hess
         )

@@ -642,16 +642,23 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
     use_natural_gradient : bool, default=True
         If True, use NGBoost (natural gradient). Recommended for faster
         convergence and better uncertainty calibration.
+    early_stopping_rounds : int, optional
+        Stop training if validation NLL doesn't improve for this many rounds.
+        Requires eval_set to be passed to fit().
     verbose : int, default=0
         Verbosity level.
-        
+
     Attributes
     ----------
     n_features_in_ : int
         Number of features seen during fit.
     booster_ : NGBoost or DistributionalGBDT
         The underlying fitted model.
-        
+    best_iteration_ : int
+        Iteration with best validation score (if early stopping used).
+    best_score_ : float
+        Best validation score achieved (if early stopping used).
+
     Examples
     --------
     >>> from openboost import OpenBoostDistributionalRegressor
@@ -682,6 +689,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         reg_lambda: float = 1.0,
         n_bins: int = 256,
         use_natural_gradient: bool = True,
+        early_stopping_rounds: int | None = None,
         verbose: int = 0,
     ) -> None:
         self.distribution = distribution
@@ -692,38 +700,52 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         self.reg_lambda = reg_lambda
         self.n_bins = n_bins
         self.use_natural_gradient = use_natural_gradient
+        self.early_stopping_rounds = early_stopping_rounds
         self.verbose = verbose
-    
+
     def fit(
         self,
         X: NDArray,
         y: NDArray,
-        **kwargs,
+        sample_weight: NDArray | None = None,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+        callbacks: list | None = None,
     ) -> OpenBoostDistributionalRegressor:
         """Fit the distributional regressor.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Training features.
         y : array-like of shape (n_samples,)
             Target values.
-            
+        sample_weight : array-like, optional
+            Not supported for distributional models; raises NotImplementedError
+            if passed.
+        eval_set : list of (X, y) tuples, optional
+            Validation sets for early stopping (NLL metric).
+        callbacks : list of Callback, optional
+            Callbacks forwarded to the underlying booster's fit().
+
         Returns
         -------
         self : OpenBoostDistributionalRegressor
             Fitted estimator.
         """
         _check_sklearn()
+        if sample_weight is not None:
+            raise NotImplementedError(
+                "sample_weight is not yet supported for distributional models"
+            )
         X, y = check_X_y(X, y, dtype=np.float32, y_numeric=True)
-        
+
         self.n_features_in_ = X.shape[1]
-        
+
         # Import here to avoid circular imports
         from ._distributional import DistributionalGBDT, NGBoost
-        
+
         ModelClass = NGBoost if self.use_natural_gradient else DistributionalGBDT
-        
+
         self.booster_ = ModelClass(
             distribution=self.distribution,
             n_trees=self.n_estimators,
@@ -733,8 +755,27 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
             reg_lambda=self.reg_lambda,
             n_bins=self.n_bins,
         )
-        
-        self.booster_.fit(X, y)
+
+        all_callbacks = list(callbacks) if callbacks else []
+        if self.early_stopping_rounds is not None and eval_set is not None:
+            all_callbacks.append(EarlyStopping(
+                patience=self.early_stopping_rounds,
+                restore_best=True,
+                verbose=self.verbose > 0,
+            ))
+
+        self.booster_.fit(
+            X, y,
+            callbacks=all_callbacks if all_callbacks else None,
+            eval_set=eval_set,
+        )
+
+        # Copy early stopping attributes
+        if hasattr(self.booster_, 'best_iteration_'):
+            self.best_iteration_ = self.booster_.best_iteration_
+        if hasattr(self.booster_, 'best_score_'):
+            self.best_score_ = self.booster_.best_score_
+
         return self
     
     def predict(self, X: NDArray) -> NDArray:
@@ -961,23 +1002,40 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
         self,
         X: NDArray,
         y: NDArray,
-        **kwargs,
+        sample_weight: NDArray | None = None,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+        callbacks: list | None = None,
     ) -> OpenBoostLinearLeafRegressor:
         """Fit the linear leaf regressor.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Training features.
         y : array-like of shape (n_samples,)
             Target values.
-            
+        sample_weight : array-like, optional
+            Not supported; raises NotImplementedError if passed.
+        eval_set : list of (X, y) tuples, optional
+            Not supported; raises NotImplementedError if passed.
+        callbacks : list of Callback, optional
+            Not supported; raises NotImplementedError if passed.
+
         Returns
         -------
         self : OpenBoostLinearLeafRegressor
             Fitted estimator.
         """
         _check_sklearn()
+        if sample_weight is not None:
+            raise NotImplementedError(
+                "sample_weight is not yet supported for OpenBoostLinearLeafRegressor"
+            )
+        if eval_set is not None or callbacks is not None:
+            raise NotImplementedError(
+                "eval_set and callbacks are not yet supported for "
+                "OpenBoostLinearLeafRegressor"
+            )
         X, y = check_X_y(X, y, dtype=np.float32, y_numeric=True)
         
         self.n_features_in_ = X.shape[1]

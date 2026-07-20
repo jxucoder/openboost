@@ -913,17 +913,27 @@ class LeafWiseGrowth(GrowthStrategy):
 
 class SymmetricGrowth(GrowthStrategy):
     """Symmetric (oblivious) tree growth.
-    
+
     All nodes at the same depth use the SAME split condition.
     This is the strategy used by CatBoost.
-    
+
     Characteristics:
     - Very fast prediction (just bit operations)
     - Regularization effect (fewer parameters)
     - 2^depth leaves regardless of data
     - Good for categorical features
+
+    The level split is chosen leaf-aware (CatBoost-style): for each candidate
+    (feature, threshold), the gain is the SUM of per-leaf gains computed from
+    each leaf's own histogram. Summing histograms across leaves before split
+    finding (the previous implementation) collapses to the root histogram —
+    identical at every depth — and repeats the same split at every level.
+
+    Missing values (bin 255) always route right, both here and in prediction
+    (ordinal: 255 > any threshold; categorical: bins >= 64 are outside the
+    bitset), so training and prediction stay consistent.
     """
-    
+
     def grow(
         self,
         binned: NDArray,
@@ -935,75 +945,67 @@ class SymmetricGrowth(GrowthStrategy):
         n_categories: NDArray | None = None,
     ) -> TreeStructure:
         """Grow symmetric tree with one split per level."""
+        # Symmetric aggregation is host-side; copy once up front.
+        if hasattr(binned, 'copy_to_host'):
+            binned = binned.copy_to_host()
+        if hasattr(grad, 'copy_to_host'):
+            grad = grad.copy_to_host()
+        if hasattr(hess, 'copy_to_host'):
+            hess = hess.copy_to_host()
+        binned = np.asarray(binned)
+        grad = np.asarray(grad, dtype=np.float32)
+        hess = np.asarray(hess, dtype=np.float32)
+
         n_features, n_samples = binned.shape
-        
+
         level_features = np.full(config.max_depth, -1, dtype=np.int32)
         level_thresholds = np.zeros(config.max_depth, dtype=np.int32)
-        
+        level_is_cat = np.zeros(config.max_depth, dtype=np.bool_)
+        level_bitsets = np.zeros(config.max_depth, dtype=np.uint64)
+
         # Track sample leaf assignments (0 to 2^depth - 1)
         sample_leaf_ids = np.zeros(n_samples, dtype=np.int32)
-        
+
         actual_depth = 0
-        
+
         for depth in range(config.max_depth):
-            # Build combined histogram across ALL current leaves
-            # For symmetric trees, we sum histograms since all use same split
-            n_leaves = 2**depth
-            leaf_ids = list(range(n_leaves))
-            
-            combined_hist = self._build_combined_histogram(
-                binned, grad, hess, sample_leaf_ids, leaf_ids
+            level_split = self._find_level_split(
+                binned, grad, hess, sample_leaf_ids, config,
+                is_categorical=is_categorical,
+                n_categories=n_categories,
             )
-            
-            if combined_hist is None:
+            if level_split is None:
                 break
-            
-            # Find ONE best split for entire level
-            splits = find_node_splits(
-                {0: combined_hist},  # Treat as single node
-                reg_lambda=config.reg_lambda,
-                min_child_weight=config.min_child_weight,
-                min_gain=config.min_gain,
-                has_missing=has_missing,
-            )
-            
-            if 0 not in splits:
-                break
-            
-            split = splits[0].split
-            level_features[depth] = split.feature
-            level_thresholds[depth] = split.threshold
+
+            feature, threshold, is_cat, cat_bitset = level_split
+            level_features[depth] = feature
+            level_thresholds[depth] = threshold
+            level_is_cat[depth] = is_cat
+            level_bitsets[depth] = cat_bitset
             actual_depth = depth + 1
-            
-            # Partition ALL samples using this single split
-            if hasattr(binned, 'copy_to_host'):
-                binned_cpu = binned.copy_to_host()
+
+            # Partition ALL samples using this single split.
+            feature_values = binned[feature, :]
+            if is_cat:
+                # Bitset membership goes left; bins >= 64 (incl. missing 255)
+                # are not representable in the 64-bit set and go right —
+                # matching _partition_samples_cpu and prediction.
+                left_lut = np.zeros(256, dtype=np.bool_)
+                for c in range(64):
+                    left_lut[c] = (cat_bitset >> c) & 1
+                goes_right = ~left_lut[feature_values]
             else:
-                binned_cpu = np.asarray(binned)
-            
-            feature_values = binned_cpu[split.feature, :]
-            is_missing = feature_values == MISSING_BIN
-            goes_right = feature_values > split.threshold
-            # Handle missing values: route according to learned direction
-            if np.any(is_missing):
-                missing_go_left = splits[0].missing_go_left
-                if missing_go_left:
-                    goes_right[is_missing] = False
-                else:
-                    goes_right[is_missing] = True
+                # Missing (bin 255) > any threshold (<= 254) → right.
+                goes_right = feature_values > threshold
             sample_leaf_ids = 2 * sample_leaf_ids + goes_right.astype(np.int32)
         
         # Compute leaf values for all 2^depth leaves
         n_leaves = 2**actual_depth
         leaf_values = np.zeros(n_leaves, dtype=np.float32)
-        
-        if hasattr(grad, 'copy_to_host'):
-            grad_cpu = grad.copy_to_host()
-            hess_cpu = hess.copy_to_host()
-        else:
-            grad_cpu = np.asarray(grad)
-            hess_cpu = np.asarray(hess)
-        
+
+        grad_cpu = grad
+        hess_cpu = hess
+
         for leaf_id in range(n_leaves):
             mask = sample_leaf_ids == leaf_id
             if np.any(mask):
@@ -1028,18 +1030,29 @@ class SymmetricGrowth(GrowthStrategy):
         values = np.zeros(max_nodes, dtype=np.float32)
         left_children = np.full(max_nodes, -1, dtype=np.int32)
         right_children = np.full(max_nodes, -1, dtype=np.int32)
-        
+        is_categorical_split = np.zeros(max_nodes, dtype=np.bool_)
+        cat_bitsets = np.zeros(max_nodes, dtype=np.uint64)
+
         # Fill in symmetric structure
         self._fill_symmetric_structure(
             features, thresholds, left_children, right_children,
-            level_features, level_thresholds, actual_depth
+            level_features, level_thresholds, actual_depth,
+            is_categorical_split=is_categorical_split,
+            cat_bitsets=cat_bitsets,
+            level_is_cat=level_is_cat,
+            level_bitsets=level_bitsets,
         )
-        
+
         # Set leaf values
         leaf_start = 2**actual_depth - 1
         for i, val in enumerate(leaf_values):
             values[leaf_start + i] = val
-        
+
+        # The fast symmetric prediction path only supports ordinal comparisons.
+        # When a level uses a categorical (bitset) split, return a standard tree
+        # (structurally still symmetric) so prediction routes by set membership.
+        any_cat_split = bool(np.any(level_is_cat[:actual_depth]))
+
         return TreeStructure(
             features=features,
             thresholds=thresholds,
@@ -1049,69 +1062,150 @@ class SymmetricGrowth(GrowthStrategy):
             n_nodes=max_nodes,
             depth=actual_depth,
             n_features=n_features,
-            is_symmetric=True,
+            is_symmetric=not any_cat_split,
             level_features=level_features[:actual_depth],
             level_thresholds=level_thresholds[:actual_depth],
+            is_categorical_split=is_categorical_split if any_cat_split else None,
+            cat_bitsets=cat_bitsets if any_cat_split else None,
         )
-    
-    def _build_combined_histogram(
+
+    def _find_level_split(
         self,
-        binned,
-        grad,
-        hess,
-        sample_leaf_ids,
-        leaf_ids: list[int],
-    ) -> NodeHistogram | None:
-        """Build combined histogram summing all leaves."""
-        if hasattr(binned, 'copy_to_host'):
-            binned = binned.copy_to_host()
-            grad = grad.copy_to_host()
-            hess = hess.copy_to_host()
-        
+        binned: NDArray,
+        grad: NDArray,
+        hess: NDArray,
+        sample_leaf_ids: NDArray,
+        config: GrowthConfig,
+        is_categorical: NDArray | None = None,
+        n_categories: NDArray | None = None,
+    ) -> tuple[int, int, bool, int] | None:
+        """Find the single best split shared by all leaves at this level.
+
+        For each candidate split, the total gain is the sum of per-leaf gains
+        computed from each leaf's own histogram (leaves whose children would
+        violate ``min_child_weight`` contribute zero). This is what makes the
+        oblivious tree non-degenerate: a shared histogram would be identical
+        at every depth.
+
+        Returns:
+            (feature, threshold, is_categorical, cat_bitset) or None if no
+            candidate achieves positive gain above ``config.min_gain``.
+            For categorical splits ``threshold`` is the split point in the
+            pooled Fisher ordering and ``cat_bitset`` holds the categories
+            (< 64) that go left.
+        """
+        reg_lambda = config.reg_lambda
+        mcw = config.min_child_weight
         n_features = binned.shape[0]
-        combined_grad = np.zeros((n_features, 256), dtype=np.float32)
-        combined_hess = np.zeros((n_features, 256), dtype=np.float32)
-        total_samples = 0
-        total_grad = 0.0
-        total_hess = 0.0
-        
-        for leaf_id in leaf_ids:
-            mask = sample_leaf_ids == leaf_id
-            n_in_leaf = int(np.sum(mask))
-            if n_in_leaf == 0:
-                continue
-            
-            total_samples += n_in_leaf
-            
-            # Build histogram for this leaf
-            leaf_binned = binned[:, mask]
-            leaf_grad = grad[mask]
-            leaf_hess = hess[mask]
-            
-            from .._backends._cpu import build_histogram_cpu
-            hist_grad, hist_hess = build_histogram_cpu(
-                leaf_binned.astype(np.uint8),
-                leaf_grad.astype(np.float32),
-                leaf_hess.astype(np.float32),
-            )
-            
-            combined_grad += hist_grad
-            combined_hess += hist_hess
-            total_grad += float(np.sum(leaf_grad))
-            total_hess += float(np.sum(leaf_hess))
-        
-        if total_samples == 0:
-            return None
-        
-        return NodeHistogram(
-            node_id=0,
-            hist_grad=combined_grad,
-            hist_hess=combined_hess,
-            sum_grad=total_grad,
-            sum_hess=total_hess,
-            n_samples=total_samples,
+
+        active_leaves = [int(leaf) for leaf in np.unique(sample_leaf_ids)]
+        leaf_hists = build_node_histograms(
+            binned, grad, hess, sample_leaf_ids, active_leaves
         )
-    
+        if not leaf_hists:
+            return None
+
+        any_cat = is_categorical is not None and np.any(is_categorical)
+
+        # Aggregate ordinal candidate gains across leaves. Threshold t means
+        # bins <= t go left; the missing bin (255) always stays right.
+        total_gain = np.zeros((n_features, 255), dtype=np.float64)
+        if any_cat:
+            pooled_grad = np.zeros((n_features, 256), dtype=np.float64)
+            pooled_hess = np.zeros((n_features, 256), dtype=np.float64)
+
+        splittable_hists = []
+        for hist in leaf_hists.values():
+            if hist.n_samples == 0 or hist.sum_hess < mcw:
+                continue  # Leaf cannot be validly split; contributes no gain.
+            splittable_hists.append(hist)
+            hg = np.asarray(hist.hist_grad, dtype=np.float64)
+            hh = np.asarray(hist.hist_hess, dtype=np.float64)
+            left_g = np.cumsum(hg[:, :255], axis=1)
+            left_h = np.cumsum(hh[:, :255], axis=1)
+            tot_g = left_g[:, -1:] + hg[:, 255:256]  # includes missing bin
+            tot_h = left_h[:, -1:] + hh[:, 255:256]
+            right_g = tot_g - left_g
+            right_h = tot_h - left_h
+            with np.errstate(divide='ignore', invalid='ignore'):
+                gain = (
+                    left_g**2 / (left_h + reg_lambda)
+                    + right_g**2 / (right_h + reg_lambda)
+                    - tot_g**2 / (tot_h + reg_lambda)
+                )
+            gain = np.nan_to_num(gain, nan=0.0, posinf=0.0, neginf=0.0)
+            valid = (left_h >= mcw) & (right_h >= mcw)
+            total_gain += np.where(valid, gain, 0.0)
+            if any_cat:
+                pooled_grad += hg
+                pooled_hess += hh
+
+        if not splittable_hists:
+            return None
+
+        # Ordinal splits are meaningless for categorical features.
+        if any_cat:
+            cat_mask = np.asarray(is_categorical, dtype=np.bool_)
+            total_gain[cat_mask, :] = -np.inf
+
+        flat_best = int(np.argmax(total_gain))
+        best_feature, best_threshold = divmod(flat_best, total_gain.shape[1])
+        best = (
+            float(total_gain[best_feature, best_threshold]),
+            int(best_feature),
+            int(best_threshold),
+            False,
+            0,
+        )
+
+        # Categorical candidates: one shared Fisher ordering (from the pooled
+        # per-leaf histograms, since all leaves share the split), scanned as
+        # prefixes with per-leaf gains aggregated across leaves.
+        if any_cat:
+            for f in np.flatnonzero(cat_mask):
+                n_cats = int(n_categories[f]) if n_categories is not None else 0
+                if n_cats < 2:
+                    continue
+                pg = pooled_grad[f, :n_cats]
+                ph = pooled_hess[f, :n_cats]
+                scores = np.where(ph > 1e-10, -pg / (ph + reg_lambda), 0.0)
+                order = np.argsort(scores, kind='stable')
+
+                agg = np.zeros(n_cats - 1, dtype=np.float64)
+                for hist in splittable_hists:
+                    hg = np.asarray(hist.hist_grad[f], dtype=np.float64)
+                    hh = np.asarray(hist.hist_hess[f], dtype=np.float64)
+                    left_g = np.cumsum(hg[order])[:-1]
+                    left_h = np.cumsum(hh[order])[:-1]
+                    tot_g = hg[:n_cats].sum() + hg[255]  # missing goes right
+                    tot_h = hh[:n_cats].sum() + hh[255]
+                    right_g = tot_g - left_g
+                    right_h = tot_h - left_h
+                    with np.errstate(divide='ignore', invalid='ignore'):
+                        gain = (
+                            left_g**2 / (left_h + reg_lambda)
+                            + right_g**2 / (right_h + reg_lambda)
+                            - tot_g**2 / (tot_h + reg_lambda)
+                        )
+                    gain = np.nan_to_num(gain, nan=0.0, posinf=0.0, neginf=0.0)
+                    valid = (left_h >= mcw) & (right_h >= mcw)
+                    agg += np.where(valid, gain, 0.0)
+
+                k = int(np.argmax(agg))
+                if agg[k] > best[0]:
+                    # Same convention as _find_best_categorical_split: bins
+                    # >= 64 cannot be represented and always route right.
+                    bitset = 0
+                    for c in order[:k + 1]:
+                        if c < 64:
+                            bitset |= 1 << int(c)
+                    best = (float(agg[k]), int(f), k + 1, True, bitset)
+
+        best_gain, feature, threshold, is_cat, cat_bitset = best
+        if best_gain <= 0.0 or best_gain < config.min_gain:
+            return None
+        return feature, threshold, is_cat, cat_bitset
+
     def _fill_symmetric_structure(
         self,
         features,
@@ -1121,21 +1215,28 @@ class SymmetricGrowth(GrowthStrategy):
         level_features,
         level_thresholds,
         depth,
+        is_categorical_split=None,
+        cat_bitsets=None,
+        level_is_cat=None,
+        level_bitsets=None,
     ):
         """Fill standard tree arrays from symmetric representation."""
         for d in range(depth):
             feat = level_features[d]
             thresh = level_thresholds[d]
-            
+
             # All nodes at this depth get same split
             level_start = 2**d - 1
             level_end = 2**(d+1) - 1
-            
+
             for node in range(level_start, level_end):
                 features[node] = feat
                 thresholds[node] = thresh
                 left_children[node] = 2 * node + 1
                 right_children[node] = 2 * node + 2
+                if is_categorical_split is not None and level_is_cat is not None:
+                    is_categorical_split[node] = level_is_cat[d]
+                    cat_bitsets[node] = level_bitsets[d]
 
 
 # =============================================================================
