@@ -62,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `evaluate_coverage()` - Prediction interval validation
 
 ### Performance
-- NaturalBoost: 1.3-11x faster than NGBoost
+- NaturalBoost: 1.3-11x faster than NGBoost on GPU (CPU: ~parity, see `benchmarks/results/ngboost_comparison_20260720.json`)
 - OpenBoostGAM: 25-43x faster than InterpretML EBM on GPU
 - Standard GBDT: Comparable to XGBoost (within 5% RMSE)
 

@@ -1,0 +1,119 @@
+{
+  "benchmark": "naturalboost_vs_ngboost",
+  "date": "2026-07-20T08:34:28+00:00",
+  "seed": 42,
+  "quick_mode": false,
+  "backend": "cpu",
+  "backend_note": "CPU-vs-CPU comparison (NGBoost is CPU-only). OpenBoost also has a GPU tree path (fit_tree_gpu_native) that this benchmark does NOT measure.",
+  "platform": {
+    "python": "3.12.12",
+    "system": "Darwin x86_64",
+    "processor": "i386",
+    "cpu_count": 16
+  },
+  "versions": {
+    "openboost": "1.0.0rc1",
+    "ngboost": "0.5.11",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
+    "scikit-learn": "1.8.0"
+  },
+  "configs": {
+    "shared": {
+      "n_boosting_rounds": 500,
+      "learning_rate": 0.03,
+      "max_depth": 3,
+      "distribution": "Normal",
+      "train_test_split": {
+        "test_size": 0.2,
+        "random_state": 42
+      }
+    },
+    "openboost": {
+      "model": "NaturalBoostNormal",
+      "n_trees": 500,
+      "learning_rate": 0.03,
+      "max_depth": 3,
+      "min_child_weight": 1.0,
+      "reg_lambda": 1.0,
+      "n_bins": 254
+    },
+    "ngboost": {
+      "model": "NGBRegressor",
+      "Dist": "Normal",
+      "n_estimators": 500,
+      "learning_rate": 0.03,
+      "Base": "DecisionTreeRegressor(criterion='friedman_mse', max_depth=3)",
+      "natural_gradient": true,
+      "random_state": 42
+    },
+    "notes": "Both models: Normal distribution, 500 boosting rounds, learning_rate=0.03, depth-3 trees, natural gradient, fixed seed 42, identical train/test splits. Remaining parameters are library defaults and differ structurally: OpenBoost fits histogram-based trees (n_bins=254, min_child_weight=1.0, reg_lambda=1.0); NGBoost fits exact-split sklearn DecisionTreeRegressor(criterion='friedman_mse') base learners with a per-round line search (its default learner). Timings are single-run wall clock on CPU; OpenBoost's one-time Numba JIT compilation is excluded via a small untimed warmup fit (both libraries get the same warmup)."
+  },
+  "metrics_note": "test_nll uses one shared closed-form Gaussian NLL for both models; test_crps uses openboost.crps_gaussian on both models' predicted (mean, std) \u2014 same formula, fair. test_rmse uses the predicted mean as the point estimate. Lower is better for all three.",
+  "skipped": [],
+  "results": [
+    {
+      "dataset": "synthetic_heteroscedastic_10_000",
+      "description": "y = friedman1(x) + (1 + 2*x5) * eps, 10 uniform features, n=10000, seed=42",
+      "n_train": 8000,
+      "n_test": 2000,
+      "n_features": 10,
+      "openboost": {
+        "fit_time_s": 16.366,
+        "test_nll": 2.1243,
+        "test_crps": 1.169,
+        "test_rmse": 2.145
+      },
+      "ngboost": {
+        "fit_time_s": 18.785,
+        "test_nll": 2.1344,
+        "test_crps": 1.1741,
+        "test_rmse": 2.1486
+      },
+      "speedup_openboost_vs_ngboost": 1.15,
+      "nll_delta_openboost_minus_ngboost": -0.0101
+    },
+    {
+      "dataset": "synthetic_heteroscedastic_50_000",
+      "description": "y = friedman1(x) + (1 + 2*x5) * eps, 10 uniform features, n=50000, seed=42",
+      "n_train": 40000,
+      "n_test": 10000,
+      "n_features": 10,
+      "openboost": {
+        "fit_time_s": 74.126,
+        "test_nll": 2.1215,
+        "test_crps": 1.1842,
+        "test_rmse": 2.165
+      },
+      "ngboost": {
+        "fit_time_s": 95.294,
+        "test_nll": 2.1163,
+        "test_crps": 1.1771,
+        "test_rmse": 2.1523
+      },
+      "speedup_openboost_vs_ngboost": 1.29,
+      "nll_delta_openboost_minus_ngboost": 0.0052
+    },
+    {
+      "dataset": "california_housing",
+      "description": "sklearn fetch_california_housing, n=20640, 8 features",
+      "n_train": 16512,
+      "n_test": 4128,
+      "n_features": 8,
+      "openboost": {
+        "fit_time_s": 30.576,
+        "test_nll": 0.5724,
+        "test_crps": 0.2548,
+        "test_rmse": 0.518
+      },
+      "ngboost": {
+        "fit_time_s": 25.012,
+        "test_nll": 0.5748,
+        "test_crps": 0.2561,
+        "test_rmse": 0.5209
+      },
+      "speedup_openboost_vs_ngboost": 0.82,
+      "nll_delta_openboost_minus_ngboost": -0.0024
+    }
+  ]
+}

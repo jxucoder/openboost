@@ -855,6 +855,361 @@ def negative_log_likelihood(
     return float(np.mean(nll))
 
 
+# =============================================================================
+# PIT Calibration Diagnostics
+# =============================================================================
+
+def _randomized_pit_discrete(cdf_fn, y: NDArray, seed: int | None) -> NDArray:
+    """Randomized PIT for integer-valued (count) distributions.
+
+    Draws u_i ~ Uniform(F(y_i - 1), F(y_i)), which is exactly Uniform(0, 1)
+    under a correctly specified model (Smith 1985; Czado et al. 2009).
+    """
+    rng = np.random.default_rng(seed)
+    k = np.round(y)
+    upper = np.asarray(cdf_fn(k), dtype=np.float64)
+    lower = np.asarray(cdf_fn(k - 1.0), dtype=np.float64)  # cdf(-1) == 0
+    return rng.uniform(lower, upper)
+
+
+def _tweedie_pit(dist, params: dict, y: NDArray, seed: int | None) -> NDArray:
+    """PIT for the Tweedie compound Poisson-Gamma distribution.
+
+    Mirrors ``Tweedie.quantile``: point mass P(Y=0) = exp(-λ) plus a
+    moment-matched Gamma for the positive part. The atom at zero is handled
+    with the randomized PIT (u ~ Uniform(0, P(Y=0)) when y == 0).
+    """
+    from scipy import stats
+
+    mu = params['mu']
+    phi = params['phi']
+    power = dist.power
+
+    if not (1 < power < 2):
+        # Outside the compound Poisson-Gamma range: Normal approximation
+        # (consistent with Tweedie.quantile)
+        sigma = np.sqrt(np.asarray(dist.variance(params), dtype=np.float64))
+        return stats.norm.cdf(y, loc=mu, scale=sigma)
+
+    lam = np.power(mu, 2 - power) / (phi * (2 - power))
+    p0 = np.exp(-lam)
+
+    var = phi * np.power(mu, power)
+    one_minus_p0 = np.maximum(1.0 - p0, 1e-12)
+    mean_pos = mu / one_minus_p0
+    var_pos = np.maximum((var + mu ** 2) / one_minus_p0 - mean_pos ** 2, 1e-12)
+    shape = mean_pos ** 2 / var_pos
+    scale = var_pos / mean_pos
+
+    u = p0 + one_minus_p0 * stats.gamma.cdf(np.maximum(y, 0.0), a=shape, scale=scale)
+
+    at_zero = y <= 0
+    if np.any(at_zero):
+        rng = np.random.default_rng(seed)
+        u[at_zero] = rng.uniform(0.0, p0[at_zero])
+    return u
+
+
+def _numerical_cdf(dist, params: dict, y: NDArray, n_grid: int = 256) -> NDArray:
+    """CDF via trapezoidal integration of the density exp(-nll).
+
+    Fallback for continuous distributions without a scipy mapping (e.g.
+    CustomDistribution). Integrates from a far-left quantile (or
+    mean - 12*std when quantile is unavailable) up to each y_i.
+    """
+    mean = np.asarray(dist.mean(params), dtype=np.float64)
+    std = np.sqrt(np.asarray(dist.variance(params), dtype=np.float64))
+    try:
+        lo = np.asarray(dist.quantile(params, 1e-9), dtype=np.float64)
+    except NotImplementedError:
+        lo = mean - 12.0 * std
+    lo = np.minimum(lo, y)  # degenerate grid -> integral 0 when y_i < lo_i
+
+    n = y.shape[0]
+    t = np.linspace(0.0, 1.0, n_grid)[None, :]
+    grid = lo[:, None] + (y - lo)[:, None] * t  # (n, n_grid)
+
+    tiled = {k: np.repeat(np.asarray(v, dtype=np.float64), n_grid)
+             for k, v in params.items()}
+    density = np.exp(-np.asarray(dist.nll(grid.ravel(), tiled), dtype=np.float64))
+
+    trapezoid = getattr(np, 'trapezoid', np.trapz)  # np.trapz removed in NumPy 2
+    return trapezoid(density.reshape(n, n_grid), grid, axis=1)
+
+
+def pit_values(
+    dist_output: Any,
+    y: NDArray,
+    *,
+    seed: int | None = None,
+) -> NDArray:
+    """Compute Probability Integral Transform (PIT) values u_i = F_i(y_i).
+
+    If the model is well calibrated, evaluating each observation y_i under
+    its own predictive CDF F_i yields values that are Uniform(0, 1). Deviations
+    from uniformity diagnose miscalibration: a U-shaped PIT histogram means the
+    predictive distributions are too narrow (overconfident), a hump-shaped one
+    means too wide (underconfident), and a sloped one means biased.
+
+    For discrete families (Poisson, NegativeBinomial) the randomized PIT
+    u_i ~ Uniform(F(y_i - 1), F(y_i)) is used — the standard approach for
+    count data (Czado, Gneiting & Held 2009). Tweedie's point mass at zero is
+    also randomized. Pass ``seed`` for reproducibility in these cases.
+
+    Args:
+        dist_output: Predictive distribution as returned by
+            ``model.predict_distribution(X)`` — any object with a ``.params``
+            dict of per-sample parameter arrays and a ``.distribution``
+            instance. If the distribution defines a ``cdf(y, params)`` method
+            it is used directly; otherwise known families are mapped to
+            scipy.stats, and unknown continuous families fall back to
+            numerical integration of ``exp(-nll)``.
+        y: Observed target values, shape (n_samples,).
+        seed: Random seed for the randomized PIT (discrete families and the
+            Tweedie zero mass). Ignored for purely continuous families.
+
+    Returns:
+        PIT values in [0, 1], shape (n_samples,), dtype float64.
+
+    Example:
+        >>> import numpy as np
+        >>> import openboost as ob
+        >>> rng = np.random.default_rng(0)
+        >>> mu = rng.normal(size=1000)
+        >>> y = rng.normal(mu, 1.0)  # data truly Normal(mu, 1)
+        >>> output = ob.DistributionOutput(
+        ...     params={'loc': mu, 'scale': np.ones(1000)},
+        ...     distribution=ob.Normal(),
+        ... )
+        >>> pit = ob.pit_values(output, y)
+        >>> _, _, ks, p = ob.pit_histogram(pit)
+        >>> p > 0.01  # approximately uniform -> calibrated
+        True
+    """
+    from scipy import stats
+
+    from ._distributions import (
+        Gamma,
+        LogNormal,
+        NegativeBinomial,
+        Normal,
+        Poisson,
+        StudentT,
+        Tweedie,
+    )
+
+    params = {k: np.asarray(v, dtype=np.float64).ravel()
+              for k, v in dist_output.params.items()}
+    dist = dist_output.distribution
+    y = np.asarray(y, dtype=np.float64).ravel()
+
+    n_samples = next(iter(params.values())).shape[0]
+    if y.shape[0] != n_samples:
+        raise ValueError(
+            f"y has {y.shape[0]} samples but dist_output has {n_samples}"
+        )
+
+    if hasattr(dist, 'cdf'):
+        # Duck-typed escape hatch: distribution provides its own CDF
+        u = np.asarray(dist.cdf(y, params), dtype=np.float64)
+    elif isinstance(dist, Normal):
+        u = stats.norm.cdf(y, loc=params['loc'], scale=params['scale'])
+    elif isinstance(dist, LogNormal):
+        u = stats.lognorm.cdf(y, s=params['scale'], scale=np.exp(params['loc']))
+    elif isinstance(dist, Gamma):
+        u = stats.gamma.cdf(y, a=params['concentration'], scale=1.0 / params['rate'])
+    elif isinstance(dist, StudentT):
+        u = stats.t.cdf(y, df=params['df'], loc=params['loc'], scale=params['scale'])
+    elif isinstance(dist, Poisson):
+        u = _randomized_pit_discrete(
+            lambda k: stats.poisson.cdf(k, mu=params['rate']), y, seed
+        )
+    elif isinstance(dist, NegativeBinomial):
+        p = params['r'] / (params['r'] + params['mu'])
+        u = _randomized_pit_discrete(
+            lambda k: stats.nbinom.cdf(k, n=params['r'], p=p), y, seed
+        )
+    elif isinstance(dist, Tweedie):
+        u = _tweedie_pit(dist, params, y, seed)
+    else:
+        u = _numerical_cdf(dist, params, y)
+
+    return np.clip(u, 0.0, 1.0)
+
+
+def pit_histogram(
+    pit: NDArray,
+    n_bins: int = 20,
+) -> tuple[NDArray, NDArray, float, float]:
+    """Histogram of PIT values plus a Kolmogorov-Smirnov uniformity test.
+
+    A calibrated model produces a flat PIT histogram; the KS test against
+    Uniform(0, 1) quantifies the deviation.
+
+    Args:
+        pit: PIT values in [0, 1] from :func:`pit_values`, shape (n_samples,).
+        n_bins: Number of equal-width histogram bins over [0, 1]. Default 20.
+
+    Returns:
+        Tuple of (bin_edges, counts, ks_statistic, ks_pvalue):
+        - bin_edges: Bin edges, shape (n_bins + 1,).
+        - counts: Observations per bin, shape (n_bins,).
+        - ks_statistic: KS distance between the empirical PIT CDF and
+          Uniform(0, 1). 0 = perfectly uniform.
+        - ks_pvalue: p-value of the KS test. Small values (< 0.01) reject
+          uniformity, i.e. indicate miscalibration.
+
+    Example:
+        >>> import numpy as np
+        >>> import openboost as ob
+        >>> pit = np.random.default_rng(0).uniform(size=2000)
+        >>> edges, counts, ks, p = ob.pit_histogram(pit, n_bins=20)
+        >>> counts.sum()
+        2000
+        >>> p > 0.01  # uniform sample passes the KS test
+        True
+    """
+    from scipy import stats
+
+    pit = np.asarray(pit, dtype=np.float64).ravel()
+    counts, bin_edges = np.histogram(pit, bins=n_bins, range=(0.0, 1.0))
+    result = stats.kstest(pit, 'uniform')
+    return bin_edges, counts, float(result.statistic), float(result.pvalue)
+
+
+def reliability_diagram(
+    pit: NDArray,
+    n_bins: int = 10,
+) -> tuple[NDArray, NDArray]:
+    """Coverage-vs-nominal data for a probabilistic reliability diagram.
+
+    For each nominal quantile level q, computes the observed frequency
+    P(PIT <= q) — the fraction of observations that fell below their
+    predicted q-th quantile. A calibrated model lies on the diagonal
+    (observed == nominal).
+
+    Args:
+        pit: PIT values in [0, 1] from :func:`pit_values`, shape (n_samples,).
+        n_bins: Number of nominal quantile levels, placed at bin midpoints
+            (0.5/n_bins, 1.5/n_bins, ..., 1 - 0.5/n_bins). Default 10.
+
+    Returns:
+        Tuple of (nominal_quantiles, observed_frequencies), each shape
+        (n_bins,). Plot observed vs nominal against the y=x diagonal.
+
+    Example:
+        >>> import numpy as np
+        >>> import openboost as ob
+        >>> pit = np.random.default_rng(0).uniform(size=5000)
+        >>> nominal, observed = ob.reliability_diagram(pit, n_bins=10)
+        >>> bool(np.max(np.abs(observed - nominal)) < 0.05)  # near-diagonal
+        True
+        >>> # plt.plot(nominal, observed, 's-'); plt.plot([0, 1], [0, 1], 'k--')
+    """
+    pit = np.asarray(pit, dtype=np.float64).ravel()
+    nominal = (np.arange(1, n_bins + 1) - 0.5) / n_bins
+    observed = np.mean(pit[None, :] <= nominal[:, None], axis=1)
+    return nominal, observed
+
+
+class PITRecalibrator:
+    """Isotonic-regression PIT recalibrator.
+
+    Wraps a fitted ``sklearn.isotonic.IsotonicRegression`` that maps raw PIT
+    values to calibrated PIT values. Created by :func:`recalibrate_pit`; use
+    :meth:`transform` to map new raw PIT values (or predictive CDF levels)
+    into calibrated ones.
+    """
+
+    def __init__(self, isotonic: Any):
+        self._isotonic = isotonic
+
+    def transform(self, u: NDArray) -> NDArray:
+        """Map raw PIT values to calibrated PIT values.
+
+        Args:
+            u: Raw PIT values in [0, 1], shape (n_samples,).
+
+        Returns:
+            Calibrated PIT values in [0, 1], shape (n_samples,), dtype float64.
+        """
+        u = np.asarray(u, dtype=np.float64).ravel()
+        return np.clip(self._isotonic.predict(u), 0.0, 1.0)
+
+
+def recalibrate_pit(
+    pit_calibration: NDArray,
+    *,
+    out_of_bounds: Literal['clip', 'nan', 'raise'] = 'clip',
+) -> PITRecalibrator:
+    """Fit an isotonic-regression recalibrator on held-out PIT values.
+
+    Learns the monotone map T(u) = empirical CDF of the calibration PIT
+    values. If the model's raw PIT is not uniform (miscalibrated), applying
+    T to future PIT values makes them approximately uniform — equivalently,
+    T recalibrates the model's predictive quantile levels (Kuleshov,
+    Fenner & Ermon 2018).
+
+    Requires scikit-learn (an optional extra).
+
+    Args:
+        pit_calibration: Raw PIT values from a held-out calibration set,
+            shape (n_samples,), as returned by :func:`pit_values`. Must
+            contain at least 2 values.
+        out_of_bounds: How the recalibrator handles inputs outside the
+            calibration range: 'clip' (default), 'nan', or 'raise'.
+
+    Returns:
+        A fitted :class:`PITRecalibrator` with a ``.transform(u)`` method.
+
+    Raises:
+        ImportError: If scikit-learn is not installed.
+        ValueError: If fewer than 2 calibration values are given.
+
+    Example:
+        >>> import numpy as np
+        >>> import openboost as ob
+        >>> rng = np.random.default_rng(0)
+        >>> # Overconfident model: claims scale 1.0 but data has scale 1.5
+        >>> mu = rng.normal(size=4000)
+        >>> y = rng.normal(mu, 1.5)
+        >>> output = ob.DistributionOutput(
+        ...     params={'loc': mu, 'scale': np.ones(4000)},
+        ...     distribution=ob.Normal(),
+        ... )
+        >>> pit = ob.pit_values(output, y)
+        >>> recal = ob.recalibrate_pit(pit[:2000])       # fit on first half
+        >>> calibrated = recal.transform(pit[2000:])     # apply to second half
+        >>> _, _, ks_raw, _ = ob.pit_histogram(pit[2000:])
+        >>> _, _, ks_cal, _ = ob.pit_histogram(calibrated)
+        >>> ks_cal < ks_raw  # recalibration improves uniformity
+        True
+    """
+    try:
+        from sklearn.isotonic import IsotonicRegression
+    except ImportError as err:
+        raise ImportError(
+            "scikit-learn is required for recalibrate_pit. "
+            "Install with: uv sync --extra dev (or pip install scikit-learn)"
+        ) from err
+
+    pit = np.asarray(pit_calibration, dtype=np.float64).ravel()
+    if pit.size < 2:
+        raise ValueError(
+            f"recalibrate_pit needs at least 2 calibration values, got {pit.size}"
+        )
+
+    order = np.argsort(pit)
+    # Hazen plotting positions: empirical CDF evaluated at the sorted PITs
+    targets = (np.arange(1, pit.size + 1) - 0.5) / pit.size
+
+    iso = IsotonicRegression(
+        y_min=0.0, y_max=1.0, increasing=True, out_of_bounds=out_of_bounds
+    )
+    iso.fit(pit[order], targets)
+    return PITRecalibrator(iso)
+
+
 # Suggested parameter grids for hyperparameter tuning
 PARAM_GRID_REGRESSION = {
     'n_estimators': [100, 300, 500],

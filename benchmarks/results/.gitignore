@@ -1,0 +1,4 @@
+# Most benchmark results are generated artifacts (ignored by the root
+# .gitignore), but the NGBoost comparison is committed: it backs the
+# numbers cited in docs/user-guide/naturalboost/overview.md.
+!ngboost_comparison_*.json

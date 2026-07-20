@@ -182,6 +182,18 @@ class Distribution(ABC):
         """
         pass
     
+    @property
+    def exposure_offset(self) -> tuple[str, float] | None:
+        """Log-exposure offset target: ``(param_name, sign)`` or None.
+
+        When not None, adding ``sign * log(e)`` to the RAW score of
+        ``param_name`` multiplies the distribution mean by ``e`` (log-link
+        mean). Used by DistributionalGBDT/NaturalBoost to apply actuarial
+        exposure offsets. None (the default) means the family has no
+        log-link mean and exposure is unsupported.
+        """
+        return None
+
     def _is_diagonal_fisher(self, F: NDArray) -> bool:
         """Check if Fisher matrix is diagonal (common for many distributions)."""
         n_params = F.shape[1]
@@ -642,7 +654,15 @@ class Gamma(Distribution):
     @property
     def param_names(self) -> list[str]:
         return ['concentration', 'rate']
-    
+
+    @property
+    def exposure_offset(self) -> tuple[str, float] | None:
+        # mean = concentration / rate: subtracting log(e) from the raw rate
+        # scales the mean by e while keeping the shape (concentration) fixed,
+        # i.e. Y -> e*Y with constant coefficient of variation — the standard
+        # Gamma GLM exposure treatment.
+        return ('rate', -1.0)
+
     def link(self, param_name: str, raw: NDArray) -> NDArray:
         # Both parameters must be positive
         return np.exp(np.clip(raw, -20, 20))
@@ -812,13 +832,18 @@ class Poisson(Distribution):
     @property
     def param_names(self) -> list[str]:
         return ['rate']
-    
+
+    @property
+    def exposure_offset(self) -> tuple[str, float] | None:
+        # mean = rate (log link): adding log(e) to the raw rate scales it by e
+        return ('rate', 1.0)
+
     def link(self, param_name: str, raw: NDArray) -> NDArray:
         return np.exp(np.clip(raw, -20, 20))
-    
+
     def link_inv(self, param_name: str, param: NDArray) -> NDArray:
         return np.log(np.clip(param, 1e-10, None))
-    
+
     def validate_target(self, y: NDArray) -> None:
         _validate_count_target(y, "Poisson")
 
@@ -1104,7 +1129,12 @@ class Tweedie(Distribution):
     @property
     def param_names(self) -> list[str]:
         return ['mu', 'phi']
-    
+
+    @property
+    def exposure_offset(self) -> tuple[str, float] | None:
+        # mean = mu (log link): adding log(e) to the raw mu scales it by e
+        return ('mu', 1.0)
+
     def link(self, param_name: str, raw: NDArray) -> NDArray:
         # Both parameters must be positive
         return np.exp(np.clip(raw, -20, 20))
@@ -1399,7 +1429,12 @@ class NegativeBinomial(Distribution):
     @property
     def param_names(self) -> list[str]:
         return ['mu', 'r']
-    
+
+    @property
+    def exposure_offset(self) -> tuple[str, float] | None:
+        # mean = mu (log link): adding log(e) to the raw mu scales it by e
+        return ('mu', 1.0)
+
     def link(self, param_name: str, raw: NDArray) -> NDArray:
         return np.exp(np.clip(raw, -20, 20))
     

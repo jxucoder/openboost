@@ -420,13 +420,28 @@ class TestOpenBoostDistributionalRegressor:
         pred = reg.predict(X)
         assert pred.shape == y.shape
 
-    def test_sample_weight_raises(self):
-        """sample_weight raises NotImplementedError instead of being ignored."""
-        X, y = self._make_data(100)
-        reg = OpenBoostDistributionalRegressor(n_estimators=5)
-        weights = np.ones(100, dtype=np.float32)
-        with pytest.raises(NotImplementedError, match="sample_weight"):
-            reg.fit(X, y, sample_weight=weights)
+    def test_sample_weight_forwarded(self):
+        """Skewed sample weights actually change the fitted model."""
+        rng = np.random.RandomState(42)
+        n = 200
+        X = rng.randn(n, 5).astype(np.float32)
+        y = X[:, 0] + rng.randn(n).astype(np.float32) * 0.1
+        y[:100] += 3.0  # index-based shift X cannot explain
+
+        weights = np.array([50.0] * 100 + [0.02] * 100, dtype=np.float32)
+
+        base = OpenBoostDistributionalRegressor(n_estimators=20, max_depth=3)
+        weighted = clone(base)
+        base.fit(X, y)
+        weighted.fit(X, y, sample_weight=weights)
+
+        pred_base = base.predict(X)
+        pred_weighted = weighted.predict(X)
+        assert not np.allclose(pred_base, pred_weighted)
+        # The weighted fit must track the upweighted half more closely
+        mse_weighted = np.mean((pred_weighted[:100] - y[:100]) ** 2)
+        mse_base = np.mean((pred_base[:100] - y[:100]) ** 2)
+        assert mse_weighted < mse_base
 
     def test_unknown_kwarg_raises(self):
         """Unknown fit kwargs raise TypeError, like sklearn."""
@@ -470,6 +485,117 @@ class TestOpenBoostDistributionalRegressor:
         for trees in reg.booster_.trees_.values():
             assert len(trees) < n_estimators
             assert len(trees) == reg.best_iteration_ + 1
+
+    def test_exposure_poisson_end_to_end(self):
+        """exposure flows through fit, eval_set 3-tuples, and predict methods."""
+        rng = np.random.RandomState(0)
+        n = 300
+        X = rng.randn(n, 3).astype(np.float32)
+        exposure = rng.uniform(0.5, 2.0, n).astype(np.float32)
+        rate = np.exp(0.4 * X[:, 0])
+        y = rng.poisson(rate * exposure).astype(np.float32)
+
+        reg = OpenBoostDistributionalRegressor(
+            distribution='poisson', n_estimators=20, max_depth=3,
+        )
+        reg.fit(
+            X[:200], y[:200],
+            exposure=exposure[:200],
+            eval_set=[(X[200:], y[200:], exposure[200:])],
+        )
+
+        # Exposure-aware (3-tuple) eval set is evaluated every round
+        assert len(reg.evals_result_['eval_0']['nll']) == 20
+
+        # Mean scales multiplicatively with exposure
+        ones = np.ones(100, dtype=np.float32)
+        pred_1 = reg.predict(X[200:], exposure=ones)
+        pred_2 = reg.predict(X[200:], exposure=2 * ones)
+        assert np.allclose(pred_2, 2 * pred_1, rtol=1e-4)
+
+        # exposure=None means exposure 1
+        assert np.allclose(reg.predict(X[200:]), pred_1, rtol=1e-6)
+
+        # Other predict methods accept exposure through the wrapper
+        lower, upper = reg.predict_interval(X[200:], alpha=0.2, exposure=ones)
+        assert (lower <= upper).all()
+        q90 = reg.predict_quantile(X[200:], 0.9, exposure=2 * ones)
+        assert q90.shape == (100,)
+        samples = reg.sample(X[200:], n_samples=3, seed=0, exposure=ones)
+        assert samples.shape == (100, 3)
+        nll = reg.nll_score(X[200:], y[200:], exposure=exposure[200:])
+        assert np.isfinite(nll)
+
+    def test_exposure_unsupported_family_raises(self):
+        """exposure with a non-log-link family raises ValueError."""
+        X, y = self._make_data(100)
+        reg = OpenBoostDistributionalRegressor(distribution='normal', n_estimators=5)
+        with pytest.raises(ValueError, match="exposure is not supported"):
+            reg.fit(X, y, exposure=np.ones(100, dtype=np.float32))
+
+    def test_eval_metric_and_early_stopping(self):
+        """Non-default eval_metric records evals_result_ and stops early."""
+        X, y = self._make_data(300)
+        X_train, X_val = X[:200], X[200:]
+        y_train, y_val = y[:200], y[200:]
+
+        n_estimators = 300
+        reg = OpenBoostDistributionalRegressor(
+            n_estimators=n_estimators,  # High number; val CRPS plateaus long before
+            max_depth=2,
+            eval_metric='crps',
+            early_stopping_rounds=5,
+        )
+        reg.fit(X_train, y_train, eval_set=[(X_val, y_val)])
+
+        history = reg.evals_result_['eval_0']['crps']
+        rounds_run = len(history)
+        assert 0 < rounds_run < n_estimators  # stopped early
+        assert all(np.isfinite(v) for v in history)
+
+        assert reg.best_iteration_ == reg.booster_.best_iteration_
+        assert reg.best_score_ == reg.booster_.best_score_
+        for trees in reg.booster_.trees_.values():
+            assert len(trees) == reg.best_iteration_ + 1
+
+    def test_evals_result_requires_fit(self):
+        """evals_result_ raises NotFittedError before fit."""
+        reg = OpenBoostDistributionalRegressor(n_estimators=5)
+        with pytest.raises(NotFittedError):
+            _ = reg.evals_result_
+
+    def test_no_early_stopping_attributes_absent(self):
+        """Without early stopping, best_iteration_/best_score_ stay absent."""
+        X, y = self._make_data(80)
+        reg = OpenBoostDistributionalRegressor(n_estimators=5)
+        reg.fit(X, y)
+        assert not hasattr(reg, 'best_iteration_')
+        assert not hasattr(reg, 'best_score_')
+        assert reg.evals_result_ == {}
+
+    def test_clone_get_params_with_new_params(self):
+        """clone/get_params/set_params work with the new constructor params."""
+        reg = OpenBoostDistributionalRegressor(
+            distribution='gamma',
+            n_estimators=15,
+            eval_metric='interval_score',
+            quantiles=[0.1, 0.9],
+            interval_alpha=0.2,
+        )
+        params = reg.get_params()
+        assert params['eval_metric'] == 'interval_score'
+        assert params['quantiles'] == [0.1, 0.9]
+        assert params['interval_alpha'] == 0.2
+
+        reg_clone = clone(reg)
+        assert reg_clone is not reg
+        assert reg_clone.eval_metric == 'interval_score'
+        assert reg_clone.quantiles == [0.1, 0.9]
+        assert reg_clone.interval_alpha == 0.2
+
+        reg.set_params(eval_metric='nll', quantiles=None)
+        assert reg.eval_metric == 'nll'
+        assert reg.quantiles is None
 
 
 class TestOpenBoostLinearLeafRegressorSklearnCompat:

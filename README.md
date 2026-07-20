@@ -10,7 +10,7 @@ For standard GBDT, use XGBoost/LightGBM — they're highly optimized C++.
 
 For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:
 
-- **NaturalBoost**: 1.6-11x faster than NGBoost (dataset-dependent; tree build is GPU-accelerated, gradient/Fisher math stays on CPU)
+- **NaturalBoost**: 1.6-11x faster than NGBoost on GPU (tree build only; gradient/Fisher math stays on CPU). On CPU the two are comparable (0.8-1.3x, quality within ~1%) — see Benchmarks
 - **OpenBoostGAM**: much faster than InterpretML EBM on our committed run (56x), with an accuracy tradeoff — see [Benchmarks](#benchmarks) for the honest numbers
 
 Plus: ~20K lines of readable Python. Modify, extend, and build on — no C++ required.
@@ -146,12 +146,14 @@ Where OpenBoost really shines is on GBDT variants that don't exist in XGBoost/Li
 | Model | vs. | Speedup | Accuracy |
 |---|---|---|---|
 | NaturalBoost (GPU) | NGBoost | 1.6x (California housing), 11.5x (synthetic 50K) | NLL slightly behind NGBoost on both datasets |
+| NaturalBoost (CPU) | NGBoost | ~parity: 0.8x–1.3x (`ngboost_comparison_20260720.json`) | NLL/CRPS/RMSE within ~1% of each other; NGBoost wins some |
 | OpenBoostGAM (GPU) | InterpretML EBM | 56x (synthetic 50K) | **Lower**: R² 0.66 vs 0.74 |
 
 Caveats to read before quoting these numbers:
 
 - The EBM comparison disabled EBM's interactions and bagging (`interactions=0`, `outer_bags=1`, `inner_bags=0`) to isolate main-effect training; OpenBoostGAM is main-effects-only. On this run OpenBoostGAM was much faster but less accurate.
 - NaturalBoost's GPU acceleration applies to the histogram-based tree build. The per-round distribution gradient and Fisher/natural-gradient computations run on CPU (numpy), so distributional training is not GPU-accelerated end-to-end.
+- On CPU the two libraries are comparable: the committed CPU-vs-CPU run (`benchmarks/results/ngboost_comparison_20260720.json`, fixed seed, identical budgets) shows 0.8x–1.3x wall-clock and quality metrics within ~1%, with NGBoost ahead on some. The GPU speedups above are where NaturalBoost's advantage actually lives.
 
 > **Note:** Benchmarks reflect the current state of development and may change as both OpenBoost and comparison libraries evolve.
 

@@ -625,8 +625,8 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
     Parameters
     ----------
     distribution : str, default='normal'
-        Distribution family. Options: 'normal', 'lognormal', 'gamma', 
-        'poisson', 'studentt'.
+        Distribution family. Options: 'normal', 'lognormal', 'gamma',
+        'poisson', 'studentt', 'tweedie', 'negbin'.
     n_estimators : int, default=100
         Number of boosting rounds.
     max_depth : int, default=4
@@ -643,17 +643,30 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         If True, use NGBoost (natural gradient). Recommended for faster
         convergence and better uncertainty calibration.
     early_stopping_rounds : int, optional
-        Stop training if validation NLL doesn't improve for this many rounds.
-        Requires eval_set to be passed to fit().
+        Stop training if the validation metric (``eval_metric``) doesn't
+        improve for this many rounds. Requires eval_set to be passed to
+        fit(). With multiple eval sets, the last one is monitored.
     verbose : int, default=0
         Verbosity level.
+    eval_metric : {'nll', 'crps', 'pinball', 'interval_score'}, default='nll'
+        Metric computed on each eval set every round and recorded in
+        ``evals_result_``.
+    quantiles : list of float, optional
+        Quantile levels used by eval_metric='pinball'.
+        Defaults to [0.05, 0.5, 0.95].
+    interval_alpha : float, default=0.1
+        Miscoverage rate used by eval_metric='interval_score'
+        (0.1 scores the central 90% interval).
 
     Attributes
     ----------
     n_features_in_ : int
         Number of features seen during fit.
-    booster_ : NGBoost or DistributionalGBDT
+    booster_ : NaturalBoost or DistributionalGBDT
         The underlying fitted model.
+    evals_result_ : dict
+        Per-round eval-set metric history recorded during fit(), e.g.
+        ``{'eval_0': {'nll': [...]}}``.
     best_iteration_ : int
         Iteration with best validation score (if early stopping used).
     best_score_ : float
@@ -681,7 +694,9 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
     
     def __init__(
         self,
-        distribution: Literal['normal', 'lognormal', 'gamma', 'poisson', 'studentt'] = 'normal',
+        distribution: Literal[
+            'normal', 'lognormal', 'gamma', 'poisson', 'studentt', 'tweedie', 'negbin'
+        ] = 'normal',
         n_estimators: int = 100,
         max_depth: int = 4,
         learning_rate: float = 0.1,
@@ -691,6 +706,9 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         use_natural_gradient: bool = True,
         early_stopping_rounds: int | None = None,
         verbose: int = 0,
+        eval_metric: Literal['nll', 'crps', 'pinball', 'interval_score'] = 'nll',
+        quantiles: list[float] | None = None,
+        interval_alpha: float = 0.1,
     ) -> None:
         self.distribution = distribution
         self.n_estimators = n_estimators
@@ -702,13 +720,17 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         self.use_natural_gradient = use_natural_gradient
         self.early_stopping_rounds = early_stopping_rounds
         self.verbose = verbose
+        self.eval_metric = eval_metric
+        self.quantiles = quantiles
+        self.interval_alpha = interval_alpha
 
     def fit(
         self,
         X: NDArray,
         y: NDArray,
         sample_weight: NDArray | None = None,
-        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+        exposure: NDArray | None = None,
+        eval_set: list[tuple] | None = None,
         callbacks: list | None = None,
     ) -> OpenBoostDistributionalRegressor:
         """Fit the distributional regressor.
@@ -719,11 +741,19 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
             Training features.
         y : array-like of shape (n_samples,)
             Target values.
-        sample_weight : array-like, optional
-            Not supported for distributional models; raises NotImplementedError
-            if passed.
-        eval_set : list of (X, y) tuples, optional
-            Validation sets for early stopping (NLL metric).
+        sample_weight : array-like of shape (n_samples,), optional
+            Non-negative per-sample weights. The training objective becomes
+            the weighted sum of per-sample NLL.
+        exposure : float or array-like of shape (n_samples,), optional
+            Strictly positive per-sample exposure for families with a
+            log-link mean (Poisson, NegativeBinomial, Gamma, Tweedie): the
+            mean is modeled as ``exposure * exp(raw_score)``. Raises
+            ValueError for families without a log-link mean.
+        eval_set : list of tuples, optional
+            Validation sets as (X, y) tuples, or (X, y, exposure) 3-tuples
+            for exposure-aware validation. Each set is evaluated every round
+            with ``eval_metric`` and the history is stored in
+            ``evals_result_``.
         callbacks : list of Callback, optional
             Callbacks forwarded to the underlying booster's fit().
 
@@ -733,18 +763,14 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
             Fitted estimator.
         """
         _check_sklearn()
-        if sample_weight is not None:
-            raise NotImplementedError(
-                "sample_weight is not yet supported for distributional models"
-            )
         X, y = check_X_y(X, y, dtype=np.float32, y_numeric=True)
 
         self.n_features_in_ = X.shape[1]
 
         # Import here to avoid circular imports
-        from ._distributional import DistributionalGBDT, NGBoost
+        from ._distributional import DistributionalGBDT, NaturalBoost
 
-        ModelClass = NGBoost if self.use_natural_gradient else DistributionalGBDT
+        ModelClass = NaturalBoost if self.use_natural_gradient else DistributionalGBDT
 
         self.booster_ = ModelClass(
             distribution=self.distribution,
@@ -766,26 +792,46 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
 
         self.booster_.fit(
             X, y,
+            sample_weight=sample_weight,
+            exposure=exposure,
             callbacks=all_callbacks if all_callbacks else None,
             eval_set=eval_set,
+            eval_metric=self.eval_metric,
+            quantiles=self.quantiles,
+            interval_alpha=self.interval_alpha,
         )
 
-        # Copy early stopping attributes
-        if hasattr(self.booster_, 'best_iteration_'):
-            self.best_iteration_ = self.booster_.best_iteration_
-        if hasattr(self.booster_, 'best_score_'):
-            self.best_score_ = self.booster_.best_score_
-
         return self
-    
-    def predict(self, X: NDArray) -> NDArray:
+
+    @property
+    def evals_result_(self) -> dict[str, dict[str, list[float]]]:
+        """Per-round eval-set metric history recorded during fit()."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.evals_result_
+
+    @property
+    def best_iteration_(self) -> int:
+        """Best round index (set when early stopping is active)."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.best_iteration_
+
+    @property
+    def best_score_(self) -> float:
+        """Best monitored metric value (set when early stopping is active)."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.best_score_
+
+    def predict(self, X: NDArray, exposure: NDArray | None = None) -> NDArray:
         """Predict mean (expected value).
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Features to predict on.
-            
+        exposure : float or array-like of shape (n_samples,), optional
+            Strictly positive per-sample exposure for log-link-mean
+            families; None means exposure 1.
+
         Returns
         -------
         y_pred : ndarray of shape (n_samples,)
@@ -794,23 +840,26 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
-        return self.booster_.predict(X)
-    
+
+        return self.booster_.predict(X, exposure=exposure)
+
     def predict_interval(
         self,
         X: NDArray,
         alpha: float = 0.1,
+        exposure: NDArray | None = None,
     ) -> tuple[NDArray, NDArray]:
         """Predict (1-alpha) prediction interval.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Features to predict on.
         alpha : float, default=0.1
             Significance level. 0.1 gives a 90% prediction interval.
-            
+        exposure : float or array-like of shape (n_samples,), optional
+            Per-sample exposure (see ``predict``).
+
         Returns
         -------
         lower : ndarray of shape (n_samples,)
@@ -821,17 +870,23 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
-        return self.booster_.predict_interval(X, alpha=alpha)
-    
-    def predict_distribution(self, X: NDArray) -> dict[str, NDArray]:
+
+        return self.booster_.predict_interval(X, alpha=alpha, exposure=exposure)
+
+    def predict_distribution(
+        self,
+        X: NDArray,
+        exposure: NDArray | None = None,
+    ) -> dict[str, NDArray]:
         """Predict all distribution parameters.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Features to predict on.
-            
+        exposure : float or array-like of shape (n_samples,), optional
+            Per-sample exposure (see ``predict``).
+
         Returns
         -------
         params : dict
@@ -841,19 +896,26 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
-        return self.booster_.predict_params(X)
-    
-    def predict_quantile(self, X: NDArray, q: float) -> NDArray:
+
+        return self.booster_.predict_params(X, exposure=exposure)
+
+    def predict_quantile(
+        self,
+        X: NDArray,
+        q: float,
+        exposure: NDArray | None = None,
+    ) -> NDArray:
         """Predict q-th quantile.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Features to predict on.
         q : float
             Quantile level (0 < q < 1).
-            
+        exposure : float or array-like of shape (n_samples,), optional
+            Per-sample exposure (see ``predict``).
+
         Returns
         -------
         quantiles : ndarray of shape (n_samples,)
@@ -862,17 +924,18 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
-        return self.booster_.predict_quantile(X, q)
-    
+
+        return self.booster_.predict_quantile(X, q, exposure=exposure)
+
     def sample(
         self,
         X: NDArray,
         n_samples: int = 1,
         seed: int | None = None,
+        exposure: NDArray | None = None,
     ) -> NDArray:
         """Sample from predicted distribution.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_obs, n_features)
@@ -881,7 +944,9 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
             Number of samples per observation.
         seed : int, optional
             Random seed for reproducibility.
-            
+        exposure : float or array-like of shape (n_obs,), optional
+            Per-sample exposure (see ``predict``).
+
         Returns
         -------
         samples : ndarray of shape (n_obs, n_samples)
@@ -890,19 +955,26 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
-        return self.booster_.sample(X, n_samples, seed)
-    
-    def nll_score(self, X: NDArray, y: NDArray) -> float:
+
+        return self.booster_.sample(X, n_samples, seed, exposure=exposure)
+
+    def nll_score(
+        self,
+        X: NDArray,
+        y: NDArray,
+        exposure: NDArray | None = None,
+    ) -> float:
         """Compute negative log-likelihood (lower is better).
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Features.
         y : array-like of shape (n_samples,)
             True target values.
-            
+        exposure : float or array-like of shape (n_samples,), optional
+            Per-sample exposure (see ``predict``).
+
         Returns
         -------
         nll : float
@@ -911,9 +983,9 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
-        return self.booster_.nll(X, y)
-    
+
+        return self.booster_.nll(X, y, exposure=exposure)
+
     # score() inherited from RegressorMixin uses R² on mean predictions
 
 

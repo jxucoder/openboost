@@ -43,7 +43,7 @@ lower, upper = model.predict_interval(X_test, alpha=0.1)  # 90% prediction inter
 
 ### Performance
 OpenBoost GPU-accelerates GBDT variants that were previously slow:
-- **NaturalBoost**: 1.6-11x faster than NGBoost (dataset-dependent; committed benchmark run)
+- **NaturalBoost**: 1.6-11x faster than NGBoost on GPU (dataset-dependent; committed benchmark run — CPU is ~parity, see `ngboost_comparison_20260720.json`)
 - **OpenBoostGAM**: 56x faster than InterpretML EBM on the committed run, with lower accuracy (R² 0.66 vs 0.74; EBM interactions/bagging disabled) — see the GAM guide for the honest comparison
 
 For standard GBDT, XGBoost/LightGBM are faster. OpenBoost's value is in the variants.

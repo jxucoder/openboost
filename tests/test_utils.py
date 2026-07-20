@@ -8,38 +8,47 @@ import numpy as np
 import pytest
 
 from openboost import (
-    OpenBoostRegressor,
-    OpenBoostClassifier,
-    OpenBoostDistributionalRegressor,
-    suggest_params,
-    cross_val_predict,
-    cross_val_predict_proba,
-    cross_val_predict_interval,
-    evaluate_coverage,
-    get_param_grid,
-    PARAM_GRID_REGRESSION,
     PARAM_GRID_CLASSIFICATION,
     PARAM_GRID_DISTRIBUTIONAL,
-    # Phase 22: Evaluation metrics
-    roc_auc_score,
+    PARAM_GRID_REGRESSION,
+    # PIT calibration diagnostics
+    DistributionOutput,
+    NaturalBoost,
+    Normal,
+    OpenBoostClassifier,
+    OpenBoostDistributionalRegressor,
+    OpenBoostRegressor,
+    Poisson,
     accuracy_score,
-    log_loss_score,
-    mse_score,
-    r2_score,
-    mae_score,
-    rmse_score,
-    f1_score,
-    precision_score,
-    recall_score,
+    brier_score,
+    calibration_curve,
+    cross_val_predict,
+    cross_val_predict_interval,
+    cross_val_predict_proba,
+    crps_empirical,
     # Phase 22 Sprint 2: Probabilistic metrics
     crps_gaussian,
-    crps_empirical,
-    brier_score,
-    pinball_loss,
-    interval_score,
+    evaluate_coverage,
     expected_calibration_error,
-    calibration_curve,
+    f1_score,
+    get_param_grid,
+    interval_score,
+    log_loss_score,
+    mae_score,
+    mse_score,
     negative_log_likelihood,
+    pinball_loss,
+    pit_histogram,
+    pit_values,
+    precision_score,
+    r2_score,
+    recalibrate_pit,
+    recall_score,
+    reliability_diagram,
+    rmse_score,
+    # Phase 22: Evaluation metrics
+    roc_auc_score,
+    suggest_params,
 )
 
 
@@ -1335,7 +1344,210 @@ class TestProbabilisticMetricsWithOpenBoost:
         
         ece = expected_calibration_error(y, y_proba)
         frac_pos, mean_pred, counts = calibration_curve(y, y_proba, n_bins=5)
-        
+
         assert 0 <= ece <= 1
         assert len(frac_pos) > 0
         assert np.sum(counts) == len(y)
+
+
+class TestPITValues:
+    """Tests for pit_values (probability integral transform)."""
+
+    def test_normal_correct_specification_uniform(self):
+        """PIT of the true Normal distribution on Normal data is uniform."""
+        rng = np.random.default_rng(42)
+        n = 4000
+        mu = rng.normal(0.0, 2.0, n)
+        sigma = np.full(n, 1.5)
+        y = rng.normal(mu, sigma)
+
+        output = DistributionOutput(
+            params={'loc': mu, 'scale': sigma}, distribution=Normal()
+        )
+        pit = pit_values(output, y)
+
+        assert pit.shape == (n,)
+        assert np.all((pit >= 0) & (pit <= 1))
+        _, _, ks, p = pit_histogram(pit)
+        assert p > 0.01  # cannot reject uniformity
+
+    def test_fitted_normal_model_approximately_uniform(self):
+        """PIT of a well-fit Normal model on Normal data passes the KS test."""
+        rng = np.random.default_rng(42)
+        n_train, n_test = 4000, 800
+        X_train = rng.uniform(-1, 1, (n_train, 3)).astype(np.float32)
+        y_train = (2.0 * X_train[:, 0] + rng.normal(0, 1.0, n_train)).astype(np.float32)
+        X_test = rng.uniform(-1, 1, (n_test, 3)).astype(np.float32)
+        y_test = (2.0 * X_test[:, 0] + rng.normal(0, 1.0, n_test)).astype(np.float32)
+
+        model = NaturalBoost(
+            distribution='normal', n_trees=200, max_depth=2,
+            learning_rate=0.05, reg_lambda=5.0, n_bins=128,
+        )
+        model.fit(X_train, y_train)
+
+        pit = pit_values(model.predict_distribution(X_test), y_test)
+        _, _, ks, p = pit_histogram(pit)
+        assert p > 0.01
+
+    def test_misspecified_model_fails_uniformity(self):
+        """PIT of a Normal model fit on LogNormal-skewed data rejects uniformity."""
+        rng = np.random.default_rng(42)
+        n_train, n_test = 1500, 1000
+        X_train = rng.uniform(-1, 1, (n_train, 3)).astype(np.float32)
+        y_train = rng.lognormal(0.0, 1.0, n_train).astype(np.float32)
+        X_test = rng.uniform(-1, 1, (n_test, 3)).astype(np.float32)
+        y_test = rng.lognormal(0.0, 1.0, n_test).astype(np.float32)
+
+        model = NaturalBoost(distribution='normal', n_trees=100, max_depth=3, n_bins=128)
+        model.fit(X_train, y_train)
+
+        pit = pit_values(model.predict_distribution(X_test), y_test)
+        _, _, ks, p = pit_histogram(pit)
+        assert p < 0.01  # skewed data under a symmetric model -> non-uniform PIT
+
+    def test_poisson_randomized_pit_uniform(self):
+        """Randomized PIT for Poisson counts is uniform under correct specification."""
+        rng = np.random.default_rng(42)
+        n = 3000
+        lam = rng.uniform(2.0, 20.0, n)
+        y = rng.poisson(lam).astype(np.float64)
+
+        output = DistributionOutput(params={'rate': lam}, distribution=Poisson())
+        pit = pit_values(output, y, seed=7)
+
+        assert np.all((pit >= 0) & (pit <= 1))
+        _, _, ks, p = pit_histogram(pit)
+        assert p > 0.01
+
+    def test_poisson_randomized_pit_seed_reproducible(self):
+        """Same seed gives identical randomized PIT; different seed differs."""
+        rng = np.random.default_rng(0)
+        n = 500
+        lam = rng.uniform(2.0, 10.0, n)
+        y = rng.poisson(lam).astype(np.float64)
+        output = DistributionOutput(params={'rate': lam}, distribution=Poisson())
+
+        pit_a = pit_values(output, y, seed=7)
+        pit_b = pit_values(output, y, seed=7)
+        pit_c = pit_values(output, y, seed=8)
+
+        np.testing.assert_array_equal(pit_a, pit_b)
+        assert not np.array_equal(pit_a, pit_c)
+
+    def test_length_mismatch_raises(self):
+        """y with wrong length raises a clear ValueError."""
+        output = DistributionOutput(
+            params={'loc': np.zeros(10), 'scale': np.ones(10)},
+            distribution=Normal(),
+        )
+        with pytest.raises(ValueError, match="samples"):
+            pit_values(output, np.zeros(5))
+
+
+class TestPITHistogram:
+    """Tests for pit_histogram."""
+
+    def test_shapes_and_counts(self):
+        """Edges/counts have documented shapes and counts sum to n."""
+        rng = np.random.default_rng(0)
+        pit = rng.uniform(size=1000)
+
+        edges, counts, ks, p = pit_histogram(pit, n_bins=20)
+
+        assert edges.shape == (21,)
+        assert counts.shape == (20,)
+        assert counts.sum() == 1000
+        assert edges[0] == 0.0 and edges[-1] == 1.0
+        assert 0 <= ks <= 1
+        assert p > 0.01  # uniform sample passes
+
+    def test_detects_nonuniform(self):
+        """Concentrated PIT values fail the KS uniformity test."""
+        rng = np.random.default_rng(0)
+        pit = rng.uniform(size=1000) ** 2  # skewed toward 0
+
+        _, _, ks, p = pit_histogram(pit)
+        assert p < 0.01
+        assert ks > 0.1
+
+
+class TestReliabilityDiagram:
+    """Tests for reliability_diagram."""
+
+    def test_calibrated_near_diagonal(self):
+        """Uniform PIT (calibrated model) gives a near-diagonal diagram."""
+        rng = np.random.default_rng(42)
+        pit = rng.uniform(size=5000)
+
+        nominal, observed = reliability_diagram(pit, n_bins=10)
+
+        assert nominal.shape == (10,)
+        assert observed.shape == (10,)
+        assert np.all(np.diff(nominal) > 0)
+        assert np.max(np.abs(observed - nominal)) < 0.05
+
+    def test_overconfident_model_deviates(self):
+        """Overconfident predictions (U-shaped PIT) deviate from the diagonal."""
+        rng = np.random.default_rng(42)
+        n = 4000
+        mu = rng.normal(0, 1, n)
+        y = rng.normal(mu, 1.5)  # true spread wider than claimed
+        output = DistributionOutput(
+            params={'loc': mu, 'scale': np.ones(n)}, distribution=Normal()
+        )
+        pit = pit_values(output, y)
+
+        nominal, observed = reliability_diagram(pit, n_bins=10)
+        assert np.max(np.abs(observed - nominal)) > 0.05
+
+
+class TestRecalibratePIT:
+    """Tests for recalibrate_pit and PITRecalibrator."""
+
+    def _miscalibrated_pit(self, n=4000, seed=42):
+        """PIT of an overconfident Normal model (claims scale 1, truth 1.5)."""
+        rng = np.random.default_rng(seed)
+        mu = rng.normal(0, 1, n)
+        y = rng.normal(mu, 1.5)
+        output = DistributionOutput(
+            params={'loc': mu, 'scale': np.ones(n)}, distribution=Normal()
+        )
+        return pit_values(output, y)
+
+    def test_recalibrator_improves_ks(self):
+        """Isotonic recalibration reduces the KS statistic on held-out PIT."""
+        pit = self._miscalibrated_pit()
+        pit_cal, pit_eval = pit[:2000], pit[2000:]
+
+        recalibrator = recalibrate_pit(pit_cal)
+        pit_transformed = recalibrator.transform(pit_eval)
+
+        _, _, ks_before, _ = pit_histogram(pit_eval)
+        _, _, ks_after, _ = pit_histogram(pit_transformed)
+        assert ks_after < ks_before
+        assert np.all((pit_transformed >= 0) & (pit_transformed <= 1))
+
+    def test_transform_monotone_and_bounded(self):
+        """The learned map is monotone non-decreasing and stays in [0, 1]."""
+        recalibrator = recalibrate_pit(self._miscalibrated_pit(n=1000))
+
+        grid = np.linspace(-0.1, 1.1, 200)  # includes out-of-range inputs
+        out = recalibrator.transform(grid)
+
+        assert np.all((out >= 0) & (out <= 1))
+        assert np.all(np.diff(out) >= 0)
+
+    def test_too_few_values_raises(self):
+        """Fewer than 2 calibration values raises ValueError."""
+        with pytest.raises(ValueError, match="at least 2"):
+            recalibrate_pit(np.array([0.5]))
+
+    def test_sklearn_missing_raises_clear_error(self, monkeypatch):
+        """A clear ImportError is raised when scikit-learn is unavailable."""
+        import sys
+        # None in sys.modules makes `import sklearn.isotonic` raise ImportError
+        monkeypatch.setitem(sys.modules, 'sklearn.isotonic', None)
+
+        with pytest.raises(ImportError, match="scikit-learn is required"):
+            recalibrate_pit(np.linspace(0.05, 0.95, 50))

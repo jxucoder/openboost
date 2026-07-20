@@ -39,16 +39,16 @@
       — `tests/test_distributional.py:93,695`
 - [x] 刷新 REVIEW_FINDINGS.md:标注已修复项及修复 commit,避免后续按过时文档排查
 
-## Phase 1 — 场景一:分布式预测(保险/需求预测/风控)做到真正能用(3–6 周)
+## Phase 1 — 场景一:分布式预测 ✅ 全部完成(2026-07-20)
 
 目标用户能走完的标准工作流:Tweedie 定价、分位数备货、厚尾风险。审计确认的堵点:
 
-- [ ] **sample_weight + exposure/offset 全链路**(保险硬需求,当前完全无法表达精算工作流,
+- [x] **sample_weight + exposure/offset 全链路**(保险硬需求,当前完全无法表达精算工作流,
       且 sklearn wrapper 静默吞掉 kwargs 不报错)— `_models/_distributional.py:126`,`_models/_sklearn.py:697,737`
-- [ ] **eval_set 升级**:支持 CRPS/coverage/interval_score/NLL 可选指标、多 eval set、
+- [x] **eval_set 升级**:支持 CRPS/coverage/interval_score/NLL 可选指标、多 eval set、
       每轮指标 history;sklearn wrapper 显式转发 eval_set/callbacks(当前早停在 sklearn API 下不可用)
       — `_models/_distributional.py:222`
-- [ ] **PIT 校准诊断**:连续预测分布最核心的校准工具目前缺失(现有 calibration 工具是分类用的);
+- [x] **PIT 校准诊断**:连续预测分布最核心的校准工具目前缺失(现有 calibration 工具是分类用的);
       加 PIT 值/直方图/可靠性图 + 可选事后再校准 — `src/openboost/_utils.py:664`
 - [x] **Tweedie 预测正确性**:quantile 用正态近似会给零通胀理赔数据负下界(恰好打脸目标场景);
       NLL 缺归一化常数不是 proper score,不能和 NGBoost 对比;sample() 是 O(n²) 双层 Python 循环
@@ -57,7 +57,7 @@
       — `src/openboost/_distributions.py:775,1376`
 - [x] **CustomDistribution 的 Fisher**:当前恒等矩阵 → NaturalBoost 对自定义分布退化为普通梯度;
       用 JAX 算经验 Fisher 或文档明示此限制 — `src/openboost/_distributions.py:1681`
-- [ ] **跑通并提交 NGBoost 对比基准**:速度 + NLL/CRPS,bench 脚本已有但无提交结果,
+- [x] **跑通并提交 NGBoost 对比基准**:速度 + NLL/CRPS,bench 脚本已有但无提交结果,
       "faster than NGBoost" 目前无凭据 — `benchmarks/compare_gpu.py:276`
 - [x] **GPU 叙事对齐事实**:分箱数据确实上 GPU 建树,但梯度/Fisher 全在 CPU numpy;
       要么把梯度计算搬上设备,要么把文档口径改准确(不许可测量的夸大)

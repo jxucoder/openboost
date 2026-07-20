@@ -37,7 +37,7 @@ With OpenBoost: it's all Python. Custom losses, custom distributions, selectable
 ```
 What's included:
 
-✅ NaturalBoost (NGBoost → GPU, 1.6-11x faster)
+✅ NaturalBoost (NGBoost → GPU, 1.6-11x faster on GPU)
 ✅ OpenBoostGAM (InterpretML EBM → GPU, 56x faster on our run; accuracy tradeoff — see repo benchmarks)
 ✅ DART, LinearLeaf, multi-GPU
 ✅ Standard GBDT (use XGBoost if you need speed)
@@ -100,7 +100,7 @@ XGBoost and LightGBM are incredible libraries, but they're 200K+ lines of C++. W
 OpenBoost GPU-accelerates GBDT variants that were previously CPU-only and slow:
 
 **What's Included**
-• NaturalBoost - probabilistic predictions (NGBoost → GPU, 1.6-11x faster)
+• NaturalBoost - probabilistic predictions (NGBoost → GPU, 1.6-11x faster on GPU)
 • OpenBoostGAM - interpretable models (InterpretML EBM → GPU, 56x faster on our benchmark, with an accuracy tradeoff — details in the repo)
 • Standard GBDT, DART, LinearLeaf (for custom algorithms; use XGBoost for production speed)
 • Full sklearn compatibility
@@ -139,7 +139,7 @@ XGBoost and LightGBM are engineering marvels, but they're essentially black boxe
 OpenBoost takes a different approach: ~20K lines of Python that GPU-accelerates GBDT variants that were previously slow and CPU-only.
 
 **What's included:**
-- NaturalBoost: NGBoost → GPU (1.6-11x faster, dataset-dependent)
+- NaturalBoost: NGBoost → GPU (1.6-11x faster on GPU, dataset-dependent)
 - OpenBoostGAM: InterpretML EBM → GPU (56x faster on our benchmark run, with an accuracy tradeoff; comparison details in the repo)
 - DART, linear-leaf models, multi-GPU via Ray
 - Standard GBDT (use XGBoost for production speed; OpenBoost for readability/customization)
@@ -183,7 +183,7 @@ XGBoost and LightGBM are incredible, but they're inaccessible to most practition
 OpenBoost is ~20K lines of Python using Numba for GPU acceleration. It brings GPU to GBDT variants that were previously CPU-only and slow.
 
 Key insight: NGBoost and InterpretML EBM are great algorithms trapped in slow Python implementations. OpenBoost GPU-accelerates them:
-- NaturalBoost: 1.6-11x faster than NGBoost (dataset-dependent)
+- NaturalBoost: 1.6-11x faster than NGBoost on GPU (dataset-dependent; CPU is ~parity)
 - OpenBoostGAM: 56x faster than InterpretML EBM on our benchmark run, with an accuracy tradeoff (benchmark details and caveats in the repo)
 
 For standard GBDT, use XGBoost/LightGBM. For variants and custom algorithms, OpenBoost fills the gap.

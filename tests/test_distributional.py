@@ -10,7 +10,7 @@ Tests cover:
 
 import numpy as np
 import pytest
-from numpy.testing import assert_allclose, assert_array_less
+from numpy.testing import assert_allclose
 
 # Skip all tests if scipy not available (needed for distributions)
 scipy = pytest.importorskip("scipy")
@@ -300,7 +300,7 @@ class TestNGBoost:
     
     def test_ngboost_vs_distributional(self):
         """NGBoost and DistributionalGBDT should both work."""
-        from openboost import NGBoost, DistributionalGBDT
+        from openboost import DistributionalGBDT, NGBoost
         
         np.random.seed(42)
         n = 100
@@ -323,10 +323,8 @@ class TestNGBoost:
     def test_ngboost_convenience_constructors(self):
         """Test NGBoost convenience constructors."""
         from openboost import (
-            NGBoostNormal,
             NGBoostLogNormal,
-            NGBoostGamma,
-            NGBoostPoisson,
+            NGBoostNormal,
         )
         
         # Should create models with correct distributions
@@ -366,7 +364,7 @@ class TestLinearLeafGBDT:
     
     def test_extrapolation(self):
         """Test that linear leaf extrapolates better than constant leaf."""
-        from openboost import LinearLeafGBDT, GradientBoosting
+        from openboost import GradientBoosting, LinearLeafGBDT
         
         np.random.seed(42)
         
@@ -390,7 +388,7 @@ class TestLinearLeafGBDT:
         constant_pred = constant.predict(X_test)
         
         linear_mse = np.mean((linear_pred - y_test) ** 2)
-        constant_mse = np.mean((constant_pred - y_test) ** 2)
+        _constant_mse = np.mean((constant_pred - y_test) ** 2)  # for debugging
         
         # Linear leaf should be better at extrapolation (or at least competitive)
         # Note: not always strictly better due to regularization, but should be reasonable
@@ -441,8 +439,8 @@ class TestSklearnWrappers:
     
     def test_distributional_regressor_interface(self):
         """Test OpenBoostDistributionalRegressor sklearn interface."""
+
         from openboost import OpenBoostDistributionalRegressor
-        from sklearn.utils.estimator_checks import check_estimator
         
         np.random.seed(42)
         n = 100
@@ -739,7 +737,7 @@ class TestKaggleDistributions:
     
     def test_list_distributions_includes_new(self):
         """Test that new distributions are in registry."""
-        from openboost import list_distributions, get_distribution
+        from openboost import get_distribution, list_distributions
         
         available = list_distributions()
         assert 'tweedie' in available
@@ -751,6 +749,303 @@ class TestKaggleDistributions:
         negbin = get_distribution('negbin')
         assert tweedie.n_params == 2
         assert negbin.n_params == 2
+
+
+class TestSampleWeightAndExposure:
+    """Tests for sample_weight and exposure support in fit/predict."""
+
+    def test_weighted_fit_matches_duplicated_sample(self):
+        """w=2 on one sample ~= physically duplicating that sample."""
+        from openboost import NaturalBoost, Normal, array
+
+        class FixedInitNormal(Normal):
+            """Normal with data-independent init.
+
+            The default init uses the (unweighted) mean/std of y, which
+            differs between the weighted and the duplicated dataset; fixing
+            the init isolates the weighted-gradient math being tested.
+            """
+
+            def init_params(self, y):
+                return {'loc': 0.0, 'scale': 0.0}
+
+        rng = np.random.default_rng(0)
+        n = 100
+        X = rng.normal(size=(n, 3)).astype(np.float32)
+        y = (X[:, 0] + 0.3 * rng.normal(size=n)).astype(np.float32)
+
+        w = np.ones(n, dtype=np.float32)
+        w[0] = 2.0
+        X_dup = np.vstack([X[:1], X])
+        y_dup = np.concatenate([y[:1], y])
+
+        # Bin once so both fits share identical bin edges (row counts differ,
+        # so independent quantile binning would produce different edges)
+        binned = array(X)
+        binned_dup = binned.transform(X_dup)
+
+        kwargs = dict(n_trees=10, max_depth=3, learning_rate=0.1)
+        m_w = NaturalBoost(distribution=FixedInitNormal(), **kwargs)
+        m_w.fit(binned, y, sample_weight=w)
+
+        m_d = NaturalBoost(distribution=FixedInitNormal(), **kwargs)
+        m_d.fit(binned_dup, y_dup)
+
+        p_w = m_w.predict(binned)
+        p_d = m_d.predict(binned)
+        assert_allclose(p_w, p_d, atol=1e-4)
+
+    def test_weighted_nll_reporting_matches_manual(self):
+        """Reported train loss is the weighted mean NLL."""
+        from openboost import DistributionalGBDT, HistoryCallback, get_distribution
+
+        rng = np.random.default_rng(1)
+        n = 80
+        X = rng.normal(size=(n, 2)).astype(np.float32)
+        y = (X[:, 0] + rng.normal(0, 0.5, n)).astype(np.float32)
+        w = rng.uniform(0.5, 3.0, n).astype(np.float32)
+
+        hist = HistoryCallback()
+        model = DistributionalGBDT(distribution='normal', n_trees=3, max_depth=2)
+        model.fit(X, y, sample_weight=w, callbacks=[hist])
+
+        # The last round's train loss is the weighted mean NLL of the final
+        # model's parameters
+        dist = get_distribution('normal')
+        y32 = np.asarray(y, dtype=np.float32).ravel()
+        params_final = model.predict_params(X)
+        expected = float(np.average(dist.nll(y32, params_final), weights=w))
+        assert hist.history['train_loss'][-1] == pytest.approx(expected, rel=1e-5)
+
+        # Sanity: differs from the unweighted mean NLL
+        unweighted = float(np.mean(dist.nll(y32, params_final)))
+        assert hist.history['train_loss'][-1] != pytest.approx(unweighted, rel=1e-5)
+
+    def test_poisson_exposure_recovery(self):
+        """Fitting with exposure recovers the per-unit rate r(x)."""
+        from openboost import NaturalBoost
+
+        rng = np.random.default_rng(42)
+        n = 1500
+        X = rng.uniform(-1, 1, size=(n, 2)).astype(np.float32)
+        r = np.exp(0.3 + 0.8 * X[:, 0])  # true rate per unit exposure
+        e = (10 ** rng.uniform(-1, 1.5, n)).astype(np.float32)  # ~0.1x-30x
+        y = rng.poisson(e * r).astype(np.float32)
+
+        kwargs = dict(
+            distribution='poisson', n_trees=150, max_depth=3, learning_rate=0.1
+        )
+        m_exp = NaturalBoost(**kwargs)
+        m_exp.fit(X, y, exposure=e)
+        # predict with default exposure=None means exposure 1 -> rate r(x)
+        rate_pred = m_exp.predict(X)
+        rel_err_with = float(np.mean(np.abs(rate_pred - r) / r))
+
+        m_raw = NaturalBoost(**kwargs)
+        m_raw.fit(X, y)
+        rel_err_without = float(np.mean(np.abs(m_raw.predict(X) - r) / r))
+
+        assert rel_err_with < 0.2, f"exposure fit off by {rel_err_with:.3f}"
+        # Without the exposure offset the model absorbs E[e] into the rate
+        assert rel_err_with < 0.25 * rel_err_without
+
+        # Predict-time exposure scales the Poisson mean multiplicatively
+        base = m_exp.predict(X[:5])
+        scaled = m_exp.predict(X[:5], exposure=np.full(5, 2.0, dtype=np.float32))
+        assert_allclose(scaled, 2.0 * base, rtol=1e-4)
+
+    def test_gamma_exposure_mean_scaling(self):
+        """Gamma exposure offsets the rate so the mean scales by e."""
+        from openboost import NaturalBoost
+
+        rng = np.random.default_rng(5)
+        n = 120
+        X = rng.normal(size=(n, 2)).astype(np.float32)
+        y = rng.gamma(2.0, 1.0, n).astype(np.float32) + 0.1
+
+        model = NaturalBoost(distribution='gamma', n_trees=5, max_depth=2)
+        model.fit(X, y)
+
+        base = model.predict(X)
+        scaled = model.predict(X, exposure=np.full(n, 2.0, dtype=np.float32))
+        assert_allclose(scaled, 2.0 * base, rtol=1e-3)
+
+    def test_exposure_unsupported_family_raises(self):
+        """Families without a log-link mean reject exposure."""
+        from openboost import NaturalBoost
+
+        rng = np.random.default_rng(2)
+        n = 60
+        X = rng.normal(size=(n, 2)).astype(np.float32)
+        y = rng.normal(size=n).astype(np.float32)
+
+        model = NaturalBoost(distribution='normal', n_trees=2, max_depth=2)
+        with pytest.raises(ValueError, match="exposure is not supported for Normal"):
+            model.fit(X, y, exposure=np.ones(n))
+
+        # Predict-time exposure on an unsupported family also raises
+        model.fit(X, y)
+        with pytest.raises(ValueError, match="exposure is not supported for Normal"):
+            model.predict(X, exposure=np.ones(n))
+
+        y_pos = np.abs(y) + 0.1
+        model_ln = NaturalBoost(distribution='lognormal', n_trees=2, max_depth=2)
+        with pytest.raises(ValueError, match="exposure is not supported for LogNormal"):
+            model_ln.fit(X, y_pos, exposure=np.ones(n))
+
+    def test_exposure_validation_errors(self):
+        """Exposure must be strictly positive with matching shape."""
+        from openboost import NaturalBoost
+
+        rng = np.random.default_rng(3)
+        n = 50
+        X = rng.uniform(-1, 1, size=(n, 2)).astype(np.float32)
+        y = rng.poisson(2.0, n).astype(np.float32)
+
+        model = NaturalBoost(distribution='poisson', n_trees=2, max_depth=2)
+
+        bad = np.ones(n)
+        bad[3] = 0.0
+        with pytest.raises(ValueError, match="strictly positive"):
+            model.fit(X, y, exposure=bad)
+
+        with pytest.raises(ValueError, match="1D array of length"):
+            model.fit(X, y, exposure=np.ones(n - 1))
+
+
+class TestEvalSetUpgrade:
+    """Tests for multi-eval-set history, eval metrics, and early stopping."""
+
+    @staticmethod
+    def _make_data(seed=0, n=200, noise=0.3):
+        rng = np.random.default_rng(seed)
+        X = rng.normal(size=(n, 3)).astype(np.float32)
+        y = (X[:, 0] + rng.normal(0, noise, n)).astype(np.float32)
+        return X, y
+
+    def test_multi_eval_set_history(self):
+        """All eval sets are evaluated each round and recorded."""
+        from openboost import NaturalBoost
+
+        X_tr, y_tr = self._make_data(seed=0)
+        X_v1, y_v1 = self._make_data(seed=1, n=60)
+        X_v2, y_v2 = self._make_data(seed=2, n=70)
+
+        model = NaturalBoost(distribution='normal', n_trees=8, max_depth=2)
+        model.fit(X_tr, y_tr, eval_set=[(X_v1, y_v1), (X_v2, y_v2)])
+
+        assert set(model.evals_result_) == {'eval_0', 'eval_1'}
+        assert len(model.evals_result_['eval_0']['nll']) == 8
+        assert len(model.evals_result_['eval_1']['nll']) == 8
+        assert all(np.isfinite(v) for v in model.evals_result_['eval_1']['nll'])
+
+        # Last recorded value matches a full re-prediction NLL
+        assert model.evals_result_['eval_1']['nll'][-1] == pytest.approx(
+            model.nll(X_v2, y_v2), rel=1e-5
+        )
+
+    def test_crps_metric_decreases(self):
+        """eval_metric='crps' produces decreasing values on train-like data."""
+        from openboost import NaturalBoost
+
+        X, y = self._make_data(seed=4, n=300)
+
+        model = NaturalBoost(
+            distribution='normal', n_trees=40, max_depth=3, learning_rate=0.1
+        )
+        model.fit(X, y, eval_set=[(X, y)], eval_metric='crps')
+
+        vals = model.evals_result_['eval_0']['crps']
+        assert len(vals) == 40
+        assert vals[-1] < vals[0]
+        assert np.mean(vals[-5:]) < np.mean(vals[:5])
+
+    def test_pinball_and_interval_metrics(self):
+        """pinball (with quantiles) and interval_score (with level) run."""
+        from openboost import NaturalBoost
+
+        X, y = self._make_data(seed=5, n=120)
+
+        model = NaturalBoost(distribution='normal', n_trees=5, max_depth=2)
+        model.fit(
+            X, y, eval_set=[(X, y)], eval_metric='pinball', quantiles=[0.1, 0.9]
+        )
+        vals = model.evals_result_['eval_0']['pinball']
+        assert len(vals) == 5
+        assert all(np.isfinite(v) and v > 0 for v in vals)
+
+        model2 = NaturalBoost(distribution='normal', n_trees=5, max_depth=2)
+        model2.fit(
+            X, y, eval_set=[(X, y)], eval_metric='interval_score',
+            interval_alpha=0.2,
+        )
+        vals2 = model2.evals_result_['eval_0']['interval_score']
+        assert len(vals2) == 5
+        assert all(np.isfinite(v) and v > 0 for v in vals2)
+
+    def test_invalid_eval_metric_raises(self):
+        from openboost import NaturalBoost
+
+        X, y = self._make_data(seed=6, n=50)
+        model = NaturalBoost(distribution='normal', n_trees=2)
+        with pytest.raises(ValueError, match="Unknown eval_metric"):
+            model.fit(X, y, eval_set=[(X, y)], eval_metric='rmse')
+
+    def test_early_stopping_monitors_last_eval_set(self):
+        """Early stopping triggers on the LAST eval set and truncates trees."""
+        from openboost import NaturalBoost
+
+        # Noisy data so the held-out NLL plateaus while train NLL keeps falling
+        X_tr, y_tr = self._make_data(seed=7, n=200, noise=1.0)
+        X_val, y_val = self._make_data(seed=8, n=80, noise=1.0)
+
+        n_trees = 300
+        model = NaturalBoost(
+            distribution='normal', n_trees=n_trees, max_depth=4, learning_rate=0.3
+        )
+        model.fit(
+            X_tr, y_tr,
+            eval_set=[(X_tr, y_tr), (X_val, y_val)],
+            early_stopping_rounds=10,
+        )
+
+        history = model.evals_result_['eval_1']['nll']
+        n_recorded = len(history)
+        assert n_recorded < n_trees  # stopped early
+        assert model.best_iteration_ < n_recorded
+        # Trees truncated to the best iteration
+        assert len(model.trees_['loc']) == model.best_iteration_ + 1
+        assert len(model.trees_['scale']) == model.best_iteration_ + 1
+        # Monitored metric is the LAST eval set's (not the train-like first)
+        assert model.best_score_ == pytest.approx(min(history), rel=1e-6)
+
+    def test_poisson_exposure_eval_3tuple(self):
+        """3-tuple (X, y, exposure) eval entries give exposure-aware validation."""
+        from openboost import NaturalBoost
+
+        rng = np.random.default_rng(9)
+        n = 800
+        X = rng.uniform(-1, 1, size=(n, 2)).astype(np.float32)
+        r = np.exp(0.3 + 0.8 * X[:, 0])
+        e = (10 ** rng.uniform(-1, 1, n)).astype(np.float32)
+        y = rng.poisson(e * r).astype(np.float32)
+
+        X_tr, y_tr, e_tr = X[:600], y[:600], e[:600]
+        X_v, y_v, e_v = X[600:], y[600:], e[600:]
+
+        model = NaturalBoost(
+            distribution='poisson', n_trees=60, max_depth=3, learning_rate=0.1
+        )
+        model.fit(X_tr, y_tr, exposure=e_tr, eval_set=[(X_v, y_v, e_v)])
+
+        vals = model.evals_result_['eval_0']['nll']
+        assert len(vals) == 60
+        assert all(np.isfinite(v) for v in vals)
+
+        # History matches exposure-aware scoring of the final model
+        assert vals[-1] == pytest.approx(model.nll(X_v, y_v, exposure=e_v), rel=1e-5)
+        # ...and beats exposure-ignorant scoring of the same model
+        assert vals[-1] < model.nll(X_v, y_v)
 
 
 if __name__ == '__main__':

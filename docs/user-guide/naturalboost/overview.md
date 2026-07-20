@@ -83,11 +83,31 @@ q90 = np.percentile(samples, 90, axis=0)
 
 ## Performance vs NGBoost
 
-| Samples | NGBoost | NaturalBoost (GPU) | Speedup |
-|---------|---------|-------------------|---------|
-| 5,000 | 5.2s | 1.9s | **2.8x** |
-| 10,000 | 10.6s | 1.9s | **5.6x** |
-| 20,000 | 22.2s | 2.0s | **11.3x** |
+Measured head-to-head against NGBoost 0.5.11 (both with a Normal distribution,
+natural gradient, and an identical budget: 500 boosting rounds, learning rate 0.03,
+depth-3 trees, seed 42, same train/test splits). This is a CPU-vs-CPU comparison —
+NGBoost is CPU-only, and OpenBoost's GPU tree path is deliberately **not** measured
+here. NLL and CRPS use the same closed-form Gaussian formulas for both models.
+Full configs, metrics, and library versions are committed in
+`benchmarks/results/ngboost_comparison_20260720.json`. Reproduce with:
+
+```bash
+OPENBOOST_BACKEND=cpu uv run --with ngboost python benchmarks/bench_ngboost_comparison.py
+```
+
+| Dataset | Fit time OB / NGB | Test NLL OB / NGB | CRPS OB / NGB | RMSE OB / NGB |
+|---------|-------------------|-------------------|---------------|---------------|
+| Synthetic heteroscedastic, 10K | **16.4s** / 18.8s (1.15x) | **2.124** / 2.134 | **1.169** / 1.174 | **2.145** / 2.149 |
+| Synthetic heteroscedastic, 50K | **74.1s** / 95.3s (1.29x) | 2.122 / **2.116** | 1.184 / **1.177** | 2.165 / **2.152** |
+| California Housing, 20.6K | 30.6s / **25.0s** (0.82x) | **0.572** / 0.575 | **0.255** / 0.256 | **0.518** / 0.521 |
+
+The honest read: on CPU the two libraries are comparable. NaturalBoost's
+histogram-based trees are modestly faster on the larger synthetic dataset (1.29x at
+50K samples), while NGBoost was faster on California Housing (0.82x). Prediction
+quality is essentially tied — NGBoost slightly wins NLL/CRPS/RMSE on the 50K
+synthetic dataset; NaturalBoost slightly wins on the other two. NaturalBoost's main
+differentiators are the GPU tree path and the wider distribution/custom-distribution
+support, not raw CPU speed.
 
 ## Best Practices
 
