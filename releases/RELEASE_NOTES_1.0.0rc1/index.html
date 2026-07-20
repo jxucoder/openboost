@@ -1941,7 +1941,7 @@
 </ul>
 <h3 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h3>
 <p>OpenBoost GPU-accelerates GBDT variants that were previously slow:
-- <strong>NaturalBoost</strong>: 1.6-11x faster than NGBoost (dataset-dependent; committed benchmark run)
+- <strong>NaturalBoost</strong>: 1.6-11x faster than NGBoost on GPU (dataset-dependent; committed benchmark run — CPU is ~parity, see <code>ngboost_comparison_20260720.json</code>)
 - <strong>OpenBoostGAM</strong>: 56x faster than InterpretML EBM on the committed run, with lower accuracy (R² 0.66 vs 0.74; EBM interactions/bagging disabled) — see the GAM guide for the honest comparison</p>
 <p>For standard GBDT, XGBoost/LightGBM are faster. OpenBoost's value is in the variants.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>

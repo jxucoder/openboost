@@ -2077,47 +2077,67 @@
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">q90</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="performance-vs-ngboost">Performance vs NGBoost<a class="headerlink" href="#performance-vs-ngboost" title="Permanent link">&para;</a></h2>
+<p>Measured head-to-head against NGBoost 0.5.11 (both with a Normal distribution,
+natural gradient, and an identical budget: 500 boosting rounds, learning rate 0.03,
+depth-3 trees, seed 42, same train/test splits). This is a CPU-vs-CPU comparison —
+NGBoost is CPU-only, and OpenBoost's GPU tree path is deliberately <strong>not</strong> measured
+here. NLL and CRPS use the same closed-form Gaussian formulas for both models.
+Full configs, metrics, and library versions are committed in
+<code>benchmarks/results/ngboost_comparison_20260720.json</code>. Reproduce with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">OPENBOOST_BACKEND</span><span class="o">=</span>cpu<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>--with<span class="w"> </span>ngboost<span class="w"> </span>python<span class="w"> </span>benchmarks/bench_ngboost_comparison.py
+</code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Samples</th>
-<th>NGBoost</th>
-<th>NaturalBoost (GPU)</th>
-<th>Speedup</th>
+<th>Dataset</th>
+<th>Fit time OB / NGB</th>
+<th>Test NLL OB / NGB</th>
+<th>CRPS OB / NGB</th>
+<th>RMSE OB / NGB</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>5,000</td>
-<td>5.2s</td>
-<td>1.9s</td>
-<td><strong>2.8x</strong></td>
+<td>Synthetic heteroscedastic, 10K</td>
+<td><strong>16.4s</strong> / 18.8s (1.15x)</td>
+<td><strong>2.124</strong> / 2.134</td>
+<td><strong>1.169</strong> / 1.174</td>
+<td><strong>2.145</strong> / 2.149</td>
 </tr>
 <tr>
-<td>10,000</td>
-<td>10.6s</td>
-<td>1.9s</td>
-<td><strong>5.6x</strong></td>
+<td>Synthetic heteroscedastic, 50K</td>
+<td><strong>74.1s</strong> / 95.3s (1.29x)</td>
+<td>2.122 / <strong>2.116</strong></td>
+<td>1.184 / <strong>1.177</strong></td>
+<td>2.165 / <strong>2.152</strong></td>
 </tr>
 <tr>
-<td>20,000</td>
-<td>22.2s</td>
-<td>2.0s</td>
-<td><strong>11.3x</strong></td>
+<td>California Housing, 20.6K</td>
+<td>30.6s / <strong>25.0s</strong> (0.82x)</td>
+<td><strong>0.572</strong> / 0.575</td>
+<td><strong>0.255</strong> / 0.256</td>
+<td><strong>0.518</strong> / 0.521</td>
 </tr>
 </tbody>
 </table>
+<p>The honest read: on CPU the two libraries are comparable. NaturalBoost's
+histogram-based trees are modestly faster on the larger synthetic dataset (1.29x at
+50K samples), while NGBoost was faster on California Housing (0.82x). Prediction
+quality is essentially tied — NGBoost slightly wins NLL/CRPS/RMSE on the 50K
+synthetic dataset; NaturalBoost slightly wins on the other two. NaturalBoost's main
+differentiators are the GPU tree path and the wider distribution/custom-distribution
+support, not raw CPU speed.</p>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Use shallower trees</strong> (<code>max_depth=3-4</code>) - better for uncertainty estimation</li>
 <li><strong>Train longer</strong> - NaturalBoost learns 2+ parameters per sample</li>
 <li><strong>Evaluate with NLL</strong> - not just RMSE</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoostNormal</span><span class="p">(</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>      <span class="c1"># More trees</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>      <span class="c1"># Shallower</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>  <span class="c1"># Lower LR</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoostNormal</span><span class="p">(</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>      <span class="c1"># More trees</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>      <span class="c1"># Shallower</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>  <span class="c1"># Lower LR</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
 </code></pre></div>
 
 

@@ -1958,7 +1958,7 @@
 <h3 id="tweet-3">Tweet 3<a class="headerlink" href="#tweet-3" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>What&#39;s included:
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>✅ NaturalBoost (NGBoost → GPU, 1.6-11x faster)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>✅ NaturalBoost (NGBoost → GPU, 1.6-11x faster on GPU)
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>✅ OpenBoostGAM (InterpretML EBM → GPU, 56x faster on our run; accuracy tradeoff — see repo benchmarks)
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>✅ DART, LinearLeaf, multi-GPU
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>✅ Standard GBDT (use XGBoost if you need speed)
@@ -2011,7 +2011,7 @@
 <a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>OpenBoost GPU-accelerates GBDT variants that were previously CPU-only and slow:
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>**What&#39;s Included**
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>• NaturalBoost - probabilistic predictions (NGBoost → GPU, 1.6-11x faster)
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>• NaturalBoost - probabilistic predictions (NGBoost → GPU, 1.6-11x faster on GPU)
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>• OpenBoostGAM - interpretable models (InterpretML EBM → GPU, 56x faster on our benchmark, with an accuracy tradeoff — details in the repo)
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>• Standard GBDT, DART, LinearLeaf (for custom algorithms; use XGBoost for production speed)
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>• Full sklearn compatibility
@@ -2044,7 +2044,7 @@
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>OpenBoost takes a different approach: ~20K lines of Python that GPU-accelerates GBDT variants that were previously slow and CPU-only.
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>**What&#39;s included:**
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>- NaturalBoost: NGBoost → GPU (1.6-11x faster, dataset-dependent)
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>- NaturalBoost: NGBoost → GPU (1.6-11x faster on GPU, dataset-dependent)
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>- OpenBoostGAM: InterpretML EBM → GPU (56x faster on our benchmark run, with an accuracy tradeoff; comparison details in the repo)
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>- DART, linear-leaf models, multi-GPU via Ray
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>- Standard GBDT (use XGBoost for production speed; OpenBoost for readability/customization)
@@ -2080,7 +2080,7 @@ pip install openboost[cuda]  # GPU support
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>OpenBoost is ~20K lines of Python using Numba for GPU acceleration. It brings GPU to GBDT variants that were previously CPU-only and slow.
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
 <a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Key insight: NGBoost and InterpretML EBM are great algorithms trapped in slow Python implementations. OpenBoost GPU-accelerates them:
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>- NaturalBoost: 1.6-11x faster than NGBoost (dataset-dependent)
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>- NaturalBoost: 1.6-11x faster than NGBoost on GPU (dataset-dependent; CPU is ~parity)
 <a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>- OpenBoostGAM: 56x faster than InterpretML EBM on our benchmark run, with an accuracy tradeoff (benchmark details and caveats in the repo)
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>For standard GBDT, use XGBoost/LightGBM. For variants and custom algorithms, OpenBoost fills the gap.

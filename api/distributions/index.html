@@ -2289,6 +2289,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#openboost.Distribution.exposure_offset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;exposure_offset
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#openboost.Distribution.link" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3509,6 +3520,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;param_names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openboost.Distribution.exposure_offset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;exposure_offset
       
     </span>
   </a>
@@ -5666,6 +5688,35 @@ dist = get_distribution('gamma')</p>
     <div class="doc doc-contents ">
 
         <p>Names of parameters, e.g., ['loc', 'scale'].</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="openboost.Distribution.exposure_offset" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">exposure_offset</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#openboost.Distribution.exposure_offset" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">exposure_offset</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Log-exposure offset target: <code>(param_name, sign)</code> or None.</p>
+<p>When not None, adding <code>sign * log(e)</code> to the RAW score of
+<code>param_name</code> multiplies the distribution mean by <code>e</code> (log-link
+mean). Used by DistributionalGBDT/NaturalBoost to apply actuarial
+exposure offsets. None (the default) means the family has no
+log-link mean and exposure is unsupported.</p>
 
     </div>
 

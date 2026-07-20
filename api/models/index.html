@@ -2535,6 +2535,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#openboost.OpenBoostDistributionalRegressor.evals_result_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;evals_result_
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openboost.OpenBoostDistributionalRegressor.best_iteration_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;best_iteration_
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openboost.OpenBoostDistributionalRegressor.best_score_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;best_score_
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#openboost.OpenBoostDistributionalRegressor.fit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4265,6 +4298,39 @@
     <span class="md-ellipsis">
       
         Sample from predicted distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openboost.OpenBoostDistributionalRegressor.evals_result_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;evals_result_
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openboost.OpenBoostDistributionalRegressor.best_iteration_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;best_iteration_
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#openboost.OpenBoostDistributionalRegressor.best_score_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;best_score_
       
     </span>
   </a>
@@ -8650,7 +8716,10 @@ eval_set : list of (X, y) tuples, optional
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">use_natural_gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">early_stopping_rounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">eval_metric</span><span class="o">=</span><span class="s2">&quot;nll&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">quantiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">interval_alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
@@ -8664,8 +8733,8 @@ eval_set : list of (X, y) tuples, optional
 Uses natural gradient boosting (NGBoost) by default for faster convergence.</p>
 <h4 id="openboost.OpenBoostDistributionalRegressor--parameters">Parameters<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor--parameters" title="Permanent link">&para;</a></h4>
 <p>distribution : str, default='normal'
-    Distribution family. Options: 'normal', 'lognormal', 'gamma', 
-    'poisson', 'studentt'.
+    Distribution family. Options: 'normal', 'lognormal', 'gamma',
+    'poisson', 'studentt', 'tweedie', 'negbin'.
 n_estimators : int, default=100
     Number of boosting rounds.
 max_depth : int, default=4
@@ -8682,15 +8751,28 @@ use_natural_gradient : bool, default=True
     If True, use NGBoost (natural gradient). Recommended for faster
     convergence and better uncertainty calibration.
 early_stopping_rounds : int, optional
-    Stop training if validation NLL doesn't improve for this many rounds.
-    Requires eval_set to be passed to fit().
+    Stop training if the validation metric (<code>eval_metric</code>) doesn't
+    improve for this many rounds. Requires eval_set to be passed to
+    fit(). With multiple eval sets, the last one is monitored.
 verbose : int, default=0
-    Verbosity level.</p>
+    Verbosity level.
+eval_metric : {'nll', 'crps', 'pinball', 'interval_score'}, default='nll'
+    Metric computed on each eval set every round and recorded in
+    <code>evals_result_</code>.
+quantiles : list of float, optional
+    Quantile levels used by eval_metric='pinball'.
+    Defaults to [0.05, 0.5, 0.95].
+interval_alpha : float, default=0.1
+    Miscoverage rate used by eval_metric='interval_score'
+    (0.1 scores the central 90% interval).</p>
 <h4 id="openboost.OpenBoostDistributionalRegressor--attributes">Attributes<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor--attributes" title="Permanent link">&para;</a></h4>
 <p>n_features_in_ : int
     Number of features seen during fit.
-booster_ : NGBoost or DistributionalGBDT
+booster_ : NaturalBoost or DistributionalGBDT
     The underlying fitted model.
+evals_result_ : dict
+    Per-round eval-set metric history recorded during fit(), e.g.
+    <code>{'eval_0': {'nll': [...]}}</code>.
 best_iteration_ : int
     Iteration with best validation score (if early stopping used).
 best_score_ : float
@@ -8733,6 +8815,78 @@ mu, sigma = params['loc'], params['scale']</p>
 
 
 
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="openboost.OpenBoostDistributionalRegressor.evals_result_" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">evals_result_</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#openboost.OpenBoostDistributionalRegressor.evals_result_" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">evals_result_</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Per-round eval-set metric history recorded during fit().</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="openboost.OpenBoostDistributionalRegressor.best_iteration_" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">best_iteration_</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#openboost.OpenBoostDistributionalRegressor.best_iteration_" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">best_iteration_</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Best round index (set when early stopping is active).</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="openboost.OpenBoostDistributionalRegressor.best_score_" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">best_score_</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#openboost.OpenBoostDistributionalRegressor.best_score_" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">best_score_</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Best monitored metric value (set when early stopping is active).</p>
+
+    </div>
+
+</div>
+
 
 
 
@@ -8745,8 +8899,13 @@ mu, sigma = params['loc'], params['scale']</p>
 
 <a href="#openboost.OpenBoostDistributionalRegressor.fit" class="headerlink" title="Permanent link">&para;</a></h3>
 <div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">fit</span><span class="p">(</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">eval_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">X</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">y</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">eval_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8757,11 +8916,19 @@ mu, sigma = params['loc'], params['scale']</p>
     Training features.
 y : array-like of shape (n_samples,)
     Target values.
-sample_weight : array-like, optional
-    Not supported for distributional models; raises NotImplementedError
-    if passed.
-eval_set : list of (X, y) tuples, optional
-    Validation sets for early stopping (NLL metric).
+sample_weight : array-like of shape (n_samples,), optional
+    Non-negative per-sample weights. The training objective becomes
+    the weighted sum of per-sample NLL.
+exposure : float or array-like of shape (n_samples,), optional
+    Strictly positive per-sample exposure for families with a
+    log-link mean (Poisson, NegativeBinomial, Gamma, Tweedie): the
+    mean is modeled as <code>exposure * exp(raw_score)</code>. Raises
+    ValueError for families without a log-link mean.
+eval_set : list of tuples, optional
+    Validation sets as (X, y) tuples, or (X, y, exposure) 3-tuples
+    for exposure-aware validation. Each set is evaluated every round
+    with <code>eval_metric</code> and the history is stored in
+    <code>evals_result_</code>.
 callbacks : list of Callback, optional
     Callbacks forwarded to the underlying booster's fit().</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.fit--returns">Returns<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.fit--returns" title="Permanent link">&para;</a></h5>
@@ -8781,7 +8948,7 @@ callbacks : list of Callback, optional
 
 
 <a href="#openboost.OpenBoostDistributionalRegressor.predict" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8789,7 +8956,10 @@ callbacks : list of Callback, optional
         <p>Predict mean (expected value).</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.predict--parameters">Parameters<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.predict--parameters" title="Permanent link">&para;</a></h5>
 <p>X : array-like of shape (n_samples, n_features)
-    Features to predict on.</p>
+    Features to predict on.
+exposure : float or array-like of shape (n_samples,), optional
+    Strictly positive per-sample exposure for log-link-mean
+    families; None means exposure 1.</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.predict--returns">Returns<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.predict--returns" title="Permanent link">&para;</a></h5>
 <p>y_pred : ndarray of shape (n_samples,)
     Predicted mean values.</p>
@@ -8807,7 +8977,7 @@ callbacks : list of Callback, optional
 
 
 <a href="#openboost.OpenBoostDistributionalRegressor.predict_interval" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">predict_interval</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">predict_interval</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8817,7 +8987,9 @@ callbacks : list of Callback, optional
 <p>X : array-like of shape (n_samples, n_features)
     Features to predict on.
 alpha : float, default=0.1
-    Significance level. 0.1 gives a 90% prediction interval.</p>
+    Significance level. 0.1 gives a 90% prediction interval.
+exposure : float or array-like of shape (n_samples,), optional
+    Per-sample exposure (see <code>predict</code>).</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.predict_interval--returns">Returns<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.predict_interval--returns" title="Permanent link">&para;</a></h5>
 <p>lower : ndarray of shape (n_samples,)
     Lower bounds of the interval.
@@ -8837,7 +9009,7 @@ upper : ndarray of shape (n_samples,)
 
 
 <a href="#openboost.OpenBoostDistributionalRegressor.predict_distribution" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">predict_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">predict_distribution</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8845,7 +9017,9 @@ upper : ndarray of shape (n_samples,)
         <p>Predict all distribution parameters.</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.predict_distribution--parameters">Parameters<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.predict_distribution--parameters" title="Permanent link">&para;</a></h5>
 <p>X : array-like of shape (n_samples, n_features)
-    Features to predict on.</p>
+    Features to predict on.
+exposure : float or array-like of shape (n_samples,), optional
+    Per-sample exposure (see <code>predict</code>).</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.predict_distribution--returns">Returns<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.predict_distribution--returns" title="Permanent link">&para;</a></h5>
 <p>params : dict
     Dictionary mapping parameter names to predicted values.
@@ -8864,7 +9038,7 @@ upper : ndarray of shape (n_samples,)
 
 
 <a href="#openboost.OpenBoostDistributionalRegressor.predict_quantile" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">predict_quantile</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">predict_quantile</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8874,7 +9048,9 @@ upper : ndarray of shape (n_samples,)
 <p>X : array-like of shape (n_samples, n_features)
     Features to predict on.
 q : float
-    Quantile level (0 &lt; q &lt; 1).</p>
+    Quantile level (0 &lt; q &lt; 1).
+exposure : float or array-like of shape (n_samples,), optional
+    Per-sample exposure (see <code>predict</code>).</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.predict_quantile--returns">Returns<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.predict_quantile--returns" title="Permanent link">&para;</a></h5>
 <p>quantiles : ndarray of shape (n_samples,)
     Predicted quantiles.</p>
@@ -8892,7 +9068,7 @@ q : float
 
 
 <a href="#openboost.OpenBoostDistributionalRegressor.sample" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">sample</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">sample</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8904,7 +9080,9 @@ q : float
 n_samples : int, default=1
     Number of samples per observation.
 seed : int, optional
-    Random seed for reproducibility.</p>
+    Random seed for reproducibility.
+exposure : float or array-like of shape (n_obs,), optional
+    Per-sample exposure (see <code>predict</code>).</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.sample--returns">Returns<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.sample--returns" title="Permanent link">&para;</a></h5>
 <p>samples : ndarray of shape (n_obs, n_samples)
     Samples from the predicted distribution.</p>
@@ -8922,7 +9100,7 @@ seed : int, optional
 
 
 <a href="#openboost.OpenBoostDistributionalRegressor.nll_score" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">nll_score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">nll_score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8932,7 +9110,9 @@ seed : int, optional
 <p>X : array-like of shape (n_samples, n_features)
     Features.
 y : array-like of shape (n_samples,)
-    True target values.</p>
+    True target values.
+exposure : float or array-like of shape (n_samples,), optional
+    Per-sample exposure (see <code>predict</code>).</p>
 <h5 id="openboost.OpenBoostDistributionalRegressor.nll_score--returns">Returns<a class="headerlink" href="#openboost.OpenBoostDistributionalRegressor.nll_score--returns" title="Permanent link">&para;</a></h5>
 <p>nll : float
     Mean negative log-likelihood.</p>
