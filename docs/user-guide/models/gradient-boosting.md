@@ -2,11 +2,23 @@
 
 The core gradient boosting model for regression and binary classification.
 
+The examples on this page share this setup:
+
+```python
+import numpy as np
+import openboost as ob
+
+rng = np.random.default_rng(0)
+X = rng.standard_normal((1000, 8)).astype(np.float32)
+y = (X[:, 0] - 2.0 * X[:, 1] + 0.1 * rng.standard_normal(1000)).astype(np.float32)
+X_train, y_train = X[:700], y[:700]
+X_val, y_val = X[700:850], y[700:850]
+X_test, y_test = X[850:], y[850:]
+```
+
 ## Basic Usage
 
 ```python
-import openboost as ob
-
 model = ob.GradientBoosting(
     n_trees=100,
     max_depth=6,
@@ -68,7 +80,7 @@ model.fit(
     eval_set=[(X_val, y_val)],
     callbacks=[
         ob.EarlyStopping(patience=10),
-        ob.Logger(every=10),
+        ob.Logger(period=10),
     ],
 )
 ```
@@ -80,8 +92,13 @@ model.fit(X_train, y_train)
 
 # Compute importance (pass the fitted model, not model.trees_)
 importance = ob.compute_feature_importances(model)
+print(importance)
+```
 
-# Plot
+<!-- docs-ci: skip -->
+```python
+# Plot (requires matplotlib)
+feature_names = [f"feature_{i}" for i in range(X_train.shape[1])]
 ob.plot_feature_importances(model, feature_names)
 ```
 

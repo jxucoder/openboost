@@ -20,10 +20,123 @@ if TYPE_CHECKING:
 # Type alias for loss functions
 LossFunction = Callable[[np.ndarray, np.ndarray], tuple[np.ndarray, np.ndarray]]
 
+# =============================================================================
+# Loss Registry (Extensibility)
+# =============================================================================
+
+# name -> gradient fn, or a factory marked with ``__openboost_factory__ = True``
+# for parameterized losses (called as ``factory(**kwargs)`` to build the fn).
+# Seeded with the built-in losses at the bottom of this module; extended at
+# runtime via ``register_loss``.
+_LOSS_REGISTRY: dict[str, LossFunction] = {}
+
+# name -> true scalar loss fn registered via ``register_loss(loss_value_fn=...)``
+_LOSS_VALUE_REGISTRY: dict[str, Callable[[np.ndarray, np.ndarray], float]] = {}
+
+# Snapshot of the built-in seed, used to detect overridden built-ins.
+_BUILTIN_LOSS_SEED: dict[str, LossFunction] = {}
+
+
+def register_loss(
+    name: str,
+    fn: LossFunction,
+    *,
+    loss_value_fn: Callable[[np.ndarray, np.ndarray], float] | None = None,
+    override: bool = False,
+) -> LossFunction:
+    """Register a custom loss function under a string name.
+
+    After registration the name works everywhere a built-in loss name does,
+    e.g. ``GradientBoosting(loss='myloss')``.
+
+    Args:
+        name: Name to register the loss under.
+        fn: Loss callable with signature ``fn(pred, y) -> (grad, hess)``.
+        loss_value_fn: Optional callable ``(pred, y) -> float`` returning the
+            TRUE scalar loss value. When provided, training history and early
+            stopping report this value instead of the second-order Taylor
+            proxy ``mean(grad^2 / (2*hess))``.
+        override: Pass True to replace an existing registration (including
+            shadowing a built-in). Without it a duplicate name raises
+            ValueError.
+
+    Returns:
+        ``fn`` unchanged.
+
+    Precedence for the reported train/val loss value of a loss:
+        1. ``loss_value_fn`` registered here for the name.
+        2. A ``loss_value`` attribute on the loss callable
+           (``fn.loss_value = lambda pred, y: ...``).
+        3. The built-in formula (built-in names only).
+        4. The second-order Taylor proxy ``mean(grad^2 / (2*hess))``.
+
+    Example:
+        >>> def my_mse(pred, y):
+        ...     return (pred - y).astype(np.float32), np.ones_like(pred, dtype=np.float32)
+        >>> register_loss('my_mse', my_mse,
+        ...               loss_value_fn=lambda pred, y: float(np.mean((pred - y) ** 2)))
+        >>> model = GradientBoosting(loss='my_mse')
+    """
+    if not isinstance(name, str) or not name:
+        raise TypeError(f"Loss name must be a non-empty string, got {name!r}")
+    if not callable(fn):
+        raise TypeError(f"Loss function must be callable, got {type(fn).__name__}")
+    if loss_value_fn is not None and not callable(loss_value_fn):
+        raise TypeError(
+            f"loss_value_fn must be callable, got {type(loss_value_fn).__name__}"
+        )
+    if not override and name in _LOSS_REGISTRY:
+        raise ValueError(
+            f"Loss '{name}' is already registered. Pass override=True to replace it."
+        )
+    _LOSS_REGISTRY[name] = fn
+    if loss_value_fn is not None:
+        _LOSS_VALUE_REGISTRY[name] = loss_value_fn
+    else:
+        # Don't leave a stale value fn behind when overriding.
+        _LOSS_VALUE_REGISTRY.pop(name, None)
+    return fn
+
+
+def is_builtin_loss(loss) -> bool:
+    """True if *loss* names a built-in loss that has not been overridden."""
+    if not isinstance(loss, str):
+        return False
+    entry = _LOSS_REGISTRY.get(loss)
+    return entry is not None and _BUILTIN_LOSS_SEED.get(loss) is entry
+
+
+def device_loss(fn: LossFunction) -> LossFunction:
+    """Mark a custom loss as device-native (opt-in GPU contract).
+
+    On the CUDA backend an unmarked custom loss triggers a host round-trip
+    every boosting round: predictions are copied to the host, the callable is
+    invoked with numpy arrays, and the returned (grad, hess) are copied back
+    to the device.
+
+    A callable decorated with ``@openboost.device_loss`` instead receives the
+    DEVICE prediction array and the device-resident targets as-is (targets are
+    moved to the device once per fit and cached), and MUST return device
+    (grad, hess) arrays of dtype float32 with the same length as ``pred``.
+
+    On the CPU backend the marker is a no-op: the callable simply receives
+    numpy arrays like any other custom loss.
+
+    Example:
+        >>> @openboost.device_loss
+        ... def my_gpu_mse(pred_dev, y_dev):
+        ...     # pred_dev / y_dev are device arrays; return device arrays.
+        ...     ...
+    """
+    if not callable(fn):
+        raise TypeError(f"device_loss expects a callable, got {type(fn).__name__}")
+    fn.__openboost_device__ = True
+    return fn
+
 
 def get_loss_function(loss: str | LossFunction, **kwargs) -> LossFunction:
     """Get a loss function by name or return custom callable.
-    
+
     Args:
         loss: Loss function name or callable. Available:
             - 'mse': Mean Squared Error (regression)
@@ -34,13 +147,14 @@ def get_loss_function(loss: str | LossFunction, **kwargs) -> LossFunction:
             - 'poisson': Poisson deviance (count data)
             - 'gamma': Gamma deviance (positive continuous)
             - 'tweedie': Tweedie deviance (compound Poisson-Gamma)
+            - any name registered via ``register_loss``
         **kwargs: Additional parameters for specific losses:
             - quantile_alpha: Quantile level for 'quantile' loss (default 0.5)
             - tweedie_rho: Variance power for 'tweedie' loss (default 1.5)
-              
+
     Returns:
         Loss function callable.
-        
+
     Examples:
         >>> loss_fn = get_loss_function('mse')
         >>> loss_fn = get_loss_function('quantile', quantile_alpha=0.9)
@@ -48,49 +162,44 @@ def get_loss_function(loss: str | LossFunction, **kwargs) -> LossFunction:
     """
     if callable(loss):
         return loss
-    
-    # Handle parameterized losses
-    if loss == 'quantile':
-        alpha = kwargs.get('quantile_alpha', 0.5)
-        return lambda pred, y: quantile_gradient(pred, y, alpha=alpha)
-    
-    if loss == 'tweedie':
-        rho = kwargs.get('tweedie_rho', 1.5)
-        return lambda pred, y: tweedie_gradient(pred, y, rho=rho)
 
-    if loss == 'huber':
-        delta = kwargs.get('huber_delta', kwargs.get('delta', 1.0))
-        return lambda pred, y: huber_gradient(pred, y, delta=delta)
-
-    loss_map = {
-        'mse': mse_gradient,
-        'squared_error': mse_gradient,
-        'logloss': logloss_gradient,
-        'binary_crossentropy': logloss_gradient,
-        'huber': huber_gradient,
-        'mae': mae_gradient,
-        'l1': mae_gradient,
-        'absolute_error': mae_gradient,
-        'poisson': poisson_gradient,
-        'gamma': gamma_gradient,
-    }
-    
-    if loss not in loss_map:
-        available = ', '.join(sorted(set(loss_map.keys()) | {'quantile', 'tweedie'}))
+    entry = _LOSS_REGISTRY.get(loss)
+    if entry is None:
+        available = ', '.join(sorted(_LOSS_REGISTRY))
         raise ValueError(f"Unknown loss '{loss}'. Available: {available}")
-    
-    return loss_map[loss]
+
+    # Parameterized built-ins are stored as factories that close over kwargs.
+    if getattr(entry, '__openboost_factory__', False):
+        return entry(**kwargs)
+    return entry
 
 
 def compute_loss_value(loss_name: str, pred: np.ndarray, y: np.ndarray, **kwargs) -> float:
     """Compute the actual scalar loss value (not the grad/hess proxy).
 
     For built-in objectives this uses the true loss formula.  For custom
-    (callable) losses we fall back to the second-order Taylor approximation
-    ``mean(grad^2 / (2 * hess))``.
+    (registered) losses, precedence is:
+
+    1. ``loss_value_fn`` passed to :func:`register_loss` for this name.
+    2. A ``loss_value`` attribute on the registered gradient callable
+       (``fn.loss_value = lambda pred, y: ...``).
+    3. The second-order Taylor approximation ``mean(grad^2 / (2 * hess))``.
     """
     pred = np.asarray(pred, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
+
+    # Custom true-loss hooks take precedence (also covers overridden built-ins).
+    value_fn = _LOSS_VALUE_REGISTRY.get(loss_name)
+    if value_fn is None:
+        entry = _LOSS_REGISTRY.get(loss_name)
+        if entry is not None:
+            value_fn = getattr(entry, 'loss_value', None)
+    if value_fn is not None:
+        return float(value_fn(pred, y))
+
+    if not is_builtin_loss(loss_name):
+        # Unknown or custom loss without a value hook: grad/hess proxy.
+        return _grad_hess_proxy(loss_name, pred, y, **kwargs)
 
     if loss_name == 'mse' or loss_name == 'squared_error':
         return float(np.mean((pred - y) ** 2))
@@ -960,8 +1069,56 @@ def _softmax_gradient_gpu(pred, y, n_classes: int):
         pred_cpu = pred.copy_to_host()
     else:
         pred_cpu = np.asarray(pred, dtype=np.float32)
-    
+
     y_cpu = y.copy_to_host() if hasattr(y, 'copy_to_host') else np.asarray(y)
-    
+
     return _softmax_gradient_cpu(pred_cpu, y_cpu, n_classes)
+
+
+# =============================================================================
+# Built-in Loss Registry Seed
+# =============================================================================
+# Parameterized built-ins are stored as factories (marked with
+# ``__openboost_factory__``) so that get_loss_function can pass kwargs
+# (quantile_alpha, tweedie_rho, huber_delta) through to them.
+
+def _quantile_factory(**kwargs):
+    alpha = kwargs.get('quantile_alpha', 0.5)
+    return lambda pred, y: quantile_gradient(pred, y, alpha=alpha)
+
+
+_quantile_factory.__openboost_factory__ = True
+
+
+def _tweedie_factory(**kwargs):
+    rho = kwargs.get('tweedie_rho', 1.5)
+    return lambda pred, y: tweedie_gradient(pred, y, rho=rho)
+
+
+_tweedie_factory.__openboost_factory__ = True
+
+
+def _huber_factory(**kwargs):
+    delta = kwargs.get('huber_delta', kwargs.get('delta', 1.0))
+    return lambda pred, y: huber_gradient(pred, y, delta=delta)
+
+
+_huber_factory.__openboost_factory__ = True
+
+
+_LOSS_REGISTRY.update({
+    'mse': mse_gradient,
+    'squared_error': mse_gradient,
+    'logloss': logloss_gradient,
+    'binary_crossentropy': logloss_gradient,
+    'huber': _huber_factory,
+    'mae': mae_gradient,
+    'l1': mae_gradient,
+    'absolute_error': mae_gradient,
+    'poisson': poisson_gradient,
+    'gamma': gamma_gradient,
+    'quantile': _quantile_factory,
+    'tweedie': _tweedie_factory,
+})
+_BUILTIN_LOSS_SEED.update(_LOSS_REGISTRY)
 

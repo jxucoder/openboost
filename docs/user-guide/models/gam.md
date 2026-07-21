@@ -12,11 +12,14 @@ prediction = f₁(x₁) + f₂(x₂) + ... + fₙ(xₙ) + intercept
 
 This means you can visualize exactly how each feature affects the prediction.
 
-**Scope:** OpenBoostGAM learns *main effects only* — one shape function per
-feature. Unlike InterpretML's EBM, it does not learn pairwise interaction
-terms. If your signal depends heavily on feature interactions, EBM (with
-interactions enabled) or a standard GBDT will fit better; OpenBoostGAM trades
-that capacity for speed and a simpler, fully additive explanation.
+**Scope:** By default OpenBoostGAM learns *main effects only* — one shape
+function per feature. Setting `interactions=k` adds `k` pairwise interaction
+terms (GA2M-style, like InterpretML's EBM), which closes part of the accuracy
+gap to EBM while keeping every term inspectable. Be aware that the interaction
+stage trains on CPU even when the main effects run on GPU. If your signal
+depends heavily on higher-order interactions, a standard GBDT will still fit
+better; OpenBoostGAM trades that capacity for speed and an explanation you can
+plot term by term.
 
 ## Basic Usage
 
@@ -62,11 +65,89 @@ matplotlib Axes it drew on; pass `ax=` to compose subplot grids.
 | `reg_lambda` | float | 1.0 | L2 regularization on leaf values |
 | `loss` | str/callable | 'mse' | Loss function (`'mse'`, `'logloss'`, or callable) |
 | `n_bins` | int | 256 | Histogram bins (max 254 usable; bin 255 reserved for missing) |
+| `interactions` | int | 0 | Pairwise interaction terms (GA2M-style) learned after main effects; 0 = off |
+| `interaction_rounds` | int/None | None | Boosting rounds for the interaction stage (None = `n_rounds`) |
+| `smoothing` | float | 0.0 | Fused-ridge smoothing of 1D shape functions; 0 = off |
+| `monotone` | dict/None | None | Per-feature monotonicity: `{feature_idx: +1}` (non-decreasing) or `-1` (non-increasing) |
 
-`n_trees` is accepted as an alias for `n_rounds`. There is no `max_depth`
-parameter: each round applies a regularized Newton update to every bin of
-every feature's shape function (a per-feature lookup table), so smoothness is
-controlled by `learning_rate`, `n_rounds`, and `reg_lambda` — not tree depth.
+All new parameters default to "off", preserving the exact pre-existing
+behavior. `n_trees` is accepted as an alias for `n_rounds`. There is no
+`max_depth` parameter: each round applies a regularized Newton update to every
+bin of every feature's shape function (a per-feature lookup table), so
+smoothness is controlled by `learning_rate`, `n_rounds`, `reg_lambda`, and
+`smoothing` — not tree depth.
+
+## Pairwise Interactions (GA2M)
+
+With `interactions=k`, after main-effects training the model ranks all feature
+pairs on the residual (FAST-style one-shot 2D Newton score, row-subsampled on
+large datasets), picks the top `k`, and boosts a 2D shape table for each:
+
+```python
+gam = ob.OpenBoostGAM(n_rounds=500, learning_rate=0.05, interactions=3)
+gam.fit(X_train, y_train)
+
+gam.interaction_pairs_            # ranked list of (i, j) tuples
+Z = gam.get_pair_shape_function(*gam.interaction_pairs_[0])  # (256, 256) table
+```
+
+`get_pair_shape_function(i, j)` returns a copy of the additive contribution on
+the `(bin_i, bin_j)` grid and raises `KeyError` for pairs that were not
+selected. Interaction terms are used automatically by `predict`.
+
+**Honest scope note:** interactions close part of the gap to EBM (which enables
+them by default) but the interaction stage always trains on CPU — expect the
+GPU speedup story to apply to the main-effects stage only.
+
+## Smoothing and Monotone Constraints
+
+```python
+gam = ob.OpenBoostGAM(
+    n_rounds=500,
+    learning_rate=0.05,
+    smoothing=1.0,             # damp jagged, sparse-bin noise in shape functions
+    monotone={0: +1, 3: -1},   # feature 0 non-decreasing, feature 3 non-increasing
+)
+gam.fit(X_train, y_train)
+```
+
+- `smoothing` solves a fused-ridge (first-difference penalty) system per round,
+  so occupied bins anchor the shape while empty bins interpolate between their
+  neighbors. It applies to ordinal (numeric) bins only — categorical features,
+  the missing-value bin, and 2D interaction tables are not smoothed.
+- `monotone` projects the accumulated shape function onto the constraint after
+  every round with count-weighted isotonic regression (PAVA). Useful when
+  domain knowledge says "risk never decreases with debt ratio".
+
+## Validation, Callbacks, and Early Stopping
+
+`fit` now accepts the same training-control arguments as `GradientBoosting`:
+
+```python
+gam = ob.OpenBoostGAM(n_rounds=2000, learning_rate=0.05)
+gam.fit(
+    X_train, y_train,
+    eval_set=[(X_val, y_val)],
+    callbacks=[ob.Logger(period=100)],
+    early_stopping_rounds=50,   # sugar for EarlyStopping(patience=50, restore_best=True)
+)
+
+gam.evals_result_     # {'eval_0': {'mse': [...]}} — per-round history per eval set
+gam.best_iteration_   # set when early stopping is used
+gam.best_score_
+```
+
+Early stopping monitors the **last** eval set; with `restore_best=True` (the
+default via `early_stopping_rounds`) the shape tables are restored to the best
+round. With `interactions > 0`, the main-effect and interaction rounds form
+one monitored sequence — stopping during the main-effect phase skips the
+interaction phase.
+
+**Backend note:** smoothing, monotone projection, the interaction stage, and
+the callbacks/eval_set machinery all run on CPU. On a CUDA backend, a plain
+`fit()` keeps the GPU main-effects path; a fit that requests smoothing,
+monotone constraints, callbacks, or eval_set falls back to CPU training with a
+warning.
 
 ## Performance vs InterpretML EBM
 
@@ -80,11 +161,13 @@ One benchmark run is committed to the repo
 
 Read this honestly: OpenBoostGAM was much faster **but less accurate** on
 this run (R² 0.663 vs 0.738). Also note the comparison controls: both models
-ran 200 rounds at `learning_rate=0.05`, and EBM was configured with
-`interactions=0`, `outer_bags=1`, `inner_bags=0` — i.e. EBM's pairwise
-interactions and bagging (both defaults that improve its accuracy but slow it
-down) were disabled. With EBM defaults, expect the accuracy gap to widen and
-the speed gap to grow.
+ran 200 rounds at `learning_rate=0.05`, and both were main-effects-only —
+OpenBoostGAM predates its `interactions` support in this run, and EBM was
+configured with `interactions=0`, `outer_bags=1`, `inner_bags=0` — i.e. EBM's
+pairwise interactions and bagging (both defaults that improve its accuracy but
+slow it down) were disabled. With EBM defaults, expect the accuracy gap to
+widen and the speed gap to grow; enabling `interactions` on OpenBoostGAM
+closes part of that gap but its interaction stage runs on CPU.
 
 Reproduce with:
 

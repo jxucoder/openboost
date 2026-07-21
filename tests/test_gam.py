@@ -300,6 +300,363 @@ class TestGAMPersistence:
 
         np.testing.assert_array_equal(pred_before, pred_after)
 
+    def test_save_load_roundtrip_interactions(self, tmp_path):
+        """Interaction tables and pairs must survive save/load."""
+        rng = np.random.RandomState(5)
+        X = rng.uniform(-2, 2, (400, 3)).astype(np.float32)
+        y = (X[:, 0] + X[:, 1] + 2.0 * X[:, 0] * X[:, 1]).astype(np.float32)
+
+        gam = ob.OpenBoostGAM(
+            n_rounds=30, learning_rate=0.1, n_bins=16,
+            interactions=1, interaction_rounds=20,
+        )
+        gam.fit(X, y)
+        assert gam.interaction_pairs_, "expected at least one selected pair"
+        pred_before = gam.predict(X)
+
+        path = str(tmp_path / "gam_interactions.joblib")
+        gam.save(path)
+
+        loaded = ob.OpenBoostGAM.load(path)
+        assert loaded.interaction_pairs_ == gam.interaction_pairs_
+        assert set(loaded.pair_shape_values_) == set(gam.pair_shape_values_)
+        np.testing.assert_array_equal(loaded.predict(X), pred_before)
+
+        # Generic auto-detecting loader must also work
+        loaded_generic = ob.load(path)
+        np.testing.assert_array_equal(loaded_generic.predict(X), pred_before)
+
+
+class _NoOpCallback(ob.Callback):
+    """Callback that observes but never modifies training."""
+
+
+class TestGAMBackwardCompat:
+    """New parameters must default to exactly the pre-change behavior."""
+
+    def test_noop_callback_identical_predictions(self, regression_100x5):
+        """The callback-enabled code path must not perturb the numerics."""
+        X, y = regression_100x5
+
+        gam_plain = ob.OpenBoostGAM(n_rounds=30, learning_rate=0.05)
+        gam_plain.fit(X, y)
+
+        gam_cb = ob.OpenBoostGAM(n_rounds=30, learning_rate=0.05)
+        gam_cb.fit(X, y, callbacks=[_NoOpCallback()])
+
+        np.testing.assert_array_equal(gam_plain.predict(X), gam_cb.predict(X))
+
+    def test_explicit_defaults_identical_predictions(self, regression_100x5):
+        """Explicitly passing the new defaults must change nothing."""
+        X, y = regression_100x5
+
+        gam_plain = ob.OpenBoostGAM(n_rounds=30, learning_rate=0.05)
+        gam_plain.fit(X, y)
+
+        gam_explicit = ob.OpenBoostGAM(
+            n_rounds=30, learning_rate=0.05,
+            interactions=0, interaction_rounds=None,
+            smoothing=0.0, monotone=None,
+        )
+        gam_explicit.fit(X, y)
+
+        np.testing.assert_array_equal(
+            gam_plain.predict(X), gam_explicit.predict(X)
+        )
+        assert gam_explicit.interaction_pairs_ == []
+        assert gam_explicit.pair_shape_values_ == {}
+
+    def test_param_validation(self):
+        """New constructor params validate at construction time."""
+        with pytest.raises(ValueError, match="interactions"):
+            ob.OpenBoostGAM(interactions=-1)
+        with pytest.raises(ValueError, match="interaction_rounds"):
+            ob.OpenBoostGAM(interaction_rounds=-5)
+        with pytest.raises(ValueError, match="smoothing"):
+            ob.OpenBoostGAM(smoothing=-0.1)
+        with pytest.raises(ValueError, match="monotone"):
+            ob.OpenBoostGAM(monotone={0: 2})
+
+
+class TestGAMInteractions:
+    """GA2M-style pairwise interaction terms."""
+
+    @staticmethod
+    def _interaction_data(n=2400, seed=7):
+        rng = np.random.RandomState(seed)
+        X = rng.uniform(-2, 2, (n, 4)).astype(np.float32)
+        y = (
+            np.sin(X[:, 0])
+            + 0.5 * X[:, 1]
+            + 3.0 * np.sin(X[:, 0] * X[:, 1])
+            + 0.05 * rng.randn(n)
+        ).astype(np.float32)
+        n_train = int(0.75 * n)
+        return X[:n_train], y[:n_train], X[n_train:], y[n_train:]
+
+    def test_interactions_improve_oos_mse(self):
+        """interactions>0 must beat interactions=0 on y with a strong pair term."""
+        X_tr, y_tr, X_te, y_te = self._interaction_data()
+
+        common = dict(n_rounds=150, learning_rate=0.1, n_bins=16)
+        gam0 = ob.OpenBoostGAM(**common, interactions=0)
+        gam0.fit(X_tr, y_tr)
+        mse0 = float(np.mean((gam0.predict(X_te) - y_te) ** 2))
+
+        gam1 = ob.OpenBoostGAM(**common, interactions=1, interaction_rounds=150)
+        gam1.fit(X_tr, y_tr)
+        mse1 = float(np.mean((gam1.predict(X_te) - y_te) ** 2))
+
+        assert mse1 < 0.75 * mse0, (
+            f"Interactions should improve OOS MSE: {mse1:.4f} vs {mse0:.4f}"
+        )
+
+    def test_fast_ranking_selects_true_pair(self):
+        """FAST-style ranking should pick (0, 1) as the top pair."""
+        X_tr, y_tr, _, _ = self._interaction_data()
+
+        gam = ob.OpenBoostGAM(
+            n_rounds=100, learning_rate=0.1, n_bins=16,
+            interactions=2, interaction_rounds=20,
+        )
+        gam.fit(X_tr, y_tr)
+
+        assert len(gam.interaction_pairs_) == 2
+        assert gam.interaction_pairs_[0] == (0, 1), (
+            f"Expected (0, 1) as top pair, got {gam.interaction_pairs_}"
+        )
+        table = gam.get_pair_shape_function(0, 1)
+        assert table.shape == (256, 256)
+        assert np.any(table != 0.0)
+
+    def test_additive_structure_with_pairs(self):
+        """Predictions must equal base + 1D lookups + 2D lookups."""
+        X_tr, y_tr, X_te, _ = self._interaction_data(n=1200)
+
+        gam = ob.OpenBoostGAM(
+            n_rounds=40, learning_rate=0.1, n_bins=16,
+            interactions=1, interaction_rounds=30,
+        )
+        gam.fit(X_tr, y_tr)
+
+        X_binned = gam.X_binned_.transform(X_te)
+        binned = np.asarray(X_binned.data)
+
+        pred_manual = np.full(binned.shape[1], gam.base_score_, dtype=np.float32)
+        for f in range(binned.shape[0]):
+            pred_manual += gam.shape_values_[f, binned[f, :]]
+        for (i, j), table in gam.pair_shape_values_.items():
+            pred_manual += table[binned[i, :], binned[j, :]]
+
+        np.testing.assert_allclose(gam.predict(X_te), pred_manual, atol=1e-5)
+
+
+class TestGAMSmoothing:
+    """Fused-ridge smoothing of 1D shape functions."""
+
+    @staticmethod
+    def _sparse_noisy_data(n_train=150, n_test=400, seed=3):
+        rng = np.random.RandomState(seed)
+        X = rng.uniform(-2, 2, (n_train + n_test, 2)).astype(np.float32)
+        y = (np.sin(X[:, 0]) + 0.3 * rng.randn(n_train + n_test)).astype(np.float32)
+        return X[:n_train], y[:n_train], X[n_train:], y[n_train:]
+
+    @staticmethod
+    def _total_variation(gam, feature_idx):
+        n_used = len(gam.X_binned_.bin_edges[feature_idx])
+        vals = gam.shape_values_[feature_idx, :n_used]
+        return float(np.abs(np.diff(vals)).sum())
+
+    def test_smoothing_reduces_total_variation(self):
+        """Smoothing must damp sparse-bin noise without large OOS MSE loss."""
+        X_tr, y_tr, X_te, y_te = self._sparse_noisy_data()
+
+        common = dict(n_rounds=200, learning_rate=0.1)
+        gam_rough = ob.OpenBoostGAM(**common, smoothing=0.0)
+        gam_rough.fit(X_tr, y_tr)
+        tv_rough = self._total_variation(gam_rough, 0)
+        mse_rough = float(np.mean((gam_rough.predict(X_te) - y_te) ** 2))
+
+        gam_smooth = ob.OpenBoostGAM(**common, smoothing=2.0)
+        gam_smooth.fit(X_tr, y_tr)
+        tv_smooth = self._total_variation(gam_smooth, 0)
+        mse_smooth = float(np.mean((gam_smooth.predict(X_te) - y_te) ** 2))
+
+        assert tv_smooth < 0.7 * tv_rough, (
+            f"Smoothing should reduce total variation: {tv_smooth:.3f} "
+            f"vs {tv_rough:.3f}"
+        )
+        assert mse_smooth < 1.2 * mse_rough, (
+            f"Smoothing must not cost much OOS accuracy: {mse_smooth:.4f} "
+            f"vs {mse_rough:.4f}"
+        )
+
+    def test_smoothing_keeps_missing_bin_raw(self):
+        """The missing-value bin (255) must not be coupled to ordinal bins."""
+        rng = np.random.RandomState(9)
+        X = rng.uniform(-2, 2, (300, 2)).astype(np.float64)
+        X[rng.rand(300) < 0.3, 0] = np.nan
+        y = np.where(np.isnan(X[:, 0]), 2.0, -1.0).astype(np.float32)
+        y += 0.01 * rng.randn(300).astype(np.float32)
+
+        gam = ob.OpenBoostGAM(n_rounds=150, learning_rate=0.1, smoothing=5.0)
+        gam.fit(X, y)
+
+        # Missing rows carry a strongly positive contribution in bin 255 that
+        # smoothing must not have dragged toward the (negative) ordinal bins.
+        assert gam.shape_values_[0, 255] > 1.0
+
+
+class TestGAMMonotone:
+    """Monotone shape constraints via PAVA projection."""
+
+    @staticmethod
+    def _monotone_data(slope, n=500, seed=11):
+        rng = np.random.RandomState(seed)
+        X = rng.uniform(-2, 2, (n, 3)).astype(np.float32)
+        y = (
+            slope * X[:, 0] + np.sin(2 * X[:, 1]) + 0.2 * rng.randn(n)
+        ).astype(np.float32)
+        return X, y
+
+    def test_monotone_increasing(self):
+        X, y = self._monotone_data(slope=1.5)
+
+        gam = ob.OpenBoostGAM(n_rounds=200, learning_rate=0.1, monotone={0: 1})
+        gam.fit(X, y)
+
+        n_used = len(gam.X_binned_.bin_edges[0])
+        diffs = np.diff(gam.shape_values_[0, :n_used])
+        assert np.all(diffs >= -1e-7), (
+            f"Shape must be non-decreasing; min diff = {diffs.min()}"
+        )
+        # The constrained model must still fit the monotone effect
+        mse = float(np.mean((gam.predict(X) - y) ** 2))
+        assert mse < 0.5 * np.var(y)
+
+    def test_monotone_decreasing(self):
+        X, y = self._monotone_data(slope=-1.5)
+
+        gam = ob.OpenBoostGAM(n_rounds=200, learning_rate=0.1, monotone={0: -1})
+        gam.fit(X, y)
+
+        n_used = len(gam.X_binned_.bin_edges[0])
+        diffs = np.diff(gam.shape_values_[0, :n_used])
+        assert np.all(diffs <= 1e-7), (
+            f"Shape must be non-increasing; max diff = {diffs.max()}"
+        )
+
+    def test_monotone_bad_index_raises(self):
+        rng = np.random.RandomState(0)
+        X = rng.randn(50, 3).astype(np.float32)
+        y = rng.randn(50).astype(np.float32)
+
+        gam = ob.OpenBoostGAM(n_rounds=5, monotone={10: 1})
+        with pytest.raises(ValueError, match="out of range"):
+            gam.fit(X, y)
+
+
+class TestGAMEvalSetCallbacks:
+    """eval_set / callbacks / early_stopping_rounds on fit()."""
+
+    @staticmethod
+    def _split_data(n=300, seed=21):
+        rng = np.random.RandomState(seed)
+        X = rng.uniform(-2, 2, (n, 3)).astype(np.float32)
+        y = (X[:, 0] + 0.5 * np.sin(2 * X[:, 1]) + 0.5 * rng.randn(n)).astype(
+            np.float32
+        )
+        n_train = 2 * n // 3
+        return X[:n_train], y[:n_train], X[n_train:], y[n_train:]
+
+    def test_evals_result_history(self):
+        """Every eval set gets a per-round metric history."""
+        X_tr, y_tr, X_va, y_va = self._split_data()
+
+        gam = ob.OpenBoostGAM(n_rounds=25, learning_rate=0.1)
+        gam.fit(X_tr, y_tr, eval_set=[(X_va, y_va), (X_tr, y_tr)])
+
+        assert set(gam.evals_result_) == {"eval_0", "eval_1"}
+        assert len(gam.evals_result_["eval_0"]["mse"]) == 25
+        assert len(gam.evals_result_["eval_1"]["mse"]) == 25
+        # Training-set loss should be decreasing overall
+        hist = gam.evals_result_["eval_1"]["mse"]
+        assert hist[-1] < hist[0]
+
+    def test_evals_result_includes_interaction_rounds(self):
+        """With interactions the history spans main + interaction rounds."""
+        rng = np.random.RandomState(2)
+        X = rng.uniform(-2, 2, (600, 3)).astype(np.float32)
+        y = (X[:, 0] * X[:, 1]).astype(np.float32)
+
+        gam = ob.OpenBoostGAM(
+            n_rounds=20, learning_rate=0.1, n_bins=16,
+            interactions=1, interaction_rounds=10,
+        )
+        gam.fit(X[:400], y[:400], eval_set=[(X[400:], y[400:])])
+
+        assert len(gam.evals_result_["eval_0"]["mse"]) == 30
+
+    def test_history_callback(self):
+        X_tr, y_tr, X_va, y_va = self._split_data()
+
+        hist = ob.HistoryCallback()
+        gam = ob.OpenBoostGAM(n_rounds=15, learning_rate=0.1)
+        gam.fit(X_tr, y_tr, callbacks=[hist], eval_set=[(X_va, y_va)])
+
+        assert len(hist.history["train_loss"]) == 15
+        assert len(hist.history["val_loss"]) == 15
+
+    def test_early_stopping_truncates(self):
+        """Early stopping must stop training well before n_rounds."""
+        X_tr, y_tr, X_va, y_va = self._split_data(n=240)
+
+        gam = ob.OpenBoostGAM(n_rounds=400, learning_rate=0.5)
+        gam.fit(
+            X_tr, y_tr,
+            eval_set=[(X_va, y_va)],
+            early_stopping_rounds=15,
+        )
+
+        n_recorded = len(gam.evals_result_["eval_0"]["mse"])
+        assert n_recorded < 400, "training should have stopped early"
+        assert hasattr(gam, "best_iteration_")
+        assert gam.best_iteration_ < n_recorded
+
+    def test_early_stopping_restores_best(self):
+        """After restore, the val loss must equal the recorded best score."""
+        X_tr, y_tr, X_va, y_va = self._split_data(n=240)
+
+        gam = ob.OpenBoostGAM(n_rounds=400, learning_rate=0.5)
+        gam.fit(
+            X_tr, y_tr,
+            eval_set=[(X_va, y_va)],
+            early_stopping_rounds=15,
+        )
+
+        history = gam.evals_result_["eval_0"]["mse"]
+        assert np.isclose(gam.best_score_, min(history), rtol=1e-6)
+
+        val_mse = float(
+            np.mean(
+                (
+                    np.asarray(gam.predict(X_va), dtype=np.float64)
+                    - np.asarray(y_va, dtype=np.float64)
+                ) ** 2
+            )
+        )
+        assert np.isclose(val_mse, gam.best_score_, rtol=1e-5), (
+            f"Restored model val MSE {val_mse:.6f} != best_score_ "
+            f"{gam.best_score_:.6f}"
+        )
+
+    def test_early_stopping_without_eval_warns(self, regression_100x5):
+        X, y = regression_100x5
+
+        gam = ob.OpenBoostGAM(n_rounds=5, learning_rate=0.1)
+        with pytest.warns(UserWarning, match="eval_set"):
+            gam.fit(X, y, early_stopping_rounds=3)
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

@@ -70,6 +70,12 @@ jobs:
         run: |
           pytest tests/ -v --tb=short
 
+      - name: Run documentation examples (CPU backend)
+        env:
+          OPENBOOST_BACKEND: "cpu"
+        run: |
+          python scripts/run_doc_examples.py
+
   # Performance regression check: main branch only
   performance-check:
     runs-on: ubuntu-latest

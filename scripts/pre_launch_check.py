@@ -74,7 +74,7 @@ def run_tests():
     )
     
     if result.returncode != 0:
-        print(f"❌ Tests failed")
+        print("❌ Tests failed")
         print(result.stdout[-2000:])  # Last 2000 chars
         return False
     
@@ -92,7 +92,7 @@ def check_readme_examples():
     )
     
     if result.returncode != 0:
-        print(f"❌ README examples failed")
+        print("❌ README examples failed")
         return False
     
     print("✅ README examples work")
@@ -109,7 +109,7 @@ def check_package_build():
     )
     
     if result.returncode != 0:
-        print(f"❌ Package build failed")
+        print("❌ Package build failed")
         return False
     
     print("✅ Package builds successfully")

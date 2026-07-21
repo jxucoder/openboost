@@ -248,6 +248,11 @@ class TreeStructure:
     @property
     def leaf_values_array(self) -> NDArray:
         """Get raw values array (for backward compatibility)."""
+        # ndarray check must come first: LeafValues is a runtime_checkable
+        # structural Protocol and a plain ndarray satisfies it, so the
+        # isinstance(..., LeafValues) branch would call ndarray.values.
+        if isinstance(self.values, np.ndarray):
+            return self.values
         if isinstance(self.values, LeafValues):
             return self.values.values
         return self.values
@@ -1240,32 +1245,76 @@ class SymmetricGrowth(GrowthStrategy):
 
 
 # =============================================================================
-# Factory Function
+# Registry / Factory Function
 # =============================================================================
+
+# name (lowercase) -> strategy class. Seeded with the built-in strategies and
+# their aliases; extended at runtime via ``register_growth_strategy``.
+_GROWTH_REGISTRY: dict[str, type[GrowthStrategy]] = {
+    "levelwise": LevelWiseGrowth,
+    "level_wise": LevelWiseGrowth,
+    "level-wise": LevelWiseGrowth,
+    "leafwise": LeafWiseGrowth,
+    "leaf_wise": LeafWiseGrowth,
+    "leaf-wise": LeafWiseGrowth,
+    "symmetric": SymmetricGrowth,
+    "oblivious": SymmetricGrowth,
+}
+
+
+def register_growth_strategy(
+    name: str,
+    cls: type[GrowthStrategy],
+    *,
+    override: bool = False,
+) -> type[GrowthStrategy]:
+    """Register a custom growth strategy class under a string name.
+
+    After registration the name works everywhere a built-in growth name does,
+    e.g. ``GradientBoosting(growth='mygrowth')`` or
+    ``fit_tree(X, grad, hess, growth='mygrowth')``.
+
+    Args:
+        name: Name to register the strategy under. Lookup is
+            case-insensitive (the name is stored lowercased, matching
+            ``get_growth_strategy``).
+        cls: A ``GrowthStrategy`` subclass. It is instantiated with no
+            arguments each time the name is resolved.
+        override: Pass True to replace an existing registration (including
+            a built-in alias). Without it a duplicate name raises ValueError.
+
+    Returns:
+        ``cls`` unchanged (usable as a decorator via functools.partial).
+    """
+    if not isinstance(name, str) or not name:
+        raise TypeError(f"Growth strategy name must be a non-empty string, got {name!r}")
+    if not (isinstance(cls, type) and issubclass(cls, GrowthStrategy)):
+        raise TypeError(
+            f"Growth strategy must be a GrowthStrategy subclass, got {cls!r}"
+        )
+    key = name.lower()
+    if not override and key in _GROWTH_REGISTRY:
+        raise ValueError(
+            f"Growth strategy '{key}' is already registered. "
+            "Pass override=True to replace it."
+        )
+    _GROWTH_REGISTRY[key] = cls
+    return cls
+
 
 def get_growth_strategy(name: str) -> GrowthStrategy:
     """Get a growth strategy by name.
-    
+
     Args:
-        name: Strategy name - "levelwise", "leafwise", or "symmetric"
-        
+        name: Strategy name - "levelwise", "leafwise", "symmetric", or any
+            name registered via ``register_growth_strategy``
+
     Returns:
         GrowthStrategy instance
     """
-    strategies = {
-        "levelwise": LevelWiseGrowth,
-        "level_wise": LevelWiseGrowth,
-        "level-wise": LevelWiseGrowth,
-        "leafwise": LeafWiseGrowth,
-        "leaf_wise": LeafWiseGrowth,
-        "leaf-wise": LeafWiseGrowth,
-        "symmetric": SymmetricGrowth,
-        "oblivious": SymmetricGrowth,
-    }
-    
     name_lower = name.lower()
-    if name_lower not in strategies:
-        available = ["levelwise", "leafwise", "symmetric"]
+    if name_lower not in _GROWTH_REGISTRY:
+        available = sorted(_GROWTH_REGISTRY)
         raise ValueError(f"Unknown growth strategy '{name}'. Available: {available}")
-    
-    return strategies[name_lower]()
+
+    return _GROWTH_REGISTRY[name_lower]()

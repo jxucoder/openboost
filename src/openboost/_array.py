@@ -174,7 +174,7 @@ class BinnedArray:
 
 def array(
     X: ArrayLike,
-    n_bins: int = 256,
+    n_bins: int = 254,
     *,
     categorical_features: Sequence[int] | None = None,
     device: str | None = None,

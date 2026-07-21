@@ -101,6 +101,12 @@ nav:
   - Tutorials:
       - Uncertainty Quantification: tutorials/uncertainty.md
       - Custom Loss Functions: tutorials/custom-loss.md
+  - Cookbook:
+      - Extending OpenBoost: cookbook/index.md
+      - Custom Loss: cookbook/custom-loss.md
+      - Custom Distribution: cookbook/custom-distribution.md
+      - Custom Growth Strategy: cookbook/custom-growth-strategy.md
+      - Device-Native Loss (GPU): cookbook/device-loss.md
   - API Reference:
       - openboost: api/openboost.md
       - Models: api/models.md

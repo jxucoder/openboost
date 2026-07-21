@@ -2,6 +2,9 @@ name: GPU Verification
 
 on:
   workflow_dispatch:
+  schedule:
+    # Nightly at 09:17 UTC — CUDA paths have no other CI coverage
+    - cron: "17 9 * * *"
 
 permissions:
   contents: read

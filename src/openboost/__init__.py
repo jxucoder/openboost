@@ -87,6 +87,7 @@ from ._core import (
 from ._core import (
     Tree as LegacyTree,
 )
+from ._core._growth import register_growth_strategy
 
 # Phase 8: TreeStructure is the new Tree
 Tree = TreeStructure  # Alias for backward compatibility
@@ -149,6 +150,7 @@ from ._distributions import (
     create_custom_distribution,
     get_distribution,
     list_distributions,
+    register_distribution,
 )
 
 # =============================================================================
@@ -164,6 +166,7 @@ from ._importance import (
 # Loss Functions
 # =============================================================================
 from ._loss import (
+    device_loss,
     gamma_gradient,  # Phase 9.3
     get_loss_function,
     huber_gradient,
@@ -172,6 +175,7 @@ from ._loss import (
     mse_gradient,
     poisson_gradient,  # Phase 9.3
     quantile_gradient,  # Phase 9.1
+    register_loss,
     softmax_gradient,  # Phase 9.2
     tweedie_gradient,  # Phase 9.3
 )
@@ -226,6 +230,7 @@ from ._models import (
 from ._models import (
     NGBoostTweedie as _NGBoostTweedie,
 )
+from ._models._sklearn import OpenBoostGAMClassifier
 
 # =============================================================================
 # Persistence
@@ -374,6 +379,7 @@ __all__ = [
     "OpenBoostClassifier",
     "OpenBoostDARTRegressor",
     "OpenBoostGAMRegressor",
+    "OpenBoostGAMClassifier",
     "OpenBoostDistributionalRegressor",
     "OpenBoostLinearLeafRegressor",
     # Callbacks (Phase 13)
@@ -401,6 +407,11 @@ __all__ = [
     "tweedie_gradient",
     "softmax_gradient",
     "get_loss_function",
+    # Extensibility: registration APIs
+    "register_loss",
+    "register_distribution",
+    "register_growth_strategy",
+    "device_loss",
     # Training (single tree, low-level)
     "fit_tree",
     "fit_tree_gpu_native",

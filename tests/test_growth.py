@@ -543,3 +543,30 @@ class TestTreeStructureLeafAbstraction:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+class TestLeafValuesArrayRegression:
+    """leaf_values_array must not mistake a plain ndarray for a LeafValues container.
+
+    LeafValues is a runtime_checkable structural Protocol, so an ndarray
+    satisfies isinstance(..., LeafValues); the old code then called
+    ndarray.values and raised AttributeError for ndarray-backed trees
+    (symmetric/leafwise growth).
+    """
+
+    def test_leaf_values_array_symmetric_and_leafwise(self):
+        import numpy as np
+
+        import openboost as ob
+
+        rng = np.random.default_rng(0)
+        X = rng.standard_normal((500, 5)).astype(np.float32)
+        y = (X[:, 0] + rng.standard_normal(500) * 0.1).astype(np.float32)
+        for growth in ("symmetric", "leafwise", "levelwise"):
+            model = ob.GradientBoosting(n_trees=2, max_depth=3, growth=growth)
+            model.fit(X, y)
+            for tree in model.trees_:
+                if hasattr(tree, "leaf_values_array"):
+                    vals = tree.leaf_values_array
+                    vals = vals() if callable(vals) else vals
+                    assert isinstance(vals, np.ndarray)

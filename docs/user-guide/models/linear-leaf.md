@@ -77,6 +77,36 @@ print(f"GBDT RMSE: {gbdt_rmse:.4f}")
 print(f"LinearLeaf RMSE: {ll_rmse:.4f}")
 ```
 
+## Validation, Callbacks, and Early Stopping
+
+`LinearLeafGBDT.fit` accepts the same training-control arguments as
+`GradientBoosting`:
+
+```python
+model = ob.LinearLeafGBDT(n_trees=500, max_depth=4)
+model.fit(
+    X_train, y_train,
+    eval_set=[(X_val, y_val)],          # a single bare (X, y) tuple also works
+    callbacks=[ob.Logger(period=25)],
+    early_stopping_rounds=20,   # sugar for EarlyStopping(patience=20, restore_best=True)
+)
+
+model.evals_result_     # {'eval_0': {'mse': [...]}} — per-round history per eval set
+model.best_iteration_   # set when early stopping is used
+model.best_score_
+```
+
+Details:
+
+- The eval metric is **MSE on raw predictions**, recorded per round for every
+  eval set under keys `'eval_0'`, `'eval_1'`, ... (`evals_result_` is `{}`
+  when no `eval_set` is passed).
+- Callbacks (`EarlyStopping`, `Logger`, `HistoryCallback`, ...) receive the
+  **last** eval set's MSE as `val_loss`.
+- `early_stopping_rounds=N` stops after `N` rounds without improvement and
+  restores the model to (and sets `best_iteration_` / `best_score_` at) the
+  best round.
+
 ## sklearn Wrapper
 
 ```python

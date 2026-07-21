@@ -32,10 +32,18 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from .._array import BinnedArray, array
+from .._callbacks import (
+    Callback,
+    CallbackManager,
+    EarlyStopping,
+    TrainingState,
+    warn_if_early_stopping_without_eval_set,
+)
 from .._core._growth import TreeStructure
 from .._core._tree import fit_tree
 from .._loss import LossFunction, get_loss_function
 from .._persistence import PersistenceMixin
+from .._validation import validate_eval_set
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -192,7 +200,15 @@ class LinearLeafGBDT(PersistenceMixin):
             - 'log2': Use log2(n_features) features
             - int: Use exactly this many features
         n_bins: Number of bins for histogram building
-        
+
+    Attributes (after fit with observability args):
+        evals_result_: Per-round eval-set MSE history recorded during
+            training, e.g. ``{'eval_0': {'mse': [...]}}``. Empty dict when
+            no ``eval_set`` was passed to ``fit()``.
+        best_iteration_: Best round index (set when early stopping is used).
+        best_score_: Best monitored metric value (set with best_iteration_).
+
+
     Example:
         ```python
         model = LinearLeafGBDT(n_trees=100, max_depth=4)
@@ -215,21 +231,45 @@ class LinearLeafGBDT(PersistenceMixin):
     reg_lambda_tree: float = 1.0
     reg_lambda_linear: float = 0.1  # Ridge regularization for linear models
     max_features_linear: int | str | None = 'sqrt'
-    n_bins: int = 256
+    n_bins: int = 254
     
     # Fitted attributes (not init)
     trees_: list[LinearLeafTree] = field(default_factory=list, init=False, repr=False)
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     _loss_fn: LossFunction | None = field(default=None, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
-    
-    def fit(self, X: NDArray, y: NDArray) -> LinearLeafGBDT:
+    evals_result_: dict[str, dict[str, list[float]]] = field(
+        default_factory=dict, init=False, repr=False
+    )
+
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        callbacks: list[Callback] | None = None,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+        early_stopping_rounds: int | None = None,
+    ) -> LinearLeafGBDT:
         """Fit the linear leaf GBDT model.
-        
+
         Args:
             X: Training features, shape (n_samples, n_features)
             y: Training targets, shape (n_samples,)
-            
+            callbacks: List of Callback instances (e.g. EarlyStopping,
+                Logger) invoked each boosting round with a TrainingState
+                carrying the round index, train MSE, and val MSE.
+            eval_set: Validation set(s) as a list of ``(X_val, y_val)``
+                tuples (a single bare tuple is also accepted). Every eval
+                set is scored with MSE each round and the per-round history
+                is stored in ``evals_result_``. The LAST eval set's MSE is
+                reported to callbacks as ``val_loss``.
+            early_stopping_rounds: Stop training when the monitored eval-set
+                MSE has not improved for this many consecutive rounds
+                (sugar for an ``EarlyStopping`` callback with
+                ``restore_best=True``). The model is restored to (truncated
+                at) the best iteration and ``best_iteration_`` /
+                ``best_score_`` are set. Requires ``eval_set``.
+
         Returns:
             self: Fitted model
         """
@@ -271,13 +311,49 @@ class LinearLeafGBDT(PersistenceMixin):
         else:
             self.base_score_ = np.float32(np.mean(y))
         pred = np.full(n_samples, self.base_score_, dtype=np.float32)
-        
-        for _round_idx in range(self.n_trees):
+
+        # Setup callbacks (early_stopping_rounds is sugar for EarlyStopping).
+        # EarlyStopping's restore_best snapshots/restores self.trees_; each
+        # LinearLeafTree bundles its routing tree AND its per-leaf linear
+        # models, so restoring trees_ truncates both consistently.
+        cb_list = list(callbacks) if callbacks else []
+        if early_stopping_rounds is not None:
+            cb_list.append(
+                EarlyStopping(patience=early_stopping_rounds, restore_best=True)
+            )
+        cb_manager = CallbackManager(cb_list)
+        state = TrainingState(model=self, n_rounds=self.n_trees)
+
+        eval_set = validate_eval_set(eval_set, n_features)
+        warn_if_early_stopping_without_eval_set(cb_list, eval_set)
+
+        # Per-eval-set state: raw features (linear leaves need un-binned
+        # values), targets, binned matrix (binned once with the training bin
+        # edges), and incrementally maintained predictions.
+        eval_data = []
+        if eval_set:
+            for X_e, y_e in eval_set:
+                X_e = np.asarray(X_e, dtype=np.float32)
+                y_e = np.asarray(y_e, dtype=np.float32).ravel()
+                binned_e = _binned_matrix(self.X_binned_.transform(X_e))
+                pred_e = np.full(X_e.shape[0], self.base_score_, dtype=np.float32)
+                eval_data.append((X_e, y_e, binned_e, pred_e))
+
+        self.evals_result_ = {
+            f'eval_{i}': {'mse': []} for i in range(len(eval_data))
+        }
+
+        cb_manager.on_train_begin(state)
+
+        for round_idx in range(self.n_trees):
+            state.round_idx = round_idx
+            cb_manager.on_round_begin(state)
+
             # Compute gradients
             grad, hess = self._loss_fn(pred, y)
             grad = np.asarray(grad, dtype=np.float32)
             hess = np.asarray(hess, dtype=np.float32)
-            
+
             # Build tree structure (just for routing)
             base_tree = fit_tree(
                 self.X_binned_,
@@ -287,17 +363,41 @@ class LinearLeafGBDT(PersistenceMixin):
                 min_child_weight=float(self.min_samples_leaf),
                 reg_lambda=self.reg_lambda_tree,
             )
-            
+
             # Fit linear models in each leaf
             linear_tree = self._fit_linear_leaves(
                 base_tree, X, y, grad, hess, pred, n_linear_features
             )
-            
+
             self.trees_.append(linear_tree)
-            
+
             # Update predictions
             tree_pred = linear_tree.predict(X)
             pred = pred + self.learning_rate * tree_pred
+
+            # Observability: only computed when requested, so the default
+            # path (no callbacks, no eval_set) is byte-identical to before.
+            if cb_manager.callbacks or eval_data:
+                # Train loss: MSE on current predictions (already tracked)
+                state.train_loss = float(np.mean((pred - y) ** 2))
+
+                # Score ALL eval sets, record history; callbacks monitor the
+                # LAST eval set's MSE (matches DistributionalGBDT semantics)
+                val_mse = None
+                for i, (X_e, y_e, binned_e, pred_e) in enumerate(eval_data):
+                    pred_e += self.learning_rate * linear_tree.predict(
+                        X_e, binned=binned_e
+                    )
+                    val_mse = float(np.mean((pred_e - y_e) ** 2))
+                    self.evals_result_[f'eval_{i}']['mse'].append(val_mse)
+                if val_mse is not None:
+                    state.val_loss = val_mse
+
+                # Check if callbacks want to stop
+                if not cb_manager.on_round_end(state):
+                    break
+
+        cb_manager.on_train_end(state)
 
         # MED-21: Release raw data reference to free memory
         self._X_raw = None

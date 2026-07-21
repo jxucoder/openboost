@@ -100,7 +100,7 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
         Fraction of samples to use for each tree.
     colsample_bytree : float, default=1.0
         Fraction of features to use for each tree.
-    n_bins : int, default=256
+    n_bins : int, default=254
         Number of bins for histogram building.
     quantile_alpha : float, default=0.5
         Quantile level for 'quantile' loss.
@@ -170,7 +170,7 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
         gamma: float = 0.0,
         subsample: float = 1.0,
         colsample_bytree: float = 1.0,
-        n_bins: int = 256,
+        n_bins: int = 254,
         quantile_alpha: float = 0.5,
         subsample_strategy: Literal['none', 'random', 'goss'] = 'none',
         goss_top_rate: float = 0.2,
@@ -348,7 +348,7 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         Fraction of samples per tree.
     colsample_bytree : float, default=1.0
         Fraction of features per tree.
-    n_bins : int, default=256
+    n_bins : int, default=254
         Number of bins for histogram building.
     subsample_strategy : {'none', 'random', 'goss'}, default='none'
         Sampling strategy for large-scale training (Phase 17).
@@ -405,7 +405,7 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
         gamma: float = 0.0,
         subsample: float = 1.0,
         colsample_bytree: float = 1.0,
-        n_bins: int = 256,
+        n_bins: int = 254,
         subsample_strategy: Literal['none', 'random', 'goss'] = 'none',
         goss_top_rate: float = 0.2,
         goss_other_rate: float = 0.1,
@@ -637,7 +637,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         Minimum sum of hessian in a leaf.
     reg_lambda : float, default=1.0
         L2 regularization on leaf values.
-    n_bins : int, default=256
+    n_bins : int, default=254
         Number of bins for histogram building.
     use_natural_gradient : bool, default=True
         If True, use NGBoost (natural gradient). Recommended for faster
@@ -702,7 +702,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         learning_rate: float = 0.1,
         min_child_weight: float = 1.0,
         reg_lambda: float = 1.0,
-        n_bins: int = 256,
+        n_bins: int = 254,
         use_natural_gradient: bool = True,
         early_stopping_rounds: int | None = None,
         verbose: int = 0,
@@ -1022,30 +1022,41 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
         - 'sqrt': Use sqrt(n_features)
         - 'log2': Use log2(n_features)
         - int: Use exactly this many features
-    n_bins : int, default=256
+    n_bins : int, default=254
         Number of bins for histogram building.
+    early_stopping_rounds : int, optional
+        Stop training if the validation MSE doesn't improve for this many
+        rounds. Requires eval_set to be passed to fit(). With multiple eval
+        sets, the last one is monitored.
     verbose : int, default=0
         Verbosity level.
-        
+
     Attributes
     ----------
     n_features_in_ : int
         Number of features seen during fit.
     booster_ : LinearLeafGBDT
         The underlying fitted model.
-        
+    evals_result_ : dict
+        Per-round eval-set MSE history recorded during fit(), e.g.
+        ``{'eval_0': {'mse': [...]}}``. Empty dict when no eval_set was used.
+    best_iteration_ : int
+        Iteration with best validation score (if early stopping used).
+    best_score_ : float
+        Best validation score achieved (if early stopping used).
+
     Examples
     --------
     >>> from openboost import OpenBoostLinearLeafRegressor
     >>> model = OpenBoostLinearLeafRegressor(n_estimators=100, max_depth=4)
     >>> model.fit(X_train, y_train)
     >>> y_pred = model.predict(X_test)
-    >>> 
+    >>>
     >>> # Compare with standard GBDT on extrapolation tasks
     >>> # LinearLeafRegressor typically performs better when the
     >>> # underlying relationship has linear components
     """
-    
+
     def __init__(
         self,
         n_estimators: int = 100,
@@ -1056,7 +1067,8 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
         reg_lambda: float = 1.0,
         reg_lambda_linear: float = 0.1,
         max_features_linear: int | Literal['sqrt', 'log2'] | None = 'sqrt',
-        n_bins: int = 256,
+        n_bins: int = 254,
+        early_stopping_rounds: int | None = None,
         verbose: int = 0,
     ) -> None:
         self.n_estimators = n_estimators
@@ -1068,6 +1080,7 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
         self.reg_lambda_linear = reg_lambda_linear
         self.max_features_linear = max_features_linear
         self.n_bins = n_bins
+        self.early_stopping_rounds = early_stopping_rounds
         self.verbose = verbose
     
     def fit(
@@ -1089,9 +1102,11 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
         sample_weight : array-like, optional
             Not supported; raises NotImplementedError if passed.
         eval_set : list of (X, y) tuples, optional
-            Not supported; raises NotImplementedError if passed.
+            Validation set(s) scored with MSE every round; history is stored
+            in ``evals_result_``. The LAST eval set is monitored by
+            callbacks / early stopping.
         callbacks : list of Callback, optional
-            Not supported; raises NotImplementedError if passed.
+            Callbacks forwarded to the underlying booster's fit().
 
         Returns
         -------
@@ -1103,15 +1118,10 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
             raise NotImplementedError(
                 "sample_weight is not yet supported for OpenBoostLinearLeafRegressor"
             )
-        if eval_set is not None or callbacks is not None:
-            raise NotImplementedError(
-                "eval_set and callbacks are not yet supported for "
-                "OpenBoostLinearLeafRegressor"
-            )
         X, y = check_X_y(X, y, dtype=np.float32, y_numeric=True)
-        
+
         self.n_features_in_ = X.shape[1]
-        
+
         # Map sklearn loss names to internal names
         loss_map = {
             'squared_error': 'mse',
@@ -1119,9 +1129,9 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
             'huber': 'huber',
         }
         internal_loss = loss_map.get(self.loss, self.loss)
-        
+
         from ._linear_leaf import LinearLeafGBDT
-        
+
         self.booster_ = LinearLeafGBDT(
             n_trees=self.n_estimators,
             max_depth=self.max_depth,
@@ -1133,18 +1143,48 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
             max_features_linear=self.max_features_linear,
             n_bins=self.n_bins,
         )
-        
-        self.booster_.fit(X, y)
+
+        all_callbacks = list(callbacks) if callbacks else []
+        if self.early_stopping_rounds is not None and eval_set is not None:
+            all_callbacks.append(EarlyStopping(
+                patience=self.early_stopping_rounds,
+                restore_best=True,
+                verbose=self.verbose > 0,
+            ))
+
+        self.booster_.fit(
+            X, y,
+            callbacks=all_callbacks if all_callbacks else None,
+            eval_set=eval_set,
+        )
         return self
-    
+
+    @property
+    def evals_result_(self) -> dict[str, dict[str, list[float]]]:
+        """Per-round eval-set MSE history recorded during fit()."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.evals_result_
+
+    @property
+    def best_iteration_(self) -> int:
+        """Best round index (set when early stopping is active)."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.best_iteration_
+
+    @property
+    def best_score_(self) -> float:
+        """Best monitored metric value (set when early stopping is active)."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.best_score_
+
     def predict(self, X: NDArray) -> NDArray:
         """Predict target values.
-        
+
         Parameters
         ----------
         X : array-like of shape (n_samples, n_features)
             Features to predict on.
-            
+
         Returns
         -------
         y_pred : ndarray of shape (n_samples,)
@@ -1153,9 +1193,9 @@ class OpenBoostLinearLeafRegressor(BaseEstimator, RegressorMixin):
         _check_sklearn()
         check_is_fitted(self, 'booster_')
         X = check_array(X, dtype=np.float32)
-        
+
         return self.booster_.predict(X)
-    
+
     # score() inherited from RegressorMixin (R² score)
 
 
@@ -1184,7 +1224,7 @@ class OpenBoostDARTRegressor(BaseEstimator, RegressorMixin):
         Minimum sum of hessian in a leaf.
     reg_lambda : float, default=1.0
         L2 regularization.
-    n_bins : int, default=256
+    n_bins : int, default=254
         Number of histogram bins.
     early_stopping_rounds : int or None, default=None
         Stop if validation loss doesn't improve for this many rounds.
@@ -1205,7 +1245,7 @@ class OpenBoostDARTRegressor(BaseEstimator, RegressorMixin):
         normalize: bool = True,
         min_child_weight: float = 1.0,
         reg_lambda: float = 1.0,
-        n_bins: int = 256,
+        n_bins: int = 254,
         early_stopping_rounds: int | None = None,
         verbose: int = 0,
         random_state: int | None = None,
@@ -1308,10 +1348,42 @@ class OpenBoostGAMRegressor(BaseEstimator, RegressorMixin):
         L2 regularization.
     loss : str, default='squared_error'
         Loss function. 'squared_error' or 'absolute_error'.
-    n_bins : int, default=256
+    n_bins : int, default=254
         Number of histogram bins.
+    interactions : int, default=0
+        Number of pairwise interaction terms (GA2M-style) learned after
+        main-effects training. 0 disables interactions.
+    interaction_rounds : int, optional
+        Boosting rounds for the interaction stage. None uses n_estimators.
+    smoothing : float, default=0.0
+        Fused-ridge smoothing strength for 1D shape functions (0 = off).
+    monotone : dict, optional
+        Mapping of feature index -> +1 (non-decreasing) or -1
+        (non-increasing) monotonicity constraint.
+    early_stopping_rounds : int, optional
+        Stop training if the validation loss doesn't improve for this many
+        rounds. Requires eval_set to be passed to fit(). With multiple eval
+        sets, the last one is monitored.
     verbose : int, default=0
         Logging verbosity.
+
+    Attributes
+    ----------
+    n_features_in_ : int
+        Number of features seen during fit.
+    booster_ : OpenBoostGAM
+        The underlying fitted model.
+    shape_values_ : ndarray
+        1D shape function lookup tables from the underlying GAM.
+    interaction_pairs_ : list of tuple
+        Selected interaction pairs (ranked), when interactions > 0.
+    evals_result_ : dict
+        Per-round eval-set metric history recorded during fit(), e.g.
+        ``{'eval_0': {'mse': [...]}}``. Empty dict when no eval_set was used.
+    best_iteration_ : int
+        Iteration with best validation score (if early stopping used).
+    best_score_ : float
+        Best validation score achieved (if early stopping used).
     """
 
     def __init__(
@@ -1320,7 +1392,12 @@ class OpenBoostGAMRegressor(BaseEstimator, RegressorMixin):
         learning_rate: float = 0.01,
         reg_lambda: float = 1.0,
         loss: Literal['squared_error', 'absolute_error'] = 'squared_error',
-        n_bins: int = 256,
+        n_bins: int = 254,
+        interactions: int = 0,
+        interaction_rounds: int | None = None,
+        smoothing: float = 0.0,
+        monotone: dict[int, int] | None = None,
+        early_stopping_rounds: int | None = None,
         verbose: int = 0,
     ) -> None:
         self.n_estimators = n_estimators
@@ -1328,10 +1405,40 @@ class OpenBoostGAMRegressor(BaseEstimator, RegressorMixin):
         self.reg_lambda = reg_lambda
         self.loss = loss
         self.n_bins = n_bins
+        self.interactions = interactions
+        self.interaction_rounds = interaction_rounds
+        self.smoothing = smoothing
+        self.monotone = monotone
+        self.early_stopping_rounds = early_stopping_rounds
         self.verbose = verbose
 
-    def fit(self, X: NDArray, y: NDArray) -> OpenBoostGAMRegressor:
-        """Fit the GAM regressor."""
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+        callbacks: list | None = None,
+    ) -> OpenBoostGAMRegressor:
+        """Fit the GAM regressor.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Training features.
+        y : array-like of shape (n_samples,)
+            Target values.
+        eval_set : list of (X, y) tuples, optional
+            Validation set(s) scored with the training loss every round;
+            history is stored in ``evals_result_``. The LAST eval set is
+            monitored by callbacks / early stopping.
+        callbacks : list of Callback, optional
+            Callbacks forwarded to the underlying booster's fit().
+
+        Returns
+        -------
+        self : OpenBoostGAMRegressor
+            Fitted estimator.
+        """
         _check_sklearn()
         X, y = check_X_y(X, y, dtype=np.float32, y_numeric=True)
         self.n_features_in_ = X.shape[1]
@@ -1345,8 +1452,25 @@ class OpenBoostGAMRegressor(BaseEstimator, RegressorMixin):
             reg_lambda=self.reg_lambda,
             loss=internal_loss,
             n_bins=self.n_bins,
+            interactions=self.interactions,
+            interaction_rounds=self.interaction_rounds,
+            smoothing=self.smoothing,
+            monotone=self.monotone,
         )
-        self.booster_.fit(X, y)
+
+        all_callbacks = list(callbacks) if callbacks else []
+        if self.early_stopping_rounds is not None and eval_set is not None:
+            all_callbacks.append(EarlyStopping(
+                patience=self.early_stopping_rounds,
+                restore_best=True,
+                verbose=self.verbose > 0,
+            ))
+
+        self.booster_.fit(
+            X, y,
+            callbacks=all_callbacks if all_callbacks else None,
+            eval_set=eval_set,
+        )
         return self
 
     def predict(self, X: NDArray) -> NDArray:
@@ -1362,4 +1486,264 @@ class OpenBoostGAMRegressor(BaseEstimator, RegressorMixin):
         check_is_fitted(self, 'booster_')
         return self.booster_.shape_values_
 
+    @property
+    def interaction_pairs_(self) -> list[tuple[int, int]]:
+        """Selected interaction pairs (ranked) from the underlying GAM."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.interaction_pairs_
+
+    @property
+    def evals_result_(self) -> dict[str, dict[str, list[float]]]:
+        """Per-round eval-set metric history recorded during fit()."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.evals_result_
+
+    @property
+    def best_iteration_(self) -> int:
+        """Best round index (set when early stopping is active)."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.best_iteration_
+
+    @property
+    def best_score_(self) -> float:
+        """Best monitored metric value (set when early stopping is active)."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.best_score_
+
     # score() inherited from RegressorMixin (R² score)
+
+
+class OpenBoostGAMClassifier(BaseEstimator, ClassifierMixin):
+    """GAM Classifier (binary) with sklearn-compatible interface.
+
+    Wraps :class:`OpenBoostGAM` with ``loss='logloss'`` for use with
+    GridSearchCV, Pipeline, etc. Supports binary classification only
+    (the underlying GAM predicts a single sigmoid-linked score).
+
+    Parameters
+    ----------
+    n_estimators : int, default=1000
+        Number of boosting rounds.
+    learning_rate : float, default=0.01
+        Shrinkage factor.
+    reg_lambda : float, default=1.0
+        L2 regularization.
+    n_bins : int, default=254
+        Number of histogram bins.
+    interactions : int, default=0
+        Number of pairwise interaction terms (GA2M-style) learned after
+        main-effects training. 0 disables interactions.
+    interaction_rounds : int, optional
+        Boosting rounds for the interaction stage. None uses n_estimators.
+    smoothing : float, default=0.0
+        Fused-ridge smoothing strength for 1D shape functions (0 = off).
+    monotone : dict, optional
+        Mapping of feature index -> +1 (non-decreasing) or -1
+        (non-increasing) monotonicity constraint.
+    early_stopping_rounds : int, optional
+        Stop training if the validation logloss doesn't improve for this
+        many rounds. Requires eval_set to be passed to fit(). With multiple
+        eval sets, the last one is monitored.
+    verbose : int, default=0
+        Logging verbosity.
+
+    Attributes
+    ----------
+    classes_ : ndarray
+        Unique class labels.
+    n_classes_ : int
+        Number of classes (always 2).
+    n_features_in_ : int
+        Number of features seen during fit.
+    booster_ : OpenBoostGAM
+        The underlying fitted model.
+    shape_values_ : ndarray
+        1D shape function lookup tables from the underlying GAM.
+    interaction_pairs_ : list of tuple
+        Selected interaction pairs (ranked), when interactions > 0.
+    evals_result_ : dict
+        Per-round eval-set metric history recorded during fit(), e.g.
+        ``{'eval_0': {'logloss': [...]}}``. Empty when no eval_set was used.
+    best_iteration_ : int
+        Iteration with best validation score (if early stopping used).
+    best_score_ : float
+        Best validation score achieved (if early stopping used).
+
+    Examples
+    --------
+    >>> from openboost import OpenBoostGAMClassifier
+    >>> clf = OpenBoostGAMClassifier(n_estimators=200)
+    >>> clf.fit(X_train, y_train)
+    >>> proba = clf.predict_proba(X_test)  # shape (n_samples, 2)
+    """
+
+    def __init__(
+        self,
+        n_estimators: int = 1000,
+        learning_rate: float = 0.01,
+        reg_lambda: float = 1.0,
+        n_bins: int = 254,
+        interactions: int = 0,
+        interaction_rounds: int | None = None,
+        smoothing: float = 0.0,
+        monotone: dict[int, int] | None = None,
+        early_stopping_rounds: int | None = None,
+        verbose: int = 0,
+    ) -> None:
+        self.n_estimators = n_estimators
+        self.learning_rate = learning_rate
+        self.reg_lambda = reg_lambda
+        self.n_bins = n_bins
+        self.interactions = interactions
+        self.interaction_rounds = interaction_rounds
+        self.smoothing = smoothing
+        self.monotone = monotone
+        self.early_stopping_rounds = early_stopping_rounds
+        self.verbose = verbose
+
+    def fit(
+        self,
+        X: NDArray,
+        y: NDArray,
+        eval_set: list[tuple[NDArray, NDArray]] | None = None,
+        callbacks: list | None = None,
+    ) -> OpenBoostGAMClassifier:
+        """Fit the GAM classifier.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Training features.
+        y : array-like of shape (n_samples,)
+            Target class labels (exactly 2 classes).
+        eval_set : list of (X, y) tuples, optional
+            Validation set(s) scored with logloss every round; history is
+            stored in ``evals_result_``. The LAST eval set is monitored by
+            callbacks / early stopping. Labels are encoded with the
+            training label encoder.
+        callbacks : list of Callback, optional
+            Callbacks forwarded to the underlying booster's fit().
+
+        Returns
+        -------
+        self : OpenBoostGAMClassifier
+            Fitted estimator.
+        """
+        _check_sklearn()
+        X, y = check_X_y(X, y, dtype=np.float32)
+        self.n_features_in_ = X.shape[1]
+
+        # Encode labels
+        self._label_encoder = LabelEncoder()
+        y_encoded = self._label_encoder.fit_transform(y)
+        self.classes_ = self._label_encoder.classes_
+        self.n_classes_ = len(self.classes_)
+        if self.n_classes_ != 2:
+            raise ValueError(
+                "OpenBoostGAMClassifier supports binary classification only; "
+                f"got {self.n_classes_} class(es). Use OpenBoostClassifier "
+                "for multi-class problems."
+            )
+
+        # Transform eval_set labels if provided (accept a single bare tuple)
+        if eval_set is not None:
+            if isinstance(eval_set, tuple):
+                eval_set = [eval_set]
+            eval_set = [
+                (X_val, self._label_encoder.transform(y_val).astype(np.float32))
+                for X_val, y_val in eval_set
+            ]
+
+        self.booster_ = OpenBoostGAM(
+            n_trees=self.n_estimators,
+            learning_rate=self.learning_rate,
+            reg_lambda=self.reg_lambda,
+            loss='logloss',
+            n_bins=self.n_bins,
+            interactions=self.interactions,
+            interaction_rounds=self.interaction_rounds,
+            smoothing=self.smoothing,
+            monotone=self.monotone,
+        )
+
+        all_callbacks = list(callbacks) if callbacks else []
+        if self.early_stopping_rounds is not None and eval_set is not None:
+            all_callbacks.append(EarlyStopping(
+                patience=self.early_stopping_rounds,
+                restore_best=True,
+                verbose=self.verbose > 0,
+            ))
+
+        self.booster_.fit(
+            X, y_encoded.astype(np.float32),
+            callbacks=all_callbacks if all_callbacks else None,
+            eval_set=eval_set,
+        )
+        return self
+
+    def predict(self, X: NDArray) -> NDArray:
+        """Predict class labels.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Features to predict on.
+
+        Returns
+        -------
+        y_pred : ndarray of shape (n_samples,)
+            Predicted class labels.
+        """
+        proba = self.predict_proba(X)
+        indices = np.argmax(proba, axis=1)
+        return self.classes_[indices]
+
+    def predict_proba(self, X: NDArray) -> NDArray:
+        """Predict class probabilities.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Features to predict on.
+
+        Returns
+        -------
+        proba : ndarray of shape (n_samples, 2)
+            Class probabilities.
+        """
+        _check_sklearn()
+        check_is_fitted(self, 'booster_')
+        X = check_array(X, dtype=np.float32)
+        return self.booster_.predict_proba(X)
+
+    @property
+    def shape_values_(self) -> NDArray:
+        """Shape function values from the underlying GAM."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.shape_values_
+
+    @property
+    def interaction_pairs_(self) -> list[tuple[int, int]]:
+        """Selected interaction pairs (ranked) from the underlying GAM."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.interaction_pairs_
+
+    @property
+    def evals_result_(self) -> dict[str, dict[str, list[float]]]:
+        """Per-round eval-set metric history recorded during fit()."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.evals_result_
+
+    @property
+    def best_iteration_(self) -> int:
+        """Best round index (set when early stopping is active)."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.best_iteration_
+
+    @property
+    def best_score_(self) -> float:
+        """Best monitored metric value (set when early stopping is active)."""
+        check_is_fitted(self, 'booster_')
+        return self.booster_.best_score_
+
+    # score() is inherited from ClassifierMixin (accuracy)

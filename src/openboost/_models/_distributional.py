@@ -173,7 +173,7 @@ class DistributionalGBDT(PersistenceMixin):
     reg_alpha: float = 0.0
     subsample: float = 1.0
     colsample_bytree: float = 1.0
-    n_bins: int = 256
+    n_bins: int = 254
     
     # Fitted attributes (not init)
     trees_: dict[str, list[TreeStructure]] = field(default_factory=dict, init=False, repr=False)

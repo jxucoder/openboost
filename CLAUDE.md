@@ -68,7 +68,7 @@ DART, LinearLeaf     growth strategies
 - **`_sklearn.py`** — sklearn-compatible wrappers (`OpenBoostRegressor`, `OpenBoostClassifier`, `OpenBoostDARTRegressor`, `OpenBoostGAMRegressor`, `OpenBoostDistributionalRegressor`, `OpenBoostLinearLeafRegressor`)
 - **`_distributional.py`** — `NaturalBoost`: distributional GBDT with callbacks/eval_set support
 - **`_dart.py`** — `DART`: dropout boosting with callbacks/eval_set support
-- **`_linear_leaf.py`**, **`_gam.py`** — Specialized model variants (callbacks not yet supported)
+- **`_linear_leaf.py`**, **`_gam.py`** — Specialized model variants (both support callbacks/eval_set/early stopping; GAM also supports pairwise interactions, smoothing, and monotone shape constraints)
 
 ### Persistence (`_persistence.py`)
 `PersistenceMixin` provides `save()`/`load()` on all models. Generic `ob.load(path)` auto-detects model class from saved state.
@@ -77,7 +77,7 @@ DART, LinearLeaf     growth strategies
 `ProfilingCallback` instruments training by wrapping core primitives (`build_node_histograms`, `find_node_splits`, `partition_samples`, `compute_leaf_values`, `fit_tree`) with timers. Outputs JSON reports to `logs/` with per-phase breakdown, bottleneck identification, and run-over-run comparison. CLI runner: `benchmarks/profile_loop.py`.
 
 ### Loss Functions (`_loss.py`)
-50+ loss implementations. Each returns `(gradient, hessian)`. Custom losses are callables with signature `fn(pred, y) -> (grad, hess)`.
+9 objectives, each with CPU/GPU/dispatcher implementations returning `(gradient, hessian)`. Custom losses are callables with signature `fn(pred, y) -> (grad, hess)`; register by name via `register_loss` (optional `loss_value_fn` for true loss reporting), and mark GPU-capable losses with `@ob.device_loss`. `register_distribution` / `register_growth_strategy` extend the other factories.
 
 ### Distributions (`_distributions.py`)
 8 distributional families for NaturalBoost (Normal, LogNormal, Gamma, Poisson, StudentT, Tweedie, NegativeBinomial). Each implements `nll_grad_hess()` for natural gradient computation.
@@ -90,7 +90,7 @@ DART, LinearLeaf     growth strategies
 - Test environment variable `OPENBOOST_BACKEND=cpu` forces CPU backend in CI.
 - Tests use `pytest-xdist` (`-n auto --dist loadfile`) for parallel execution. Shared fixtures are in `tests/conftest.py` (session-scoped datasets, function-scoped gradients).
 - **GPU-native builder** (`fit_tree_gpu_native`) does not support missing values or categorical features. The training loop in `_boosting.py` auto-falls back to `fit_tree()` with a warning when the data has NaN or categorical columns.
-- **Callbacks**: `GradientBoosting`, `MultiClassGradientBoosting`, `DART`, and `NaturalBoost`/`DistributionalGBDT` all support `callbacks` and `eval_set` in `fit()`. `LinearLeafGBDT` and `OpenBoostGAM` do not yet.
+- **Callbacks**: all models — `GradientBoosting`, `MultiClassGradientBoosting`, `DART`, `NaturalBoost`/`DistributionalGBDT`, `LinearLeafGBDT`, and `OpenBoostGAM` — support `callbacks` and `eval_set` in `fit()`.
 - **`random_state`**: `GradientBoosting` and `DART` accept `random_state` for reproducibility. Sklearn wrappers pass it through. DART also accepts `seed` (alias).
 - **`suggest_params()`**: Returns sklearn-style names by default (`n_estimators`). Pass `style='core'` to get core API names (`n_trees`).
 - **Profiling**: `ProfilingCallback` wraps core primitives with timers. Enable via callback or `OPENBOOST_PROFILE=1` env var. Reports go to `logs/` as JSON.

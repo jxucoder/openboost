@@ -32,7 +32,7 @@ from .._callbacks import (
 )
 from .._core._growth import TreeStructure, get_growth_strategy
 from .._core._tree import fit_tree
-from .._loss import LossFunction, compute_loss_value, get_loss_function
+from .._loss import LossFunction, compute_loss_value, get_loss_function, is_builtin_loss
 from .._persistence import PersistenceMixin
 from .._sampling import (
     goss_sample,
@@ -77,8 +77,10 @@ def _compute_loss_value(loss, pred, y, **kwargs) -> float:
     actual loss (MSE, MAE, logloss, …) rather than the second-order Taylor
     proxy that is unreliable for MAE/quantile.
 
-    *loss* may be a string name or a callable.  For callables the grad/hess
-    proxy is used as fallback.
+    *loss* may be a string name or a callable.  For callables, a
+    ``loss_value`` attribute on the callable (``fn.loss_value = ...``) is
+    used as the true loss when present; otherwise the grad/hess proxy is
+    the fallback.
     """
     if hasattr(pred, 'copy_to_host'):
         pred = pred.copy_to_host()
@@ -87,6 +89,11 @@ def _compute_loss_value(loss, pred, y, **kwargs) -> float:
 
     if isinstance(loss, str):
         return compute_loss_value(loss, pred, y, **kwargs)
+
+    # Custom callable with an explicit true-loss hook
+    value_fn = getattr(loss, 'loss_value', None)
+    if value_fn is not None:
+        return float(value_fn(pred, y))
 
     # Custom callable — use grad/hess proxy
     grad, hess = loss(np.asarray(pred, dtype=np.float32),
@@ -189,7 +196,7 @@ class GradientBoosting(PersistenceMixin):
     gamma: float = 0.0
     subsample: float = 1.0
     colsample_bytree: float = 1.0
-    n_bins: int = 256
+    n_bins: int = 254
     quantile_alpha: float = 0.5
     tweedie_rho: float = 1.5
     distributed: bool = False
@@ -642,9 +649,17 @@ class GradientBoosting(PersistenceMixin):
         pred_host = np.full(n_samples, base, dtype=np.float32)
         pred_gpu = cuda.to_device(pred_host)
         
-        # Check if using custom loss (requires Python callback)
-        is_custom_loss = callable(self.loss)
-        
+        # Check if using custom loss (requires a Python callback unless the
+        # loss is marked device-native). Losses registered by name via
+        # register_loss() count as custom too.
+        is_custom_loss = callable(self.loss) or not is_builtin_loss(self.loss)
+        # Opt-in device contract: a callable decorated with
+        # @openboost.device_loss (i.e. ``__openboost_device__ = True``)
+        # receives device arrays directly and must return device (grad, hess).
+        is_device_loss = is_custom_loss and bool(
+            getattr(self._loss_fn, '__openboost_device__', False)
+        )
+
         # Pre-allocate gradient arrays
         if not is_custom_loss:
             grad_gpu = cuda.device_array(n_samples, dtype=np.float32)
@@ -749,7 +764,12 @@ class GradientBoosting(PersistenceMixin):
             cb_manager.on_round_begin(state)
 
             # Compute gradients
-            if is_custom_loss:
+            if is_device_loss:
+                # Device-native custom loss: pred stays on the GPU, y is the
+                # cached device copy; the callable must return device
+                # (grad, hess) arrays (no host round-trip).
+                grad_gpu, hess_gpu = self._loss_fn(pred_gpu, y_gpu)
+            elif is_custom_loss:
                 # Custom loss: need to copy pred to CPU, call Python, copy back
                 pred_cpu = pred_gpu.copy_to_host()
                 grad_cpu, hess_cpu = self._loss_fn(pred_cpu, y)
@@ -1270,7 +1290,7 @@ class MultiClassGradientBoosting(PersistenceMixin):
     gamma: float = 0.0
     subsample: float = 1.0
     colsample_bytree: float = 1.0
-    n_bins: int = 256
+    n_bins: int = 254
     subsample_strategy: Literal['none', 'random', 'goss'] = 'none'
     goss_top_rate: float = 0.2
     goss_other_rate: float = 0.1

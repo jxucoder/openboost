@@ -2095,6 +2095,51 @@ def get_distribution(name: str | Distribution) -> Distribution:
     return DISTRIBUTIONS[name_lower]()
 
 
+def register_distribution(
+    name: str,
+    cls: type[Distribution],
+    *,
+    override: bool = False,
+) -> type[Distribution]:
+    """Register a custom Distribution class under a string name.
+
+    After registration the name works everywhere a built-in distribution
+    name does, e.g. ``NaturalBoost(distribution='mydist')``.
+
+    Args:
+        name: Name to register the distribution under. Lookup is
+            case-insensitive (the name is stored lowercased, matching
+            ``get_distribution``).
+        cls: A ``Distribution`` subclass. It is instantiated with no
+            arguments each time the name is resolved.
+        override: Pass True to replace an existing registration (including
+            a built-in name). Without it a duplicate name raises ValueError.
+
+    Returns:
+        ``cls`` unchanged.
+
+    Example:
+        >>> class MyNormal(Normal):
+        ...     pass
+        >>> register_distribution('mynormal', MyNormal)
+        >>> model = NaturalBoost(distribution='mynormal')
+    """
+    if not isinstance(name, str) or not name:
+        raise TypeError(f"Distribution name must be a non-empty string, got {name!r}")
+    if not (isinstance(cls, type) and issubclass(cls, Distribution)):
+        raise TypeError(
+            f"Distribution must be a Distribution subclass, got {cls!r}"
+        )
+    key = name.lower()
+    if not override and key in DISTRIBUTIONS:
+        raise ValueError(
+            f"Distribution '{key}' is already registered. "
+            "Pass override=True to replace it."
+        )
+    DISTRIBUTIONS[key] = cls
+    return cls
+
+
 def list_distributions() -> list[str]:
     """List available distribution names."""
     return sorted(set(DISTRIBUTIONS.keys()))

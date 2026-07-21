@@ -246,6 +246,198 @@ class TestLinearLeafEdgeCases:
         assert np.all(np.isfinite(pred))
 
 
+class _RecordingCallback(ob.Callback):
+    """Records every hook invocation for assertions."""
+
+    def __init__(self):
+        self.train_begin_calls = 0
+        self.train_end_calls = 0
+        self.begin_rounds = []
+        self.end_rounds = []
+        self.train_losses = []
+        self.val_losses = []
+
+    def on_train_begin(self, state):
+        self.train_begin_calls += 1
+
+    def on_round_begin(self, state):
+        self.begin_rounds.append(state.round_idx)
+
+    def on_round_end(self, state):
+        self.end_rounds.append(state.round_idx)
+        self.train_losses.append(state.train_loss)
+        self.val_losses.append(state.val_loss)
+        return True
+
+    def on_train_end(self, state):
+        self.train_end_calls += 1
+
+
+class _NoOpCallback(ob.Callback):
+    """Callback that does nothing (inherits all default hooks)."""
+
+
+def _es_dataset():
+    """Train/val split prone to overfitting, for early-stopping tests."""
+    rng = np.random.RandomState(123)
+    X = rng.randn(250, 6).astype(np.float32)
+    y = (1.5 * X[:, 0] - X[:, 2] + 0.3 * rng.randn(250)).astype(np.float32)
+    X_val = rng.randn(80, 6).astype(np.float32)
+    y_val = (1.5 * X_val[:, 0] - X_val[:, 2] + 0.3 * rng.randn(80)).astype(np.float32)
+    return X, y, X_val, y_val
+
+
+class TestLinearLeafObservability:
+    """fit() observability: callbacks, eval_set, early stopping."""
+
+    def test_noop_callback_predictions_identical(self, regression_200x10):
+        """Fit with a no-op callback must be byte-identical to plain fit.
+
+        This proves the observability additions (loss computation, callback
+        dispatch) do not perturb the training path at all — i.e. the default
+        no-args behavior is unchanged from before the feature existed.
+        """
+        X, y = regression_200x10
+
+        plain = ob.LinearLeafGBDT(n_trees=10, max_depth=3)
+        plain.fit(X, y)
+
+        instrumented = ob.LinearLeafGBDT(n_trees=10, max_depth=3)
+        instrumented.fit(X, y, callbacks=[_NoOpCallback()])
+
+        np.testing.assert_array_equal(plain.predict(X), instrumented.predict(X))
+
+    def test_callback_rounds_and_losses(self, regression_200x10):
+        """Callbacks see correct round indices and correct train/val MSE."""
+        X, y = regression_200x10
+        X_train, y_train = X[:150], y[:150]
+        X_val, y_val = X[150:], y[150:]
+        n_trees = 8
+
+        cb = _RecordingCallback()
+        model = ob.LinearLeafGBDT(n_trees=n_trees, max_depth=3)
+        model.fit(X_train, y_train, callbacks=[cb], eval_set=[(X_val, y_val)])
+
+        # Hook cadence and round numbering
+        assert cb.train_begin_calls == 1
+        assert cb.train_end_calls == 1
+        assert cb.begin_rounds == list(range(n_trees))
+        assert cb.end_rounds == list(range(n_trees))
+
+        # Losses are populated and finite every round
+        assert all(
+            loss is not None and np.isfinite(loss) for loss in cb.train_losses
+        )
+        assert all(
+            loss is not None and np.isfinite(loss) for loss in cb.val_losses
+        )
+
+        # Final round's losses must equal MSE of the full model's predictions
+        # (incremental tracking follows the same accumulation order as
+        # predict(), so this is exact)
+        train_mse = float(np.mean((model.predict(X_train) - y_train) ** 2))
+        val_mse = float(np.mean((model.predict(X_val) - y_val) ** 2))
+        assert cb.train_losses[-1] == train_mse
+        assert cb.val_losses[-1] == val_mse
+
+        # val_loss reported to callbacks is the recorded eval history
+        assert cb.val_losses == model.evals_result_['eval_0']['mse']
+
+    def test_evals_result_history_lengths(self, regression_200x10):
+        """evals_result_ records one MSE per eval set per round trained."""
+        X, y = regression_200x10
+        X_train, y_train = X[:120], y[:120]
+        n_trees = 7
+
+        model = ob.LinearLeafGBDT(n_trees=n_trees, max_depth=3)
+        model.fit(
+            X_train, y_train,
+            eval_set=[(X[120:160], y[120:160]), (X[160:], y[160:])],
+        )
+
+        assert set(model.evals_result_.keys()) == {'eval_0', 'eval_1'}
+        assert len(model.evals_result_['eval_0']['mse']) == n_trees
+        assert len(model.evals_result_['eval_1']['mse']) == n_trees
+
+        # No eval_set -> empty history dict
+        plain = ob.LinearLeafGBDT(n_trees=3, max_depth=2)
+        plain.fit(X_train, y_train)
+        assert plain.evals_result_ == {}
+
+    def test_early_stopping_truncates_on_plateau(self):
+        """Early stopping halts before n_trees and truncates to best round."""
+        X, y, X_val, y_val = _es_dataset()
+        n_trees, patience = 200, 5
+
+        model = ob.LinearLeafGBDT(n_trees=n_trees, max_depth=3)
+        model.fit(
+            X, y,
+            eval_set=[(X_val, y_val)],
+            early_stopping_rounds=patience,
+        )
+
+        history = model.evals_result_['eval_0']['mse']
+        rounds_trained = len(history)
+
+        # Stopped early, well short of n_trees
+        assert rounds_trained < n_trees
+
+        # Trees truncated to the best round; leaf models live inside each
+        # LinearLeafTree so they are truncated with it
+        assert model.best_iteration_ == int(np.argmin(history))
+        assert len(model.trees_) == model.best_iteration_ + 1
+        assert model.best_score_ == min(history)
+
+        # Stop happened exactly patience rounds after the best round
+        assert rounds_trained == model.best_iteration_ + patience + 1
+
+        # History covers every round trained, not just up to the best round
+        assert rounds_trained > model.best_iteration_
+
+        pred = model.predict(X_val)
+        assert np.all(np.isfinite(pred))
+
+    def test_truncated_model_matches_short_refit(self):
+        """Restored-best model predicts identically to a fresh fit with
+        n_trees == best_iteration_ + 1 (training is deterministic)."""
+        X, y, X_val, y_val = _es_dataset()
+
+        es_model = ob.LinearLeafGBDT(n_trees=200, max_depth=3)
+        es_model.fit(X, y, eval_set=[(X_val, y_val)], early_stopping_rounds=5)
+
+        short = ob.LinearLeafGBDT(n_trees=es_model.best_iteration_ + 1, max_depth=3)
+        short.fit(X, y)
+
+        np.testing.assert_array_equal(es_model.predict(X_val), short.predict(X_val))
+
+    def test_early_stopping_callback_rounds(self):
+        """Under early stopping, callbacks see rounds 0..rounds_trained-1."""
+        X, y, X_val, y_val = _es_dataset()
+
+        cb = _RecordingCallback()
+        model = ob.LinearLeafGBDT(n_trees=200, max_depth=3)
+        model.fit(
+            X, y,
+            callbacks=[cb],
+            eval_set=[(X_val, y_val)],
+            early_stopping_rounds=5,
+        )
+
+        rounds_trained = len(model.evals_result_['eval_0']['mse'])
+        assert cb.end_rounds == list(range(rounds_trained))
+        assert cb.train_end_calls == 1
+
+    def test_early_stopping_without_eval_set_warns(self, regression_100x5):
+        """early_stopping_rounds with no eval_set warns and has no effect."""
+        X, y = regression_100x5
+
+        model = ob.LinearLeafGBDT(n_trees=5, max_depth=2)
+        with pytest.warns(UserWarning, match="eval_set"):
+            model.fit(X, y, early_stopping_rounds=3)
+
+        assert len(model.trees_) == 5  # trained to completion
+
+
 class TestLinearLeafPersistence:
     """Save/load functionality."""
 
