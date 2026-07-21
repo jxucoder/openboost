@@ -228,9 +228,7 @@ class TreeStructure:
         Returns:
             Values for those leaves (shape depends on leaf type)
         """
-        if isinstance(self.values, LeafValues):
-            return self.values[leaf_ids]
-        # Backward compat: plain NDArray
+        # Both plain ndarrays and LeafValues containers support indexing.
         return self.values[leaf_ids]
     
     def set_leaf_value(self, leaf_id: int, value) -> None:
@@ -240,10 +238,8 @@ class TreeStructure:
             leaf_id: Leaf node index
             value: Value to store (scalar or array depending on leaf type)
         """
-        if isinstance(self.values, LeafValues):
-            self.values[leaf_id] = value
-        else:
-            self.values[leaf_id] = value
+        # Both plain ndarrays and LeafValues containers support item assignment.
+        self.values[leaf_id] = value
     
     @property
     def leaf_values_array(self) -> NDArray:
