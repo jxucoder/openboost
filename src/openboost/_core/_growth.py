@@ -216,7 +216,17 @@ class TreeStructure:
 
     # Cached GPU arrays for fast repeated prediction (avoids re-transferring)
     _gpu_arrays: dict | None = field(default=None, repr=False)
-    
+
+    def __getstate__(self) -> dict:
+        # Device handles cannot be deep-copied/pickled; host arrays are the
+        # source of truth, the cache re-uploads lazily (see Tree.__getstate__).
+        state = self.__dict__.copy()
+        state['_gpu_arrays'] = None
+        return state
+
+    def __setstate__(self, state: dict) -> None:
+        self.__dict__.update(state)
+
     def get_leaf_values(self, leaf_ids: NDArray) -> NDArray:
         """Get leaf values for given leaf IDs.
         

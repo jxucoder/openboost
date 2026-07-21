@@ -157,11 +157,27 @@ class Tree:
         
         return features, thresholds, values, left, right
     
+    def __getstate__(self) -> dict:
+        # DeviceNDArray handles cannot be deep-copied or pickled (Cython objects
+        # with non-trivial __cinit__), which breaks EarlyStopping's restore_best
+        # snapshot and pickling of GPU-trained models. Materialize the CPU
+        # arrays first, then drop the device handles; they re-upload lazily.
+        if self.on_gpu:
+            self.to_arrays()
+        state = self.__dict__.copy()
+        for key in ('_features_gpu', '_thresholds_gpu', '_values_gpu',
+                    '_left_gpu', '_right_gpu'):
+            state[key] = None
+        return state
+
+    def __setstate__(self, state: dict) -> None:
+        self.__dict__.update(state)
+
     def to_gpu_arrays(self):
         """Get GPU arrays for fast GPU prediction.
-        
+
         Returns arrays already on GPU if available, otherwise transfers from CPU.
-        
+
         Returns:
             features_gpu, thresholds_gpu, values_gpu, left_gpu, right_gpu
         """
@@ -975,7 +991,18 @@ class SymmetricTree:
     _level_features_gpu: NDArray | None = field(default=None, repr=False)
     _level_thresholds_gpu: NDArray | None = field(default=None, repr=False)
     _leaf_values_gpu: NDArray | None = field(default=None, repr=False)
-    
+
+    def __getstate__(self) -> dict:
+        # Device handles cannot be deep-copied/pickled; host arrays are the
+        # source of truth, caches re-upload lazily (see Tree.__getstate__).
+        state = self.__dict__.copy()
+        for key in ('_level_features_gpu', '_level_thresholds_gpu', '_leaf_values_gpu'):
+            state[key] = None
+        return state
+
+    def __setstate__(self, state: dict) -> None:
+        self.__dict__.update(state)
+
     def __call__(self, X: BinnedArray | NDArray) -> NDArray:
         """Predict using this symmetric tree."""
         return predict_symmetric_tree(self, X)

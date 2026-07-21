@@ -570,3 +570,34 @@ class TestLeafValuesArrayRegression:
                     vals = tree.leaf_values_array
                     vals = vals() if callable(vals) else vals
                     assert isinstance(vals, np.ndarray)
+
+
+class TestTreeSnapshotSafety:
+    """Trees must survive deepcopy and pickle (EarlyStopping restore_best
+    snapshots trees_; GPU device-array caches are not copyable and must be
+    dropped by __getstate__, re-uploading lazily afterwards)."""
+
+    def test_deepcopy_and_pickle_all_growth_strategies(self):
+        import copy
+        import pickle
+
+        import numpy as np
+
+        import openboost as ob
+
+        rng = np.random.default_rng(3)
+        X = rng.standard_normal((400, 4)).astype(np.float32)
+        y = (X[:, 0] - X[:, 1] + 0.1 * rng.standard_normal(400)).astype(np.float32)
+        for growth in ("levelwise", "leafwise", "symmetric"):
+            model = ob.GradientBoosting(n_trees=3, max_depth=3, growth=growth)
+            model.fit(X, y)
+            for tree in model.trees_:
+                clone = copy.deepcopy(tree)
+                revived = pickle.loads(pickle.dumps(tree))
+                np.testing.assert_allclose(clone(X), tree(X), rtol=1e-6)
+                np.testing.assert_allclose(revived(X), tree(X), rtol=1e-6)
+                # device caches must not survive the round-trip
+                for obj in (clone, revived):
+                    for attr, val in vars(obj).items():
+                        if attr.endswith("_gpu") or attr == "_gpu_arrays":
+                            assert val is None, f"{attr} leaked through snapshot"
