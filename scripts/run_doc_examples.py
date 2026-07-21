@@ -18,7 +18,7 @@ Exit status is non-zero if any file's script fails, so this can gate CI.
 
 Usage:
     OPENBOOST_BACKEND=cpu uv run python scripts/run_doc_examples.py
-    uv run python scripts/run_doc_examples.py docs/quickstart.md   # subset
+    uv run python scripts/run_doc_examples.py docs/getting-started/quickstart.md   # subset
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ DOC_FILES = [
     "docs/cookbook/custom-distribution.md",
     "docs/cookbook/custom-growth-strategy.md",
     "docs/cookbook/device-loss.md",
-    "docs/quickstart.md",
+    "docs/getting-started/quickstart.md",
     "docs/user-guide/models/gradient-boosting.md",
 ]
 

@@ -43,7 +43,7 @@ from openboost import Logger
 
 model.fit(
     X_train, y_train,
-    callbacks=[Logger(every=10)],  # Print every 10 trees
+    callbacks=[Logger(period=10)],  # Print every 10 trees
 )
 ```
 
@@ -96,7 +96,7 @@ from openboost import EarlyStopping, Logger, ModelCheckpoint
 
 callbacks = [
     EarlyStopping(patience=20),
-    Logger(every=10),
+    Logger(period=10),
     ModelCheckpoint('checkpoints/model_{round}.joblib'),
 ]
 

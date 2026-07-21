@@ -221,3 +221,4 @@ logs/
 
 # Benchmark results (generated)
 benchmarks/results/*.json
+tasks/

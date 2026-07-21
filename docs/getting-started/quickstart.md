@@ -59,12 +59,14 @@ predictions = (probabilities > 0.5).astype(int)
 ```python
 import openboost as ob
 
+y_class = np.random.randint(0, 5, size=len(X_train))  # labels 0..4
+
 model = ob.MultiClassGradientBoosting(
     n_classes=5,
     n_trees=100,
     max_depth=6,
 )
-model.fit(X_train, y_train)  # y_train: 0, 1, 2, 3, or 4
+model.fit(X_train, y_class)  # labels must be 0, 1, 2, 3, or 4
 
 # Get probabilities
 probabilities = model.predict_proba(X_test)  # Shape: (n_samples, n_classes)
@@ -128,7 +130,7 @@ model = ob.GradientBoosting(n_trees=500, max_depth=6)
 
 callbacks = [
     EarlyStopping(patience=10, min_delta=0.001),
-    Logger(every=10),
+    Logger(period=10),
 ]
 
 model.fit(

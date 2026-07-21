@@ -177,7 +177,7 @@ model.fit(
     X_train, y_train,
     callbacks=[
         EarlyStopping(patience=10),
-        Logger(every=10),
+        Logger(period=10),
     ],
     eval_set=[(X_val, y_val)],
 )
