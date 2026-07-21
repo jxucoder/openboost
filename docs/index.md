@@ -1,7 +1,7 @@
 # OpenBoost
 
 <p align="center" style="font-size: 1.2em;">
-  <strong>A GPU-native, all-Python platform for tree-based machine learning.</strong>
+  <strong>The hackable gradient boosting platform — probabilistic predictions, interpretable GAMs, and custom algorithms, all in readable Python, all GPU-ready.</strong>
 </p>
 
 <p align="center">

@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "openboost"
 version = "1.0.0rc1"
-description = "GPU-accelerated gradient boosting, written in Python"
+description = "Hackable gradient boosting platform: probabilistic predictions, interpretable GAMs, and custom algorithms in readable Python, with CPU and CUDA backends"
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"

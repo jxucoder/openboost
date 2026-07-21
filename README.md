@@ -1,6 +1,6 @@
 # OpenBoost
 
-**A GPU-native, all-Python platform for tree-based machine learning.**
+**The hackable gradient boosting platform — probabilistic predictions, interpretable GAMs, and custom algorithms, all in readable Python, all GPU-ready.**
 
 > **Note:** OpenBoost is in active development. APIs may change between releases. Use at your own risk.
 
@@ -12,6 +12,7 @@ For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom alg
 
 - **NaturalBoost**: 1.6-11x faster than NGBoost on GPU (tree build only; gradient/Fisher math stays on CPU). On CPU the two are comparable (0.8-1.3x, quality within ~1%) — see Benchmarks
 - **OpenBoostGAM**: much faster than InterpretML EBM on our committed run (56x), with an accuracy tradeoff — see [Benchmarks](#benchmarks) for the honest numbers
+- **Your own algorithms**: custom losses, distributions, and tree-growth strategies are registration APIs (`register_loss`, `register_distribution`, `register_growth_strategy`), not C++ forks — see the [cookbook](https://jxucoder.github.io/openboost/cookbook/custom-loss/)
 
 Plus: ~20K lines of readable Python. Modify, extend, and build on — no C++ required.
 
