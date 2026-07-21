@@ -50,10 +50,23 @@ Both models score **best-on-validation** (early-stopping regime). Library =
      train NLL, so full steps are always accepted (bit-identical runs);
    - per-channel learning rate: no help (see above).
    Early stopping on a validation set is currently mandatory.
-4. **Open questions** for a production version: principled regularization of
-   the scale channel inside the joint gain; non-diagonal Fisher families
-   (k×k solve per candidate split); closing the real-data capacity gap
-   (deeper/more trees, or hybrid shared-then-separate rounds).
+4. **Capacity does not explain E3 either** (`run_depth5.py`): the depth-4
+   comparison gives one-tree half the per-round leaf budget (16 vs 2×16), but
+   equalizing it makes things *worse* — E3 best NLL is 0.5812 at depth 5 and
+   0.5751 at depth 6 vs 0.5453 at depth 4 (library: 0.4910). Four hypotheses
+   for the real-data gap are now falsified: structure sharing (E2), step size
+   (inert line search), scale overfitting (slower scale channel hurt), and
+   per-round capacity (deeper trees hurt).
+5. **Remaining hypothesis (untested)**: precision weighting. The joint
+   μ-channel uses gradients scaled by 1/σ², so regions with small predicted σ
+   dominate split selection and leaf values; the per-parameter baseline fits
+   its mean trees to Fisher-preconditioned targets (≈ raw residuals), i.e.
+   effectively *unweighted*. If early σ estimates are noisy on real data,
+   precision weighting amplifies their errors into the mean fit. Testing this
+   (e.g. tempered weighting `(1/σ²)^α`) is the natural next experiment.
+6. **Open questions** for a production version: the precision-weighting
+   question above; principled regularization of the scale channel inside the
+   joint gain; non-diagonal Fisher families (k×k solve per candidate split).
 
 ## Run
 
