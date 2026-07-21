@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://jxucoder.github.io/openboost/user-guide/models/multiclass/">
+        <link rel="canonical" href="https://jxucoder.github.io/openboost/cookbook/custom-growth-strategy/">
       
       
-        <link rel="prev" href="../gradient-boosting/">
+        <link rel="prev" href="../custom-distribution/">
       
       
-        <link rel="next" href="../dart/">
+        <link rel="next" href="../device-loss/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>Multi-class Classification - OpenBoost</title>
+        <title>Custom Growth Strategy - OpenBoost</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#multi-class-classification" class="md-skip">
+        <a href="#recipe-custom-growth-strategy" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="OpenBoost" class="md-header__button md-logo" aria-label="OpenBoost" data-md-component="logo">
+    <a href="../.." title="OpenBoost" class="md-header__button md-logo" aria-label="OpenBoost" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Multi-class Classification
+              Custom Growth Strategy
             
           </span>
         </div>
@@ -227,7 +227,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -248,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../getting-started/installation/" class="md-tabs__link">
+        <a href="../../getting-started/installation/" class="md-tabs__link">
           
   
   
@@ -264,8 +264,6 @@
   
   
   
-    
-  
   
     
     
@@ -273,13 +271,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../gradient-boosting/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../user-guide/models/gradient-boosting/" class="md-tabs__link">
           
   
   
@@ -302,7 +298,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../tutorials/uncertainty/" class="md-tabs__link">
+        <a href="../../tutorials/uncertainty/" class="md-tabs__link">
           
   
   
@@ -318,11 +314,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../cookbook/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -342,7 +340,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../api/openboost/" class="md-tabs__link">
+        <a href="../../api/openboost/" class="md-tabs__link">
           
   
   
@@ -362,7 +360,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../migration/from-xgboost/" class="md-tabs__link">
+        <a href="../../migration/from-xgboost/" class="md-tabs__link">
           
   
   
@@ -380,7 +378,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../changelog/" class="md-tabs__link">
+      <a href="../../changelog/" class="md-tabs__link">
         
   
   
@@ -415,7 +413,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="OpenBoost" class="md-nav__button md-logo" aria-label="OpenBoost" data-md-component="logo">
+    <a href="../.." title="OpenBoost" class="md-nav__button md-logo" aria-label="OpenBoost" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -445,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -524,7 +522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/installation/" class="md-nav__link">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -552,7 +550,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -580,7 +578,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/gpu-setup/" class="md-nav__link">
+      <a href="../../getting-started/gpu-setup/" class="md-nav__link">
         
   
   
@@ -612,31 +610,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -654,7 +647,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -669,31 +662,26 @@
                 
   
   
-    
   
   
-  
     
     
     
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
         
           
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
             
   
   
@@ -711,7 +699,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -729,7 +717,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gradient-boosting/" class="md-nav__link">
+      <a href="../../user-guide/models/gradient-boosting/" class="md-nav__link">
         
   
   
@@ -754,37 +742,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Multi-class Classification
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../user-guide/models/multiclass/" class="md-nav__link">
         
   
   
@@ -800,70 +761,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-iris-classification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example: Iris Classification
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sklearn-wrapper" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        sklearn Wrapper
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -876,7 +773,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dart/" class="md-nav__link">
+      <a href="../../user-guide/models/dart/" class="md-nav__link">
         
   
   
@@ -904,7 +801,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gam/" class="md-nav__link">
+      <a href="../../user-guide/models/gam/" class="md-nav__link">
         
   
   
@@ -932,7 +829,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../linear-leaf/" class="md-nav__link">
+      <a href="../../user-guide/models/linear-leaf/" class="md-nav__link">
         
   
   
@@ -974,20 +871,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
         
           
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
             
   
   
@@ -1023,7 +917,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../naturalboost/overview/" class="md-nav__link">
+      <a href="../../user-guide/naturalboost/overview/" class="md-nav__link">
         
   
   
@@ -1051,7 +945,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../naturalboost/distributions/" class="md-nav__link">
+      <a href="../../user-guide/naturalboost/distributions/" class="md-nav__link">
         
   
   
@@ -1079,7 +973,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../naturalboost/custom-distributions/" class="md-nav__link">
+      <a href="../../user-guide/naturalboost/custom-distributions/" class="md-nav__link">
         
   
   
@@ -1121,20 +1015,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
             
   
   
@@ -1170,7 +1061,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../training/callbacks/" class="md-nav__link">
+      <a href="../../user-guide/training/callbacks/" class="md-nav__link">
         
   
   
@@ -1198,7 +1089,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../training/large-scale/" class="md-nav__link">
+      <a href="../../user-guide/training/large-scale/" class="md-nav__link">
         
   
   
@@ -1240,20 +1131,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
         
           
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
             
   
   
@@ -1289,7 +1177,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../evaluation/metrics/" class="md-nav__link">
+      <a href="../../user-guide/evaluation/metrics/" class="md-nav__link">
         
   
   
@@ -1325,7 +1213,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sklearn-integration/" class="md-nav__link">
+      <a href="../../user-guide/sklearn-integration/" class="md-nav__link">
         
   
   
@@ -1353,7 +1241,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../model-persistence/" class="md-nav__link">
+      <a href="../../user-guide/model-persistence/" class="md-nav__link">
         
   
   
@@ -1440,7 +1328,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/uncertainty/" class="md-nav__link">
+      <a href="../../tutorials/uncertainty/" class="md-nav__link">
         
   
   
@@ -1468,7 +1356,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/custom-loss/" class="md-nav__link">
+      <a href="../../tutorials/custom-loss/" class="md-nav__link">
         
   
   
@@ -1500,26 +1388,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -1537,7 +1430,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1555,7 +1448,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -1583,7 +1476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/custom-loss/" class="md-nav__link">
+      <a href="../custom-loss/" class="md-nav__link">
         
   
   
@@ -1611,7 +1504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/custom-distribution/" class="md-nav__link">
+      <a href="../custom-distribution/" class="md-nav__link">
         
   
   
@@ -1636,10 +1529,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../cookbook/custom-growth-strategy/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Growth Strategy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1655,6 +1575,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#complete-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete script
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-growthstrategy-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The GrowthStrategy contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1667,7 +1640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/device-loss/" class="md-nav__link">
+      <a href="../device-loss/" class="md-nav__link">
         
   
   
@@ -1754,7 +1727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/openboost/" class="md-nav__link">
+      <a href="../../api/openboost/" class="md-nav__link">
         
   
   
@@ -1782,7 +1755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/models/" class="md-nav__link">
+      <a href="../../api/models/" class="md-nav__link">
         
   
   
@@ -1810,7 +1783,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/distributions/" class="md-nav__link">
+      <a href="../../api/distributions/" class="md-nav__link">
         
   
   
@@ -1838,7 +1811,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/callbacks/" class="md-nav__link">
+      <a href="../../api/callbacks/" class="md-nav__link">
         
   
   
@@ -1866,7 +1839,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/loss/" class="md-nav__link">
+      <a href="../../api/loss/" class="md-nav__link">
         
   
   
@@ -1894,7 +1867,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/utils/" class="md-nav__link">
+      <a href="../../api/utils/" class="md-nav__link">
         
   
   
@@ -1981,7 +1954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../migration/from-xgboost/" class="md-nav__link">
+      <a href="../../migration/from-xgboost/" class="md-nav__link">
         
   
   
@@ -2016,7 +1989,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -2063,10 +2036,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#complete-script" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Basic Usage
+        Complete script
       
     </span>
   </a>
@@ -2074,10 +2047,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
+  <a href="#the-growthstrategy-contract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parameters
+        The GrowthStrategy contract
       
     </span>
   </a>
@@ -2085,21 +2058,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-iris-classification" class="md-nav__link">
+  <a href="#notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example: Iris Classification
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sklearn-wrapper" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        sklearn Wrapper
+        Notes
       
     </span>
   </a>
@@ -2126,79 +2088,108 @@
   
 
 
-<h1 id="multi-class-classification">Multi-class Classification<a class="headerlink" href="#multi-class-classification" title="Permanent link">&para;</a></h1>
-<p>For classification problems with more than 2 classes.</p>
-<h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<h1 id="recipe-custom-growth-strategy">Recipe: Custom Growth Strategy<a class="headerlink" href="#recipe-custom-growth-strategy" title="Permanent link">&para;</a></h1>
+<p>Plug your own tree-growth policy into <code>GradientBoosting</code> under a string name,
+next to the built-in <code>'levelwise'</code>, <code>'leafwise'</code>, and <code>'symmetric'</code> strategies.</p>
+<p><strong>You will use:</strong> <code>ob.GrowthStrategy</code> / <code>ob.LevelWiseGrowth</code>,
+<code>ob.register_growth_strategy</code>, <code>GradientBoosting(growth='&lt;your name&gt;')</code>.</p>
+<h2 id="complete-script">Complete script<a class="headerlink" href="#complete-script" title="Permanent link">&para;</a></h2>
+<p>The easiest custom strategy wraps a built-in one and rewrites its
+<code>GrowthConfig</code>. Here: <strong>depth-capped random-feature growth</strong> — every tree is
+level-wise but capped at depth 3 and sees only a random 70% of the features,
+regardless of what the model was configured with. (Think of it as an
+extra-randomized, heavily regularized forest layer.)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">MultiClassGradientBoosting</span><span class="p">(</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">n_classes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>  <span class="c1"># y_train: 0, 1, 2, 3, or 4</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">ShallowRandomGrowth</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">LevelWiseGrowth</span><span class="p">):</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Level-wise growth, capped at depth 3, random 70% feature subset per tree.&quot;&quot;&quot;</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Get class probabilities</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">probabilities</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>  <span class="c1"># Shape: (n_samples, n_classes)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">depth_cap</span> <span class="o">=</span> <span class="mi">3</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">feature_fraction</span> <span class="o">=</span> <span class="mf">0.7</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Get class predictions</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>  <span class="c1"># Shape: (n_samples,)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">grow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binned</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">hess</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>             <span class="n">has_missing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_categorical</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_categories</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        <span class="n">config</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>            <span class="n">config</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>            <span class="n">max_depth</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">max_depth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth_cap</span><span class="p">),</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>            <span class="n">colsample_bytree</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">colsample_bytree</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_fraction</span><span class="p">),</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="p">)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>            <span class="n">binned</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">hess</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>            <span class="n">has_missing</span><span class="o">=</span><span class="n">has_missing</span><span class="p">,</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>            <span class="n">is_categorical</span><span class="o">=</span><span class="n">is_categorical</span><span class="p">,</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>            <span class="n">n_categories</span><span class="o">=</span><span class="n">n_categories</span><span class="p">,</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="p">)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1"># Register once (process-wide); the class must construct with no arguments —</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># it is instantiated fresh each time the name is resolved.</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="n">ob</span><span class="o">.</span><span class="n">register_growth_strategy</span><span class="p">(</span><span class="s1">&#39;shallow_random&#39;</span><span class="p">,</span> <span class="n">ShallowRandomGrowth</span><span class="p">)</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># --- Use it by name ----------------------------------------------------------</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="n">X</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">2000</span><span class="p">))</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">1600</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1600</span><span class="p">:]</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:</span><span class="mi">1600</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">1600</span><span class="p">:]</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">growth</span><span class="o">=</span><span class="s1">&#39;shallow_random&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="c1"># Every tree honored the cap even though the model asked for max_depth=6</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="n">depths</span> <span class="o">=</span> <span class="p">{</span><span class="n">tree</span><span class="o">.</span><span class="n">depth</span> <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">trees_</span><span class="p">}</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;tree depths:&quot;</span><span class="p">,</span> <span class="n">depths</span><span class="p">)</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="k">assert</span> <span class="nb">max</span><span class="p">(</span><span class="n">depths</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="n">rmse</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span> <span class="o">-</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;test RMSE: </span><span class="si">{</span><span class="n">rmse</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
-<p>Same as <code>GradientBoosting</code>, plus:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>n_classes</code></td>
-<td>int</td>
-<td>required</td>
-<td>Number of classes</td>
-</tr>
-</tbody>
-</table>
-<h2 id="example-iris-classification">Example: Iris Classification<a class="headerlink" href="#example-iris-classification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_iris</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Load data</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Split</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Train</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">MultiClassGradientBoosting</span><span class="p">(</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">n_classes</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Evaluate</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="n">accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">predictions</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<h2 id="the-growthstrategy-contract">The <code>GrowthStrategy</code> contract<a class="headerlink" href="#the-growthstrategy-contract" title="Permanent link">&para;</a></h2>
+<p>To write a strategy from scratch, subclass <code>ob.GrowthStrategy</code> and implement
+one method:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyGrowth</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">GrowthStrategy</span><span class="p">):</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">grow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binned</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">hess</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>             <span class="n">has_missing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_categorical</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_categories</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="o">...</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="k">return</span> <span class="n">tree</span>  <span class="c1"># an ob.TreeStructure</span>
 </code></pre></div>
-<h2 id="sklearn-wrapper">sklearn Wrapper<a class="headerlink" href="#sklearn-wrapper" title="Permanent link">&para;</a></h2>
-<p>For scikit-learn compatibility:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenBoostClassifier</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_score</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">clf</span> <span class="o">=</span> <span class="n">OpenBoostClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CV Accuracy: </span><span class="si">{</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
+<ul>
+<li><code>binned</code> — binned features, shape <code>(n_features, n_samples)</code>, uint8 (bin 255
+  is reserved for missing values).</li>
+<li><code>grad</code>, <code>hess</code> — float32 arrays of shape <code>(n_samples,)</code>.</li>
+<li><code>config</code> — an <code>ob.GrowthConfig</code> dataclass carrying <code>max_depth</code>,
+  <code>max_leaves</code>, <code>min_child_weight</code>, <code>reg_lambda</code>, <code>reg_alpha</code>, <code>min_gain</code>,
+  <code>subsample</code>, and <code>colsample_bytree</code>.</li>
+<li><code>has_missing</code> / <code>is_categorical</code> / <code>n_categories</code> — optional per-feature
+  metadata arrays; a minimal strategy may ignore them (numeric, fully-observed
+  data), but then must not be used with missing values or categoricals.</li>
+<li>Return an <code>ob.TreeStructure</code> (routing arrays + leaf values), which handles
+  prediction on both CPU and GPU.</li>
+</ul>
+<p>The building blocks used by the built-in strategies are exported for reuse:
+<code>ob.build_node_histograms</code>, <code>ob.find_node_splits</code>, <code>ob.partition_samples</code>,
+<code>ob.compute_leaf_values</code>, and <code>ob.get_nodes_at_depth</code>. Reading
+<code>LevelWiseGrowth.grow</code> in <code>openboost/_core/_growth.py</code> (~120 lines) is the
+best template for a from-scratch implementation.</p>
+<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Names are case-insensitive</strong> and stored lowercased. Registering an existing
+  name (including built-in aliases like <code>'oblivious'</code>) raises <code>ValueError</code>
+  unless you pass <code>override=True</code>.</li>
+<li>The name works in <code>GradientBoosting(growth=...)</code> and in the low-level
+  <code>ob.fit_tree(X_binned, grad, hess, growth=...)</code>. You can also bypass the
+  registry entirely and pass a strategy <em>instance</em>:
+  <code>fit_tree(..., growth=MyGrowth())</code>.</li>
+<li>Hyperparameters on a registered strategy must be class attributes (the
+  registry instantiates with no arguments). If you need per-model
+  configuration, register several named variants or pass configured instances
+  to <code>fit_tree</code>.</li>
+</ul>
 
 
 
@@ -2281,10 +2272,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

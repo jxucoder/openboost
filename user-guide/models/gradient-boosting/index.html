@@ -322,6 +322,26 @@
     
     
       <li class="md-tabs__item">
+        <a href="../../../cookbook/" class="md-tabs__link">
+          
+  
+  
+  Cookbook
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
         <a href="../../../api/openboost/" class="md-tabs__link">
           
   
@@ -1595,7 +1615,7 @@
   <span class="md-ellipsis">
     
   
-    API Reference
+    Cookbook
   
 
     
@@ -1608,6 +1628,205 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cookbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending OpenBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/custom-loss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Loss
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/custom-distribution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/custom-growth-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Growth Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/device-loss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device-Native Loss (GPU)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1812,10 +2031,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1833,8 +2052,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2087,17 +2306,26 @@
 
 <h1 id="gradient-boosting">Gradient Boosting<a class="headerlink" href="#gradient-boosting" title="Permanent link">&para;</a></h1>
 <p>The core gradient boosting model for regression and binary classification.</p>
+<p>The examples on this page share this setup:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">X</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">700</span><span class="p">],</span> <span class="n">y</span><span class="p">[:</span><span class="mi">700</span><span class="p">]</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">700</span><span class="p">:</span><span class="mi">850</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">700</span><span class="p">:</span><span class="mi">850</span><span class="p">]</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">850</span><span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="mi">850</span><span class="p">:]</span>
+</code></pre></div>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <table>
@@ -2220,45 +2448,48 @@
 </tbody>
 </table>
 <h3 id="custom-loss-function">Custom Loss Function<a class="headerlink" href="#custom-loss-function" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">quantile_loss</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">residual</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">pred</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">residual</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">tau</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">hess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="k">return</span> <span class="n">grad</span><span class="p">,</span> <span class="n">hess</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">quantile_loss</span><span class="p">)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">quantile_loss</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">residual</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">pred</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">grad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">residual</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">tau</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">hess</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">return</span> <span class="n">grad</span><span class="p">,</span> <span class="n">hess</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">quantile_loss</span><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="training-with-validation">Training with Validation<a class="headerlink" href="#training-with-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">eval_set</span><span class="o">=</span><span class="p">[(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)],</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="n">ob</span><span class="o">.</span><span class="n">EarlyStopping</span><span class="p">(</span><span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">ob</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="n">every</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="p">],</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">eval_set</span><span class="o">=</span><span class="p">[(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="n">ob</span><span class="o">.</span><span class="n">EarlyStopping</span><span class="p">(</span><span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="n">ob</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="p">],</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">)</span>
 </code></pre></div>
 <h2 id="feature-importance">Feature Importance<a class="headerlink" href="#feature-importance" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Compute importance (pass the fitted model, not model.trees_)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">importance</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">compute_feature_importances</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Plot</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">ob</span><span class="o">.</span><span class="n">plot_feature_importances</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Compute importance (pass the fitted model, not model.trees_)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">importance</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">compute_feature_importances</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">importance</span><span class="p">)</span>
+</code></pre></div>
+<!-- docs-ci: skip -->
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Plot (requires matplotlib)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;feature_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">ob</span><span class="o">.</span><span class="n">plot_feature_importances</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="growth-strategies">Growth Strategies<a class="headerlink" href="#growth-strategies" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Level-wise (XGBoost-style, default)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;levelwise&#39;</span><span class="p">)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Leaf-wise (LightGBM-style); cap leaf count with max_leaves</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;leafwise&#39;</span><span class="p">,</span> <span class="n">max_leaves</span><span class="o">=</span><span class="mi">31</span><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Symmetric/Oblivious (CatBoost-style)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;symmetric&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Level-wise (XGBoost-style, default)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;levelwise&#39;</span><span class="p">)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Leaf-wise (LightGBM-style); cap leaf count with max_leaves</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;leafwise&#39;</span><span class="p">,</span> <span class="n">max_leaves</span><span class="o">=</span><span class="mi">31</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Symmetric/Oblivious (CatBoost-style)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">growth</span><span class="o">=</span><span class="s1">&#39;symmetric&#39;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
 
@@ -2287,7 +2518,7 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">gamma</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">subsample</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">n_bins</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">n_bins</span><span class="o">=</span><span class="mi">254</span><span class="p">,</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">quantile_alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">tweedie_rho</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">distributed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -2465,7 +2696,7 @@ training is fully batched for maximum performance.</p>
                   </span>
                   <span class="doc-param-default">
                     <b>DEFAULT:</b>
-                      <code>256</code>
+                      <code>254</code>
                   </span>
               </p>
             </td>

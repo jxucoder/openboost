@@ -322,6 +322,26 @@
     
     
       <li class="md-tabs__item">
+        <a href="../../../cookbook/" class="md-tabs__link">
+          
+  
+  
+  Cookbook
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
         <a href="../../../api/openboost/" class="md-tabs__link">
           
   
@@ -936,6 +956,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#validation-callbacks-and-early-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation, Callbacks, and Early Stopping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sklearn-wrapper" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1528,7 +1559,7 @@
   <span class="md-ellipsis">
     
   
-    API Reference
+    Cookbook
   
 
     
@@ -1541,6 +1572,205 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cookbook
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending OpenBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/custom-loss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Loss
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/custom-distribution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Distribution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/custom-growth-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Growth Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cookbook/device-loss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device-Native Loss (GPU)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1745,10 +1975,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1766,8 +1996,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1914,6 +2144,17 @@
     <span class="md-ellipsis">
       
         Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-callbacks-and-early-stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation, Callbacks, and Early Stopping
       
     </span>
   </a>
@@ -2091,12 +2332,38 @@ not available):</p>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GBDT RMSE: </span><span class="si">{</span><span class="n">gbdt_rmse</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LinearLeaf RMSE: </span><span class="si">{</span><span class="n">ll_rmse</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="validation-callbacks-and-early-stopping">Validation, Callbacks, and Early Stopping<a class="headerlink" href="#validation-callbacks-and-early-stopping" title="Permanent link">&para;</a></h2>
+<p><code>LinearLeafGBDT.fit</code> accepts the same training-control arguments as
+<code>GradientBoosting</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">LinearLeafGBDT</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">eval_set</span><span class="o">=</span><span class="p">[(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)],</span>          <span class="c1"># a single bare (X, y) tuple also works</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">ob</span><span class="o">.</span><span class="n">Logger</span><span class="p">(</span><span class="n">period</span><span class="o">=</span><span class="mi">25</span><span class="p">)],</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">early_stopping_rounds</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>   <span class="c1"># sugar for EarlyStopping(patience=20, restore_best=True)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">model</span><span class="o">.</span><span class="n">evals_result_</span>     <span class="c1"># {&#39;eval_0&#39;: {&#39;mse&#39;: [...]}} — per-round history per eval set</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">model</span><span class="o">.</span><span class="n">best_iteration_</span>   <span class="c1"># set when early stopping is used</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">model</span><span class="o">.</span><span class="n">best_score_</span>
+</code></pre></div>
+<p>Details:</p>
+<ul>
+<li>The eval metric is <strong>MSE on raw predictions</strong>, recorded per round for every
+  eval set under keys <code>'eval_0'</code>, <code>'eval_1'</code>, ... (<code>evals_result_</code> is <code>{}</code>
+  when no <code>eval_set</code> is passed).</li>
+<li>Callbacks (<code>EarlyStopping</code>, <code>Logger</code>, <code>HistoryCallback</code>, ...) receive the
+  <strong>last</strong> eval set's MSE as <code>val_loss</code>.</li>
+<li><code>early_stopping_rounds=N</code> stops after <code>N</code> rounds without improvement and
+  restores the model to (and sets <code>best_iteration_</code> / <code>best_score_</code> at) the
+  best round.</li>
+</ul>
 <h2 id="sklearn-wrapper">sklearn Wrapper<a class="headerlink" href="#sklearn-wrapper" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenBoostLinearLeafRegressor</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">OpenBoostLinearLeafRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² Score: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenBoostLinearLeafRegressor</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">OpenBoostLinearLeafRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R² Score: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_test</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 

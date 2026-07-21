@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://jxucoder.github.io/openboost/user-guide/models/multiclass/">
+        <link rel="canonical" href="https://jxucoder.github.io/openboost/cookbook/device-loss/">
       
       
-        <link rel="prev" href="../gradient-boosting/">
+        <link rel="prev" href="../custom-growth-strategy/">
       
       
-        <link rel="next" href="../dart/">
+        <link rel="next" href="../../api/openboost/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>Multi-class Classification - OpenBoost</title>
+        <title>Device-Native Loss (GPU) - OpenBoost</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#multi-class-classification" class="md-skip">
+        <a href="#recipe-device-native-loss-gpu" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="OpenBoost" class="md-header__button md-logo" aria-label="OpenBoost" data-md-component="logo">
+    <a href="../.." title="OpenBoost" class="md-header__button md-logo" aria-label="OpenBoost" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Multi-class Classification
+              Device-Native Loss (GPU)
             
           </span>
         </div>
@@ -227,7 +227,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -248,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../getting-started/installation/" class="md-tabs__link">
+        <a href="../../getting-started/installation/" class="md-tabs__link">
           
   
   
@@ -264,8 +264,6 @@
   
   
   
-    
-  
   
     
     
@@ -273,13 +271,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../gradient-boosting/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../user-guide/models/gradient-boosting/" class="md-tabs__link">
           
   
   
@@ -302,7 +298,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../tutorials/uncertainty/" class="md-tabs__link">
+        <a href="../../tutorials/uncertainty/" class="md-tabs__link">
           
   
   
@@ -318,11 +314,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../cookbook/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -342,7 +340,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../api/openboost/" class="md-tabs__link">
+        <a href="../../api/openboost/" class="md-tabs__link">
           
   
   
@@ -362,7 +360,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../migration/from-xgboost/" class="md-tabs__link">
+        <a href="../../migration/from-xgboost/" class="md-tabs__link">
           
   
   
@@ -380,7 +378,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../changelog/" class="md-tabs__link">
+      <a href="../../changelog/" class="md-tabs__link">
         
   
   
@@ -415,7 +413,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="OpenBoost" class="md-nav__button md-logo" aria-label="OpenBoost" data-md-component="logo">
+    <a href="../.." title="OpenBoost" class="md-nav__button md-logo" aria-label="OpenBoost" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -445,7 +443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -524,7 +522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/installation/" class="md-nav__link">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -552,7 +550,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -580,7 +578,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/gpu-setup/" class="md-nav__link">
+      <a href="../../getting-started/gpu-setup/" class="md-nav__link">
         
   
   
@@ -612,31 +610,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -654,7 +647,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -669,31 +662,26 @@
                 
   
   
-    
   
   
-  
     
     
     
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
         
           
-          
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
             
   
   
@@ -711,7 +699,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -729,7 +717,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gradient-boosting/" class="md-nav__link">
+      <a href="../../user-guide/models/gradient-boosting/" class="md-nav__link">
         
   
   
@@ -754,37 +742,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Multi-class Classification
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../user-guide/models/multiclass/" class="md-nav__link">
         
   
   
@@ -800,70 +761,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-iris-classification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example: Iris Classification
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sklearn-wrapper" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        sklearn Wrapper
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -876,7 +773,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dart/" class="md-nav__link">
+      <a href="../../user-guide/models/dart/" class="md-nav__link">
         
   
   
@@ -904,7 +801,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gam/" class="md-nav__link">
+      <a href="../../user-guide/models/gam/" class="md-nav__link">
         
   
   
@@ -932,7 +829,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../linear-leaf/" class="md-nav__link">
+      <a href="../../user-guide/models/linear-leaf/" class="md-nav__link">
         
   
   
@@ -974,20 +871,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
         
           
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
             
   
   
@@ -1023,7 +917,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../naturalboost/overview/" class="md-nav__link">
+      <a href="../../user-guide/naturalboost/overview/" class="md-nav__link">
         
   
   
@@ -1051,7 +945,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../naturalboost/distributions/" class="md-nav__link">
+      <a href="../../user-guide/naturalboost/distributions/" class="md-nav__link">
         
   
   
@@ -1079,7 +973,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../naturalboost/custom-distributions/" class="md-nav__link">
+      <a href="../../user-guide/naturalboost/custom-distributions/" class="md-nav__link">
         
   
   
@@ -1121,20 +1015,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
         
           
-          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
             
   
   
@@ -1170,7 +1061,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../training/callbacks/" class="md-nav__link">
+      <a href="../../user-guide/training/callbacks/" class="md-nav__link">
         
   
   
@@ -1198,7 +1089,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../training/large-scale/" class="md-nav__link">
+      <a href="../../user-guide/training/large-scale/" class="md-nav__link">
         
   
   
@@ -1240,20 +1131,17 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
         
           
-          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
             
   
   
@@ -1289,7 +1177,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../evaluation/metrics/" class="md-nav__link">
+      <a href="../../user-guide/evaluation/metrics/" class="md-nav__link">
         
   
   
@@ -1325,7 +1213,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sklearn-integration/" class="md-nav__link">
+      <a href="../../user-guide/sklearn-integration/" class="md-nav__link">
         
   
   
@@ -1353,7 +1241,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../model-persistence/" class="md-nav__link">
+      <a href="../../user-guide/model-persistence/" class="md-nav__link">
         
   
   
@@ -1440,7 +1328,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/uncertainty/" class="md-nav__link">
+      <a href="../../tutorials/uncertainty/" class="md-nav__link">
         
   
   
@@ -1468,7 +1356,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/custom-loss/" class="md-nav__link">
+      <a href="../../tutorials/custom-loss/" class="md-nav__link">
         
   
   
@@ -1500,26 +1388,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -1537,7 +1430,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1555,7 +1448,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -1583,7 +1476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/custom-loss/" class="md-nav__link">
+      <a href="../custom-loss/" class="md-nav__link">
         
   
   
@@ -1611,7 +1504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/custom-distribution/" class="md-nav__link">
+      <a href="../custom-distribution/" class="md-nav__link">
         
   
   
@@ -1639,7 +1532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/custom-growth-strategy/" class="md-nav__link">
+      <a href="../custom-growth-strategy/" class="md-nav__link">
         
   
   
@@ -1664,10 +1557,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../cookbook/device-loss/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Device-Native Loss (GPU)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1683,6 +1603,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-script-runs-on-cpu-identical-code-runs-on-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete script (runs on CPU; identical code runs on GPU)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explicit-cupy-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explicit CuPy version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1754,7 +1749,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/openboost/" class="md-nav__link">
+      <a href="../../api/openboost/" class="md-nav__link">
         
   
   
@@ -1782,7 +1777,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/models/" class="md-nav__link">
+      <a href="../../api/models/" class="md-nav__link">
         
   
   
@@ -1810,7 +1805,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/distributions/" class="md-nav__link">
+      <a href="../../api/distributions/" class="md-nav__link">
         
   
   
@@ -1838,7 +1833,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/callbacks/" class="md-nav__link">
+      <a href="../../api/callbacks/" class="md-nav__link">
         
   
   
@@ -1866,7 +1861,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/loss/" class="md-nav__link">
+      <a href="../../api/loss/" class="md-nav__link">
         
   
   
@@ -1894,7 +1889,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/utils/" class="md-nav__link">
+      <a href="../../api/utils/" class="md-nav__link">
         
   
   
@@ -1981,7 +1976,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../migration/from-xgboost/" class="md-nav__link">
+      <a href="../../migration/from-xgboost/" class="md-nav__link">
         
   
   
@@ -2016,7 +2011,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -2063,10 +2058,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
+  <a href="#the-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Basic Usage
+        The problem
       
     </span>
   </a>
@@ -2074,10 +2069,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
+  <a href="#the-contract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parameters
+        The contract
       
     </span>
   </a>
@@ -2085,10 +2080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-iris-classification" class="md-nav__link">
+  <a href="#complete-script-runs-on-cpu-identical-code-runs-on-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Example: Iris Classification
+        Complete script (runs on CPU; identical code runs on GPU)
       
     </span>
   </a>
@@ -2096,10 +2091,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sklearn-wrapper" class="md-nav__link">
+  <a href="#explicit-cupy-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        sklearn Wrapper
+        Explicit CuPy version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
       
     </span>
   </a>
@@ -2126,79 +2132,98 @@
   
 
 
-<h1 id="multi-class-classification">Multi-class Classification<a class="headerlink" href="#multi-class-classification" title="Permanent link">&para;</a></h1>
-<p>For classification problems with more than 2 classes.</p>
-<h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">MultiClassGradientBoosting</span><span class="p">(</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">n_classes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>  <span class="c1"># y_train: 0, 1, 2, 3, or 4</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Get class probabilities</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">probabilities</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>  <span class="c1"># Shape: (n_samples, n_classes)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Get class predictions</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>  <span class="c1"># Shape: (n_samples,)</span>
+<h1 id="recipe-device-native-loss-gpu">Recipe: Device-Native Loss (GPU)<a class="headerlink" href="#recipe-device-native-loss-gpu" title="Permanent link">&para;</a></h1>
+<p>Mark a custom loss as device-native so the CUDA backend computes gradients
+entirely on the GPU, skipping the per-round host round-trip.</p>
+<p><strong>You will use:</strong> <code>ob.device_loss</code>, <code>GradientBoosting(loss=&lt;callable&gt;)</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">This recipe needs CUDA to show a benefit</p>
+<p><code>ob.device_loss</code> is a <strong>no-op on the CPU backend</strong> — the script below runs
+anywhere (and is what CI runs), but the round-trip it eliminates only
+exists on the CUDA backend. The honest claim is: same results everywhere,
+faster only on GPU.</p>
+</div>
+<h2 id="the-problem">The problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
+<p>On the CUDA backend, an <em>unmarked</em> custom loss forces a host round-trip every
+boosting round: device predictions are copied to the host, your callable runs
+on NumPy arrays, and the returned <code>(grad, hess)</code> are copied back to the
+device. For big datasets that copy can dominate the round.</p>
+<h2 id="the-contract">The contract<a class="headerlink" href="#the-contract" title="Permanent link">&para;</a></h2>
+<p>Decorating a loss with <code>@ob.device_loss</code> sets <code>fn.__openboost_device__ = True</code>
+and changes what the CUDA path hands you:</p>
+<ul>
+<li><code>pred</code> is the <strong>device</strong> (CuPy) prediction array — no copy.</li>
+<li><code>y</code> is the training target <strong>already resident on the device</strong> (moved once
+  per <code>fit</code> and cached).</li>
+<li>You <strong>must return device <code>(grad, hess)</code> float32 arrays</strong> with the same
+  length as <code>pred</code>.</li>
+<li>On the CPU backend the marker is ignored: your callable receives plain NumPy
+  arrays like any other custom loss.</li>
+</ul>
+<h2 id="complete-script-runs-on-cpu-identical-code-runs-on-gpu">Complete script (runs on CPU; identical code runs on GPU)<a class="headerlink" href="#complete-script-runs-on-cpu-identical-code-runs-on-gpu" title="Permanent link">&para;</a></h2>
+<p>Written with operations that both NumPy and CuPy arrays support, so one
+function serves both backends:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nd">@ob</span><span class="o">.</span><span class="n">device_loss</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">device_asymmetric_mse</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Asymmetric squared error, backend-agnostic.</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="sd">    CUDA backend: `pred` and `y` are CuPy device arrays; the arithmetic below</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="sd">    stays on the GPU and returns device arrays. CPU backend: plain NumPy.</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">residual</span> <span class="o">=</span> <span class="n">pred</span> <span class="o">-</span> <span class="n">y</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="c1"># (residual &lt; 0) * 3.0 + 1.0  ==  4 where under-predicting, else 1,</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="c1"># written without np./cp. so it works on either array type.</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">residual</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3.0</span> <span class="o">+</span> <span class="mf">1.0</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">grad</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">residual</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">hess</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="k">return</span> <span class="n">grad</span><span class="p">,</span> <span class="n">hess</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">X</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">1500</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">1500</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">device_asymmetric_mse</span><span class="p">)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">1200</span><span class="p">],</span> <span class="n">y</span><span class="p">[:</span><span class="mi">1200</span><span class="p">])</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">1200</span><span class="p">:])</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;marked device-native: </span><span class="si">{</span><span class="n">device_asymmetric_mse</span><span class="o">.</span><span class="n">__openboost_device__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;fraction under-predicted: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pred</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="mi">1200</span><span class="p">:]))</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
-<p>Same as <code>GradientBoosting</code>, plus:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>n_classes</code></td>
-<td>int</td>
-<td>required</td>
-<td>Number of classes</td>
-</tr>
-</tbody>
-</table>
-<h2 id="example-iris-classification">Example: Iris Classification<a class="headerlink" href="#example-iris-classification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<h2 id="explicit-cupy-version">Explicit CuPy version<a class="headerlink" href="#explicit-cupy-version" title="Permanent link">&para;</a></h2>
+<p>If you prefer explicit device code (or need CuPy-only operations), import
+<code>cupy</code> inside the function. This variant requires a CUDA GPU:</p>
+<!-- docs-ci: skip -->
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">cupy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cp</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_iris</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Load data</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">iris</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Split</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Train</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">MultiClassGradientBoosting</span><span class="p">(</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">n_classes</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Evaluate</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="n">accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">predictions</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nd">@ob</span><span class="o">.</span><span class="n">device_loss</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">gpu_logcosh</span><span class="p">(</span><span class="n">pred_dev</span><span class="p">,</span> <span class="n">y_dev</span><span class="p">):</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">residual</span> <span class="o">=</span> <span class="n">pred_dev</span> <span class="o">-</span> <span class="n">y_dev</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">grad</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">residual</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="n">hess</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">grad</span> <span class="o">*</span> <span class="n">grad</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">cp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="k">return</span> <span class="n">grad</span><span class="p">,</span> <span class="n">hess</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">ob</span><span class="o">.</span><span class="n">set_backend</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">gpu_logcosh</span><span class="p">)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>  <span class="c1"># gradients never leave the GPU</span>
 </code></pre></div>
-<h2 id="sklearn-wrapper">sklearn Wrapper<a class="headerlink" href="#sklearn-wrapper" title="Permanent link">&para;</a></h2>
-<p>For scikit-learn compatibility:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenBoostClassifier</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_score</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">clf</span> <span class="o">=</span> <span class="n">OpenBoostClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CV Accuracy: </span><span class="si">{</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
+<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Correctness first</strong>: returning host arrays (or non-float32) from a marked
+  loss on the CUDA path violates the contract — if you cannot keep the math on
+  the device, simply leave the loss unmarked and accept the round-trip.</li>
+<li>Works with named registration too: <code>ob.register_loss('gpu_logcosh',
+  gpu_logcosh)</code> keeps the device marker, since the callable itself carries it.</li>
+<li>The built-in string losses (<code>'mse'</code>, <code>'logloss'</code>, ...) already run
+  device-native on CUDA; <code>device_loss</code> is only for <em>custom</em> callables.</li>
+<li>See <a href="../custom-loss/">Custom Loss</a> for loss-value reporting hooks that make
+  logging/early-stopping show your true loss.</li>
+</ul>
 
 
 
@@ -2281,10 +2306,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
