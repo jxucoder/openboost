@@ -39,7 +39,7 @@ class OpenBoostGAM(PersistenceMixin):
     """GPU-accelerated Generalized Additive Model.
     
     An interpretable model where:
-        prediction = sum(shape_function[i](feature[i]) for all features)
+        `prediction = sum(shape_function[i](feature[i]) for all features)`
     
     Each shape function is a lookup table mapping binned feature values
     to contribution scores. Trained via parallel gradient boosting.
@@ -1033,4 +1033,3 @@ if is_cuda():
         _init_cuda_kernels()
     except Exception:
         warnings.warn("Failed to compile GAM CUDA kernels; will retry on first use", stacklevel=1)
-

@@ -1,7 +1,7 @@
 # OpenBoost
 
 <p align="center" style="font-size: 1.2em;">
-  <strong>The hackable gradient boosting platform — probabilistic predictions, interpretable GAMs, and custom algorithms, all in readable Python, all GPU-ready.</strong>
+  <strong>The hackable gradient boosting platform — probabilistic predictions, interpretable GAMs, and custom algorithms in readable Python, with CPU and CUDA tree backends.</strong>
 </p>
 
 <p align="center">
@@ -17,10 +17,10 @@
 
 For standard GBDT, use XGBoost/LightGBM—they're highly optimized C++.
 
-For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:
+For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost provides reusable Python primitives and a CUDA tree-building path:
 
-- **NaturalBoost**: 1.6-11x faster than NGBoost on GPU; comparable on CPU (0.8-1.3x, quality within ~1%)
-- **OpenBoostGAM**: much faster than InterpretML EBM (56x on our benchmark run), with an accuracy tradeoff — see the [GAM guide](user-guide/models/gam.md) for honest numbers
+- **NaturalBoost**: full-distribution prediction; comparable to NGBoost on the committed CPU benchmark (0.8-1.3x wall-clock, quality within ~1%)
+- **OpenBoostGAM**: interpretable main effects with an optional GPU path; benchmark it on your own workload with the included harness
 
 Plus: ~20K lines of readable Python. Modify, extend, and build on—no C++ required.
 
@@ -45,7 +45,9 @@ lower, upper = prob_model.predict_interval(X_test, alpha=0.1)  # 90% interval
 
 ### :rocket: GPU Accelerated
 
-Numba CUDA kernels for histogram building and tree construction. GAM training ran 56x faster than CPU-based EBM on our committed benchmark (with an accuracy tradeoff — see the [GAM guide](user-guide/models/gam.md)).
+Numba CUDA kernels accelerate histogram building and tree construction. Some
+features and model stages remain CPU-only or deliberately fall back to CPU;
+the model guides document those boundaries.
 
 ### :brain: Probabilistic Predictions
 
@@ -62,11 +64,14 @@ Drop-in replacement for scikit-learn pipelines. Works with GridSearchCV, cross_v
 ## Installation
 
 ```bash
-pip install openboost
+pip install --pre openboost
 
 # With GPU support
-pip install "openboost[cuda]"
+pip install --pre "openboost[cuda]"
 ```
+
+Without `--pre`, pip installs the older stable release rather than the current
+1.0 release candidate.
 
 ## What's Included
 
@@ -78,21 +83,23 @@ pip install "openboost[cuda]"
 
 ## Performance
 
-OpenBoost GPU-accelerates GBDT variants that were previously slow:
+The repository currently includes one auditable third-party comparison:
+`benchmarks/results/ngboost_comparison_20260720.json`.
 
 | Benchmark | Result |
 |-----------|--------|
-| NaturalBoost vs NGBoost (GPU) | **1.6-11x faster** (NLL slightly behind NGBoost) |
 | NaturalBoost vs NGBoost (CPU) | ~parity: 0.8-1.3x, NLL/CRPS/RMSE within ~1% (`ngboost_comparison_20260720.json`) |
-| OpenBoostGAM vs InterpretML EBM | **56x faster** on the committed run, at lower accuracy (R² 0.66 vs 0.74; EBM interactions and bagging disabled) |
 
-For standard GBDT, XGBoost/LightGBM are faster on CPU (OpenBoost's GPU-native builder wins on A100 — see the README benchmarks). OpenBoost's value is in the variants.
+GPU benchmark harnesses are included, but exact third-party speedup claims are
+not published until the corresponding raw result artifact and environment
+metadata are committed. For standard GBDT, use XGBoost/LightGBM; OpenBoost's
+value is in research-friendly variants and extensibility.
 
 ## Who Is OpenBoost For?
 
 - **Kaggle Competitors** - Probabilistic predictions that XGBoost can't do
 - **ML Researchers** - Prototype new algorithms in Python
-- **Startups** - Ship interpretable models fast
+- **Product teams** - Prototype interpretable or probabilistic models before production hardening
 - **Students** - Actually understand how gradient boosting works
 
 ## Roadmap

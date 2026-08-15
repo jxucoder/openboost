@@ -116,8 +116,11 @@ dist = CustomDistribution(
 )
 ```
 
-Note: if you use JAX, write `nll_fn` with operations that JAX can trace
-(plain arithmetic and `numpy`-style ufuncs work; avoid in-place mutation).
+Note: if you use JAX, write `nll_fn` with operations that JAX can trace:
+plain arithmetic and `jax.numpy` ufuncs work, while regular `numpy` ufuncs do
+not. When tracing fails, OpenBoost warns once and switches that distribution
+instance to numerical differentiation instead of returning placeholder
+gradients. Avoid in-place mutation in either path.
 
 ## Fisher Information
 

@@ -447,6 +447,61 @@ class TestCustomDistributionChainRule:
                     err_msg=f"JAX vs numerical hessian mismatch for '{name}'",
                 )
 
+    def test_autodiff_error_falls_back_and_disables_jax(self, monkeypatch):
+        """A failed trace must use real numerical derivatives, never placeholders."""
+        dist = self._make_dist(use_jax=False)
+        dist._jax_available = True
+
+        def fail_autodiff(y, params):
+            raise TypeError("user NLL is not JAX-traceable")
+
+        monkeypatch.setattr(dist, '_jax_gradient', fail_autodiff)
+
+        y = np.array([0.5, -1.0, 2.0, 3.5])
+        raw = {
+            'a': np.array([0.0, 0.5, -0.5, 1.0]),
+            'b': np.array([0.0, 1.0, -1.0, 0.3]),
+            'c': np.array([0.0, -0.5, 0.5, 1.0]),
+        }
+        params = _params_from_raw(dist, raw)
+        expected = dist._numerical_gradient(y, params)
+
+        with pytest.warns(RuntimeWarning, match='falling back to numerical'):
+            actual = dist.nll_gradient(y, params)
+
+        assert not dist._jax_available
+        for name in dist.param_names:
+            assert_allclose(actual[name][0], expected[name][0])
+            assert_allclose(actual[name][1], expected[name][1])
+
+    def test_numpy_nll_falls_back_when_jax_is_installed(self):
+        """Plain numpy NLLs remain correct when optional JAX is installed."""
+        pytest.importorskip('jax')
+
+        def nll_np(y, p):
+            mu, sigma = p['loc'], p['scale']
+            return 0.5 * np.log(2 * np.pi * sigma ** 2) + (y - mu) ** 2 / (2 * sigma ** 2)
+
+        links = {'loc': 'identity', 'scale': 'exp'}
+        d_num = CustomDistribution(['loc', 'scale'], links, nll_np, use_jax=False)
+        d_jax = CustomDistribution(['loc', 'scale'], links, nll_np, use_jax=True)
+        assert d_jax._jax_available
+
+        y = np.array([0.5, -1.0, 2.0])
+        params = {
+            'loc': np.array([0.0, 0.5, -0.5]),
+            'scale': np.array([1.0, 2.0, 0.75]),
+        }
+
+        expected = d_num.nll_gradient(y, params)
+        with pytest.warns(RuntimeWarning, match='Use jax.numpy operations'):
+            actual = d_jax.nll_gradient(y, params)
+
+        assert not d_jax._jax_available
+        for name in d_num.param_names:
+            assert_allclose(actual[name][0], expected[name][0])
+            assert_allclose(actual[name][1], expected[name][1])
+
 
 class TestCustomDistributionEmpiricalFisher:
     """Fisher must be the empirical g^2 diagonal, not identity."""

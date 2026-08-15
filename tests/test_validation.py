@@ -3,9 +3,10 @@
 Tests that helpful error messages are raised for common user mistakes.
 """
 
+import warnings
+
 import numpy as np
 import pytest
-import warnings
 
 
 class TestValidateX:
@@ -275,6 +276,37 @@ class TestValidateSampleWeight:
 
         with pytest.raises(ValueError, match="negative"):
             model.fit(X, y, sample_weight=weights)
+
+    def test_cuda_weights_raise_instead_of_being_ignored(self, monkeypatch):
+        """Unsupported weighting must fail before CUDA training starts."""
+        import openboost as ob
+        from openboost._models import _boosting
+
+        monkeypatch.setattr(_boosting, "is_cuda", lambda: True)
+        X = np.random.randn(20, 3).astype(np.float32)
+        y = np.random.randn(20).astype(np.float32)
+        weights = np.ones(20, dtype=np.float32)
+
+        with pytest.raises(NotImplementedError, match="CUDA backend"):
+            ob.GradientBoosting(n_trees=1).fit(X, y, sample_weight=weights)
+
+    @pytest.mark.parametrize(
+        ("kwargs", "message"),
+        [
+            ({"n_gpus": 2}, "multi-GPU"),
+            ({"distributed": True}, "distributed"),
+        ],
+    )
+    def test_distributed_weights_raise_instead_of_being_ignored(self, kwargs, message):
+        """Distributed paths that cannot consume weights must reject them."""
+        import openboost as ob
+
+        X = np.random.randn(20, 3).astype(np.float32)
+        y = np.random.randn(20).astype(np.float32)
+        weights = np.ones(20, dtype=np.float32)
+
+        with pytest.raises(NotImplementedError, match=message):
+            ob.GradientBoosting(n_trees=1, **kwargs).fit(X, y, sample_weight=weights)
 
 
 class TestValidateEvalSet:

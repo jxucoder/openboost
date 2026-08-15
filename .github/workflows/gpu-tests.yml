@@ -14,7 +14,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  modal-credentials:
+    name: Check Modal credentials
+    runs-on: ubuntu-latest
+    outputs:
+      available: ${{ steps.check.outputs.available }}
+
+    steps:
+      - name: Check whether Modal is configured
+        id: check
+        env:
+          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+        shell: bash
+        run: |
+          if [[ -n "$MODAL_TOKEN_ID" && -n "$MODAL_TOKEN_SECRET" ]]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping Modal GPU verification because repository secrets are not configured."
+          fi
+
   modal-gpu-tests:
+    needs: modal-credentials
+    if: needs.modal-credentials.outputs.available == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
 

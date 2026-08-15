@@ -149,31 +149,22 @@ the callbacks/eval_set machinery all run on CPU. On a CUDA backend, a plain
 monotone constraints, callbacks, or eval_set falls back to CPU training with a
 warning.
 
-## Performance vs InterpretML EBM
+## Benchmarking against InterpretML EBM
 
-One benchmark run is committed to the repo
-(`benchmarks/results/gpu_benchmark_20260322_153105.json`, produced by
-`benchmarks/compare_gpu.py --bench ebm` on a Modal A100):
-
-| Dataset | OpenBoostGAM (GPU) | EBM (CPU) | Speedup | GAM R² | EBM R² |
-|---------|-------------------|-----------|---------|--------|--------|
-| Synthetic, 50,000 x 20 | 0.14s | 8.06s | **56x** | 0.663 | 0.738 |
-
-Read this honestly: OpenBoostGAM was much faster **but less accurate** on
-this run (R² 0.663 vs 0.738). Also note the comparison controls: both models
-ran 200 rounds at `learning_rate=0.05`, and both were main-effects-only —
-OpenBoostGAM predates its `interactions` support in this run, and EBM was
-configured with `interactions=0`, `outer_bags=1`, `inner_bags=0` — i.e. EBM's
-pairwise interactions and bagging (both defaults that improve its accuracy but
-slow it down) were disabled. With EBM defaults, expect the accuracy gap to
-widen and the speed gap to grow; enabling `interactions` on OpenBoostGAM
-closes part of that gap but its interaction stage runs on CPU.
-
-Reproduce with:
+The repository includes a comparison harness, but does not currently commit a
+raw EBM comparison result with the exact environment metadata. Run the harness
+on the hardware and model configuration you intend to use, and compare both
+fit time and predictive quality before choosing an implementation:
 
 ```bash
 uv run modal run benchmarks/compare_gpu.py --bench ebm
 ```
+
+For an auditable performance claim, commit the generated JSON result together
+with GPU model, package versions, dataset seed, training budget, EBM interaction
+and bagging settings, and both models' quality metrics. OpenBoostGAM's smoothing,
+monotone projection, callbacks, evaluation, and interaction stage are CPU-only,
+so a main-effects microbenchmark does not represent every configuration.
 
 ## Example: Credit Risk
 

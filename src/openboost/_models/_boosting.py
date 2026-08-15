@@ -263,6 +263,27 @@ class GradientBoosting(PersistenceMixin):
         X = validate_X(X, allow_nan=True, context="fit")
         y = validate_y(y, n_samples=X.shape[0] if hasattr(X, 'shape') else None, context="fit")
         sample_weight = validate_sample_weight(sample_weight, len(y))
+
+        use_multigpu = (
+            (self.n_gpus is not None and self.n_gpus > 1)
+            or (self.devices is not None and len(self.devices) > 1)
+        )
+        if sample_weight is not None:
+            if use_multigpu:
+                raise NotImplementedError(
+                    "sample_weight is not supported for multi-GPU training; "
+                    "use a single CPU backend instead"
+                )
+            if self.distributed:
+                raise NotImplementedError(
+                    "sample_weight is not supported for distributed training; "
+                    "use the CPU backend instead"
+                )
+            if is_cuda():
+                raise NotImplementedError(
+                    "sample_weight is not supported on the CUDA backend; "
+                    "use ob.set_backend('cpu') before fitting"
+                )
         
         n_samples = len(y)
         
@@ -315,8 +336,6 @@ class GradientBoosting(PersistenceMixin):
 
         # Choose training path based on backend
         # Phase 18: Check for multi-GPU first
-        use_multigpu = (self.n_gpus is not None and self.n_gpus > 1) or (self.devices is not None and len(self.devices) > 1)
-
         if (use_multigpu or self.distributed) and not _is_levelwise_growth(self.growth):
             warnings.warn(
                 f"growth='{self.growth}' is not supported for distributed/"
@@ -330,7 +349,7 @@ class GradientBoosting(PersistenceMixin):
         elif self.distributed:
             self._fit_distributed(y, n_samples)
         elif is_cuda():
-            self._fit_gpu(y, n_samples, callbacks, eval_set, sample_weight)
+            self._fit_gpu(y, n_samples, callbacks, eval_set)
         else:
             self._fit_cpu(y, n_samples, callbacks, eval_set, sample_weight)
         
@@ -626,7 +645,6 @@ class GradientBoosting(PersistenceMixin):
         n_samples: int,
         callbacks: list[Callback] | None = None,
         eval_set: list[tuple[NDArray, NDArray]] | None = None,
-        sample_weight: NDArray | None = None,
     ):
         """GPU-optimized training using growth strategies with callback support.
         
@@ -784,18 +802,6 @@ class GradientBoosting(PersistenceMixin):
             else:
                 # Built-in loss: compute entirely on GPU
                 grad_gpu, hess_gpu = self._loss_fn(pred_gpu, y_gpu)
-            
-            # Known Limitation (1.0.0rc1): sample_weight not fully supported on GPU
-            # GPU training uses histograms built from all samples; weighting would
-            # require weighted histogram accumulation which is not yet implemented.
-            # Workaround: Use CPU backend with ob.set_backend('cpu') for weighted training
-            # TODO(v1.1): Implement GPU sample weighting via weighted histogram kernels
-            if sample_weight is not None:
-                warnings.warn(
-                    "sample_weight is not supported on GPU backend and will be ignored",
-                    UserWarning,
-                    stacklevel=2,
-                )
             
             # Apply sampling strategy (Phase 17)
             if use_goss:
@@ -1529,4 +1535,3 @@ class MultiClassGradientBoosting(PersistenceMixin):
         """
         logits = self.predict_raw(X)
         return np.argmax(logits, axis=1)
-

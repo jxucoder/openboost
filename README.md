@@ -1,6 +1,6 @@
 # OpenBoost
 
-**The hackable gradient boosting platform — probabilistic predictions, interpretable GAMs, and custom algorithms, all in readable Python, all GPU-ready.**
+**The hackable gradient boosting platform — probabilistic predictions, interpretable GAMs, and custom algorithms in readable Python, with CPU and CUDA tree backends.**
 
 > **Note:** OpenBoost is in active development. APIs may change between releases. Use at your own risk.
 
@@ -8,10 +8,10 @@
 
 For standard GBDT, use XGBoost/LightGBM — they're highly optimized C++.
 
-For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:
+For GBDT **variants** (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost provides reusable Python primitives and a CUDA tree-building path:
 
-- **NaturalBoost**: 1.6-11x faster than NGBoost on GPU (tree build only; gradient/Fisher math stays on CPU). On CPU the two are comparable (0.8-1.3x, quality within ~1%) — see Benchmarks
-- **OpenBoostGAM**: much faster than InterpretML EBM on our committed run (56x), with an accuracy tradeoff — see [Benchmarks](#benchmarks) for the honest numbers
+- **NaturalBoost**: full-distribution prediction with a GPU tree path. On the committed CPU comparison, OpenBoost and NGBoost are comparable (0.8-1.3x wall-clock, quality within ~1%) — see [Benchmarks](#benchmarks)
+- **OpenBoostGAM**: interpretable main effects with an optional GPU training path; use the included harness to measure speed and accuracy on your workload
 - **Your own algorithms**: custom losses, distributions, and tree-growth strategies are registration APIs (`register_loss`, `register_distribution`, `register_growth_strategy`), not C++ forks — see the [cookbook](https://jxucoder.github.io/openboost/cookbook/custom-loss/)
 
 Plus: ~20K lines of readable Python. Modify, extend, and build on — no C++ required.
@@ -33,7 +33,10 @@ OpenBoost provides primitives (histograms, binning, tree fitting) that you combi
 - **Linear-leaf models** — linear models in tree leaves for better extrapolation
 - **Your own algorithms** — custom losses, distributions, or entirely new methods
 
-All run on GPU with the same Python code. All models support `save()`/`load()` persistence, and most support callbacks and early stopping.
+The core tree-building paths support CPU and CUDA backends. Some features and
+model stages remain CPU-only or deliberately fall back to CPU; see the model
+guides for those boundaries. All models support `save()`/`load()` persistence,
+and most support callbacks and early stopping.
 
 ## Quick Start
 
@@ -90,14 +93,17 @@ for round in range(100):
 ## Installation
 
 ```bash
-pip install openboost
+# Current release candidate (recommended while 1.0 is in prerelease)
+pip install --pre openboost
 
 # With GPU support
-pip install openboost[cuda]
+pip install --pre "openboost[cuda]"
 
 # With sklearn integration
-pip install openboost[sklearn]
+pip install --pre "openboost[sklearn]"
 ```
+
+`pip install openboost` without `--pre` installs the older stable release.
 
 ## Documentation
 
@@ -110,53 +116,46 @@ Full docs, tutorials, and API reference: **[jxucoder.github.io/openboost](https:
 
 ## Benchmarks
 
-### GPU: OpenBoost vs XGBoost
+### Committed comparison: NaturalBoost vs NGBoost on CPU
 
-On standard GBDT, OpenBoost's GPU-native tree builder is **3-4x faster** than XGBoost's GPU histogram method on an A100, with comparable accuracy:
+The repository includes one current, auditable third-party comparison:
+`benchmarks/results/ngboost_comparison_20260720.json`. It uses fixed seeds,
+identical boosting budgets, and the same train/test splits.
 
-| Task | Data | Trees | OpenBoost | XGBoost | Speedup |
-|---|---|---|---|---|---|
-| Regression | 2M x 80 | 300 | 10.0s | 45.5s | **4.6x** |
-| Binary | 2M x 80 | 300 | 11.8s | 40.9s | **3.5x** |
+| Dataset | OpenBoost / NGBoost fit time | Result |
+|---|---|---|
+| Synthetic heteroscedastic, 10K | 16.4s / 18.8s (1.15x) | OpenBoost slightly better NLL/CRPS/RMSE |
+| Synthetic heteroscedastic, 50K | 74.1s / 95.3s (1.29x) | NGBoost slightly better NLL/CRPS/RMSE |
+| California Housing, 20.6K | 30.6s / 25.0s (0.82x) | OpenBoost slightly better NLL/CRPS/RMSE |
 
-<details>
-<summary>Benchmark details</summary>
+The honest read is CPU parity: neither implementation wins every dataset, and
+quality is within roughly 1% in this run.
 
-- **Hardware**: NVIDIA A100 (Modal)
-- **Fairness controls**: both receive raw numpy arrays (no pre-built DMatrix), `cuda.synchronize()` after OpenBoost `fit()`, both at default threading, XGBoost `max_bin=256` to match OpenBoost, JIT/GPU warmup before timing
-- **Metric**: median of 3 trials, timing `fit()` only
-- **XGBoost config**: `tree_method="hist"`, `device="cuda"`
+Reproduce it with:
 
-Reproduce with:
 ```bash
-# Local (requires CUDA GPU)
+OPENBOOST_BACKEND=cpu uv run --with ngboost python benchmarks/bench_ngboost_comparison.py
+```
+
+### GPU benchmark harnesses
+
+GPU comparisons are available in `benchmarks/bench_gpu.py` and
+`benchmarks/compare_gpu.py`. Third-party GPU speedups are intentionally not
+quoted here until the exact raw result artifact and environment metadata are
+committed alongside the claim.
+
+```bash
+# Local CUDA GPU
 uv run python benchmarks/bench_gpu.py --task all --scale medium
 
-# On Modal A100
+# Modal A100
 uv run modal run benchmarks/bench_gpu.py --task all --scale medium
 ```
 
-Available scales: `small` (500K), `medium` (2M), `large` (5M), `xlarge` (10M).
-
-</details>
-
-### Variant models
-
-Where OpenBoost really shines is on GBDT variants that don't exist in XGBoost/LightGBM. From the committed benchmark run (`benchmarks/results/gpu_benchmark_20260322_153105.json`, Modal A100):
-
-| Model | vs. | Speedup | Accuracy |
-|---|---|---|---|
-| NaturalBoost (GPU) | NGBoost | 1.6x (California housing), 11.5x (synthetic 50K) | NLL slightly behind NGBoost on both datasets |
-| NaturalBoost (CPU) | NGBoost | ~parity: 0.8x–1.3x (`ngboost_comparison_20260720.json`) | NLL/CRPS/RMSE within ~1% of each other; NGBoost wins some |
-| OpenBoostGAM (GPU) | InterpretML EBM | 56x (synthetic 50K) | **Lower**: R² 0.66 vs 0.74 |
-
-Caveats to read before quoting these numbers:
-
-- The EBM comparison disabled EBM's interactions and bagging (`interactions=0`, `outer_bags=1`, `inner_bags=0`) to isolate main-effect training; OpenBoostGAM is main-effects-only. On this run OpenBoostGAM was much faster but less accurate.
-- NaturalBoost's GPU acceleration applies to the histogram-based tree build. The per-round distribution gradient and Fisher/natural-gradient computations run on CPU (numpy), so distributional training is not GPU-accelerated end-to-end.
-- On CPU the two libraries are comparable: the committed CPU-vs-CPU run (`benchmarks/results/ngboost_comparison_20260720.json`, fixed seed, identical budgets) shows 0.8x–1.3x wall-clock and quality metrics within ~1%, with NGBoost ahead on some. The GPU speedups above are where NaturalBoost's advantage actually lives.
-
-> **Note:** Benchmarks reflect the current state of development and may change as both OpenBoost and comparison libraries evolve.
+NaturalBoost's CUDA acceleration applies to histogram-based tree building;
+distribution gradients and Fisher/natural-gradient calculations still run on
+CPU. Benchmark end-to-end fit time, accuracy, and calibration on the workload
+you actually care about.
 
 ## Roadmap
 

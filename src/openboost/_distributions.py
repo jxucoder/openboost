@@ -19,6 +19,7 @@ Supported distributions:
 
 from __future__ import annotations
 
+import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
@@ -1667,7 +1668,8 @@ class CustomDistribution(Distribution):
             mean_fn: Optional function (params_dict) -> mean prediction
             variance_fn: Optional function (params_dict) -> variance
             init_fn: Optional function (y) -> dict of initial raw param values
-            use_jax: Try to use JAX for autodiff (falls back to numerical if unavailable)
+            use_jax: Try to use JAX for autodiff (falls back to numerical if
+                unavailable or if the user NLL cannot be traced)
             eps: Epsilon for numerical gradients
         """
         self._param_names = param_names
@@ -1874,7 +1876,6 @@ class CustomDistribution(Distribution):
         batched_grad_fn = jax.vmap(grad_fn, in_axes=(0, 0))
         batched_hess_fn = jax.vmap(hess_fn, in_axes=(0, 0))
 
-        n = len(y)
         # Recover raw values from the constrained params (links are monotone)
         raw_values = jnp.stack(
             [jnp.array(self.link_inv(name, np.asarray(params[name])))
@@ -1883,36 +1884,16 @@ class CustomDistribution(Distribution):
         )
         y_jax = jnp.array(y)
 
-        try:
-            grads = batched_grad_fn(raw_values, y_jax)  # shape (n, n_params)
-            hess_matrices = batched_hess_fn(raw_values, y_jax)  # shape (n, n_params, n_params)
+        grads = batched_grad_fn(raw_values, y_jax)  # shape (n, n_params)
+        hess_matrices = batched_hess_fn(raw_values, y_jax)  # shape (n, n_params, n_params)
 
-            results = {}
-            for j, name in enumerate(self._param_names):
-                g = np.array(grads[:, j], dtype=np.float32)
-                h = np.maximum(np.array(hess_matrices[:, j, j], dtype=np.float32), 1e-6)
-                results[name] = (g, h)
+        results = {}
+        for j, name in enumerate(self._param_names):
+            g = np.array(grads[:, j], dtype=np.float32)
+            h = np.maximum(np.array(hess_matrices[:, j, j], dtype=np.float32), 1e-6)
+            results[name] = (g, h)
 
-            return results
-        except Exception:
-            # Fall back to sample-by-sample on error
-            results = {name: (np.zeros(n, dtype=np.float32), np.zeros(n, dtype=np.float32))
-                       for name in self._param_names}
-
-            for i in range(n):
-                pv = raw_values[i]
-                try:
-                    g = grad_fn(pv, y_jax[i])
-                    h = hess_fn(pv, y_jax[i])
-                    for j, name in enumerate(self._param_names):
-                        results[name][0][i] = float(g[j])
-                        results[name][1][i] = max(float(h[j, j]), 1e-6)
-                except Exception:
-                    for _j, name in enumerate(self._param_names):
-                        results[name][0][i] = 0.0
-                        results[name][1][i] = 1.0
-
-            return results
+        return results
     
     def nll_gradient(
         self,
@@ -1924,8 +1905,23 @@ class CustomDistribution(Distribution):
         if self._jax_available:
             try:
                 results = self._jax_gradient(y, params)
-            except Exception:
-                results = None
+            except Exception as exc:
+                # A user function written with numpy instead of jax.numpy is
+                # the most common reason tracing fails. Disable JAX for this
+                # distribution instance so every boosting round does not pay
+                # for the same failed trace, then use the documented numerical
+                # path. Never manufacture gradients after an autodiff error.
+                self._jax_available = False
+                self._jax_grad_fn = None
+                self._jax_hess_fn = None
+                warnings.warn(
+                    "JAX autodiff failed for the custom distribution; "
+                    "falling back to numerical differentiation for this instance. "
+                    "Use jax.numpy operations in nll_fn to keep autodiff enabled "
+                    f"({type(exc).__name__}: {exc})",
+                    RuntimeWarning,
+                    stacklevel=2,
+                )
 
         if results is None:
             results = self._numerical_gradient(y, params)

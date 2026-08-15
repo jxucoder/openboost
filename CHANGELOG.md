@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made multi-round `fit_trees_batch` recompute gradients and hessians from targets.
 - Consolidated batch configuration and training state into one canonical module.
 - Added manually triggered CUDA verification on Modal GPUs.
+- Custom distributions now fall back to numerical differentiation when JAX
+  cannot trace a user NLL, instead of returning placeholder gradients.
+- Unsupported `sample_weight` inputs now raise on CUDA, distributed, and
+  multi-GPU training paths instead of being ignored.
+- Performance documentation now quotes only results backed by committed raw
+  benchmark artifacts.
 
 ## [1.0.0rc1] - 2026-01-20
 
@@ -71,13 +77,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Performance
 GPU-accelerates GBDT variants that were previously slow:
-- NaturalBoost: 1.3-2x faster than NGBoost
-- OpenBoostGAM: 10-40x faster than InterpretML EBM
+- NaturalBoost and OpenBoostGAM include CUDA tree-building paths.
+- Exact speedups depend on the workload and environment; current documentation
+  quotes only benchmark results whose raw artifacts are committed.
 
 For standard GBDT, XGBoost/LightGBM are faster. OpenBoost's value is in the variants and customizability.
 
 ### Known Limitations (1.0.0rc1)
-- `sample_weight` is not yet fully supported on GPU backend (works on CPU)
+- `sample_weight` is CPU-only; CUDA, distributed, and multi-GPU paths raise
+  `NotImplementedError` rather than silently ignoring weights
 - `MultiClassGradientBoosting` does not support callbacks (early stopping, logging)
 - Multi-GPU training requires Ray and raw numpy arrays (not pre-binned data)
 - JAX backend for custom distributions is optional (falls back to numerical gradients)

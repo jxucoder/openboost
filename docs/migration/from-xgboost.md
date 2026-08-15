@@ -327,6 +327,6 @@ print(f"Correlation: {np.corrcoef(xgb_pred, ob_pred)[0,1]:.4f}")
 
 ## Getting Help
 
-- [Quickstart Guide](../quickstart.md) - Get started with OpenBoost
+- [Quickstart Guide](../getting-started/quickstart.md) - Get started with OpenBoost
 - [Uncertainty Tutorial](../tutorials/uncertainty.md) - Learn NaturalBoost
 - [Custom Loss Tutorial](../tutorials/custom-loss.md) - Define your own objectives
