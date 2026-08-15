@@ -850,6 +850,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#backend-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#feature-importance" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2213,6 +2224,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#backend-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend Limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#feature-importance" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2389,7 +2411,7 @@
 <tr>
 <td><code>n_bins</code></td>
 <td>int</td>
-<td>256</td>
+<td>254</td>
 <td>Number of histogram bins</td>
 </tr>
 <tr>
@@ -2469,6 +2491,11 @@
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="p">],</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">)</span>
 </code></pre></div>
+<h2 id="backend-limits">Backend Limits<a class="headerlink" href="#backend-limits" title="Permanent link">&para;</a></h2>
+<p>Per-sample <code>sample_weight</code> is currently supported only by the single-device CPU
+training path. CUDA, distributed, and multi-GPU training raise
+<code>NotImplementedError</code> when weights are supplied, so weighted observations are
+never silently treated as unweighted.</p>
 <h2 id="feature-importance">Feature Importance<a class="headerlink" href="#feature-importance" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>

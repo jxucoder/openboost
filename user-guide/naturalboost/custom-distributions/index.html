@@ -2297,8 +2297,11 @@ difference step):</p>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">use_jax</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># force the numerical fallback</span>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">)</span>
 </code></pre></div>
-<p>Note: if you use JAX, write <code>nll_fn</code> with operations that JAX can trace
-(plain arithmetic and <code>numpy</code>-style ufuncs work; avoid in-place mutation).</p>
+<p>Note: if you use JAX, write <code>nll_fn</code> with operations that JAX can trace:
+plain arithmetic and <code>jax.numpy</code> ufuncs work, while regular <code>numpy</code> ufuncs do
+not. When tracing fails, OpenBoost warns once and switches that distribution
+instance to numerical differentiation instead of returning placeholder
+gradients. Avoid in-place mutation in either path.</p>
 <h2 id="fisher-information">Fisher Information<a class="headerlink" href="#fisher-information" title="Permanent link">&para;</a></h2>
 <p>NaturalBoost preconditions gradients with the Fisher information matrix.
 Custom distributions use an <strong>empirical diagonal approximation</strong> built from

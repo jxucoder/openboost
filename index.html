@@ -2315,7 +2315,7 @@
 
 <h1 id="openboost">OpenBoost<a class="headerlink" href="#openboost" title="Permanent link">&para;</a></h1>
 <p align="center" style="font-size: 1.2em;">
-  <strong>The hackable gradient boosting platform — probabilistic predictions, interpretable GAMs, and custom algorithms, all in readable Python, all GPU-ready.</strong>
+  <strong>The hackable gradient boosting platform — probabilistic predictions, interpretable GAMs, and custom algorithms in readable Python, with CPU and CUDA tree backends.</strong>
 </p>
 
 <p align="center">
@@ -2328,10 +2328,10 @@
 <hr />
 <h2 id="why-openboost">Why OpenBoost?<a class="headerlink" href="#why-openboost" title="Permanent link">&para;</a></h2>
 <p>For standard GBDT, use XGBoost/LightGBM—they're highly optimized C++.</p>
-<p>For GBDT <strong>variants</strong> (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost brings GPU acceleration to methods that were previously CPU-only and slow:</p>
+<p>For GBDT <strong>variants</strong> (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost provides reusable Python primitives and a CUDA tree-building path:</p>
 <ul>
-<li><strong>NaturalBoost</strong>: 1.6-11x faster than NGBoost on GPU; comparable on CPU (0.8-1.3x, quality within ~1%)</li>
-<li><strong>OpenBoostGAM</strong>: much faster than InterpretML EBM (56x on our benchmark run), with an accuracy tradeoff — see the <a href="user-guide/models/gam/">GAM guide</a> for honest numbers</li>
+<li><strong>NaturalBoost</strong>: full-distribution prediction; comparable to NGBoost on the committed CPU benchmark (0.8-1.3x wall-clock, quality within ~1%)</li>
+<li><strong>OpenBoostGAM</strong>: interpretable main effects with an optional GPU path; benchmark it on your own workload with the included harness</li>
 </ul>
 <p>Plus: ~20K lines of readable Python. Modify, extend, and build on—no C++ required.</p>
 <h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
@@ -2350,7 +2350,9 @@
 </code></pre></div>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <h3 id="rocket-gpu-accelerated">:rocket: GPU Accelerated<a class="headerlink" href="#rocket-gpu-accelerated" title="Permanent link">&para;</a></h3>
-<p>Numba CUDA kernels for histogram building and tree construction. GAM training ran 56x faster than CPU-based EBM on our committed benchmark (with an accuracy tradeoff — see the <a href="user-guide/models/gam/">GAM guide</a>).</p>
+<p>Numba CUDA kernels accelerate histogram building and tree construction. Some
+features and model stages remain CPU-only or deliberately fall back to CPU;
+the model guides document those boundaries.</p>
 <h3 id="brain-probabilistic-predictions">:brain: Probabilistic Predictions<a class="headerlink" href="#brain-probabilistic-predictions" title="Permanent link">&para;</a></h3>
 <p>NaturalBoost provides full probability distributions with uncertainty quantification. 8 built-in distributions including Normal, Gamma, Tweedie, and Negative Binomial.</p>
 <h3 id="snake-all-python">:snake: All Python<a class="headerlink" href="#snake-all-python" title="Permanent link">&para;</a></h3>
@@ -2358,11 +2360,13 @@
 <h3 id="gear-sklearn-compatible">:gear: sklearn Compatible<a class="headerlink" href="#gear-sklearn-compatible" title="Permanent link">&para;</a></h3>
 <p>Drop-in replacement for scikit-learn pipelines. Works with GridSearchCV, cross_val_score, and Pipeline.</p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>openboost
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>openboost
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># With GPU support</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;openboost[cuda]&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span><span class="s2">&quot;openboost[cuda]&quot;</span>
 </code></pre></div>
+<p>Without <code>--pre</code>, pip installs the older stable release rather than the current
+1.0 release candidate.</p>
 <h2 id="whats-included">What's Included<a class="headerlink" href="#whats-included" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2387,7 +2391,8 @@
 </tbody>
 </table>
 <h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
-<p>OpenBoost GPU-accelerates GBDT variants that were previously slow:</p>
+<p>The repository currently includes one auditable third-party comparison:
+<code>benchmarks/results/ngboost_comparison_20260720.json</code>.</p>
 <table>
 <thead>
 <tr>
@@ -2397,25 +2402,20 @@
 </thead>
 <tbody>
 <tr>
-<td>NaturalBoost vs NGBoost (GPU)</td>
-<td><strong>1.6-11x faster</strong> (NLL slightly behind NGBoost)</td>
-</tr>
-<tr>
 <td>NaturalBoost vs NGBoost (CPU)</td>
 <td>~parity: 0.8-1.3x, NLL/CRPS/RMSE within ~1% (<code>ngboost_comparison_20260720.json</code>)</td>
 </tr>
-<tr>
-<td>OpenBoostGAM vs InterpretML EBM</td>
-<td><strong>56x faster</strong> on the committed run, at lower accuracy (R² 0.66 vs 0.74; EBM interactions and bagging disabled)</td>
-</tr>
 </tbody>
 </table>
-<p>For standard GBDT, XGBoost/LightGBM are faster on CPU (OpenBoost's GPU-native builder wins on A100 — see the README benchmarks). OpenBoost's value is in the variants.</p>
+<p>GPU benchmark harnesses are included, but exact third-party speedup claims are
+not published until the corresponding raw result artifact and environment
+metadata are committed. For standard GBDT, use XGBoost/LightGBM; OpenBoost's
+value is in research-friendly variants and extensibility.</p>
 <h2 id="who-is-openboost-for">Who Is OpenBoost For?<a class="headerlink" href="#who-is-openboost-for" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Kaggle Competitors</strong> - Probabilistic predictions that XGBoost can't do</li>
 <li><strong>ML Researchers</strong> - Prototype new algorithms in Python</li>
-<li><strong>Startups</strong> - Ship interpretable models fast</li>
+<li><strong>Product teams</strong> - Prototype interpretable or probabilistic models before production hardening</li>
 <li><strong>Students</strong> - Actually understand how gradient boosting works</li>
 </ul>
 <h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>

@@ -950,10 +950,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-vs-interpretml-ebm" class="md-nav__link">
+  <a href="#benchmarking-against-interpretml-ebm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Performance vs InterpretML EBM
+        Benchmarking against InterpretML EBM
       
     </span>
   </a>
@@ -2206,10 +2206,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-vs-interpretml-ebm" class="md-nav__link">
+  <a href="#benchmarking-against-interpretml-ebm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Performance vs InterpretML EBM
+        Benchmarking against InterpretML EBM
       
     </span>
   </a>
@@ -2432,44 +2432,18 @@ the callbacks/eval_set machinery all run on CPU. On a CUDA backend, a plain
 <code>fit()</code> keeps the GPU main-effects path; a fit that requests smoothing,
 monotone constraints, callbacks, or eval_set falls back to CPU training with a
 warning.</p>
-<h2 id="performance-vs-interpretml-ebm">Performance vs InterpretML EBM<a class="headerlink" href="#performance-vs-interpretml-ebm" title="Permanent link">&para;</a></h2>
-<p>One benchmark run is committed to the repo
-(<code>benchmarks/results/gpu_benchmark_20260322_153105.json</code>, produced by
-<code>benchmarks/compare_gpu.py --bench ebm</code> on a Modal A100):</p>
-<table>
-<thead>
-<tr>
-<th>Dataset</th>
-<th>OpenBoostGAM (GPU)</th>
-<th>EBM (CPU)</th>
-<th>Speedup</th>
-<th>GAM R²</th>
-<th>EBM R²</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Synthetic, 50,000 x 20</td>
-<td>0.14s</td>
-<td>8.06s</td>
-<td><strong>56x</strong></td>
-<td>0.663</td>
-<td>0.738</td>
-</tr>
-</tbody>
-</table>
-<p>Read this honestly: OpenBoostGAM was much faster <strong>but less accurate</strong> on
-this run (R² 0.663 vs 0.738). Also note the comparison controls: both models
-ran 200 rounds at <code>learning_rate=0.05</code>, and both were main-effects-only —
-OpenBoostGAM predates its <code>interactions</code> support in this run, and EBM was
-configured with <code>interactions=0</code>, <code>outer_bags=1</code>, <code>inner_bags=0</code> — i.e. EBM's
-pairwise interactions and bagging (both defaults that improve its accuracy but
-slow it down) were disabled. With EBM defaults, expect the accuracy gap to
-widen and the speed gap to grow; enabling <code>interactions</code> on OpenBoostGAM
-closes part of that gap but its interaction stage runs on CPU.</p>
-<p>Reproduce with:</p>
+<h2 id="benchmarking-against-interpretml-ebm">Benchmarking against InterpretML EBM<a class="headerlink" href="#benchmarking-against-interpretml-ebm" title="Permanent link">&para;</a></h2>
+<p>The repository includes a comparison harness, but does not currently commit a
+raw EBM comparison result with the exact environment metadata. Run the harness
+on the hardware and model configuration you intend to use, and compare both
+fit time and predictive quality before choosing an implementation:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>uv<span class="w"> </span>run<span class="w"> </span>modal<span class="w"> </span>run<span class="w"> </span>benchmarks/compare_gpu.py<span class="w"> </span>--bench<span class="w"> </span>ebm
 </code></pre></div>
+<p>For an auditable performance claim, commit the generated JSON result together
+with GPU model, package versions, dataset seed, training budget, EBM interaction
+and bagging settings, and both models' quality metrics. OpenBoostGAM's smoothing,
+monotone projection, callbacks, evaluation, and interaction stage are CPU-only,
+so a main-effects microbenchmark does not represent every configuration.</p>
 <h2 id="example-credit-risk">Example: Credit Risk<a class="headerlink" href="#example-credit-risk" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
