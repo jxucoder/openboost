@@ -960,6 +960,68 @@ class TestEvalSetUpgrade:
         assert vals[-1] < vals[0]
         assert np.mean(vals[-5:]) < np.mean(vals[:5])
 
+    def test_crps_training_reduces_crps_and_reports_objective(self):
+        """Explicit CRPS training improves its objective and logs CRPS, not NLL."""
+        from openboost import HistoryCallback, NaturalBoost, crps_gaussian
+
+        X, y = self._make_data(seed=41, n=400, noise=0.5)
+        initial = crps_gaussian(
+            y,
+            np.full_like(y, np.mean(y)),
+            np.full_like(y, np.std(y) + 1e-6),
+        )
+        history = HistoryCallback()
+        model = NaturalBoost(
+            distribution='normal',
+            training_objective='crps',
+            n_trees=50,
+            max_depth=3,
+            learning_rate=0.1,
+        )
+        model.fit(X, y, callbacks=[history])
+
+        output = model.predict_distribution(X)
+        final = crps_gaussian(y, output.params['loc'], output.params['scale'])
+        final_nll = model.nll(X, y)
+        assert final < initial
+        assert history.history['train_loss'][-1] == pytest.approx(final, rel=1e-5)
+        assert history.history['train_loss'][-1] != pytest.approx(final_nll, rel=1e-3)
+
+    def test_training_objective_is_explicit_and_validated(self):
+        """CRPS is opt-in, independent of eval_metric, and Normal-only."""
+        from openboost import NaturalBoost
+
+        X, y = self._make_data(seed=42, n=100)
+        default = NaturalBoost(
+            distribution='normal', n_trees=5, max_depth=2, learning_rate=0.05
+        )
+        explicit_nll = NaturalBoost(
+            distribution='normal',
+            training_objective='nll',
+            n_trees=5,
+            max_depth=2,
+            learning_rate=0.05,
+        )
+        default.fit(X, y, eval_set=[(X, y)], eval_metric='crps')
+        explicit_nll.fit(X, y)
+        for name in ('loc', 'scale'):
+            assert_allclose(
+                default.predict_params(X)[name],
+                explicit_nll.predict_params(X)[name],
+                rtol=0,
+                atol=0,
+            )
+
+        with pytest.raises(ValueError, match="supports only the Normal"):
+            NaturalBoost(
+                distribution='poisson', training_objective='crps', n_trees=1
+            ).fit(X, np.maximum(np.rint(y - y.min()), 0))
+
+        with pytest.raises(ValueError, match="Unknown training_objective"):
+            NaturalBoost(
+                distribution='normal', training_objective='mystery', n_trees=1
+            ).fit(X, y)
+
     def test_pinball_and_interval_metrics(self):
         """pinball (with quantiles) and interval_score (with level) run."""
         from openboost import NaturalBoost

@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 T = TypeVar("T", bound="PersistenceMixin")
 
-_SERIALIZATION_VERSION = 2
+_SERIALIZATION_VERSION = 3
 
 
 def _to_numpy(arr: Any) -> np.ndarray | None:

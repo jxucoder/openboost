@@ -431,6 +431,74 @@ class Normal(Distribution):
             'loc': (grad_loc.astype(np.float32), hess_loc.astype(np.float32)),
             'scale': (grad_scale.astype(np.float32), hess_scale.astype(np.float32)),
         }
+
+    def crps(
+        self,
+        y: NDArray,
+        params: dict[str, NDArray],
+    ) -> NDArray:
+        """Per-sample Gaussian continuous ranked probability score.
+
+        Lower is better.  The implementation uses the closed-form Normal
+        score in float64 so the same objective can be used both for training
+        diagnostics and finite-difference correctness tests.
+        """
+        from scipy.special import erf
+
+        y = np.asarray(y, dtype=np.float64)
+        loc = np.asarray(params['loc'], dtype=np.float64)
+        scale = np.asarray(params['scale'], dtype=np.float64)
+        z = (y - loc) / scale
+        cdf_contrast = erf(z / np.sqrt(2.0))  # 2 * Phi(z) - 1
+        pdf = np.exp(-0.5 * z ** 2) / np.sqrt(2.0 * np.pi)
+        return scale * (
+            z * cdf_contrast + 2.0 * pdf - 1.0 / np.sqrt(np.pi)
+        )
+
+    def crps_gradient(
+        self,
+        y: NDArray,
+        params: dict[str, NDArray],
+    ) -> dict[str, GradHess]:
+        """Gaussian CRPS gradient with positive expected curvature.
+
+        Raw parameters are ``loc`` and ``log(scale)``.  The exact CRPS
+        Hessian is indefinite for sufficiently large standardized residuals,
+        so it is not suitable for OpenBoost's positive-Hessian tree solver.
+        Instead this method returns the expected CRPS Hessian under the
+        current Normal prediction:
+
+        ``diag(1 / (sqrt(pi) * scale), scale / (2 * sqrt(pi)))``.
+
+        This is a score-specific, strictly positive curvature surrogate.  It
+        is deliberately distinct from the Fisher information used by the NLL
+        natural-gradient objective.
+        """
+        from scipy.special import erf
+
+        y = np.asarray(y, dtype=np.float64)
+        loc = np.asarray(params['loc'], dtype=np.float64)
+        scale = np.asarray(params['scale'], dtype=np.float64)
+        z = (y - loc) / scale
+        cdf_contrast = erf(z / np.sqrt(2.0))  # 2 * Phi(z) - 1
+        pdf = np.exp(-0.5 * z ** 2) / np.sqrt(2.0 * np.pi)
+        sqrt_pi = np.sqrt(np.pi)
+
+        grad_loc = -cdf_contrast
+        grad_scale = scale * (2.0 * pdf - 1.0 / sqrt_pi)
+        curvature_loc = 1.0 / (sqrt_pi * scale)
+        curvature_scale = scale / (2.0 * sqrt_pi)
+
+        return {
+            'loc': (
+                grad_loc.astype(np.float32),
+                curvature_loc.astype(np.float32),
+            ),
+            'scale': (
+                grad_scale.astype(np.float32),
+                curvature_scale.astype(np.float32),
+            ),
+        }
     
     def fisher_information(
         self,

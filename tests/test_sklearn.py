@@ -579,22 +579,28 @@ class TestOpenBoostDistributionalRegressor:
         reg = OpenBoostDistributionalRegressor(
             distribution='gamma',
             n_estimators=15,
+            training_objective='nll',
             eval_metric='interval_score',
             quantiles=[0.1, 0.9],
             interval_alpha=0.2,
         )
         params = reg.get_params()
         assert params['eval_metric'] == 'interval_score'
+        assert params['training_objective'] == 'nll'
         assert params['quantiles'] == [0.1, 0.9]
         assert params['interval_alpha'] == 0.2
 
         reg_clone = clone(reg)
         assert reg_clone is not reg
         assert reg_clone.eval_metric == 'interval_score'
+        assert reg_clone.training_objective == 'nll'
         assert reg_clone.quantiles == [0.1, 0.9]
         assert reg_clone.interval_alpha == 0.2
 
-        reg.set_params(eval_metric='nll', quantiles=None)
+        reg.set_params(
+            training_objective='crps', eval_metric='nll', quantiles=None
+        )
+        assert reg.training_objective == 'crps'
         assert reg.eval_metric == 'nll'
         assert reg.quantiles is None
 

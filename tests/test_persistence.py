@@ -99,7 +99,7 @@ class TestGradientBoostingPersistence:
         )
 
         state = model._to_state_dict()
-        assert state["_serialization_version"] == 2
+        assert state["_serialization_version"] == 3
         assert all("is_categorical_split" in tree for tree in state["trees_"])
         assert all("cat_bitsets" in tree for tree in state["trees_"])
 
@@ -325,6 +325,28 @@ class TestNaturalBoostPersistence:
         np.testing.assert_allclose(pred_before, pred_after, rtol=1e-5)
         np.testing.assert_allclose(interval_before[0], interval_after[0], rtol=1e-5)
         np.testing.assert_allclose(interval_before[1], interval_after[1], rtol=1e-5)
+
+    def test_save_load_crps_objective(self, regression_data, tmp_path):
+        """CRPS training semantics survive a persistence round trip."""
+        import openboost as ob
+
+        X, y = regression_data
+        model = ob.NaturalBoostNormal(
+            training_objective='crps', n_trees=10, max_depth=3
+        )
+        model.fit(X[:400], y[:400])
+        pred_before = model.predict_distribution(X[400:])
+
+        save_path = tmp_path / "crps-model.joblib"
+        model.save(save_path)
+        loaded = ob.NaturalBoost.load(save_path)
+        pred_after = loaded.predict_distribution(X[400:])
+
+        assert loaded.training_objective == 'crps'
+        for name in ('loc', 'scale'):
+            np.testing.assert_allclose(
+                pred_before.params[name], pred_after.params[name], rtol=1e-6
+            )
 
     def test_save_load_poisson(self, tmp_path):
         """Test save/load for NaturalBoost with Poisson distribution."""

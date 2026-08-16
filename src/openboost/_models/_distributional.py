@@ -66,6 +66,9 @@ if TYPE_CHECKING:
 #: Metrics accepted by ``fit(eval_metric=...)``.
 EVAL_METRICS = ('nll', 'crps', 'pinball', 'interval_score')
 
+#: Objectives accepted by ``training_objective``.
+TRAINING_OBJECTIVES = ('nll', 'crps')
+
 
 def _validate_exposure(exposure, n_samples: int, context: str = "fit") -> NDArray:
     """Validate an exposure vector: positive, finite, shape (n_samples,).
@@ -138,6 +141,10 @@ class DistributionalGBDT(PersistenceMixin):
         subsample: Row sampling ratio (0.0-1.0)
         colsample_bytree: Column sampling ratio (0.0-1.0)
         n_bins: Number of bins for histogram building
+        training_objective: Objective used to fit distribution parameters.
+            ``'nll'`` preserves the likelihood/Fisher path. ``'crps'`` is
+            currently available for Normal predictions and uses Gaussian
+            CRPS with a positive score-specific expected curvature.
         
     Attributes:
         trees_: Dict mapping param_name -> list of trees
@@ -174,6 +181,7 @@ class DistributionalGBDT(PersistenceMixin):
     subsample: float = 1.0
     colsample_bytree: float = 1.0
     n_bins: int = 254
+    training_objective: Literal['nll', 'crps'] = 'nll'
     
     # Fitted attributes (not init)
     trees_: dict[str, list[TreeStructure]] = field(default_factory=dict, init=False, repr=False)
@@ -242,6 +250,19 @@ class DistributionalGBDT(PersistenceMixin):
         """
         # Get distribution instance
         self.distribution_ = get_distribution(self.distribution)
+
+        if self.training_objective not in TRAINING_OBJECTIVES:
+            raise ValueError(
+                f"Unknown training_objective '{self.training_objective}'. "
+                f"Available: {', '.join(TRAINING_OBJECTIVES)}."
+            )
+        if self.training_objective == 'crps' and not isinstance(
+            self.distribution_, Normal
+        ):
+            raise ValueError(
+                "training_objective='crps' currently supports only the "
+                "Normal distribution."
+            )
 
         y = np.asarray(y, dtype=np.float32).ravel()
         n_samples = len(y)
@@ -425,11 +446,12 @@ class DistributionalGBDT(PersistenceMixin):
                 params_report = self._constrained_params(
                     raw_preds, exposure_param, train_log_offset
                 )
+                if self.training_objective == 'crps':
+                    train_values = self.distribution_.crps(y, params_report)
+                else:
+                    train_values = self.distribution_.nll(y, params_report)
                 state.train_loss = float(
-                    np.average(
-                        self.distribution_.nll(y, params_report),
-                        weights=sample_weight,
-                    )
+                    np.average(train_values, weights=sample_weight)
                 )
                 if last_metric is not None:
                     # Early stopping monitors the LAST eval set's metric
@@ -539,6 +561,8 @@ class DistributionalGBDT(PersistenceMixin):
         
         Subclasses can override for different gradient computation.
         """
+        if self.training_objective == 'crps':
+            return self.distribution_.crps_gradient(y, params)
         return self.distribution_.nll_gradient(y, params)
     
     def _predict_raw(self, X: NDArray | BinnedArray) -> dict[str, NDArray]:
@@ -749,8 +773,10 @@ class NaturalBoost(DistributionalGBDT):
     Uses natural gradient instead of ordinary gradient, leading to faster
     convergence by accounting for the geometry of the parameter space.
     
-    Natural gradient: F^{-1} @ ordinary_gradient
-    where F is the Fisher information matrix.
+    With the default NLL objective, the natural gradient is
+    ``F^{-1} @ ordinary_gradient`` where F is the Fisher information matrix.
+    Normal CRPS training instead uses its score-specific expected curvature;
+    it does not reuse the NLL Fisher information.
     
     Key advantages over standard GBDT:
     - Full probability distributions, not just point estimates
@@ -803,6 +829,12 @@ class NaturalBoost(DistributionalGBDT):
         Natural gradient = F^{-1} @ ordinary_gradient
         where F is the Fisher information matrix.
         """
+        if self.training_objective == 'crps':
+            # Gaussian CRPS uses its own positive expected curvature rather
+            # than the NLL Fisher information.  Returning gradient/curvature
+            # directly lets the tree solver perform the corresponding
+            # second-order leaf updates.
+            return self.distribution_.crps_gradient(y, params)
         return self.distribution_.natural_gradient(y, params)
 
 

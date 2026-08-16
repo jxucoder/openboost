@@ -126,6 +126,25 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   CRPS in only two of five folds. Reject the larger fixed learning rate; the
   next experiment must separate mean accuracy from post-fit scale calibration
   or test a different scale objective.
+- Gaussian CRPS training is not a new algorithmic claim: NGBoost already
+  publishes a Normal CRPS score and generalized natural-gradient metric. A
+  direct local prototype of that metric was unstable at larger learning rates
+  on heteroscedastic synthetic data (mean predicted scale exploded), so it was
+  rejected as OpenBoost's implementation path rather than copied blindly.
+- The exact Gaussian CRPS Hessian is indefinite in the tails and cannot be fed
+  to OpenBoost's positive-Hessian tree solver. The implemented explicit
+  `training_objective='crps'` instead uses the strictly positive expected CRPS
+  curvature under the current Normal prediction. This keeps the default NLL
+  path unchanged, keeps training objective independent from `eval_metric`, and
+  fails early for non-Normal distributions.
+- In a local heteroscedastic synthetic diagnostic, expected-curvature CRPS
+  training reduced held-out CRPS relative to NLL training at each tested fixed
+  learning rate (`0.003`, `0.01`, `0.03`, and `0.1`) for 300 depth-3 rounds.
+  This is a development hypothesis only, not benchmark evidence. The core
+  mathematical/API slice passed 191 tests (2 skipped), including finite
+  differences, default-NLL identity, objective logging, sklearn cloning, and
+  persistence. It must still win on the frozen `1028_SWD` development folds
+  before being promoted into the ScoringBench wrapper experiment.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
