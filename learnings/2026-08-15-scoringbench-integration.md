@@ -83,11 +83,19 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   therefore validates the entire registry before the index exists. Exact-name
   shards now select first and validate only the requested datasets; index and
   list modes retain their validated-list semantics.
+- The first Abalone sentinel never reached model fitting: all three OpenML suite
+  requests returned server errors and dataset 183 then exhausted retries with
+  HTTP 504. ScoringBench caught the dataset exception and returned an empty
+  result while exiting successfully; OpenBoost's `result_rows == 10` artifact
+  gate correctly failed the job. The PR sentinel now uses ScoringBench's
+  `1027_ESL` PMLB/GitHub source so this small gate does not depend on the OpenML
+  data endpoint. Full-suite runs still must report OpenML failures rather than
+  silently treating them as model results.
 
 ## Risks and Follow-ups
 
 - Run the official full suite on Linux and submit the wrapper/results upstream.
-- Use the Abalone sentinel only as a reproducibility/integration gate; inspect
+- Use the `1027_ESL` sentinel only as a reproducibility/integration gate; inspect
   its 5-fold artifact before deciding whether OpenBoost merits broader shards.
 - Run a separate large-sample curve on at least three real ScoringBench datasets.
 - Add CPU/CUDA prediction parity before interpreting a CUDA timing result.

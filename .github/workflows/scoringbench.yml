@@ -88,7 +88,7 @@ jobs:
           python benchmarks/scoringbench/run.py \
             --scoringbench-dir .repos/ScoringBench \
             --models openboost_cpu,ngboost \
-            --dataset-name Abalone \
+            --dataset-name 1027_ESL \
             --sample-size 3000 \
             --n-folds 5 \
             --n-repeats 1 \

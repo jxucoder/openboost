@@ -83,12 +83,13 @@ PYTHONPATH=.repos/ScoringBench \
 ```
 
 The `ScoringBench` GitHub workflow runs this contract, the two-fold smoke, and
-an Abalone quality sentinel on relevant pull requests, then uploads the raw
-Parquet files and manifests. The sentinel uses the official five-fold,
-3,000-row protocol and default 500 rounds; one dataset is still not a quality
-claim. Manual `quality_shard` mode accepts an exact dataset name so the suite can
-be sharded without downloading every dataset just to resolve an index. Only a
-completed full suite belongs in a leaderboard submission.
+a `1027_ESL` quality sentinel on relevant pull requests, then uploads the raw
+Parquet files and manifests. The PMLB/GitHub-backed sentinel avoids making the
+basic quality gate depend on OpenML dataset uptime. It uses the official
+five-fold, 3,000-row protocol and default 500 rounds; one dataset is still not a
+quality claim. Manual `quality_shard` mode accepts an exact dataset name so the
+suite can be sharded without downloading every dataset just to resolve an
+index. Only a completed full suite belongs in a leaderboard submission.
 
 ## Official quality track
 
