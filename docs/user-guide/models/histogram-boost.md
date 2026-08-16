@@ -67,5 +67,5 @@ state-of-the-art claim.
 | `reg_alpha` | 0.0 | L1 regularization for vector leaf values |
 
 `predict_distribution()` returns `HistogramDistributionOutput`, which provides
-`mean()`, `variance()`, `std()`, exact `crps()`, `tempered()`, `quantile()`,
-`interval()`, and `sample()`.
+`mean()`, `variance()`, `std()`, exact `crps()`, `tempered()`, density-preserving
+`subdivide()`, `quantile()`, `interval()`, and `sample()`.

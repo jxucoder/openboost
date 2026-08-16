@@ -186,6 +186,7 @@ class OpenBoostHistogramWrapper(ProbabilisticWrapper):
         temperature_grid: tuple[float, ...] = (1.0,),
         calibration_fraction: float = 0.2,
         calibration_seed: int = 42,
+        evaluation_subdivisions: int = 1,
         model_params: dict | None = None,
     ) -> None:
         self.n_distribution_bins = n_distribution_bins
@@ -197,6 +198,7 @@ class OpenBoostHistogramWrapper(ProbabilisticWrapper):
         self.temperature_grid = tuple(float(value) for value in temperature_grid)
         self.calibration_fraction = calibration_fraction
         self.calibration_seed = calibration_seed
+        self.evaluation_subdivisions = evaluation_subdivisions
         self.model_params = dict(model_params or {})
         self._model = None
         self._selected_temperature = 1.0
@@ -230,6 +232,12 @@ class OpenBoostHistogramWrapper(ProbabilisticWrapper):
             raise ValueError("temperature_grid must contain positive finite values")
         if not 0.0 < self.calibration_fraction < 1.0:
             raise ValueError("calibration_fraction must lie in (0, 1)")
+        if (
+            isinstance(self.evaluation_subdivisions, bool)
+            or not isinstance(self.evaluation_subdivisions, (int, np.integer))
+            or self.evaluation_subdivisions < 1
+        ):
+            raise ValueError("evaluation_subdivisions must be a positive integer")
 
         params = {
             "n_distribution_bins": self.n_distribution_bins,
@@ -280,6 +288,7 @@ class OpenBoostHistogramWrapper(ProbabilisticWrapper):
         output = self._model.predict_distribution(self._sanitize_X(X)).tempered(
             self._selected_temperature
         )
+        output = output.subdivide(self.evaluation_subdivisions)
         return DistributionPrediction(
             probas=np.asarray(output.probas, dtype=np.float64),
             bin_edges=np.asarray(output.bin_edges, dtype=np.float64),

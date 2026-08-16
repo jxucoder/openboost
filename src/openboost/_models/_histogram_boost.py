@@ -27,6 +27,8 @@ def _softmax(logits: NDArray) -> NDArray:
 def _continuous_crps_terms(
     y: NDArray,
     bin_edges: NDArray,
+    *,
+    normalize: bool = True,
 ) -> tuple[NDArray, NDArray]:
     """Return normalized terms for exact piecewise-uniform histogram CRPS.
 
@@ -34,8 +36,8 @@ def _continuous_crps_terms(
     ``E|X-y| - 0.5 E|X-X'|``.  Each histogram bin represents a uniform
     conditional density, not a point mass at its midpoint.  The returned first
     term has shape ``(n_samples, n_bins)`` and the pairwise-distance matrix has
-    shape ``(n_bins, n_bins)``.  Both are divided by mean bin width so tree
-    regularization remains invariant to target units.
+    shape ``(n_bins, n_bins)``.  With ``normalize=True``, both are divided by
+    mean bin width so tree regularization remains invariant to target units.
     """
     y = np.asarray(y, dtype=np.float64).reshape(-1)
     bin_edges = np.asarray(bin_edges, dtype=np.float64).reshape(-1)
@@ -63,7 +65,7 @@ def _continuous_crps_terms(
 
     pairwise_distance = np.abs(midpoints[:, None] - midpoints[None, :])
     np.fill_diagonal(pairwise_distance, widths / 3.0)
-    normalization = float(np.mean(widths))
+    normalization = float(np.mean(widths)) if normalize else 1.0
     return distance_to_target / normalization, pairwise_distance / normalization
 
 
@@ -73,13 +75,20 @@ def _continuous_crps_loss(
     bin_edges: NDArray,
 ) -> NDArray:
     """Exact per-row CRPS for the represented piecewise-uniform histogram."""
-    return _continuous_crps_from_probabilities(_softmax(logits), y, bin_edges)
+    return _continuous_crps_from_probabilities(
+        _softmax(logits),
+        y,
+        bin_edges,
+        normalize=True,
+    )
 
 
 def _continuous_crps_from_probabilities(
     probabilities: NDArray,
     y: NDArray,
     bin_edges: NDArray,
+    *,
+    normalize: bool = False,
 ) -> NDArray:
     """Exact per-row CRPS for already-normalized histogram probabilities."""
     probabilities = np.asarray(probabilities, dtype=np.float64)
@@ -91,7 +100,11 @@ def _continuous_crps_from_probabilities(
     if np.any(totals <= 0.0):
         raise ValueError("each probability row must have positive mass")
     probabilities = probabilities / totals
-    distance_to_target, pairwise_distance = _continuous_crps_terms(y, bin_edges)
+    distance_to_target, pairwise_distance = _continuous_crps_terms(
+        y,
+        bin_edges,
+        normalize=normalize,
+    )
     if distance_to_target.shape != probabilities.shape:
         raise ValueError("y and bin_edges must match the probability rows and bins")
     first = np.sum(probabilities * distance_to_target, axis=1)
@@ -223,6 +236,26 @@ class HistogramDistributionOutput:
             log_probabilities -= np.max(log_probabilities, axis=1, keepdims=True)
             probabilities = np.exp(log_probabilities)
         return HistogramDistributionOutput(probabilities, self.bin_edges.copy())
+
+    def subdivide(self, factor: int) -> HistogramDistributionOutput:
+        """Refine each uniform bin without changing the represented density."""
+        if isinstance(factor, bool) or not isinstance(factor, (int, np.integer)) or factor < 1:
+            raise ValueError("factor must be a positive integer")
+        factor = int(factor)
+        if factor == 1:
+            return HistogramDistributionOutput(self.probas.copy(), self.bin_edges.copy())
+        n_bins = self.probas.shape[1]
+        refined_edges = np.empty(n_bins * factor + 1, dtype=np.float64)
+        fractions = np.arange(factor, dtype=np.float64) / factor
+        for index, (lower, upper) in enumerate(
+            zip(self.bin_edges[:-1], self.bin_edges[1:], strict=True)
+        ):
+            refined_edges[index * factor : (index + 1) * factor] = lower + fractions * (
+                upper - lower
+            )
+        refined_edges[-1] = self.bin_edges[-1]
+        refined_probabilities = np.repeat(self.probas / factor, factor, axis=1)
+        return HistogramDistributionOutput(refined_probabilities, refined_edges)
 
     def quantile(self, q: float) -> NDArray:
         if not 0.0 <= q <= 1.0:

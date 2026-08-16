@@ -88,10 +88,12 @@ def test_openboost_histogram_wrapper_selects_temperature_on_inner_validation():
         temperature_grid=(0.7, 1.0, 1.2),
         calibration_fraction=0.2,
         calibration_seed=3,
+        evaluation_subdivisions=2,
     ).fit(X[:60], y[:60])
 
     assert model._selected_temperature in model.temperature_grid
     assert set(model._temperature_scores) == set(model.temperature_grid)
     assert all(np.isfinite(list(model._temperature_scores.values())))
     distribution = model.predict_distribution(X[60:])
+    assert distribution.probas.shape == (20, 12)
     np.testing.assert_allclose(distribution.mean, model.predict(X[60:]))

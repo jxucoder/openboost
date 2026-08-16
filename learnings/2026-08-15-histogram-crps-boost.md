@@ -141,6 +141,14 @@ temperature by exact CRPS on an inner training-only split, then refitting the
 base model on the complete outer training fold. Its default grid remains
 `(1.0,)`, so V1 behavior does not silently change.
 
+The inner split selected temperature 0.85 on consumed fold 0. Outer metrics
+were CRPS 1.2986, RMSE 2.7148, coverage 95.67%, and interval score 11.7174.
+Exact within-bin coverage was 93.17%, confirming that the remaining official
+coverage excess came partly from whole-bin interval envelopes. The distribution
+output now supports density-preserving subdivision, and the wrapper can refine
+50 training bins to 100 evaluation bins. Subdivision leaves exact CRPS, mean,
+and variance unchanged; it only reduces evaluator quantile-grid error.
+
 ## Commits
 
 - `b9db276` — `feat: add histogram CRPS boosting`

@@ -251,8 +251,18 @@ def test_histogram_distribution_output_moments_quantiles_and_sampling():
         dist.crps(np.array([0.5, 0.5])),
         [25.0 / 48.0, 1.0 / 12.0],
     )
+    refined = dist.subdivide(4)
+    assert refined.probas.shape == (2, 8)
+    np.testing.assert_allclose(refined.mean(), dist.mean())
+    np.testing.assert_allclose(refined.variance(), dist.variance())
+    np.testing.assert_allclose(
+        refined.crps(np.array([0.5, 0.5])),
+        dist.crps(np.array([0.5, 0.5])),
+    )
     with pytest.raises(ValueError, match="strictly positive"):
         dist.tempered(0.0)
+    with pytest.raises(ValueError, match="positive integer"):
+        dist.subdivide(0)
 
     with pytest.raises(ValueError, match="bin_edges must contain only finite"):
         ob.HistogramDistributionOutput(
