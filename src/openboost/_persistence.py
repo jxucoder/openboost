@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 T = TypeVar("T", bound="PersistenceMixin")
 
-_SERIALIZATION_VERSION = 3
+_SERIALIZATION_VERSION = 4
 
 
 def _to_numpy(arr: Any) -> np.ndarray | None:
@@ -256,6 +256,9 @@ class PersistenceMixin:
                 if value is not None:
                     state["_bin_edges"] = value.bin_edges
                     state["_n_features"] = value.n_features
+                    state["_binning_version"] = vars(value).get(
+                        "binning_version", 1
+                    )
                     if hasattr(value, "has_missing"):
                         state["_has_missing"] = _to_numpy(value.has_missing)
                     if hasattr(value, "is_categorical"):
@@ -361,6 +364,10 @@ class PersistenceMixin:
             is_categorical = state.get("_is_categorical", np.array([], dtype=np.bool_))
             category_maps = state.get("_category_maps", [])
             n_categories = state.get("_n_categories", np.array([], dtype=np.int32))
+            # States written before serialization version 4 used the legacy
+            # top-bin clipping rule.  Preserve it so loading an old model does
+            # not silently change predictions.
+            binning_version = state.get("_binning_version", 1)
             
             # Create placeholder data (empty, just need structure for transform)
             placeholder_data = np.zeros((n_features, 0), dtype=np.uint8)
@@ -375,6 +382,7 @@ class PersistenceMixin:
                 is_categorical=is_categorical if isinstance(is_categorical, np.ndarray) else np.array(is_categorical, dtype=np.bool_),
                 category_maps=category_maps,
                 n_categories=n_categories if isinstance(n_categories, np.ndarray) else np.array(n_categories, dtype=np.int32),
+                binning_version=int(binning_version),
             )
         
         # Reconstruct _loss_fn from stored loss name/config

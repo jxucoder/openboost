@@ -159,6 +159,23 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   sharpness by 2.63%. It still trails every frozen strong baseline on CRPS.
   Keep the objective implementation, reject this configuration as the final
   wrapper, and next isolate post-fit scale calibration on training folds only.
+- The apparent mean-model gap was traced to numeric binning, not histogram
+  subtraction. `np.searchsorted` over `m` cut edges legitimately returns
+  indices `0..m`, but both fit and transform clipped the result to `m - 1`.
+  That silently merged the highest numeric interval into its predecessor; a
+  binary feature with `n_bins=2` could become constant. The corrected binning
+  keeps the top index, tests the NaN and out-of-range paths, and records a
+  binning-semantics version in persistence. Models saved before serialization
+  version 4 retain the legacy routing so loading them does not silently change
+  predictions. Histogram subtraction was independently checked against direct
+  child histograms and selected the same splits; do not replace that optimized
+  path as part of this fix.
+- The binning/persistence slice passed 83 focused tests across array handling,
+  tree growth, core fitting, and model round trips. Production files and the
+  changed binning test pass Ruff; `tests/test_persistence.py` still has its
+  pre-existing import-order/unused-import findings, which are unrelated to this
+  correctness change. A fresh ScoringBench artifact is still required before
+  interpreting the quality impact.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts

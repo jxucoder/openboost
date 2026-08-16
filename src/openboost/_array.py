@@ -23,6 +23,8 @@ if TYPE_CHECKING:
 
 # Reserved bin index for missing values (NaN)
 MISSING_BIN: int = 255
+_LEGACY_BINNING_VERSION: int = 1
+_CURRENT_BINNING_VERSION: int = 2
 
 
 @dataclass
@@ -51,6 +53,11 @@ class BinnedArray:
     is_categorical: NDArray[np.bool_] = field(default_factory=lambda: np.array([], dtype=np.bool_))
     category_maps: list[dict | None] = field(default_factory=list)
     n_categories: NDArray[np.int32] = field(default_factory=lambda: np.array([], dtype=np.int32))
+    # Version 1 clipped searchsorted outputs to ``len(edges) - 1`` and
+    # accidentally merged the top numeric bin into its predecessor.  Keep the
+    # version on fitted bin metadata so models saved before the correction
+    # retain their original prediction routing after loading.
+    binning_version: int = _CURRENT_BINNING_VERSION
     
     def __repr__(self) -> str:
         n_missing = int(np.sum(self.has_missing)) if len(self.has_missing) > 0 else 0
@@ -91,6 +98,12 @@ class BinnedArray:
             >>> X_test_binned = X_train_binned.transform(X_test)
             >>> predictions = model.predict(X_test_binned)
         """
+        # Direct pickle/joblib payloads from before the version field existed
+        # bypass PersistenceMixin. Treat their missing attribute as legacy.
+        binning_version = vars(self).get(
+            'binning_version', _LEGACY_BINNING_VERSION
+        )
+
         # Convert to numpy
         X_np = _to_numpy(X)
         if X_np.ndim == 1:
@@ -141,10 +154,13 @@ class BinnedArray:
                     # No bin edges (constant feature)
                     binned[:, j] = 0
                 else:
-                    # searchsorted finds the bin index
+                    # ``m`` cut edges define ``m + 1`` bins, indexed 0..m.
+                    # Version 1 incorrectly clipped the upper index to m - 1;
+                    # preserve that behavior only for models trained before
+                    # the top-bin correctness fix.
                     bin_idx = np.searchsorted(edges, col[~nan_mask], side='right')
-                    # Clip to valid range (in case test values exceed training range)
-                    bin_idx = np.clip(bin_idx, 0, len(edges) - 1)
+                    max_bin = _numeric_max_bin(edges, binning_version)
+                    bin_idx = np.clip(bin_idx, 0, max_bin)
                     binned[~nan_mask, j] = bin_idx.astype(np.uint8)
                 
                 # Handle missing values
@@ -169,6 +185,7 @@ class BinnedArray:
             is_categorical=self.is_categorical,
             category_maps=self.category_maps,
             n_categories=self.n_categories,
+            binning_version=binning_version,
         )
 
 
@@ -288,6 +305,7 @@ def array(
         is_categorical=is_categorical,
         category_maps=category_maps,
         n_categories=n_categories,
+        binning_version=_CURRENT_BINNING_VERSION,
     )
 
 
@@ -405,19 +423,40 @@ def _bin_numeric_feature(
         else:
             edges = np.nanpercentile(valid_col, percentiles)
             edges = np.unique(edges)
-            # searchsorted is what digitize calls internally, minus overhead
+            # ``m`` cut edges create ``m + 1`` bins.  The searchsorted output
+            # already lies in 0..m; allowing m is essential for preserving the
+            # top interval, especially for low-cardinality integer features.
             bin_idx = np.searchsorted(edges, valid_col, side='right')
-            np.clip(bin_idx, 0, len(edges) - 1, out=bin_idx)
+            np.clip(
+                bin_idx,
+                0,
+                _numeric_max_bin(edges, _CURRENT_BINNING_VERSION),
+                out=bin_idx,
+            )
             binned_col[~nan_mask] = bin_idx.astype(np.uint8)
             binned_col[nan_mask] = MISSING_BIN
     else:
         edges = np.percentile(col, percentiles)
         edges = np.unique(edges)
         bin_idx = np.searchsorted(edges, col, side='right')
-        np.clip(bin_idx, 0, len(edges) - 1, out=bin_idx)
+        np.clip(
+            bin_idx,
+            0,
+            _numeric_max_bin(edges, _CURRENT_BINNING_VERSION),
+            out=bin_idx,
+        )
         binned_col = bin_idx.astype(np.uint8)
 
     return binned_col, edges, has_nan, False, None, 0
+
+
+def _numeric_max_bin(edges: NDArray, binning_version: int) -> int:
+    """Return the highest valid numeric bin for persisted binning semantics."""
+    if binning_version <= _LEGACY_BINNING_VERSION:
+        return max(len(edges) - 1, 0)
+    # ``array`` creates at most 253 cut edges, so the current top bin is at
+    # most 253 and remains safely below MISSING_BIN (255).
+    return min(len(edges), MISSING_BIN - 1)
 
 
 def _bin_categorical_feature(

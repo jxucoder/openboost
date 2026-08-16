@@ -99,7 +99,8 @@ class TestGradientBoostingPersistence:
         )
 
         state = model._to_state_dict()
-        assert state["_serialization_version"] == 3
+        assert state["_serialization_version"] == 4
+        assert state["_binning_version"] == 2
         assert all("is_categorical_split" in tree for tree in state["trees_"])
         assert all("cat_bitsets" in tree for tree in state["trees_"])
 
@@ -468,6 +469,31 @@ class TestSklearnWrappersPersistence:
 
 class TestPersistenceEdgeCases:
     """Test edge cases for persistence."""
+
+    def test_legacy_numeric_binning_routing_survives_load(self):
+        """Loading a pre-fix model preserves its legacy top-bin routing."""
+        import openboost as ob
+
+        X = np.array([[1.0], [1.0], [2.0], [2.0]], dtype=np.float32)
+        y = np.array([0.0, 0.0, 1.0, 1.0], dtype=np.float32)
+        metadata = ob.array(X, n_bins=2)
+        metadata.binning_version = 1
+        legacy_binned = metadata.transform(X)
+        assert np.unique(legacy_binned.data).tolist() == [0]
+
+        model = ob.GradientBoosting(n_trees=1, max_depth=1)
+        model.fit(legacy_binned, y)
+        pred_before = model.predict(X)
+        state = model._to_state_dict()
+        state["_serialization_version"] = 3
+        state.pop("_binning_version")
+
+        loaded = ob.GradientBoosting()
+        loaded._from_state_dict(state)
+
+        assert loaded.X_binned_.binning_version == 1
+        np.testing.assert_array_equal(loaded.X_binned_.transform(X).data, 0)
+        np.testing.assert_allclose(loaded.predict(X), pred_before, rtol=0, atol=0)
 
     def test_load_wrong_class_raises(self, regression_data, tmp_path):
         """Test that loading with wrong class raises error."""
