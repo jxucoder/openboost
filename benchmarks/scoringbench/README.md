@@ -82,12 +82,13 @@ PYTHONPATH=.repos/ScoringBench \
   benchmarks/scoringbench/test_openboost_wrapper.py -q
 ```
 
-The `ScoringBench` GitHub workflow runs this contract plus the two-fold smoke
-benchmark on relevant pull requests and uploads the raw Parquet files and
-manifest. Its manual `quality_shard` mode runs one indexed dataset with the
-official five-fold, 3,000-row protocol. A green smoke job proves integration,
-not model quality; only completed official shards belong in a leaderboard
-submission.
+The `ScoringBench` GitHub workflow runs this contract, the two-fold smoke, and
+an Abalone quality sentinel on relevant pull requests, then uploads the raw
+Parquet files and manifests. The sentinel uses the official five-fold,
+3,000-row protocol and default 500 rounds; one dataset is still not a quality
+claim. Manual `quality_shard` mode accepts an exact dataset name so the suite can
+be sharded without downloading every dataset just to resolve an index. Only a
+completed full suite belongs in a leaderboard submission.
 
 ## Official quality track
 

@@ -48,7 +48,10 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   manifest and both raw Parquet files with 4 result rows; its digest is
   `sha256:3c98f640af58291f7cb648ac38bfa04ff0a44bd198698fb47a2b4f22dfb98862`.
   This proves the integration path only, not comparative model value.
-- CI/source provenance and artifact-working-directory tests: 3 passed.
+- CI/source provenance, artifact-working-directory, and named-shard selection
+  tests: 4 passed.
+- Linux ScoringBench run #4 confirmed `source_sha`, tested PR merge SHA, clean
+  checkouts, pinned upstream SHA, and 4 smoke rows in artifact `9256692529`.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
@@ -76,10 +79,16 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   would make a later manifest report a dirty checkout. The launcher now builds
   and validates that registry from inside the output directory and restores the
   original working directory even after an exception.
+- ScoringBench validates datasets by loading them. Selecting a shard by index
+  therefore validates the entire registry before the index exists. Exact-name
+  shards now select first and validate only the requested datasets; index and
+  list modes retain their validated-list semantics.
 
 ## Risks and Follow-ups
 
 - Run the official full suite on Linux and submit the wrapper/results upstream.
+- Use the Abalone sentinel only as a reproducibility/integration gate; inspect
+  its 5-fold artifact before deciding whether OpenBoost merits broader shards.
 - Run a separate large-sample curve on at least three real ScoringBench datasets.
 - Add CPU/CUDA prediction parity before interpreting a CUDA timing result.
 - The first artifact identified the PR merge commit but not the source-head SHA.

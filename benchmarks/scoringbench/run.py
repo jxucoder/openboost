@@ -140,13 +140,14 @@ def _build_parser() -> argparse.ArgumentParser:
         default=3000,
         help="Official ScoringBench default is 3000; use 0 only for a scale extension",
     )
-    parser.add_argument(
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument(
         "--dataset-index",
         type=int,
         action="append",
         help="Run selected index from ScoringBench's validated dataset list (repeatable)",
     )
-    parser.add_argument(
+    selection.add_argument(
         "--dataset-name",
         action="append",
         help="Run exact case-insensitive dataset name from the validated list (repeatable)",
@@ -186,6 +187,13 @@ def _select_datasets(all_datasets: list[dict], args) -> list[dict]:
         return [lookup[name.casefold()] for name in args.dataset_name]
 
     return all_datasets
+
+
+def _validate_selected_datasets(all_datasets: list[dict], args, validate) -> list[dict]:
+    """Validate only named shards; indexed shards retain validated-list semantics."""
+    if args.dataset_name:
+        return validate(_select_datasets(all_datasets, args))
+    return _select_datasets(validate(all_datasets), args)
 
 
 def _model_factories(args):
@@ -385,12 +393,17 @@ def main() -> int:
         # that reproducibility artifact with the benchmark instead of dirtying
         # the OpenBoost checkout.
         with _working_directory(output_dir):
-            datasets = validate_datasets(get_DATASETS_CONFIG())
+            all_datasets = get_DATASETS_CONFIG()
             if args.list_datasets:
+                datasets = validate_datasets(all_datasets)
                 for index, dataset in enumerate(datasets):
                     print(f"{index:3d}  {dataset['name']}")
                 return 0
-        datasets = _select_datasets(datasets, args)
+            datasets = _validate_selected_datasets(
+                all_datasets,
+                args,
+                validate_datasets,
+            )
 
     if args.lite:
         args.n_folds = 2

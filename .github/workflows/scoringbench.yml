@@ -18,10 +18,10 @@ on:
         options:
           - smoke
           - quality_shard
-      dataset_index:
-        description: ScoringBench dataset index for quality_shard
+      dataset_name:
+        description: Exact ScoringBench dataset name for quality_shard
         required: true
-        default: "0"
+        default: Abalone
         type: string
       n_trees:
         description: Boosting rounds for quality_shard
@@ -36,7 +36,7 @@ concurrency:
 jobs:
   scoringbench-cpu:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     env:
       OPENBOOST_BACKEND: cpu
       OPENBOOST_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -80,16 +80,29 @@ jobs:
             --models openboost_cpu,ngboost \
             --smoke \
             --n-trees 20 \
-            --output-dir "${RUNNER_TEMP}/scoringbench-output"
+            --output-dir "${RUNNER_TEMP}/scoringbench-smoke"
+
+      - name: Run official quality sentinel
+        if: github.event_name == 'pull_request'
+        run: |
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu,ngboost \
+            --dataset-name Abalone \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --n-trees 500 \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
 
       - name: Run official quality shard
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'quality_shard'
         env:
-          DATASET_INDEX: ${{ inputs.dataset_index }}
+          DATASET_NAME: ${{ inputs.dataset_name }}
           N_TREES: ${{ inputs.n_trees }}
         run: |
-          if [[ ! "${DATASET_INDEX}" =~ ^[0-9]+$ ]]; then
-            echo "dataset_index must be a non-negative integer" >&2
+          if [[ -z "${DATASET_NAME}" ]]; then
+            echo "dataset_name must not be empty" >&2
             exit 2
           fi
           if [[ ! "${N_TREES}" =~ ^[1-9][0-9]*$ ]]; then
@@ -99,23 +112,37 @@ jobs:
           python benchmarks/scoringbench/run.py \
             --scoringbench-dir .repos/ScoringBench \
             --models openboost_cpu,ngboost \
-            --dataset-index "${DATASET_INDEX}" \
+            --dataset-name "${DATASET_NAME}" \
             --sample-size 3000 \
             --n-folds 5 \
             --n-repeats 1 \
             --n-trees "${N_TREES}" \
-            --output-dir "${RUNNER_TEMP}/scoringbench-output"
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
 
-      - name: Verify benchmark artifact
+      - name: Verify smoke artifact
+        if: github.event_name == 'pull_request' || inputs.mode == 'smoke'
         run: |
-          test -s "${RUNNER_TEMP}/scoringbench-output/openboost_manifest.json"
-          test -n "$(find "${RUNNER_TEMP}/scoringbench-output/raw" -name '*.parquet' -print -quit)"
+          MANIFEST="${RUNNER_TEMP}/scoringbench-smoke/openboost_manifest.json"
+          test -s "${MANIFEST}"
+          test -n "$(find "${RUNNER_TEMP}/scoringbench-smoke/raw" -name '*.parquet' -print -quit)"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "smoke" and m["result_rows"] == 4' "${MANIFEST}"
+
+      - name: Verify quality-shard artifact
+        if: github.event_name == 'pull_request' || inputs.mode == 'quality_shard'
+        run: |
+          MANIFEST="${RUNNER_TEMP}/scoringbench-quality/openboost_manifest.json"
+          test -s "${MANIFEST}"
+          test -s "${RUNNER_TEMP}/scoringbench-quality/datasets.json"
+          test -n "$(find "${RUNNER_TEMP}/scoringbench-quality/raw" -name '*.parquet' -print -quit)"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "official_quality_shard" and m["official_protocol_compatible"] and m["result_rows"] == 10' "${MANIFEST}"
 
       - name: Upload benchmark artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: scoringbench-${{ github.event_name }}-${{ github.sha }}
-          path: ${{ runner.temp }}/scoringbench-output
+          path: |
+            ${{ runner.temp }}/scoringbench-smoke
+            ${{ runner.temp }}/scoringbench-quality
           if-no-files-found: warn
           retention-days: 30

@@ -3,7 +3,11 @@
 from pathlib import Path
 
 import pytest
-from benchmarks.scoringbench.run import _ci_state, _working_directory
+from benchmarks.scoringbench.run import (
+    _ci_state,
+    _validate_selected_datasets,
+    _working_directory,
+)
 
 
 def test_ci_state_is_none_outside_github_actions(monkeypatch):
@@ -51,3 +55,24 @@ def test_working_directory_contains_upstream_output_and_restores_on_error(tmp_pa
 
     assert Path.cwd() == original
     assert (artifact_dir / "datasets.json").read_text() == "[]\n"
+
+
+def test_named_quality_shard_validates_only_selected_dataset():
+    class Args:
+        dataset_index = None
+        dataset_name = ["Abalone"]
+
+    registry = [
+        {"name": "Abalone", "source": "openml", "id": 183},
+        {"name": "large_unused", "source": "openml", "id": 999},
+    ]
+    validated = []
+
+    def validate(datasets):
+        validated.extend(datasets)
+        return datasets
+
+    result = _validate_selected_datasets(registry, Args(), validate)
+
+    assert result == [registry[0]]
+    assert validated == [registry[0]]
