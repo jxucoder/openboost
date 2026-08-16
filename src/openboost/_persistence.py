@@ -17,6 +17,8 @@ if TYPE_CHECKING:
 
 T = TypeVar("T", bound="PersistenceMixin")
 
+_SERIALIZATION_VERSION = 2
+
 
 def _to_numpy(arr: Any) -> np.ndarray | None:
     """Convert array to numpy, handling GPU arrays.
@@ -84,14 +86,14 @@ def _tree_to_dict(tree: TreeStructure) -> dict[str, Any]:
         data["level_thresholds"] = _to_numpy(tree.level_thresholds)
 
     # Phase 14: Missing value handling
-    if hasattr(tree, "missing_go_left") and tree.missing_go_left is not None:
+    if tree.missing_go_left is not None:
         data["missing_go_left"] = _to_numpy(tree.missing_go_left)
 
     # Phase 14.3: Categorical support
-    if hasattr(tree, "is_categorical") and tree.is_categorical is not None:
-        data["is_categorical"] = _to_numpy(tree.is_categorical)
-    if hasattr(tree, "category_masks") and tree.category_masks is not None:
-        data["category_masks"] = _to_numpy(tree.category_masks)
+    if tree.is_categorical_split is not None:
+        data["is_categorical_split"] = _to_numpy(tree.is_categorical_split)
+    if tree.cat_bitsets is not None:
+        data["cat_bitsets"] = _to_numpy(tree.cat_bitsets)
 
     return data
 
@@ -157,7 +159,15 @@ def _dict_to_tree(data: dict[str, Any]) -> TreeStructure:
     else:
         values = values_arr
 
-    tree = TreeStructure(
+    # Accept the pre-Phase 14.3 draft key names for compatibility with any
+    # model states produced while those names were in use.
+    is_categorical_split = data.get(
+        "is_categorical_split",
+        data.get("is_categorical"),
+    )
+    cat_bitsets = data.get("cat_bitsets", data.get("category_masks"))
+
+    return TreeStructure(
         features=data["features"],
         thresholds=data["thresholds"],
         left_children=data["left_children"],
@@ -169,19 +179,10 @@ def _dict_to_tree(data: dict[str, Any]) -> TreeStructure:
         is_symmetric=data.get("is_symmetric", False),
         level_features=data.get("level_features"),
         level_thresholds=data.get("level_thresholds"),
+        missing_go_left=data.get("missing_go_left"),
+        is_categorical_split=is_categorical_split,
+        cat_bitsets=cat_bitsets,
     )
-
-    # Phase 14: Missing value handling
-    if "missing_go_left" in data:
-        tree.missing_go_left = data["missing_go_left"]
-
-    # Phase 14.3: Categorical support
-    if "is_categorical" in data:
-        tree.is_categorical = data["is_categorical"]
-    if "category_masks" in data:
-        tree.category_masks = data["category_masks"]
-
-    return tree
 
 
 class PersistenceMixin:
@@ -224,7 +225,10 @@ class PersistenceMixin:
         Returns:
             Dictionary containing all model state
         """
-        state = {"__class__": type(self).__name__, "_serialization_version": 1}
+        state = {
+            "__class__": type(self).__name__,
+            "_serialization_version": _SERIALIZATION_VERSION,
+        }
 
         for attr in self._get_persist_attrs():
             value = getattr(self, attr, None)
@@ -284,7 +288,6 @@ class PersistenceMixin:
         """
         import warnings
 
-        _CURRENT_SERIALIZATION_VERSION = 1
         saved_version = state.get("_serialization_version")
         if saved_version is None:
             warnings.warn(
@@ -293,11 +296,20 @@ class PersistenceMixin:
                 UserWarning,
                 stacklevel=2,
             )
-        elif saved_version > _CURRENT_SERIALIZATION_VERSION:
+        elif saved_version > _SERIALIZATION_VERSION:
             warnings.warn(
                 f"Model was saved with serialization version {saved_version}, "
-                f"but current version is {_CURRENT_SERIALIZATION_VERSION}. "
+                f"but current version is {_SERIALIZATION_VERSION}. "
                 "Some features may not load correctly.",
+                UserWarning,
+                stacklevel=2,
+            )
+        elif saved_version < 2 and np.any(state.get("_is_categorical", False)):
+            warnings.warn(
+                "This model uses categorical features and was saved with "
+                "serialization version 1, which did not reliably preserve "
+                "categorical tree routing. Retrain and resave the model before "
+                "using its predictions in production.",
                 UserWarning,
                 stacklevel=2,
             )
@@ -341,8 +353,6 @@ class PersistenceMixin:
 
         # Restore bin edges for transform
         if "_bin_edges" in state:
-            import numpy as np
-
             from ._array import BinnedArray
             
             # Create a minimal BinnedArray with just bin edges for transform

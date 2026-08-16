@@ -73,6 +73,52 @@ class TestGradientBoostingPersistence:
         # Predictions should match
         np.testing.assert_allclose(pred_before, pred_after, rtol=1e-5)
 
+    def test_save_load_preserves_categorical_tree_state(self, tmp_path):
+        """Categorical split routing survives a model round trip."""
+        import openboost as ob
+
+        categories = np.tile(
+            np.array([0.0, 1.0, 2.0, np.nan], dtype=np.float32),
+            60,
+        )
+        X = categories[:, None]
+        y = np.select(
+            [categories == 0.0, categories == 1.0, categories == 2.0],
+            [4.0, -3.0, 2.0],
+            default=7.0,
+        ).astype(np.float32)
+
+        X_binned = ob.array(X, categorical_features=[0])
+        model = ob.GradientBoosting(n_trees=8, max_depth=2, learning_rate=0.2)
+        model.fit(X_binned, y)
+
+        assert any(
+            tree.is_categorical_split is not None
+            and np.any(tree.is_categorical_split[: tree.n_nodes])
+            for tree in model.trees_
+        )
+
+        state = model._to_state_dict()
+        assert state["_serialization_version"] == 2
+        assert all("is_categorical_split" in tree for tree in state["trees_"])
+        assert all("cat_bitsets" in tree for tree in state["trees_"])
+
+        pred_before = model.predict(X)
+        save_path = tmp_path / "categorical_model.joblib"
+        model.save(save_path)
+        loaded = ob.GradientBoosting.load(save_path)
+        pred_after = loaded.predict(X)
+
+        for expected, actual in zip(model.trees_, loaded.trees_, strict=True):
+            np.testing.assert_array_equal(
+                expected.is_categorical_split,
+                actual.is_categorical_split,
+            )
+            np.testing.assert_array_equal(expected.cat_bitsets, actual.cat_bitsets)
+            np.testing.assert_array_equal(expected.missing_go_left, actual.missing_go_left)
+
+        np.testing.assert_allclose(pred_before, pred_after, rtol=0, atol=0)
+
     def test_save_load_with_different_losses(self, regression_data, tmp_path):
         """Test save/load with various loss functions."""
         import openboost as ob
