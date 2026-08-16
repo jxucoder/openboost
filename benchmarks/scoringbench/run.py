@@ -30,6 +30,16 @@ def _csv(value: str) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
+def _float_csv(value: str) -> tuple[float, ...]:
+    try:
+        result = tuple(float(item) for item in _csv(value))
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("expected comma-separated numbers") from exc
+    if not result:
+        raise argparse.ArgumentTypeError("expected at least one number")
+    return result
+
+
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -75,9 +85,7 @@ def _verify_dataset_files(datasets: list[dict], ensure_cached) -> list[dict]:
             continue
         expected = str(expected).lower()
         if len(expected) != 64 or any(char not in "0123456789abcdef" for char in expected):
-            raise ValueError(
-                f"invalid raw_sha256 for dataset {dataset['name']!r}: {expected!r}"
-            )
+            raise ValueError(f"invalid raw_sha256 for dataset {dataset['name']!r}: {expected!r}")
         if dataset.get("source") != "pmlb" or not dataset.get("url"):
             raise ValueError(
                 "raw_sha256 verification currently requires a PMLB URL; "
@@ -295,9 +303,7 @@ def _audit_records(
                     "model": key[1],
                     "fold": key[2],
                     "error_type": (
-                        str(row["error_type"])
-                        if _is_present_text(row.get("error_type"))
-                        else None
+                        str(row["error_type"]) if _is_present_text(row.get("error_type")) else None
                     ),
                     "error": str(error),
                 }
@@ -386,8 +392,8 @@ def _build_parser() -> argparse.ArgumentParser:
         default=["openboost_cpu", "ngboost"],
         help=(
             "Comma-separated models: openboost_cpu, openboost_cuda, "
-            "openboost_histogram_cpu, ngboost, xgboost_quantile, xgblss, "
-            "catboost_quantile"
+            "openboost_histogram_cpu, openboost_histogram_cpu_v2, ngboost, "
+            "xgboost_quantile, xgblss, catboost_quantile"
         ),
     )
     parser.add_argument("--n-trees", type=int, default=500)
@@ -410,6 +416,14 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--histogram-learning-rate", type=float, default=0.05)
     parser.add_argument("--histogram-max-depth", type=int, default=6)
     parser.add_argument("--histogram-curvature-scale", type=float, default=1.0)
+    parser.add_argument(
+        "--histogram-v2-temperature-grid",
+        type=_float_csv,
+        default=(0.5, 0.7, 0.85, 1.0, 1.2),
+    )
+    parser.add_argument("--histogram-v2-calibration-fraction", type=float, default=0.2)
+    parser.add_argument("--histogram-v2-calibration-seed", type=int, default=42)
+    parser.add_argument("--histogram-v2-evaluation-subdivisions", type=int, default=2)
     parser.add_argument(
         "--xgboost-rounds",
         type=int,
@@ -578,6 +592,18 @@ def _model_parameters(args) -> dict[str, dict]:
             "n_feature_bins": 254,
             "curvature_scale": args.histogram_curvature_scale,
         },
+        "openboost_histogram_cpu_v2": {
+            "n_distribution_bins": args.histogram_bins,
+            "n_trees": args.histogram_rounds,
+            "learning_rate": args.histogram_learning_rate,
+            "max_depth": args.histogram_max_depth,
+            "n_feature_bins": 254,
+            "curvature_scale": args.histogram_curvature_scale,
+            "temperature_grid": args.histogram_v2_temperature_grid,
+            "calibration_fraction": args.histogram_v2_calibration_fraction,
+            "calibration_seed": args.histogram_v2_calibration_seed,
+            "evaluation_subdivisions": args.histogram_v2_evaluation_subdivisions,
+        },
         "ngboost": {
             "dist": "normal",
             "n_estimators": args.n_trees,
@@ -622,6 +648,9 @@ def _model_factories(args):
         "openboost_histogram_cpu": lambda: OpenBoostHistogramWrapper(
             **parameters["openboost_histogram_cpu"]
         ),
+        "openboost_histogram_cpu_v2": lambda: OpenBoostHistogramWrapper(
+            **parameters["openboost_histogram_cpu_v2"]
+        ),
     }
 
     if "ngboost" in args.models:
@@ -655,6 +684,7 @@ def _model_factories(args):
             "openboost_cpu",
             "openboost_cuda",
             "openboost_histogram_cpu",
+            "openboost_histogram_cpu_v2",
             "ngboost",
             "xgboost_quantile",
             "xgblss",
@@ -677,10 +707,7 @@ def _write_provenance(
     import openboost as ob
 
     official_shape = (
-        not args.smoke
-        and args.sample_size == 3000
-        and args.n_folds == 5
-        and args.n_repeats == 1
+        not args.smoke and args.sample_size == 3000 and args.n_folds == 5 and args.n_repeats == 1
     )
     official_protocol_compatible = official_shape and not args.development_run
     if args.smoke:
@@ -719,9 +746,7 @@ def _write_provenance(
         "scoringbench_git": _git_state(scoringbench_dir),
         "ci": _ci_state(),
         "arguments": vars(args),
-        "model_parameters": {
-            name: _model_parameters(args)[name] for name in args.models
-        },
+        "model_parameters": {name: _model_parameters(args)[name] for name in args.models},
         "datasets": [
             {
                 "name": dataset["name"],

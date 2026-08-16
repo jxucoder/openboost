@@ -145,9 +145,7 @@ def test_load_dataset_registry_accepts_frozen_scoringbench_list(tmp_path):
     ]
 
 
-def test_registry_path_is_resolved_before_artifact_working_directory(
-    tmp_path, monkeypatch
-):
+def test_registry_path_is_resolved_before_artifact_working_directory(tmp_path, monkeypatch):
     registry = tmp_path / "datasets.json"
     registry.write_text('[{"name": "alpha"}]')
     monkeypatch.chdir(tmp_path)
@@ -260,6 +258,10 @@ def test_strong_baseline_defaults_match_scoringbench_registered_budgets():
     assert args.histogram_learning_rate == 0.05
     assert args.histogram_max_depth == 6
     assert args.histogram_curvature_scale == 1.0
+    assert args.histogram_v2_temperature_grid == (0.5, 0.7, 0.85, 1.0, 1.2)
+    assert args.histogram_v2_calibration_fraction == 0.2
+    assert args.histogram_v2_calibration_seed == 42
+    assert args.histogram_v2_evaluation_subdivisions == 2
     assert args.xgboost_rounds == 100
     assert args.xgboost_quantiles == 50
     assert args.xgblss_rounds == 100
@@ -282,6 +284,18 @@ def test_strong_baseline_defaults_match_scoringbench_registered_budgets():
         "max_depth": 6,
         "n_feature_bins": 254,
         "curvature_scale": 1.0,
+    }
+    assert parameters["openboost_histogram_cpu_v2"] == {
+        "n_distribution_bins": 50,
+        "n_trees": 100,
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "n_feature_bins": 254,
+        "curvature_scale": 1.0,
+        "temperature_grid": (0.5, 0.7, 0.85, 1.0, 1.2),
+        "calibration_fraction": 0.2,
+        "calibration_seed": 42,
+        "evaluation_subdivisions": 2,
     }
     assert parameters["xgboost_quantile"]["num_boost_round"] == 100
     assert parameters["xgblss"]["num_boost_round"] == 100
