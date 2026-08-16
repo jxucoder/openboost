@@ -115,6 +115,15 @@ over-dispersed: mean sharpness 6.48 versus CatBoost's 1.56, while RMSE was only
 0.34% worse. Diagnose retained tail mass on this consumed dataset before
 changing capacity or touching confirmation data.
 
+The follow-up audit found two semantic problems for V2. First, V1 trained a
+midpoint ranked-probability approximation while ScoringBench evaluated the
+exact piecewise-uniform histogram CRPS; the within-bin term is not a constant.
+Second, `base_smoothing=1` added one pseudocount per bin, so prior strength grew
+with output resolution. V2 uses the exact energy-form CRPS gradient and PSD
+simplex-tangent curvature, and treats `base_smoothing` as a total Dirichlet
+concentration spread evenly across bins. Both changes have analytic and
+finite-difference tests; neither is yet benchmark evidence.
+
 ## Commits
 
 - `b9db276` — `feat: add histogram CRPS boosting`

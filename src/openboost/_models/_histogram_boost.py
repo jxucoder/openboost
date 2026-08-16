@@ -24,86 +24,116 @@ def _softmax(logits: NDArray) -> NDArray:
     return exp / np.sum(exp, axis=1, keepdims=True)
 
 
-def _normalized_crps_loss(
-    logits: NDArray,
-    labels: NDArray,
-    spacings: NDArray,
-) -> NDArray:
-    """Per-row ranked probability score on an ordered target grid.
+def _continuous_crps_terms(
+    y: NDArray,
+    bin_edges: NDArray,
+) -> tuple[NDArray, NDArray]:
+    """Return normalized terms for exact piecewise-uniform histogram CRPS.
 
-    The positive spacing weights are normalized to mean one.  This is CRPS on
-    the discretized support up to a positive, target-scale-dependent constant;
-    normalization keeps tree regularization comparable across target units.
+    CRPS has the energy representation
+    ``E|X-y| - 0.5 E|X-X'|``.  Each histogram bin represents a uniform
+    conditional density, not a point mass at its midpoint.  The returned first
+    term has shape ``(n_samples, n_bins)`` and the pairwise-distance matrix has
+    shape ``(n_bins, n_bins)``.  Both are divided by mean bin width so tree
+    regularization remains invariant to target units.
     """
+    y = np.asarray(y, dtype=np.float64).reshape(-1)
+    bin_edges = np.asarray(bin_edges, dtype=np.float64).reshape(-1)
+    if bin_edges.size < 3:
+        raise ValueError("bin_edges must describe at least two bins")
+    if not np.all(np.isfinite(y)) or not np.all(np.isfinite(bin_edges)):
+        raise ValueError("y and bin_edges must contain only finite values")
+    widths = np.diff(bin_edges)
+    if np.any(widths <= 0.0):
+        raise ValueError("bin_edges must be strictly increasing")
+    midpoints = 0.5 * (bin_edges[:-1] + bin_edges[1:])
+
+    y_column = y[:, None]
+    lower = bin_edges[:-1][None, :]
+    upper = bin_edges[1:][None, :]
+    distance_to_target = np.where(
+        y_column < lower,
+        midpoints[None, :] - y_column,
+        np.where(
+            y_column > upper,
+            y_column - midpoints[None, :],
+            ((y_column - lower) ** 2 + (upper - y_column) ** 2) / (2.0 * widths[None, :]),
+        ),
+    )
+
+    pairwise_distance = np.abs(midpoints[:, None] - midpoints[None, :])
+    np.fill_diagonal(pairwise_distance, widths / 3.0)
+    normalization = float(np.mean(widths))
+    return distance_to_target / normalization, pairwise_distance / normalization
+
+
+def _continuous_crps_loss(
+    logits: NDArray,
+    y: NDArray,
+    bin_edges: NDArray,
+) -> NDArray:
+    """Exact per-row CRPS for the represented piecewise-uniform histogram."""
     probabilities = _softmax(logits)
-    cdf = np.cumsum(probabilities, axis=1)
-    target_cdf = np.arange(probabilities.shape[1])[None, :] >= labels[:, None]
-    weights = np.concatenate([spacings / np.mean(spacings), np.zeros(1, dtype=np.float64)])
-    residual = cdf - target_cdf
-    return np.sum(weights * residual * residual, axis=1)
+    distance_to_target, pairwise_distance = _continuous_crps_terms(y, bin_edges)
+    if distance_to_target.shape != probabilities.shape:
+        raise ValueError("y and bin_edges must match the logit rows and outputs")
+    first = np.sum(probabilities * distance_to_target, axis=1)
+    second = 0.5 * np.einsum(
+        "ni,ij,nj->n",
+        probabilities,
+        pairwise_distance,
+        probabilities,
+    )
+    return first - second
 
 
 def _crps_grad_gn(
     logits: NDArray,
-    labels: NDArray,
-    spacings: NDArray,
+    y: NDArray,
+    bin_edges: NDArray,
     *,
     curvature_scale: float = 1.0,
     sample_weight: NDArray | None = None,
     curvature_floor: float = 1e-6,
 ) -> tuple[NDArray, NDArray]:
-    """Gradient and positive diagonal Gauss-Newton curvature for CRPS.
+    """Gradient and PSD diagonal curvature for exact continuous CRPS.
 
-    For ``p = softmax(z)``, ``C_k = sum_{j<=k} p_j`` and ordered one-hot
-    target CDF ``T``, the normalized score is ``sum_k w_k (C_k-T_k)^2``.
-    The returned curvature is the diagonal of ``2 J.T @ W @ J`` multiplied by
-    ``curvature_scale``; it deliberately excludes the indefinite residual
-    term in the exact logit Hessian.
+    If ``a_j = E|U_j-y|`` and ``D_jk = E|U_j-U_k|`` for uniform histogram
+    bins, CRPS is ``a.T @ p - 0.5 * p.T @ D @ p``.  The gradient is exact.
+    Curvature is the diagonal of ``J.T @ (-D) @ J`` for the softmax Jacobian
+    ``J``; ``-D`` is positive semidefinite on the probability-simplex tangent
+    space.  The indefinite residual term from differentiating ``J`` is
+    deliberately excluded.
     """
     logits = np.asarray(logits, dtype=np.float64)
-    labels = np.asarray(labels, dtype=np.int64).reshape(-1)
-    spacings = np.asarray(spacings, dtype=np.float64).reshape(-1)
     if logits.ndim != 2:
         raise ValueError("logits must have shape (n_samples, n_distribution_bins)")
     n_samples, n_outputs = logits.shape
-    if labels.shape != (n_samples,):
-        raise ValueError("labels must have one entry per logit row")
-    if np.any((labels < 0) | (labels >= n_outputs)):
-        raise ValueError("labels must index a distribution bin")
-    if spacings.shape != (n_outputs - 1,) or np.any(spacings <= 0.0):
-        raise ValueError("spacings must be positive with length n_distribution_bins - 1")
     if curvature_scale <= 0.0:
         raise ValueError("curvature_scale must be strictly positive")
 
     probabilities = _softmax(logits)
-    cdf = np.cumsum(probabilities, axis=1)
-    target_cdf = np.arange(n_outputs)[None, :] >= labels[:, None]
-    weights = np.concatenate([spacings / np.mean(spacings), np.zeros(1, dtype=np.float64)])
-    residual = cdf - target_cdf
+    distance_to_target, pairwise_distance = _continuous_crps_terms(y, bin_edges)
+    if distance_to_target.shape != (n_samples, n_outputs):
+        raise ValueError("y and bin_edges must match the logit rows and outputs")
 
-    # dL/dp_j = 2 * sum_{k>=j} w_k residual_k.
-    grad_probability = 2.0 * np.flip(
-        np.cumsum(np.flip(weights * residual, axis=1), axis=1),
-        axis=1,
-    )
+    probability_distance = probabilities @ pairwise_distance
+    grad_probability = distance_to_target - probability_distance
     centered = grad_probability - np.sum(probabilities * grad_probability, axis=1, keepdims=True)
     gradient = probabilities * centered
 
-    # dC_k/dz_j = p_j * (1[j<=k] - C_k).  Prefix/suffix sums compute
-    # diag(2 J.T W J) for every j in O(n_samples * n_outputs).
-    left_terms = weights * cdf * cdf
-    left = np.concatenate(
-        [
-            np.zeros((n_samples, 1), dtype=np.float64),
-            np.cumsum(left_terms, axis=1)[:, :-1],
-        ],
+    probability_quadratic = np.sum(
+        probabilities * probability_distance,
         axis=1,
+        keepdims=True,
     )
-    right = np.flip(
-        np.cumsum(np.flip(weights * (1.0 - cdf) ** 2, axis=1), axis=1),
-        axis=1,
+    distance_diagonal = np.diag(pairwise_distance)[None, :]
+    curvature = (
+        curvature_scale
+        * probabilities
+        * probabilities
+        * (2.0 * probability_distance - distance_diagonal - probability_quadratic)
     )
-    curvature = curvature_scale * 2.0 * probabilities * probabilities * (left + right)
     curvature = np.maximum(curvature, curvature_floor)
 
     if sample_weight is not None:
@@ -212,9 +242,9 @@ class HistogramBoost(PersistenceMixin):
     """CPU shared-tree boosting for a flexible histogram distribution.
 
     Each boosting round fits one tree structure with a vector of logit updates
-    in every leaf.  The objective is an ordered, discretized CRPS and therefore
-    produces a monotone CDF by construction without independent-quantile
-    crossing.
+    in every leaf.  The objective is the exact continuous CRPS of the
+    represented piecewise-uniform histogram and therefore produces a monotone
+    CDF by construction without independent-quantile crossing.
 
     This first implementation supports numeric CPU input (including NaNs).
     Categorical splits, CUDA, callbacks, and evaluation sets intentionally raise
@@ -346,7 +376,9 @@ class HistogramBoost(PersistenceMixin):
             weights=count_weights,
             minlength=self.n_distribution_bins,
         ).astype(np.float64)
-        counts += self.base_smoothing
+        # ``base_smoothing`` is a total Dirichlet concentration, distributed
+        # evenly so changing the number of bins does not change prior strength.
+        counts += self.base_smoothing / self.n_distribution_bins
         probabilities = np.maximum(counts, np.finfo(np.float64).tiny)
         probabilities /= np.sum(probabilities)
         self.base_logits_ = np.log(probabilities)
@@ -356,12 +388,11 @@ class HistogramBoost(PersistenceMixin):
         logits = np.broadcast_to(
             self.base_logits_, (X_valid.shape[0], self.n_distribution_bins)
         ).copy()
-        spacings = np.diff(self.target_bin_midpoints_)
         for _ in range(self.n_trees):
             grad, hess = _crps_grad_gn(
                 logits,
-                labels,
-                spacings,
+                y_valid,
+                self.target_bin_edges_,
                 curvature_scale=self.curvature_scale,
                 sample_weight=weights,
             )

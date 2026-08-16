@@ -1,8 +1,9 @@
 # HistogramBoost
 
 `HistogramBoost` predicts a flexible probability histogram instead of assuming
-a Normal, Gamma, or other parametric family. It trains the complete CDF with a
-discretized continuous ranked probability score (CRPS).
+a Normal, Gamma, or other parametric family. Each bin represents uniform
+density, and the model trains the complete CDF with that histogram's exact
+continuous ranked probability score (CRPS).
 
 Each boosting round learns one tree structure. Every leaf stores a vector of
 updates for the ordered histogram logits. A softmax converts those logits into
@@ -61,6 +62,7 @@ state-of-the-art claim.
 | `n_feature_bins` | 254 | Numeric feature histogram bins |
 | `curvature_scale` | 1.0 | Scale of the PSD Gauss–Newton diagonal |
 | `reg_lambda` | 1.0 | L2 regularization for vector leaf values |
+| `base_smoothing` | 1.0 | Total Dirichlet prior weight, spread evenly across target bins |
 | `reg_alpha` | 0.0 | L1 regularization for vector leaf values |
 
 `predict_distribution()` returns `HistogramDistributionOutput`, which provides

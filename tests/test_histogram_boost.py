@@ -10,17 +10,18 @@ import pytest
 import openboost as ob
 from openboost._core._vector_tree import _find_best_vector_split, fit_vector_tree
 from openboost._models._histogram_boost import (
+    _continuous_crps_loss,
+    _continuous_crps_terms,
     _crps_grad_gn,
-    _normalized_crps_loss,
 )
 
 
-def test_crps_logit_gradient_matches_finite_difference():
+def test_continuous_crps_logit_gradient_matches_finite_difference():
     rng = np.random.default_rng(4)
     logits = rng.normal(size=(3, 5))
-    labels = np.array([0, 2, 4])
-    spacings = np.array([0.5, 1.0, 0.75, 1.5])
-    grad, _ = _crps_grad_gn(logits, labels, spacings)
+    y = np.array([-0.2, 1.3, 4.8])
+    bin_edges = np.array([-1.0, 0.0, 0.7, 2.0, 3.5, 5.0])
+    grad, _ = _crps_grad_gn(logits, y, bin_edges)
 
     eps = 1e-6
     numerical = np.empty_like(logits)
@@ -31,36 +32,43 @@ def test_crps_logit_gradient_matches_finite_difference():
             plus[row, output] += eps
             minus[row, output] -= eps
             numerical[row, output] = (
-                _normalized_crps_loss(plus, labels, spacings)[row]
-                - _normalized_crps_loss(minus, labels, spacings)[row]
+                _continuous_crps_loss(plus, y, bin_edges)[row]
+                - _continuous_crps_loss(minus, y, bin_edges)[row]
             ) / (2 * eps)
 
     np.testing.assert_allclose(grad, numerical, rtol=2e-5, atol=2e-6)
     np.testing.assert_allclose(np.sum(grad, axis=1), 0.0, atol=1e-7)
 
 
-def test_crps_gauss_newton_diagonal_matches_explicit_jacobian():
+def test_continuous_crps_includes_uniform_within_bin_distance():
+    # A Uniform(0, 1) forecast observed at 0.5 has CRPS 1/12. The second
+    # far-away bin has negligible softmax mass at these logits.
+    loss = _continuous_crps_loss(
+        np.array([[50.0, -50.0]]),
+        np.array([0.5]),
+        np.array([0.0, 1.0, 2.0]),
+    )
+    assert loss[0] == pytest.approx(1.0 / 12.0)
+
+
+def test_continuous_crps_psd_diagonal_matches_explicit_jacobian():
     logits = np.array([[0.4, -0.2, 0.1, 0.7]])
-    labels = np.array([2])
-    spacings = np.array([0.5, 1.5, 0.75])
+    y = np.array([1.2])
+    bin_edges = np.array([-0.5, 0.0, 1.5, 2.25, 4.0])
     scale = 1.7
     _, hess = _crps_grad_gn(
         logits,
-        labels,
-        spacings,
+        y,
+        bin_edges,
         curvature_scale=scale,
         curvature_floor=0.0,
     )
 
     p = np.exp(logits[0] - np.max(logits[0]))
     p /= p.sum()
-    cdf = np.cumsum(p)
-    weights = np.r_[spacings / np.mean(spacings), 0.0]
-    jacobian = np.empty((len(p), len(p)))
-    for k in range(len(p)):
-        for j in range(len(p)):
-            jacobian[k, j] = p[j] * ((j <= k) - cdf[k])
-    expected = scale * 2.0 * np.diag(jacobian.T @ np.diag(weights) @ jacobian)
+    _, pairwise_distance = _continuous_crps_terms(y, bin_edges)
+    jacobian = np.diag(p) - np.outer(p, p)
+    expected = scale * np.diag(jacobian.T @ (-pairwise_distance) @ jacobian)
 
     np.testing.assert_allclose(hess[0], expected, rtol=2e-6, atol=1e-8)
     assert np.all(hess >= 0.0)
@@ -68,14 +76,14 @@ def test_crps_gauss_newton_diagonal_matches_explicit_jacobian():
 
 def test_crps_sample_weight_scales_gradient_and_curvature():
     logits = np.zeros((3, 4))
-    labels = np.array([0, 1, 3])
-    spacings = np.ones(3)
+    y = np.array([-0.5, 1.2, 4.0])
+    bin_edges = np.array([-1.0, 0.0, 1.0, 2.0, 3.0])
     weights = np.array([0.0, 2.0, 5.0])
-    grad, hess = _crps_grad_gn(logits, labels, spacings)
+    grad, hess = _crps_grad_gn(logits, y, bin_edges)
     weighted_grad, weighted_hess = _crps_grad_gn(
         logits,
-        labels,
-        spacings,
+        y,
+        bin_edges,
         sample_weight=weights,
     )
     np.testing.assert_allclose(weighted_grad, grad * weights[:, None])
@@ -238,6 +246,22 @@ def test_histogram_boost_sample_weight_controls_base_distribution():
         weighted.fit(X, y, sample_weight=np.zeros(len(y)))
     with pytest.raises(ValueError, match="only finite"):
         weighted.fit(X, y, sample_weight=np.full(len(y), np.inf))
+
+
+def test_histogram_boost_base_smoothing_is_total_prior_weight():
+    X = np.arange(4, dtype=np.float32).reshape(-1, 1)
+    y = np.zeros(4, dtype=np.float32)
+    model = ob.HistogramBoost(
+        n_distribution_bins=5,
+        n_trees=0,
+        base_smoothing=1.0,
+    ).fit(X, y)
+
+    probabilities = model.predict_distribution(X[:1]).probas[0]
+    labels = np.searchsorted(model.target_bin_edges_[1:-1], y, side="right")
+    counts = np.bincount(labels, minlength=5)
+    expected = (counts + 1.0 / 5.0) / (len(y) + 1.0)
+    np.testing.assert_allclose(probabilities, expected)
 
 
 def test_histogram_boost_persistence_preserves_vector_predictions(tmp_path):
