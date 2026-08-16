@@ -53,6 +53,13 @@ def _load_dataset_registry(path: Path) -> list[dict]:
     return datasets
 
 
+def _resolve_dataset_registry_path(value: str | None) -> Path | None:
+    """Resolve a CLI registry path before changing into the artifact directory."""
+    if value is None:
+        return None
+    return Path(value).expanduser().resolve()
+
+
 def _verify_dataset_files(datasets: list[dict], ensure_cached) -> list[dict]:
     """Materialize and verify dataset files pinned by a frozen registry.
 
@@ -785,6 +792,7 @@ def _write_provenance(
 
 def main() -> int:
     args = _build_parser().parse_args()
+    dataset_registry_path = _resolve_dataset_registry_path(args.dataset_registry)
     if sys.platform == "darwin" and platform.machine() == "x86_64":
         raise SystemExit(
             "The complete ScoringBench runner is unsupported on Intel macOS: "
@@ -832,8 +840,7 @@ def main() -> int:
         # the OpenBoost checkout.
         with _working_directory(output_dir):
             if args.dataset_registry:
-                registry_path = Path(args.dataset_registry).expanduser().resolve()
-                all_datasets = _load_dataset_registry(registry_path)
+                all_datasets = _load_dataset_registry(dataset_registry_path)
                 Path("datasets.json").write_text(
                     json.dumps(all_datasets, indent=2, ensure_ascii=False) + "\n"
                 )

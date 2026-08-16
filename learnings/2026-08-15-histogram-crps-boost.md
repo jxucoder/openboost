@@ -69,6 +69,11 @@ tuned again before the preregistered `197_cpu_act` run.
 
 ## Failed Attempts
 
+- The first preregistered Actions run (`31930232251`) failed before dataset
+  download because the launcher resolved a relative frozen-registry path after
+  changing into its artifact directory. Registry inputs are now resolved
+  before that directory change and covered by a regression test. The failed
+  run observed no benchmark outcome and remains part of the audit trail.
 - Absolute-value exact Hessian: improved the prototype but has no valid PSD or
   majorization interpretation; reject it.
 - Gaussian residual-shape calibration and independent scalar quantile models:

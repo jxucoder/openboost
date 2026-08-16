@@ -10,6 +10,7 @@ from benchmarks.scoringbench.run import (
     _enforce_dataset_role_lock,
     _load_dataset_registry,
     _model_parameters,
+    _resolve_dataset_registry_path,
     _select_datasets,
     _validate_selected_datasets,
     _verify_dataset_files,
@@ -142,6 +143,18 @@ def test_load_dataset_registry_accepts_frozen_scoringbench_list(tmp_path):
     assert _load_dataset_registry(path) == [
         {"name": "alpha", "source": "pmlb", "url": "https://example"}
     ]
+
+
+def test_registry_path_is_resolved_before_artifact_working_directory(
+    tmp_path, monkeypatch
+):
+    registry = tmp_path / "datasets.json"
+    registry.write_text('[{"name": "alpha"}]')
+    monkeypatch.chdir(tmp_path)
+
+    resolved = _resolve_dataset_registry_path("datasets.json")
+    with _working_directory(tmp_path / "artifact"):
+        assert _load_dataset_registry(resolved) == [{"name": "alpha"}]
 
 
 def test_verify_dataset_files_accepts_matching_pinned_bytes(tmp_path):
