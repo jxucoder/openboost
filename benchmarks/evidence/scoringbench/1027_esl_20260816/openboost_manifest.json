@@ -1,0 +1,83 @@
+{
+  "arguments": {
+    "dataset_index": null,
+    "dataset_name": [
+      "1027_ESL"
+    ],
+    "learning_rate": 0.01,
+    "list_datasets": false,
+    "lite": false,
+    "max_depth": 3,
+    "models": [
+      "openboost_cpu",
+      "ngboost"
+    ],
+    "n_folds": 5,
+    "n_quantiles": 99,
+    "n_repeats": 1,
+    "n_trees": 500,
+    "output_dir": "/home/runner/work/_temp/scoringbench-quality",
+    "sample_size": 3000,
+    "scoringbench_dir": ".repos/ScoringBench",
+    "seed": 42,
+    "smoke": false
+  },
+  "ci": {
+    "event_name": "pull_request",
+    "head_ref": "codex/scoringbench-release-hardening",
+    "provider": "github_actions",
+    "ref": "refs/pull/19/merge",
+    "repository": "jxucoder/openboost",
+    "run_attempt": "1",
+    "run_id": "31922702524",
+    "source_sha": "921c024b23fc4549b251222f35ce64a4b6846505",
+    "tested_sha": "71dd86b7c95245593030ca488981bc2607f02eb5"
+  },
+  "created_at": "2026-08-16T02:54:19+00:00",
+  "datasets": [
+    {
+      "id": null,
+      "name": "1027_ESL",
+      "source": "pmlb"
+    }
+  ],
+  "official_protocol_compatible": true,
+  "openboost_git": {
+    "commit": "71dd86b7c95245593030ca488981bc2607f02eb5",
+    "dirty": false
+  },
+  "platform": {
+    "cpu_count": 4,
+    "gpu": null,
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "release": "6.17.0-1022-azure",
+    "system": "Linux"
+  },
+  "protocol": "ScoringBench",
+  "protocol_mode": "official_quality_shard",
+  "result_rows": 10,
+  "schema_version": 1,
+  "scoringbench_git": {
+    "commit": "a938a667b7839b41e9272929010573410301c0b4",
+    "dirty": false
+  },
+  "versions": {
+    "catboost": null,
+    "cupy-cuda12x": null,
+    "ngboost": "0.5.11",
+    "numba": "0.67.0",
+    "numba-cuda": null,
+    "numpy": "2.2.6",
+    "openboost": "1.0.0rc1",
+    "pandas": "2.3.3",
+    "pyarrow": "25.0.1",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.18.0",
+    "torch": "2.13.0",
+    "xgboost": null,
+    "xgboostlss": null
+  },
+  "warning": null
+}

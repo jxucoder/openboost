@@ -157,6 +157,11 @@ Generated ScoringBench directories are gitignored. Publish accepted evidence in
 ScoringBench's designated output/LFS repository or intentionally force-add a
 frozen artifact; do not commit an arbitrary local smoke run.
 
+The first frozen official-protocol sentinel is under
+`benchmarks/evidence/scoringbench/1027_esl_20260816/`. It preserves the raw
+Parquet rows and documents both favorable and unfavorable metrics. Do not
+generalize that single-dataset result into a library-level claim.
+
 ## Evidence gate
 
 OpenBoost should claim value only after all of the following are true:

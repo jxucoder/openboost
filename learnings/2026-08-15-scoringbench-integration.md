@@ -52,6 +52,15 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   tests: 4 passed.
 - Linux ScoringBench run #4 confirmed `source_sha`, tested PR merge SHA, clean
   checkouts, pinned upstream SHA, and 4 smoke rows in artifact `9256692529`.
+- Linux ScoringBench run #6 completed the `1027_ESL` official-quality sentinel:
+  10 fold/model rows, clean provenance, and artifact verification all passed.
+  Artifact `9256929555` has digest
+  `sha256:0c5176c4a28cd44444f6a086643a01f636b0dcb5e165a4a30d3d992f3e96da97`.
+- The frozen evidence under
+  `benchmarks/evidence/scoringbench/1027_esl_20260816/` preserves the manifest,
+  resolved dataset registry, both raw Parquet files, and a descriptive summary.
+  OpenBoost's mean CRPS/RMSE/90% interval score and time were better on this
+  shard, but mean log score was worse and CRPS won only 2/5 folds.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
