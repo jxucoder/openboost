@@ -39,6 +39,7 @@ jobs:
     timeout-minutes: 45
     env:
       OPENBOOST_BACKEND: cpu
+      OPENBOOST_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       PYTHONHASHSEED: "0"
       NUMBA_NUM_THREADS: "2"
       OMP_NUM_THREADS: "2"

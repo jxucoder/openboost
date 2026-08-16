@@ -144,8 +144,9 @@ their results cannot be confused:
 Run each CUDA measurement in a fresh process. Report cold and repeated runs
 separately, and include failures/OOMs. The generated `openboost_manifest.json`
 records both git commits, dirty state, arguments, package versions, platform and
-GPU identity. Runs whose manifest says `scoringbench_scale_extension` are not
-official leaderboard runs.
+GPU identity. In GitHub Actions it also distinguishes the tested merge commit
+from the pull request's source-head commit. Runs whose manifest says
+`scoringbench_scale_extension` are not official leaderboard runs.
 
 Generated ScoringBench directories are gitignored. Publish accepted evidence in
 ScoringBench's designated output/LFS repository or intentionally force-add a

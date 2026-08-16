@@ -70,6 +70,27 @@ def _gpu_info() -> dict | None:
         return {"error": f"{type(exc).__name__}: {exc}"}
 
 
+def _ci_state() -> dict | None:
+    """Return non-secret GitHub Actions identity for artifact provenance."""
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        return None
+
+    names = {
+        "event_name": "GITHUB_EVENT_NAME",
+        "repository": "GITHUB_REPOSITORY",
+        "ref": "GITHUB_REF",
+        "tested_sha": "GITHUB_SHA",
+        "source_sha": "OPENBOOST_SOURCE_SHA",
+        "head_ref": "GITHUB_HEAD_REF",
+        "run_id": "GITHUB_RUN_ID",
+        "run_attempt": "GITHUB_RUN_ATTEMPT",
+    }
+    return {
+        "provider": "github_actions",
+        **{key: os.environ.get(env_name) for key, env_name in names.items()},
+    }
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Run OpenBoost on the external ScoringBench protocol"
@@ -260,6 +281,7 @@ def _write_provenance(
         ),
         "openboost_git": _git_state(PROJECT_ROOT),
         "scoringbench_git": _git_state(scoringbench_dir),
+        "ci": _ci_state(),
         "arguments": vars(args),
         "datasets": [
             {

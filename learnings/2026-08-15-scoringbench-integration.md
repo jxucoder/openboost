@@ -42,7 +42,12 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - `ruff check benchmarks/scoringbench`: passed.
 - Python compilation and manifest protocol classification: passed.
 - GitHub workflow YAML parsed locally; the pinned wrapper contract passed before
-  the workflow was added. The complete Linux smoke remains a CI gate.
+  the workflow was added, then the complete Linux smoke passed in run #1.
+- Linux ScoringBench run #1 passed the contract, two-fold OpenBoost/NGBoost
+  smoke, artifact verification, and upload. Artifact `9256565927` contains the
+  manifest and both raw Parquet files with 4 result rows; its digest is
+  `sha256:3c98f640af58291f7cb648ac38bfa04ff0a44bd198698fb47a2b4f22dfb98862`.
+  This proves the integration path only, not comparative model value.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
@@ -71,7 +76,7 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - Run the official full suite on Linux and submit the wrapper/results upstream.
 - Run a separate large-sample curve on at least three real ScoringBench datasets.
 - Add CPU/CUDA prediction parity before interpreting a CUDA timing result.
-- Run the new Linux smoke workflow and retain its artifact; workflow syntax and
-  wrapper-only validation do not prove that the complete runner succeeds.
+- The first artifact identified the PR merge commit but not the source-head SHA.
+  The manifest now records both; confirm the mapping in the next CI artifact.
 - Add freMTPL2 or another real exposure-aware case study after the third-party
   quality result exists.
