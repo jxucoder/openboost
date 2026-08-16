@@ -70,6 +70,7 @@ def _git_state(path: Path) -> dict:
     return {
         "commit": run("rev-parse", "HEAD"),
         "dirty": bool(status) if status is not None else None,
+        "changes": status.splitlines() if status else [],
     }
 
 
@@ -456,64 +457,79 @@ def _validate_selected_datasets(all_datasets: list[dict], args, validate) -> lis
     return _select_datasets(validate(all_datasets), args)
 
 
-def _model_factories(args):
-    from benchmarks.scoringbench.openboost_wrapper import OpenBoostWrapper
-
-    common = {
+def _model_parameters(args) -> dict[str, dict]:
+    """Return the exact benchmark constructor parameters for every model."""
+    openboost_common = {
         "n_trees": args.n_trees,
         "learning_rate": args.learning_rate,
         "max_depth": args.max_depth,
         "n_quantiles": args.n_quantiles,
     }
+    return {
+        "openboost_cpu": {"backend": "cpu", **openboost_common},
+        "openboost_cuda": {"backend": "cuda", **openboost_common},
+        "ngboost": {
+            "dist": "normal",
+            "n_estimators": args.n_trees,
+            "learning_rate": args.learning_rate,
+            "n_quantiles": args.n_quantiles,
+            "ngb_params": {"random_state": args.seed},
+        },
+        "xgboost_quantile": {
+            "n_bins": args.xgboost_quantiles,
+            "num_boost_round": args.xgboost_rounds,
+            "xgb_params": {"device": "cpu", "seed": args.seed, "nthread": 2},
+        },
+        "xgblss": {
+            "n_quantiles": args.n_quantiles,
+            "num_boost_round": args.xgblss_rounds,
+            "distribution": "Gaussian",
+            "xgblss_params": {"device": "cpu", "seed": args.seed, "nthread": 2},
+        },
+        "catboost_quantile": {
+            "n_quantiles": args.n_quantiles,
+            "iterations": args.catboost_rounds,
+            "catboost_params": {
+                "allow_writing_files": False,
+                "random_seed": args.seed,
+                "thread_count": 2,
+            },
+        },
+    }
 
-    def openboost(backend: str):
-        return lambda: OpenBoostWrapper(backend=backend, **common)
+
+def _model_factories(args):
+    from benchmarks.scoringbench.openboost_wrapper import OpenBoostWrapper
+
+    parameters = _model_parameters(args)
 
     factories = {
-        "openboost_cpu": openboost("cpu"),
-        "openboost_cuda": openboost("cuda"),
+        "openboost_cpu": lambda: OpenBoostWrapper(**parameters["openboost_cpu"]),
+        "openboost_cuda": lambda: OpenBoostWrapper(**parameters["openboost_cuda"]),
     }
 
     if "ngboost" in args.models:
         from scoringbench.wrappers.ngboost_wrapper import NGBoostWrapper
 
-        factories["ngboost"] = lambda: NGBoostWrapper(
-            dist="normal",
-            n_estimators=args.n_trees,
-            learning_rate=args.learning_rate,
-            n_quantiles=args.n_quantiles,
-            ngb_params={"random_state": args.seed},
-        )
+        factories["ngboost"] = lambda: NGBoostWrapper(**parameters["ngboost"])
 
     if "xgboost_quantile" in args.models:
         from scoringbench.wrappers.xgb_vector import XGBQuantileVectorWrapper
 
         factories["xgboost_quantile"] = lambda: XGBQuantileVectorWrapper(
-            n_bins=args.xgboost_quantiles,
-            num_boost_round=args.xgboost_rounds,
-            xgb_params={"device": "cpu", "seed": args.seed, "nthread": 2},
+            **parameters["xgboost_quantile"]
         )
 
     if "xgblss" in args.models:
         from scoringbench.wrappers.xgblss_wrapper import XGBLSSWrapper
 
-        factories["xgblss"] = lambda: XGBLSSWrapper(
-            n_quantiles=args.n_quantiles,
-            num_boost_round=args.xgblss_rounds,
-            distribution="Gaussian",
-            xgblss_params={"device": "cpu", "seed": args.seed, "nthread": 2},
-        )
+        factories["xgblss"] = lambda: XGBLSSWrapper(**parameters["xgblss"])
 
     if "catboost_quantile" in args.models:
         from scoringbench.wrappers.catboost_wrapper import CatBoostQuantileWrapper
 
         factories["catboost_quantile"] = lambda: CatBoostQuantileWrapper(
-            n_quantiles=args.n_quantiles,
-            iterations=args.catboost_rounds,
-            catboost_params={
-                "random_seed": args.seed,
-                "thread_count": 2,
-            },
+            **parameters["catboost_quantile"]
         )
 
     valid = set(factories)
@@ -577,6 +593,9 @@ def _write_provenance(
         "scoringbench_git": _git_state(scoringbench_dir),
         "ci": _ci_state(),
         "arguments": vars(args),
+        "model_parameters": {
+            name: _model_parameters(args)[name] for name in args.models
+        },
         "datasets": [
             {
                 "name": dataset["name"],

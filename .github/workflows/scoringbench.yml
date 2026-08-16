@@ -168,7 +168,7 @@ jobs:
           test -s "${RUNNER_TEMP}/scoringbench-quality/benchmark_outcome.json"
           test -s "${RUNNER_TEMP}/scoringbench-quality/datasets.json"
           test -n "$(find "${RUNNER_TEMP}/scoringbench-quality/raw" -name '*.parquet' -print -quit)"
-          python -c 'import json, sys; m=json.load(open(sys.argv[1])); expected=25 if sys.argv[2] == "strong_shard" else 10; assert m["protocol_mode"] == "official_quality_shard" and m["official_protocol_compatible"] and m["result_rows"] == expected and m["expected_result_rows"] == expected and m["outcome"]["status"] == "complete"' "${MANIFEST}" "${{ inputs.mode }}"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); expected=25 if sys.argv[2] == "strong_shard" else 10; assert m["protocol_mode"] == "official_quality_shard" and m["official_protocol_compatible"] and m["result_rows"] == expected and m["expected_result_rows"] == expected and m["outcome"]["status"] == "complete" and m["openboost_git"]["dirty"] is False' "${MANIFEST}" "${{ inputs.mode }}"
 
       - name: Upload benchmark artifact
         if: always()

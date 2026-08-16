@@ -8,6 +8,7 @@ from benchmarks.scoringbench.run import (
     _build_parser,
     _ci_state,
     _load_dataset_registry,
+    _model_parameters,
     _select_datasets,
     _validate_selected_datasets,
     _working_directory,
@@ -180,3 +181,9 @@ def test_strong_baseline_defaults_match_scoringbench_registered_budgets():
     assert args.xgboost_quantiles == 50
     assert args.xgblss_rounds == 100
     assert args.catboost_rounds == 1000
+
+    parameters = _model_parameters(args)
+    assert parameters["xgboost_quantile"]["num_boost_round"] == 100
+    assert parameters["xgblss"]["num_boost_round"] == 100
+    assert parameters["catboost_quantile"]["iterations"] == 1000
+    assert parameters["catboost_quantile"]["catboost_params"]["allow_writing_files"] is False

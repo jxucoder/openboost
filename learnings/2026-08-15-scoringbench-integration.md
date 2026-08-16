@@ -87,6 +87,11 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   pin: XGBoostLSS declares `torch>=2.1,<2.10`. The old selection came from
   resolving for Intel macOS, where 2.2.2 is the final available Torch wheel;
   benchmark dependencies must be resolved for the Linux target platform.
+- Strong-baseline run `31925230473` completed all 25 expected rows, but its
+  OpenBoost checkout was dirty after training. CatBoost writes `catboost_info/`
+  in the process working directory unless configured otherwise. The factory
+  now sets `allow_writing_files=False`, manifests include porcelain change
+  paths, and the artifact gate rejects a dirty OpenBoost checkout.
 
 - The composer-swarm Cursor scout repeatedly failed with macOS Keychain error
   `SecItemCopyMatching failed -50`. Use local inspection until its CLI
