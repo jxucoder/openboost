@@ -183,12 +183,14 @@ def test_strong_baseline_defaults_match_scoringbench_registered_budgets():
     assert args.catboost_rounds == 1000
     assert args.reg_lambda == 1.0
     assert args.min_child_weight == 1.0
+    assert args.training_objective == "nll"
     assert args.development_run is False
 
     parameters = _model_parameters(args)
     assert parameters["openboost_cpu"]["model_params"] == {
         "reg_lambda": 1.0,
         "min_child_weight": 1.0,
+        "training_objective": "nll",
     }
     assert parameters["xgboost_quantile"]["num_boost_round"] == 100
     assert parameters["xgblss"]["num_boost_round"] == 100
@@ -206,6 +208,8 @@ def test_development_parameters_are_explicit_in_manifest_constructor_contract():
             "250",
             "--learning-rate",
             "0.04",
+            "--training-objective",
+            "crps",
             "--max-depth",
             "2",
             "--reg-lambda",
@@ -222,5 +226,9 @@ def test_development_parameters_are_explicit_in_manifest_constructor_contract():
         "learning_rate": 0.04,
         "max_depth": 2,
         "n_quantiles": 99,
-        "model_params": {"reg_lambda": 3.0, "min_child_weight": 5.0},
+        "model_params": {
+            "reg_lambda": 3.0,
+            "min_child_weight": 5.0,
+            "training_objective": "crps",
+        },
     }

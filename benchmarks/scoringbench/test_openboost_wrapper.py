@@ -31,3 +31,22 @@ def test_openboost_wrapper_distribution_contract():
     assert np.all(np.isfinite(distribution.bin_edges))
     assert np.allclose(distribution.probas.sum(axis=1), 1.0)
     assert np.all(np.diff(distribution.bin_edges, axis=1) > 0)
+
+
+def test_openboost_wrapper_forwards_crps_training_objective():
+    rng = np.random.default_rng(7)
+    X = rng.normal(size=(100, 3)).astype(np.float32)
+    y = (X[:, 0] + rng.normal(scale=0.4, size=100)).astype(np.float32)
+    model = OpenBoostWrapper(
+        backend="cpu",
+        n_trees=5,
+        learning_rate=0.05,
+        max_depth=2,
+        n_quantiles=9,
+        model_params={"training_objective": "crps"},
+    )
+
+    model.fit(X[:80], y[:80])
+
+    assert model._model.training_objective == "crps"
+    assert np.all(np.isfinite(model.predict(X[80:])))

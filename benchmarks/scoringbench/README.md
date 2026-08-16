@@ -189,6 +189,7 @@ metrics:
   --n-folds 5 \
   --n-trees 250 \
   --learning-rate 0.04 \
+  --training-objective crps \
   --max-depth 2 \
   --reg-lambda 1.0 \
   --min-child-weight 1.0 \
@@ -198,6 +199,10 @@ metrics:
 
 Record every tried configuration, including failures. Select one configuration
 using only development datasets; do not repeatedly inspect the held-out suite.
+`--training-objective crps` is an explicit development candidate for Gaussian
+CRPS. It does not change `eval_metric`, is not enabled by default, and must not
+be described as an official result until it is frozen and rerun on untouched
+data.
 
 Use `--dataset-index N` or `--dataset-name NAME` for resumable shards. Use
 `--list-datasets` to display the validated list. Do not tune OpenBoost on the

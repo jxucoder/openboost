@@ -145,6 +145,11 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   differences, default-NLL identity, objective logging, sklearn cloning, and
   persistence. It must still win on the frozen `1028_SWD` development folds
   before being promoted into the ScoringBench wrapper experiment.
+- The benchmark launcher and manual Actions workflow now record and forward
+  `training_objective`; the default remains `nll`, while CRPS candidates must
+  carry the `development_tuning` protocol label. The provenance suite passed
+  10 tests and both NLL/CRPS wrapper contracts passed against the pinned
+  ScoringBench checkout.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts

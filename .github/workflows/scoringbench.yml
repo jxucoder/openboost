@@ -35,6 +35,14 @@ on:
         required: true
         default: "0.01"
         type: string
+      training_objective:
+        description: OpenBoost objective for development_shard
+        required: true
+        default: nll
+        type: choice
+        options:
+          - nll
+          - crps
       max_depth:
         description: OpenBoost tree depth for development_shard
         required: true
@@ -178,6 +186,7 @@ jobs:
           DATASET_NAME: ${{ inputs.dataset_name }}
           N_TREES: ${{ inputs.n_trees }}
           LEARNING_RATE: ${{ inputs.learning_rate }}
+          TRAINING_OBJECTIVE: ${{ inputs.training_objective }}
           MAX_DEPTH: ${{ inputs.max_depth }}
           REG_LAMBDA: ${{ inputs.reg_lambda }}
           MIN_CHILD_WEIGHT: ${{ inputs.min_child_weight }}
@@ -191,6 +200,7 @@ jobs:
             --n-repeats 1 \
             --n-trees "${N_TREES}" \
             --learning-rate "${LEARNING_RATE}" \
+            --training-objective "${TRAINING_OBJECTIVE}" \
             --max-depth "${MAX_DEPTH}" \
             --reg-lambda "${REG_LAMBDA}" \
             --min-child-weight "${MIN_CHILD_WEIGHT}" \

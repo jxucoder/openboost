@@ -328,6 +328,15 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--n-trees", type=int, default=500)
     parser.add_argument("--learning-rate", type=float, default=0.01)
     parser.add_argument("--max-depth", type=int, default=3)
+    parser.add_argument(
+        "--training-objective",
+        choices=("nll", "crps"),
+        default="nll",
+        help=(
+            "OpenBoost training objective. CRPS is a development candidate; "
+            "use --development-run while evaluating it."
+        ),
+    )
     parser.add_argument("--reg-lambda", type=float, default=1.0)
     parser.add_argument("--min-child-weight", type=float, default=1.0)
     parser.add_argument("--n-quantiles", type=int, default=99)
@@ -477,6 +486,7 @@ def _model_parameters(args) -> dict[str, dict]:
         "model_params": {
             "reg_lambda": args.reg_lambda,
             "min_child_weight": args.min_child_weight,
+            "training_objective": args.training_objective,
         },
     }
     return {
