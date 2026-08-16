@@ -198,6 +198,21 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   with more rounds but did not close the native-XGBoost gap, while a prototype
   exact residual-quantile leaf refit was worse. Do not productize either path
   without a stronger multi-dataset hypothesis and a clean artifact.
+- A shared-tree vector-PMF prototype identified a different ceiling: directly
+  optimizing discretized CRPS can close the shape gap that a two-parameter
+  Gaussian cannot. The first prototype used an invalid absolute-value
+  transform of an indefinite exact diagonal Hessian and is rejected. Replacing
+  it with the positive-semidefinite Gauss--Newton diagonal, 50 bins, 100 rounds,
+  and learning rate 0.05 produced mean CRPS 0.333588 on the already-consumed
+  `1028_SWD` folds, versus 0.338359 for the frozen native XGBoost quantile row.
+  This selects an architecture for implementation; it is not new-dataset or
+  OpenBoost-core evidence.
+- Before loading more data, protocol `crps_distribution_v1` froze
+  `197_cpu_act` for development and `537_houses` for one untouched confirmation
+  run. Their PMLB source commit, compressed-file hashes, model budgets, metric
+  guardrails, fold-win thresholds, and permitted claim language are committed
+  under `benchmarks/scoringbench/protocols/`. The candidate API and exact
+  hyperparameters must be committed before loading the development entry.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
