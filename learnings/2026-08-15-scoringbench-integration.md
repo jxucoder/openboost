@@ -176,6 +176,28 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   pre-existing import-order/unused-import findings, which are unrelated to this
   correctness change. A fresh ScoringBench artifact is still required before
   interpreting the quality impact.
+- The full non-GPU/non-benchmark CPU suite subsequently passed with 752 tests
+  and 32 expected skips. Clean Linux development run `31928677396` then
+  completed all five `1028_SWD` folds from source `236c2df`; artifact
+  `9258714239` has digest
+  `sha256:c75eea2d93bf10d5de1ae48a8ab37eed66c1dc1c326a9810ab8dc808c4656836`.
+  The committed raw artifact is under
+  `benchmarks/evidence/scoringbench/development/1028_swd_binning_fix_20260816/`.
+- Correct binning reduces OpenBoost mean CRPS from 0.355075 to 0.347845
+  (2.04%, four of five folds) and RMSE from 0.626043 to 0.615779. On this
+  consumed development dataset it beats XGBoostLSS CRPS by 0.41% in four of
+  five folds, while NGBoost remains effective parity (0.10% lower mean but only
+  two OpenBoost fold wins). The primary goal remains unmet: OpenBoost is 2.80%
+  behind native XGBoost quantile and 3.41% behind CatBoost quantile, winning
+  only one fold against each. Its coverage error, interval score, PIT KS, and
+  RMSE are substantially better than those two quantile rows here; report this
+  as a Pareto trade-off, not a CRPS win.
+- Two local, non-artifact follow-ups were rejected before implementation.
+  Replacing the Normal shape with the training residual empirical shape made
+  negligible CRPS difference. Independent OpenBoost quantile models improved
+  with more rounds but did not close the native-XGBoost gap, while a prototype
+  exact residual-quantile leaf refit was worse. Do not productize either path
+  without a stronger multi-dataset hypothesis and a clean artifact.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts

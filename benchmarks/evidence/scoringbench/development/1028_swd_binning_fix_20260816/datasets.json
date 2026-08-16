@@ -1,0 +1,482 @@
+[
+  {
+    "name": "Abalone",
+    "source": "openml",
+    "id": 183,
+    "abbr": "A"
+  },
+  {
+    "name": "Student_Performance",
+    "source": "openml",
+    "id": 42352,
+    "abbr": "SP"
+  },
+  {
+    "name": "Infrared_Thermography_Temperature",
+    "source": "openml",
+    "id": 46613,
+    "abbr": "ITT"
+  },
+  {
+    "name": "Parkinsons_Telemonitoring",
+    "source": "openml",
+    "id": 4531,
+    "abbr": "PT"
+  },
+  {
+    "name": "Energy_Efficiency",
+    "source": "openml",
+    "id": 44960,
+    "abbr": "EE"
+  },
+  {
+    "name": "QsarFishToxicity",
+    "source": "openml",
+    "id": 44970,
+    "abbr": "Q"
+  },
+  {
+    "name": "concrete_compressive_strength",
+    "source": "openml",
+    "id": 44959,
+    "abbr": "CCS"
+  },
+  {
+    "name": "PRODUCTIVITY",
+    "source": "openml",
+    "id": 42989,
+    "abbr": "P"
+  },
+  {
+    "name": "AIRFOIL",
+    "source": "openml",
+    "id": 44957,
+    "abbr": "A"
+  },
+  {
+    "name": "BIAS_CORRECTION",
+    "source": "openml",
+    "id": 42897,
+    "abbr": "BC"
+  },
+  {
+    "name": "1027_ESL",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1027_ESL/1027_ESL.tsv.gz",
+    "abbr": "1E"
+  },
+  {
+    "name": "1028_SWD",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1028_SWD/1028_SWD.tsv.gz",
+    "abbr": "1S"
+  },
+  {
+    "name": "1029_LEV",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1029_LEV/1029_LEV.tsv.gz",
+    "abbr": "1L"
+  },
+  {
+    "name": "1030_ERA",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1030_ERA/1030_ERA.tsv.gz",
+    "abbr": "1E"
+  },
+  {
+    "name": "1199_BNG_echoMonths",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1199_BNG_echoMonths/1199_BNG_echoMonths.tsv.gz",
+    "abbr": "1BE"
+  },
+  {
+    "name": "197_cpu_act",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/197_cpu_act/197_cpu_act.tsv.gz",
+    "abbr": "1CA"
+  },
+  {
+    "name": "225_puma8NH",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/225_puma8NH/225_puma8NH.tsv.gz",
+    "abbr": "2P"
+  },
+  {
+    "name": "227_cpu_small",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/227_cpu_small/227_cpu_small.tsv.gz",
+    "abbr": "2CS"
+  },
+  {
+    "name": "294_satellite_image",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/294_satellite_image/294_satellite_image.tsv.gz",
+    "abbr": "2SI"
+  },
+  {
+    "name": "344_mv",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/344_mv/344_mv.tsv.gz",
+    "abbr": "3M"
+  },
+  {
+    "name": "503_wind",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/503_wind/503_wind.tsv.gz",
+    "abbr": "5W"
+  },
+  {
+    "name": "529_pollen",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/529_pollen/529_pollen.tsv.gz",
+    "abbr": "5P"
+  },
+  {
+    "name": "537_houses",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/537_houses/537_houses.tsv.gz",
+    "abbr": "5H"
+  },
+  {
+    "name": "547_no2",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/547_no2/547_no2.tsv.gz",
+    "abbr": "5N"
+  },
+  {
+    "name": "564_fried",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/564_fried/564_fried.tsv.gz",
+    "abbr": "5F"
+  },
+  {
+    "name": "595_fri_c0_1000_10",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/595_fri_c0_1000_10/595_fri_c0_1000_10.tsv.gz",
+    "abbr": "5FC"
+  },
+  {
+    "name": "1193_BNG_lowbwt",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1193_BNG_lowbwt/1193_BNG_lowbwt.tsv.gz",
+    "abbr": "1BL"
+  },
+  {
+    "name": "1201_BNG_breastTumor",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1201_BNG_breastTumor/1201_BNG_breastTumor.tsv.gz",
+    "abbr": "1BB"
+  },
+  {
+    "name": "1203_BNG_pwLinear",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1203_BNG_pwLinear/1203_BNG_pwLinear.tsv.gz",
+    "abbr": "1BP"
+  },
+  {
+    "name": "215_2dplanes",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/215_2dplanes/215_2dplanes.tsv.gz",
+    "abbr": "22"
+  },
+  {
+    "name": "218_house_8L",
+    "source": "pmlb",
+    "url": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/218_house_8L/218_house_8L.tsv.gz",
+    "abbr": "2H8"
+  },
+  {
+    "name": "Wizmir",
+    "source": "keel",
+    "url": "https://sci2s.ugr.es/keel/dataset/data/regression/wizmir.zip",
+    "abbr": "W"
+  },
+  {
+    "name": "Ele2",
+    "source": "keel",
+    "url": "https://sci2s.ugr.es/keel/dataset/data/regression/ele-2.zip",
+    "abbr": "E"
+  },
+  {
+    "name": "Treasury",
+    "source": "keel",
+    "url": "https://sci2s.ugr.es/keel/dataset/data/regression/treasury.zip",
+    "abbr": "T"
+  },
+  {
+    "name": "Mortgage",
+    "source": "keel",
+    "url": "https://sci2s.ugr.es/keel/dataset/data/regression/mortgage.zip",
+    "abbr": "M"
+  },
+  {
+    "name": "Laser",
+    "source": "keel",
+    "url": "https://sci2s.ugr.es/keel/dataset/data/regression/laser.zip",
+    "abbr": "L"
+  },
+  {
+    "name": "1000-Cameras-Dataset",
+    "source": "openml",
+    "id": 43714,
+    "abbr": "1"
+  },
+  {
+    "name": "3D_Estimation_using_RSSI_of_WLAN_dataset_complete_1_target",
+    "source": "openml",
+    "id": 45720,
+    "abbr": "3EU"
+  },
+  {
+    "name": "Ailerons",
+    "source": "openml",
+    "id": 296,
+    "abbr": "A"
+  },
+  {
+    "name": "Another-Dataset-on-used-Fiat-500-(1538-rows)",
+    "source": "openml",
+    "id": 43828,
+    "abbr": "A"
+  },
+  {
+    "name": "BNG(mv)",
+    "source": "openml",
+    "id": 1213,
+    "abbr": "B"
+  },
+  {
+    "name": "BNG(stock)",
+    "source": "openml",
+    "id": 1200,
+    "abbr": "B"
+  },
+  {
+    "name": "CPMP-2015-regression",
+    "source": "openml",
+    "id": 41700,
+    "abbr": "C"
+  },
+  {
+    "name": "CPS1988",
+    "source": "openml",
+    "id": 43963,
+    "abbr": "C"
+  },
+  {
+    "name": "CookbookReviews",
+    "source": "openml",
+    "id": 45744,
+    "abbr": "C"
+  },
+  {
+    "name": "Goodreads-Computer-Books",
+    "source": "openml",
+    "id": 43785,
+    "abbr": "G"
+  },
+  {
+    "name": "IEEE80211aa-GATS",
+    "source": "openml",
+    "id": 43180,
+    "abbr": "I"
+  },
+  {
+    "name": "Job_Profitability",
+    "source": "openml",
+    "id": 44311,
+    "abbr": "JP"
+  },
+  {
+    "name": "Kaggle_bike_sharing_demand_challange",
+    "source": "openml",
+    "id": 1414,
+    "abbr": "KBS"
+  },
+  {
+    "name": "MiamiHousing2016",
+    "source": "openml",
+    "id": 43093,
+    "abbr": "M"
+  },
+  {
+    "name": "Moneyball",
+    "source": "openml",
+    "id": 41021,
+    "abbr": "M"
+  },
+  {
+    "name": "NASA_PHM2008",
+    "source": "openml",
+    "id": 42821,
+    "abbr": "NP"
+  },
+  {
+    "name": "OnlineNewsPopularity",
+    "source": "openml",
+    "id": 4545,
+    "abbr": "O"
+  },
+  {
+    "name": "SAT11-HAND-runtime-regression",
+    "source": "openml",
+    "id": 41980,
+    "abbr": "S"
+  },
+  {
+    "name": "analcatdata_supreme",
+    "source": "openml",
+    "id": 504,
+    "abbr": "AS"
+  },
+  {
+    "name": "avocado_sales",
+    "source": "openml",
+    "id": 43927,
+    "abbr": "AS"
+  },
+  {
+    "name": "bank32nh",
+    "source": "openml",
+    "id": 558,
+    "abbr": "B"
+  },
+  {
+    "name": "bank8FM",
+    "source": "openml",
+    "id": 572,
+    "abbr": "B"
+  },
+  {
+    "name": "boston",
+    "source": "openml",
+    "id": 531,
+    "abbr": "B"
+  },
+  {
+    "name": "chscase_foot",
+    "source": "openml",
+    "id": 703,
+    "abbr": "CF"
+  },
+  {
+    "name": "colleges",
+    "source": "openml",
+    "id": 42727,
+    "abbr": "C"
+  },
+  {
+    "name": "dataset_sales",
+    "source": "openml",
+    "id": 42183,
+    "abbr": "DS"
+  },
+  {
+    "name": "debutanizer",
+    "source": "openml",
+    "id": 23516,
+    "abbr": "D"
+  },
+  {
+    "name": "delta_elevators",
+    "source": "openml",
+    "id": 198,
+    "abbr": "DE"
+  },
+  {
+    "name": "fifa",
+    "source": "openml",
+    "id": 44026,
+    "abbr": "F"
+  },
+  {
+    "name": "house_16H_reg",
+    "source": "openml",
+    "id": 574,
+    "abbr": "H1R"
+  },
+  {
+    "name": "house_prices_nominal",
+    "source": "openml",
+    "id": 42563,
+    "abbr": "HPN"
+  },
+  {
+    "name": "kin8nm",
+    "source": "openml",
+    "id": 189,
+    "abbr": "K"
+  },
+  {
+    "name": "mauna-loa-atmospheric-co2",
+    "source": "openml",
+    "id": 41187,
+    "abbr": "M"
+  },
+  {
+    "name": "pol_reg",
+    "source": "openml",
+    "id": 201,
+    "abbr": "PR"
+  },
+  {
+    "name": "puma32H",
+    "source": "openml",
+    "id": 308,
+    "abbr": "P"
+  },
+  {
+    "name": "sensory",
+    "source": "openml",
+    "id": 546,
+    "abbr": "S"
+  },
+  {
+    "name": "socmob",
+    "source": "openml",
+    "id": 541,
+    "abbr": "S"
+  },
+  {
+    "name": "space_ga",
+    "source": "openml",
+    "id": 507,
+    "abbr": "SG"
+  },
+  {
+    "name": "stock_fardamento02",
+    "source": "openml",
+    "id": 42545,
+    "abbr": "SF"
+  },
+  {
+    "name": "sulfur",
+    "source": "openml",
+    "id": 23515,
+    "abbr": "S"
+  },
+  {
+    "name": "topo_2_1",
+    "source": "openml",
+    "id": 422,
+    "abbr": "T21"
+  },
+  {
+    "name": "us_crime",
+    "source": "openml",
+    "id": 42730,
+    "abbr": "UC"
+  },
+  {
+    "name": "weather_izmir",
+    "source": "openml",
+    "id": 42369,
+    "abbr": "WI"
+  },
+  {
+    "name": "yprop_4_1",
+    "source": "openml",
+    "id": 416,
+    "abbr": "Y41"
+  }
+]

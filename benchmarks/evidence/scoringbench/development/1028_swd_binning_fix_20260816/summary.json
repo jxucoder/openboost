@@ -1,0 +1,74 @@
+{
+  "artifact": {
+    "digest": "sha256:c75eea2d93bf10d5de1ae48a8ab37eed66c1dc1c326a9810ab8dc808c4656836",
+    "id": 9258714239,
+    "source_sha": "236c2dfad7c6ea6ea8d406077a59eec3ac32e510",
+    "workflow_run_id": 31928677396
+  },
+  "baseline": "../1028_swd_lr_sweep_20260816/baseline_lr_001",
+  "candidate_metrics": {
+    "coverage_90_abs_error": 0.028999996185302756,
+    "crps": 0.34784456793765095,
+    "interval_score_90": 2.509361067814866,
+    "pit_ks_stat": 0.09802668231196801,
+    "rmse": 0.6157794340555057,
+    "sharpness": 0.5604867750552687
+  },
+  "comparisons": {
+    "catboost_quantile": {
+      "baseline_crps": 0.3363766926503152,
+      "candidate_crps_relative_percent": 3.4092359958058482,
+      "candidate_crps_wins": 1,
+      "candidate_coverage_error_relative_percent": -87.81512762882153,
+      "candidate_interval_score_relative_percent": -11.19005295818769,
+      "candidate_pit_ks_relative_percent": -43.160047784863856,
+      "candidate_rmse_relative_percent": -3.1713396938279903
+    },
+    "ngboost": {
+      "baseline_crps": 0.3481847240643794,
+      "candidate_crps_relative_percent": -0.09769415577965956,
+      "candidate_crps_wins": 2,
+      "candidate_coverage_error_relative_percent": -9.374993015079236,
+      "candidate_interval_score_relative_percent": -2.4460776539851126,
+      "candidate_pit_ks_relative_percent": -1.3762692644908037,
+      "candidate_rmse_relative_percent": -0.08693406957233085
+    },
+    "openboost_before_fix": {
+      "baseline_crps": 0.35507492380808053,
+      "candidate_crps_relative_percent": -2.0362901983857373,
+      "candidate_crps_wins": 4,
+      "candidate_coverage_error_relative_percent": -6.4516223308077265,
+      "candidate_interval_score_relative_percent": -1.9707568344182858,
+      "candidate_pit_ks_relative_percent": 12.224803295387954,
+      "candidate_rmse_relative_percent": -1.6393938069868441
+    },
+    "xgblss": {
+      "baseline_crps": 0.3492890583364678,
+      "candidate_crps_relative_percent": -0.41355157407345633,
+      "candidate_crps_wins": 4,
+      "candidate_coverage_error_relative_percent": -29.26827566315279,
+      "candidate_interval_score_relative_percent": -6.020129964847132,
+      "candidate_pit_ks_relative_percent": -2.510826416548262,
+      "candidate_rmse_relative_percent": -0.31891960877288295
+    },
+    "xgboost_quantile": {
+      "baseline_crps": 0.3383589409871867,
+      "candidate_crps_relative_percent": 2.8034213970492994,
+      "candidate_crps_wins": 1,
+      "candidate_coverage_error_relative_percent": -89.13857803317438,
+      "candidate_interval_score_relative_percent": -9.99843321488677,
+      "candidate_pit_ks_relative_percent": -67.54753242799605,
+      "candidate_rmse_relative_percent": -3.293809336382647
+    }
+  },
+  "decision": "correctness_fix_accepted_quality_goal_not_met",
+  "file_sha256": {
+    "benchmark_outcome.json": "cefba05ad79fdb6056f55cba5afda606d79984537856a41868b7e4a88c12e4a1",
+    "datasets.json": "c81d1dbc444de36dff5e02975664fc34c06a057e9de012a1fa998534b461526c",
+    "openboost_manifest.json": "3f8b2678899ebb79cee25a0b1f9401cc8d5377f09698294907e9bdbf4bb5c9f1",
+    "raw/openboost_cpu/1028_SWD.parquet": "5c810080aafcc6f561e86ca517ec20988fb2bb9f1a59a1aa6b97c2908efb334d"
+  },
+  "folds": 5,
+  "protocol": "development_tuning",
+  "scoringbench_sha": "a938a667b7839b41e9272929010573410301c0b4"
+}

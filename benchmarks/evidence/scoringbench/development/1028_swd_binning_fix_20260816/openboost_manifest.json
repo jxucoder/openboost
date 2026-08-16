@@ -1,0 +1,126 @@
+{
+  "arguments": {
+    "catboost_rounds": 1000,
+    "dataset_index": null,
+    "dataset_name": [
+      "1028_SWD"
+    ],
+    "dataset_registry": null,
+    "development_run": true,
+    "learning_rate": 0.01,
+    "list_datasets": false,
+    "lite": false,
+    "max_depth": 3,
+    "min_child_weight": 1.0,
+    "models": [
+      "openboost_cpu"
+    ],
+    "n_folds": 5,
+    "n_quantiles": 99,
+    "n_repeats": 1,
+    "n_trees": 500,
+    "output_dir": "/home/runner/work/_temp/scoringbench-quality",
+    "reg_lambda": 1.0,
+    "sample_size": 3000,
+    "scoringbench_dir": ".repos/ScoringBench",
+    "seed": 42,
+    "shard_count": null,
+    "shard_index": null,
+    "smoke": false,
+    "training_objective": "nll",
+    "xgblss_rounds": 100,
+    "xgboost_quantiles": 50,
+    "xgboost_rounds": 100
+  },
+  "ci": {
+    "event_name": "workflow_dispatch",
+    "head_ref": "",
+    "provider": "github_actions",
+    "ref": "refs/heads/codex/scoringbench-release-hardening",
+    "repository": "jxucoder/openboost",
+    "run_attempt": "1",
+    "run_id": "31928677396",
+    "source_sha": "236c2dfad7c6ea6ea8d406077a59eec3ac32e510",
+    "tested_sha": "236c2dfad7c6ea6ea8d406077a59eec3ac32e510"
+  },
+  "created_at": "2026-08-16T05:25:28+00:00",
+  "dataset_registry": {
+    "file": "datasets.json",
+    "mode": "scoringbench_dynamic",
+    "resolved_sha256": "c81d1dbc444de36dff5e02975664fc34c06a057e9de012a1fa998534b461526c",
+    "source_sha256": null
+  },
+  "datasets": [
+    {
+      "id": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1028_SWD/1028_SWD.tsv.gz",
+      "name": "1028_SWD",
+      "source": "pmlb"
+    }
+  ],
+  "expected_result_rows": 5,
+  "model_parameters": {
+    "openboost_cpu": {
+      "backend": "cpu",
+      "learning_rate": 0.01,
+      "max_depth": 3,
+      "model_params": {
+        "min_child_weight": 1.0,
+        "reg_lambda": 1.0,
+        "training_objective": "nll"
+      },
+      "n_quantiles": 99,
+      "n_trees": 500
+    }
+  },
+  "official_protocol_compatible": false,
+  "openboost_git": {
+    "changes": [],
+    "commit": "236c2dfad7c6ea6ea8d406077a59eec3ac32e510",
+    "dirty": false
+  },
+  "outcome": {
+    "duplicate_rows": 0,
+    "error_rows": 0,
+    "file": "benchmark_outcome.json",
+    "invalid_metric_rows": 0,
+    "missing_rows": 0,
+    "status": "complete",
+    "unexpected_rows": 0,
+    "valid_rows": 5
+  },
+  "platform": {
+    "cpu_count": 4,
+    "gpu": null,
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "release": "6.17.0-1022-azure",
+    "system": "Linux"
+  },
+  "protocol": "ScoringBench",
+  "protocol_mode": "development_tuning",
+  "result_rows": 5,
+  "schema_version": 2,
+  "scoringbench_git": {
+    "changes": [],
+    "commit": "a938a667b7839b41e9272929010573410301c0b4",
+    "dirty": false
+  },
+  "versions": {
+    "catboost": null,
+    "cupy-cuda12x": null,
+    "ngboost": "0.5.11",
+    "numba": "0.67.0",
+    "numba-cuda": null,
+    "numpy": "2.2.6",
+    "openboost": "1.0.0rc1",
+    "pandas": "2.3.3",
+    "pyarrow": "25.0.1",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.18.0",
+    "torch": "2.13.0",
+    "xgboost": null,
+    "xgboostlss": null
+  },
+  "warning": "This is a development/tuning run and must not be represented as held-out leaderboard evidence."
+}
