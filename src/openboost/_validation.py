@@ -272,8 +272,8 @@ def validate_sample_weight(
             f"Min value: {np.min(sample_weight)}"
         )
 
-    if np.any(np.isnan(sample_weight)):
-        raise ValueError("sample_weight contains NaN values.")
+    if not np.all(np.isfinite(sample_weight)):
+        raise ValueError("sample_weight must contain only finite values.")
 
     return sample_weight.astype(np.float32)
 

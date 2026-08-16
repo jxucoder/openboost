@@ -155,7 +155,7 @@ def _dict_to_tree(data: dict[str, Any]) -> TreeStructure:
     if values_type == "scalar":
         values = ScalarLeaves(values_arr)
     elif values_type == "vector":
-        values = VectorLeaves(values_arr)
+        values = VectorLeaves(values_arr, n_outputs=values_arr.shape[1])
     else:
         values = values_arr
 
@@ -545,6 +545,7 @@ def load(path: str | Path) -> PersistenceMixin:
         NaturalBoostTweedie,
     )
     from ._models._gam import OpenBoostGAM
+    from ._models._histogram_boost import HistogramBoost
     from ._models._linear_leaf import LinearLeafGBDT
 
     _CLASS_MAP: dict[str, type[PersistenceMixin]] = {
@@ -554,6 +555,7 @@ def load(path: str | Path) -> PersistenceMixin:
             MultiClassGradientBoosting,
             DART,
             OpenBoostGAM,
+            HistogramBoost,
             DistributionalGBDT,
             NaturalBoost,
             NaturalBoostNormal,

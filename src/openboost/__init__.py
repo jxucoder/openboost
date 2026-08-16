@@ -184,6 +184,8 @@ from ._models import (
     # Phase 15/16: Distributional GBDT (NaturalBoost)
     DistributionalGBDT,
     GradientBoosting,
+    HistogramBoost,
+    HistogramDistributionOutput,
     # Phase 15: Linear Leaf GBDT
     LinearLeafGBDT,
     MultiClassGradientBoosting,
@@ -333,6 +335,8 @@ __all__ = [
     "MISSING_BIN",
     # High-level API (recommended)
     "GradientBoosting",
+    "HistogramBoost",
+    "HistogramDistributionOutput",
     "MultiClassGradientBoosting",
     "OpenBoostGAM",
     "DART",
