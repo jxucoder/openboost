@@ -109,6 +109,7 @@ markers = [
     "numerical: marks numerical agreement tests against reference implementations",
     "parity: marks CPU/GPU parity tests",
     "benchmark: marks performance benchmark tests (not run in CI)",
+    "jax: marks tests that import and compile JAX (run serially in Linux CI)",
 ]
 
 [dependency-groups]

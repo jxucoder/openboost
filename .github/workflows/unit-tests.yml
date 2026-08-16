@@ -6,10 +6,15 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # Fast tests: <3 min, runs on every PR
   fast-tests:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -43,11 +48,19 @@ jobs:
         env:
           OPENBOOST_BACKEND: "cpu"
         run: |
-          pytest tests/ -v --tb=short -m "not slow and not benchmark"
+          pytest tests/ -v --tb=short -m "not slow and not benchmark and not jax"
+
+      - name: Run JAX distribution tests serially (Linux, Python 3.12)
+        if: runner.os == 'Linux' && matrix.python-version == '3.12'
+        env:
+          OPENBOOST_BACKEND: "cpu"
+        run: |
+          pytest tests/test_distribution_gradients.py -v --tb=short -n 0 -m jax
 
   # Full tests: includes slow tests, runs after fast tests pass
   full-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: fast-tests
 
     steps:
@@ -68,7 +81,7 @@ jobs:
         env:
           OPENBOOST_BACKEND: "cpu"
         run: |
-          pytest tests/ -v --tb=short
+          pytest tests/ -v --tb=short -m "not jax"
 
       - name: Run documentation examples (CPU backend)
         env:
@@ -79,6 +92,7 @@ jobs:
   # Compare the pushed main range against the previous remote main on one runner.
   performance-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     if: github.ref == 'refs/heads/main'
     needs: full-tests
 

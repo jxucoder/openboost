@@ -400,6 +400,7 @@ class TestCustomDistributionChainRule:
         expected_hess = 2.0 * resid ** 2 / params['scale'] ** 2
         assert_allclose(grads['scale'][1], expected_hess, rtol=1e-2)
 
+    @pytest.mark.jax
     def test_jax_gradient_matches_numerical_path(self):
         """JAX path must differentiate through the link, like the numerical path.
 
@@ -474,6 +475,7 @@ class TestCustomDistributionChainRule:
             assert_allclose(actual[name][0], expected[name][0])
             assert_allclose(actual[name][1], expected[name][1])
 
+    @pytest.mark.jax
     def test_numpy_nll_falls_back_when_jax_is_installed(self):
         """Plain numpy NLLs remain correct when optional JAX is installed."""
         pytest.importorskip('jax')
