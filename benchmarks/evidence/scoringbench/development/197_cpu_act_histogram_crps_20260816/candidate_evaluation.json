@@ -1,0 +1,50 @@
+{
+  "accepted": false,
+  "baselines": [
+    "xgboost_quantile",
+    "catboost_quantile"
+  ],
+  "candidate": "openboost_histogram_cpu",
+  "comparisons": {
+    "candidate_fold_wins": 2,
+    "coverage_error_improvement": 0.10033333301544194,
+    "crps_ratio": 1.02111053670206,
+    "interval_score_ratio": 1.0125582707407659,
+    "rmse_ratio": 1.0034435540465978
+  },
+  "confirmation_dataset_win": false,
+  "dataset": "197_cpu_act",
+  "development_pass": false,
+  "guardrails": {
+    "at_least_3_of_5_fold_wins": false,
+    "complete_15_rows": true,
+    "coverage_error_at_most_0_05": false,
+    "coverage_error_improves_by_0_02": true,
+    "crps_ratio_at_most_1_02": false,
+    "interval_score_ratio_at_most_1_05": true,
+    "rmse_ratio_at_most_1_05": true
+  },
+  "phase": "development",
+  "schema_version": 1,
+  "selected_strong_baseline": "catboost_quantile",
+  "summaries": {
+    "catboost_quantile": {
+      "mean_abs_coverage_90_error": 0.1826666831970215,
+      "mean_crps": 1.3262356982847625,
+      "mean_interval_score_90": 13.329529331871402,
+      "mean_rmse": 2.5824970354629198
+    },
+    "openboost_histogram_cpu": {
+      "mean_abs_coverage_90_error": 0.08233335018157957,
+      "mean_crps": 1.3542332456689852,
+      "mean_interval_score_90": 13.496925170068025,
+      "mean_rmse": 2.591390003579715
+    },
+    "xgboost_quantile": {
+      "mean_abs_coverage_90_error": 0.22533334493637086,
+      "mean_crps": 1.6201360866516095,
+      "mean_interval_score_90": 17.979672910724513,
+      "mean_rmse": 3.698760308978361
+    }
+  }
+}

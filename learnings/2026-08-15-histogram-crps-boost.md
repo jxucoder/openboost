@@ -99,6 +99,22 @@ tuned again before the preregistered `197_cpu_act` run.
 - Benchmark next on `197_cpu_act` using protocol `crps_distribution_v1`. Freeze
   one candidate before explicitly unlocking `537_houses`.
 
+## First preregistered development result
+
+The frozen `197_cpu_act` run completed 15/15 rows from clean source with the
+preregistered dataset hash, but the candidate failed the development gate.
+CatBoost was the strong baseline. HistogramBoost was 2.111% worse on mean CRPS
+and won only two of five folds; its 98.23% coverage produced 8.23 percentage
+points of absolute 90% coverage error. The interval-score and RMSE guardrails
+passed. The confirmation dataset therefore remains locked.
+
+HistogramBoost did beat native XGBoost quantile on all five folds, with 16.41%
+lower mean CRPS, 24.93% lower 90% interval score, and 29.94% lower RMSE. This is
+a one-dataset development signal, not an overall win. The candidate was badly
+over-dispersed: mean sharpness 6.48 versus CatBoost's 1.56, while RMSE was only
+0.34% worse. Diagnose retained tail mass on this consumed dataset before
+changing capacity or touching confirmation data.
+
 ## Commits
 
 - `b9db276` — `feat: add histogram CRPS boosting`
