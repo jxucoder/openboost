@@ -70,6 +70,16 @@ def _is_levelwise_growth(growth) -> bool:
     )
 
 
+def _validate_batch_size(batch_size: int | None) -> None:
+    """Reject the reserved high-level mini-batch option until it is implemented."""
+    if batch_size is not None:
+        raise NotImplementedError(
+            "batch_size is reserved but high-level mini-batch training is not "
+            "implemented. Leave batch_size=None; the low-level mini-batch "
+            "histogram helpers are not an end-to-end model.fit path."
+        )
+
+
 def _compute_loss_value(loss, pred, y, **kwargs) -> float:
     """Compute scalar loss using the true loss formula for known objectives.
 
@@ -141,7 +151,8 @@ class GradientBoosting(PersistenceMixin):
             - 'goss': Gradient-based One-Side Sampling (LightGBM-style)
         goss_top_rate: Fraction of top-gradient samples to keep (for GOSS).
         goss_other_rate: Fraction of remaining samples to sample (for GOSS).
-        batch_size: Mini-batch size for large datasets. If None, process all at once.
+        batch_size: Reserved for a future high-level mini-batch training path.
+            Any non-None value currently raises NotImplementedError.
         growth: Tree growth strategy:
             - 'levelwise': XGBoost-style level-wise growth (default)
             - 'leafwise': LightGBM-style best-first growth (see max_leaves)
@@ -250,6 +261,8 @@ class GradientBoosting(PersistenceMixin):
             )
             ```
         """
+        _validate_batch_size(self.batch_size)
+
         # Clear any previous fit
         self.trees_ = []
 
@@ -1328,6 +1341,8 @@ class MultiClassGradientBoosting(PersistenceMixin):
             self: The fitted model.
         """
         from .._loss import softmax_gradient
+
+        _validate_batch_size(self.batch_size)
 
         # Clear previous fit
         self.trees_ = []
