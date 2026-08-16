@@ -66,6 +66,11 @@ tuned again before the preregistered `197_cpu_act` run.
 - The normal MkDocs build passes. Strict mode still aborts on 29 pre-existing
   Griffe warnings in older callbacks, distributions, losses, models, array,
   tree, and importance docstrings; none originate from `HistogramBoost`.
+- `evaluate_crps_candidate.py` turns the preregistered thresholds into a
+  fail-closed machine-readable decision: exact rows, one globally selected
+  strong baseline, paired fold wins, CRPS ratio, coverage-error improvement,
+  interval-score ratio, and RMSE ratio. This evaluator was committed before
+  observing the new development outcome.
 
 ## Failed Attempts
 
@@ -96,4 +101,5 @@ tuned again before the preregistered `197_cpu_act` run.
 
 ## Commits
 
-- Pending — `feat: add histogram CRPS boosting`
+- `b9db276` — `feat: add histogram CRPS boosting`
+- This change — `bench: automate CRPS candidate acceptance`
