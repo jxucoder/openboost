@@ -18,10 +18,11 @@ on:
         options:
           - smoke
           - quality_shard
+          - strong_shard
       dataset_name:
-        description: Exact ScoringBench dataset name for quality_shard
+        description: Exact ScoringBench dataset name for a quality/strong shard
         required: true
-        default: Abalone
+        default: 1027_ESL
         type: string
       n_trees:
         description: Boosting rounds for quality_shard
@@ -52,7 +53,9 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: benchmarks/scoringbench/requirements.txt
+          cache-dependency-path: |
+            benchmarks/scoringbench/requirements.txt
+            benchmarks/scoringbench/requirements-strong-baselines.txt
 
       - name: Check out pinned ScoringBench
         run: |
@@ -64,6 +67,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r benchmarks/scoringbench/requirements.txt
           python -m pip install -e .
+
+      - name: Install strong comparison models
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'strong_shard'
+        run: |
+          python -m pip install -r benchmarks/scoringbench/requirements-strong-baselines.txt
 
       - name: Validate wrapper contract
         env:
@@ -119,6 +127,30 @@ jobs:
             --n-trees "${N_TREES}" \
             --output-dir "${RUNNER_TEMP}/scoringbench-quality"
 
+      - name: Run strong-baseline diagnostic shard
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'strong_shard'
+        env:
+          DATASET_NAME: ${{ inputs.dataset_name }}
+          N_TREES: ${{ inputs.n_trees }}
+        run: |
+          if [[ -z "${DATASET_NAME}" ]]; then
+            echo "dataset_name must not be empty" >&2
+            exit 2
+          fi
+          if [[ ! "${N_TREES}" =~ ^[1-9][0-9]*$ ]]; then
+            echo "n_trees must be a positive integer" >&2
+            exit 2
+          fi
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu,ngboost,xgboost_quantile,xgblss,catboost_quantile \
+            --dataset-name "${DATASET_NAME}" \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --n-trees "${N_TREES}" \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
+
       - name: Verify smoke artifact
         if: github.event_name == 'pull_request' || inputs.mode == 'smoke'
         run: |
@@ -129,14 +161,14 @@ jobs:
           python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "smoke" and m["result_rows"] == 4 and m["outcome"]["status"] == "complete"' "${MANIFEST}"
 
       - name: Verify quality-shard artifact
-        if: github.event_name == 'pull_request' || inputs.mode == 'quality_shard'
+        if: github.event_name == 'pull_request' || inputs.mode == 'quality_shard' || inputs.mode == 'strong_shard'
         run: |
           MANIFEST="${RUNNER_TEMP}/scoringbench-quality/openboost_manifest.json"
           test -s "${MANIFEST}"
           test -s "${RUNNER_TEMP}/scoringbench-quality/benchmark_outcome.json"
           test -s "${RUNNER_TEMP}/scoringbench-quality/datasets.json"
           test -n "$(find "${RUNNER_TEMP}/scoringbench-quality/raw" -name '*.parquet' -print -quit)"
-          python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "official_quality_shard" and m["official_protocol_compatible"] and m["result_rows"] == 10 and m["expected_result_rows"] == 10 and m["outcome"]["status"] == "complete"' "${MANIFEST}"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); expected=25 if sys.argv[2] == "strong_shard" else 10; assert m["protocol_mode"] == "official_quality_shard" and m["official_protocol_compatible"] and m["result_rows"] == expected and m["expected_result_rows"] == expected and m["outcome"]["status"] == "complete"' "${MANIFEST}" "${{ inputs.mode }}"
 
       - name: Upload benchmark artifact
         if: always()

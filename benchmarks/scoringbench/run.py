@@ -321,13 +321,37 @@ def _build_parser() -> argparse.ArgumentParser:
         default=["openboost_cpu", "ngboost"],
         help=(
             "Comma-separated models: openboost_cpu, openboost_cuda, ngboost, "
-            "xgblss, catboost_quantile"
+            "xgboost_quantile, xgblss, catboost_quantile"
         ),
     )
     parser.add_argument("--n-trees", type=int, default=500)
     parser.add_argument("--learning-rate", type=float, default=0.01)
     parser.add_argument("--max-depth", type=int, default=3)
     parser.add_argument("--n-quantiles", type=int, default=99)
+    parser.add_argument(
+        "--xgboost-rounds",
+        type=int,
+        default=100,
+        help="Boosting rounds for the ScoringBench XGBoost quantile baseline",
+    )
+    parser.add_argument(
+        "--xgboost-quantiles",
+        type=int,
+        default=50,
+        help="Quantile outputs for the ScoringBench XGBoost quantile baseline",
+    )
+    parser.add_argument(
+        "--xgblss-rounds",
+        type=int,
+        default=100,
+        help="Boosting rounds for the ScoringBench Gaussian XGBoostLSS baseline",
+    )
+    parser.add_argument(
+        "--catboost-rounds",
+        type=int,
+        default=1000,
+        help="Iterations for the ScoringBench CatBoost MultiQuantile baseline",
+    )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--n-folds", type=int, default=5)
     parser.add_argument("--n-repeats", type=int, default=1)
@@ -461,14 +485,23 @@ def _model_factories(args):
             ngb_params={"random_state": args.seed},
         )
 
+    if "xgboost_quantile" in args.models:
+        from scoringbench.wrappers.xgb_vector import XGBQuantileVectorWrapper
+
+        factories["xgboost_quantile"] = lambda: XGBQuantileVectorWrapper(
+            n_bins=args.xgboost_quantiles,
+            num_boost_round=args.xgboost_rounds,
+            xgb_params={"device": "cpu", "seed": args.seed, "nthread": 2},
+        )
+
     if "xgblss" in args.models:
         from scoringbench.wrappers.xgblss_wrapper import XGBLSSWrapper
 
         factories["xgblss"] = lambda: XGBLSSWrapper(
             n_quantiles=args.n_quantiles,
-            num_boost_round=args.n_trees,
+            num_boost_round=args.xgblss_rounds,
             distribution="Gaussian",
-            xgblss_params={"max_depth": args.max_depth, "eta": args.learning_rate},
+            xgblss_params={"device": "cpu", "seed": args.seed, "nthread": 2},
         )
 
     if "catboost_quantile" in args.models:
@@ -476,11 +509,10 @@ def _model_factories(args):
 
         factories["catboost_quantile"] = lambda: CatBoostQuantileWrapper(
             n_quantiles=args.n_quantiles,
-            iterations=args.n_trees,
+            iterations=args.catboost_rounds,
             catboost_params={
-                "depth": args.max_depth,
-                "learning_rate": args.learning_rate,
                 "random_seed": args.seed,
+                "thread_count": 2,
             },
         )
 
@@ -491,6 +523,7 @@ def _model_factories(args):
             "openboost_cpu",
             "openboost_cuda",
             "ngboost",
+            "xgboost_quantile",
             "xgblss",
             "catboost_quantile",
         ]

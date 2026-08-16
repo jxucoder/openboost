@@ -15,6 +15,35 @@ different questions with two deliberately separate protocols:
    row cap. This measures OpenBoost's CPU/CUDA scaling but must not be presented
    as an official ScoringBench leaderboard result.
 
+## What counts as a good model
+
+NGBoost is a canonical natural-gradient reference, not the product bar. The
+quality target is the strongest practical boosting alternative in the same
+ScoringBench protocol. The acceptance comparison set is:
+
+- ScoringBench's XGBoost multi-quantile wrapper (`xgboost_quantile`);
+- Gaussian XGBoostLSS (`xgblss`), which is the closest full-distribution
+  XGBoost-family competitor;
+- CatBoost MultiQuantile (`catboost_quantile`);
+- NGBoost as the method/reference baseline.
+
+OpenBoost is a **good ScoringBench model** only when the completed full suite
+places it first or statistically tied for first on primary proper scores, it
+beats the strongest XGBoost-family baseline on a majority of paired datasets,
+and the result is not purchased with a material regression in log score,
+interval score, calibration, point RMSE, or failure coverage. CRPS is the first
+optimization target; log score, interval score/coverage, RMSE, failures, and
+training time remain explicit guardrails. A single shard decides what to debug,
+not whether this target has been achieved.
+
+The diagnostic deliberately uses the budgets registered by ScoringBench
+rather than forcing every implementation to share one arbitrary tree count:
+100 rounds/50 quantiles for XGBoost quantile, 100 Gaussian rounds for
+XGBoostLSS, 1,000 iterations/99 quantiles for CatBoost, and 500 rounds for
+OpenBoost/NGBoost. These choices and resolved package versions are recorded in
+the manifest. Its timing is descriptive; a later speed claim requires a
+quality-matched compute sweep.
+
 ## Environment
 
 Use a separate Linux environment because ScoringBench currently constrains
@@ -58,6 +87,13 @@ Optional comparison models:
 
 ```bash
 uv pip install --python .venv-scoringbench/bin/python xgboostlss catboost
+```
+
+For the frozen strong-baseline environment used by CI diagnostics:
+
+```bash
+uv pip install --python .venv-scoringbench/bin/python \
+  -r benchmarks/scoringbench/requirements-strong-baselines.txt
 ```
 
 ## Validate the adapter
@@ -112,6 +148,19 @@ dataset. Start with OpenBoost and the existing NGBoost wrapper:
   --n-folds 5 \
   --n-repeats 1 \
   --output-dir benchmarks/results/scoringbench-quality
+```
+
+Run one strong-baseline diagnostic before changing model behavior:
+
+```bash
+.venv-scoringbench/bin/python benchmarks/scoringbench/run.py \
+  --scoringbench-dir .repos/ScoringBench \
+  --models openboost_cpu,ngboost,xgboost_quantile,xgblss,catboost_quantile \
+  --dataset-name 1027_ESL \
+  --sample-size 3000 \
+  --n-folds 5 \
+  --n-repeats 1 \
+  --output-dir benchmarks/results/scoringbench-strong-diagnostic
 ```
 
 Use `--dataset-index N` or `--dataset-name NAME` for resumable shards. Use

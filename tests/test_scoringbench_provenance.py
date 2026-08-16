@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from benchmarks.scoringbench.run import (
     _audit_records,
+    _build_parser,
     _ci_state,
     _load_dataset_registry,
     _select_datasets,
@@ -160,3 +161,22 @@ def test_stable_strided_shards_cover_registry_exactly_once():
         dataset["name"] for dataset in registry
     )
     assert len(selected) == len({dataset["name"] for dataset in selected})
+
+
+def test_strong_baseline_defaults_match_scoringbench_registered_budgets():
+    args = _build_parser().parse_args(
+        ["--models", "openboost_cpu,ngboost,xgboost_quantile,xgblss,catboost_quantile"]
+    )
+
+    assert args.models == [
+        "openboost_cpu",
+        "ngboost",
+        "xgboost_quantile",
+        "xgblss",
+        "catboost_quantile",
+    ]
+    assert args.n_trees == 500
+    assert args.xgboost_rounds == 100
+    assert args.xgboost_quantiles == 50
+    assert args.xgblss_rounds == 100
+    assert args.catboost_rounds == 1000

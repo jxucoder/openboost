@@ -38,6 +38,10 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   `--shard-count` split one ordered registry across workers without rebuilding
   a potentially changing OpenML suite in each job; source and copied-registry
   hashes are recorded in schema-v2 manifests.
+- Strong-baseline mode adds the ScoringBench native XGBoost quantile, Gaussian
+  XGBoostLSS, and CatBoost MultiQuantile wrappers with frozen package versions
+  and their registered model-specific budgets. This makes NGBoost a reference,
+  not the acceptance bar.
 
 ## Verification
 
@@ -49,6 +53,9 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - ScoringBench provenance/outcome/sharding tests: 8 passed after adding frozen
   registry loading, exact-completion and mixed missing/error/non-finite cases,
   and proof that strided shards cover each entry exactly once.
+- Strong-baseline parser/provenance suite: 9 passed. The frozen Linux target
+  dependency contract resolved 87 packages including NumPy 2.2.6, Pandas
+  2.2.3, Torch 2.9.1, XGBoost 3.3.0, XGBoostLSS 0.6.1, and CatBoost 1.2.10.
 - `ruff check benchmarks/scoringbench`: passed.
 - Python compilation and manifest protocol classification: passed.
 - GitHub workflow YAML parsed locally; the pinned wrapper contract passed before
@@ -74,6 +81,12 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
+
+- A first local dependency resolution appeared to make XGBoostLSS 0.6.1 select
+  Torch 2.2.2 beside NumPy 2.2.6. PyPI metadata disproved the suspected hard
+  pin: XGBoostLSS declares `torch>=2.1,<2.10`. The old selection came from
+  resolving for Intel macOS, where 2.2.2 is the final available Torch wheel;
+  benchmark dependencies must be resolved for the Linux target platform.
 
 - The composer-swarm Cursor scout repeatedly failed with macOS Keychain error
   `SecItemCopyMatching failed -50`. Use local inspection until its CLI
