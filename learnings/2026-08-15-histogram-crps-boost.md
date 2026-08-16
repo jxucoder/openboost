@@ -124,6 +124,13 @@ simplex-tangent curvature, and treats `base_smoothing` as a total Dirichlet
 concentration spread evenly across bins. Both changes have analytic and
 finite-difference tests; neither is yet benchmark evidence.
 
+The training audit also showed that one absolute `reg_lambda` controlled both
+split structure and leaf updates. Lowering it from 1 to 0.1 on a consumed fold
+reduced sharpness strongly but changed the learned structure enough to worsen
+RMSE. V2 therefore adds an optional `leaf_reg_lambda`: split regularization
+stays at 1, while leaf shrinkage can be studied independently. `None` preserves
+the original coupled behavior.
+
 ## Commits
 
 - `b9db276` — `feat: add histogram CRPS boosting`

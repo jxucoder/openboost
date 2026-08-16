@@ -148,6 +148,7 @@ def fit_vector_tree(
     max_depth: int = 6,
     min_child_weight: float = 1e-3,
     reg_lambda: float = 1.0,
+    leaf_reg_lambda: float | None = None,
     reg_alpha: float = 0.0,
     min_gain: float = 0.0,
 ) -> TreeStructure:
@@ -159,6 +160,11 @@ def fit_vector_tree(
         CPU ``BinnedArray`` or feature-major uint8 matrix.
     grad, hess:
         Arrays with shape ``(n_samples, n_outputs)``.
+    reg_lambda:
+        L2 regularization used to compare split structures.
+    leaf_reg_lambda:
+        L2 regularization for the final vector leaf update. ``None`` reuses
+        ``reg_lambda`` for backward-compatible behavior.
     """
     if isinstance(X, BinnedArray):
         if X.device != "cpu" or hasattr(X.data, "__cuda_array_interface__"):
@@ -190,6 +196,9 @@ def fit_vector_tree(
         raise ValueError("max_depth must be non-negative")
     if reg_lambda <= 0.0:
         raise ValueError("reg_lambda must be strictly positive")
+    if leaf_reg_lambda is not None and leaf_reg_lambda <= 0.0:
+        raise ValueError("leaf_reg_lambda must be strictly positive or None")
+    resolved_leaf_reg_lambda = reg_lambda if leaf_reg_lambda is None else leaf_reg_lambda
 
     n_outputs = grad.shape[1]
     max_nodes = 2 ** (max_depth + 1) - 1
@@ -259,7 +268,7 @@ def fit_vector_tree(
         values[node_id] = _leaf_value(
             sum_grad,
             sum_hess,
-            reg_lambda,
+            resolved_leaf_reg_lambda,
             reg_alpha,
         ).astype(np.float32)
 

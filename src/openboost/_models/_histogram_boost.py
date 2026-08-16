@@ -257,6 +257,7 @@ class HistogramBoost(PersistenceMixin):
     max_depth: int = 6
     min_child_weight: float = 1e-3
     reg_lambda: float = 1.0
+    leaf_reg_lambda: float | None = None
     reg_alpha: float = 0.0
     min_gain: float = 0.0
     n_feature_bins: int = 254
@@ -277,6 +278,7 @@ class HistogramBoost(PersistenceMixin):
         "max_depth",
         "min_child_weight",
         "reg_lambda",
+        "leaf_reg_lambda",
         "reg_alpha",
         "min_gain",
         "n_feature_bins",
@@ -309,6 +311,8 @@ class HistogramBoost(PersistenceMixin):
             raise ValueError("min_child_weight must be non-negative")
         if self.reg_lambda <= 0.0:
             raise ValueError("reg_lambda must be strictly positive")
+        if self.leaf_reg_lambda is not None and self.leaf_reg_lambda <= 0.0:
+            raise ValueError("leaf_reg_lambda must be strictly positive or None")
         if self.reg_alpha < 0.0 or self.min_gain < 0.0:
             raise ValueError("reg_alpha and min_gain must be non-negative")
         if not 2 <= self.n_feature_bins <= 254:
@@ -403,6 +407,7 @@ class HistogramBoost(PersistenceMixin):
                 max_depth=self.max_depth,
                 min_child_weight=self.min_child_weight,
                 reg_lambda=self.reg_lambda,
+                leaf_reg_lambda=self.leaf_reg_lambda,
                 reg_alpha=self.reg_alpha,
                 min_gain=self.min_gain,
             )

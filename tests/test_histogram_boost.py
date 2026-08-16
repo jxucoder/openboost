@@ -164,6 +164,23 @@ def test_vector_split_and_leaf_values_match_brute_force():
         -grad[left].sum(axis=0) / (hess[left].sum(axis=0) + reg_lambda),
     )
 
+    leaf_reg_lambda = 0.1
+    decoupled = fit_vector_tree(
+        binned,
+        grad,
+        hess,
+        max_depth=1,
+        min_child_weight=0.0,
+        reg_lambda=reg_lambda,
+        leaf_reg_lambda=leaf_reg_lambda,
+    )
+    np.testing.assert_array_equal(decoupled.features, tree.features)
+    decoupled_prediction = decoupled.predict(binned)
+    np.testing.assert_allclose(
+        decoupled_prediction[left][0],
+        -grad[left].sum(axis=0) / (hess[left].sum(axis=0) + leaf_reg_lambda),
+    )
+
 
 def test_histogram_boost_defaults_are_frozen_and_sklearn_cloneable():
     model = ob.HistogramBoost()
@@ -172,6 +189,8 @@ def test_histogram_boost_defaults_are_frozen_and_sklearn_cloneable():
     assert model.learning_rate == 0.05
     assert model.max_depth == 6
     assert model.curvature_scale == 1.0
+    assert model.reg_lambda == 1.0
+    assert model.leaf_reg_lambda is None
 
     sklearn = pytest.importorskip("sklearn.base")
     cloned = sklearn.clone(model)
