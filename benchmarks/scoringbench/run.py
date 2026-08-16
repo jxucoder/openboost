@@ -96,6 +96,20 @@ def _verify_dataset_files(datasets: list[dict], ensure_cached) -> list[dict]:
     return verified
 
 
+def _enforce_dataset_role_lock(datasets: list[dict], *, allow_confirmation: bool) -> None:
+    """Prevent accidental observation of preregistered confirmation data."""
+    locked = [
+        dataset["name"]
+        for dataset in datasets
+        if dataset.get("openboost_role") == "untouched_confirmation"
+    ]
+    if locked and not allow_confirmation:
+        raise ValueError(
+            "confirmation dataset is still locked; freeze the candidate first, "
+            "then rerun with --allow-confirmation: " + ", ".join(locked)
+        )
+
+
 def _git_state(path: Path) -> dict:
     def run(*args: str) -> str | None:
         try:
@@ -464,6 +478,14 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--allow-confirmation",
+        action="store_true",
+        help=(
+            "Unlock a registry entry marked untouched_confirmation. Use only "
+            "after the candidate implementation and configuration are committed."
+        ),
+    )
+    parser.add_argument(
         "--list-datasets",
         action="store_true",
         help="Print ScoringBench's validated dataset names and exit",
@@ -803,6 +825,10 @@ def main() -> int:
                 return 0
             def validate_with_raw_verification(selected):
                 nonlocal verified_dataset_files
+                _enforce_dataset_role_lock(
+                    selected,
+                    allow_confirmation=args.allow_confirmation,
+                )
                 verified_dataset_files = _verify_dataset_files(
                     selected,
                     _ensure_cached,

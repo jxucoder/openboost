@@ -218,6 +218,9 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   validation, bypasses the opaque processed cache for the run, and records the
   verified URL, digest, and byte size in manifest schema 3. This makes the
   protocol's immutable-data requirement executable rather than documentary.
+- A registry entry marked `untouched_confirmation` is rejected before download
+  unless the launcher receives `--allow-confirmation`. This is a deliberate,
+  manifest-recorded unlock after the selected candidate is committed.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts

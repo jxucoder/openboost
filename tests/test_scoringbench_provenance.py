@@ -7,6 +7,7 @@ from benchmarks.scoringbench.run import (
     _audit_records,
     _build_parser,
     _ci_state,
+    _enforce_dataset_role_lock,
     _load_dataset_registry,
     _model_parameters,
     _select_datasets,
@@ -196,6 +197,20 @@ def test_verify_dataset_files_fails_closed_on_hash_mismatch(tmp_path):
             ],
             lambda *_args: raw,
         )
+
+
+def test_confirmation_dataset_requires_explicit_unlock():
+    datasets = [
+        {
+            "name": "held_out",
+            "openboost_role": "untouched_confirmation",
+        }
+    ]
+
+    with pytest.raises(ValueError, match="confirmation dataset is still locked"):
+        _enforce_dataset_role_lock(datasets, allow_confirmation=False)
+
+    _enforce_dataset_role_lock(datasets, allow_confirmation=True)
 
 
 def test_stable_strided_shards_cover_registry_exactly_once():

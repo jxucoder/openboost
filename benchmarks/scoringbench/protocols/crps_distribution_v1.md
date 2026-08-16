@@ -11,7 +11,8 @@ on them. It separates architecture development from confirmation after the
 - Untouched confirmation: `537_houses`, a continuous housing/population
   regression dataset with 8 numeric features. Do not load, validate, or run
   this entry until one candidate implementation and configuration have been
-  frozen after the development result.
+  frozen after the development result. The launcher enforces this registry
+  role unless the confirmation run explicitly supplies `--allow-confirmation`.
 
 Both URLs in `crps_distribution_v1.json` point to PMLB commit
 `9cc9017958f2d8284e62d8bc54b77cb6fa1e9592`. The registry also records the
