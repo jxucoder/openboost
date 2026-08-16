@@ -76,7 +76,7 @@ jobs:
         run: |
           python scripts/run_doc_examples.py
 
-  # Performance regression check: main branch only
+  # Compare the pushed main range against the previous remote main on one runner.
   performance-check:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -84,6 +84,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -98,6 +100,26 @@ jobs:
 
       - name: Performance regression check
         env:
+          BASELINE_SHA: ${{ github.event.before }}
           OPENBOOST_BACKEND: "cpu"
         run: |
-          python benchmarks/check_performance.py
+          BASELINE_ROOT="${RUNNER_TEMP}/openboost-baseline"
+          git worktree add --detach "${BASELINE_ROOT}" "${BASELINE_SHA}"
+          NUMBA_CACHE_DIR="${RUNNER_TEMP}/numba-baseline" \
+            python benchmarks/check_performance.py \
+              --source-root "${BASELINE_ROOT}" \
+              --benchmark-only \
+              --output "${RUNNER_TEMP}/performance-baseline.json"
+          NUMBA_CACHE_DIR="${RUNNER_TEMP}/numba-current" \
+            python benchmarks/check_performance.py \
+              --baseline "${RUNNER_TEMP}/performance-baseline.json" \
+              --output "${RUNNER_TEMP}/performance-current.json"
+
+      - name: Upload performance results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-check-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/performance-baseline.json
+            ${{ runner.temp }}/performance-current.json
