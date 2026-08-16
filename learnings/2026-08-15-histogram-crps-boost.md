@@ -96,8 +96,14 @@ tuned again before the preregistered `197_cpu_act` run.
   and column sampling are not implemented.
 - Fixed train-range support can clip held-out extremes. The preregistered run
   must publish failures and all interval/calibration guardrails.
-- Benchmark next on `197_cpu_act` using protocol `crps_distribution_v1`. Freeze
-  one candidate before explicitly unlocking `537_houses`.
+- Public `sample_weight` still has a release blocker: rows with zero weight are
+  removed from gradient aggregation but not from feature binning or target
+  support. A zero-weight feature or target outlier can therefore change the
+  fitted model. Delete zero-weight rows before both binning steps and add
+  deletion-equivalence tests.
+- The V2 workflow verifies result completeness and provenance but does not yet
+  execute the acceptance evaluator in CI. The confirmation path is also not
+  phase-bound. Keep `537_houses` locked until both are machine-enforced.
 
 ## First preregistered development result
 
@@ -149,7 +155,50 @@ output now supports density-preserving subdivision, and the wrapper can refine
 50 training bins to 100 evaluation bins. Subdivision leaves exact CRPS, mean,
 and variance unchanged; it only reduces evaluator quantile-grid error.
 
+## Frozen V2 development result
+
+The frozen V2 Actions run `31932958804` completed 15/15 rows from clean
+OpenBoost source `39bdb63` and pinned ScoringBench source `a938a667`. The
+downloaded artifact had GitHub digest
+`sha256:572672e818cf60a295826f7b057bad0269f5121f5bfc31a258188eea12234adc`,
+and the compressed `197_cpu_act` input matched its preregistered SHA-256. The
+fail-closed evaluator returned `development_pass=true`.
+
+HistogramBoost V2 achieved mean CRPS 1.287204. That was 2.943% lower than
+CatBoost MultiQuantile's 1.326236, with four strict fold wins out of five, and
+20.550% lower than native XGBoost quantile's 1.620136, with five of five fold
+wins. V2 also lowered RMSE by 1.200% relative to CatBoost and by 31.017%
+relative to XGBoost. Its official 90% interval score was 11.281116 versus
+13.329529 and 17.979673, respectively.
+
+Official 90% coverage was 94.80%, so the frozen absolute-error guardrail passed
+at 4.80 percentage points. This value is not a standalone calibration claim:
+ScoringBench uses whole-bin interval envelopes and V2's lossless two-way
+subdivision reduces that representation error without changing the density,
+physical CRPS, mean, or continuous variance. Exact interpolated multi-level
+coverage should become the future calibration gate.
+
+The quality improvement did not make the CPU implementation fast. Mean fit
+time, including the inner calibration fit, was 161.41 seconds per fold: 1.145x
+CatBoost and 10.907x XGBoost in this one four-core Actions run. This converts
+GPU vector histograms from a speculative feature into a concrete systems
+target: preserve the frozen quality behavior while reducing the ten-fold CPU
+gap to native XGBoost.
+
+This remains consumed one-dataset development evidence. It does not establish
+an overall ScoringBench, full-suite, or SOTA win. An independent audit also
+found that the current gate mixes CatBoost with the XGBoost-family goal, omits
+XGBoostLSS from the V2 run, and is not executed inside the workflow. The next
+protocol slice must separate the strict XGBoost-family win, CatBoost
+competitiveness, calibration/RMSE guardrails, and confirmation decision before
+touching `537_houses`.
+
 ## Commits
 
 - `b9db276` — `feat: add histogram CRPS boosting`
-- This change — `bench: automate CRPS candidate acceptance`
+- `3cbd763` — `bench: automate CRPS candidate acceptance`
+- `8ddd276` — `fix: align histogram training with continuous CRPS`
+- `35ae55d` — `feat: separate vector split and leaf regularization`
+- `ec810fd` — `feat: select histogram temperature on inner validation`
+- `5f376e4` — `feat: refine histogram evaluation grids losslessly`
+- `39bdb63` — `bench: freeze HistogramBoost V2 protocol`
