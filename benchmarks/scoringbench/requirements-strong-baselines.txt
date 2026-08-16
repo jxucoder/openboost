@@ -1,0 +1,5 @@
+# Strong practical baselines for the manually dispatched diagnostic/full suite.
+# Keep these exact so a campaign cannot silently change model implementations.
+xgboost==3.3.0
+xgboostlss==0.6.1
+catboost==1.2.10

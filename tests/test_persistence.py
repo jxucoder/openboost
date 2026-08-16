@@ -73,6 +73,53 @@ class TestGradientBoostingPersistence:
         # Predictions should match
         np.testing.assert_allclose(pred_before, pred_after, rtol=1e-5)
 
+    def test_save_load_preserves_categorical_tree_state(self, tmp_path):
+        """Categorical split routing survives a model round trip."""
+        import openboost as ob
+
+        categories = np.tile(
+            np.array([0.0, 1.0, 2.0, np.nan], dtype=np.float32),
+            60,
+        )
+        X = categories[:, None]
+        y = np.select(
+            [categories == 0.0, categories == 1.0, categories == 2.0],
+            [4.0, -3.0, 2.0],
+            default=7.0,
+        ).astype(np.float32)
+
+        X_binned = ob.array(X, categorical_features=[0])
+        model = ob.GradientBoosting(n_trees=8, max_depth=2, learning_rate=0.2)
+        model.fit(X_binned, y)
+
+        assert any(
+            tree.is_categorical_split is not None
+            and np.any(tree.is_categorical_split[: tree.n_nodes])
+            for tree in model.trees_
+        )
+
+        state = model._to_state_dict()
+        assert state["_serialization_version"] == 4
+        assert state["_binning_version"] == 2
+        assert all("is_categorical_split" in tree for tree in state["trees_"])
+        assert all("cat_bitsets" in tree for tree in state["trees_"])
+
+        pred_before = model.predict(X)
+        save_path = tmp_path / "categorical_model.joblib"
+        model.save(save_path)
+        loaded = ob.GradientBoosting.load(save_path)
+        pred_after = loaded.predict(X)
+
+        for expected, actual in zip(model.trees_, loaded.trees_, strict=True):
+            np.testing.assert_array_equal(
+                expected.is_categorical_split,
+                actual.is_categorical_split,
+            )
+            np.testing.assert_array_equal(expected.cat_bitsets, actual.cat_bitsets)
+            np.testing.assert_array_equal(expected.missing_go_left, actual.missing_go_left)
+
+        np.testing.assert_allclose(pred_before, pred_after, rtol=0, atol=0)
+
     def test_save_load_with_different_losses(self, regression_data, tmp_path):
         """Test save/load with various loss functions."""
         import openboost as ob
@@ -280,6 +327,28 @@ class TestNaturalBoostPersistence:
         np.testing.assert_allclose(interval_before[0], interval_after[0], rtol=1e-5)
         np.testing.assert_allclose(interval_before[1], interval_after[1], rtol=1e-5)
 
+    def test_save_load_crps_objective(self, regression_data, tmp_path):
+        """CRPS training semantics survive a persistence round trip."""
+        import openboost as ob
+
+        X, y = regression_data
+        model = ob.NaturalBoostNormal(
+            training_objective='crps', n_trees=10, max_depth=3
+        )
+        model.fit(X[:400], y[:400])
+        pred_before = model.predict_distribution(X[400:])
+
+        save_path = tmp_path / "crps-model.joblib"
+        model.save(save_path)
+        loaded = ob.NaturalBoost.load(save_path)
+        pred_after = loaded.predict_distribution(X[400:])
+
+        assert loaded.training_objective == 'crps'
+        for name in ('loc', 'scale'):
+            np.testing.assert_allclose(
+                pred_before.params[name], pred_after.params[name], rtol=1e-6
+            )
+
     def test_save_load_poisson(self, tmp_path):
         """Test save/load for NaturalBoost with Poisson distribution."""
         import openboost as ob
@@ -400,6 +469,31 @@ class TestSklearnWrappersPersistence:
 
 class TestPersistenceEdgeCases:
     """Test edge cases for persistence."""
+
+    def test_legacy_numeric_binning_routing_survives_load(self):
+        """Loading a pre-fix model preserves its legacy top-bin routing."""
+        import openboost as ob
+
+        X = np.array([[1.0], [1.0], [2.0], [2.0]], dtype=np.float32)
+        y = np.array([0.0, 0.0, 1.0, 1.0], dtype=np.float32)
+        metadata = ob.array(X, n_bins=2)
+        metadata.binning_version = 1
+        legacy_binned = metadata.transform(X)
+        assert np.unique(legacy_binned.data).tolist() == [0]
+
+        model = ob.GradientBoosting(n_trees=1, max_depth=1)
+        model.fit(legacy_binned, y)
+        pred_before = model.predict(X)
+        state = model._to_state_dict()
+        state["_serialization_version"] = 3
+        state.pop("_binning_version")
+
+        loaded = ob.GradientBoosting()
+        loaded._from_state_dict(state)
+
+        assert loaded.X_binned_.binning_version == 1
+        np.testing.assert_array_equal(loaded.X_binned_.transform(X).data, 0)
+        np.testing.assert_allclose(loaded.predict(X), pred_before, rtol=0, atol=0)
 
     def test_load_wrong_class_raises(self, regression_data, tmp_path):
         """Test that loading with wrong class raises error."""

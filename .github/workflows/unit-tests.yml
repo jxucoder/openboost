@@ -6,22 +6,35 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  # Fast tests: <3 min, runs on every PR
+  # Core tests: runs on every PR across the supported OS/Python matrix.
   fast-tests:
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
         python-version: ["3.10", "3.12"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Restore compiled Numba kernels
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/numba-cache
+          key: numba-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('src/openboost/**/*.py') }}
+          restore-keys: |
+            numba-${{ runner.os }}-py${{ matrix.python-version }}-
 
       - name: Install OpenMP runtime (macOS)
         if: runner.os == 'macOS'
@@ -42,21 +55,39 @@ jobs:
       - name: Run fast tests (CPU backend)
         env:
           OPENBOOST_BACKEND: "cpu"
+          NUMBA_CACHE_DIR: ${{ runner.temp }}/numba-cache
         run: |
-          pytest tests/ -v --tb=short -m "not slow and not benchmark"
+          pytest tests/ -v --tb=short -m "not slow and not benchmark and not jax"
 
-  # Full tests: includes slow tests, runs after fast tests pass
+      - name: Run JAX distribution tests serially (Linux, Python 3.12)
+        if: runner.os == 'Linux' && matrix.python-version == '3.12'
+        env:
+          OPENBOOST_BACKEND: "cpu"
+          NUMBA_CACHE_DIR: ${{ runner.temp }}/numba-cache
+        run: |
+          pytest tests/test_distribution_gradients.py -v --tb=short -n 0 -m jax
+
+  # Slow tests and docs run after the core matrix; do not duplicate core tests.
   full-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: fast-tests
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+
+      - name: Restore compiled Numba kernels
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/numba-cache
+          key: numba-${{ runner.os }}-py3.12-${{ hashFiles('src/openboost/**/*.py') }}
+          restore-keys: |
+            numba-${{ runner.os }}-py3.12-
 
       - name: Install dependencies
         run: |
@@ -64,29 +95,34 @@ jobs:
           pip install -e ".[test,sklearn]"
           pip install "xgboost>=2.0"
 
-      - name: Run all tests (CPU backend)
+      - name: Run slow tests (CPU backend)
         env:
           OPENBOOST_BACKEND: "cpu"
+          NUMBA_CACHE_DIR: ${{ runner.temp }}/numba-cache
         run: |
-          pytest tests/ -v --tb=short
+          pytest tests/ -v --tb=short -m "slow and not benchmark and not jax"
 
       - name: Run documentation examples (CPU backend)
         env:
           OPENBOOST_BACKEND: "cpu"
+          NUMBA_CACHE_DIR: ${{ runner.temp }}/numba-cache
         run: |
           python scripts/run_doc_examples.py
 
-  # Performance regression check: main branch only
+  # Compare the pushed main range against the previous remote main on one runner.
   performance-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     if: github.ref == 'refs/heads/main'
     needs: full-tests
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -98,6 +134,26 @@ jobs:
 
       - name: Performance regression check
         env:
+          BASELINE_SHA: ${{ github.event.before }}
           OPENBOOST_BACKEND: "cpu"
         run: |
-          python benchmarks/check_performance.py
+          BASELINE_ROOT="${RUNNER_TEMP}/openboost-baseline"
+          git worktree add --detach "${BASELINE_ROOT}" "${BASELINE_SHA}"
+          NUMBA_CACHE_DIR="${RUNNER_TEMP}/numba-baseline" \
+            python benchmarks/check_performance.py \
+              --source-root "${BASELINE_ROOT}" \
+              --benchmark-only \
+              --output "${RUNNER_TEMP}/performance-baseline.json"
+          NUMBA_CACHE_DIR="${RUNNER_TEMP}/numba-current" \
+            python benchmarks/check_performance.py \
+              --baseline "${RUNNER_TEMP}/performance-baseline.json" \
+              --output "${RUNNER_TEMP}/performance-current.json"
+
+      - name: Upload performance results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-check-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/performance-baseline.json
+            ${{ runner.temp }}/performance-current.json

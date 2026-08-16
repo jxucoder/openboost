@@ -53,6 +53,27 @@ class TestBinningConsistency:
         assert np.all(test_binned.data < 255), "Out-of-range values should not be missing bin"
         assert np.all(test_binned.data >= 0), "Bins should be non-negative"
 
+    def test_transform_preserves_corrected_top_bin(self):
+        """The largest and above-range values stay in the final numeric bin."""
+        X_train = np.array([[1.0], [1.0], [2.0], [2.0]], dtype=np.float32)
+        X_test = np.array([[0.0], [1.0], [2.0], [3.0]], dtype=np.float32)
+
+        binned = ob.array(X_train, n_bins=2)
+        transformed = binned.transform(X_test)
+
+        np.testing.assert_array_equal(transformed.data[0], [0, 0, 1, 1])
+
+    def test_transform_without_version_uses_legacy_routing(self):
+        """Directly unpickled pre-version metadata keeps its old top-bin rule."""
+        X = np.array([[1.0], [1.0], [2.0], [2.0]], dtype=np.float32)
+        binned = ob.array(X, n_bins=2)
+        del binned.binning_version
+
+        transformed = binned.transform(X)
+
+        assert transformed.binning_version == 1
+        np.testing.assert_array_equal(transformed.data[0], 0)
+
 
 class TestBinEdges:
     """Verify bin edge properties."""
@@ -142,10 +163,47 @@ class TestBinningEdgeCases:
         """Two distinct values should produce two bins."""
         X = np.array([[0.0], [0.0], [1.0], [1.0]], dtype=np.float32)
 
-        binned = ob.array(X)
+        binned = ob.array(X, n_bins=2)
 
         unique_bins = np.unique(binned.data[0, :])
         assert len(unique_bins) == 2, f"Two values should produce 2 bins, got {len(unique_bins)}"
+
+    def test_low_cardinality_values_keep_distinct_top_bin(self):
+        """Quantile binning must not merge the highest ordinal level."""
+        X = np.repeat(
+            np.array([[1.0], [2.0], [3.0], [4.0]], dtype=np.float32),
+            repeats=4,
+            axis=0,
+        )
+
+        binned = ob.array(X, n_bins=4)
+
+        assert np.unique(binned.data[0]).tolist() == [0, 1, 2, 3]
+
+    def test_top_bin_with_missing_values(self):
+        """The NaN path preserves both numeric bins plus the missing bin."""
+        X = np.array([[1.0], [1.0], [2.0], [2.0], [np.nan]], dtype=np.float32)
+
+        binned = ob.array(X, n_bins=2)
+
+        np.testing.assert_array_equal(binned.data[0], [0, 0, 1, 1, 255])
+
+    def test_top_bin_enables_binary_tree_split(self):
+        """A depth-one tree can split the two values retained by binning."""
+        X = np.array([[1.0], [1.0], [2.0], [2.0]], dtype=np.float32)
+        y = np.array([0.0, 0.0, 1.0, 1.0], dtype=np.float32)
+        binned = ob.array(X, n_bins=2)
+
+        tree = ob.fit_tree(
+            binned,
+            -y,
+            np.ones_like(y),
+            max_depth=1,
+            reg_lambda=0.0,
+        )
+
+        assert tree.features[0] == 0
+        np.testing.assert_array_equal(tree(binned), y)
 
     def test_very_large_values(self):
         """Large values should not cause overflow."""

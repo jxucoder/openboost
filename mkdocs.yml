@@ -87,6 +87,7 @@ nav:
           - DART: user-guide/models/dart.md
           - OpenBoostGAM: user-guide/models/gam.md
           - Linear Leaf GBDT: user-guide/models/linear-leaf.md
+          - HistogramBoost: user-guide/models/histogram-boost.md
       - NaturalBoost:
           - Overview: user-guide/naturalboost/overview.md
           - Distributions: user-guide/naturalboost/distributions.md

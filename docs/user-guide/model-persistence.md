@@ -28,6 +28,7 @@ All models support save/load:
 - `DART`
 - `OpenBoostGAM`
 - `NaturalBoostNormal`, `NaturalBoostGamma`, etc.
+- `HistogramBoost`
 - `LinearLeafGBDT`
 
 ## Using joblib/pickle Directly

@@ -114,7 +114,8 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
     goss_other_rate : float, default=0.1
         Fraction of remaining samples to sample (for GOSS).
     batch_size : int, optional
-        Mini-batch size for large datasets. If None, process all at once.
+        Reserved for future high-level mini-batch training. Non-None values
+        currently raise NotImplementedError.
     early_stopping_rounds : int, optional
         Stop training if validation score doesn't improve for this many rounds.
         Requires eval_set to be passed to fit().
@@ -357,7 +358,8 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
     goss_other_rate : float, default=0.1
         Fraction of remaining samples to sample (for GOSS).
     batch_size : int, optional
-        Mini-batch size for large datasets.
+        Reserved for future high-level mini-batch training. Non-None values
+        currently raise NotImplementedError.
     early_stopping_rounds : int, optional
         Stop if validation doesn't improve.
     verbose : int, default=0
@@ -642,6 +644,11 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
     use_natural_gradient : bool, default=True
         If True, use NGBoost (natural gradient). Recommended for faster
         convergence and better uncertainty calibration.
+    training_objective : {'nll', 'crps'}, default='nll'
+        Objective used to fit the distribution parameters. CRPS training is
+        currently supported only for the Normal distribution and uses a
+        positive score-specific expected curvature. This is independent of
+        ``eval_metric``.
     early_stopping_rounds : int, optional
         Stop training if the validation metric (``eval_metric``) doesn't
         improve for this many rounds. Requires eval_set to be passed to
@@ -704,6 +711,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         reg_lambda: float = 1.0,
         n_bins: int = 254,
         use_natural_gradient: bool = True,
+        training_objective: Literal['nll', 'crps'] = 'nll',
         early_stopping_rounds: int | None = None,
         verbose: int = 0,
         eval_metric: Literal['nll', 'crps', 'pinball', 'interval_score'] = 'nll',
@@ -718,6 +726,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
         self.reg_lambda = reg_lambda
         self.n_bins = n_bins
         self.use_natural_gradient = use_natural_gradient
+        self.training_objective = training_objective
         self.early_stopping_rounds = early_stopping_rounds
         self.verbose = verbose
         self.eval_metric = eval_metric
@@ -780,6 +789,7 @@ class OpenBoostDistributionalRegressor(BaseEstimator, RegressorMixin):
             min_child_weight=self.min_child_weight,
             reg_lambda=self.reg_lambda,
             n_bins=self.n_bins,
+            training_objective=self.training_objective,
         )
 
         all_callbacks = list(callbacks) if callbacks else []

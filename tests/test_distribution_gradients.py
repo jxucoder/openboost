@@ -118,6 +118,49 @@ class TestGradientsMatchFiniteDifferences:
         }
         _check_family_gradients(Normal(), y, raw)
 
+    def test_normal_crps_raw_gradients_and_expected_curvature(self):
+        """Gaussian CRPS derivatives match FD; training curvature stays positive."""
+        dist = Normal()
+        z_values = np.array([-6.0, -2.0, -0.5, 0.0, 0.5, 2.0, 6.0])
+        scales = np.array([0.05, 1.0, 20.0])
+        z = np.tile(z_values, len(scales))
+        scale = np.repeat(scales, len(z_values))
+        loc = np.linspace(-1.0, 1.0, len(z))
+        y = loc + z * scale
+        raw = {'loc': loc, 'scale': np.log(scale)}
+        params = _params_from_raw(dist, raw)
+        grads = dist.crps_gradient(y, params)
+
+        for name in dist.param_names:
+            fd = _fd_grad_raw(
+                dist,
+                y,
+                raw,
+                name,
+                objective=dist.crps,
+                eps=1e-5,
+            )
+            assert_allclose(grads[name][0], fd, rtol=5e-4, atol=5e-5)
+            assert np.all(np.isfinite(grads[name][1]))
+            assert np.all(grads[name][1] > 0)
+
+        sqrt_pi = np.sqrt(np.pi)
+        assert_allclose(grads['loc'][1], 1 / (sqrt_pi * scale), rtol=1e-6)
+        assert_allclose(grads['scale'][1], scale / (2 * sqrt_pi), rtol=1e-6)
+
+    def test_normal_crps_loss_matches_public_metric(self):
+        from openboost import crps_gaussian
+
+        dist = Normal()
+        y = np.array([-2.0, 0.2, 3.0])
+        params = {
+            'loc': np.array([-1.5, 0.0, 2.0]),
+            'scale': np.array([0.2, 1.0, 4.0]),
+        }
+        assert np.mean(dist.crps(y, params)) == pytest.approx(
+            crps_gaussian(y, params['loc'], params['scale']), rel=1e-12
+        )
+
     def test_lognormal(self):
         y = np.array([0.05, 1.0, 4.0, 50.0])
         raw = {
@@ -400,6 +443,7 @@ class TestCustomDistributionChainRule:
         expected_hess = 2.0 * resid ** 2 / params['scale'] ** 2
         assert_allclose(grads['scale'][1], expected_hess, rtol=1e-2)
 
+    @pytest.mark.jax
     def test_jax_gradient_matches_numerical_path(self):
         """JAX path must differentiate through the link, like the numerical path.
 
@@ -474,6 +518,7 @@ class TestCustomDistributionChainRule:
             assert_allclose(actual[name][0], expected[name][0])
             assert_allclose(actual[name][1], expected[name][1])
 
+    @pytest.mark.jax
     def test_numpy_nll_falls_back_when_jax_is_installed(self):
         """Plain numpy NLLs remain correct when optional JAX is installed."""
         pytest.importorskip('jax')

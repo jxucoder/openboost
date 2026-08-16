@@ -34,6 +34,7 @@ from ._distributional import (
     NGBoostTweedie,
 )
 from ._gam import OpenBoostGAM
+from ._histogram_boost import HistogramBoost, HistogramDistributionOutput
 
 # Phase 15: Linear Leaf GBDT
 from ._linear_leaf import LinearLeafGBDT, LinearLeafTree
@@ -52,6 +53,8 @@ __all__ = [
     "MultiClassGradientBoosting",
     "DART",
     "OpenBoostGAM",
+    "HistogramBoost",
+    "HistogramDistributionOutput",
     # Phase 13: sklearn-compatible wrappers
     "OpenBoostRegressor",
     "OpenBoostClassifier",

@@ -3,13 +3,12 @@
 Provides a scikit-learn-like API for training gradient boosting models
 with both built-in and custom loss functions.
 
-This module implements batched training that keeps computation on the GPU
-without returning to Python between trees, achieving performance competitive
-with XGBoost.
+This module implements GPU-aware training paths and reusable tree-building
+primitives. Performance claims require workload-specific benchmark artifacts.
 
 Phase 13: Added callback support for early stopping, logging, etc.
-Phase 17: Added GOSS sampling and mini-batch training for large-scale datasets.
-Phase 18: Added multi-GPU support via Ray for data-parallel training.
+Phase 17: Added GOSS sampling and low-level mini-batch primitives.
+Phase 18: Added an experimental multi-GPU path via Ray.
 """
 
 from __future__ import annotations
@@ -68,6 +67,16 @@ def _is_levelwise_growth(growth) -> bool:
     return isinstance(growth, str) and growth.lower() in (
         'levelwise', 'level_wise', 'level-wise'
     )
+
+
+def _validate_batch_size(batch_size: int | None) -> None:
+    """Reject the reserved high-level mini-batch option until it is implemented."""
+    if batch_size is not None:
+        raise NotImplementedError(
+            "batch_size is reserved but high-level mini-batch training is not "
+            "implemented. Leave batch_size=None; the low-level mini-batch "
+            "histogram helpers are not an end-to-end model.fit path."
+        )
 
 
 def _compute_loss_value(loss, pred, y, **kwargs) -> float:
@@ -141,7 +150,8 @@ class GradientBoosting(PersistenceMixin):
             - 'goss': Gradient-based One-Side Sampling (LightGBM-style)
         goss_top_rate: Fraction of top-gradient samples to keep (for GOSS).
         goss_other_rate: Fraction of remaining samples to sample (for GOSS).
-        batch_size: Mini-batch size for large datasets. If None, process all at once.
+        batch_size: Reserved for a future high-level mini-batch training path.
+            Any non-None value currently raises NotImplementedError.
         growth: Tree growth strategy:
             - 'levelwise': XGBoost-style level-wise growth (default)
             - 'leafwise': LightGBM-style best-first growth (see max_leaves)
@@ -178,11 +188,11 @@ class GradientBoosting(PersistenceMixin):
         )
         ```
         
-        Multi-GPU training:
+        Experimental multi-GPU training:
         
         ```python
         model = ob.GradientBoosting(n_trees=100, n_gpus=4)
-        model.fit(X, y)  # Data parallel across 4 GPUs
+        model.fit(X, y)  # Requires independent parity/scaling validation
         ```
     """
     
@@ -250,6 +260,8 @@ class GradientBoosting(PersistenceMixin):
             )
             ```
         """
+        _validate_batch_size(self.batch_size)
+
         # Clear any previous fit
         self.trees_ = []
 
@@ -413,7 +425,8 @@ class GradientBoosting(PersistenceMixin):
         Each GPU holds a shard of the data and computes local histograms,
         which are aggregated on the driver to build global trees.
         
-        This approach provides near-linear scaling for large datasets.
+        This path is experimental until single-device parity and repeated
+        two-/four-GPU scaling results are checked into the repository.
         """
         if MultiGPUContext is None:
             raise ImportError(
@@ -1328,6 +1341,8 @@ class MultiClassGradientBoosting(PersistenceMixin):
             self: The fitted model.
         """
         from .._loss import softmax_gradient
+
+        _validate_batch_size(self.batch_size)
 
         # Clear previous fit
         self.trees_ = []

@@ -1,0 +1,62 @@
+{
+  "artifact_digest": "sha256:0c5176c4a28cd44444f6a086643a01f636b0dcb5e165a4a30d3d992f3e96da97",
+  "artifact_id": 9256929555,
+  "dataset": "1027_ESL",
+  "files": {
+    "openboost_manifest.json": "sha256:e1e825d99c35c8f41eabbacfad388923ae6b6271267f827814d1644d46b87121",
+    "raw/ngboost/1027_ESL.parquet": "sha256:d9cd14271f2a6471bd01976f66363550f14eaaf5273694c9de6fe80a70a0c679",
+    "raw/openboost_cpu/1027_ESL.parquet": "sha256:58c0f434c97b8578a3d283b5d37ecf9f7103cfdbd6cc85246cb4a713722eb3e0"
+  },
+  "folds": 5,
+  "metrics": {
+    "coverage_90": {
+      "ngboost_abs_error": 0.0862823605537415,
+      "ngboost_mean": 0.8137176394462585,
+      "openboost_abs_error": 0.04527667760848997,
+      "openboost_closer_folds": 5,
+      "openboost_mean": 0.85472332239151
+    },
+    "crps": {
+      "ngboost_mean": 0.3077139963362946,
+      "openboost_fold_wins": 2,
+      "openboost_mean": 0.3005270428812241,
+      "openboost_relative_percent": -2.3355952412434267
+    },
+    "interval_score_90": {
+      "ngboost_mean": 2.737215196639375,
+      "openboost_fold_wins": 4,
+      "openboost_mean": 2.436057677703067,
+      "openboost_relative_percent": -11.002332564354278
+    },
+    "log_score": {
+      "ngboost_mean": 0.67596661214236,
+      "openboost_fold_wins": 1,
+      "openboost_mean": 0.7100775390578736,
+      "openboost_relative_percent": 5.04624434147789
+    },
+    "pit_ks_stat": {
+      "ngboost_mean": 0.10549263800016417,
+      "openboost_fold_wins": 3,
+      "openboost_mean": 0.08936585621575437,
+      "openboost_relative_percent": -15.287115850098198
+    },
+    "rmse": {
+      "ngboost_mean": 0.5549269313560135,
+      "openboost_fold_wins": 3,
+      "openboost_mean": 0.5459231513016759,
+      "openboost_relative_percent": -1.6225163252279073
+    },
+    "train_time": {
+      "ngboost_mean": 3.298694705963135,
+      "ngboost_over_openboost_speedup": 1.5623446940621515,
+      "openboost_fold_wins": 5,
+      "openboost_mean": 2.1113744735717774,
+      "openboost_relative_percent": -35.99363803643326
+    }
+  },
+  "openboost_source_sha": "921c024b23fc4549b251222f35ce64a4b6846505",
+  "protocol_mode": "official_quality_shard",
+  "scoringbench_sha": "a938a667b7839b41e9272929010573410301c0b4",
+  "tested_merge_sha": "71dd86b7c95245593030ca488981bc2607f02eb5",
+  "workflow_run_id": 31922702524
+}

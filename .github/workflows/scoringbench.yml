@@ -1,0 +1,299 @@
+name: ScoringBench
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/scoringbench.yml"
+      - "benchmarks/scoringbench/**"
+      - "src/openboost/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Benchmark scope
+        required: true
+        default: smoke
+        type: choice
+        options:
+          - smoke
+          - quality_shard
+          - strong_shard
+          - development_shard
+          - crps_distribution_shard
+          - crps_distribution_v2_shard
+      dataset_name:
+        description: Exact ScoringBench dataset name for a quality/strong shard
+        required: true
+        default: 1027_ESL
+        type: string
+      n_trees:
+        description: Boosting rounds for quality_shard
+        required: true
+        default: "500"
+        type: string
+      learning_rate:
+        description: OpenBoost learning rate for development_shard
+        required: true
+        default: "0.01"
+        type: string
+      training_objective:
+        description: OpenBoost objective for development_shard
+        required: true
+        default: nll
+        type: choice
+        options:
+          - nll
+          - crps
+      max_depth:
+        description: OpenBoost tree depth for development_shard
+        required: true
+        default: "3"
+        type: string
+      reg_lambda:
+        description: OpenBoost L2 leaf regularization for development_shard
+        required: true
+        default: "1.0"
+        type: string
+      min_child_weight:
+        description: OpenBoost minimum child Hessian for development_shard
+        required: true
+        default: "1.0"
+        type: string
+      allow_confirmation:
+        description: Unlock the preregistered confirmation dataset
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: scoringbench-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scoringbench-cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      OPENBOOST_BACKEND: cpu
+      OPENBOOST_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PYTHONHASHSEED: "0"
+      NUMBA_NUM_THREADS: "2"
+      OMP_NUM_THREADS: "2"
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            benchmarks/scoringbench/requirements.txt
+            benchmarks/scoringbench/requirements-strong-baselines.txt
+
+      - name: Check out pinned ScoringBench
+        run: |
+          git clone --filter=blob:none https://github.com/jonaslandsgesell/ScoringBench .repos/ScoringBench
+          git -C .repos/ScoringBench checkout --detach "$(cat benchmarks/scoringbench/SCORINGBENCH_COMMIT)"
+
+      - name: Install benchmark environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r benchmarks/scoringbench/requirements.txt
+          python -m pip install -e .
+
+      - name: Install strong comparison models
+        if: github.event_name == 'workflow_dispatch' && (inputs.mode == 'strong_shard' || inputs.mode == 'crps_distribution_shard' || inputs.mode == 'crps_distribution_v2_shard')
+        run: |
+          python -m pip install -r benchmarks/scoringbench/requirements-strong-baselines.txt
+
+      - name: Validate wrapper contract
+        env:
+          PYTHONPATH: .repos/ScoringBench
+        run: |
+          python -m pytest -o addopts="" \
+            benchmarks/scoringbench/test_openboost_wrapper.py -q
+
+      - name: Run smoke benchmark
+        if: github.event_name == 'pull_request' || inputs.mode == 'smoke'
+        run: |
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu,ngboost \
+            --smoke \
+            --n-trees 20 \
+            --output-dir "${RUNNER_TEMP}/scoringbench-smoke"
+
+      - name: Run official quality sentinel
+        if: github.event_name == 'pull_request'
+        run: |
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu,ngboost \
+            --dataset-name 1027_ESL \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --n-trees 500 \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
+
+      - name: Run official quality shard
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'quality_shard'
+        env:
+          DATASET_NAME: ${{ inputs.dataset_name }}
+          N_TREES: ${{ inputs.n_trees }}
+        run: |
+          if [[ -z "${DATASET_NAME}" ]]; then
+            echo "dataset_name must not be empty" >&2
+            exit 2
+          fi
+          if [[ ! "${N_TREES}" =~ ^[1-9][0-9]*$ ]]; then
+            echo "n_trees must be a positive integer" >&2
+            exit 2
+          fi
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu,ngboost \
+            --dataset-name "${DATASET_NAME}" \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --n-trees "${N_TREES}" \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
+
+      - name: Run strong-baseline diagnostic shard
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'strong_shard'
+        env:
+          DATASET_NAME: ${{ inputs.dataset_name }}
+          N_TREES: ${{ inputs.n_trees }}
+        run: |
+          if [[ -z "${DATASET_NAME}" ]]; then
+            echo "dataset_name must not be empty" >&2
+            exit 2
+          fi
+          if [[ ! "${N_TREES}" =~ ^[1-9][0-9]*$ ]]; then
+            echo "n_trees must be a positive integer" >&2
+            exit 2
+          fi
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu,ngboost,xgboost_quantile,xgblss,catboost_quantile \
+            --dataset-name "${DATASET_NAME}" \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --n-trees "${N_TREES}" \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
+
+      - name: Run OpenBoost development shard
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'development_shard'
+        env:
+          DATASET_NAME: ${{ inputs.dataset_name }}
+          N_TREES: ${{ inputs.n_trees }}
+          LEARNING_RATE: ${{ inputs.learning_rate }}
+          TRAINING_OBJECTIVE: ${{ inputs.training_objective }}
+          MAX_DEPTH: ${{ inputs.max_depth }}
+          REG_LAMBDA: ${{ inputs.reg_lambda }}
+          MIN_CHILD_WEIGHT: ${{ inputs.min_child_weight }}
+        run: |
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu \
+            --dataset-name "${DATASET_NAME}" \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --n-trees "${N_TREES}" \
+            --learning-rate "${LEARNING_RATE}" \
+            --training-objective "${TRAINING_OBJECTIVE}" \
+            --max-depth "${MAX_DEPTH}" \
+            --reg-lambda "${REG_LAMBDA}" \
+            --min-child-weight "${MIN_CHILD_WEIGHT}" \
+            --development-run \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
+
+      - name: Run preregistered CRPS distribution shard
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'crps_distribution_shard'
+        env:
+          DATASET_NAME: ${{ inputs.dataset_name }}
+          ALLOW_CONFIRMATION: ${{ inputs.allow_confirmation }}
+        run: |
+          if [[ -z "${DATASET_NAME}" ]]; then
+            echo "dataset_name must not be empty" >&2
+            exit 2
+          fi
+          CONFIRMATION_FLAG=()
+          if [[ "${ALLOW_CONFIRMATION}" == "true" ]]; then
+            CONFIRMATION_FLAG=(--allow-confirmation)
+          fi
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_histogram_cpu,xgboost_quantile,catboost_quantile \
+            --dataset-registry \
+              benchmarks/scoringbench/protocols/crps_distribution_v1.json \
+            --dataset-name "${DATASET_NAME}" \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --development-run \
+            "${CONFIRMATION_FLAG[@]}" \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
+
+      - name: Run preregistered CRPS distribution V2 shard
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'crps_distribution_v2_shard'
+        env:
+          DATASET_NAME: ${{ inputs.dataset_name }}
+          ALLOW_CONFIRMATION: ${{ inputs.allow_confirmation }}
+        run: |
+          if [[ -z "${DATASET_NAME}" ]]; then
+            echo "dataset_name must not be empty" >&2
+            exit 2
+          fi
+          CONFIRMATION_FLAG=()
+          if [[ "${ALLOW_CONFIRMATION}" == "true" ]]; then
+            CONFIRMATION_FLAG=(--allow-confirmation)
+          fi
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_histogram_cpu_v2,xgboost_quantile,catboost_quantile \
+            --dataset-registry \
+              benchmarks/scoringbench/protocols/crps_distribution_v1.json \
+            --dataset-name "${DATASET_NAME}" \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --development-run \
+            "${CONFIRMATION_FLAG[@]}" \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
+
+      - name: Verify smoke artifact
+        if: github.event_name == 'pull_request' || inputs.mode == 'smoke'
+        run: |
+          MANIFEST="${RUNNER_TEMP}/scoringbench-smoke/openboost_manifest.json"
+          test -s "${MANIFEST}"
+          test -s "${RUNNER_TEMP}/scoringbench-smoke/benchmark_outcome.json"
+          test -n "$(find "${RUNNER_TEMP}/scoringbench-smoke/raw" -name '*.parquet' -print -quit)"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "smoke" and m["result_rows"] == 4 and m["outcome"]["status"] == "complete"' "${MANIFEST}"
+
+      - name: Verify quality-shard artifact
+        if: github.event_name == 'pull_request' || inputs.mode == 'quality_shard' || inputs.mode == 'strong_shard' || inputs.mode == 'development_shard' || inputs.mode == 'crps_distribution_shard' || inputs.mode == 'crps_distribution_v2_shard'
+        run: |
+          MANIFEST="${RUNNER_TEMP}/scoringbench-quality/openboost_manifest.json"
+          test -s "${MANIFEST}"
+          test -s "${RUNNER_TEMP}/scoringbench-quality/benchmark_outcome.json"
+          test -s "${RUNNER_TEMP}/scoringbench-quality/datasets.json"
+          test -n "$(find "${RUNNER_TEMP}/scoringbench-quality/raw" -name '*.parquet' -print -quit)"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); mode=sys.argv[2]; distribution=mode in {"crps_distribution_shard", "crps_distribution_v2_shard"}; dev=mode == "development_shard" or distribution; expected=25 if mode == "strong_shard" else (15 if distribution else (5 if mode == "development_shard" else 10)); protocol="development_tuning" if dev else "official_quality_shard"; assert m["protocol_mode"] == protocol and m["official_protocol_compatible"] is (not dev) and m["result_rows"] == expected and m["expected_result_rows"] == expected and m["outcome"]["status"] == "complete" and m["openboost_git"]["dirty"] is False and (not distribution or len(m["verified_dataset_files"]) == 1)' "${MANIFEST}" "${{ inputs.mode }}"
+
+      - name: Upload benchmark artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scoringbench-${{ github.event_name }}-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/scoringbench-smoke
+            ${{ runner.temp }}/scoringbench-quality
+          if-no-files-found: warn
+          retention-days: 30

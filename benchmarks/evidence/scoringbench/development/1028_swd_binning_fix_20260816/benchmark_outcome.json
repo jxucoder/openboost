@@ -1,0 +1,21 @@
+{
+  "datasets": [
+    {
+      "dataset": "1028_SWD",
+      "expected_rows": 5,
+      "observed_rows": 5,
+      "status": "complete",
+      "valid_rows": 5
+    }
+  ],
+  "duplicate_rows": [],
+  "error_rows": [],
+  "expected_rows": 5,
+  "invalid_metric_rows": [],
+  "missing_rows": [],
+  "observed_rows": 5,
+  "schema_version": 1,
+  "status": "complete",
+  "unexpected_rows": [],
+  "valid_rows": 5
+}

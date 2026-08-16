@@ -1,0 +1,20 @@
+[
+  {
+    "name": "197_cpu_act",
+    "source": "pmlb",
+    "url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/9cc9017958f2d8284e62d8bc54b77cb6fa1e9592/datasets/197_cpu_act/197_cpu_act.tsv.gz",
+    "target_col": "target",
+    "abbr": "1CA",
+    "openboost_role": "development",
+    "raw_sha256": "d00fd6bac2eda0821a04ff10277663d211127745a19a474c0feee41a16914fdc"
+  },
+  {
+    "name": "537_houses",
+    "source": "pmlb",
+    "url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/9cc9017958f2d8284e62d8bc54b77cb6fa1e9592/datasets/537_houses/537_houses.tsv.gz",
+    "target_col": "target",
+    "abbr": "5H",
+    "openboost_role": "untouched_confirmation",
+    "raw_sha256": "d383fd58bb79760ffaf0b615942fd47d926a19e75a8f980b79fbe9ad479d9cbf"
+  }
+]

@@ -1,0 +1,156 @@
+{
+  "arguments": {
+    "allow_confirmation": false,
+    "catboost_rounds": 1000,
+    "dataset_index": null,
+    "dataset_name": [
+      "197_cpu_act"
+    ],
+    "dataset_registry": "benchmarks/scoringbench/protocols/crps_distribution_v1.json",
+    "development_run": true,
+    "histogram_bins": 50,
+    "histogram_curvature_scale": 1.0,
+    "histogram_learning_rate": 0.05,
+    "histogram_max_depth": 6,
+    "histogram_rounds": 100,
+    "learning_rate": 0.01,
+    "list_datasets": false,
+    "lite": false,
+    "max_depth": 3,
+    "min_child_weight": 1.0,
+    "models": [
+      "openboost_histogram_cpu",
+      "xgboost_quantile",
+      "catboost_quantile"
+    ],
+    "n_folds": 5,
+    "n_quantiles": 99,
+    "n_repeats": 1,
+    "n_trees": 500,
+    "output_dir": "/home/runner/work/_temp/scoringbench-quality",
+    "reg_lambda": 1.0,
+    "sample_size": 3000,
+    "scoringbench_dir": ".repos/ScoringBench",
+    "seed": 42,
+    "shard_count": null,
+    "shard_index": null,
+    "smoke": false,
+    "training_objective": "nll",
+    "xgblss_rounds": 100,
+    "xgboost_quantiles": 50,
+    "xgboost_rounds": 100
+  },
+  "ci": {
+    "event_name": "workflow_dispatch",
+    "head_ref": "",
+    "provider": "github_actions",
+    "ref": "refs/heads/codex/scoringbench-release-hardening",
+    "repository": "jxucoder/openboost",
+    "run_attempt": "1",
+    "run_id": "31930502694",
+    "source_sha": "835335aa9b5fe89708eb757aef16c4fc60472574",
+    "tested_sha": "835335aa9b5fe89708eb757aef16c4fc60472574"
+  },
+  "created_at": "2026-08-16T06:28:35+00:00",
+  "dataset_registry": {
+    "file": "datasets.json",
+    "mode": "frozen_file",
+    "resolved_sha256": "29d4ca6fdd1281452e598b85fe4151092b82e9d2bfc1cfc7ceb9ee1a10df82e1",
+    "source_sha256": "29d4ca6fdd1281452e598b85fe4151092b82e9d2bfc1cfc7ceb9ee1a10df82e1"
+  },
+  "datasets": [
+    {
+      "id": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/9cc9017958f2d8284e62d8bc54b77cb6fa1e9592/datasets/197_cpu_act/197_cpu_act.tsv.gz",
+      "name": "197_cpu_act",
+      "source": "pmlb"
+    }
+  ],
+  "expected_result_rows": 15,
+  "model_parameters": {
+    "catboost_quantile": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "random_seed": 42,
+        "thread_count": 2
+      },
+      "iterations": 1000,
+      "n_quantiles": 99
+    },
+    "openboost_histogram_cpu": {
+      "curvature_scale": 1.0,
+      "learning_rate": 0.05,
+      "max_depth": 6,
+      "n_distribution_bins": 50,
+      "n_feature_bins": 254,
+      "n_trees": 100
+    },
+    "xgboost_quantile": {
+      "n_bins": 50,
+      "num_boost_round": 100,
+      "xgb_params": {
+        "device": "cpu",
+        "nthread": 2,
+        "seed": 42
+      }
+    }
+  },
+  "official_protocol_compatible": false,
+  "openboost_git": {
+    "changes": [],
+    "commit": "835335aa9b5fe89708eb757aef16c4fc60472574",
+    "dirty": false
+  },
+  "outcome": {
+    "duplicate_rows": 0,
+    "error_rows": 0,
+    "file": "benchmark_outcome.json",
+    "invalid_metric_rows": 0,
+    "missing_rows": 0,
+    "status": "complete",
+    "unexpected_rows": 0,
+    "valid_rows": 15
+  },
+  "platform": {
+    "cpu_count": 4,
+    "gpu": null,
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "release": "6.17.0-1022-azure",
+    "system": "Linux"
+  },
+  "protocol": "ScoringBench",
+  "protocol_mode": "development_tuning",
+  "result_rows": 15,
+  "schema_version": 3,
+  "scoringbench_git": {
+    "changes": [],
+    "commit": "a938a667b7839b41e9272929010573410301c0b4",
+    "dirty": false
+  },
+  "verified_dataset_files": [
+    {
+      "name": "197_cpu_act",
+      "sha256": "d00fd6bac2eda0821a04ff10277663d211127745a19a474c0feee41a16914fdc",
+      "size_bytes": 381809,
+      "url": "https://media.githubusercontent.com/media/EpistasisLab/pmlb/9cc9017958f2d8284e62d8bc54b77cb6fa1e9592/datasets/197_cpu_act/197_cpu_act.tsv.gz"
+    }
+  ],
+  "versions": {
+    "catboost": "1.2.10",
+    "cupy-cuda12x": null,
+    "ngboost": "0.5.11",
+    "numba": "0.67.0",
+    "numba-cuda": null,
+    "numpy": "2.2.6",
+    "openboost": "1.0.0rc1",
+    "pandas": "2.2.3",
+    "pyarrow": "25.0.1",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.16.3",
+    "torch": "2.9.1",
+    "xgboost": "3.3.0",
+    "xgboostlss": "0.6.1"
+  },
+  "warning": "This is a development/tuning run and must not be represented as held-out leaderboard evidence."
+}

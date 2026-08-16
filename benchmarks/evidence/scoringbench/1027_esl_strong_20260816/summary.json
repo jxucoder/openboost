@@ -1,0 +1,130 @@
+{
+  "artifact": {
+    "digest": "sha256:4044cc803958036d16c55aefed98c3142486e7ddba4bdfca61f364d5e7310765",
+    "id": 9257853524,
+    "workflow_run_id": 31925701435,
+    "workflow_url": "https://github.com/jxucoder/openboost/actions/runs/31925701435"
+  },
+  "dataset": "1027_ESL",
+  "file_sha256": {
+    "benchmark_outcome.json": "d0640e3d74a7d14c615b61963121b873d8500d9664d07d78fb98234b7a14f3e4",
+    "datasets.json": "c81d1dbc444de36dff5e02975664fc34c06a057e9de012a1fa998534b461526c",
+    "openboost_manifest.json": "70a1cc6c05fa5109d59bd319e3a0a3d8d76307664f40c7b0147f5283b5cae3c5",
+    "raw/catboost_quantile/1027_ESL.parquet": "461258ad37aa5d7fb4e3bb4a7659832d0bca7b6f2e714776746d8539466696b9",
+    "raw/ngboost/1027_ESL.parquet": "a87222737ce8bea41532f91af7f1fb0e826dae7aac0430f57078de199fc25194",
+    "raw/openboost_cpu/1027_ESL.parquet": "737edc08cab22cb3f28b1b6a237b718ce698f38aa03046f792b63ea11a1e42ae",
+    "raw/xgblss/1027_ESL.parquet": "fd24636edaa89d83217f26788da15e0d5a005b80cd1ba13940e7ea3af585d1c3",
+    "raw/xgboost_quantile/1027_ESL.parquet": "8e09f343e54ba328094954c6477c2b4a2e62a67466d3f071d0d5ba627ce50692"
+  },
+  "folds": 5,
+  "metric_comparability": {
+    "cross_model_primary": [
+      "crps",
+      "rmse",
+      "coverage_90",
+      "coverage_90_abs_error",
+      "interval_score_90",
+      "pit_ks_stat"
+    ],
+    "diagnostic_not_cross_model_comparable": {
+      "crls": "Integrated on model-specific support; upstream implementation documents that values are not directly comparable across differing bin grids.",
+      "log_score": "Finite quantile support clamps out-of-support targets to a boundary-bin density, creating a tail-boundary artifact."
+    },
+    "timing": "Fit-only cold/warm mixture from one persistent process; not a scale or steady-state benchmark."
+  },
+  "means": {
+    "catboost_quantile": {
+      "coverage_90": 0.7172312140464783,
+      "coverage_90_abs_error": 0.18276878595352175,
+      "crls": 0.5825405189879156,
+      "crps": 0.32486018716094617,
+      "interval_score_90": 4.06573659420003,
+      "log_score": -1.3190115168420253,
+      "pit_ks_stat": 0.14662502054983878,
+      "rmse": 0.5901363119168295,
+      "train_time": 2.4480895519256594
+    },
+    "ngboost": {
+      "coverage_90": 0.8137176394462585,
+      "coverage_90_abs_error": 0.08628236055374147,
+      "crls": 0.8919766693054967,
+      "crps": 0.30774525268048586,
+      "interval_score_90": 2.7370853096534686,
+      "log_score": 0.676160510947884,
+      "pit_ks_stat": 0.10549263800016417,
+      "rmse": 0.5549747191688402,
+      "train_time": 2.443098306655884
+    },
+    "openboost_cpu": {
+      "coverage_90": 0.85472332239151,
+      "coverage_90_abs_error": 0.05104986906051636,
+      "crls": 0.9305498802189568,
+      "crps": 0.30052704288122417,
+      "interval_score_90": 2.436057677703067,
+      "log_score": 0.7100775390578737,
+      "pit_ks_stat": 0.08936585621575435,
+      "rmse": 0.545923151301676,
+      "train_time": 1.3844860553741456
+    },
+    "xgblss": {
+      "coverage_90": 0.7951819777488709,
+      "coverage_90_abs_error": 0.10481802225112917,
+      "crls": 0.8545918044143812,
+      "crps": 0.30426339893126575,
+      "interval_score_90": 2.879351361511471,
+      "log_score": 0.6375427933712055,
+      "pit_ks_stat": 0.09914356858963747,
+      "rmse": 0.538414204542853,
+      "train_time": 0.15186233520507814
+    },
+    "xgboost_quantile": {
+      "coverage_90": 0.6127077579498291,
+      "coverage_90_abs_error": 0.2872922420501709,
+      "crls": 0.5757246011831073,
+      "crps": 0.32567075673952595,
+      "interval_score_90": 3.980709384171024,
+      "log_score": -2.2200916983373404,
+      "pit_ks_stat": 0.22044577530811366,
+      "rmse": 0.6177832060042735,
+      "train_time": 0.38692564964294435
+    }
+  },
+  "openboost_source_sha": "cea891a8cb964c655c30092ab0a223f4f140c03b",
+  "relative_percent_of_fold_means": {
+    "catboost_quantile": {
+      "coverage_90_abs_error": -72.06860635737965,
+      "crps": -7.490343612856022,
+      "interval_score_90": -40.08323900819789,
+      "pit_ks_stat": -39.05142800278187,
+      "rmse": -7.492025100361004,
+      "train_time": -43.4462659143693
+    },
+    "ngboost": {
+      "coverage_90_abs_error": -40.83394481457232,
+      "crps": -2.3455145892229403,
+      "interval_score_90": -10.998109225485326,
+      "pit_ks_stat": -15.287115850098193,
+      "rmse": -1.6309874224037508,
+      "train_time": -43.33072674143711
+    },
+    "xgblss": {
+      "coverage_90_abs_error": -51.296668297930594,
+      "crps": -1.2280004966636278,
+      "interval_score_90": -15.395609224144986,
+      "pit_ks_stat": -9.862175139522938,
+      "rmse": 1.394641280907218,
+      "train_time": 811.6717805665942
+    },
+    "xgboost_quantile": {
+      "coverage_90_abs_error": -82.23068305074477,
+      "crps": -7.720593064612176,
+      "interval_score_90": -38.80342816810849,
+      "pit_ks_stat": -59.46129786753722,
+      "rmse": -11.631921037053978,
+      "train_time": 257.81707846242597
+    }
+  },
+  "protocol_mode": "official_quality_shard",
+  "result_rows": 25,
+  "scoringbench_sha": "a938a667b7839b41e9272929010573410301c0b4"
+}
