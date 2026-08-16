@@ -43,7 +43,7 @@ For CUDA GPU acceleration:
 |-------|-----------------|---------|
 | `cuda` | CuPy for GPU acceleration | `pip install "openboost[cuda]"` |
 | `sklearn` | scikit-learn integration | `pip install "openboost[sklearn]"` |
-| `distributed` | Ray for multi-GPU training | `pip install "openboost[distributed]"` |
+| `distributed` | Ray for experimental multi-GPU work | `pip install "openboost[distributed]"` |
 | `all` | Everything | `pip install "openboost[all]"` |
 
 ## Requirements

@@ -28,19 +28,20 @@ ob.set_backend("cuda")
 
 ## GPU Performance
 
-GPU acceleration provides significant speedups for larger datasets:
+GPU benefit depends on dataset shape, tree parameters, distribution, CUDA
+stack, transfer policy, and JIT warm-up. OpenBoost does not publish a universal
+speedup table without a checked-in benchmark artifact.
 
-| Dataset Size | Typical Speedup |
-|--------------|-----------------|
-| <5K samples | ~1x (CPU overhead dominates) |
-| 5K-10K | 2-7x |
-| 25K+ | 2-3x |
-| 100K+ | 5-10x |
+For a defensible comparison:
 
-!!! tip "Best practices for GPU"
-    - Ensure data is `float32` (not `float64`)
-    - Use larger datasets (GPU overhead not worth it for <5K samples)
-    - GPU shows best speedup at 10K+ samples
+1. force the backend with `ob.set_backend("cpu")` or `"cuda"`;
+2. run a warm-up that is excluded from timed repetitions;
+3. compare predictions and task metrics before comparing runtime;
+4. report repeated fit/predict timings, peak memory, failures, and hardware;
+5. save raw results with the OpenBoost commit and dependency versions.
+
+The ScoringBench integration under `benchmarks/scoringbench/` defines separate
+official-quality and scale-extension protocols for probabilistic models.
 
 ## Multi-GPU Training
 
@@ -67,8 +68,9 @@ model.fit(X, y)
 ### Training seems slow on GPU
 
 - Ensure data is `float32` (not `float64`)
-- Use larger datasets (GPU overhead not worth it for <5K samples)
-- GPU shows best speedup at 10K+ samples
+- Exclude first-use JIT compilation only when the benchmark protocol says so
+- Check that `ob.get_backend()` reports `"cuda"`
+- Measure fit and prediction separately; do not assume a crossover dataset size
 
 ### Model trained on GPU, loading on CPU machine
 

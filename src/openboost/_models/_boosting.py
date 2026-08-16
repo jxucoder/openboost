@@ -3,13 +3,12 @@
 Provides a scikit-learn-like API for training gradient boosting models
 with both built-in and custom loss functions.
 
-This module implements batched training that keeps computation on the GPU
-without returning to Python between trees, achieving performance competitive
-with XGBoost.
+This module implements GPU-aware training paths and reusable tree-building
+primitives. Performance claims require workload-specific benchmark artifacts.
 
 Phase 13: Added callback support for early stopping, logging, etc.
-Phase 17: Added GOSS sampling and mini-batch training for large-scale datasets.
-Phase 18: Added multi-GPU support via Ray for data-parallel training.
+Phase 17: Added GOSS sampling and low-level mini-batch primitives.
+Phase 18: Added an experimental multi-GPU path via Ray.
 """
 
 from __future__ import annotations
@@ -189,11 +188,11 @@ class GradientBoosting(PersistenceMixin):
         )
         ```
         
-        Multi-GPU training:
+        Experimental multi-GPU training:
         
         ```python
         model = ob.GradientBoosting(n_trees=100, n_gpus=4)
-        model.fit(X, y)  # Data parallel across 4 GPUs
+        model.fit(X, y)  # Requires independent parity/scaling validation
         ```
     """
     
@@ -426,7 +425,8 @@ class GradientBoosting(PersistenceMixin):
         Each GPU holds a shard of the data and computes local histograms,
         which are aggregated on the driver to build global trees.
         
-        This approach provides near-linear scaling for large datasets.
+        This path is experimental until single-device parity and repeated
+        two-/four-GPU scaling results are checked into the repository.
         """
         if MultiGPUContext is None:
             raise ImportError(

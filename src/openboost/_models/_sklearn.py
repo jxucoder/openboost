@@ -114,7 +114,8 @@ class OpenBoostRegressor(BaseEstimator, RegressorMixin):
     goss_other_rate : float, default=0.1
         Fraction of remaining samples to sample (for GOSS).
     batch_size : int, optional
-        Mini-batch size for large datasets. If None, process all at once.
+        Reserved for future high-level mini-batch training. Non-None values
+        currently raise NotImplementedError.
     early_stopping_rounds : int, optional
         Stop training if validation score doesn't improve for this many rounds.
         Requires eval_set to be passed to fit().
@@ -357,7 +358,8 @@ class OpenBoostClassifier(BaseEstimator, ClassifierMixin):
     goss_other_rate : float, default=0.1
         Fraction of remaining samples to sample (for GOSS).
     batch_size : int, optional
-        Mini-batch size for large datasets.
+        Reserved for future high-level mini-batch training. Non-None values
+        currently raise NotImplementedError.
     early_stopping_rounds : int, optional
         Stop if validation doesn't improve.
     verbose : int, default=0
