@@ -60,6 +60,12 @@ tuned again before the preregistered `197_cpu_act` run.
   `openboost_histogram_cpu` and passes the model's regular PMF grid through the
   benchmark's native-grid path. The three wrapper contracts and 13 provenance
   tests pass against the pinned local ScoringBench checkout.
+- The complete non-GPU/non-benchmark CPU suite passed with 764 tests and 32
+  expected skips. Public documentation marks the estimator CPU/numeric only,
+  explains its finite-support risk, and makes no benchmark-win claim.
+- The normal MkDocs build passes. Strict mode still aborts on 29 pre-existing
+  Griffe warnings in older callbacks, distributions, losses, models, array,
+  tree, and importance docstrings; none originate from `HistogramBoost`.
 
 ## Failed Attempts
 

@@ -63,6 +63,20 @@ All OpenBoost model classes.
 
 ## Probabilistic Models (NaturalBoost)
 
+### HistogramBoost
+
+::: openboost.HistogramBoost
+    options:
+      show_root_heading: true
+      show_source: true
+
+### HistogramDistributionOutput
+
+::: openboost.HistogramDistributionOutput
+    options:
+      show_root_heading: true
+      show_source: true
+
 ### NaturalBoost
 
 ::: openboost.NaturalBoost
