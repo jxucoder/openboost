@@ -1,0 +1,57 @@
+{
+  "artifact": {
+    "digest": "sha256:02f3827ee1787a6559f841cd277407d7faa1f2af2dd8031caf39794d8173594e",
+    "id": 9258329504,
+    "source_sha": "f092613f5d3b77c54b100c8a07be865ec3173fe3",
+    "workflow_run_id": 31927426636
+  },
+  "baseline": "../1028_swd_lr_sweep_20260816/baseline_lr_001",
+  "candidate_vs_nll": {
+    "coverage_90_abs_error": {
+      "baseline_mean": 0.030999999046325687,
+      "candidate_lower_wins": 2,
+      "candidate_mean": 0.027999999523162854,
+      "relative_percent": -9.677418114367365
+    },
+    "crps": {
+      "baseline_mean": 0.35507492380808053,
+      "candidate_lower_wins": 4,
+      "candidate_mean": 0.353996062777474,
+      "relative_percent": -0.30384038924407
+    },
+    "interval_score_90": {
+      "baseline_mean": 2.559808672169682,
+      "candidate_lower_wins": 0,
+      "candidate_mean": 2.6605614850848283,
+      "relative_percent": 3.9359509173687135
+    },
+    "pit_ks_stat": {
+      "baseline_mean": 0.08734850000489737,
+      "candidate_lower_wins": 4,
+      "candidate_mean": 0.08087311043727916,
+      "relative_percent": -7.4132807858808825
+    },
+    "rmse": {
+      "baseline_mean": 0.6260427399635591,
+      "candidate_lower_wins": 3,
+      "candidate_mean": 0.6255523498852755,
+      "relative_percent": -0.07833172513302955
+    },
+    "sharpness": {
+      "baseline_mean": 0.5801309335762859,
+      "candidate_lower_wins": 0,
+      "candidate_mean": 0.5953941579557143,
+      "relative_percent": 2.630996469251601
+    }
+  },
+  "decision": "keep_objective_reject_candidate_configuration",
+  "file_sha256": {
+    "benchmark_outcome.json": "cefba05ad79fdb6056f55cba5afda606d79984537856a41868b7e4a88c12e4a1",
+    "datasets.json": "c81d1dbc444de36dff5e02975664fc34c06a057e9de012a1fa998534b461526c",
+    "openboost_manifest.json": "2ff8fd620d6ec1cc1f6c142790eebf3249532ca11f6aa0281efd138bd0367c96",
+    "raw/openboost_cpu/1028_SWD.parquet": "f1f199eb9c48efdcd00e4acdc55132db2e54eedc4817b4a3b90a41ce8614fb3f"
+  },
+  "folds": 5,
+  "protocol": "development_tuning",
+  "scoringbench_sha": "a938a667b7839b41e9272929010573410301c0b4"
+}

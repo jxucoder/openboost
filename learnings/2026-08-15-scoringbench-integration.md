@@ -150,6 +150,15 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   carry the `development_tuning` protocol label. The provenance suite passed
   10 tests and both NLL/CRPS wrapper contracts passed against the pinned
   ScoringBench checkout.
+- Clean CRPS-objective run `31927426636` completed 5/5 `1028_SWD` rows in
+  artifact `9258329504` (digest
+  `sha256:02f3827ee1787a6559f841cd277407d7faa1f2af2dd8031caf39794d8173594e`).
+  Against the identical NLL configuration it improved mean CRPS by 0.30%
+  (four of five folds), PIT KS by 7.41%, coverage error by 9.68%, and RMSE by
+  0.08%, but worsened 90% interval score by 3.94% on all five folds and widened
+  sharpness by 2.63%. It still trails every frozen strong baseline on CRPS.
+  Keep the objective implementation, reject this configuration as the final
+  wrapper, and next isolate post-fit scale calibration on training folds only.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
