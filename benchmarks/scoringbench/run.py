@@ -8,6 +8,7 @@ provenance and exposes a small smoke mode for integration testing.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.metadata
 import json
 import math
@@ -27,6 +28,29 @@ SRC_ROOT = PROJECT_ROOT / "src"
 
 def _csv(value: str) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _load_dataset_registry(path: Path) -> list[dict]:
+    """Load and minimally validate a frozen ScoringBench dataset registry."""
+    payload = json.loads(path.read_text())
+    datasets = payload.get("datasets") if isinstance(payload, dict) else payload
+    if not isinstance(datasets, list) or not datasets:
+        raise ValueError(f"dataset registry must contain a non-empty list: {path}")
+    if any(not isinstance(dataset, dict) or not dataset.get("name") for dataset in datasets):
+        raise ValueError(f"every dataset registry entry must be an object with a name: {path}")
+    names = [dataset["name"].casefold() for dataset in datasets]
+    duplicates = sorted({name for name in names if names.count(name) > 1})
+    if duplicates:
+        raise ValueError(f"duplicate case-insensitive dataset names in {path}: {duplicates}")
+    return datasets
 
 
 def _git_state(path: Path) -> dict:
@@ -325,6 +349,23 @@ def _build_parser() -> argparse.ArgumentParser:
         action="append",
         help="Run exact case-insensitive dataset name from the validated list (repeatable)",
     )
+    selection.add_argument(
+        "--shard-index",
+        type=int,
+        help="Run one zero-based strided shard from the dataset registry",
+    )
+    parser.add_argument(
+        "--shard-count",
+        type=int,
+        help="Total number of stable registry shards; requires --shard-index",
+    )
+    parser.add_argument(
+        "--dataset-registry",
+        help=(
+            "Frozen ScoringBench datasets.json to use instead of rebuilding the "
+            "dynamic upstream registry"
+        ),
+    )
     parser.add_argument(
         "--lite",
         action="store_true",
@@ -359,12 +400,34 @@ def _select_datasets(all_datasets: list[dict], args) -> list[dict]:
             raise ValueError(f"unknown dataset names: {missing}; use --list-datasets")
         return [lookup[name.casefold()] for name in args.dataset_name]
 
+    if args.shard_index is not None:
+        if args.shard_count is None or args.shard_count <= 0:
+            raise ValueError("--shard-count must be a positive integer with --shard-index")
+        if args.shard_index < 0 or args.shard_index >= args.shard_count:
+            raise ValueError(
+                f"--shard-index must be in 0..{args.shard_count - 1}, got {args.shard_index}"
+            )
+        selected = [
+            dataset
+            for position, dataset in enumerate(all_datasets)
+            if position % args.shard_count == args.shard_index
+        ]
+        if not selected:
+            raise ValueError(
+                f"shard {args.shard_index}/{args.shard_count} selects no datasets "
+                f"from a registry of size {len(all_datasets)}"
+            )
+        return selected
+
+    if args.shard_count is not None:
+        raise ValueError("--shard-count requires --shard-index")
+
     return all_datasets
 
 
 def _validate_selected_datasets(all_datasets: list[dict], args, validate) -> list[dict]:
     """Validate only named shards; indexed shards retain validated-list semantics."""
-    if args.dataset_name:
+    if args.dataset_name or args.shard_index is not None:
         return validate(_select_datasets(all_datasets, args))
     return _select_datasets(validate(all_datasets), args)
 
@@ -456,13 +519,16 @@ def _write_provenance(
         protocol_mode = "smoke"
     elif args.sample_size != 3000:
         protocol_mode = "scoringbench_scale_extension"
-    elif official_shape and (args.dataset_index or args.dataset_name):
+    elif official_shape and (
+        args.dataset_index or args.dataset_name or args.shard_index is not None
+    ):
         protocol_mode = "official_quality_shard"
     elif official_shape:
         protocol_mode = "official_quality"
     else:
         protocol_mode = "scoringbench_protocol_deviation"
 
+    registry_path = output_dir / "datasets.json"
     manifest = {
         "schema_version": 2,
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -482,10 +548,20 @@ def _write_provenance(
             {
                 "name": dataset["name"],
                 "source": dataset.get("source", "openml"),
-                "id": dataset.get("id", dataset.get("loader")),
+                "id": dataset.get("id", dataset.get("url", dataset.get("loader"))),
             }
             for dataset in datasets
         ],
+        "dataset_registry": {
+            "mode": "frozen_file" if args.dataset_registry else "scoringbench_dynamic",
+            "resolved_sha256": _sha256(registry_path) if registry_path.exists() else None,
+            "source_sha256": (
+                _sha256(Path(args.dataset_registry).expanduser().resolve())
+                if args.dataset_registry
+                else None
+            ),
+            "file": "datasets.json" if registry_path.exists() else None,
+        },
         "result_rows": result_rows,
         "expected_result_rows": outcome["expected_rows"],
         "outcome": {
@@ -578,7 +654,14 @@ def main() -> int:
         # that reproducibility artifact with the benchmark instead of dirtying
         # the OpenBoost checkout.
         with _working_directory(output_dir):
-            all_datasets = get_DATASETS_CONFIG()
+            if args.dataset_registry:
+                registry_path = Path(args.dataset_registry).expanduser().resolve()
+                all_datasets = _load_dataset_registry(registry_path)
+                Path("datasets.json").write_text(
+                    json.dumps(all_datasets, indent=2, ensure_ascii=False) + "\n"
+                )
+            else:
+                all_datasets = get_DATASETS_CONFIG()
             if args.list_datasets:
                 datasets = validate_datasets(all_datasets)
                 for index, dataset in enumerate(datasets):

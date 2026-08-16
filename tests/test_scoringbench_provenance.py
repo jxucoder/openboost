@@ -6,6 +6,8 @@ import pytest
 from benchmarks.scoringbench.run import (
     _audit_records,
     _ci_state,
+    _load_dataset_registry,
+    _select_datasets,
     _validate_selected_datasets,
     _working_directory,
 )
@@ -129,3 +131,32 @@ def test_outcome_audit_publishes_missing_error_and_invalid_metric_rows():
     ]
     assert outcome["error_rows"][0]["error"] == "model exploded"
     assert outcome["invalid_metric_rows"][0]["metrics"] == ["log_score"]
+
+
+def test_load_dataset_registry_accepts_frozen_scoringbench_list(tmp_path):
+    path = tmp_path / "datasets.json"
+    path.write_text('[{"name": "alpha", "source": "pmlb", "url": "https://example"}]')
+
+    assert _load_dataset_registry(path) == [
+        {"name": "alpha", "source": "pmlb", "url": "https://example"}
+    ]
+
+
+def test_stable_strided_shards_cover_registry_exactly_once():
+    registry = [{"name": f"dataset_{index}"} for index in range(7)]
+
+    class Args:
+        dataset_index = None
+        dataset_name = None
+        shard_count = 3
+        shard_index = 0
+
+    selected = []
+    for shard_index in range(Args.shard_count):
+        Args.shard_index = shard_index
+        selected.extend(_select_datasets(registry, Args()))
+
+    assert sorted(dataset["name"] for dataset in selected) == sorted(
+        dataset["name"] for dataset in registry
+    )
+    assert len(selected) == len({dataset["name"] for dataset in selected})

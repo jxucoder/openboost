@@ -119,6 +119,26 @@ Use `--dataset-index N` or `--dataset-name NAME` for resumable shards. Use
 test folds. If hyperparameters are changed, apply the same declared search
 budget to every comparison model.
 
+For a parallel campaign, freeze the resolved upstream registry and partition
+that exact ordered list into stable strided shards. The first sentinel's
+registry is committed as evidence and can seed the first full campaign:
+
+```bash
+.venv-scoringbench/bin/python benchmarks/scoringbench/run.py \
+  --scoringbench-dir .repos/ScoringBench \
+  --models openboost_cpu,ngboost \
+  --dataset-registry \
+    benchmarks/evidence/scoringbench/1027_esl_20260816/datasets.json \
+  --shard-index 0 \
+  --shard-count 10 \
+  --output-dir benchmarks/results/scoringbench-quality/shard-0
+```
+
+Run every index from zero through `shard-count - 1`. The union covers each
+registry entry exactly once. Both the source-registry and copied artifact
+hashes are recorded, so a campaign cannot silently mix changing OpenML suite
+membership across jobs.
+
 After all shards complete, run ScoringBench's own aggregation and autoranking:
 
 ```bash

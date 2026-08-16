@@ -34,6 +34,10 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - `benchmark_outcome.json`: an exact dataset/model/fold completeness audit that
   makes upstream-captured failures and non-finite distributional metrics
   machine-readable and changes the launcher exit status to failure.
+- Frozen-registry sharding: `--dataset-registry`, `--shard-index`, and
+  `--shard-count` split one ordered registry across workers without rebuilding
+  a potentially changing OpenML suite in each job; source and copied-registry
+  hashes are recorded in schema-v2 manifests.
 
 ## Verification
 
@@ -42,8 +46,9 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - Fresh isolated-environment contract after adding xdist: 1 passed on Intel
   macOS with Numba 0.63.1; this validates the adapter only, not benchmark scores.
 - OpenBoost distributional regression tests: 47 passed.
-- ScoringBench provenance/outcome tests: 6 passed after adding exact-completion
-  and mixed missing/error/non-finite cases.
+- ScoringBench provenance/outcome/sharding tests: 8 passed after adding frozen
+  registry loading, exact-completion and mixed missing/error/non-finite cases,
+  and proof that strided shards cover each entry exactly once.
 - `ruff check benchmarks/scoringbench`: passed.
 - Python compilation and manifest protocol classification: passed.
 - GitHub workflow YAML parsed locally; the pinned wrapper contract passed before
