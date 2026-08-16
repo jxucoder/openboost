@@ -29,6 +29,8 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - `benchmarks/scoringbench/README.md`: environment, official track, scale track,
   upstream submission, and evidence gates.
 - `.gitignore`: ignore arbitrary local ScoringBench result directories.
+- `.github/workflows/scoringbench.yml`: pinned Linux contract/smoke validation,
+  artifact upload, and a manually dispatched official-quality shard.
 
 ## Verification
 
@@ -39,6 +41,8 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - OpenBoost distributional regression tests: 47 passed.
 - `ruff check benchmarks/scoringbench`: passed.
 - Python compilation and manifest protocol classification: passed.
+- GitHub workflow YAML parsed locally; the pinned wrapper contract passed before
+  the workflow was added. The complete Linux smoke remains a CI gate.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
@@ -67,5 +71,7 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - Run the official full suite on Linux and submit the wrapper/results upstream.
 - Run a separate large-sample curve on at least three real ScoringBench datasets.
 - Add CPU/CUDA prediction parity before interpreting a CUDA timing result.
+- Run the new Linux smoke workflow and retain its artifact; workflow syntax and
+  wrapper-only validation do not prove that the complete runner succeeds.
 - Add freMTPL2 or another real exposure-aware case study after the third-party
   quality result exists.

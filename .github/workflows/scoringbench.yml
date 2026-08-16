@@ -1,0 +1,120 @@
+name: ScoringBench
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/scoringbench.yml"
+      - "benchmarks/scoringbench/**"
+      - "src/openboost/**"
+      - "pyproject.toml"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Benchmark scope
+        required: true
+        default: smoke
+        type: choice
+        options:
+          - smoke
+          - quality_shard
+      dataset_index:
+        description: ScoringBench dataset index for quality_shard
+        required: true
+        default: "0"
+        type: string
+      n_trees:
+        description: Boosting rounds for quality_shard
+        required: true
+        default: "500"
+        type: string
+
+concurrency:
+  group: scoringbench-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scoringbench-cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENBOOST_BACKEND: cpu
+      PYTHONHASHSEED: "0"
+      NUMBA_NUM_THREADS: "2"
+      OMP_NUM_THREADS: "2"
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: benchmarks/scoringbench/requirements.txt
+
+      - name: Check out pinned ScoringBench
+        run: |
+          git clone --filter=blob:none https://github.com/jonaslandsgesell/ScoringBench .repos/ScoringBench
+          git -C .repos/ScoringBench checkout --detach "$(cat benchmarks/scoringbench/SCORINGBENCH_COMMIT)"
+
+      - name: Install benchmark environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r benchmarks/scoringbench/requirements.txt
+          python -m pip install -e .
+
+      - name: Validate wrapper contract
+        env:
+          PYTHONPATH: .repos/ScoringBench
+        run: |
+          python -m pytest -o addopts="" \
+            benchmarks/scoringbench/test_openboost_wrapper.py -q
+
+      - name: Run smoke benchmark
+        if: github.event_name == 'pull_request' || inputs.mode == 'smoke'
+        run: |
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu,ngboost \
+            --smoke \
+            --n-trees 20 \
+            --output-dir "${RUNNER_TEMP}/scoringbench-output"
+
+      - name: Run official quality shard
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'quality_shard'
+        env:
+          DATASET_INDEX: ${{ inputs.dataset_index }}
+          N_TREES: ${{ inputs.n_trees }}
+        run: |
+          if [[ ! "${DATASET_INDEX}" =~ ^[0-9]+$ ]]; then
+            echo "dataset_index must be a non-negative integer" >&2
+            exit 2
+          fi
+          if [[ ! "${N_TREES}" =~ ^[1-9][0-9]*$ ]]; then
+            echo "n_trees must be a positive integer" >&2
+            exit 2
+          fi
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu,ngboost \
+            --dataset-index "${DATASET_INDEX}" \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --n-trees "${N_TREES}" \
+            --output-dir "${RUNNER_TEMP}/scoringbench-output"
+
+      - name: Verify benchmark artifact
+        run: |
+          test -s "${RUNNER_TEMP}/scoringbench-output/openboost_manifest.json"
+          test -n "$(find "${RUNNER_TEMP}/scoringbench-output/raw" -name '*.parquet' -print -quit)"
+
+      - name: Upload benchmark artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scoringbench-${{ github.event_name }}-${{ github.sha }}
+          path: ${{ runner.temp }}/scoringbench-output
+          if-no-files-found: warn
+          retention-days: 30

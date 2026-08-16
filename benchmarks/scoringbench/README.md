@@ -82,6 +82,13 @@ PYTHONPATH=.repos/ScoringBench \
   benchmarks/scoringbench/test_openboost_wrapper.py -q
 ```
 
+The `ScoringBench` GitHub workflow runs this contract plus the two-fold smoke
+benchmark on relevant pull requests and uploads the raw Parquet files and
+manifest. Its manual `quality_shard` mode runs one indexed dataset with the
+official five-fold, 3,000-row protocol. A green smoke job proves integration,
+not model quality; only completed official shards belong in a leaderboard
+submission.
+
 ## Official quality track
 
 Run the official default: five folds, one repeat, at most 3,000 rows per
