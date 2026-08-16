@@ -91,6 +91,14 @@ quality claim. Manual `quality_shard` mode accepts an exact dataset name so the
 suite can be sharded without downloading every dataset just to resolve an
 index. Only a completed full suite belongs in a leaderboard submission.
 
+Every launcher invocation also writes `benchmark_outcome.json`. ScoringBench's
+upstream runner deliberately catches dataset/model exceptions so the remaining
+campaign can continue; therefore a zero return from upstream is not proof of a
+complete shard. OpenBoost audits every expected dataset/model/fold row, rejects
+duplicates, captured model errors, missing rows, and non-finite core metrics,
+then exits non-zero when that audit is incomplete. The failure report remains
+in the uploaded artifact and is evidence, not disposable CI noise.
+
 ## Official quality track
 
 Run the official default: five folds, one repeat, at most 3,000 rows per

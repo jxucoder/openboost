@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import importlib.metadata
 import json
+import math
 import os
 import platform
 import subprocess
@@ -102,6 +103,178 @@ def _working_directory(path: Path):
         yield
     finally:
         os.chdir(original)
+
+
+_REQUIRED_DISTRIBUTIONAL_METRICS = (
+    "crps",
+    "log_score",
+    "rmse",
+    "coverage_90",
+    "interval_score_90",
+    "train_time",
+)
+
+
+def _is_present_finite(value) -> bool:
+    """Return whether a benchmark value is present and numerically finite."""
+    if value is None or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(float(value))
+    except (TypeError, ValueError):
+        return False
+
+
+def _is_present_text(value) -> bool:
+    return value is not None and bool(str(value).strip()) and str(value).lower() != "nan"
+
+
+def _audit_records(
+    records: list[dict],
+    datasets: list[dict],
+    model_names: list[str],
+    *,
+    n_folds: int,
+    n_repeats: int,
+) -> dict:
+    """Audit exact dataset/model/fold coverage after the upstream runner returns.
+
+    ScoringBench intentionally catches dataset and model exceptions so a long
+    campaign can continue.  That behavior is useful for throughput, but its
+    return code cannot be used as a completeness signal.  This audit turns
+    missing, duplicate, error, and non-finite metric rows into explicit data.
+    """
+    expected_keys = {
+        (dataset["name"], model_name, fold)
+        for dataset in datasets
+        for model_name in model_names
+        for fold in range(n_folds * n_repeats)
+    }
+    rows_by_key: dict[tuple[str, str, int], list[dict]] = {}
+    unexpected_rows = []
+    for row in records:
+        try:
+            key = (str(row["dataset"]), str(row["model"]), int(row["fold"]))
+        except (KeyError, TypeError, ValueError):
+            unexpected_rows.append(
+                {
+                    "reason": "invalid_identity",
+                    "dataset": repr(row.get("dataset")),
+                    "model": repr(row.get("model")),
+                    "fold": repr(row.get("fold")),
+                }
+            )
+            continue
+        if key not in expected_keys:
+            unexpected_rows.append(
+                {
+                    "reason": "unexpected_identity",
+                    "dataset": key[0],
+                    "model": key[1],
+                    "fold": key[2],
+                }
+            )
+            continue
+        rows_by_key.setdefault(key, []).append(row)
+
+    missing_rows = [
+        {"dataset": dataset, "model": model, "fold": fold}
+        for dataset, model, fold in sorted(expected_keys - rows_by_key.keys())
+    ]
+    duplicate_rows = [
+        {
+            "dataset": key[0],
+            "model": key[1],
+            "fold": key[2],
+            "count": len(rows),
+        }
+        for key, rows in sorted(rows_by_key.items())
+        if len(rows) != 1
+    ]
+    error_rows = []
+    invalid_metric_rows = []
+    valid_keys = set()
+    for key, rows in rows_by_key.items():
+        if len(rows) != 1:
+            continue
+        row = rows[0]
+        error = row.get("error")
+        if _is_present_text(error):
+            error_rows.append(
+                {
+                    "dataset": key[0],
+                    "model": key[1],
+                    "fold": key[2],
+                    "error_type": (
+                        str(row["error_type"])
+                        if _is_present_text(row.get("error_type"))
+                        else None
+                    ),
+                    "error": str(error),
+                }
+            )
+            continue
+        invalid_metrics = [
+            metric
+            for metric in _REQUIRED_DISTRIBUTIONAL_METRICS
+            if not _is_present_finite(row.get(metric))
+        ]
+        if invalid_metrics:
+            invalid_metric_rows.append(
+                {
+                    "dataset": key[0],
+                    "model": key[1],
+                    "fold": key[2],
+                    "metrics": invalid_metrics,
+                }
+            )
+            continue
+        valid_keys.add(key)
+
+    dataset_outcomes = []
+    expected_per_dataset = len(model_names) * n_folds * n_repeats
+    for dataset in datasets:
+        name = dataset["name"]
+        observed = sum(key[0] == name for key in rows_by_key)
+        valid = sum(key[0] == name for key in valid_keys)
+        dataset_outcomes.append(
+            {
+                "dataset": name,
+                "expected_rows": expected_per_dataset,
+                "observed_rows": observed,
+                "valid_rows": valid,
+                "status": "complete" if valid == expected_per_dataset else "incomplete",
+            }
+        )
+
+    complete = (
+        len(valid_keys) == len(expected_keys)
+        and not missing_rows
+        and not duplicate_rows
+        and not error_rows
+        and not invalid_metric_rows
+        and not unexpected_rows
+    )
+    return {
+        "schema_version": 1,
+        "status": "complete" if complete else "incomplete",
+        "expected_rows": len(expected_keys),
+        "observed_rows": len(records),
+        "valid_rows": len(valid_keys),
+        "missing_rows": missing_rows,
+        "duplicate_rows": duplicate_rows,
+        "error_rows": error_rows,
+        "invalid_metric_rows": invalid_metric_rows,
+        "unexpected_rows": unexpected_rows,
+        "datasets": dataset_outcomes,
+    }
+
+
+def _write_outcome(output_dir: Path, outcome: dict) -> Path:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    path = output_dir / "benchmark_outcome.json"
+    path.write_text(json.dumps(outcome, indent=2, sort_keys=True) + "\n")
+    return path
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -269,6 +442,7 @@ def _write_provenance(
     args,
     datasets: list[dict],
     result_rows: int,
+    outcome: dict,
 ) -> Path:
     import openboost as ob
 
@@ -290,7 +464,7 @@ def _write_provenance(
         protocol_mode = "scoringbench_protocol_deviation"
 
     manifest = {
-        "schema_version": 1,
+        "schema_version": 2,
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "protocol": "ScoringBench",
         "protocol_mode": protocol_mode,
@@ -313,6 +487,17 @@ def _write_provenance(
             for dataset in datasets
         ],
         "result_rows": result_rows,
+        "expected_result_rows": outcome["expected_rows"],
+        "outcome": {
+            "status": outcome["status"],
+            "valid_rows": outcome["valid_rows"],
+            "missing_rows": len(outcome["missing_rows"]),
+            "duplicate_rows": len(outcome["duplicate_rows"]),
+            "error_rows": len(outcome["error_rows"]),
+            "invalid_metric_rows": len(outcome["invalid_metric_rows"]),
+            "unexpected_rows": len(outcome["unexpected_rows"]),
+            "file": "benchmark_outcome.json",
+        },
         "platform": {
             "python": platform.python_version(),
             "system": platform.system(),
@@ -418,15 +603,25 @@ def main() -> int:
         seed=args.seed,
         sample_size=args.sample_size,
     )
+    outcome = _audit_records(
+        result.to_dict(orient="records"),
+        datasets,
+        list(model_factories),
+        n_folds=args.n_folds,
+        n_repeats=args.n_repeats,
+    )
+    outcome_path = _write_outcome(output_dir, outcome)
     manifest = _write_provenance(
         output_dir,
         scoringbench_dir,
         args,
         datasets,
         result_rows=len(result),
+        outcome=outcome,
     )
+    print(f"OpenBoost outcome: {outcome_path} ({outcome['status']})")
     print(f"OpenBoost provenance: {manifest}")
-    return 0
+    return 0 if outcome["status"] == "complete" else 1
 
 
 if __name__ == "__main__":

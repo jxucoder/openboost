@@ -124,17 +124,19 @@ jobs:
         run: |
           MANIFEST="${RUNNER_TEMP}/scoringbench-smoke/openboost_manifest.json"
           test -s "${MANIFEST}"
+          test -s "${RUNNER_TEMP}/scoringbench-smoke/benchmark_outcome.json"
           test -n "$(find "${RUNNER_TEMP}/scoringbench-smoke/raw" -name '*.parquet' -print -quit)"
-          python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "smoke" and m["result_rows"] == 4' "${MANIFEST}"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "smoke" and m["result_rows"] == 4 and m["outcome"]["status"] == "complete"' "${MANIFEST}"
 
       - name: Verify quality-shard artifact
         if: github.event_name == 'pull_request' || inputs.mode == 'quality_shard'
         run: |
           MANIFEST="${RUNNER_TEMP}/scoringbench-quality/openboost_manifest.json"
           test -s "${MANIFEST}"
+          test -s "${RUNNER_TEMP}/scoringbench-quality/benchmark_outcome.json"
           test -s "${RUNNER_TEMP}/scoringbench-quality/datasets.json"
           test -n "$(find "${RUNNER_TEMP}/scoringbench-quality/raw" -name '*.parquet' -print -quit)"
-          python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "official_quality_shard" and m["official_protocol_compatible"] and m["result_rows"] == 10' "${MANIFEST}"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "official_quality_shard" and m["official_protocol_compatible"] and m["result_rows"] == 10 and m["expected_result_rows"] == 10 and m["outcome"]["status"] == "complete"' "${MANIFEST}"
 
       - name: Upload benchmark artifact
         if: always()

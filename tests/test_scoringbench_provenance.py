@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 from benchmarks.scoringbench.run import (
+    _audit_records,
     _ci_state,
     _validate_selected_datasets,
     _working_directory,
@@ -76,3 +77,55 @@ def test_named_quality_shard_validates_only_selected_dataset():
 
     assert result == [registry[0]]
     assert validated == [registry[0]]
+
+
+def _complete_record(dataset="example", model="openboost_cpu", fold=0):
+    return {
+        "dataset": dataset,
+        "model": model,
+        "fold": fold,
+        "crps": 0.2,
+        "log_score": 0.4,
+        "rmse": 0.5,
+        "coverage_90": 0.9,
+        "interval_score_90": 1.2,
+        "train_time": 2.0,
+    }
+
+
+def test_outcome_audit_accepts_exact_complete_distributional_rows():
+    outcome = _audit_records(
+        [_complete_record(fold=0), _complete_record(fold=1)],
+        [{"name": "example"}],
+        ["openboost_cpu"],
+        n_folds=2,
+        n_repeats=1,
+    )
+
+    assert outcome["status"] == "complete"
+    assert outcome["expected_rows"] == 2
+    assert outcome["valid_rows"] == 2
+
+
+def test_outcome_audit_publishes_missing_error_and_invalid_metric_rows():
+    invalid = _complete_record(model="ngboost", fold=0)
+    invalid["log_score"] = float("nan")
+    error = _complete_record(fold=1)
+    error.update(error="model exploded", error_type="RuntimeError")
+
+    outcome = _audit_records(
+        [_complete_record(fold=0), error, invalid],
+        [{"name": "example"}],
+        ["openboost_cpu", "ngboost"],
+        n_folds=2,
+        n_repeats=1,
+    )
+
+    assert outcome["status"] == "incomplete"
+    assert outcome["expected_rows"] == 4
+    assert outcome["valid_rows"] == 1
+    assert outcome["missing_rows"] == [
+        {"dataset": "example", "model": "ngboost", "fold": 1}
+    ]
+    assert outcome["error_rows"][0]["error"] == "model exploded"
+    assert outcome["invalid_metric_rows"][0]["metrics"] == ["log_score"]

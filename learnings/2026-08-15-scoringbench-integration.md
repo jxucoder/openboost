@@ -31,6 +31,9 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - `.gitignore`: ignore arbitrary local ScoringBench result directories.
 - `.github/workflows/scoringbench.yml`: pinned Linux contract/smoke validation,
   artifact upload, and a manually dispatched official-quality shard.
+- `benchmark_outcome.json`: an exact dataset/model/fold completeness audit that
+  makes upstream-captured failures and non-finite distributional metrics
+  machine-readable and changes the launcher exit status to failure.
 
 ## Verification
 
@@ -39,6 +42,8 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - Fresh isolated-environment contract after adding xdist: 1 passed on Intel
   macOS with Numba 0.63.1; this validates the adapter only, not benchmark scores.
 - OpenBoost distributional regression tests: 47 passed.
+- ScoringBench provenance/outcome tests: 6 passed after adding exact-completion
+  and mixed missing/error/non-finite cases.
 - `ruff check benchmarks/scoringbench`: passed.
 - Python compilation and manifest protocol classification: passed.
 - GitHub workflow YAML parsed locally; the pinned wrapper contract passed before
@@ -100,6 +105,11 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   `1027_ESL` PMLB/GitHub source so this small gate does not depend on the OpenML
   data endpoint. Full-suite runs still must report OpenML failures rather than
   silently treating them as model results.
+- ScoringBench's outer runner catches dataset exceptions and its fold runner
+  converts model exceptions into rows; neither condition necessarily produces
+  a failing process. The OpenBoost launcher now audits the returned records
+  after the entire shard finishes, preserves all omissions/errors, and only
+  then exits non-zero for an incomplete outcome.
 
 ## Risks and Follow-ups
 
