@@ -328,6 +328,8 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--n-trees", type=int, default=500)
     parser.add_argument("--learning-rate", type=float, default=0.01)
     parser.add_argument("--max-depth", type=int, default=3)
+    parser.add_argument("--reg-lambda", type=float, default=1.0)
+    parser.add_argument("--min-child-weight", type=float, default=1.0)
     parser.add_argument("--n-quantiles", type=int, default=99)
     parser.add_argument(
         "--xgboost-rounds",
@@ -402,6 +404,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Use sklearn diabetes with 2 folds; validates integration, not leaderboard evidence",
     )
     parser.add_argument(
+        "--development-run",
+        action="store_true",
+        help=(
+            "Mark this run as tuning-only evidence that must not be submitted or "
+            "reported as a held-out leaderboard result"
+        ),
+    )
+    parser.add_argument(
         "--list-datasets",
         action="store_true",
         help="Print ScoringBench's validated dataset names and exit",
@@ -464,6 +474,10 @@ def _model_parameters(args) -> dict[str, dict]:
         "learning_rate": args.learning_rate,
         "max_depth": args.max_depth,
         "n_quantiles": args.n_quantiles,
+        "model_params": {
+            "reg_lambda": args.reg_lambda,
+            "min_child_weight": args.min_child_weight,
+        },
     }
     return {
         "openboost_cpu": {"backend": "cpu", **openboost_common},
@@ -564,8 +578,11 @@ def _write_provenance(
         and args.n_folds == 5
         and args.n_repeats == 1
     )
+    official_protocol_compatible = official_shape and not args.development_run
     if args.smoke:
         protocol_mode = "smoke"
+    elif args.development_run:
+        protocol_mode = "development_tuning"
     elif args.sample_size != 3000:
         protocol_mode = "scoringbench_scale_extension"
     elif official_shape and (
@@ -583,11 +600,16 @@ def _write_provenance(
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "protocol": "ScoringBench",
         "protocol_mode": protocol_mode,
-        "official_protocol_compatible": official_shape,
+        "official_protocol_compatible": official_protocol_compatible,
         "warning": (
             None
-            if official_shape
-            else "This run is not directly comparable to the official 5-fold, sample_size=3000 leaderboard."
+            if official_protocol_compatible
+            else (
+                "This is a development/tuning run and must not be represented as "
+                "held-out leaderboard evidence."
+                if args.development_run
+                else "This run is not directly comparable to the official 5-fold, sample_size=3000 leaderboard."
+            )
         ),
         "openboost_git": _git_state(PROJECT_ROOT),
         "scoringbench_git": _git_state(scoringbench_dir),

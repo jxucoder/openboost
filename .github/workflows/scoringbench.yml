@@ -19,6 +19,7 @@ on:
           - smoke
           - quality_shard
           - strong_shard
+          - development_shard
       dataset_name:
         description: Exact ScoringBench dataset name for a quality/strong shard
         required: true
@@ -28,6 +29,26 @@ on:
         description: Boosting rounds for quality_shard
         required: true
         default: "500"
+        type: string
+      learning_rate:
+        description: OpenBoost learning rate for development_shard
+        required: true
+        default: "0.01"
+        type: string
+      max_depth:
+        description: OpenBoost tree depth for development_shard
+        required: true
+        default: "3"
+        type: string
+      reg_lambda:
+        description: OpenBoost L2 leaf regularization for development_shard
+        required: true
+        default: "1.0"
+        type: string
+      min_child_weight:
+        description: OpenBoost minimum child Hessian for development_shard
+        required: true
+        default: "1.0"
         type: string
 
 concurrency:
@@ -151,6 +172,31 @@ jobs:
             --n-trees "${N_TREES}" \
             --output-dir "${RUNNER_TEMP}/scoringbench-quality"
 
+      - name: Run OpenBoost development shard
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'development_shard'
+        env:
+          DATASET_NAME: ${{ inputs.dataset_name }}
+          N_TREES: ${{ inputs.n_trees }}
+          LEARNING_RATE: ${{ inputs.learning_rate }}
+          MAX_DEPTH: ${{ inputs.max_depth }}
+          REG_LAMBDA: ${{ inputs.reg_lambda }}
+          MIN_CHILD_WEIGHT: ${{ inputs.min_child_weight }}
+        run: |
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_cpu \
+            --dataset-name "${DATASET_NAME}" \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --n-trees "${N_TREES}" \
+            --learning-rate "${LEARNING_RATE}" \
+            --max-depth "${MAX_DEPTH}" \
+            --reg-lambda "${REG_LAMBDA}" \
+            --min-child-weight "${MIN_CHILD_WEIGHT}" \
+            --development-run \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
+
       - name: Verify smoke artifact
         if: github.event_name == 'pull_request' || inputs.mode == 'smoke'
         run: |
@@ -161,14 +207,14 @@ jobs:
           python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "smoke" and m["result_rows"] == 4 and m["outcome"]["status"] == "complete"' "${MANIFEST}"
 
       - name: Verify quality-shard artifact
-        if: github.event_name == 'pull_request' || inputs.mode == 'quality_shard' || inputs.mode == 'strong_shard'
+        if: github.event_name == 'pull_request' || inputs.mode == 'quality_shard' || inputs.mode == 'strong_shard' || inputs.mode == 'development_shard'
         run: |
           MANIFEST="${RUNNER_TEMP}/scoringbench-quality/openboost_manifest.json"
           test -s "${MANIFEST}"
           test -s "${RUNNER_TEMP}/scoringbench-quality/benchmark_outcome.json"
           test -s "${RUNNER_TEMP}/scoringbench-quality/datasets.json"
           test -n "$(find "${RUNNER_TEMP}/scoringbench-quality/raw" -name '*.parquet' -print -quit)"
-          python -c 'import json, sys; m=json.load(open(sys.argv[1])); expected=25 if sys.argv[2] == "strong_shard" else 10; assert m["protocol_mode"] == "official_quality_shard" and m["official_protocol_compatible"] and m["result_rows"] == expected and m["expected_result_rows"] == expected and m["outcome"]["status"] == "complete" and m["openboost_git"]["dirty"] is False' "${MANIFEST}" "${{ inputs.mode }}"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); mode=sys.argv[2]; expected=25 if mode == "strong_shard" else (5 if mode == "development_shard" else 10); protocol="development_tuning" if mode == "development_shard" else "official_quality_shard"; compatible=mode != "development_shard"; assert m["protocol_mode"] == protocol and m["official_protocol_compatible"] is compatible and m["result_rows"] == expected and m["expected_result_rows"] == expected and m["outcome"]["status"] == "complete" and m["openboost_git"]["dirty"] is False' "${MANIFEST}" "${{ inputs.mode }}"
 
       - name: Upload benchmark artifact
         if: always()

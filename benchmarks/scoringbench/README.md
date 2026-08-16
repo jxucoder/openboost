@@ -30,11 +30,18 @@ ScoringBench protocol. The acceptance comparison set is:
 OpenBoost is a **good ScoringBench model** only when the completed full suite
 places it first or statistically tied for first on primary proper scores, it
 beats the strongest XGBoost-family baseline on a majority of paired datasets,
-and the result is not purchased with a material regression in log score,
-interval score, calibration, point RMSE, or failure coverage. CRPS is the first
-optimization target; log score, interval score/coverage, RMSE, failures, and
-training time remain explicit guardrails. A single shard decides what to debug,
-not whether this target has been achieved.
+and the result is not purchased with a material regression in interval score,
+calibration, point RMSE, or failure coverage. CRPS is the cross-model
+optimization target; interval score/coverage, RMSE, failures, and training time
+remain explicit guardrails. A single shard decides what to debug, not whether
+this target has been achieved.
+
+ScoringBench's current reconstructed log score and CRLS are not acceptance
+metrics for this comparison. Finite quantile support clamps out-of-support
+targets to a boundary-bin density, while CRLS is integrated over each model's
+own support. Compare Gaussian models with a separately audited analytic NLL;
+only restore a cross-model density score after validating one common grid,
+resolution, support, and tail rule.
 
 The diagnostic deliberately uses the budgets registered by ScoringBench
 rather than forcing every implementation to share one arbitrary tree count:
@@ -135,6 +142,11 @@ duplicates, captured model errors, missing rows, and non-finite core metrics,
 then exits non-zero when that audit is incomplete. The failure report remains
 in the uploaded artifact and is evidence, not disposable CI noise.
 
+The manifest's `official_protocol_compatible` field means only that the run has
+ScoringBench's 3,000-row, five-fold, one-repeat shape and was not marked as
+development tuning. It does not certify leaderboard acceptance, immutable
+dataset bytes, equal compute budgets, or statistical sufficiency.
+
 ## Official quality track
 
 Run the official default: five folds, one repeat, at most 3,000 rows per
@@ -162,6 +174,30 @@ Run one strong-baseline diagnostic before changing model behavior:
   --n-repeats 1 \
   --output-dir benchmarks/results/scoringbench-strong-diagnostic
 ```
+
+After freezing that baseline, test candidate OpenBoost settings on a different
+development dataset. `--development-run` deliberately makes the manifest
+ineligible for official evidence even though it retains the same five folds and
+metrics:
+
+```bash
+.venv-scoringbench/bin/python benchmarks/scoringbench/run.py \
+  --scoringbench-dir .repos/ScoringBench \
+  --models openboost_cpu \
+  --dataset-name 1028_SWD \
+  --sample-size 3000 \
+  --n-folds 5 \
+  --n-trees 250 \
+  --learning-rate 0.04 \
+  --max-depth 2 \
+  --reg-lambda 1.0 \
+  --min-child-weight 1.0 \
+  --development-run \
+  --output-dir benchmarks/results/scoringbench-development
+```
+
+Record every tried configuration, including failures. Select one configuration
+using only development datasets; do not repeatedly inspect the held-out suite.
 
 Use `--dataset-index N` or `--dataset-name NAME` for resumable shards. Use
 `--list-datasets` to display the validated list. Do not tune OpenBoost on the
@@ -245,7 +281,7 @@ OpenBoost should claim value only after all of the following are true:
 
 - the wrapper and results are accepted upstream by ScoringBench;
 - quality is reported across the full suite, not a selected winning subset;
-- paired fold-level CRPS/log-score/interval-score differences include
+- paired fold-level CRPS/interval-score differences include
   uncertainty intervals or the upstream statistical ranking;
 - CPU and CUDA predictions pass a separate parity gate;
 - a scale curve uses at least three real datasets and multiple data sizes;

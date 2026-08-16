@@ -181,9 +181,46 @@ def test_strong_baseline_defaults_match_scoringbench_registered_budgets():
     assert args.xgboost_quantiles == 50
     assert args.xgblss_rounds == 100
     assert args.catboost_rounds == 1000
+    assert args.reg_lambda == 1.0
+    assert args.min_child_weight == 1.0
+    assert args.development_run is False
 
     parameters = _model_parameters(args)
+    assert parameters["openboost_cpu"]["model_params"] == {
+        "reg_lambda": 1.0,
+        "min_child_weight": 1.0,
+    }
     assert parameters["xgboost_quantile"]["num_boost_round"] == 100
     assert parameters["xgblss"]["num_boost_round"] == 100
     assert parameters["catboost_quantile"]["iterations"] == 1000
     assert parameters["catboost_quantile"]["catboost_params"]["allow_writing_files"] is False
+
+
+def test_development_parameters_are_explicit_in_manifest_constructor_contract():
+    args = _build_parser().parse_args(
+        [
+            "--models",
+            "openboost_cpu",
+            "--development-run",
+            "--n-trees",
+            "250",
+            "--learning-rate",
+            "0.04",
+            "--max-depth",
+            "2",
+            "--reg-lambda",
+            "3.0",
+            "--min-child-weight",
+            "5.0",
+        ]
+    )
+
+    assert args.development_run is True
+    assert _model_parameters(args)["openboost_cpu"] == {
+        "backend": "cpu",
+        "n_trees": 250,
+        "learning_rate": 0.04,
+        "max_depth": 2,
+        "n_quantiles": 99,
+        "model_params": {"reg_lambda": 3.0, "min_child_weight": 5.0},
+    }

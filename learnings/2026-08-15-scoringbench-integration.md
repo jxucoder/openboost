@@ -42,6 +42,10 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   XGBoostLSS, and CatBoost MultiQuantile wrappers with frozen package versions
   and their registered model-specific budgets. This makes NGBoost a reference,
   not the acceptance bar.
+- Development mode exposes OpenBoost tree count, learning rate, depth, L2 leaf
+  regularization, and minimum child Hessian while forcing the manifest protocol
+  label to `development_tuning`. It preserves ScoringBench folds and metrics but
+  is intentionally ineligible for held-out or leaderboard evidence.
 
 ## Verification
 
@@ -89,12 +93,20 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   interval score, absolute 90% coverage error, and PIT KS. Against native
   XGBoost quantile it reduced those metrics by 7.7%, 38.8%, 82.2%, and 59.5%
   respectively and reduced RMSE by 11.6%. Against Gaussian XGBoostLSS it had
-  1.2% lower CRPS and 51.3% lower coverage error, but 11.4% worse log score,
-  1.4% worse RMSE, and about 9.1 times its warm per-fold training time.
+  1.2% lower CRPS and 51.3% lower coverage error, but 1.4% worse RMSE and about
+  9.1 times its fit-only per-fold training time.
 - Those results define a useful hypothesis, not a win: the shard has one small
   dataset, one seed, correlated folds, unequal model-specific budgets, CPU
   only, and no confidence interval. Timing also varied materially between two
   otherwise equivalent Actions runs, so it cannot support a speed claim.
+- A post-run metric audit found that the current ScoringBench reconstructed
+  log score clamps targets outside finite quantile support to the boundary-bin
+  density. CRLS is integrated over each model's own support, and the upstream
+  implementation explicitly warns that values are not comparable across
+  different bin grids. Both metrics remain in the raw artifact but are excluded
+  from cross-model conclusions. Use a separately audited analytic Gaussian NLL
+  for parametric-only density comparison; do not optimize OpenBoost against the
+  current quantile log-score artifact.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
@@ -161,9 +173,10 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 - The acceptance bar is stronger than NGBoost parity: OpenBoost should rank
   first or statistically tied on the primary proper scores, beat the strongest
   XGBoost-family baseline on a majority of paired datasets, and avoid material
-  regressions in density score, interval score, calibration, RMSE, failure
-  rate, or resource use. Report per-dataset paired effects and uncertainty, not
-  only macro means.
+  regressions in interval score, calibration, RMSE, failure rate, or resource
+  use. CRPS is the current cross-model primary metric. Density scoring becomes
+  a guardrail only after common-support handling is validated; report
+  per-dataset paired effects and uncertainty, not only macro means.
 - Run a separate large-sample curve on at least three real ScoringBench datasets.
 - Add CPU/CUDA prediction parity before interpreting a CUDA timing result.
 - The first artifact identified the PR merge commit but not the source-head SHA.

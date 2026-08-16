@@ -17,6 +17,21 @@
     "raw/xgboost_quantile/1027_ESL.parquet": "8e09f343e54ba328094954c6477c2b4a2e62a67466d3f071d0d5ba627ce50692"
   },
   "folds": 5,
+  "metric_comparability": {
+    "cross_model_primary": [
+      "crps",
+      "rmse",
+      "coverage_90",
+      "coverage_90_abs_error",
+      "interval_score_90",
+      "pit_ks_stat"
+    ],
+    "diagnostic_not_cross_model_comparable": {
+      "crls": "Integrated on model-specific support; upstream implementation documents that values are not directly comparable across differing bin grids.",
+      "log_score": "Finite quantile support clamps out-of-support targets to a boundary-bin density, creating a tail-boundary artifact."
+    },
+    "timing": "Fit-only cold/warm mixture from one persistent process; not a scale or steady-state benchmark."
+  },
   "means": {
     "catboost_quantile": {
       "coverage_90": 0.7172312140464783,
@@ -75,43 +90,35 @@
     }
   },
   "openboost_source_sha": "cea891a8cb964c655c30092ab0a223f4f140c03b",
-  "paired_openboost_relative_percent": {
+  "relative_percent_of_fold_means": {
     "catboost_quantile": {
       "coverage_90_abs_error": -72.06860635737965,
-      "crls": 59.73994080886593,
       "crps": -7.490343612856022,
       "interval_score_90": -40.08323900819789,
-      "log_score": 153.83406664696452,
       "pit_ks_stat": -39.05142800278187,
       "rmse": -7.492025100361004,
       "train_time": -43.4462659143693
     },
     "ngboost": {
       "coverage_90_abs_error": -40.83394481457232,
-      "crls": 4.324464107732061,
       "crps": -2.3455145892229403,
       "interval_score_90": -10.998109225485326,
-      "log_score": 5.016120811675712,
       "pit_ks_stat": -15.287115850098193,
       "rmse": -1.6309874224037508,
       "train_time": -43.33072674143711
     },
     "xgblss": {
       "coverage_90_abs_error": -51.296668297930594,
-      "crls": 8.888228907908463,
       "crps": -1.2280004966636278,
       "interval_score_90": -15.395609224144986,
-      "log_score": 11.377235605333752,
       "pit_ks_stat": -9.862175139522938,
       "rmse": 1.394641280907218,
       "train_time": 811.6717805665942
     },
     "xgboost_quantile": {
       "coverage_90_abs_error": -82.23068305074477,
-      "crls": 61.63107817638637,
       "crps": -7.720593064612176,
       "interval_score_90": -38.80342816810849,
-      "log_score": 131.9841536090451,
       "pit_ks_stat": -59.46129786753722,
       "rmse": -11.631921037053978,
       "train_time": 257.81707846242597
