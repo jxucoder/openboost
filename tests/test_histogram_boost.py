@@ -293,6 +293,61 @@ def test_histogram_boost_sample_weight_controls_base_distribution():
         weighted.fit(X, y, sample_weight=np.zeros(len(y)))
     with pytest.raises(ValueError, match="only finite"):
         weighted.fit(X, y, sample_weight=np.full(len(y), np.inf))
+    with pytest.raises(ValueError, match="finite when converted to float32"):
+        weighted.fit(X, y, sample_weight=np.full(len(y), 1e300, dtype=np.float64))
+
+
+@pytest.mark.parametrize(
+    ("outlier_X", "outlier_y"),
+    [
+        (np.array([1.5, -0.5], dtype=np.float32), 1_000.0),
+        (np.array([1e6, -1e6], dtype=np.float32), 1.5),
+    ],
+    ids=("target-outlier", "feature-outlier"),
+)
+def test_histogram_boost_zero_weight_outlier_matches_dropped_row(outlier_X, outlier_y):
+    X = np.array(
+        [
+            [-2.0, 1.0],
+            [-1.0, 0.5],
+            [0.0, 0.0],
+            [1.0, -0.5],
+            [2.0, -1.0],
+            [3.0, -1.5],
+        ],
+        dtype=np.float32,
+    )
+    y = np.array([-1.0, -0.5, 0.0, 1.0, 2.0, 2.5], dtype=np.float32)
+    X_with_outlier = np.vstack([X, outlier_X])
+    y_with_outlier = np.append(y, np.float32(outlier_y))
+    weights = np.append(np.ones(len(y), dtype=np.float32), np.float32(0.0))
+    params = {
+        "n_distribution_bins": 6,
+        "n_trees": 3,
+        "max_depth": 2,
+        "n_feature_bins": 8,
+    }
+
+    dropped = ob.HistogramBoost(**params).fit(X, y)
+    weighted = ob.HistogramBoost(**params).fit(
+        X_with_outlier,
+        y_with_outlier,
+        sample_weight=weights,
+    )
+
+    np.testing.assert_array_equal(weighted.target_bin_edges_, dropped.target_bin_edges_)
+    for weighted_edges, dropped_edges in zip(
+        weighted.X_binned_.bin_edges,
+        dropped.X_binned_.bin_edges,
+        strict=True,
+    ):
+        np.testing.assert_array_equal(weighted_edges, dropped_edges)
+    np.testing.assert_allclose(
+        weighted.predict_distribution(X).probas,
+        dropped.predict_distribution(X).probas,
+        rtol=0.0,
+        atol=0.0,
+    )
 
 
 def test_histogram_boost_base_smoothing_is_total_prior_weight():

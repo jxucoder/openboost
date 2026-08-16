@@ -252,8 +252,10 @@ def validate_sample_weight(
     if sample_weight is None:
         return None
 
-    if not isinstance(sample_weight, np.ndarray):
-        sample_weight = np.asarray(sample_weight, dtype=np.float32)
+    try:
+        sample_weight = np.asarray(sample_weight, dtype=np.float64)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("sample_weight must contain numeric values.") from exc
 
     if sample_weight.ndim != 1:
         raise ValueError(
@@ -275,7 +277,14 @@ def validate_sample_weight(
     if not np.all(np.isfinite(sample_weight)):
         raise ValueError("sample_weight must contain only finite values.")
 
-    return sample_weight.astype(np.float32)
+    with np.errstate(over="ignore", invalid="ignore"):
+        sample_weight_float32 = sample_weight.astype(np.float32)
+    if not np.all(np.isfinite(sample_weight_float32)):
+        raise ValueError(
+            "sample_weight must remain finite when converted to float32."
+        )
+
+    return sample_weight_float32
 
 
 def validate_eval_set(

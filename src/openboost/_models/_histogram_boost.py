@@ -427,6 +427,14 @@ class HistogramBoost(PersistenceMixin):
         weights = validate_sample_weight(sample_weight, X_valid.shape[0])
         if weights is not None and float(np.sum(weights)) <= 0.0:
             raise ValueError("sample_weight must contain positive total weight")
+        if weights is not None and np.any(weights == 0.0):
+            # A zero-weight observation must be equivalent to removing it.  In
+            # particular, it must not influence feature bins or the target
+            # support learned below.
+            positive_weight = weights > 0.0
+            X_valid = X_valid[positive_weight]
+            y_valid = y_valid[positive_weight]
+            weights = weights[positive_weight]
 
         self.X_binned_ = array(X_valid, n_bins=self.n_feature_bins, device="cpu")
         if self.X_binned_.any_categorical:
