@@ -198,6 +198,7 @@ def array(
         categorical_features: List of column indices that are categorical.
                              These use category encoding instead of quantile binning.
                              Max 254 unique categories per feature (255 reserved for NaN).
+                             Tree models currently support at most 64 categories.
         device: Target device ("cuda" or "cpu"). Auto-detected if None.
         
     Returns:

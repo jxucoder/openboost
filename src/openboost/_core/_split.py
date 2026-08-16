@@ -16,6 +16,9 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 
+_MAX_CATEGORICAL_SPLIT_CARDINALITY = 64
+
+
 class SplitInfo(NamedTuple):
     """Information about a split.
     
@@ -257,7 +260,9 @@ def find_best_split_with_categorical(
         min_gain: Minimum gain to make a split
         has_missing: Boolean array (n_features,) for features with NaN
         is_categorical: Boolean array (n_features,) for categorical features
-        n_categories: Number of categories per feature (0 for numeric)
+        n_categories: Number of categories per feature (0 for numeric). Categorical
+                      tree splits support at most 64 categories because the left
+                      category set is represented by one uint64 bitset.
         
     Returns:
         SplitInfo with best feature, threshold/bitset, gain, etc.
@@ -273,6 +278,20 @@ def find_best_split_with_categorical(
     # Check if we have categorical features
     any_categorical = is_categorical is not None and np.any(is_categorical)
     any_missing = has_missing is not None and np.any(has_missing)
+
+    if any_categorical:
+        if n_categories is None:
+            raise ValueError(
+                "n_categories is required when is_categorical contains True"
+            )
+        categorical_counts = np.asarray(n_categories)[np.asarray(is_categorical)]
+        if np.any(categorical_counts > _MAX_CATEGORICAL_SPLIT_CARDINALITY):
+            observed = int(np.max(categorical_counts))
+            raise ValueError(
+                f"Categorical feature has {observed} categories; maximum "
+                f"supported is {_MAX_CATEGORICAL_SPLIT_CARDINALITY} because "
+                "categorical tree routing uses a single uint64 bitset"
+            )
     
     # If no categorical and no missing, use standard split
     if not any_categorical and not any_missing:
@@ -333,4 +352,3 @@ def find_best_split_with_categorical(
         cat_bitset=cat_bitset,
         cat_threshold=cat_threshold,
     )
-

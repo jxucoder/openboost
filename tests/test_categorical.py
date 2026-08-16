@@ -178,6 +178,16 @@ class TestCategoricalSplitFinding:
 
 class TestGradientBoostingWithCategorical:
     """Tests for GradientBoosting with categorical features."""
+
+    def test_fit_rejects_unrepresentable_categorical_split(self):
+        """Tree training fails before silently truncating a category bitset."""
+        categories = np.tile(np.arange(65, dtype=np.float32), 4)
+        X_binned = array(categories[:, None], categorical_features=[0])
+        y = (categories % 2).astype(np.float32)
+
+        model = GradientBoosting(n_trees=1, max_depth=1)
+        with pytest.raises(ValueError, match="maximum supported is 64"):
+            model.fit(X_binned, y)
     
     def test_fit_with_categorical(self):
         """GradientBoosting fits with categorical features."""
