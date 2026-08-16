@@ -73,10 +73,27 @@ def _continuous_crps_loss(
     bin_edges: NDArray,
 ) -> NDArray:
     """Exact per-row CRPS for the represented piecewise-uniform histogram."""
-    probabilities = _softmax(logits)
+    return _continuous_crps_from_probabilities(_softmax(logits), y, bin_edges)
+
+
+def _continuous_crps_from_probabilities(
+    probabilities: NDArray,
+    y: NDArray,
+    bin_edges: NDArray,
+) -> NDArray:
+    """Exact per-row CRPS for already-normalized histogram probabilities."""
+    probabilities = np.asarray(probabilities, dtype=np.float64)
+    if probabilities.ndim != 2:
+        raise ValueError("probabilities must have shape (n_samples, n_bins)")
+    if not np.all(np.isfinite(probabilities)) or np.any(probabilities < 0.0):
+        raise ValueError("probabilities must be finite and non-negative")
+    totals = np.sum(probabilities, axis=1, keepdims=True)
+    if np.any(totals <= 0.0):
+        raise ValueError("each probability row must have positive mass")
+    probabilities = probabilities / totals
     distance_to_target, pairwise_distance = _continuous_crps_terms(y, bin_edges)
     if distance_to_target.shape != probabilities.shape:
-        raise ValueError("y and bin_edges must match the logit rows and outputs")
+        raise ValueError("y and bin_edges must match the probability rows and bins")
     first = np.sum(probabilities * distance_to_target, axis=1)
     second = 0.5 * np.einsum(
         "ni,ij,nj->n",
@@ -188,6 +205,24 @@ class HistogramDistributionOutput:
 
     def std(self) -> NDArray:
         return np.sqrt(self.variance())
+
+    def crps(self, y: NDArray) -> NDArray:
+        """Return exact per-row continuous ranked probability scores."""
+        return _continuous_crps_from_probabilities(self.probas, y, self.bin_edges)
+
+    def tempered(self, temperature: float) -> HistogramDistributionOutput:
+        """Return the same histogram grid with temperature-scaled probabilities."""
+        if not np.isfinite(temperature) or temperature <= 0.0:
+            raise ValueError("temperature must be finite and strictly positive")
+        if temperature == 1.0:
+            probabilities = self.probas.copy()
+        else:
+            log_probabilities = np.full_like(self.probas, -np.inf)
+            positive = self.probas > 0.0
+            log_probabilities[positive] = np.log(self.probas[positive]) / temperature
+            log_probabilities -= np.max(log_probabilities, axis=1, keepdims=True)
+            probabilities = np.exp(log_probabilities)
+        return HistogramDistributionOutput(probabilities, self.bin_edges.copy())
 
     def quantile(self, q: float) -> NDArray:
         if not 0.0 <= q <= 1.0:

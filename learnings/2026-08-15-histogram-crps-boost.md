@@ -131,6 +131,16 @@ RMSE. V2 therefore adds an optional `leaf_reg_lambda`: split regularization
 stays at 1, while leaf shrinkage can be studied independently. `None` preserves
 the original coupled behavior.
 
+On consumed `197_cpu_act` fold 0, the exact-objective model at 100 rounds
+improved CRPS from 1.3614 to 1.3187 and RMSE from 2.8446 to 2.7647, but official
+90% coverage remained 97.67%. A diagnostic temperature sweep found that 0.7
+improved CRPS again to 1.2957, RMSE to 2.7271, coverage to 94.0%, and interval
+score to 10.9102. Because that temperature used an already-consumed outer fold,
+it cannot be frozen directly. The ScoringBench wrapper now supports selecting
+temperature by exact CRPS on an inner training-only split, then refitting the
+base model on the complete outer training fold. Its default grid remains
+`(1.0,)`, so V1 behavior does not silently change.
+
 ## Commits
 
 - `b9db276` — `feat: add histogram CRPS boosting`

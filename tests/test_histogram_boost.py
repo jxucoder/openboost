@@ -10,6 +10,7 @@ import pytest
 import openboost as ob
 from openboost._core._vector_tree import _find_best_vector_split, fit_vector_tree
 from openboost._models._histogram_boost import (
+    _continuous_crps_from_probabilities,
     _continuous_crps_loss,
     _continuous_crps_terms,
     _crps_grad_gn,
@@ -49,6 +50,12 @@ def test_continuous_crps_includes_uniform_within_bin_distance():
         np.array([0.0, 1.0, 2.0]),
     )
     assert loss[0] == pytest.approx(1.0 / 12.0)
+    probability_loss = _continuous_crps_from_probabilities(
+        np.array([[1.0, 0.0]]),
+        np.array([0.5]),
+        np.array([0.0, 1.0, 2.0]),
+    )
+    assert probability_loss[0] == pytest.approx(1.0 / 12.0)
 
 
 def test_continuous_crps_psd_diagonal_matches_explicit_jacobian():
@@ -235,6 +242,17 @@ def test_histogram_distribution_output_moments_quantiles_and_sampling():
     np.testing.assert_array_equal(samples1, samples2)
     assert samples1.shape == (2, 20)
     assert np.all((samples1 >= 0.0) & (samples1 <= 2.0))
+
+    sharper = dist.tempered(0.5)
+    np.testing.assert_allclose(sharper.probas.sum(axis=1), 1.0)
+    assert sharper.probas[0, 1] > dist.probas[0, 1]
+    np.testing.assert_array_equal(dist.tempered(1.0).probas, dist.probas)
+    np.testing.assert_allclose(
+        dist.crps(np.array([0.5, 0.5])),
+        [25.0 / 48.0, 1.0 / 12.0],
+    )
+    with pytest.raises(ValueError, match="strictly positive"):
+        dist.tempered(0.0)
 
     with pytest.raises(ValueError, match="bin_edges must contain only finite"):
         ob.HistogramDistributionOutput(

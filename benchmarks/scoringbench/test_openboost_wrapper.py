@@ -74,3 +74,24 @@ def test_openboost_histogram_wrapper_preserves_native_distribution_grid():
     assert distribution.bin_edges.shape == (9,)
     np.testing.assert_allclose(distribution.probas.sum(axis=1), 1.0)
     np.testing.assert_allclose(distribution.mean, model.predict(X[80:]))
+
+
+def test_openboost_histogram_wrapper_selects_temperature_on_inner_validation():
+    rng = np.random.default_rng(19)
+    X = rng.normal(size=(80, 3)).astype(np.float32)
+    y = (X[:, 0] + rng.normal(scale=0.3, size=80)).astype(np.float32)
+    model = OpenBoostHistogramWrapper(
+        n_distribution_bins=6,
+        n_trees=2,
+        max_depth=1,
+        n_feature_bins=10,
+        temperature_grid=(0.7, 1.0, 1.2),
+        calibration_fraction=0.2,
+        calibration_seed=3,
+    ).fit(X[:60], y[:60])
+
+    assert model._selected_temperature in model.temperature_grid
+    assert set(model._temperature_scores) == set(model.temperature_grid)
+    assert all(np.isfinite(list(model._temperature_scores.values())))
+    distribution = model.predict_distribution(X[60:])
+    np.testing.assert_allclose(distribution.mean, model.predict(X[60:]))

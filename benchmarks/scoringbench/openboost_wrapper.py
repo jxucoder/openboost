@@ -183,6 +183,9 @@ class OpenBoostHistogramWrapper(ProbabilisticWrapper):
         max_depth: int = 6,
         n_feature_bins: int = 254,
         curvature_scale: float = 1.0,
+        temperature_grid: tuple[float, ...] = (1.0,),
+        calibration_fraction: float = 0.2,
+        calibration_seed: int = 42,
         model_params: dict | None = None,
     ) -> None:
         self.n_distribution_bins = n_distribution_bins
@@ -191,8 +194,13 @@ class OpenBoostHistogramWrapper(ProbabilisticWrapper):
         self.max_depth = max_depth
         self.n_feature_bins = n_feature_bins
         self.curvature_scale = curvature_scale
+        self.temperature_grid = tuple(float(value) for value in temperature_grid)
+        self.calibration_fraction = calibration_fraction
+        self.calibration_seed = calibration_seed
         self.model_params = dict(model_params or {})
         self._model = None
+        self._selected_temperature = 1.0
+        self._temperature_scores: dict[float, float] = {}
 
     @staticmethod
     def _sanitize_X(X) -> np.ndarray:
@@ -216,6 +224,12 @@ class OpenBoostHistogramWrapper(ProbabilisticWrapper):
         X, y = X[valid], y[valid]
         if len(y) == 0:
             raise ValueError("No valid finite training samples")
+        if not self.temperature_grid or any(
+            not np.isfinite(value) or value <= 0.0 for value in self.temperature_grid
+        ):
+            raise ValueError("temperature_grid must contain positive finite values")
+        if not 0.0 < self.calibration_fraction < 1.0:
+            raise ValueError("calibration_fraction must lie in (0, 1)")
 
         params = {
             "n_distribution_bins": self.n_distribution_bins,
@@ -226,19 +240,46 @@ class OpenBoostHistogramWrapper(ProbabilisticWrapper):
             "curvature_scale": self.curvature_scale,
             **self.model_params,
         }
+
+        self._selected_temperature = 1.0
+        self._temperature_scores = {}
+        if len(self.temperature_grid) > 1 and len(y) >= 4:
+            rng = np.random.default_rng(self.calibration_seed)
+            indices = rng.permutation(len(y))
+            n_calibration = min(
+                max(1, int(round(self.calibration_fraction * len(y)))),
+                len(y) - 2,
+            )
+            calibration_idx = indices[:n_calibration]
+            inner_train_idx = indices[n_calibration:]
+            calibration_model = ob.HistogramBoost(**params).fit(
+                X[inner_train_idx],
+                y[inner_train_idx],
+            )
+            calibration_output = calibration_model.predict_distribution(X[calibration_idx])
+            for temperature in self.temperature_grid:
+                score = np.mean(calibration_output.tempered(temperature).crps(y[calibration_idx]))
+                self._temperature_scores[temperature] = float(score)
+            self._selected_temperature = min(
+                self.temperature_grid,
+                key=lambda value: (
+                    self._temperature_scores[value],
+                    abs(value - 1.0),
+                    value,
+                ),
+            )
+
         self._model = ob.HistogramBoost(**params).fit(X, y)
         return self
 
     def predict(self, X) -> np.ndarray:
-        self._require_fitted()
-        return np.asarray(
-            self._model.predict(self._sanitize_X(X)),
-            dtype=np.float64,
-        ).reshape(-1)
+        return np.asarray(self.predict_distribution(X).mean, dtype=np.float64).reshape(-1)
 
     def predict_distribution(self, X) -> DistributionPrediction:
         self._require_fitted()
-        output = self._model.predict_distribution(self._sanitize_X(X))
+        output = self._model.predict_distribution(self._sanitize_X(X)).tempered(
+            self._selected_temperature
+        )
         return DistributionPrediction(
             probas=np.asarray(output.probas, dtype=np.float64),
             bin_edges=np.asarray(output.bin_edges, dtype=np.float64),
