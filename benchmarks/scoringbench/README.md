@@ -51,6 +51,13 @@ OpenBoost/NGBoost. These choices and resolved package versions are recorded in
 the manifest. Its timing is descriptive; a later speed claim requires a
 quality-matched compute sweep.
 
+The preregistered `crps_distribution_v1` development experiment adds
+`openboost_histogram_cpu`: 50 target bins, 100 shared-vector trees, learning
+rate 0.05, depth 6, and positive-semidefinite Gauss--Newton curvature scale 1.
+It is a development candidate, not an official leaderboard row. Its immutable
+dataset roles, raw-file hashes, acceptance thresholds, and confirmation lock
+are recorded under `benchmarks/scoringbench/protocols/`.
+
 ## Environment
 
 Use a separate Linux environment because ScoringBench currently constrains

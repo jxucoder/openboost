@@ -3,7 +3,10 @@
 import numpy as np
 from scoringbench.wrappers.base import DistributionPrediction
 
-from benchmarks.scoringbench.openboost_wrapper import OpenBoostWrapper
+from benchmarks.scoringbench.openboost_wrapper import (
+    OpenBoostHistogramWrapper,
+    OpenBoostWrapper,
+)
 
 
 def test_openboost_wrapper_distribution_contract():
@@ -50,3 +53,24 @@ def test_openboost_wrapper_forwards_crps_training_objective():
 
     assert model._model.training_objective == "crps"
     assert np.all(np.isfinite(model.predict(X[80:])))
+
+
+def test_openboost_histogram_wrapper_preserves_native_distribution_grid():
+    rng = np.random.default_rng(11)
+    X = rng.normal(size=(100, 3)).astype(np.float32)
+    y = (X[:, 0] + rng.normal(scale=0.5, size=100)).astype(np.float32)
+    model = OpenBoostHistogramWrapper(
+        n_distribution_bins=8,
+        n_trees=3,
+        max_depth=2,
+        n_feature_bins=12,
+    ).fit(X[:80], y[:80])
+
+    distribution = model.predict_distribution(X[80:])
+
+    assert isinstance(distribution, DistributionPrediction)
+    assert distribution.is_natively_gridded_model is True
+    assert distribution.probas.shape == (20, 8)
+    assert distribution.bin_edges.shape == (9,)
+    np.testing.assert_allclose(distribution.probas.sum(axis=1), 1.0)
+    np.testing.assert_allclose(distribution.mean, model.predict(X[80:]))

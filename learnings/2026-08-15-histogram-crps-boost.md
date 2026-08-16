@@ -56,6 +56,10 @@ tuned again before the preregistered `197_cpu_act` run.
 - A local, non-artifact `1028_SWD` fold-0 smoke produced CRPS 0.327624 versus
   0.334891 for the frozen native XGBoost quantile row. This is consumed-data
   implementation evidence only and cannot support a product claim.
+- The ScoringBench adapter exposes the frozen model as
+  `openboost_histogram_cpu` and passes the model's regular PMF grid through the
+  benchmark's native-grid path. The three wrapper contracts and 13 provenance
+  tests pass against the pinned local ScoringBench checkout.
 
 ## Failed Attempts
 

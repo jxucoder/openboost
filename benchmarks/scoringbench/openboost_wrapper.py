@@ -1,4 +1,4 @@
-"""ScoringBench wrapper for OpenBoost NaturalBoost.
+"""ScoringBench wrappers for OpenBoost distributional models.
 
 This module intentionally lives in OpenBoost's repository while the integration
 is being validated.  It is also shaped as an upstream-ready ScoringBench wrapper:
@@ -163,4 +163,86 @@ class OpenBoostWrapper(ProbabilisticWrapper):
             self._alphas,
             mean=mean,
             y_range=self._y_range,
+        )
+
+
+class OpenBoostHistogramWrapper(ProbabilisticWrapper):
+    """OpenBoost shared-tree histogram distribution trained by CRPS.
+
+    The defaults are the candidate frozen before the
+    ``crps_distribution_v1`` development run: 50 target bins, 100 trees,
+    learning rate 0.05, depth 6, and Gauss--Newton curvature scale 1.
+    """
+
+    def __init__(
+        self,
+        *,
+        n_distribution_bins: int = 50,
+        n_trees: int = 100,
+        learning_rate: float = 0.05,
+        max_depth: int = 6,
+        n_feature_bins: int = 254,
+        curvature_scale: float = 1.0,
+        model_params: dict | None = None,
+    ) -> None:
+        self.n_distribution_bins = n_distribution_bins
+        self.n_trees = n_trees
+        self.learning_rate = learning_rate
+        self.max_depth = max_depth
+        self.n_feature_bins = n_feature_bins
+        self.curvature_scale = curvature_scale
+        self.model_params = dict(model_params or {})
+        self._model = None
+
+    @staticmethod
+    def _sanitize_X(X) -> np.ndarray:
+        X = np.asarray(X, dtype=np.float32)
+        if X.ndim != 2:
+            raise ValueError(f"X must be 2-dimensional, got shape {X.shape}")
+        # HistogramBoost handles NaN explicitly; only infinities need a finite
+        # sentinel to match the other ScoringBench wrappers.
+        return np.nan_to_num(X, nan=np.nan, posinf=1e7, neginf=-1e7)
+
+    def _require_fitted(self) -> None:
+        if self._model is None:
+            raise RuntimeError("Model not fitted. Call fit() first.")
+
+    def fit(self, X, y) -> OpenBoostHistogramWrapper:
+        import openboost as ob
+
+        X = self._sanitize_X(X)
+        y = np.asarray(y, dtype=np.float32).reshape(-1)
+        valid = np.isfinite(y)
+        X, y = X[valid], y[valid]
+        if len(y) == 0:
+            raise ValueError("No valid finite training samples")
+
+        params = {
+            "n_distribution_bins": self.n_distribution_bins,
+            "n_trees": self.n_trees,
+            "learning_rate": self.learning_rate,
+            "max_depth": self.max_depth,
+            "n_feature_bins": self.n_feature_bins,
+            "curvature_scale": self.curvature_scale,
+            **self.model_params,
+        }
+        self._model = ob.HistogramBoost(**params).fit(X, y)
+        return self
+
+    def predict(self, X) -> np.ndarray:
+        self._require_fitted()
+        return np.asarray(
+            self._model.predict(self._sanitize_X(X)),
+            dtype=np.float64,
+        ).reshape(-1)
+
+    def predict_distribution(self, X) -> DistributionPrediction:
+        self._require_fitted()
+        output = self._model.predict_distribution(self._sanitize_X(X))
+        return DistributionPrediction(
+            probas=np.asarray(output.probas, dtype=np.float64),
+            bin_edges=np.asarray(output.bin_edges, dtype=np.float64),
+            bin_midpoints=np.asarray(output.bin_midpoints, dtype=np.float64),
+            mean=np.asarray(output.mean(), dtype=np.float64),
+            is_natively_gridded_model=True,
         )

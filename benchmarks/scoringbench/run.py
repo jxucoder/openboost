@@ -378,8 +378,9 @@ def _build_parser() -> argparse.ArgumentParser:
         type=_csv,
         default=["openboost_cpu", "ngboost"],
         help=(
-            "Comma-separated models: openboost_cpu, openboost_cuda, ngboost, "
-            "xgboost_quantile, xgblss, catboost_quantile"
+            "Comma-separated models: openboost_cpu, openboost_cuda, "
+            "openboost_histogram_cpu, ngboost, xgboost_quantile, xgblss, "
+            "catboost_quantile"
         ),
     )
     parser.add_argument("--n-trees", type=int, default=500)
@@ -397,6 +398,11 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--reg-lambda", type=float, default=1.0)
     parser.add_argument("--min-child-weight", type=float, default=1.0)
     parser.add_argument("--n-quantiles", type=int, default=99)
+    parser.add_argument("--histogram-rounds", type=int, default=100)
+    parser.add_argument("--histogram-bins", type=int, default=50)
+    parser.add_argument("--histogram-learning-rate", type=float, default=0.05)
+    parser.add_argument("--histogram-max-depth", type=int, default=6)
+    parser.add_argument("--histogram-curvature-scale", type=float, default=1.0)
     parser.add_argument(
         "--xgboost-rounds",
         type=int,
@@ -557,6 +563,14 @@ def _model_parameters(args) -> dict[str, dict]:
     return {
         "openboost_cpu": {"backend": "cpu", **openboost_common},
         "openboost_cuda": {"backend": "cuda", **openboost_common},
+        "openboost_histogram_cpu": {
+            "n_distribution_bins": args.histogram_bins,
+            "n_trees": args.histogram_rounds,
+            "learning_rate": args.histogram_learning_rate,
+            "max_depth": args.histogram_max_depth,
+            "n_feature_bins": 254,
+            "curvature_scale": args.histogram_curvature_scale,
+        },
         "ngboost": {
             "dist": "normal",
             "n_estimators": args.n_trees,
@@ -588,13 +602,19 @@ def _model_parameters(args) -> dict[str, dict]:
 
 
 def _model_factories(args):
-    from benchmarks.scoringbench.openboost_wrapper import OpenBoostWrapper
+    from benchmarks.scoringbench.openboost_wrapper import (
+        OpenBoostHistogramWrapper,
+        OpenBoostWrapper,
+    )
 
     parameters = _model_parameters(args)
 
     factories = {
         "openboost_cpu": lambda: OpenBoostWrapper(**parameters["openboost_cpu"]),
         "openboost_cuda": lambda: OpenBoostWrapper(**parameters["openboost_cuda"]),
+        "openboost_histogram_cpu": lambda: OpenBoostHistogramWrapper(
+            **parameters["openboost_histogram_cpu"]
+        ),
     }
 
     if "ngboost" in args.models:
@@ -627,6 +647,7 @@ def _model_factories(args):
         allowed = [
             "openboost_cpu",
             "openboost_cuda",
+            "openboost_histogram_cpu",
             "ngboost",
             "xgboost_quantile",
             "xgblss",
@@ -823,6 +844,7 @@ def main() -> int:
                 for index, dataset in enumerate(datasets):
                     print(f"{index:3d}  {dataset['name']}")
                 return 0
+
             def validate_with_raw_verification(selected):
                 nonlocal verified_dataset_files
                 _enforce_dataset_role_lock(

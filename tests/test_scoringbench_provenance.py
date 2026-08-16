@@ -130,9 +130,7 @@ def test_outcome_audit_publishes_missing_error_and_invalid_metric_rows():
     assert outcome["status"] == "incomplete"
     assert outcome["expected_rows"] == 4
     assert outcome["valid_rows"] == 1
-    assert outcome["missing_rows"] == [
-        {"dataset": "example", "model": "ngboost", "fold": 1}
-    ]
+    assert outcome["missing_rows"] == [{"dataset": "example", "model": "ngboost", "fold": 1}]
     assert outcome["error_rows"][0]["error"] == "model exploded"
     assert outcome["invalid_metric_rows"][0]["metrics"] == ["log_score"]
 
@@ -168,9 +166,7 @@ def test_verify_dataset_files_accepts_matching_pinned_bytes(tmp_path):
         ensure_cached,
     )
 
-    assert calls == [
-        ("example", "https://example.test/example.tsv.gz", "example.tsv.gz")
-    ]
+    assert calls == [("example", "https://example.test/example.tsv.gz", "example.tsv.gz")]
     assert verified == [
         {
             "name": "example",
@@ -246,6 +242,11 @@ def test_strong_baseline_defaults_match_scoringbench_registered_budgets():
         "catboost_quantile",
     ]
     assert args.n_trees == 500
+    assert args.histogram_rounds == 100
+    assert args.histogram_bins == 50
+    assert args.histogram_learning_rate == 0.05
+    assert args.histogram_max_depth == 6
+    assert args.histogram_curvature_scale == 1.0
     assert args.xgboost_rounds == 100
     assert args.xgboost_quantiles == 50
     assert args.xgblss_rounds == 100
@@ -260,6 +261,14 @@ def test_strong_baseline_defaults_match_scoringbench_registered_budgets():
         "reg_lambda": 1.0,
         "min_child_weight": 1.0,
         "training_objective": "nll",
+    }
+    assert parameters["openboost_histogram_cpu"] == {
+        "n_distribution_bins": 50,
+        "n_trees": 100,
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "n_feature_bins": 254,
+        "curvature_scale": 1.0,
     }
     assert parameters["xgboost_quantile"]["num_boost_round"] == 100
     assert parameters["xgblss"]["num_boost_round"] == 100

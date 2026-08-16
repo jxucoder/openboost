@@ -20,6 +20,7 @@ on:
           - quality_shard
           - strong_shard
           - development_shard
+          - crps_distribution_shard
       dataset_name:
         description: Exact ScoringBench dataset name for a quality/strong shard
         required: true
@@ -58,6 +59,11 @@ on:
         required: true
         default: "1.0"
         type: string
+      allow_confirmation:
+        description: Unlock the preregistered confirmation dataset
+        required: true
+        default: false
+        type: boolean
 
 concurrency:
   group: scoringbench-${{ github.workflow }}-${{ github.ref }}
@@ -98,7 +104,7 @@ jobs:
           python -m pip install -e .
 
       - name: Install strong comparison models
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'strong_shard'
+        if: github.event_name == 'workflow_dispatch' && (inputs.mode == 'strong_shard' || inputs.mode == 'crps_distribution_shard')
         run: |
           python -m pip install -r benchmarks/scoringbench/requirements-strong-baselines.txt
 
@@ -207,6 +213,33 @@ jobs:
             --development-run \
             --output-dir "${RUNNER_TEMP}/scoringbench-quality"
 
+      - name: Run preregistered CRPS distribution shard
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'crps_distribution_shard'
+        env:
+          DATASET_NAME: ${{ inputs.dataset_name }}
+          ALLOW_CONFIRMATION: ${{ inputs.allow_confirmation }}
+        run: |
+          if [[ -z "${DATASET_NAME}" ]]; then
+            echo "dataset_name must not be empty" >&2
+            exit 2
+          fi
+          CONFIRMATION_FLAG=()
+          if [[ "${ALLOW_CONFIRMATION}" == "true" ]]; then
+            CONFIRMATION_FLAG=(--allow-confirmation)
+          fi
+          python benchmarks/scoringbench/run.py \
+            --scoringbench-dir .repos/ScoringBench \
+            --models openboost_histogram_cpu,xgboost_quantile,catboost_quantile \
+            --dataset-registry \
+              benchmarks/scoringbench/protocols/crps_distribution_v1.json \
+            --dataset-name "${DATASET_NAME}" \
+            --sample-size 3000 \
+            --n-folds 5 \
+            --n-repeats 1 \
+            --development-run \
+            "${CONFIRMATION_FLAG[@]}" \
+            --output-dir "${RUNNER_TEMP}/scoringbench-quality"
+
       - name: Verify smoke artifact
         if: github.event_name == 'pull_request' || inputs.mode == 'smoke'
         run: |
@@ -217,14 +250,14 @@ jobs:
           python -c 'import json, sys; m=json.load(open(sys.argv[1])); assert m["protocol_mode"] == "smoke" and m["result_rows"] == 4 and m["outcome"]["status"] == "complete"' "${MANIFEST}"
 
       - name: Verify quality-shard artifact
-        if: github.event_name == 'pull_request' || inputs.mode == 'quality_shard' || inputs.mode == 'strong_shard' || inputs.mode == 'development_shard'
+        if: github.event_name == 'pull_request' || inputs.mode == 'quality_shard' || inputs.mode == 'strong_shard' || inputs.mode == 'development_shard' || inputs.mode == 'crps_distribution_shard'
         run: |
           MANIFEST="${RUNNER_TEMP}/scoringbench-quality/openboost_manifest.json"
           test -s "${MANIFEST}"
           test -s "${RUNNER_TEMP}/scoringbench-quality/benchmark_outcome.json"
           test -s "${RUNNER_TEMP}/scoringbench-quality/datasets.json"
           test -n "$(find "${RUNNER_TEMP}/scoringbench-quality/raw" -name '*.parquet' -print -quit)"
-          python -c 'import json, sys; m=json.load(open(sys.argv[1])); mode=sys.argv[2]; expected=25 if mode == "strong_shard" else (5 if mode == "development_shard" else 10); protocol="development_tuning" if mode == "development_shard" else "official_quality_shard"; compatible=mode != "development_shard"; assert m["protocol_mode"] == protocol and m["official_protocol_compatible"] is compatible and m["result_rows"] == expected and m["expected_result_rows"] == expected and m["outcome"]["status"] == "complete" and m["openboost_git"]["dirty"] is False' "${MANIFEST}" "${{ inputs.mode }}"
+          python -c 'import json, sys; m=json.load(open(sys.argv[1])); mode=sys.argv[2]; dev=mode in {"development_shard", "crps_distribution_shard"}; expected=25 if mode == "strong_shard" else (15 if mode == "crps_distribution_shard" else (5 if mode == "development_shard" else 10)); protocol="development_tuning" if dev else "official_quality_shard"; assert m["protocol_mode"] == protocol and m["official_protocol_compatible"] is (not dev) and m["result_rows"] == expected and m["expected_result_rows"] == expected and m["outcome"]["status"] == "complete" and m["openboost_git"]["dirty"] is False and (mode != "crps_distribution_shard" or len(m["verified_dataset_files"]) == 1)' "${MANIFEST}" "${{ inputs.mode }}"
 
       - name: Upload benchmark artifact
         if: always()

@@ -40,6 +40,23 @@ absolute-value transform of an indefinite exact diagonal is rejected. The
 candidate's exact public API and hyperparameters must be committed before the
 development dataset is loaded.
 
+The frozen candidate is `openboost_histogram_cpu`, backed by:
+
+```python
+openboost.HistogramBoost(
+    n_distribution_bins=50,
+    n_trees=100,
+    learning_rate=0.05,
+    max_depth=6,
+    n_feature_bins=254,
+    curvature_scale=1.0,
+)
+```
+
+All other constructor values remain at the committed defaults. The wrapper
+passes its regular shared grid and PMF directly to ScoringBench as a natively
+gridded prediction; it does not derive or regrid quantiles.
+
 ## Development acceptance
 
 Let `B` be whichever of XGBoost quantile and CatBoost MultiQuantile has the
