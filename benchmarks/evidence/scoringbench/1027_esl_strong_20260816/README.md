@@ -1,0 +1,43 @@
+# 1027_ESL strong-baseline diagnostic
+
+This is a clean, official-protocol-compatible five-fold ScoringBench shard. It
+compares OpenBoost CPU against NGBoost, native XGBoost multi-quantile,
+Gaussian XGBoostLSS, and CatBoost MultiQuantile. All 25 expected
+dataset/model/fold rows completed; the OpenBoost and ScoringBench checkouts were
+clean. The exact model constructors, package versions, platform, source SHAs,
+and CI identity are in `openboost_manifest.json`.
+
+Lower is better for every displayed score except raw coverage, whose target is
+0.90. `Coverage error` is the fold-level mean of `abs(coverage_90 - 0.90)`.
+
+| Model | CRPS | Log score | CRLS | RMSE | 90% coverage | Coverage error | 90% interval score | PIT KS | Train seconds |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| OpenBoost CPU | **0.3005** | 0.7101 | 0.9305 | 0.5459 | **0.8547** | **0.0510** | **2.4361** | **0.0894** | 1.3845 |
+| XGBoostLSS | 0.3043 | 0.6375 | 0.8546 | **0.5384** | 0.7952 | 0.1048 | 2.8794 | 0.0991 | **0.1519** |
+| NGBoost | 0.3077 | 0.6762 | 0.8920 | 0.5550 | 0.8137 | 0.0863 | 2.7371 | 0.1055 | 2.4431 |
+| CatBoost quantile | 0.3249 | -1.3190 | 0.5825 | 0.5901 | 0.7172 | 0.1828 | 4.0657 | 0.1466 | 2.4481 |
+| XGBoost quantile | 0.3257 | **-2.2201** | **0.5757** | 0.6178 | 0.6127 | 0.2873 | 3.9807 | 0.2204 | 0.3869 |
+
+On this shard, OpenBoost has the best mean CRPS, interval score, coverage
+error, and PIT KS statistic. Relative to native XGBoost quantile, its CRPS is
+7.7% lower, interval score is 38.8% lower, coverage error is 82.2% lower, and
+RMSE is 11.6% lower. It wins four of five folds on CRPS and all five folds on
+RMSE, interval score, coverage error, and PIT KS.
+
+This is not an overall win. XGBoost quantile and CatBoost have much lower
+density-based log score/CRLS while also producing severely under-covering 90%
+intervals. XGBoostLSS has 1.4% better RMSE, 11.4% better log score, and is about
+9.1 times faster in these warm per-fold timings; OpenBoost has 1.2% better CRPS
+and substantially better interval calibration. The timing is not a scale claim
+and differed materially across otherwise equivalent Actions runs.
+
+The result is one small dataset, one seed, five correlated folds, unequal
+model-specific default budgets, CPU only, and no paired confidence interval.
+It is a diagnostic signal, not a library-level marketing claim. The next
+quality decision must come from multiple untouched datasets and ultimately the
+complete official suite. Hyperparameter changes prompted by this shard must be
+developed elsewhere and not re-labelled as held-out evidence.
+
+Source artifact: [GitHub Actions run 31925701435](https://github.com/jxucoder/openboost/actions/runs/31925701435), artifact `9257853524`, digest
+`sha256:4044cc803958036d16c55aefed98c3142486e7ddba4bdfca61f364d5e7310765`.
+`summary.json` records every frozen file hash and the unrounded means.

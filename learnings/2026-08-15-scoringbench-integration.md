@@ -78,6 +78,23 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   resolved dataset registry, both raw Parquet files, and a descriptive summary.
   OpenBoost's mean CRPS/RMSE/90% interval score and time were better on this
   shard, but mean log score was worse and CRPS won only 2/5 folds.
+- Clean strong-baseline run `31925701435` completed all 25 expected rows for
+  `1027_ESL` at source commit `cea891a` and pinned ScoringBench commit
+  `a938a667`. Artifact `9257853524` has digest
+  `sha256:4044cc803958036d16c55aefed98c3142486e7ddba4bdfca61f364d5e7310765`.
+  The source checkout had no porcelain changes, and every frozen input/result
+  file is checksummed in
+  `benchmarks/evidence/scoringbench/1027_esl_strong_20260816/summary.json`.
+- On that one diagnostic shard, OpenBoost ranked first on mean CRPS, 90%
+  interval score, absolute 90% coverage error, and PIT KS. Against native
+  XGBoost quantile it reduced those metrics by 7.7%, 38.8%, 82.2%, and 59.5%
+  respectively and reduced RMSE by 11.6%. Against Gaussian XGBoostLSS it had
+  1.2% lower CRPS and 51.3% lower coverage error, but 11.4% worse log score,
+  1.4% worse RMSE, and about 9.1 times its warm per-fold training time.
+- Those results define a useful hypothesis, not a win: the shard has one small
+  dataset, one seed, correlated folds, unequal model-specific budgets, CPU
+  only, and no confidence interval. Timing also varied materially between two
+  otherwise equivalent Actions runs, so it cannot support a speed claim.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
@@ -137,8 +154,16 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 ## Risks and Follow-ups
 
 - Run the official full suite on Linux and submit the wrapper/results upstream.
-- Use the `1027_ESL` sentinel only as a reproducibility/integration gate; inspect
-  its 5-fold artifact before deciding whether OpenBoost merits broader shards.
+- Treat `1027_ESL` as consumed diagnostic evidence. Do not tune on it and then
+  relabel the result as held out. Use separate development datasets to test
+  Normal scale/log-score hypotheses, preserve CRPS/calibration guardrails, and
+  make the final decision on untouched datasets or the complete suite.
+- The acceptance bar is stronger than NGBoost parity: OpenBoost should rank
+  first or statistically tied on the primary proper scores, beat the strongest
+  XGBoost-family baseline on a majority of paired datasets, and avoid material
+  regressions in density score, interval score, calibration, RMSE, failure
+  rate, or resource use. Report per-dataset paired effects and uncertainty, not
+  only macro means.
 - Run a separate large-sample curve on at least three real ScoringBench datasets.
 - Add CPU/CUDA prediction parity before interpreting a CUDA timing result.
 - The first artifact identified the PR merge commit but not the source-head SHA.
