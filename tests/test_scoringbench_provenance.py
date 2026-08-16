@@ -11,6 +11,7 @@ from benchmarks.scoringbench.run import (
     _model_parameters,
     _select_datasets,
     _validate_selected_datasets,
+    _verify_dataset_files,
     _working_directory,
 )
 
@@ -142,6 +143,59 @@ def test_load_dataset_registry_accepts_frozen_scoringbench_list(tmp_path):
     assert _load_dataset_registry(path) == [
         {"name": "alpha", "source": "pmlb", "url": "https://example"}
     ]
+
+
+def test_verify_dataset_files_accepts_matching_pinned_bytes(tmp_path):
+    raw = tmp_path / "pinned.tsv.gz"
+    raw.write_bytes(b"frozen dataset bytes")
+    expected = __import__("hashlib").sha256(raw.read_bytes()).hexdigest()
+    calls = []
+
+    def ensure_cached(name, url, filename):
+        calls.append((name, url, filename))
+        return raw
+
+    verified = _verify_dataset_files(
+        [
+            {
+                "name": "example",
+                "source": "pmlb",
+                "url": "https://example.test/example.tsv.gz",
+                "raw_sha256": expected,
+            }
+        ],
+        ensure_cached,
+    )
+
+    assert calls == [
+        ("example", "https://example.test/example.tsv.gz", "example.tsv.gz")
+    ]
+    assert verified == [
+        {
+            "name": "example",
+            "url": "https://example.test/example.tsv.gz",
+            "sha256": expected,
+            "size_bytes": len(b"frozen dataset bytes"),
+        }
+    ]
+
+
+def test_verify_dataset_files_fails_closed_on_hash_mismatch(tmp_path):
+    raw = tmp_path / "pinned.tsv.gz"
+    raw.write_bytes(b"different bytes")
+
+    with pytest.raises(ValueError, match="raw dataset hash mismatch"):
+        _verify_dataset_files(
+            [
+                {
+                    "name": "example",
+                    "source": "pmlb",
+                    "url": "https://example.test/example.tsv.gz",
+                    "raw_sha256": "0" * 64,
+                }
+            ],
+            lambda *_args: raw,
+        )
 
 
 def test_stable_strided_shards_cover_registry_exactly_once():

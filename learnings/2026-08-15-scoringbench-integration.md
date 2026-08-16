@@ -213,6 +213,11 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   guardrails, fold-win thresholds, and permitted claim language are committed
   under `benchmarks/scoringbench/protocols/`. The candidate API and exact
   hyperparameters must be committed before loading the development entry.
+- Frozen registries may now include `raw_sha256`. The launcher materializes
+  those entries through ScoringBench's raw cache, rejects a mismatch before
+  validation, bypasses the opaque processed cache for the run, and records the
+  verified URL, digest, and byte size in manifest schema 3. This makes the
+  protocol's immutable-data requirement executable rather than documentary.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts

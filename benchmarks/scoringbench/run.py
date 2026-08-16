@@ -53,6 +53,49 @@ def _load_dataset_registry(path: Path) -> list[dict]:
     return datasets
 
 
+def _verify_dataset_files(datasets: list[dict], ensure_cached) -> list[dict]:
+    """Materialize and verify dataset files pinned by a frozen registry.
+
+    ScoringBench's processed cache is intentionally fast but cannot prove which
+    raw bytes produced an entry. A registry may therefore provide
+    ``raw_sha256``. Those entries are downloaded through ScoringBench's own raw
+    cache and checked before validation or fold construction.
+    """
+    verified = []
+    for dataset in datasets:
+        expected = dataset.get("raw_sha256")
+        if expected is None:
+            continue
+        expected = str(expected).lower()
+        if len(expected) != 64 or any(char not in "0123456789abcdef" for char in expected):
+            raise ValueError(
+                f"invalid raw_sha256 for dataset {dataset['name']!r}: {expected!r}"
+            )
+        if dataset.get("source") != "pmlb" or not dataset.get("url"):
+            raise ValueError(
+                "raw_sha256 verification currently requires a PMLB URL; "
+                f"dataset {dataset['name']!r} has source={dataset.get('source')!r}"
+            )
+
+        filename = f"{dataset['name']}.tsv.gz"
+        path = Path(ensure_cached(dataset["name"], dataset["url"], filename))
+        actual = _sha256(path)
+        if actual != expected:
+            raise ValueError(
+                f"raw dataset hash mismatch for {dataset['name']!r}: "
+                f"expected {expected}, got {actual} at {path}"
+            )
+        verified.append(
+            {
+                "name": dataset["name"],
+                "url": dataset["url"],
+                "sha256": actual,
+                "size_bytes": path.stat().st_size,
+            }
+        )
+    return verified
+
+
 def _git_state(path: Path) -> dict:
     def run(*args: str) -> str | None:
         try:
@@ -579,6 +622,7 @@ def _write_provenance(
     datasets: list[dict],
     result_rows: int,
     outcome: dict,
+    verified_dataset_files: list[dict] | None = None,
 ) -> Path:
     import openboost as ob
 
@@ -606,7 +650,7 @@ def _write_provenance(
 
     registry_path = output_dir / "datasets.json"
     manifest = {
-        "schema_version": 2,
+        "schema_version": 3,
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "protocol": "ScoringBench",
         "protocol_mode": protocol_mode,
@@ -646,6 +690,7 @@ def _write_provenance(
             ),
             "file": "datasets.json" if registry_path.exists() else None,
         },
+        "verified_dataset_files": verified_dataset_files or [],
         "result_rows": result_rows,
         "expected_result_rows": outcome["expected_rows"],
         "outcome": {
@@ -716,12 +761,17 @@ def main() -> int:
     sys.path.insert(0, str(PROJECT_ROOT))
     sys.path.insert(0, str(scoringbench_dir))
 
-    from scoringbench.datasets import get_DATASETS_CONFIG, validate_datasets
+    from scoringbench.datasets import (
+        _ensure_cached,
+        get_DATASETS_CONFIG,
+        validate_datasets,
+    )
     from scoringbench.runner import run_benchmark
     from scoringbench.utils import set_seed
 
     set_seed(args.seed)
     output_dir = Path(args.output_dir).expanduser().resolve()
+    verified_dataset_files = []
     if args.smoke:
         datasets = [
             {
@@ -751,10 +801,22 @@ def main() -> int:
                 for index, dataset in enumerate(datasets):
                     print(f"{index:3d}  {dataset['name']}")
                 return 0
+            def validate_with_raw_verification(selected):
+                nonlocal verified_dataset_files
+                verified_dataset_files = _verify_dataset_files(
+                    selected,
+                    _ensure_cached,
+                )
+                if verified_dataset_files:
+                    # Force the pinned raw file through preprocessing instead
+                    # of accepting an opaque processed cache entry.
+                    os.environ["SCORINGBENCH_NO_CACHE"] = "1"
+                return validate_datasets(selected)
+
             datasets = _validate_selected_datasets(
                 all_datasets,
                 args,
-                validate_datasets,
+                validate_with_raw_verification,
             )
 
     if args.lite:
@@ -785,6 +847,7 @@ def main() -> int:
         datasets,
         result_rows=len(result),
         outcome=outcome,
+        verified_dataset_files=verified_dataset_files,
     )
     print(f"OpenBoost outcome: {outcome_path} ({outcome['status']})")
     print(f"OpenBoost provenance: {manifest}")
