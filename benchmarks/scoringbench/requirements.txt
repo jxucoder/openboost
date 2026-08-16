@@ -8,4 +8,5 @@ pyarrow>=15
 autorank>=1.2
 openml>=0.15
 pytest>=7
+pytest-xdist>=3
 ngboost>=0.5

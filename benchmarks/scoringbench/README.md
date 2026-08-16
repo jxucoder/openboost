@@ -26,11 +26,25 @@ contract test remains useful for local adapter development.
 
 ```bash
 git clone https://github.com/jonaslandsgesell/ScoringBench .repos/ScoringBench
+git -C .repos/ScoringBench checkout "$(cat benchmarks/scoringbench/SCORINGBENCH_COMMIT)"
 
 uv venv .venv-scoringbench --python 3.12
 uv pip install --python .venv-scoringbench/bin/python \
   -r benchmarks/scoringbench/requirements.txt
 uv pip install --python .venv-scoringbench/bin/python -e .
+```
+
+`SCORINGBENCH_COMMIT` freezes the upstream protocol used for committed results.
+Test newer upstream revisions separately before updating that file. The manifest
+records the checked-out revision and dirty state.
+
+On Intel macOS, the latest Numba release may not publish a compatible wheel.
+The full benchmark remains unsupported there, but the wrapper contract can be
+checked with the last compatible wheel instead of compiling llvmlite locally:
+
+```bash
+uv pip install --python .venv-scoringbench/bin/python 'numba==0.63.1'
+uv pip install --python .venv-scoringbench/bin/python --no-deps -e .
 ```
 
 For CUDA, install OpenBoost's CUDA extra using the package versions appropriate

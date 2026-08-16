@@ -34,6 +34,8 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
 
 - Wrapper contract: 1 passed against ScoringBench commit
   `a938a667b7839b41e9272929010573410301c0b4`.
+- Fresh isolated-environment contract after adding xdist: 1 passed on Intel
+  macOS with Numba 0.63.1; this validates the adapter only, not benchmark scores.
 - OpenBoost distributional regression tests: 47 passed.
 - `ruff check benchmarks/scoringbench`: passed.
 - Python compilation and manifest protocol classification: passed.
@@ -48,7 +50,17 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   requires NumPy 2.x, while the available PyTorch wheel uses the NumPy 1.x ABI.
   One run crashed and later attempts entered an uninterruptible kernel exit
   state. The launcher now refuses this platform before importing ScoringBench.
-  Published CPU/CUDA runs must use Linux.
+- A fresh isolated environment could not collect the wrapper test because the
+  repository-wide pytest configuration enables xdist while the benchmark
+  requirements omitted `pytest-xdist`. The isolated requirements now include
+  it.
+- Installing unconstrained `numba>=0.60` on Intel macOS selected Numba 0.67,
+  for which no compatible wheel was available; llvmlite then tried to build
+  against LLVM 20 although that release requires LLVM 22. Installing the last
+  available Intel wheel (`numba==0.63.1`) and the editable project with
+  `--no-deps` is sufficient for the wrapper-only contract. This workaround is
+  not a supported full benchmark environment. Published CPU/CUDA runs must use
+  Linux.
 
 ## Risks and Follow-ups
 
