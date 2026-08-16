@@ -1,6 +1,9 @@
 """Tests for ScoringBench artifact provenance that need no external checkout."""
 
-from benchmarks.scoringbench.run import _ci_state
+from pathlib import Path
+
+import pytest
+from benchmarks.scoringbench.run import _ci_state, _working_directory
 
 
 def test_ci_state_is_none_outside_github_actions(monkeypatch):
@@ -35,3 +38,16 @@ def test_ci_state_distinguishes_tested_merge_from_source_head(monkeypatch):
         "run_id": "123",
         "run_attempt": "2",
     }
+
+
+def test_working_directory_contains_upstream_output_and_restores_on_error(tmp_path):
+    original = Path.cwd()
+    artifact_dir = tmp_path / "artifact"
+
+    with pytest.raises(RuntimeError, match="stop"), _working_directory(artifact_dir):
+        assert Path.cwd() == artifact_dir
+        Path("datasets.json").write_text("[]\n")
+        raise RuntimeError("stop")
+
+    assert Path.cwd() == original
+    assert (artifact_dir / "datasets.json").read_text() == "[]\n"

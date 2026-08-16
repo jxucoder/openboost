@@ -48,6 +48,7 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   manifest and both raw Parquet files with 4 result rows; its digest is
   `sha256:3c98f640af58291f7cb648ac38bfa04ff0a44bd198698fb47a2b4f22dfb98862`.
   This proves the integration path only, not comparative model value.
+- CI/source provenance and artifact-working-directory tests: 3 passed.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts
@@ -70,6 +71,11 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   `--no-deps` is sufficient for the wrapper-only contract. This workaround is
   not a supported full benchmark environment. Published CPU/CUDA runs must use
   Linux.
+- Building ScoringBench's official dataset registry writes `datasets.json` to
+  `Path.cwd()`. A dataset-list probe therefore polluted the OpenBoost root and
+  would make a later manifest report a dirty checkout. The launcher now builds
+  and validates that registry from inside the output directory and restores the
+  original working directory even after an exception.
 
 ## Risks and Follow-ups
 

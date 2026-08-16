@@ -14,6 +14,7 @@ import os
 import platform
 import subprocess
 import sys
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -89,6 +90,18 @@ def _ci_state() -> dict | None:
         "provider": "github_actions",
         **{key: os.environ.get(env_name) for key, env_name in names.items()},
     }
+
+
+@contextmanager
+def _working_directory(path: Path):
+    """Temporarily direct upstream relative outputs into an artifact directory."""
+    original = Path.cwd()
+    path.mkdir(parents=True, exist_ok=True)
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(original)
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -355,6 +368,7 @@ def main() -> int:
     from scoringbench.utils import set_seed
 
     set_seed(args.seed)
+    output_dir = Path(args.output_dir).expanduser().resolve()
     if args.smoke:
         datasets = [
             {
@@ -367,18 +381,21 @@ def main() -> int:
         ]
         args.n_folds = 2
     else:
-        datasets = validate_datasets(get_DATASETS_CONFIG())
-        if args.list_datasets:
-            for index, dataset in enumerate(datasets):
-                print(f"{index:3d}  {dataset['name']}")
-            return 0
+        # ScoringBench exports its resolved dataset registry to Path.cwd(). Keep
+        # that reproducibility artifact with the benchmark instead of dirtying
+        # the OpenBoost checkout.
+        with _working_directory(output_dir):
+            datasets = validate_datasets(get_DATASETS_CONFIG())
+            if args.list_datasets:
+                for index, dataset in enumerate(datasets):
+                    print(f"{index:3d}  {dataset['name']}")
+                return 0
         datasets = _select_datasets(datasets, args)
 
     if args.lite:
         args.n_folds = 2
 
     model_factories = _model_factories(args)
-    output_dir = Path(args.output_dir).expanduser().resolve()
     result = run_benchmark(
         datasets_config=datasets,
         model_factories=model_factories,
