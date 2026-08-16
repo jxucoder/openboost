@@ -89,6 +89,13 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   The source checkout had no porcelain changes, and every frozen input/result
   file is checksummed in
   `benchmarks/evidence/scoringbench/1027_esl_strong_20260816/summary.json`.
+- `1028_SWD` clean baseline run `31926255124` completed 25/25 rows in artifact
+  `9258026048` (digest `sha256:495ac3c8c02c0846423131c4636dfde05f0da872b637bca2be9493b3c02aa8b4`).
+  Development run `31926664340` completed 5/5 rows with the expected
+  `development_tuning` label in artifact `9258115955` (digest
+  `sha256:b3b77cbf691bef574b0a27c897b8a92a22e90a4c158f0f7e3ae556400d60e599`).
+  Both source checkouts were clean; every copied artifact file is checksummed
+  under `benchmarks/evidence/scoringbench/development/1028_swd_lr_sweep_20260816/`.
 - On that one diagnostic shard, OpenBoost ranked first on mean CRPS, 90%
   interval score, absolute 90% coverage error, and PIT KS. Against native
   XGBoost quantile it reduced those metrics by 7.7%, 38.8%, 82.2%, and 59.5%
@@ -107,6 +114,18 @@ OpenBoost's exposure-aware API, which still needs a domain benchmark.
   from cross-model conclusions. Use a separately audited analytic Gaussian NLL
   for parametric-only density comparison; do not optimize OpenBoost against the
   current quantile log-score artifact.
+- Untouched development dataset `1028_SWD` showed the opposite CRPS ranking
+  from `1027_ESL`: OpenBoost had the best interval score, coverage error, and
+  PIT KS, but mean CRPS was 4.9% worse than native XGBoost quantile, 1.7% worse
+  than XGBoostLSS, and 2.0% worse than NGBoost. It lost CRPS to native XGBoost
+  on all five folds. This disproves a general quality-win claim and identifies
+  a reproducible sharpness/calibration trade-off.
+- A development-only `0.03 × 500` OpenBoost run narrowed mean sharpness by 5.4%
+  relative to `0.01 × 500`, but worsened CRPS by 0.44%, interval score by 4.74%,
+  PIT KS by 9.82%, and absolute 90% coverage error by 3.23%. It improved paired
+  CRPS in only two of five folds. Reject the larger fixed learning rate; the
+  next experiment must separate mean accuracy from post-fit scale calibration
+  or test a different scale objective.
 - Integration commit: `a4555bc` (`bench: add ScoringBench integration`).
 
 ## Failed Attempts

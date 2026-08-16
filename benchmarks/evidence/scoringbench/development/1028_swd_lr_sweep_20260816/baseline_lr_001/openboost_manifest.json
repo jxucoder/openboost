@@ -1,0 +1,158 @@
+{
+  "arguments": {
+    "catboost_rounds": 1000,
+    "dataset_index": null,
+    "dataset_name": [
+      "1028_SWD"
+    ],
+    "dataset_registry": null,
+    "learning_rate": 0.01,
+    "list_datasets": false,
+    "lite": false,
+    "max_depth": 3,
+    "models": [
+      "openboost_cpu",
+      "ngboost",
+      "xgboost_quantile",
+      "xgblss",
+      "catboost_quantile"
+    ],
+    "n_folds": 5,
+    "n_quantiles": 99,
+    "n_repeats": 1,
+    "n_trees": 500,
+    "output_dir": "/home/runner/work/_temp/scoringbench-quality",
+    "sample_size": 3000,
+    "scoringbench_dir": ".repos/ScoringBench",
+    "seed": 42,
+    "shard_count": null,
+    "shard_index": null,
+    "smoke": false,
+    "xgblss_rounds": 100,
+    "xgboost_quantiles": 50,
+    "xgboost_rounds": 100
+  },
+  "ci": {
+    "event_name": "workflow_dispatch",
+    "head_ref": "",
+    "provider": "github_actions",
+    "ref": "refs/heads/codex/scoringbench-release-hardening",
+    "repository": "jxucoder/openboost",
+    "run_attempt": "1",
+    "run_id": "31926255124",
+    "source_sha": "24e9873a0eff442a33ab0f970624bb8f9c4a6f36",
+    "tested_sha": "24e9873a0eff442a33ab0f970624bb8f9c4a6f36"
+  },
+  "created_at": "2026-08-16T04:26:25+00:00",
+  "dataset_registry": {
+    "file": "datasets.json",
+    "mode": "scoringbench_dynamic",
+    "resolved_sha256": "c81d1dbc444de36dff5e02975664fc34c06a057e9de012a1fa998534b461526c",
+    "source_sha256": null
+  },
+  "datasets": [
+    {
+      "id": "https://github.com/EpistasisLab/penn-ml-benchmarks/raw/master/datasets/1028_SWD/1028_SWD.tsv.gz",
+      "name": "1028_SWD",
+      "source": "pmlb"
+    }
+  ],
+  "expected_result_rows": 25,
+  "model_parameters": {
+    "catboost_quantile": {
+      "catboost_params": {
+        "allow_writing_files": false,
+        "random_seed": 42,
+        "thread_count": 2
+      },
+      "iterations": 1000,
+      "n_quantiles": 99
+    },
+    "ngboost": {
+      "dist": "normal",
+      "learning_rate": 0.01,
+      "n_estimators": 500,
+      "n_quantiles": 99,
+      "ngb_params": {
+        "random_state": 42
+      }
+    },
+    "openboost_cpu": {
+      "backend": "cpu",
+      "learning_rate": 0.01,
+      "max_depth": 3,
+      "n_quantiles": 99,
+      "n_trees": 500
+    },
+    "xgblss": {
+      "distribution": "Gaussian",
+      "n_quantiles": 99,
+      "num_boost_round": 100,
+      "xgblss_params": {
+        "device": "cpu",
+        "nthread": 2,
+        "seed": 42
+      }
+    },
+    "xgboost_quantile": {
+      "n_bins": 50,
+      "num_boost_round": 100,
+      "xgb_params": {
+        "device": "cpu",
+        "nthread": 2,
+        "seed": 42
+      }
+    }
+  },
+  "official_protocol_compatible": true,
+  "openboost_git": {
+    "changes": [],
+    "commit": "24e9873a0eff442a33ab0f970624bb8f9c4a6f36",
+    "dirty": false
+  },
+  "outcome": {
+    "duplicate_rows": 0,
+    "error_rows": 0,
+    "file": "benchmark_outcome.json",
+    "invalid_metric_rows": 0,
+    "missing_rows": 0,
+    "status": "complete",
+    "unexpected_rows": 0,
+    "valid_rows": 25
+  },
+  "platform": {
+    "cpu_count": 4,
+    "gpu": null,
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "python": "3.12.13",
+    "release": "6.17.0-1022-azure",
+    "system": "Linux"
+  },
+  "protocol": "ScoringBench",
+  "protocol_mode": "official_quality_shard",
+  "result_rows": 25,
+  "schema_version": 2,
+  "scoringbench_git": {
+    "changes": [],
+    "commit": "a938a667b7839b41e9272929010573410301c0b4",
+    "dirty": false
+  },
+  "versions": {
+    "catboost": "1.2.10",
+    "cupy-cuda12x": null,
+    "ngboost": "0.5.11",
+    "numba": "0.67.0",
+    "numba-cuda": null,
+    "numpy": "2.2.6",
+    "openboost": "1.0.0rc1",
+    "pandas": "2.2.3",
+    "pyarrow": "25.0.1",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.16.3",
+    "torch": "2.9.1",
+    "xgboost": "3.3.0",
+    "xgboostlss": "0.6.1"
+  },
+  "warning": null
+}
