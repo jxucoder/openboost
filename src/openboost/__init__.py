@@ -183,6 +183,7 @@ from ._models import (
     DART,
     # Phase 15/16: Distributional GBDT (NaturalBoost)
     DistributionalGBDT,
+    FormulaBoost,
     GradientBoosting,
     # Phase 15: Linear Leaf GBDT
     LinearLeafGBDT,
@@ -204,6 +205,7 @@ from ._models import (
     OpenBoostLinearLeafRegressor,
     # Phase 13: sklearn-compatible wrappers
     OpenBoostRegressor,
+    WeibullAFT,
 )
 from ._models import (
     # Backward compatibility aliases (deprecated, accessed via __getattr__)
@@ -346,6 +348,8 @@ __all__ = [
     "NaturalBoostStudentT",
     "NaturalBoostTweedie",
     "NaturalBoostNegBin",
+    "FormulaBoost",
+    "WeibullAFT",
     "LegacyTree",
     # Backward compatibility (deprecated)
     "NGBoost",
