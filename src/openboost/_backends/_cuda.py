@@ -3584,3 +3584,131 @@ def build_tree_symmetric_gpu_native(
     
     # Already on GPU - no transfer needed!
     return level_features_gpu, level_thresholds_gpu, leaf_values
+
+
+# =============================================================================
+# Multi-parameter objective kernels (unified trainer, K>1)
+# =============================================================================
+
+def _blocks_threads(n: int, threads: int = 256) -> tuple[int, int]:
+    return (n + threads - 1) // threads, threads
+
+
+@cuda.jit
+def _normal_ordinary_kernel(raw_loc, raw_scale, y, g_loc, h_loc, g_scale, h_scale, n):
+    """Ordinary NLL grad/hess for Normal: loc identity, scale exp-link."""
+    i = cuda.grid(1)
+    if i >= n:
+        return
+    mu = raw_loc[i]
+    s = raw_scale[i]
+    if s > 20.0:
+        s = 20.0
+    elif s < -20.0:
+        s = -20.0
+    sigma = math.exp(s)
+    var = sigma * sigma
+    if var < 1e-12:
+        var = 1e-12
+    resid = y[i] - mu
+    g_loc[i] = -resid / var
+    h_loc[i] = 1.0 / var
+    g_scale[i] = 1.0 - (resid * resid) / var
+    h_scale[i] = 2.0
+
+
+@cuda.jit
+def _normal_natural_kernel(raw_loc, raw_scale, y, g_loc, h_loc, g_scale, h_scale, n):
+    """Natural gradient for Normal (diagonal Fisher): F=diag(1/σ², 2)."""
+    i = cuda.grid(1)
+    if i >= n:
+        return
+    mu = raw_loc[i]
+    s = raw_scale[i]
+    if s > 20.0:
+        s = 20.0
+    elif s < -20.0:
+        s = -20.0
+    sigma = math.exp(s)
+    var = sigma * sigma
+    if var < 1e-12:
+        var = 1e-12
+    resid = y[i] - mu
+    g_loc[i] = -resid
+    h_loc[i] = 1.0
+    g_scale[i] = 0.5 * (1.0 - (resid * resid) / var)
+    h_scale[i] = 1.0
+
+
+@cuda.jit
+def _poisson_ordinary_kernel(raw_rate, y, g, h, n):
+    """Ordinary NLL grad/hess for Poisson with exp link: λ=exp(raw)."""
+    i = cuda.grid(1)
+    if i >= n:
+        return
+    r = raw_rate[i]
+    if r > 20.0:
+        r = 20.0
+    elif r < -20.0:
+        r = -20.0
+    lam = math.exp(r)
+    g[i] = lam - y[i]
+    h[i] = lam if lam > 1e-6 else 1e-6
+
+
+@cuda.jit
+def _poisson_natural_kernel(raw_rate, y, g, h, n):
+    """Natural gradient for Poisson: F=λ, nat=(λ-y)/λ, unit hessian."""
+    i = cuda.grid(1)
+    if i >= n:
+        return
+    r = raw_rate[i]
+    if r > 20.0:
+        r = 20.0
+    elif r < -20.0:
+        r = -20.0
+    lam = math.exp(r)
+    if lam < 1e-12:
+        lam = 1e-12
+    g[i] = 1.0 - y[i] / lam
+    h[i] = 1.0
+
+
+@cuda.jit
+def _scale_gh_kernel(grad, hess, weight, n):
+    i = cuda.grid(1)
+    if i < n:
+        w = weight[i]
+        grad[i] *= w
+        hess[i] *= w
+
+
+def normal_step_gpu(raw_loc, raw_scale, y, *, natural: bool):
+    """In-place Normal (grad, hess) on device. Returns four device arrays."""
+    n = int(y.shape[0])
+    g_loc = cuda.device_array(n, dtype=np.float32)
+    h_loc = cuda.device_array(n, dtype=np.float32)
+    g_scale = cuda.device_array(n, dtype=np.float32)
+    h_scale = cuda.device_array(n, dtype=np.float32)
+    blocks, threads = _blocks_threads(n)
+    kern = _normal_natural_kernel if natural else _normal_ordinary_kernel
+    kern[blocks, threads](raw_loc, raw_scale, y, g_loc, h_loc, g_scale, h_scale, n)
+    return g_loc, h_loc, g_scale, h_scale
+
+
+def poisson_step_gpu(raw_rate, y, *, natural: bool):
+    """In-place Poisson (grad, hess) on device."""
+    n = int(y.shape[0])
+    g = cuda.device_array(n, dtype=np.float32)
+    h = cuda.device_array(n, dtype=np.float32)
+    blocks, threads = _blocks_threads(n)
+    kern = _poisson_natural_kernel if natural else _poisson_ordinary_kernel
+    kern[blocks, threads](raw_rate, y, g, h, n)
+    return g, h
+
+
+def scale_gh_gpu(grad, hess, weight) -> None:
+    """Multiply grad and hess by per-sample weights, in place."""
+    n = int(grad.shape[0])
+    blocks, threads = _blocks_threads(n)
+    _scale_gh_kernel[blocks, threads](grad, hess, weight, n)

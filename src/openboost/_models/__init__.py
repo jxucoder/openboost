@@ -33,6 +33,7 @@ from ._distributional import (
     NGBoostStudentT,
     NGBoostTweedie,
 )
+from ._formula import FormulaBoost
 from ._gam import OpenBoostGAM
 
 # Phase 15: Linear Leaf GBDT
@@ -45,6 +46,7 @@ from ._sklearn import (
     OpenBoostLinearLeafRegressor,
     OpenBoostRegressor,
 )
+from ._survival import WeibullAFT
 
 __all__ = [
     # Standard GBDT
@@ -82,4 +84,6 @@ __all__ = [
     # Phase 15: Linear Leaf GBDT
     "LinearLeafGBDT",
     "LinearLeafTree",
+    "FormulaBoost",
+    "WeibullAFT",
 ]

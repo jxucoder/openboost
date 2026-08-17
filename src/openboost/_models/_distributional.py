@@ -40,25 +40,20 @@ from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
-from .._array import BinnedArray, array
-from .._callbacks import (
-    Callback,
-    CallbackManager,
-    EarlyStopping,
-    TrainingState,
-    warn_if_early_stopping_without_eval_set,
-)
+from .._array import BinnedArray
+from .._callbacks import Callback
 from .._core._growth import TreeStructure
-from .._core._tree import fit_tree
 from .._distributions import (
     Distribution,
     DistributionOutput,
     Normal,
     get_distribution,
 )
+from .._objectives import DistributionObjective
 from .._persistence import PersistenceMixin
+from .._trainer import TrainerConfig, fit_boosting, predict_raw
 from .._utils import crps_empirical, crps_gaussian, interval_score, pinball_loss
-from .._validation import validate_eval_set, validate_sample_weight
+from .._validation import validate_sample_weight
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
@@ -184,7 +179,8 @@ class DistributionalGBDT(PersistenceMixin):
     X_binned_: BinnedArray | None = field(default=None, init=False, repr=False)
     _base_scores: dict[str, float] = field(default_factory=dict, init=False, repr=False)
     n_features_in_: int = field(default=0, init=False, repr=False)
-    
+    _use_natural_gradient: bool = field(default=False, init=False, repr=False)
+
     def fit(
         self,
         X: NDArray,
@@ -254,11 +250,8 @@ class DistributionalGBDT(PersistenceMixin):
                 f"Available: {', '.join(EVAL_METRICS)}."
             )
 
-        # Split optional (X, y, exposure) eval entries before validation
         eval_pairs, eval_exposures = _split_eval_exposures(eval_set)
 
-        # Resolve which raw parameter carries the log-exposure offset
-        # (raises ValueError for families without a log-link mean)
         exposure_param: str | None = None
         exposure_sign = 0.0
         needs_exposure = exposure is not None or any(
@@ -272,172 +265,56 @@ class DistributionalGBDT(PersistenceMixin):
             exposure = _validate_exposure(exposure, n_samples, context="fit")
             train_log_offset = (exposure_sign * np.log(exposure)).astype(np.float32)
 
-        # Bin features
-        if isinstance(X, BinnedArray):
-            self.X_binned_ = X
-        else:
-            self.X_binned_ = array(X, n_bins=self.n_bins)
+        objective = DistributionObjective(
+            self.distribution_,
+            natural=self._use_natural_gradient,
+            exposure_param=exposure_param,
+            exposure_sign=exposure_sign,
+        )
 
-        self.n_features_in_ = self.X_binned_.n_features
-
-        # Initialize tree storage
-        self.trees_ = {}
-        for param_name in self.distribution_.param_names:
-            self.trees_[param_name] = []
-
-        # Initialize raw predictions (in link space) using data statistics
-        init_params = self.distribution_.init_params(y)
-        raw_preds = {}
-
-        for param_name in self.distribution_.param_names:
-            raw_init = init_params[param_name]
-            self._base_scores[param_name] = float(raw_init)
-            raw_preds[param_name] = np.full(n_samples, raw_init, dtype=np.float32)
-
-        # Setup callbacks (early_stopping_rounds is sugar for EarlyStopping)
-        cb_list = list(callbacks) if callbacks else []
-        if early_stopping_rounds is not None:
-            cb_list.append(
-                EarlyStopping(patience=early_stopping_rounds, restore_best=True)
-            )
-        cb_manager = CallbackManager(cb_list)
-        state = TrainingState(model=self, n_rounds=self.n_trees)
-        cb_manager.on_train_begin(state)
-
-        eval_pairs = validate_eval_set(eval_pairs, self.X_binned_.n_features)
-        warn_if_early_stopping_without_eval_set(cb_list, eval_pairs)
-
-        # Per-eval-set state: binned features, targets, incrementally
-        # maintained raw scores, and optional log-exposure offset
-        eval_data = []
+        eval_sets = None
         if eval_pairs:
+            eval_sets = []
             for (X_e, y_e), exp_e in zip(eval_pairs, eval_exposures, strict=True):
-                X_e_binned = (
-                    X_e if isinstance(X_e, BinnedArray)
-                    else self.X_binned_.transform(X_e)
-                )
-                raw_e = {
-                    p: np.full(
-                        X_e_binned.n_samples, self._base_scores[p], dtype=np.float32
-                    )
-                    for p in self.distribution_.param_names
-                }
-                log_off_e = None
+                extra_e: dict = {}
                 if exp_e is not None:
-                    exp_e = _validate_exposure(
-                        exp_e, X_e_binned.n_samples, context="eval"
-                    )
-                    log_off_e = (exposure_sign * np.log(exp_e)).astype(np.float32)
-                eval_data.append((X_e_binned, y_e, raw_e, log_off_e))
+                    y_e_arr = np.asarray(y_e).ravel()
+                    exp_e = _validate_exposure(exp_e, len(y_e_arr), context="eval")
+                    extra_e["log_offset"] = (
+                        exposure_sign * np.log(exp_e)
+                    ).astype(np.float32)
+                eval_sets.append({"X": X_e, "y": y_e, "extra": extra_e})
 
-        self.evals_result_ = {
-            f'eval_{i}': {eval_metric: []} for i in range(len(eval_data))
-        }
-
-        # Training loop
-        for _round_idx in range(self.n_trees):
-            # Constrained params from raw scores (+ exposure offset)
-            params = self._constrained_params(
-                raw_preds, exposure_param, train_log_offset
+        def _score_eval(y_e, raw_e, extra_e):
+            params_e = objective.constrain(raw_e, extra_e)
+            return self._eval_metric_value(
+                y_e, params_e, eval_metric, quantiles, interval_alpha
             )
 
-            # Get gradients for each parameter
-            grads_dict = self._compute_gradients(y, params)
-
-            if sample_weight is not None:
-                # Weighted likelihood: the objective is sum_i w_i * NLL_i.
-                #
-                # Ordinary-gradient path (DistributionalGBDT): grad_i/hess_i
-                # are per-sample derivatives of NLL_i, so both scale linearly
-                # in w_i; the Newton leaf value -Σ w_i g_i / (Σ w_i h_i + λ)
-                # is then the correct weighted step.
-                #
-                # Natural-gradient path (NaturalBoost): under the weighted
-                # likelihood the per-sample Fisher information also scales by
-                # w_i, so the per-sample natural gradient
-                # (w_i F_i)^{-1} (w_i g_i) = F_i^{-1} g_i is weight-INVARIANT.
-                # The correct weighted natural-gradient aggregate is obtained
-                # by scaling the per-sample natural gradient (returned by
-                # _compute_gradients with unit hessians) by w_i, and scaling
-                # its unit hessian by w_i so leaf aggregation becomes the
-                # weighted mean -Σ w_i g̃_i / (Σ w_i + λ). Post-scaling both
-                # grad and hess by w_i therefore covers both paths.
-                grads_dict = {
-                    p: (
-                        (g * sample_weight).astype(np.float32),
-                        (h * sample_weight).astype(np.float32),
-                    )
-                    for p, (g, h) in grads_dict.items()
-                }
-
-            # Train one tree per parameter
-            for param_name in self.distribution_.param_names:
-                grad, hess = grads_dict[param_name]
-
-                tree = fit_tree(
-                    self.X_binned_,
-                    grad,
-                    hess,
-                    max_depth=self.max_depth,
-                    min_child_weight=self.min_child_weight,
-                    reg_lambda=self.reg_lambda,
-                    reg_alpha=self.reg_alpha,
-                    subsample=self.subsample,
-                    colsample_bytree=self.colsample_bytree,
-                )
-
-                self.trees_[param_name].append(tree)
-
-                # Update raw predictions (add tree prediction, as in standard GBDT)
-                # Tree is trained on gradients, so it outputs the negative gradient direction
-                tree_pred = tree(self.X_binned_)
-                if hasattr(tree_pred, 'copy_to_host'):
-                    tree_pred = tree_pred.copy_to_host()
-
-                raw_preds[param_name] += self.learning_rate * tree_pred
-
-                # Keep eval-set raw scores in sync (incremental, avoids
-                # re-running all trees each round)
-                for X_e_binned, _y_e, raw_e, _log_off_e in eval_data:
-                    pred_e = tree(X_e_binned)
-                    if hasattr(pred_e, 'copy_to_host'):
-                        pred_e = pred_e.copy_to_host()
-                    raw_e[param_name] += self.learning_rate * pred_e
-
-            # Evaluate ALL eval sets and record per-round history
-            last_metric = None
-            for i, (_X_e_binned, y_e, raw_e, log_off_e) in enumerate(eval_data):
-                params_e = self._constrained_params(
-                    raw_e, exposure_param, log_off_e
-                )
-                last_metric = self._eval_metric_value(
-                    y_e, params_e, eval_metric, quantiles, interval_alpha
-                )
-                self.evals_result_[f'eval_{i}'][eval_metric].append(last_metric)
-
-            # Callbacks
-            state.round_idx = _round_idx
-            if cb_manager.callbacks:
-                # Train loss: (weighted) mean NLL of the post-round params,
-                # matching the timing of the eval-set metrics. Recomputed from
-                # raw_preds because identity-link params alias raw_preds and
-                # were mutated in place by the tree updates above.
-                params_report = self._constrained_params(
-                    raw_preds, exposure_param, train_log_offset
-                )
-                state.train_loss = float(
-                    np.average(
-                        self.distribution_.nll(y, params_report),
-                        weights=sample_weight,
-                    )
-                )
-                if last_metric is not None:
-                    # Early stopping monitors the LAST eval set's metric
-                    state.val_loss = last_metric
-                if not cb_manager.on_round_end(state):
-                    break
-
-        cb_manager.on_train_end(state)
+        fit_boosting(
+            self,
+            objective,
+            X,
+            y,
+            config=TrainerConfig(
+                n_trees=self.n_trees,
+                max_depth=self.max_depth,
+                learning_rate=self.learning_rate,
+                min_child_weight=self.min_child_weight,
+                reg_lambda=self.reg_lambda,
+                reg_alpha=self.reg_alpha,
+                subsample=self.subsample,
+                colsample_bytree=self.colsample_bytree,
+                n_bins=self.n_bins,
+            ),
+            sample_weight=sample_weight,
+            extra={"log_offset": train_log_offset},
+            callbacks=callbacks,
+            early_stopping_rounds=early_stopping_rounds,
+            eval_sets=eval_sets,
+            eval_fn=_score_eval if eval_sets else None,
+            eval_metric_name=eval_metric,
+        )
         return self
 
     def _resolve_exposure_offset(self) -> tuple[str, float]:
@@ -550,35 +427,7 @@ class DistributionalGBDT(PersistenceMixin):
         Returns:
             Dictionary mapping param_name -> raw predictions
         """
-        if not self.trees_:
-            raise RuntimeError("Model not fitted. Call fit() first.")
-        
-        # Bin the data if needed, using training bin edges for consistency
-        if isinstance(X, BinnedArray):
-            X_binned = X
-        elif self.X_binned_ is not None:
-            # Use transform to apply training bin edges to new data
-            X_binned = self.X_binned_.transform(X)
-        else:
-            X_binned = array(X, n_bins=self.n_bins)
-        
-        n_samples = X_binned.n_samples
-        raw_preds = {}
-        
-        for param_name in self.distribution_.param_names:
-            # Start with base score
-            pred = np.full(n_samples, self._base_scores[param_name], dtype=np.float32)
-            
-            # Accumulate tree predictions
-            for tree in self.trees_[param_name]:
-                tree_pred = tree(X_binned)
-                if hasattr(tree_pred, 'copy_to_host'):
-                    tree_pred = tree_pred.copy_to_host()
-                pred += self.learning_rate * tree_pred
-            
-            raw_preds[param_name] = pred
-        
-        return raw_preds
+        return predict_raw(self, X)
     
     def predict_params(
         self,
@@ -792,7 +641,8 @@ class NaturalBoost(DistributionalGBDT):
     # Override defaults for NaturalBoost
     max_depth: int = 4  # Shallower trees often work better
     learning_rate: float = 0.1
-    
+    _use_natural_gradient: bool = field(default=True, init=False, repr=False)
+
     def _compute_gradients(
         self,
         y: NDArray,
