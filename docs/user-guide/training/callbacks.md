@@ -2,6 +2,11 @@
 
 Control training with callbacks for early stopping, logging, checkpointing, and more.
 
+NaturalBoost, FormulaBoost, WeibullAFT, and the mean-regression models
+all accept `callbacks=` and `eval_set=` on `fit()`.
+`FormulaBoost` eval tuples are `(X, y, model_input)`; `WeibullAFT` tuples
+are `(X, y[, event])`.
+
 ## Available Callbacks
 
 | Callback | Purpose |

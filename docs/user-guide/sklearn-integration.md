@@ -1,6 +1,8 @@
 # sklearn Integration
 
-OpenBoost provides sklearn-compatible wrappers for seamless integration with scikit-learn pipelines.
+OpenBoost provides sklearn-compatible wrappers for mean-regression GBDT
+and NaturalBoost. `FormulaBoost` and `WeibullAFT` are core APIs (no
+sklearn estimator yet); use them directly.
 
 ## Available Wrappers
 

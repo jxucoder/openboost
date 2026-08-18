@@ -1,6 +1,12 @@
 # Migrating from XGBoost to OpenBoost
 
-This guide helps you transition from XGBoost to OpenBoost with minimal changes.
+Stay on XGBoost or LightGBM for ordinary mean regression. They are
+faster C++. Switch to OpenBoost for **distributional regression**
+(`F(y | x)`), a **varying-coefficient** formula `y = f(θ(z), x)`, or a
+Weibull AFT whose shape varies with covariates.
+
+This page maps XGBoost APIs onto OpenBoost for the overlap, then shows the
+three things XGBoost cannot express.
 
 ## Parameter Mapping
 
@@ -219,41 +225,77 @@ joblib.dump(model, 'model.joblib')
 loaded = joblib.load('model.joblib')
 ```
 
-## Feature Comparison
+## Feature comparison
 
-| Feature | XGBoost | OpenBoost |
-|---------|---------|-----------|
-| GPU Support | ✅ | ✅ |
-| Custom Loss | ⚠️ (requires Python wrapper) | ✅ (native Python) |
-| Uncertainty | ❌ | ✅ (NaturalBoost) |
-| Interpretable GAM | ❌ | ✅ (OpenBoostGAM) |
-| Linear Leaves | ❌ | ✅ (LinearLeafGBDT) |
-| DART | ✅ | ✅ |
-| Growth Strategies | Level-wise | Level-wise, Leaf-wise, Symmetric |
-| GOSS Sampling | ❌ (use LightGBM) | ✅ |
-| Pure Python | ❌ (C++) | ✅ |
+| | XGBoost | OpenBoost |
+|---|---|---|
+| Point-estimate GBDT | Fast C++, the default choice | Works; not the reason to switch |
+| GPU trees | Yes | Yes |
+| Custom loss | Python `obj` callback; **diagonal Hessian only** | Native `(grad, hess)`; FormulaBoost does **full GGN** |
+| Distributional / NGBoost-style | No | `NaturalBoost*` |
+| Formula `y = f(θ, x)` with coupled params | Diagonal custom obj only | `FormulaBoost(precond="full")` |
+| Survival AFT | Location only; scale is a **global** hyperparameter | `WeibullAFT` boosts `λ(z)` **and** `k(z)` |
+| Interpretable GAM | No (use SHAP) | `OpenBoostGAM` |
+| All Python | No | Yes (~20K lines) |
 
-## What OpenBoost Does Better
+## Where OpenBoost adds something
 
-### 1. Uncertainty Quantification
+### 1. A full distribution
 
 ```python
-# XGBoost: Just point predictions
-pred = xgb_model.predict(X_test)  # Single number
+# XGBoost: a point
+pred = xgb_model.predict(X_test)
 
-# OpenBoost: Full distributions
+# OpenBoost: parameters of a distribution
 model = ob.NaturalBoostNormal(n_trees=100)
 model.fit(X_train, y_train)
 mean = model.predict(X_test)
-lower, upper = model.predict_interval(X_test)  # 90% interval
-samples = model.sample(X_test, n_samples=1000)  # Monte Carlo
+lo, hi = model.predict_interval(X_test, alpha=0.1)
+samples = model.sample(X_test, n_samples=1000)
 ```
 
-### 2. Custom Loss Functions
+On the UCI datasets measured so far, NLL is tied or better vs NGBoost, and on
+an A100 NaturalBoost fits in seconds at sizes where CPU-only NGBoost needs
+most of an hour. See [Benchmarks](../benchmarks.md) for the caveats.
+
+### 2. A formula with off-diagonal GGN
+
+XGBoost custom objectives cannot represent the off-diagonal of `JᵀJ`.
+That term is what recovers coupled parameters (`b(z)` on the sales curve:
+corr 0.877 vs 0.599). Black-box XGBoost also cannot extrapolate in the
+structural input `x`. FormulaBoost is ~21x better there.
 
 ```python
-# XGBoost: Requires Python callback wrapper, tricky to get right
-# OpenBoost: Native Python, just return (grad, hess)
+def sales(theta, x):
+    a, b = theta
+    return a * x ** (1.0 / (1.0 + np.exp(-b * x)))
+
+model = ob.FormulaBoost(
+    formula=sales, n_params=2, links=("log", "identity"),
+    param_names=("a", "b"), precond="full",
+)
+model.fit(Z, y, model_input=x)
+params = model.predict_params(Z)   # the actual deliverable
+```
+
+### 3. Per-row Weibull shape
+
+```python
+# XGBoost AFT: one global scale hyperparameter, same k for every row
+# OpenBoost: both λ(z) and k(z) are ensembles
+model = ob.WeibullAFT(n_trees=300, max_depth=3)
+model.fit(Z, time, event=observed)
+params = model.predict_params(Z)           # {scale, shape}
+s = model.predict_survival(Z, t=12.0)
+```
+
+On a varying-shape DGP, shape correlation is 0.997; XGBoost has no
+per-row `k` to correlate. Censored NLL is better (0.761 vs 0.830);
+C-index is close (0.680 vs 0.672).
+
+### 4. A native Python custom loss (point-estimate)
+
+```python
 def my_loss(pred, y):
     grad = pred - y
     hess = np.ones_like(pred)
@@ -262,36 +304,13 @@ def my_loss(pred, y):
 model = ob.GradientBoosting(loss=my_loss)
 ```
 
-### 3. Interpretable Models
+## What XGBoost does better
 
-```python
-# XGBoost: SHAP values (post-hoc, expensive)
-# OpenBoost: Inherently interpretable GAM
-gam = ob.OpenBoostGAM(n_rounds=500)
-gam.fit(X_train, y_train)
-gam.plot_shape_function(0, feature_name="age")
-```
+- **Point-estimate speed on CPU.** Optimized C++. Use it for MSE/logloss.
+- **Distributed training.** Spark / Dask / dedicated cluster runtimes.
+- **Ecosystem.** More examples, more Stack Overflow, more production war stories.
 
-### 4. Code Readability
-
-```python
-# XGBoost: 200K+ lines of C++
-# OpenBoost: ~6K lines of Python you can actually read and modify
-```
-
-## What XGBoost Does Better
-
-### 1. Raw Speed on CPU
-
-XGBoost is highly optimized C++ and will be faster on CPU for very large datasets.
-
-### 2. Distributed Training (Spark, Dask)
-
-XGBoost has mature distributed training support.
-
-### 3. Community and Ecosystem
-
-XGBoost has more examples, tutorials, and community support.
+If the job is "fit a GBDT, get a number," do not migrate.
 
 ## Migration Checklist
 
@@ -311,22 +330,23 @@ You can use both libraries during migration:
 import xgboost as xgb
 import openboost as ob
 
-# Keep XGBoost for existing models
+# Keep XGBoost for existing point-estimate models
 xgb_model = xgb.XGBRegressor()
 xgb_model.fit(X_train, y_train)
-
-# Try OpenBoost for new features
-ob_model = ob.NaturalBoostNormal()  # Uncertainty!
-ob_model.fit(X_train, y_train)
-
-# Compare predictions
 xgb_pred = xgb_model.predict(X_test)
+
+# OpenBoost for F(y | x)
+ob_model = ob.NaturalBoostNormal()
+ob_model.fit(X_train, y_train)
 ob_pred = ob_model.predict(X_test)
-print(f"Correlation: {np.corrcoef(xgb_pred, ob_pred)[0,1]:.4f}")
+print(f"Correlation: {np.corrcoef(xgb_pred, ob_pred)[0, 1]:.4f}")
 ```
 
-## Getting Help
+## Getting help
 
-- [Quickstart Guide](../getting-started/quickstart.md) - Get started with OpenBoost
-- [Uncertainty Tutorial](../tutorials/uncertainty.md) - Learn NaturalBoost
-- [Custom Loss Tutorial](../tutorials/custom-loss.md) - Define your own objectives
+- [Quickstart](../getting-started/quickstart.md)
+- [How it works](../user-guide/how-it-works.md)
+- [FormulaBoost](../user-guide/formulaboost.md)
+- [Weibull AFT](../user-guide/survival.md)
+- [Uncertainty tutorial](../tutorials/uncertainty.md)
+- [Benchmarks](../benchmarks.md)

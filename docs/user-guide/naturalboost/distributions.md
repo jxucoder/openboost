@@ -1,6 +1,9 @@
 # Distributions
 
-NaturalBoost supports multiple probability distributions for different data types.
+NaturalBoost families. Pick one that matches the support of `y`. For a
+formula that is not a distribution, use
+[FormulaBoost](../formulaboost.md). For censored survival, use
+[WeibullAFT](../survival.md).
 
 ## Choosing a Distribution
 

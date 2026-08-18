@@ -1,6 +1,6 @@
 """Survival capability benchmark: Weibull AFT with covariate-dependent shape.
 
-The second capability proof for "Boost every parameter". Data is Weibull AFT
+Capability proof beyond NGBoost's model class. Data is Weibull AFT
 where BOTH the scale lambda(z) AND the shape k(z) depend on covariates:
 
     T ~ Weibull(scale=lambda(z), shape=k(z)),  right-censored at ~35%.

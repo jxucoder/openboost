@@ -1,6 +1,16 @@
-# NaturalBoost Overview
+# NaturalBoost
 
-NaturalBoost predicts full probability distributions instead of just point estimates, giving you uncertainty bounds on your predictions.
+NaturalBoost is **distributional regression** via boosting: each
+parameter of `F(y | x)` (`loc`, `scale`, …) is its own ensemble, stepped
+with natural gradient. That is the
+[GAMLSS](https://doi.org/10.1111/j.1467-9876.2005.00510.x) / NGBoost
+model class, with a GPU histogram-tree path.
+
+For a structural formula that is not a distribution, use
+[FormulaBoost](../formulaboost.md) (varying-coefficient). For
+right-censored Weibull survival, use
+[WeibullAFT](../survival.md). Shared engine:
+[How it works](../how-it-works.md).
 
 ## Why Uncertainty Matters
 
@@ -81,33 +91,22 @@ prob_exceed = np.mean(samples > threshold, axis=0)  # P(Y > 10)
 q90 = np.percentile(samples, 90, axis=0)
 ```
 
-## Performance vs NGBoost
+## vs NGBoost
 
-Measured head-to-head against NGBoost 0.5.11 (both with a Normal distribution,
-natural gradient, and an identical budget: 500 boosting rounds, learning rate 0.03,
-depth-3 trees, seed 42, same train/test splits). This is a CPU-vs-CPU comparison —
-NGBoost is CPU-only, and OpenBoost's GPU tree path is deliberately **not** measured
-here. NLL and CRPS use the same closed-form Gaussian formulas for both models.
-Full configs, metrics, and library versions are committed in
-`benchmarks/results/ngboost_comparison_20260720.json`. Reproduce with:
+On GPU (Modal A100, 90K rows, heteroscedastic Normal) NaturalBoost fits in
+2.21s against NGBoost's 2716s, with NLL tied (2.108 vs 2.102). NGBoost has no
+GPU implementation. This is one configuration from an early benchmark run, not
+a settled result.
 
-```bash
-OPENBOOST_BACKEND=cpu uv run --with ngboost python benchmarks/bench_ngboost_comparison.py
-```
+On the NGBoost-paper UCI suite (20 paired splits, same budget) OpenBoost is
+tied-or-better on every dataset that completed; significant NLL wins on
+kin8nm, protein, and california; no significant loss.
 
-| Dataset | Fit time OB / NGB | Test NLL OB / NGB | CRPS OB / NGB | RMSE OB / NGB |
-|---------|-------------------|-------------------|---------------|---------------|
-| Synthetic heteroscedastic, 10K | **16.4s** / 18.8s (1.15x) | **2.124** / 2.134 | **1.169** / 1.174 | **2.145** / 2.149 |
-| Synthetic heteroscedastic, 50K | **74.1s** / 95.3s (1.29x) | 2.122 / **2.116** | 1.184 / **1.177** | 2.165 / **2.152** |
-| California Housing, 20.6K | 30.6s / **25.0s** (0.82x) | **0.572** / 0.575 | **0.255** / 0.256 | **0.518** / 0.521 |
+On CPU the two libraries are ~parity (0.8–1.3×). The speed claim is the
+GPU tree path, not a faster CPU NGBoost clone.
 
-The honest read: on CPU the two libraries are comparable. NaturalBoost's
-histogram-based trees are modestly faster on the larger synthetic dataset (1.29x at
-50K samples), while NGBoost was faster on California Housing (0.82x). Prediction
-quality is essentially tied — NGBoost slightly wins NLL/CRPS/RMSE on the 50K
-synthetic dataset; NaturalBoost slightly wins on the other two. NaturalBoost's main
-differentiators are the GPU tree path and the wider distribution/custom-distribution
-support, not raw CPU speed.
+Full tables, caveats, and reproduce commands:
+[Benchmarks](../../benchmarks.md).
 
 ## Best Practices
 
@@ -122,3 +121,11 @@ model = ob.NaturalBoostNormal(
     learning_rate=0.05,  # Lower LR
 )
 ```
+
+## Related
+
+- [How it works](../how-it-works.md): the shared engine
+- [FormulaBoost](../formulaboost.md): when `f` is a formula, not a distribution
+- [Weibull AFT](../survival.md): censored survival
+- [Custom distributions](custom-distributions.md)
+- [Benchmarks](../../benchmarks.md)

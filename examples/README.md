@@ -1,213 +1,94 @@
 # OpenBoost Examples
 
-This directory contains runnable examples demonstrating OpenBoost's capabilities.
-
-## Quick Start
+Runnable scripts. Distributional regression first; mean-regression GBDT after.
 
 ```bash
-# Run any example
-uv run python examples/basic_regression.py
-
-# Or with standard Python
-python examples/basic_regression.py
+uv run python examples/uncertainty_quantification.py
 ```
 
-## Examples Overview
+## Overview
 
-| Example | Description | Key Features |
-|---------|-------------|--------------|
-| [basic_regression.py](basic_regression.py) | Standard gradient boosting for regression | `GradientBoosting`, callbacks, feature importance |
-| [binary_classification.py](binary_classification.py) | Binary classification with probability outputs | `OpenBoostClassifier`, ROC AUC, calibration |
-| [multiclass_classification.py](multiclass_classification.py) | Multi-class classification with softmax | `MultiClassGradientBoosting`, confusion matrix |
-| [uncertainty_quantification.py](uncertainty_quantification.py) | Probabilistic predictions with uncertainty | `NaturalBoostNormal`, prediction intervals, CRPS |
-| [kaggle_insurance.py](kaggle_insurance.py) | Insurance claims with Tweedie distribution | `NaturalBoostTweedie`, zero-inflated data |
-| [kaggle_sales.py](kaggle_sales.py) | Sales forecasting with Negative Binomial | `NaturalBoostNegBin`, overdispersed counts |
-| [custom_loss.py](custom_loss.py) | Custom loss functions | Quantile, Huber, asymmetric losses |
-| [gpu_training.py](gpu_training.py) | GPU acceleration guide | Backend selection, benchmarking |
-| [gam_explainability.py](gam_explainability.py) | Interpretable GAM models | `OpenBoostGAM`, shape functions |
-| [sklearn_pipeline.py](sklearn_pipeline.py) | sklearn Pipeline integration | `Pipeline`, `GridSearchCV`, preprocessing |
-| [model_persistence.py](model_persistence.py) | Saving and loading models | `save()`, `load()`, checkpointing |
+| Example | Description | Key APIs |
+|---------|-------------|----------|
+| [uncertainty_quantification.py](uncertainty_quantification.py) | Full distribution, intervals, CRPS | `NaturalBoostNormal` |
+| [kaggle_insurance.py](kaggle_insurance.py) | Zero-inflated claims | `NaturalBoostTweedie` |
+| [kaggle_sales.py](kaggle_sales.py) | Overdispersed counts | `NaturalBoostNegBin` |
+| [basic_regression.py](basic_regression.py) | Point-estimate regression | `GradientBoosting` |
+| [binary_classification.py](binary_classification.py) | Binary classifier | `OpenBoostClassifier` |
+| [multiclass_classification.py](multiclass_classification.py) | Softmax multi-class | `MultiClassGradientBoosting` |
+| [custom_loss.py](custom_loss.py) | Quantile / Huber / asymmetric | custom `loss=` |
+| [gpu_training.py](gpu_training.py) | Backend selection | `set_backend` |
+| [gam_explainability.py](gam_explainability.py) | Interpretable main effects | `OpenBoostGAM` |
+| [sklearn_pipeline.py](sklearn_pipeline.py) | `Pipeline` / `GridSearchCV` | `OpenBoostRegressor` |
+| [model_persistence.py](model_persistence.py) | `save` / `load` | `PersistenceMixin` |
 
-## Detailed Descriptions
+FormulaBoost and WeibullAFT do not have example scripts yet; copy from the
+docs:
 
-### Basic Regression (`basic_regression.py`)
+- [FormulaBoost](https://jxucoder.github.io/openboost/user-guide/formulaboost/)
+- [Weibull AFT](https://jxucoder.github.io/openboost/user-guide/survival/)
+- [Quickstart](https://jxucoder.github.io/openboost/getting-started/quickstart/)
 
-Learn the fundamentals of OpenBoost with a standard regression task.
+## Uncertainty (`uncertainty_quantification.py`)
 
-**Topics covered:**
-- Training `GradientBoosting` with various hyperparameters
-- Using callbacks (`EarlyStopping`, `Logger`)
-- Computing feature importances
-- sklearn-compatible API with `OpenBoostRegressor`
-- Cross-validation utilities
+NaturalBoost: intervals, quantiles, sampling, CRPS / NLL, heteroscedastic
+noise.
 
-### Binary Classification (`binary_classification.py`)
+## Insurance (`kaggle_insurance.py`)
 
-Train a binary classifier with probability calibration analysis.
+`NaturalBoostTweedie` for zero-inflated positive claims. Risk
+segmentation, P(large claim), vs a plain MSE GBDT.
 
-**Topics covered:**
-- Binary classification with `logloss` objective
-- `OpenBoostClassifier` sklearn wrapper
-- ROC AUC, precision, recall, F1 metrics
-- Calibration analysis (Brier score, ECE)
-- Out-of-fold probability predictions
+## Sales (`kaggle_sales.py`)
 
-### Uncertainty Quantification (`uncertainty_quantification.py`)
+`NaturalBoostNegBin` for overdispersed counts. Service levels, vs Poisson.
 
-The power of NaturalBoost: full probability distributions, not just point estimates!
+## Point-estimate GBDT
 
-**Topics covered:**
-- Training `NaturalBoostNormal` for probabilistic predictions
-- Prediction intervals (90%, 80%, 50%)
-- Quantile predictions
-- Sampling from predicted distributions
-- Proper scoring rules (CRPS, NLL)
-- Heteroscedastic uncertainty
+`basic_regression.py`, `binary_classification.py`,
+`multiclass_classification.py` cover `GradientBoosting` / sklearn
+wrappers, callbacks, and feature importance. Use these when you want a
+number, not `F(y | x)`. For production MSE/logloss at scale,
+XGBoost / LightGBM are still faster C++.
 
-### Kaggle Insurance (`kaggle_insurance.py`)
+## Custom loss (`custom_loss.py`)
 
-Tweedie distribution for insurance claim prediction (like Porto Seguro, Allstate).
+Quantile, Huber, asymmetric, log-cosh. Each returns `(grad, hess)`. For a
+**formula** with coupled parameters, this is the wrong tool; use
+FormulaBoost (full GGN), not a diagonal custom objective.
 
-**Topics covered:**
-- `NaturalBoostTweedie` for zero-inflated positive continuous data
-- Risk segmentation analysis
-- Probability of large claims
-- Individual risk assessment
-- Comparison with simple MSE model
+## GPU (`gpu_training.py`)
 
-### Kaggle Sales (`kaggle_sales.py`)
+Backend detection, pinning, and a small wall-clock check. Headline A100
+numbers live in [benchmarks](https://jxucoder.github.io/openboost/benchmarks/).
 
-Negative Binomial for sales/demand forecasting (like Rossmann, Bike Sharing).
+## GAM (`gam_explainability.py`)
 
-**Topics covered:**
-- `NaturalBoostNegBin` for overdispersed count data
-- Inventory planning (service levels)
-- Day-of-week and promotional effects
-- Probability of high demand
-- Comparison with Poisson model
-
-### Custom Loss Functions (`custom_loss.py`)
-
-Build any loss function you need!
-
-**Topics covered:**
-- Quantile regression for different percentiles
-- Huber loss for outlier robustness
-- Asymmetric loss for business costs
-- Log-cosh smooth approximation
-- How to write custom loss functions
-
-### GPU Training (`gpu_training.py`)
-
-Get the most out of GPU acceleration.
-
-**Topics covered:**
-- Automatic GPU detection
-- Manual backend selection
-- Performance benchmarking
-- Best practices for GPU training
-- Multi-GPU training overview
-
-### GAM Explainability (`gam_explainability.py`)
-
-Interpretable machine learning with `OpenBoostGAM`.
-
-**Topics covered:**
-- Training interpretable GAM models
-- Visualizing shape functions
-- Per-feature contribution analysis
-- Explaining individual predictions
-- Trade-offs vs black-box models
+Main-effect shape functions, per-feature contributions.
 
 ## Requirements
 
-All examples work with the base OpenBoost installation:
-
 ```bash
-pip install openboost
-```
-
-Some examples benefit from optional dependencies:
-
-```bash
-# For sklearn integration examples
-pip install scikit-learn
-
-# For visualization
-pip install matplotlib
-
-# For GPU examples
-pip install numba  # CUDA support included
-```
-
-## Running Examples
-
-### Local Development
-
-```bash
-# From the repository root
-cd openboost
-
-# Run with uv
-uv run python examples/basic_regression.py
-
-# Or standard Python
-python examples/basic_regression.py
-```
-
-### In a Notebook
-
-```python
-# Copy-paste code from examples into Jupyter/Colab cells
-import openboost as ob
-
-model = ob.GradientBoosting(n_trees=100)
-model.fit(X_train, y_train)
-```
-
-### On Cloud (Modal, etc.)
-
-```python
-# Examples work on cloud GPU instances
-import modal
-
-app = modal.App()
-
-@app.function(gpu="A100")
-def train_model():
-    import openboost as ob
-    # ... example code ...
+pip install --pre openboost
+pip install scikit-learn matplotlib   # sklearn + plots
+pip install --pre "openboost[cuda]"   # GPU example
 ```
 
 ## Tips
 
-1. **Start simple**: Begin with `basic_regression.py` to understand the API
-2. **Check GPU**: Run `gpu_training.py` to verify GPU setup
-3. **Explore uncertainty**: `uncertainty_quantification.py` shows NaturalBoost's unique value
-4. **For Kaggle**: `kaggle_insurance.py` and `kaggle_sales.py` are ready-to-adapt templates
-5. **Custom needs**: `custom_loss.py` shows how to extend OpenBoost
+1. Start with `uncertainty_quantification.py` if you care about intervals.
+2. Confirm CUDA with `gpu_training.py` (`ob.is_cuda()`).
+3. Insurance / sales examples are the distribution-family templates.
+4. `custom_loss.py` is for point-estimate objectives; FormulaBoost is for
+   `y = f(θ, x)`.
 
 ## Troubleshooting
 
-**Example won't run?**
-- Ensure OpenBoost is installed: `pip install openboost`
-- For sklearn examples: `pip install scikit-learn`
+**Import errors.** `pip install --pre openboost` (without `--pre` you get
+the older stable release).
 
-**GPU not detected?**
-- Check CUDA installation: `nvidia-smi`
-- Ensure numba is installed: `pip install numba`
-- See `gpu_training.py` for debugging tips
+**GPU not detected.** `nvidia-smi`, then
+`python -c "from numba import cuda; print(list(cuda.gpus))"`.
 
-**Plots not showing?**
-- Install matplotlib: `pip install matplotlib`
-- In headless environments, plots save to files
-
-## Contributing
-
-Have a cool example to share? PRs welcome!
-
-Guidelines:
-- Self-contained (generates synthetic data or uses sklearn datasets)
-- Well-commented
-- Demonstrates a clear use case
-- Follows existing style
+**Headless plots.** Examples write figures to files when no display is
+available.

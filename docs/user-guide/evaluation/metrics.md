@@ -50,7 +50,8 @@ weighted_auc = ob.roc_auc_score(y_true, y_proba, sample_weight=weights)
 
 ## Probabilistic Metrics
 
-For NaturalBoost and distributional models:
+For NaturalBoost, FormulaBoost (via residuals / parameter recovery), and
+WeibullAFT (censored NLL):
 
 ```python
 import openboost as ob

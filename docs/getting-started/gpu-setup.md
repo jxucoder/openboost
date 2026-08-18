@@ -1,87 +1,103 @@
 # GPU Setup
 
-OpenBoost automatically detects and uses CUDA GPUs when available.
+OpenBoost uses CUDA for histogram building and tree construction.
+NaturalBoost, FormulaBoost, and WeibullAFT share that tree path. Some
+objective math still runs on the host (FormulaBoost GGN today; LogNormal /
+digamma families). Trees are the expensive part at scale.
 
-## Verify GPU Detection
+## Verify detection
 
 ```python
 import openboost as ob
 
-print(f"Backend: {ob.get_backend()}")  # "cuda" or "cpu"
-print(f"Using GPU: {ob.is_cuda()}")    # True if GPU active
+print(ob.get_backend())   # "cuda" or "cpu"
+print(ob.is_cuda())       # True if a GPU is active
 ```
 
-## Manual Backend Selection
+Install the extra first: `pip install --pre "openboost[cuda]"`.
+
+## Pin a backend
 
 ```python
 import openboost as ob
 
-# Force CPU (useful for debugging or comparison)
-ob.set_backend("cpu")
-
-# Force GPU
+ob.set_backend("cpu")    # debug / comparison
 ob.set_backend("cuda")
 
-# Or use environment variable
+# Or:
 # export OPENBOOST_BACKEND=cuda
 ```
 
-## GPU Performance
+`backend_context("cpu")` is a temporary switch that restores the previous
+backend on exit.
 
-GPU acceleration provides significant speedups for larger datasets:
+## What the A100 numbers actually are
 
-| Dataset Size | Typical Speedup |
-|--------------|-----------------|
-| <5K samples | ~1x (CPU overhead dominates) |
-| 5K-10K | 2-7x |
-| 25K+ | 2-3x |
-| 100K+ | 5-10x |
+NaturalBoost vs NGBoost, heteroscedastic Normal, 80 features, 500 trees,
+Modal A100. NGBoost has **no GPU implementation**, so this is GPU OpenBoost
+against CPU NGBoost, which is the comparison that exists in the world.
 
-!!! tip "Best practices for GPU"
-    - Ensure data is `float32` (not `float64`)
-    - Use larger datasets (GPU overhead not worth it for <5K samples)
-    - GPU shows best speedup at 10K+ samples
+| n_train | OpenBoost (A100) | NGBoost (CPU) | speedup |
+|--------:|-----------------:|--------------:|--------:|
+| 45K | 3.01s | 1414s | 470× |
+| 90K | 2.21s | 2716s | **1229×** |
+| 450K | 5.40s | skipped (hours) | n/a |
+| 900K | 6.94s | skipped | n/a |
 
-## Multi-GPU Training
+NLL is tied at every size that both ran. Full tables:
+[Benchmarks](../benchmarks.md).
+
+!!! tip "When GPU helps"
+    Histogram trees win at tens of thousands of rows and up. Below ~5K
+    samples, kernel launch overhead often matches CPU. Use `float32`
+    features. Missing values and categoricals fall back from the
+    GPU-native builder to the hybrid path (warning emitted).
+
+On CPU, NaturalBoost and NGBoost are ~parity (0.8–1.3×). Do not quote the
+A100 ratio as a CPU claim.
+
+## FormulaBoost and WeibullAFT on GPU
+
+Both use GPU trees. FormulaBoost's GGN (finite-difference Jacobian +
+`K×K` solve) currently runs on the host; at 200K rows full GGN still beat
+an XGBoost custom objective (17s vs 20s on A100). WeibullAFT's expected
+Fisher step is cheap (`2×2` per row).
+
+## Multi-GPU
 
 ```python
 import openboost as ob
 
-# Use multiple GPUs with Ray (requires ray[default])
 model = ob.GradientBoosting(n_trees=100, n_gpus=4)
 model.fit(X, y)
 
-# Or specify exact GPU devices
 model = ob.GradientBoosting(n_trees=100, devices=[0, 2])
 model.fit(X, y)
 ```
 
+Requires `pip install --pre "openboost[distributed]"` (Ray).
+NaturalBoost / FormulaBoost / WeibullAFT currently train on one GPU.
+
 ## Requirements
 
-- NVIDIA GPU with CUDA Compute Capability 3.5+
-- CUDA Toolkit 11.0+ or 12.0+
-- Numba 0.60+ (`pip install numba`)
+- NVIDIA GPU, CUDA Compute Capability 3.5+
+- CUDA Toolkit 11 or 12
+- `numba-cuda>=0.23`
 
 ## Troubleshooting
 
-### Training seems slow on GPU
+**Training seems slow on GPU.** Features should be `float32`. Tiny datasets
+do not amortize kernel launch. Confirm `ob.is_cuda()` is True.
 
-- Ensure data is `float32` (not `float64`)
-- Use larger datasets (GPU overhead not worth it for <5K samples)
-- GPU shows best speedup at 10K+ samples
+**CUDA not detected.**
 
-### Model trained on GPU, loading on CPU machine
+1. `nvidia-smi`
+2. `python -c "from numba import cuda; print(list(cuda.gpus))"`
+3. Reinstall `openboost[cuda]` against the CUDA version on the machine
+
+**Trained on GPU, loading on CPU.** Saved models are backend-agnostic.
 
 ```python
-# Models are saved in a backend-agnostic format
 model.save("model.joblib")
-
-# Load on any machine (CPU or GPU)
-loaded = ob.GradientBoosting.load("model.joblib")
+loaded = ob.NaturalBoostNormal.load("model.joblib")  # CPU or GPU
 ```
-
-### CUDA not detected
-
-1. Check CUDA installation: `nvcc --version`
-2. Check Numba can see GPU: `python -c "from numba import cuda; print(cuda.gpus)"`
-3. Ensure compatible CUDA version with Numba

@@ -1,6 +1,9 @@
 # Custom Loss Functions
 
-OpenBoost lets you define any loss function in Python. No C++, no recompilation.
+Point-estimate custom objectives: you return `(grad, hess)` in Python, no
+C++. That Hessian is **diagonal**. If the model is a formula with coupled
+parameters, use [FormulaBoost](../user-guide/formulaboost.md)
+(`precond="full"`) instead of rolling an XGBoost-style custom objective.
 
 ## How Gradient Boosting Works
 
@@ -347,7 +350,7 @@ OpenBoost includes these losses out of the box:
 | Huber | `'huber'` | Outlier-robust |
 | Quantile | `'quantile'` | Quantile regression |
 | LogLoss | `'logloss'` | Binary classification |
-| Softmax | (automatic) | Multi-class — used internally by `MultiClassGradientBoosting`, not a `loss=` string |
+| Softmax | (automatic) | Multi-class, used internally by `MultiClassGradientBoosting`, not a `loss=` string |
 | Poisson | `'poisson'` | Count data |
 | Gamma | `'gamma'` | Positive continuous |
 | Tweedie | `'tweedie'` | Zero-inflated positive |
@@ -361,5 +364,6 @@ model = ob.GradientBoosting(n_trees=100, loss='tweedie', tweedie_rho=1.5)
 
 ## Next Steps
 
-- [Uncertainty Quantification](uncertainty.md) - Probabilistic predictions
-- [Migration from XGBoost](../migration/from-xgboost.md) - Switching from XGBoost
+- [FormulaBoost](../user-guide/formulaboost.md): formula parameters, full GGN
+- [Uncertainty Quantification](uncertainty.md)
+- [Migration from XGBoost](../migration/from-xgboost.md)
