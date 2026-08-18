@@ -5,14 +5,25 @@ build-backend = "hatchling.build"
 [project]
 name = "openboost"
 version = "1.0.0rc1"
-description = "Hackable gradient boosting platform: probabilistic predictions, interpretable GAMs, and custom algorithms in readable Python, with CPU and CUDA backends"
+description = "GPU gradient boosting for distributional regression and varying-coefficient models"
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
 authors = [
     { name = "J. Xu" }
 ]
-keywords = ["gradient-boosting", "gbdt", "gpu", "cuda", "machine-learning"]
+keywords = [
+    "distributional-regression",
+    "varying-coefficient",
+    "gamlss",
+    "natural-gradient",
+    "probabilistic",
+    "survival",
+    "gbdt",
+    "gpu",
+    "cuda",
+    "machine-learning",
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",

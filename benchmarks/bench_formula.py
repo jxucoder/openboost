@@ -1,4 +1,4 @@
-"""Formula capability benchmark: the yardstick for "Boost every parameter".
+"""Formula capability benchmark: varying-coefficient FormulaBoost vs baselines.
 
 FormulaBoost fits a user formula ``y ~ f(theta(z), x)`` where each parameter
 surface ``theta_k(z)`` is its own boosting ensemble and ``x`` enters only

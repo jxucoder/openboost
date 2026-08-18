@@ -7,8 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `FormulaBoost`: boost parameters of a user formula `y = f(θ, x)` with
+  finite-difference Jacobian and damped GGN (`precond='full'|'diag'|'plain'`).
+- `WeibullAFT`: right-censored Weibull AFT that boosts both scale `λ(z)`
+  and shape `k(z)` using expected-Fisher natural gradient.
+- Unified `fit_boosting` trainer and `Objective` protocol shared by
+  NaturalBoost, FormulaBoost, and WeibullAFT.
+- Capability benchmarks `benchmarks/bench_formula.py` and
+  `benchmarks/bench_survival.py`; probabilistic speed/quality suite
+  `benchmarks/bench_probabilistic.py`.
+
 ### Changed
 
+- Documentation and package description framed as distributional
+  regression (GAMLSS / NGBoost) and varying-coefficient models: README,
+  docs home, quickstart, GPU setup, NaturalBoost guide, XGBoost
+  migration, and a new benchmarks page. Headline numbers: 1229× vs
+  NGBoost on A100 at 90K (NLL tied); FormulaBoost ~21× better
+  extrapolation than black-box GBDT; WeibullAFT recovers `k(z)`.
+- Performance documentation now quotes only results backed by committed
+  benchmark runs (Modal A100 speed/capability, CPU UCI quality).
 - Made multi-round `fit_trees_batch` recompute gradients and hessians from targets.
 - Consolidated batch configuration and training state into one canonical module.
 - Added manually triggered CUDA verification on Modal GPUs.
@@ -16,8 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cannot trace a user NLL, instead of returning placeholder gradients.
 - Unsupported `sample_weight` inputs now raise on CUDA, distributed, and
   multi-GPU training paths instead of being ignored.
-- Performance documentation now quotes only results backed by committed raw
-  benchmark artifacts.
 
 ## [1.0.0rc1] - 2026-01-20
 

@@ -1,6 +1,6 @@
 """FormulaBoost: boost every parameter of a user formula.
 
-Varying-coefficient / semi-parametric boosting. Features ``Z`` determine
+Varying-coefficient model. Features ``Z`` determine
 parameter surfaces ``theta(Z)`` via trees; a user formula
 ``y ≈ f(theta, x)`` consumes those parameters and a structural input ``x``.
 """
@@ -36,11 +36,13 @@ class FormulaBoost(PersistenceMixin):
             ``sigmoid``), length K.
         loss: Training loss. Currently ``mse`` only.
         precond: GGN preconditioner: ``full`` (default), ``diag``, or
-            ``plain`` (raw gradient — usually a bad idea).
+            ``plain`` (raw gradient, usually a bad idea).
         damp: Levenberg–Marquardt damping added to the GGN matrix.
         param_names: Optional names for the K parameters. Defaults to
             ``theta_0``, ``theta_1``, ...
-        n_trees, max_depth, learning_rate, ...: standard tree knobs.
+
+    Tree knobs (``n_trees``, ``max_depth``, ``learning_rate``, ...) match
+    ``GradientBoosting``.
 
     Example:
         ```python

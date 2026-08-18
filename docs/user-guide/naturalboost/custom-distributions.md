@@ -90,7 +90,7 @@ lower, upper = model.predict_interval(X_test, alpha=0.1)
 
 ## Gradient Computation: JAX or Numerical
 
-You do not provide gradients — they are computed automatically from `nll_fn`:
+You do not provide gradients; they are computed automatically from `nll_fn`:
 
 - **JAX** (used automatically when `jax` is installed): exact autodiff of the
   NLL composed with the link functions, vectorized with `jax.vmap`.
@@ -142,3 +142,8 @@ print(ob.list_distributions())
 normal = ob.get_distribution('normal')
 gamma = ob.get_distribution('gamma')
 ```
+
+If the object you want to boost is a formula `y = f(θ, x)` rather than a
+probability distribution, skip this page and use
+[FormulaBoost](../formulaboost.md). For right-censored Weibull,
+use [WeibullAFT](../survival.md).

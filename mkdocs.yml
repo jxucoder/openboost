@@ -1,5 +1,5 @@
 site_name: OpenBoost
-site_description: GPU-native, all-Python platform for tree-based machine learning
+site_description: GPU gradient boosting for distributional regression. Every parameter of F(y|x) gets its own tree ensemble, trained with the full natural gradient.
 site_url: https://jxucoder.github.io/openboost
 repo_url: https://github.com/jxucoder/openboost
 repo_name: jxucoder/openboost
@@ -81,16 +81,19 @@ nav:
       - Quickstart: getting-started/quickstart.md
       - GPU Setup: getting-started/gpu-setup.md
   - User Guide:
-      - Models:
+      - Distributional & varying-coefficient:
+          - How it works: user-guide/how-it-works.md
+          - NaturalBoost: user-guide/naturalboost/overview.md
+          - Distributions: user-guide/naturalboost/distributions.md
+          - Custom Distributions: user-guide/naturalboost/custom-distributions.md
+          - FormulaBoost: user-guide/formulaboost.md
+          - Weibull AFT: user-guide/survival.md
+      - Mean regression:
           - Gradient Boosting: user-guide/models/gradient-boosting.md
           - Multi-class Classification: user-guide/models/multiclass.md
           - DART: user-guide/models/dart.md
           - OpenBoostGAM: user-guide/models/gam.md
           - Linear Leaf GBDT: user-guide/models/linear-leaf.md
-      - NaturalBoost:
-          - Overview: user-guide/naturalboost/overview.md
-          - Distributions: user-guide/naturalboost/distributions.md
-          - Custom Distributions: user-guide/naturalboost/custom-distributions.md
       - Training:
           - Callbacks: user-guide/training/callbacks.md
           - Large-Scale Training: user-guide/training/large-scale.md
@@ -107,6 +110,7 @@ nav:
       - Custom Distribution: cookbook/custom-distribution.md
       - Custom Growth Strategy: cookbook/custom-growth-strategy.md
       - Device-Native Loss (GPU): cookbook/device-loss.md
+  - Benchmarks: benchmarks.md
   - API Reference:
       - openboost: api/openboost.md
       - Models: api/models.md

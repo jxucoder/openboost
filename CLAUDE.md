@@ -4,7 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-OpenBoost is a GPU-native, all-Python gradient boosting library (~20K lines). It uses Numba JIT for CPU kernels and CuPy/numba-cuda for GPU acceleration. Designed as a research-friendly alternative to XGBoost/LightGBM with full Python source.
+OpenBoost is GPU gradient boosting for distributional regression (~20K
+lines of Python). Each parameter of the statistical model is a
+histogram-tree ensemble, trained with the full K x K natural gradient /
+GGN rather than a diagonal approximation. Numba JIT on CPU,
+CuPy/numba-cuda on GPU.
+
+Flagship models: `NaturalBoost` (GAMLSS-style distributions),
+`FormulaBoost` (varying-coefficient formula), `WeibullAFT` (censored
+Weibull). Mean-regression GBDT, GAM, DART, and linear-leaf models share
+the same tree engine.
+
+Not a faster XGBoost clone. XGBoost/LightGBM remain the right tool for
+ordinary MSE/logloss GBDT.
 
 ## Commands
 
@@ -44,31 +56,40 @@ uv build                                        # Build wheel/sdist
 ### Layer Overview
 
 ```
-Models (_models/)  →  Core (_core/)  →  Backends (_backends/)
-    ↓                     ↓                    ↓
-GradientBoosting     fit_tree()          _cpu.py (Numba JIT)
-NaturalBoost         histograms          _cuda.py (CuPy kernels)
-OpenBoostGAM         split finding
-DART, LinearLeaf     growth strategies
+Models (_models/)  →  Trainer (_trainer.py)  →  Core (_core/)  →  Backends
+    ↓                      Objective protocol         ↓              ↓
+NaturalBoost           fit_boosting()            fit_tree()     _cpu.py
+FormulaBoost           _objectives.py            histograms     _cuda.py
+WeibullAFT             Distribution / Formula /  split finding
+GradientBoosting       AFT / Loss                growth
+OpenBoostGAM, DART, LinearLeaf
 ```
 
 ### Data Layer (`_array.py`)
-`BinnedArray` is the fundamental data structure — quantile-bins continuous features into uint8 (max 255 bins). Missing values encode as `MISSING_BIN = 255`. Native categorical feature support with auto-detection of string/object columns. All tree-building operates on binned data.
+`BinnedArray` is the fundamental data structure: it quantile-bins continuous features into uint8 (max 255 bins). Missing values encode as `MISSING_BIN = 255`. Native categorical feature support with auto-detection of string/object columns. All tree-building operates on binned data.
 
 ### Core (`_core/`)
-- **`_tree.py`** — `fit_tree()`, `fit_tree_gpu_native()`, `fit_tree_symmetric()`: the main tree-fitting entry points
-- **`_primitives.py`** — Low-level histogram building, split finding, sample partitioning
-- **`_growth.py`** — Three growth strategies: `LevelWiseGrowth` (XGBoost-style), `LeafWiseGrowth` (LightGBM-style), `SymmetricGrowth` (CatBoost-style)
+- **`_tree.py`**: the main tree-fitting entry points `fit_tree()`, `fit_tree_gpu_native()`, `fit_tree_symmetric()`
+- **`_primitives.py`**: Low-level histogram building, split finding, sample partitioning
+- **`_growth.py`**: Three growth strategies: `LevelWiseGrowth` (XGBoost-style), `LeafWiseGrowth` (LightGBM-style), `SymmetricGrowth` (CatBoost-style)
 
 ### Backend Dispatch (`_backends/`)
 `get_backend()` / `set_backend()` switch between CPU and CUDA implementations. Same interface, different kernels. Control via `OPENBOOST_BACKEND` env var or `set_backend('cuda')`. Use `backend_context('cpu')` context manager for temporary switches.
 
 ### Models (`_models/`)
-- **`_boosting.py`** — `GradientBoosting`, `MultiClassGradientBoosting`: main model classes with full callback/eval_set support
-- **`_sklearn.py`** — sklearn-compatible wrappers (`OpenBoostRegressor`, `OpenBoostClassifier`, `OpenBoostDARTRegressor`, `OpenBoostGAMRegressor`, `OpenBoostDistributionalRegressor`, `OpenBoostLinearLeafRegressor`)
-- **`_distributional.py`** — `NaturalBoost`: distributional GBDT with callbacks/eval_set support
-- **`_dart.py`** — `DART`: dropout boosting with callbacks/eval_set support
-- **`_linear_leaf.py`**, **`_gam.py`** — Specialized model variants (both support callbacks/eval_set/early stopping; GAM also supports pairwise interactions, smoothing, and monotone shape constraints)
+- **`_boosting.py`**: `GradientBoosting`, `MultiClassGradientBoosting`
+- **`_distributional.py`**: `NaturalBoost` / `DistributionalGBDT` (facade over the unified trainer)
+- **`_formula.py`**: `FormulaBoost` with user `f(θ, x)`, FD Jacobian, GGN preconditioner
+- **`_survival.py`**: `WeibullAFT` with censored NLL, expected-Fisher natural gradient
+- **`_sklearn.py`**: sklearn wrappers (`OpenBoostRegressor`, `OpenBoostClassifier`, `OpenBoostDARTRegressor`, `OpenBoostGAMRegressor`, `OpenBoostDistributionalRegressor`, `OpenBoostLinearLeafRegressor`)
+- **`_dart.py`**, **`_linear_leaf.py`**, **`_gam.py`**: DART, linear-leaf, GAM
+
+### Trainer (`_trainer.py`) + objectives (`_objectives.py`)
+Single `fit_boosting(objective, X, y, ...)` loop. Facades supply an
+`Objective` (`DistributionObjective`, `FormulaObjective`,
+`WeibullAFTObjective`, `LossObjective`). GPU path: device-resident raw
+scores when the objective is device-capable; `fit_tree_gpu_native` per
+channel.
 
 ### Persistence (`_persistence.py`)
 `PersistenceMixin` provides `save()`/`load()` on all models. Generic `ob.load(path)` auto-detects model class from saved state.
@@ -85,12 +106,12 @@ DART, LinearLeaf     growth strategies
 ## Key Conventions
 
 - **Python 3.10+** target. Ruff rules: E, F, I, UP, B, SIM (line length 100; E501, E402, F821 ignored).
-- **uv only** for package management — never `pip install` or `conda`.
+- **uv only** for package management: never `pip install` or `conda`.
 - All Numba-jitted functions use `@njit` or `@cuda.jit`. CPU kernels are in `_backends/_cpu.py`, CUDA in `_backends/_cuda.py`.
 - Test environment variable `OPENBOOST_BACKEND=cpu` forces CPU backend in CI.
 - Tests use `pytest-xdist` (`-n auto --dist loadfile`) for parallel execution. Shared fixtures are in `tests/conftest.py` (session-scoped datasets, function-scoped gradients).
 - **GPU-native builder** (`fit_tree_gpu_native`) does not support missing values or categorical features. The training loop in `_boosting.py` auto-falls back to `fit_tree()` with a warning when the data has NaN or categorical columns.
-- **Callbacks**: all models — `GradientBoosting`, `MultiClassGradientBoosting`, `DART`, `NaturalBoost`/`DistributionalGBDT`, `LinearLeafGBDT`, and `OpenBoostGAM` — support `callbacks` and `eval_set` in `fit()`.
+- **Callbacks**: every model (`GradientBoosting`, `MultiClassGradientBoosting`, `DART`, `NaturalBoost`/`DistributionalGBDT`, `FormulaBoost`, `WeibullAFT`, `LinearLeafGBDT`, `OpenBoostGAM`) supports `callbacks` and `eval_set` in `fit()`. FormulaBoost eval tuples are `(X, y, model_input)`; WeibullAFT tuples are `(X, y[, event])`.
 - **`random_state`**: `GradientBoosting` and `DART` accept `random_state` for reproducibility. Sklearn wrappers pass it through. DART also accepts `seed` (alias).
 - **`suggest_params()`**: Returns sklearn-style names by default (`n_estimators`). Pass `style='core'` to get core API names (`n_trees`).
 - **Profiling**: `ProfilingCallback` wraps core primitives with timers. Enable via callback or `OPENBOOST_PROFILE=1` env var. Reports go to `logs/` as JSON.

@@ -1,35 +1,21 @@
-"""OpenBoost: The PyTorch of Gradient Boosting.
+"""OpenBoost: GPU gradient boosting for distributional regression.
 
-Train-many optimized, research-friendly, GPU-accelerated gradient boosting.
+Every parameter of F(y|x) gets its own ensemble of histogram trees, updated
+with the full K x K natural gradient: GAMLSS-style distributional regression
+(NaturalBoost, plus WeibullAFT for right-censored data) and varying-coefficient
+models (FormulaBoost).
 
-Quick Start (Batched Training):
     >>> import openboost as ob
-    >>>
-    >>> # Simple scikit-learn-like API
-    >>> model = ob.GradientBoosting(n_trees=100, loss='mse')
+    >>> model = ob.NaturalBoostNormal(n_trees=100)
     >>> model.fit(X_train, y_train)
-    >>> predictions = model.predict(X_test)
+    >>> mean = model.predict(X_test)
+    >>> lo, hi = model.predict_interval(X_test, alpha=0.1)
 
-Custom Loss Functions:
-    >>> def quantile_loss(pred, y, tau=0.5):
-    ...     residual = y - pred
-    ...     grad = np.where(residual > 0, -tau, 1 - tau)
-    ...     hess = np.ones_like(pred)
-    ...     return grad, hess
-    >>> model = ob.GradientBoosting(n_trees=100, loss=quantile_loss)
-    >>> model.fit(X_train, y_train)
+    >>> model = ob.FormulaBoost(formula=f, n_params=2, links=("log", "identity"))
+    >>> model.fit(Z, y, model_input=x)
 
-Low-Level API (Full Control):
-    >>> # Bin data once, reuse everywhere
-    >>> X_binned = ob.array(X_train)
-    >>>
-    >>> # You own the training loop
-    >>> pred = np.zeros(len(y_train))
-    >>> for round in range(100):
-    ...     grad = 2 * (pred - y_train)  # Your loss, your gradients
-    ...     hess = np.ones_like(grad) * 2
-    ...     tree = ob.fit_tree(X_binned, grad, hess)
-    ...     pred = pred + 0.1 * tree(X_binned)
+    >>> model = ob.WeibullAFT()
+    >>> model.fit(Z, time, event=observed)
 """
 
 import warnings as _warnings

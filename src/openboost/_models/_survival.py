@@ -31,7 +31,9 @@ class WeibullAFT(PersistenceMixin):
 
     Args:
         damp: Levenberg-Marquardt damping on the per-sample 2x2 information.
-        n_trees, max_depth, learning_rate, ...: standard tree knobs.
+
+    Tree knobs (``n_trees``, ``max_depth``, ``learning_rate``, ...) match
+    ``GradientBoosting``.
 
     Example:
         ```python
