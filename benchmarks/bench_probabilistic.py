@@ -59,21 +59,48 @@ ES_PATIENCE = 50
 # =============================================================================
 # Dataset registry (quality suite)
 # =============================================================================
-# NGBoost-paper-style UCI datasets, fetched from OpenML by name (best effort:
-# a fetch failure skips the dataset with a note instead of crashing the run).
+# NGBoost-paper-style UCI datasets. OpenML's name->id resolution endpoint is
+# flaky (frequent 503s), so each row carries the numeric data_id as well; the
+# loader fetches by id first (skips the flaky name endpoint) and falls back to
+# name, with retries. A fetch failure skips the dataset with a note instead of
+# crashing the run. data_ids verified against OpenML for version 1.
 
 OPENML_DATASETS = [
-    # (short name, openml name, version)
-    ("boston", "boston", 1),
-    ("concrete", "Concrete_Compressive_Strength", 1),
-    ("energy", "energy-efficiency", 1),
-    ("kin8nm", "kin8nm", 1),
-    ("naval", "naval_propulsion_plant", 1),
-    ("power", "combined_cycle_power_plant", 1),
-    ("protein", "physicochemical-protein", 1),
-    ("wine", "wine_quality", 1),
-    ("yacht", "yacht_hydrodynamics", 1),
+    # (short name, openml name, version, data_id)
+    ("boston", "boston", 1, 531),
+    ("concrete", "Concrete_Compressive_Strength", 1, 4353),
+    ("energy", "energy-efficiency", 1, 1472),
+    ("kin8nm", "kin8nm", 1, 189),
+    # naval by-id 44898 is a deactivated version; use name resolution instead.
+    ("naval", "naval_propulsion_plant", 1, None),
+    ("power", "combined_cycle_power_plant", 1, None),
+    ("protein", "physicochemical-protein", 1, 42903),
+    ("wine", "wine_quality", 1, 287),
+    ("yacht", "yacht_hydrodynamics", 1, 42370),
 ]
+
+
+def _fetch_openml_robust(name, version, data_id=None, as_frame=True, retries=3):
+    """Fetch from OpenML by id first (avoids the flaky name endpoint), then by
+    name, retrying with backoff. Raises the last error if all attempts fail."""
+    import time
+
+    from sklearn.datasets import fetch_openml
+
+    attempts = []
+    if data_id is not None:
+        attempts.append({"data_id": data_id})
+    attempts.append({"name": name, "version": version})
+
+    last = None
+    for r in range(retries):
+        for kw in attempts:
+            try:
+                return fetch_openml(as_frame=as_frame, parser="auto", **kw)
+            except Exception as exc:  # noqa: BLE001 - retry every failure mode
+                last = exc
+        time.sleep(2 * (r + 1))
+    raise last
 
 
 def load_quality_datasets(quick: bool = False) -> tuple[list[dict], list[str]]:
@@ -82,17 +109,13 @@ def load_quality_datasets(quick: bool = False) -> tuple[list[dict], list[str]]:
     datasets: list[dict] = []
     notes: list[str] = []
 
-    from sklearn.datasets import fetch_california_housing, fetch_openml
+    from sklearn.datasets import fetch_california_housing
 
-    if quick:
-        wanted = OPENML_DATASETS[:1]
-    else:
-        wanted = OPENML_DATASETS
+    wanted = OPENML_DATASETS[:1] if quick else OPENML_DATASETS
 
-    for short, name, version in wanted:
+    for short, name, version, data_id in wanted:
         try:
-            bunch = fetch_openml(name=name, version=version, as_frame=True,
-                                 parser="auto")
+            bunch = _fetch_openml_robust(name, version, data_id)
             frame = bunch.frame.select_dtypes(include=[np.number]).dropna()
             target_col = bunch.target_names[0] if bunch.target_names else \
                 frame.columns[-1]
@@ -120,8 +143,9 @@ def load_quality_datasets(quick: bool = False) -> tuple[list[dict], list[str]]:
 
     if not quick:
         try:
-            msd = fetch_openml(name="YearPredictionMSD", version=1,
-                               as_frame=False, parser="auto")
+            # "active" version: name+version=1 does not resolve on OpenML.
+            msd = _fetch_openml_robust("YearPredictionMSD", "active",
+                                       data_id=None, as_frame=False)
             X = msd.data.astype("float64")
             y = msd.target.astype("float64")
             # Subsample for the quality suite: NGBoost's exact-split trees at
@@ -309,7 +333,7 @@ def run_quality(quick: bool = False) -> dict:
                 metrics["fit_time_s"] = round(fit_time, 3)
                 per_split[lib].append(metrics)
 
-        def agg(lib, key):
+        def agg(lib, key, per_split=per_split):
             vals = [m[key] for m in per_split[lib]]
             return {"mean": float(np.mean(vals)), "std": float(np.std(vals))}
 
@@ -360,8 +384,6 @@ def _time_to_nll(model_name, nll_curve_fn, target_nll):
 
 
 def run_speed(quick: bool = False, use_gpu: bool = False) -> dict:
-    import numpy as np
-
     import openboost as ob
 
     # 1M hits the ≥1M acceptance gate. NGBoost exact-split trees took
@@ -549,10 +571,30 @@ if modal is not None and app is not None:
               flush=True)
         return run_suites(suite=suite, quick=quick, use_gpu=True)
 
+    @app.function(image=image, timeout=4 * 3600)
+    def _run_quality_remote(quick: bool = False):
+        # Quality suite is CPU-only (NGBoost is CPU); run it off-GPU. Modal's
+        # datacenter network to OpenML is reliable, unlike some local networks.
+        sys.path.insert(0, "/root")
+        import openboost as ob
+
+        ob.set_backend("cpu")
+        print(f"backend={ob.get_backend()} suite=quality quick={quick}",
+              flush=True)
+        return run_suites(suite="quality", quick=quick, use_gpu=False)
+
     @app.local_entrypoint()
     def main(suite: str = "all", quick: bool = False):
         report = _run_remote.remote(suite=suite, quick=quick)
         save_report(report, suite)
+
+    @app.local_entrypoint()
+    def quality(quick: bool = False):
+        report = _run_quality_remote.remote(quick=quick)
+        save_report(report, "quality")
+        q = report["suites"].get("quality", {})
+        print(f"\nquality: {len(q.get('results', []))} datasets, "
+              f"{len(q.get('skipped', []))} skipped")
 
 
 # =============================================================================

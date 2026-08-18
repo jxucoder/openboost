@@ -22,15 +22,7 @@ from .._core._growth import TreeStructure
 from .._objectives import WeibullAFTObjective
 from .._persistence import PersistenceMixin
 from .._trainer import TrainerConfig, fit_boosting, predict_raw
-
-
-def _as_1d(a, n: int, name: str) -> NDArray:
-    arr = np.asarray(a, dtype=np.float64).ravel()
-    if arr.shape[0] != n:
-        raise ValueError(
-            f"{name} has length {arr.shape[0]}, expected {n} (matching y)."
-        )
-    return arr
+from .._validation import validate_1d
 
 
 @dataclass
@@ -97,7 +89,7 @@ class WeibullAFT(PersistenceMixin):
         y = np.asarray(y, dtype=np.float64).ravel()
         if np.any(y <= 0):
             raise ValueError("WeibullAFT requires strictly positive times y.")
-        ev = None if event is None else _as_1d(event, len(y), "event")
+        ev = None if event is None else validate_1d(event, len(y), "event")
         self._objective = self._make_objective()
 
         eval_sets: list[dict[str, Any]] | None = None
@@ -116,7 +108,7 @@ class WeibullAFT(PersistenceMixin):
                         "(X_val, y_val[, event_val])."
                     )
                 X_e, y_e = item[0], np.asarray(item[1], dtype=np.float64).ravel()
-                ev_e = (_as_1d(item[2], len(y_e), "event")
+                ev_e = (validate_1d(item[2], len(y_e), "event")
                         if len(item) == 3 else None)
                 eval_sets.append(
                     {"X": X_e, "y": y_e, "extra": {"event": ev_e}}
@@ -185,6 +177,6 @@ class WeibullAFT(PersistenceMixin):
         if self._objective is None:
             self._objective = self._make_objective()
         y = np.asarray(y, dtype=np.float64).ravel()
-        ev = None if event is None else _as_1d(event, len(y), "event")
+        ev = None if event is None else validate_1d(event, len(y), "event")
         raw = predict_raw(self, X)
         return self._objective.loss_value(raw, y, None, {"event": ev})

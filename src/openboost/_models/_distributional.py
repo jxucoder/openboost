@@ -406,29 +406,7 @@ class DistributionalGBDT(PersistenceMixin):
             upper = self.distribution_.quantile(params, 1 - interval_alpha / 2)
             return interval_score(y, lower, upper, alpha=interval_alpha)
         raise ValueError(f"Unknown eval_metric '{metric}'.")  # pragma: no cover
-    
-    def _compute_gradients(
-        self,
-        y: NDArray,
-        params: dict[str, NDArray],
-    ) -> dict[str, tuple[NDArray, NDArray]]:
-        """Compute gradients (ordinary gradient descent).
-        
-        Subclasses can override for different gradient computation.
-        """
-        return self.distribution_.nll_gradient(y, params)
-    
-    def _predict_raw(self, X: NDArray | BinnedArray) -> dict[str, NDArray]:
-        """Predict raw (link-space) parameters.
-        
-        Args:
-            X: Features to predict on
-            
-        Returns:
-            Dictionary mapping param_name -> raw predictions
-        """
-        return predict_raw(self, X)
-    
+
     def predict_params(
         self,
         X: NDArray | BinnedArray,
@@ -448,7 +426,7 @@ class DistributionalGBDT(PersistenceMixin):
             Dictionary mapping param_name -> predicted values
             (in constrained parameter space)
         """
-        raw_preds = self._predict_raw(X)
+        raw_preds = predict_raw(self, X)
 
         if exposure is not None:
             name, sign = self._resolve_exposure_offset()
@@ -642,18 +620,6 @@ class NaturalBoost(DistributionalGBDT):
     max_depth: int = 4  # Shallower trees often work better
     learning_rate: float = 0.1
     _use_natural_gradient: bool = field(default=True, init=False, repr=False)
-
-    def _compute_gradients(
-        self,
-        y: NDArray,
-        params: dict[str, NDArray],
-    ) -> dict[str, tuple[NDArray, NDArray]]:
-        """Compute natural gradients.
-        
-        Natural gradient = F^{-1} @ ordinary_gradient
-        where F is the Fisher information matrix.
-        """
-        return self.distribution_.natural_gradient(y, params)
 
 
 # =============================================================================
