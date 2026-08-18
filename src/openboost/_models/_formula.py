@@ -20,15 +20,7 @@ from .._core._growth import TreeStructure
 from .._objectives import FormulaObjective
 from .._persistence import PersistenceMixin
 from .._trainer import TrainerConfig, fit_boosting, predict_raw
-
-
-def _as_1d(a, n: int, name: str) -> NDArray:
-    arr = np.asarray(a, dtype=np.float64).ravel()
-    if arr.shape[0] != n:
-        raise ValueError(
-            f"{name} has length {arr.shape[0]}, expected {n} (matching y)."
-        )
-    return arr
+from .._validation import validate_1d
 
 
 @dataclass
@@ -120,7 +112,7 @@ class FormulaBoost(PersistenceMixin):
         ``eval_set`` entries are ``(X_val, y_val, model_input_val)``.
         """
         y = np.asarray(y, dtype=np.float64).ravel()
-        x = _as_1d(model_input, len(y), "model_input")
+        x = validate_1d(model_input, len(y), "model_input")
         self._objective = self._make_objective()
 
         eval_sets: list[dict[str, Any]] | None = None
@@ -144,7 +136,7 @@ class FormulaBoost(PersistenceMixin):
                     {
                         "X": X_e,
                         "y": y_e,
-                        "extra": {"model_input": _as_1d(x_e, len(y_e), "model_input")},
+                        "extra": {"model_input": validate_1d(x_e, len(y_e), "model_input")},
                     }
                 )
 
@@ -184,6 +176,6 @@ class FormulaBoost(PersistenceMixin):
         """Evaluate the formula at ``predict_params(X)`` and ``model_input``."""
         params = self.predict_params(X)
         names = self._objective.channel_names
-        x = _as_1d(model_input, next(iter(params.values())).shape[0], "model_input")
+        x = validate_1d(model_input, next(iter(params.values())).shape[0], "model_input")
         theta = tuple(params[name] for name in names)
         return np.asarray(self.formula(theta, x), dtype=np.float64).ravel()

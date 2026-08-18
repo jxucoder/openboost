@@ -278,6 +278,20 @@ def validate_sample_weight(
     return sample_weight.astype(np.float32)
 
 
+def validate_1d(a: Any, n: int, name: str) -> NDArray:
+    """Validate a length-``n`` 1D float64 array for an auxiliary input.
+
+    Used for per-sample vectors that must align with ``y`` (e.g. a formula's
+    ``model_input`` or a survival ``event`` indicator).
+    """
+    arr = np.asarray(a, dtype=np.float64).ravel()
+    if arr.shape[0] != n:
+        raise ValueError(
+            f"{name} has length {arr.shape[0]}, expected {n} (matching y)."
+        )
+    return arr
+
+
 def validate_eval_set(
     eval_set: list[tuple] | tuple | None,
     n_features: int,
