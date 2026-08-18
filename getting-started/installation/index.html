@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="GPU-native, all-Python platform for tree-based machine learning">
+        <meta name="description" content="GPU gradient boosting for distributional regression. Every parameter of F(y|x) gets its own tree ensemble, trained with the full natural gradient.">
       
       
       
@@ -277,7 +277,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../user-guide/models/gradient-boosting/" class="md-tabs__link">
+        <a href="../../user-guide/how-it-works/" class="md-tabs__link">
           
   
   
@@ -329,6 +329,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../benchmarks/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Benchmarks
+
+      </a>
+    </li>
   
 
       
@@ -590,7 +609,7 @@
   <a href="#quick-install" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Install
+        Quick install
       
     </span>
   </a>
@@ -598,10 +617,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-gpu-support" class="md-nav__link">
+  <a href="#gpu-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        With GPU Support
+        GPU support
       
     </span>
   </a>
@@ -609,10 +628,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#optional-dependencies" class="md-nav__link">
+  <a href="#optional-extras" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional Dependencies
+        Optional extras
       
     </span>
   </a>
@@ -632,10 +651,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#for-gpu-support" class="md-nav__link">
+  <a href="#for-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        For GPU Support
+        For GPU
       
     </span>
   </a>
@@ -648,10 +667,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
+  <a href="#verify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify Installation
+        Verify
       
     </span>
   </a>
@@ -659,10 +678,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#development-installation" class="md-nav__link">
+  <a href="#development-install" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Development Installation
+        Development install
       
     </span>
   </a>
@@ -823,7 +842,7 @@
   <span class="md-ellipsis">
     
   
-    Models
+    Distributional & varying-coefficient
   
 
     
@@ -839,7 +858,235 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Models
+    Distributional & varying-coefficient
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/how-it-works/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How it works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/naturalboost/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NaturalBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/naturalboost/distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/naturalboost/custom-distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/formulaboost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FormulaBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/survival/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Weibull AFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mean regression
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mean regression
   
 
           </label>
@@ -972,150 +1219,6 @@
     
   
     Linear Leaf GBDT
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    NaturalBoost
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    NaturalBoost
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../user-guide/naturalboost/overview/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../user-guide/naturalboost/distributions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Distributions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../user-guide/naturalboost/custom-distributions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Custom Distributions
   
 
     
@@ -1724,6 +1827,33 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -1738,10 +1868,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1759,8 +1889,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1965,10 +2095,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1986,8 +2116,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2089,7 +2219,7 @@
   <a href="#quick-install" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Install
+        Quick install
       
     </span>
   </a>
@@ -2097,10 +2227,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-gpu-support" class="md-nav__link">
+  <a href="#gpu-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        With GPU Support
+        GPU support
       
     </span>
   </a>
@@ -2108,10 +2238,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#optional-dependencies" class="md-nav__link">
+  <a href="#optional-extras" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional Dependencies
+        Optional extras
       
     </span>
   </a>
@@ -2131,10 +2261,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#for-gpu-support" class="md-nav__link">
+  <a href="#for-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        For GPU Support
+        For GPU
       
     </span>
   </a>
@@ -2147,10 +2277,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
+  <a href="#verify" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify Installation
+        Verify
       
     </span>
   </a>
@@ -2158,10 +2288,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#development-installation" class="md-nav__link">
+  <a href="#development-install" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Development Installation
+        Development install
       
     </span>
   </a>
@@ -2189,39 +2319,43 @@
 
 
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
-<h2 id="quick-install">Quick Install<a class="headerlink" href="#quick-install" title="Permanent link">&para;</a></h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">pip</label><label for="__tabbed_1_2">uv</label><label for="__tabbed_1_3">conda</label></div>
+<p>OpenBoost 1.0 is a release candidate. Install with <code>--pre</code> until 1.0.0.</p>
+<h2 id="quick-install">Quick install<a class="headerlink" href="#quick-install" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">pip</label><label for="__tabbed_1_2">uv</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>openboost
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>openboost
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>add<span class="w"> </span>openboost
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Coming soon</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>openboost
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>add<span class="w"> </span>--prerelease<span class="o">=</span>allow<span class="w"> </span>openboost
 </code></pre></div>
 </div>
 </div>
 </div>
-<h2 id="with-gpu-support">With GPU Support<a class="headerlink" href="#with-gpu-support" title="Permanent link">&para;</a></h2>
-<p>For CUDA GPU acceleration:</p>
+<p><code>pip install openboost</code> without <code>--pre</code> still resolves the older stable
+release.</p>
+<h2 id="gpu-support">GPU support<a class="headerlink" href="#gpu-support" title="Permanent link">&para;</a></h2>
+<p>Numba CUDA kernels for histogram trees. Requires an NVIDIA GPU.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">pip</label><label for="__tabbed_2_2">uv</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;openboost[cuda]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span><span class="s2">&quot;openboost[cuda]&quot;</span>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;openboost[cuda]&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uv<span class="w"> </span>add<span class="w"> </span>--prerelease<span class="o">=</span>allow<span class="w"> </span><span class="s2">&quot;openboost[cuda]&quot;</span>
 </code></pre></div>
 </div>
 </div>
 </div>
-<h2 id="optional-dependencies">Optional Dependencies<a class="headerlink" href="#optional-dependencies" title="Permanent link">&para;</a></h2>
+<p>Then:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(),</span> <span class="n">ob</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">())</span>   <span class="c1"># &quot;cuda&quot; True when a GPU is visible</span>
+</code></pre></div>
+<p>See <a href="../gpu-setup/">GPU setup</a> for backend pinning, multi-GPU, and
+troubleshooting.</p>
+<h2 id="optional-extras">Optional extras<a class="headerlink" href="#optional-extras" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2233,48 +2367,59 @@
 <tbody>
 <tr>
 <td><code>cuda</code></td>
-<td>CuPy for GPU acceleration</td>
-<td><code>pip install "openboost[cuda]"</code></td>
+<td>numba-cuda + CuPy for GPU trees</td>
+<td><code>pip install --pre "openboost[cuda]"</code></td>
 </tr>
 <tr>
 <td><code>sklearn</code></td>
-<td>scikit-learn integration</td>
-<td><code>pip install "openboost[sklearn]"</code></td>
+<td>scikit-learn wrappers</td>
+<td><code>pip install --pre "openboost[sklearn]"</code></td>
+</tr>
+<tr>
+<td><code>jax</code></td>
+<td>autodiff for custom distributions / formulas</td>
+<td><code>pip install --pre "openboost[jax]"</code></td>
 </tr>
 <tr>
 <td><code>distributed</code></td>
-<td>Ray for multi-GPU training</td>
-<td><code>pip install "openboost[distributed]"</code></td>
+<td>Ray for multi-GPU</td>
+<td><code>pip install --pre "openboost[distributed]"</code></td>
 </tr>
 <tr>
 <td><code>all</code></td>
 <td>Everything</td>
-<td><code>pip install "openboost[all]"</code></td>
+<td><code>pip install --pre "openboost[all]"</code></td>
 </tr>
 </tbody>
 </table>
+<p>Finite-difference Jacobians work without JAX. Install <code>jax</code> when you want
+autodiff on a custom NLL.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Python 3.10+</li>
 <li>NumPy 1.24+</li>
 <li>Numba 0.60+</li>
+<li>SciPy 1.10+</li>
 </ul>
-<h3 id="for-gpu-support">For GPU Support<a class="headerlink" href="#for-gpu-support" title="Permanent link">&para;</a></h3>
+<h3 id="for-gpu">For GPU<a class="headerlink" href="#for-gpu" title="Permanent link">&para;</a></h3>
 <ul>
-<li>NVIDIA GPU with CUDA Compute Capability 3.5+</li>
-<li>CUDA Toolkit 11.0+ or 12.0+</li>
+<li>NVIDIA GPU, CUDA Compute Capability 3.5+</li>
+<li>CUDA Toolkit 11 or 12</li>
+<li><code>numba-cuda&gt;=0.23</code>, <code>cupy-cuda12x&gt;=13</code></li>
 </ul>
-<h2 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
+<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OpenBoost version: </span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend: </span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;cuda&quot; or &quot;cpu&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GPU available: </span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OpenBoost </span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend: </span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>   <span class="c1"># &quot;cuda&quot; or &quot;cpu&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GPU:     </span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="development-installation">Development Installation<a class="headerlink" href="#development-installation" title="Permanent link">&para;</a></h2>
+<h2 id="development-install">Development install<a class="headerlink" href="#development-install" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/jxucoder/openboost.git
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">cd</span><span class="w"> </span>openboost
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>dev
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># GPU kernels:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>cuda<span class="w"> </span>--extra<span class="w"> </span>dev
 </code></pre></div>
 
 

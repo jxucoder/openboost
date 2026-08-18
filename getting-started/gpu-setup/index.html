@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="GPU-native, all-Python platform for tree-based machine learning">
+        <meta name="description" content="GPU gradient boosting for distributional regression. Every parameter of F(y|x) gets its own tree ensemble, trained with the full natural gradient.">
       
       
       
@@ -16,7 +16,7 @@
         <link rel="prev" href="../quickstart/">
       
       
-        <link rel="next" href="../../user-guide/models/gradient-boosting/">
+        <link rel="next" href="../../user-guide/how-it-works/">
       
       
         
@@ -277,7 +277,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../user-guide/models/gradient-boosting/" class="md-tabs__link">
+        <a href="../../user-guide/how-it-works/" class="md-tabs__link">
           
   
   
@@ -329,6 +329,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../benchmarks/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Benchmarks
+
+      </a>
+    </li>
   
 
       
@@ -643,10 +662,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#verify-gpu-detection" class="md-nav__link">
+  <a href="#verify-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify GPU Detection
+        Verify detection
       
     </span>
   </a>
@@ -654,10 +673,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#manual-backend-selection" class="md-nav__link">
+  <a href="#pin-a-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Manual Backend Selection
+        Pin a backend
       
     </span>
   </a>
@@ -665,10 +684,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gpu-performance" class="md-nav__link">
+  <a href="#what-the-a100-numbers-actually-are" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GPU Performance
+        What the A100 numbers actually are
       
     </span>
   </a>
@@ -676,10 +695,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multi-gpu-training" class="md-nav__link">
+  <a href="#formulaboost-and-weibullaft-on-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multi-GPU Training
+        FormulaBoost and WeibullAFT on GPU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-GPU
       
     </span>
   </a>
@@ -705,45 +735,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#training-seems-slow-on-gpu" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Training seems slow on GPU
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#model-trained-on-gpu-loading-on-cpu-machine" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Model trained on GPU, loading on CPU machine
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cuda-not-detected" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CUDA not detected
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -845,7 +836,7 @@
   <span class="md-ellipsis">
     
   
-    Models
+    Distributional & varying-coefficient
   
 
     
@@ -861,7 +852,235 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Models
+    Distributional & varying-coefficient
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/how-it-works/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How it works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/naturalboost/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NaturalBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/naturalboost/distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/naturalboost/custom-distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/formulaboost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FormulaBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/survival/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Weibull AFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mean regression
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mean regression
   
 
           </label>
@@ -994,150 +1213,6 @@
     
   
     Linear Leaf GBDT
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    NaturalBoost
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    NaturalBoost
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../user-guide/naturalboost/overview/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../user-guide/naturalboost/distributions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Distributions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../user-guide/naturalboost/custom-distributions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Custom Distributions
   
 
     
@@ -1746,6 +1821,33 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -1760,10 +1862,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1781,8 +1883,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1987,10 +2089,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -2008,8 +2110,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2108,10 +2210,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#verify-gpu-detection" class="md-nav__link">
+  <a href="#verify-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify GPU Detection
+        Verify detection
       
     </span>
   </a>
@@ -2119,10 +2221,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#manual-backend-selection" class="md-nav__link">
+  <a href="#pin-a-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Manual Backend Selection
+        Pin a backend
       
     </span>
   </a>
@@ -2130,10 +2232,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gpu-performance" class="md-nav__link">
+  <a href="#what-the-a100-numbers-actually-are" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GPU Performance
+        What the A100 numbers actually are
       
     </span>
   </a>
@@ -2141,10 +2243,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#multi-gpu-training" class="md-nav__link">
+  <a href="#formulaboost-and-weibullaft-on-gpu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Multi-GPU Training
+        FormulaBoost and WeibullAFT on GPU
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-GPU
       
     </span>
   </a>
@@ -2171,45 +2284,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#training-seems-slow-on-gpu" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Training seems slow on GPU
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#model-trained-on-gpu-loading-on-cpu-machine" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Model trained on GPU, loading on CPU machine
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cuda-not-detected" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CUDA not detected
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -2233,98 +2307,114 @@
 
 
 <h1 id="gpu-setup">GPU Setup<a class="headerlink" href="#gpu-setup" title="Permanent link">&para;</a></h1>
-<p>OpenBoost automatically detects and uses CUDA GPUs when available.</p>
-<h2 id="verify-gpu-detection">Verify GPU Detection<a class="headerlink" href="#verify-gpu-detection" title="Permanent link">&para;</a></h2>
+<p>OpenBoost uses CUDA for histogram building and tree construction.
+NaturalBoost, FormulaBoost, and WeibullAFT share that tree path. Some
+objective math still runs on the host (FormulaBoost GGN today; LogNormal /
+digamma families). Trees are the expensive part at scale.</p>
+<h2 id="verify-detection">Verify detection<a class="headerlink" href="#verify-detection" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend: </span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;cuda&quot; or &quot;cpu&quot;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using GPU: </span><span class="si">{</span><span class="n">ob</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>    <span class="c1"># True if GPU active</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">get_backend</span><span class="p">())</span>   <span class="c1"># &quot;cuda&quot; or &quot;cpu&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">is_cuda</span><span class="p">())</span>       <span class="c1"># True if a GPU is active</span>
 </code></pre></div>
-<h2 id="manual-backend-selection">Manual Backend Selection<a class="headerlink" href="#manual-backend-selection" title="Permanent link">&para;</a></h2>
+<p>Install the extra first: <code>pip install --pre "openboost[cuda]"</code>.</p>
+<h2 id="pin-a-backend">Pin a backend<a class="headerlink" href="#pin-a-backend" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Force CPU (useful for debugging or comparison)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">ob</span><span class="o">.</span><span class="n">set_backend</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">ob</span><span class="o">.</span><span class="n">set_backend</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>    <span class="c1"># debug / comparison</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">ob</span><span class="o">.</span><span class="n">set_backend</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Force GPU</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">ob</span><span class="o">.</span><span class="n">set_backend</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Or use environment variable</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># export OPENBOOST_BACKEND=cuda</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Or:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># export OPENBOOST_BACKEND=cuda</span>
 </code></pre></div>
-<h2 id="gpu-performance">GPU Performance<a class="headerlink" href="#gpu-performance" title="Permanent link">&para;</a></h2>
-<p>GPU acceleration provides significant speedups for larger datasets:</p>
+<p><code>backend_context("cpu")</code> is a temporary switch that restores the previous
+backend on exit.</p>
+<h2 id="what-the-a100-numbers-actually-are">What the A100 numbers actually are<a class="headerlink" href="#what-the-a100-numbers-actually-are" title="Permanent link">&para;</a></h2>
+<p>NaturalBoost vs NGBoost, heteroscedastic Normal, 80 features, 500 trees,
+Modal A100. NGBoost has <strong>no GPU implementation</strong>, so this is GPU OpenBoost
+against CPU NGBoost, which is the comparison that exists in the world.</p>
 <table>
 <thead>
 <tr>
-<th>Dataset Size</th>
-<th>Typical Speedup</th>
+<th style="text-align: right;">n_train</th>
+<th style="text-align: right;">OpenBoost (A100)</th>
+<th style="text-align: right;">NGBoost (CPU)</th>
+<th style="text-align: right;">speedup</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>&lt;5K samples</td>
-<td>~1x (CPU overhead dominates)</td>
+<td style="text-align: right;">45K</td>
+<td style="text-align: right;">3.01s</td>
+<td style="text-align: right;">1414s</td>
+<td style="text-align: right;">470×</td>
 </tr>
 <tr>
-<td>5K-10K</td>
-<td>2-7x</td>
+<td style="text-align: right;">90K</td>
+<td style="text-align: right;">2.21s</td>
+<td style="text-align: right;">2716s</td>
+<td style="text-align: right;"><strong>1229×</strong></td>
 </tr>
 <tr>
-<td>25K+</td>
-<td>2-3x</td>
+<td style="text-align: right;">450K</td>
+<td style="text-align: right;">5.40s</td>
+<td style="text-align: right;">skipped (hours)</td>
+<td style="text-align: right;">n/a</td>
 </tr>
 <tr>
-<td>100K+</td>
-<td>5-10x</td>
+<td style="text-align: right;">900K</td>
+<td style="text-align: right;">6.94s</td>
+<td style="text-align: right;">skipped</td>
+<td style="text-align: right;">n/a</td>
 </tr>
 </tbody>
 </table>
+<p>NLL is tied at every size that both ran. Full tables:
+<a href="../../benchmarks/">Benchmarks</a>.</p>
 <div class="admonition tip">
-<p class="admonition-title">Best practices for GPU</p>
-<ul>
-<li>Ensure data is <code>float32</code> (not <code>float64</code>)</li>
-<li>Use larger datasets (GPU overhead not worth it for &lt;5K samples)</li>
-<li>GPU shows best speedup at 10K+ samples</li>
-</ul>
+<p class="admonition-title">When GPU helps</p>
+<p>Histogram trees win at tens of thousands of rows and up. Below ~5K
+samples, kernel launch overhead often matches CPU. Use <code>float32</code>
+features. Missing values and categoricals fall back from the
+GPU-native builder to the hybrid path (warning emitted).</p>
 </div>
-<h2 id="multi-gpu-training">Multi-GPU Training<a class="headerlink" href="#multi-gpu-training" title="Permanent link">&para;</a></h2>
+<p>On CPU, NaturalBoost and NGBoost are ~parity (0.8–1.3×). Do not quote the
+A100 ratio as a CPU claim.</p>
+<h2 id="formulaboost-and-weibullaft-on-gpu">FormulaBoost and WeibullAFT on GPU<a class="headerlink" href="#formulaboost-and-weibullaft-on-gpu" title="Permanent link">&para;</a></h2>
+<p>Both use GPU trees. FormulaBoost's GGN (finite-difference Jacobian +
+<code>K×K</code> solve) currently runs on the host; at 200K rows full GGN still beat
+an XGBoost custom objective (17s vs 20s on A100). WeibullAFT's expected
+Fisher step is cheap (<code>2×2</code> per row).</p>
+<h2 id="multi-gpu">Multi-GPU<a class="headerlink" href="#multi-gpu" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Use multiple GPUs with Ray (requires ray[default])</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_gpus</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Or specify exact GPU devices</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">devices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_gpus</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">devices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </code></pre></div>
+<p>Requires <code>pip install --pre "openboost[distributed]"</code> (Ray).
+NaturalBoost / FormulaBoost / WeibullAFT currently train on one GPU.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <ul>
-<li>NVIDIA GPU with CUDA Compute Capability 3.5+</li>
-<li>CUDA Toolkit 11.0+ or 12.0+</li>
-<li>Numba 0.60+ (<code>pip install numba</code>)</li>
+<li>NVIDIA GPU, CUDA Compute Capability 3.5+</li>
+<li>CUDA Toolkit 11 or 12</li>
+<li><code>numba-cuda&gt;=0.23</code></li>
 </ul>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="training-seems-slow-on-gpu">Training seems slow on GPU<a class="headerlink" href="#training-seems-slow-on-gpu" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Ensure data is <code>float32</code> (not <code>float64</code>)</li>
-<li>Use larger datasets (GPU overhead not worth it for &lt;5K samples)</li>
-<li>GPU shows best speedup at 10K+ samples</li>
-</ul>
-<h3 id="model-trained-on-gpu-loading-on-cpu-machine">Model trained on GPU, loading on CPU machine<a class="headerlink" href="#model-trained-on-gpu-loading-on-cpu-machine" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Models are saved in a backend-agnostic format</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;model.joblib&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Load on any machine (CPU or GPU)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">loaded</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;model.joblib&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="cuda-not-detected">CUDA not detected<a class="headerlink" href="#cuda-not-detected" title="Permanent link">&para;</a></h3>
+<p><strong>Training seems slow on GPU.</strong> Features should be <code>float32</code>. Tiny datasets
+do not amortize kernel launch. Confirm <code>ob.is_cuda()</code> is True.</p>
+<p><strong>CUDA not detected.</strong></p>
 <ol>
-<li>Check CUDA installation: <code>nvcc --version</code></li>
-<li>Check Numba can see GPU: <code>python -c "from numba import cuda; print(cuda.gpus)"</code></li>
-<li>Ensure compatible CUDA version with Numba</li>
+<li><code>nvidia-smi</code></li>
+<li><code>python -c "from numba import cuda; print(list(cuda.gpus))"</code></li>
+<li>Reinstall <code>openboost[cuda]</code> against the CUDA version on the machine</li>
 </ol>
+<p><strong>Trained on GPU, loading on CPU.</strong> Saved models are backend-agnostic.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;model.joblib&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">loaded</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoostNormal</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;model.joblib&quot;</span><span class="p">)</span>  <span class="c1"># CPU or GPU</span>
+</code></pre></div>
 
 
 

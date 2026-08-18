@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="GPU-native, all-Python platform for tree-based machine learning">
+        <meta name="description" content="GPU gradient boosting for distributional regression. Every parameter of F(y|x) gets its own tree ensemble, trained with the full natural gradient.">
       
       
       
@@ -275,7 +275,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="user-guide/models/gradient-boosting/" class="md-tabs__link">
+        <a href="user-guide/how-it-works/" class="md-tabs__link">
           
   
   
@@ -327,6 +327,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="benchmarks/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Benchmarks
+
+      </a>
+    </li>
   
 
       
@@ -501,10 +520,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-openboost" class="md-nav__link">
+  <a href="#why-this-exists" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why OpenBoost?
+        Why this exists
       
     </span>
   </a>
@@ -512,10 +531,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-example" class="md-nav__link">
+  <a href="#the-models" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Example
+        The models
       
     </span>
   </a>
@@ -523,71 +542,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#benchmarks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Features
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rocket-gpu-accelerated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        :rocket: GPU Accelerated
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#brain-probabilistic-predictions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        :brain: Probabilistic Predictions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snake-all-python" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        :snake: All Python
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gear-sklearn-compatible" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        :gear: sklearn Compatible
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
+        Benchmarks
       
     </span>
   </a>
@@ -595,10 +553,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#whats-included" class="md-nav__link">
+  <a href="#who-this-is-for" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What's Included
+        Who this is for
       
     </span>
   </a>
@@ -606,32 +564,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance" class="md-nav__link">
+  <a href="#install" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Performance
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#who-is-openboost-for" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Who Is OpenBoost For?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#roadmap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Roadmap
+        Install
       
     </span>
   </a>
@@ -882,7 +818,7 @@
   <span class="md-ellipsis">
     
   
-    Models
+    Distributional & varying-coefficient
   
 
     
@@ -898,7 +834,235 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Models
+    Distributional & varying-coefficient
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="user-guide/how-it-works/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How it works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="user-guide/naturalboost/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NaturalBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="user-guide/naturalboost/distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="user-guide/naturalboost/custom-distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="user-guide/formulaboost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FormulaBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="user-guide/survival/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Weibull AFT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mean regression
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mean regression
   
 
           </label>
@@ -1031,150 +1195,6 @@
     
   
     Linear Leaf GBDT
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    NaturalBoost
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    NaturalBoost
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="user-guide/naturalboost/overview/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="user-guide/naturalboost/distributions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Distributions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="user-guide/naturalboost/custom-distributions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Custom Distributions
   
 
     
@@ -1783,6 +1803,33 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -1797,10 +1844,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -1818,8 +1865,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2024,10 +2071,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -2045,8 +2092,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2145,10 +2192,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-openboost" class="md-nav__link">
+  <a href="#why-this-exists" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why OpenBoost?
+        Why this exists
       
     </span>
   </a>
@@ -2156,10 +2203,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-example" class="md-nav__link">
+  <a href="#the-models" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Example
+        The models
       
     </span>
   </a>
@@ -2167,71 +2214,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#benchmarks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Features
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rocket-gpu-accelerated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        :rocket: GPU Accelerated
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#brain-probabilistic-predictions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        :brain: Probabilistic Predictions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#snake-all-python" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        :snake: All Python
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gear-sklearn-compatible" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        :gear: sklearn Compatible
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
+        Benchmarks
       
     </span>
   </a>
@@ -2239,10 +2225,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#whats-included" class="md-nav__link">
+  <a href="#who-this-is-for" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What's Included
+        Who this is for
       
     </span>
   </a>
@@ -2250,32 +2236,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance" class="md-nav__link">
+  <a href="#install" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Performance
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#who-is-openboost-for" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Who Is OpenBoost For?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#roadmap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Roadmap
+        Install
       
     </span>
   </a>
@@ -2314,112 +2278,172 @@
 
 
 <h1 id="openboost">OpenBoost<a class="headerlink" href="#openboost" title="Permanent link">&para;</a></h1>
-<p align="center" style="font-size: 1.2em;">
-  <strong>The hackable gradient boosting platform — probabilistic predictions, interpretable GAMs, and custom algorithms in readable Python, with CPU and CUDA tree backends.</strong>
+<p align="center" style="font-size: 1.4em;">
+  <strong>GPU gradient boosting for distributional regression.</strong>
+</p>
+
+<p align="center">
+  Every parameter of <code>F(y | x)</code> gets its own tree ensemble, updated
+  with the full <code>K&times;K</code> natural gradient rather than a diagonal
+  approximation. <code>FormulaBoost</code> extends the same engine to
+  varying-coefficient formulas <code>y = f(θ(z), x)</code>.
 </p>
 
 <p align="center">
   <a href="getting-started/quickstart/">Quickstart</a> •
-  <a href="user-guide/models/gradient-boosting/">Models</a> •
-  <a href="user-guide/naturalboost/overview/">NaturalBoost</a> •
-  <a href="api/openboost/">API Reference</a>
+  <a href="user-guide/how-it-works/">How it works</a> •
+  <a href="user-guide/formulaboost/">FormulaBoost</a> •
+  <a href="user-guide/survival/">Weibull AFT</a> •
+  <a href="benchmarks/">Benchmarks</a> •
+  <a href="api/openboost/">API</a>
 </p>
 
 <hr />
-<h2 id="why-openboost">Why OpenBoost?<a class="headerlink" href="#why-openboost" title="Permanent link">&para;</a></h2>
-<p>For standard GBDT, use XGBoost/LightGBM—they're highly optimized C++.</p>
-<p>For GBDT <strong>variants</strong> (probabilistic predictions, interpretable GAMs, custom algorithms), OpenBoost provides reusable Python primitives and a CUDA tree-building path:</p>
-<ul>
-<li><strong>NaturalBoost</strong>: full-distribution prediction; comparable to NGBoost on the committed CPU benchmark (0.8-1.3x wall-clock, quality within ~1%)</li>
-<li><strong>OpenBoostGAM</strong>: interpretable main effects with an optional GPU path; benchmark it on your own workload with the included harness</li>
-</ul>
-<p>Plus: ~20K lines of readable Python. Modify, extend, and build on—no C++ required.</p>
-<h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
+<h2 id="why-this-exists">Why this exists<a class="headerlink" href="#why-this-exists" title="Permanent link">&para;</a></h2>
+<p><a href="https://doi.org/10.1111/j.1467-9876.2005.00510.x">Distributional regression</a>
+(GAMLSS) fits every parameter of <code>F(y | x)</code> as a function of covariates,
+not just the mean. NGBoost does that with boosting, on CPU, for a few
+built-in families.</p>
+<p>A <a href="https://doi.org/10.1111/j.2517-6161.1993.tb01939.x">varying-coefficient model</a>
+does the same for a structural formula <code>y ≈ f(θ(z), x)</code>. XGBoost custom
+objectives accept only a <strong>diagonal</strong> Hessian, so they cannot represent
+the off-diagonal coupling in <code>θ</code>. XGBoost <code>survival:aft</code> holds the
+Weibull shape as one global hyperparameter.</p>
+<p>OpenBoost fits both classes, censoring included, with histogram trees, a
+full per-sample Fisher or GGN metric, and a GPU path.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>NGBoost</th>
+<th>XGBoost</th>
+<th>OpenBoost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What varies with covariates</td>
+<td>Distribution parameters (fixed catalogue)</td>
+<td>The mean, or a diagonal custom objective</td>
+<td>Distribution or formula parameters</td>
+</tr>
+<tr>
+<td>Metric</td>
+<td>Natural gradient</td>
+<td>Diagonal Hessian only</td>
+<td>Fisher / full GGN</td>
+</tr>
+<tr>
+<td>GPU trees</td>
+<td>No</td>
+<td>Yes (mean / AFT location)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Covariate-dependent Weibull shape <code>k(z)</code></td>
+<td>n/a</td>
+<td>No (global hyperparameter)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Formula off-diagonals</td>
+<td>n/a</td>
+<td>Inexpressible</td>
+<td>Full GGN</td>
+</tr>
+</tbody>
+</table>
+<p>For ordinary mean regression, use XGBoost or LightGBM. They are faster
+C++.</p>
+<h2 id="the-models">The models<a class="headerlink" href="#the-models" title="Permanent link">&para;</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">NaturalBoost</label><label for="__tabbed_1_2">FormulaBoost</label><label for="__tabbed_1_3">WeibullAFT</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Distributional regression. Predict <code>F(y | x)</code>, not a point.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Standard gradient boosting</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">GradientBoosting</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Probabilistic predictions with uncertainty</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">prob_model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoostNormal</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">prob_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">mean</span> <span class="o">=</span> <span class="n">prob_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">prob_model</span><span class="o">.</span><span class="n">predict_interval</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># 90% interval</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoostNormal</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">mean</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_interval</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>   <span class="c1"># 90% interval</span>
 </code></pre></div>
-<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
-<h3 id="rocket-gpu-accelerated">:rocket: GPU Accelerated<a class="headerlink" href="#rocket-gpu-accelerated" title="Permanent link">&para;</a></h3>
-<p>Numba CUDA kernels accelerate histogram building and tree construction. Some
-features and model stages remain CPU-only or deliberately fall back to CPU;
-the model guides document those boundaries.</p>
-<h3 id="brain-probabilistic-predictions">:brain: Probabilistic Predictions<a class="headerlink" href="#brain-probabilistic-predictions" title="Permanent link">&para;</a></h3>
-<p>NaturalBoost provides full probability distributions with uncertainty quantification. 8 built-in distributions including Normal, Gamma, Tweedie, and Negative Binomial.</p>
-<h3 id="snake-all-python">:snake: All Python<a class="headerlink" href="#snake-all-python" title="Permanent link">&para;</a></h3>
-<p>~20K lines of readable, hackable code. No C++ compilation needed. Understand and modify the algorithms.</p>
-<h3 id="gear-sklearn-compatible">:gear: sklearn Compatible<a class="headerlink" href="#gear-sklearn-compatible" title="Permanent link">&para;</a></h3>
-<p>Drop-in replacement for scikit-learn pipelines. Works with GridSearchCV, cross_val_score, and Pipeline.</p>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>openboost
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># With GPU support</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span><span class="s2">&quot;openboost[cuda]&quot;</span>
+</div>
+<div class="tabbed-block">
+<p>Varying-coefficient model. Write <code>y = f(θ, x)</code>; trees learn <code>θ(z)</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">sales</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">theta</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="p">)))</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">FormulaBoost</span><span class="p">(</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="n">formula</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span> <span class="n">n_params</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">links</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">param_names</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">),</span> <span class="n">precond</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Z_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">model_input</span><span class="o">=</span><span class="n">x_train</span><span class="p">)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_params</span><span class="p">(</span><span class="n">Z_test</span><span class="p">)</span>          <span class="c1"># per-row a(z), b(z)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">yhat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Z_test</span><span class="p">,</span> <span class="n">model_input</span><span class="o">=</span><span class="n">x_new</span><span class="p">)</span>
 </code></pre></div>
-<p>Without <code>--pre</code>, pip installs the older stable release rather than the current
-1.0 release candidate.</p>
-<h2 id="whats-included">What's Included<a class="headerlink" href="#whats-included" title="Permanent link">&para;</a></h2>
+</div>
+<div class="tabbed-block">
+<p>Censored Weibull AFT; both scale and shape vary with <code>z</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">WeibullAFT</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Z_train</span><span class="p">,</span> <span class="n">time_train</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="n">observed</span><span class="p">)</span>  <span class="c1"># 1 = event, 0 = censored</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_params</span><span class="p">(</span><span class="n">Z_test</span><span class="p">)</span>           <span class="c1"># {scale, shape}</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">t_hat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Z_test</span><span class="p">)</span>                   <span class="c1"># median time</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">s</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_survival</span><span class="p">(</span><span class="n">Z_test</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>       <span class="c1"># S(5 | z)</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Same trainer, same tree engine. Mean regression is the single-parameter case
+of it: <code>GradientBoosting</code>, <code>OpenBoostGAM</code>, DART, linear-leaf models, and
+sklearn wrappers ship in the same package.</p>
+<h2 id="benchmarks">Benchmarks<a class="headerlink" href="#benchmarks" title="Permanent link">&para;</a></h2>
+<p>Early and incomplete, so read them as directional rather than settled.</p>
 <table>
 <thead>
 <tr>
-<th>Category</th>
-<th>Models</th>
+<th>Gate</th>
+<th>Where it stands</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Standard GBDT</strong></td>
-<td>GradientBoosting, MultiClassGradientBoosting, DART</td>
+<td>Speed vs NGBoost</td>
+<td>Seconds on an A100 at sizes where NGBoost, which is CPU-only, takes most of an hour. On CPU the two are near parity, so this is a claim about the GPU tree path.</td>
 </tr>
 <tr>
-<td><strong>Interpretable</strong></td>
-<td>OpenBoostGAM, LinearLeafGBDT</td>
+<td>Quality vs NGBoost</td>
+<td>Tied or better NLL on the 8 UCI datasets measured, over 20 paired splits. Three datasets are still unmeasured.</td>
 </tr>
 <tr>
-<td><strong>Probabilistic</strong></td>
-<td>NaturalBoostNormal, LogNormal, Gamma, Poisson, StudentT, Tweedie, NegBin</td>
+<td>Capability</td>
+<td>FormulaBoost and WeibullAFT recover parameter surfaces that a diagonal-Hessian objective cannot express.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
-<p>The repository currently includes one auditable third-party comparison:
-<code>benchmarks/results/ngboost_comparison_20260720.json</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Benchmark</th>
-<th>Result</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NaturalBoost vs NGBoost (CPU)</td>
-<td>~parity: 0.8-1.3x, NLL/CRPS/RMSE within ~1% (<code>ngboost_comparison_20260720.json</code>)</td>
-</tr>
-</tbody>
-</table>
-<p>GPU benchmark harnesses are included, but exact third-party speedup claims are
-not published until the corresponding raw result artifact and environment
-metadata are committed. For standard GBDT, use XGBoost/LightGBM; OpenBoost's
-value is in research-friendly variants and extensibility.</p>
-<h2 id="who-is-openboost-for">Who Is OpenBoost For?<a class="headerlink" href="#who-is-openboost-for" title="Permanent link">&para;</a></h2>
+<p>XGBoostLSS and LightGBMLSS are the nearest alternatives and are not yet in the
+comparison. Numbers, caveats, and reproduce commands:
+<a href="benchmarks/">Benchmarks</a>.</p>
+<h2 id="who-this-is-for">Who this is for<a class="headerlink" href="#who-this-is-for" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Kaggle Competitors</strong> - Probabilistic predictions that XGBoost can't do</li>
-<li><strong>ML Researchers</strong> - Prototype new algorithms in Python</li>
-<li><strong>Product teams</strong> - Prototype interpretable or probabilistic models before production hardening</li>
-<li><strong>Students</strong> - Actually understand how gradient boosting works</li>
+<li>Insurance pricing, energy/demand, credit risk: you need <code>F(y | x)</code>, not a point</li>
+<li>Curve / dose / saturation models where the formula is the product and <code>θ(z)</code> is what you ship</li>
+<li>Survival analysis where the Weibull shape should move with covariates</li>
+<li>Anyone who has been hand-rolling an XGBoost custom objective and hitting the diagonal-Hessian wall</li>
 </ul>
-<h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
-<p><strong>Train-many optimization</strong>: Industry workloads often train many models (hyperparameter tuning, CV, per-segment models). XGBoost optimizes for one model fast. OpenBoost plans to enable native optimization for training many models efficiently.</p>
+<p>Not the right tool if you want the fastest possible MSE/logloss GBDT. Use
+XGBoost or LightGBM for that.</p>
+<h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span>openboost
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pip<span class="w"> </span>install<span class="w"> </span>--pre<span class="w"> </span><span class="s2">&quot;openboost[cuda]&quot;</span>
+</code></pre></div>
+<p>Without <code>--pre</code>, pip installs the older stable release rather than the
+current 1.0 release candidate. See <a href="getting-started/installation/">Installation</a>.</p>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>Apache 2.0</p>
 

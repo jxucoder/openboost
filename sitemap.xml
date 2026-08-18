@@ -5,6 +5,10 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://jxucoder.github.io/openboost/benchmarks/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://jxucoder.github.io/openboost/changelog/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
@@ -77,11 +81,23 @@
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
+         <loc>https://jxucoder.github.io/openboost/user-guide/formulaboost/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jxucoder.github.io/openboost/user-guide/how-it-works/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
          <loc>https://jxucoder.github.io/openboost/user-guide/model-persistence/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>
          <loc>https://jxucoder.github.io/openboost/user-guide/sklearn-integration/</loc>
+         <lastmod>2026-08-18</lastmod>
+    </url>
+    <url>
+         <loc>https://jxucoder.github.io/openboost/user-guide/survival/</loc>
          <lastmod>2026-08-18</lastmod>
     </url>
     <url>

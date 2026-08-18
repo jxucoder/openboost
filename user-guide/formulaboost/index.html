@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://jxucoder.github.io/openboost/user-guide/naturalboost/overview/">
+        <link rel="canonical" href="https://jxucoder.github.io/openboost/user-guide/formulaboost/">
       
       
-        <link rel="prev" href="../../how-it-works/">
+        <link rel="prev" href="../naturalboost/custom-distributions/">
       
       
-        <link rel="next" href="../distributions/">
+        <link rel="next" href="../survival/">
       
       
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>NaturalBoost - OpenBoost</title>
+        <title>FormulaBoost - OpenBoost</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#naturalboost" class="md-skip">
+        <a href="#formulaboost" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="OpenBoost" class="md-header__button md-logo" aria-label="OpenBoost" data-md-component="logo">
+    <a href="../.." title="OpenBoost" class="md-header__button md-logo" aria-label="OpenBoost" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              NaturalBoost
+              FormulaBoost
             
           </span>
         </div>
@@ -227,7 +227,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -248,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../getting-started/installation/" class="md-tabs__link">
+        <a href="../../getting-started/installation/" class="md-tabs__link">
           
   
   
@@ -279,7 +279,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../how-it-works/" class="md-tabs__link">
+        <a href="../how-it-works/" class="md-tabs__link">
           
   
   
@@ -302,7 +302,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../tutorials/uncertainty/" class="md-tabs__link">
+        <a href="../../tutorials/uncertainty/" class="md-tabs__link">
           
   
   
@@ -322,7 +322,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../cookbook/" class="md-tabs__link">
+        <a href="../../cookbook/" class="md-tabs__link">
           
   
   
@@ -340,7 +340,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../benchmarks/" class="md-tabs__link">
+      <a href="../../benchmarks/" class="md-tabs__link">
         
   
   
@@ -361,7 +361,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../api/openboost/" class="md-tabs__link">
+        <a href="../../api/openboost/" class="md-tabs__link">
           
   
   
@@ -381,7 +381,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../migration/from-xgboost/" class="md-tabs__link">
+        <a href="../../migration/from-xgboost/" class="md-tabs__link">
           
   
   
@@ -399,7 +399,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../changelog/" class="md-tabs__link">
+      <a href="../../changelog/" class="md-tabs__link">
         
   
   
@@ -434,7 +434,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="OpenBoost" class="md-nav__button md-logo" aria-label="OpenBoost" data-md-component="logo">
+    <a href="../.." title="OpenBoost" class="md-nav__button md-logo" aria-label="OpenBoost" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -464,7 +464,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -543,7 +543,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/installation/" class="md-nav__link">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -571,7 +571,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -599,7 +599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/gpu-setup/" class="md-nav__link">
+      <a href="../../getting-started/gpu-setup/" class="md-nav__link">
         
   
   
@@ -748,7 +748,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-it-works/" class="md-nav__link">
+      <a href="../how-it-works/" class="md-nav__link">
         
   
   
@@ -756,6 +756,90 @@
     
   
     How it works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../naturalboost/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NaturalBoost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../naturalboost/distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../naturalboost/custom-distributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Distributions
   
 
     
@@ -792,7 +876,7 @@
   <span class="md-ellipsis">
     
   
-    NaturalBoost
+    FormulaBoost
   
 
     
@@ -810,7 +894,7 @@
   <span class="md-ellipsis">
     
   
-    NaturalBoost
+    FormulaBoost
   
 
     
@@ -836,10 +920,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-uncertainty-matters" class="md-nav__link">
+  <a href="#minimal-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Uncertainty Matters
+        Minimal example
       
     </span>
   </a>
@@ -847,10 +931,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#links" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Links
       
     </span>
   </a>
@@ -858,10 +942,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#available-models" class="md-nav__link">
+  <a href="#preconditioner" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Models
+        Preconditioner
       
     </span>
   </a>
@@ -869,10 +953,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#distribution-output" class="md-nav__link">
+  <a href="#fit-signature" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Distribution Output
+        Fit signature
       
     </span>
   </a>
@@ -880,10 +964,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#monte-carlo-sampling" class="md-nav__link">
+  <a href="#what-to-evaluate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Monte Carlo Sampling
+        What to evaluate
       
     </span>
   </a>
@@ -891,10 +975,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vs-ngboost" class="md-nav__link">
+  <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
-        vs NGBoost
+        Tips
       
     </span>
   </a>
@@ -902,21 +986,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
+  <a href="#persistence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related
+        Persistence
       
     </span>
   </a>
@@ -939,91 +1012,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../distributions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Distributions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../custom-distributions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Custom Distributions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../formulaboost/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    FormulaBoost
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../survival/" class="md-nav__link">
+      <a href="../survival/" class="md-nav__link">
         
   
   
@@ -1114,7 +1103,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/gradient-boosting/" class="md-nav__link">
+      <a href="../models/gradient-boosting/" class="md-nav__link">
         
   
   
@@ -1142,7 +1131,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/multiclass/" class="md-nav__link">
+      <a href="../models/multiclass/" class="md-nav__link">
         
   
   
@@ -1170,7 +1159,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/dart/" class="md-nav__link">
+      <a href="../models/dart/" class="md-nav__link">
         
   
   
@@ -1198,7 +1187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/gam/" class="md-nav__link">
+      <a href="../models/gam/" class="md-nav__link">
         
   
   
@@ -1226,7 +1215,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../models/linear-leaf/" class="md-nav__link">
+      <a href="../models/linear-leaf/" class="md-nav__link">
         
   
   
@@ -1317,7 +1306,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../training/callbacks/" class="md-nav__link">
+      <a href="../training/callbacks/" class="md-nav__link">
         
   
   
@@ -1345,7 +1334,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../training/large-scale/" class="md-nav__link">
+      <a href="../training/large-scale/" class="md-nav__link">
         
   
   
@@ -1436,7 +1425,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../evaluation/metrics/" class="md-nav__link">
+      <a href="../evaluation/metrics/" class="md-nav__link">
         
   
   
@@ -1472,7 +1461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sklearn-integration/" class="md-nav__link">
+      <a href="../sklearn-integration/" class="md-nav__link">
         
   
   
@@ -1500,7 +1489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../model-persistence/" class="md-nav__link">
+      <a href="../model-persistence/" class="md-nav__link">
         
   
   
@@ -1587,7 +1576,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/uncertainty/" class="md-nav__link">
+      <a href="../../tutorials/uncertainty/" class="md-nav__link">
         
   
   
@@ -1615,7 +1604,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorials/custom-loss/" class="md-nav__link">
+      <a href="../../tutorials/custom-loss/" class="md-nav__link">
         
   
   
@@ -1702,7 +1691,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/" class="md-nav__link">
+      <a href="../../cookbook/" class="md-nav__link">
         
   
   
@@ -1730,7 +1719,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/custom-loss/" class="md-nav__link">
+      <a href="../../cookbook/custom-loss/" class="md-nav__link">
         
   
   
@@ -1758,7 +1747,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/custom-distribution/" class="md-nav__link">
+      <a href="../../cookbook/custom-distribution/" class="md-nav__link">
         
   
   
@@ -1786,7 +1775,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/custom-growth-strategy/" class="md-nav__link">
+      <a href="../../cookbook/custom-growth-strategy/" class="md-nav__link">
         
   
   
@@ -1814,7 +1803,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cookbook/device-loss/" class="md-nav__link">
+      <a href="../../cookbook/device-loss/" class="md-nav__link">
         
   
   
@@ -1849,7 +1838,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../benchmarks/" class="md-nav__link">
+      <a href="../../benchmarks/" class="md-nav__link">
         
   
   
@@ -1928,7 +1917,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/openboost/" class="md-nav__link">
+      <a href="../../api/openboost/" class="md-nav__link">
         
   
   
@@ -1956,7 +1945,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/models/" class="md-nav__link">
+      <a href="../../api/models/" class="md-nav__link">
         
   
   
@@ -1984,7 +1973,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/distributions/" class="md-nav__link">
+      <a href="../../api/distributions/" class="md-nav__link">
         
   
   
@@ -2012,7 +2001,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/callbacks/" class="md-nav__link">
+      <a href="../../api/callbacks/" class="md-nav__link">
         
   
   
@@ -2040,7 +2029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/loss/" class="md-nav__link">
+      <a href="../../api/loss/" class="md-nav__link">
         
   
   
@@ -2068,7 +2057,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../api/utils/" class="md-nav__link">
+      <a href="../../api/utils/" class="md-nav__link">
         
   
   
@@ -2155,7 +2144,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../migration/from-xgboost/" class="md-nav__link">
+      <a href="../../migration/from-xgboost/" class="md-nav__link">
         
   
   
@@ -2190,7 +2179,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -2237,10 +2226,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-uncertainty-matters" class="md-nav__link">
+  <a href="#minimal-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why Uncertainty Matters
+        Minimal example
       
     </span>
   </a>
@@ -2248,10 +2237,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#links" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Links
       
     </span>
   </a>
@@ -2259,10 +2248,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#available-models" class="md-nav__link">
+  <a href="#preconditioner" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Available Models
+        Preconditioner
       
     </span>
   </a>
@@ -2270,10 +2259,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#distribution-output" class="md-nav__link">
+  <a href="#fit-signature" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Distribution Output
+        Fit signature
       
     </span>
   </a>
@@ -2281,10 +2270,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#monte-carlo-sampling" class="md-nav__link">
+  <a href="#what-to-evaluate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Monte Carlo Sampling
+        What to evaluate
       
     </span>
   </a>
@@ -2292,10 +2281,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vs-ngboost" class="md-nav__link">
+  <a href="#tips" class="md-nav__link">
     <span class="md-ellipsis">
       
-        vs NGBoost
+        Tips
       
     </span>
   </a>
@@ -2303,21 +2292,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
+  <a href="#persistence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related
+        Persistence
       
     </span>
   </a>
@@ -2344,150 +2322,195 @@
   
 
 
-<h1 id="naturalboost">NaturalBoost<a class="headerlink" href="#naturalboost" title="Permanent link">&para;</a></h1>
-<p>NaturalBoost is <strong>distributional regression</strong> via boosting: each
-parameter of <code>F(y | x)</code> (<code>loc</code>, <code>scale</code>, …) is its own ensemble, stepped
-with natural gradient. That is the
-<a href="https://doi.org/10.1111/j.1467-9876.2005.00510.x">GAMLSS</a> / NGBoost
-model class, with a GPU histogram-tree path.</p>
-<p>For a structural formula that is not a distribution, use
-<a href="../../formulaboost/">FormulaBoost</a> (varying-coefficient). For
-right-censored Weibull survival, use
-<a href="../../survival/">WeibullAFT</a>. Shared engine:
-<a href="../../how-it-works/">How it works</a>.</p>
-<h2 id="why-uncertainty-matters">Why Uncertainty Matters<a class="headerlink" href="#why-uncertainty-matters" title="Permanent link">&para;</a></h2>
-<p>Traditional gradient boosting gives you a single number: "the price will be $100". But in reality, you might want to know:</p>
-<ul>
-<li>How confident is the model?</li>
-<li>What's the range of likely values?</li>
-<li>What's the probability of exceeding a threshold?</li>
-</ul>
-<p>NaturalBoost answers these questions by predicting distribution parameters (e.g., mean and variance for a Normal distribution).</p>
-<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Train probabilistic model</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoostNormal</span><span class="p">(</span><span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Point prediction (mean)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">mean</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 90% prediction interval</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_interval</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Check coverage</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">coverage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_test</span> <span class="o">&gt;=</span> <span class="n">lower</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_test</span> <span class="o">&lt;=</span> <span class="n">upper</span><span class="p">))</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Coverage: </span><span class="si">{</span><span class="n">coverage</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Should be ~90%</span>
+<h1 id="formulaboost">FormulaBoost<a class="headerlink" href="#formulaboost" title="Permanent link">&para;</a></h1>
+<p>A <a href="https://doi.org/10.1111/j.2517-6161.1993.tb01939.x">varying-coefficient model</a>:
+trees learn <code>θ(Z)</code>, and a structural input <code>x</code> enters only through a
+formula you write.</p>
+<p>Covariates <code>Z</code> determine parameter surfaces <code>θ(Z)</code> via trees. A structural
+input <code>x</code> (spend, dose, time, …) goes into a formula you write:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>y ≈ f(θ(Z), x)
 </code></pre></div>
-<h2 id="available-models">Available Models<a class="headerlink" href="#available-models" title="Permanent link">&para;</a></h2>
+<p>The trees never see <code>x</code> as a split feature unless you put it in <code>Z</code>. That
+is the point: the shape in <code>x</code> is constrained by <code>f</code>, so the model can
+extrapolate in <code>x</code> while still letting <code>θ</code> vary with <code>Z</code>.</p>
+<h2 id="minimal-example">Minimal example<a class="headerlink" href="#minimal-example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">openboost</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ob</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">sales</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">theta</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">sigmoid</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="mf">30.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">)))</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="n">sigmoid</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">FormulaBoost</span><span class="p">(</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="n">formula</span><span class="o">=</span><span class="n">sales</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">n_params</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">links</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">),</span>   <span class="c1"># a &gt; 0, b unconstrained</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="n">param_names</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">precond</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span>              <span class="c1"># GGN; default</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Z_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">model_input</span><span class="o">=</span><span class="n">x_train</span><span class="p">)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="n">params</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_params</span><span class="p">(</span><span class="n">Z_test</span><span class="p">)</span>              <span class="c1"># dict: a(z), b(z)</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="n">yhat</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Z_test</span><span class="p">,</span> <span class="n">model_input</span><span class="o">=</span><span class="n">x_test</span><span class="p">)</span>
+</code></pre></div>
+<p><code>formula(theta, x)</code> receives <code>theta</code> as a tuple of <code>K</code> arrays (already
+passed through the links) and <code>x</code> as a 1-d array. It must return a 1-d
+prediction the same length as <code>x</code>.</p>
+<h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
+<p>Each parameter has a link that maps unconstrained tree scores to the
+domain the formula expects.</p>
 <table>
 <thead>
 <tr>
-<th>Model</th>
-<th>Distribution</th>
-<th>Use Case</th>
+<th>Link</th>
+<th>Constrained range</th>
+<th>Typical use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>NaturalBoostNormal</code></td>
-<td>Gaussian</td>
-<td>General uncertainty</td>
+<td><code>identity</code></td>
+<td>ℝ</td>
+<td>unconstrained coefficients</td>
 </tr>
 <tr>
-<td><code>NaturalBoostLogNormal</code></td>
-<td>Log-Normal</td>
-<td>Positive skewed (prices)</td>
+<td><code>log</code></td>
+<td>(0, ∞)</td>
+<td>scales, rates</td>
 </tr>
 <tr>
-<td><code>NaturalBoostGamma</code></td>
-<td>Gamma</td>
-<td>Positive continuous</td>
+<td><code>softplus</code></td>
+<td>(0, ∞)</td>
+<td>scales, smoother than <code>log</code></td>
 </tr>
 <tr>
-<td><code>NaturalBoostPoisson</code></td>
-<td>Poisson</td>
-<td>Count data</td>
-</tr>
-<tr>
-<td><code>NaturalBoostStudentT</code></td>
-<td>Student-t</td>
-<td>Heavy tails, outliers</td>
-</tr>
-<tr>
-<td><code>NaturalBoostTweedie</code></td>
-<td>Tweedie</td>
-<td>Insurance claims (Kaggle!)</td>
-</tr>
-<tr>
-<td><code>NaturalBoostNegBin</code></td>
-<td>Negative Binomial</td>
-<td>Sales forecasting (Kaggle!)</td>
+<td><code>sigmoid</code></td>
+<td>(0, 1)</td>
+<td>fractions, saturations</td>
 </tr>
 </tbody>
 </table>
-<h2 id="distribution-output">Distribution Output<a class="headerlink" href="#distribution-output" title="Permanent link">&para;</a></h2>
-<p>For full control, use <code>predict_distribution()</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_distribution</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Access distribution parameters</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">mean</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">std</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">variance</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">variance</span><span class="p">()</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Prediction intervals</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># 90% interval</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Negative log-likelihood</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">nll</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">nll</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean NLL: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">nll</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p><code>links</code> must have length <code>n_params</code>.</p>
+<h2 id="preconditioner">Preconditioner<a class="headerlink" href="#preconditioner" title="Permanent link">&para;</a></h2>
+<p>FormulaBoost scores the formula with a finite-difference Jacobian <code>J</code> and
+preconditions with the generalized Gauss-Newton matrix <code>JᵀJ</code> (plus
+Levenberg–Marquardt damping <code>damp</code>).</p>
+<table>
+<thead>
+<tr>
+<th><code>precond</code></th>
+<th>What it does</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>full</code> (default)</td>
+<td>Invert the <code>K×K</code> GGN including off-diagonals</td>
+<td>Production. Recovers coupled parameters.</td>
+</tr>
+<tr>
+<td><code>diag</code></td>
+<td>Invert only <code>diag(JᵀJ)</code></td>
+<td>Faster; similar predictive RMSE, weaker parameter recovery.</td>
+</tr>
+<tr>
+<td><code>plain</code></td>
+<td>Raw gradient, no GGN</td>
+<td>Debugging only. Diverges on the sales curve.</td>
+</tr>
+</tbody>
+</table>
+<p>XGBoost's custom-objective API accepts only a <strong>diagonal</strong> Hessian. That
+is why <code>full</code> vs XGBoost-diag is the capability comparison, not a speed
+contest.</p>
+<p><code>damp</code> (default <code>1.0</code>) is added to the GGN diagonal. Increase it if
+updates explode; decrease it if training crawls.</p>
+<h2 id="fit-signature">Fit signature<a class="headerlink" href="#fit-signature" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">Z</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model_input</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">eval_set</span><span class="o">=</span><span class="p">[(</span><span class="n">Z_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">x_val</span><span class="p">)],</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">ob</span><span class="o">.</span><span class="n">EarlyStopping</span><span class="p">(</span><span class="n">patience</span><span class="o">=</span><span class="mi">20</span><span class="p">)],</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">early_stopping_rounds</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">)</span>
 </code></pre></div>
-<h2 id="monte-carlo-sampling">Monte Carlo Sampling<a class="headerlink" href="#monte-carlo-sampling" title="Permanent link">&para;</a></h2>
-<p>Sample from the predicted distribution for downstream analysis:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Draw samples</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">samples</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>  <span class="c1"># Shape: (1000, n_test)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Risk analysis</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">threshold</span> <span class="o">=</span> <span class="mf">10.0</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">prob_exceed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># P(Y &gt; 10)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Quantile estimation</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">q90</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="vs-ngboost">vs NGBoost<a class="headerlink" href="#vs-ngboost" title="Permanent link">&para;</a></h2>
-<p>On GPU (Modal A100, 90K rows, heteroscedastic Normal) NaturalBoost fits in
-2.21s against NGBoost's 2716s, with NLL tied (2.108 vs 2.102). NGBoost has no
-GPU implementation. This is one configuration from an early benchmark run, not
-a settled result.</p>
-<p>On the NGBoost-paper UCI suite (20 paired splits, same budget) OpenBoost is
-tied-or-better on every dataset that completed; significant NLL wins on
-kin8nm, protein, and california; no significant loss.</p>
-<p>On CPU the two libraries are ~parity (0.8–1.3×). The speed claim is the
-GPU tree path, not a faster CPU NGBoost clone.</p>
-<p>Full tables, caveats, and reproduce commands:
-<a href="../../../benchmarks/">Benchmarks</a>.</p>
-<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<ol>
-<li><strong>Use shallower trees</strong> (<code>max_depth=3-4</code>) - better for uncertainty estimation</li>
-<li><strong>Train longer</strong> - NaturalBoost learns 2+ parameters per sample</li>
-<li><strong>Evaluate with NLL</strong> - not just RMSE</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">model</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">NaturalBoostNormal</span><span class="p">(</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">n_trees</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>      <span class="c1"># More trees</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>      <span class="c1"># Shallower</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>  <span class="c1"># Lower LR</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
-</code></pre></div>
-<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
+<p><code>eval_set</code> entries are always <code>(X, y, model_input)</code>, three arrays.</p>
+<h2 id="what-to-evaluate">What to evaluate<a class="headerlink" href="#what-to-evaluate" title="Permanent link">&para;</a></h2>
+<p>On the sales-curve benchmark (200K rows, train <code>x ∈ [0.25, 2.5]</code>, extrap
+<code>x ∈ [3, 5]</code>):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align: right;">test RMSE</th>
+<th style="text-align: right;">extrap RMSE</th>
+<th style="text-align: right;">corr <code>b(z)</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FormulaBoost <code>full</code></td>
+<td style="text-align: right;">0.139</td>
+<td style="text-align: right;"><strong>0.183</strong></td>
+<td style="text-align: right;"><strong>0.877</strong></td>
+</tr>
+<tr>
+<td>FormulaBoost <code>diag</code></td>
+<td style="text-align: right;">0.130</td>
+<td style="text-align: right;">0.181</td>
+<td style="text-align: right;">0.730</td>
+</tr>
+<tr>
+<td>black-box GBDT</td>
+<td style="text-align: right;">0.127</td>
+<td style="text-align: right;">3.872</td>
+<td style="text-align: right;">n/a</td>
+</tr>
+<tr>
+<td>XGBoost custom (diag Hess)</td>
+<td style="text-align: right;">0.129</td>
+<td style="text-align: right;">0.203</td>
+<td style="text-align: right;">0.599</td>
+</tr>
+<tr>
+<td>global <code>(a, b)</code></td>
+<td style="text-align: right;">1.641</td>
+<td style="text-align: right;">4.396</td>
+<td style="text-align: right;">n/a</td>
+</tr>
+</tbody>
+</table>
+<p>Honest reading:</p>
 <ul>
-<li><a href="../../how-it-works/">How it works</a>: the shared engine</li>
-<li><a href="../../formulaboost/">FormulaBoost</a>: when <code>f</code> is a formula, not a distribution</li>
-<li><a href="../../survival/">Weibull AFT</a>: censored survival</li>
-<li><a href="../custom-distributions/">Custom distributions</a></li>
-<li><a href="../../../benchmarks/">Benchmarks</a></li>
+<li><strong>Extrapolation</strong> is the product claim (~21× vs black-box). The formula
+  constrains the shape in <code>x</code>; a GBDT that splits on <code>x</code> does not.</li>
+<li><strong>Parameter recovery</strong> of <code>b(z)</code> is what <code>full</code> GGN buys. If you only
+  care about in-sample RMSE, <code>diag</code> is enough.</li>
+<li><code>plain</code> is not a baseline you should ship (extrap RMSE ~3.9).</li>
 </ul>
+<p>Reproduce: <code>uv run modal run benchmarks/bench_formula.py</code>. Full notes:
+<a href="../../benchmarks/">Benchmarks</a>.</p>
+<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Keep <code>K</code> small. The GGN is <code>K×K</code> per row; two to five parameters is the
+  intended range.</li>
+<li>Put only <strong>covariates</strong> in <code>Z</code>. Put the structural axis in
+  <code>model_input</code>. Mixing them usually destroys extrapolation.</li>
+<li>Start with a global fit in your head (what would one <code>(a, b)</code> be?) so
+  you can tell whether the surfaces are recovering anything.</li>
+<li>Shallower trees (<code>max_depth=3</code>) and more rounds, same as NaturalBoost.</li>
+</ul>
+<h2 id="persistence">Persistence<a class="headerlink" href="#persistence" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;formula.joblib&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">loaded</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">FormulaBoost</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;formula.joblib&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The formula callable is pickled with the model. Keep it importable under
+the same module path if you move files between save and load.</p>
 
 
 
@@ -2570,10 +2593,10 @@ GPU tree path, not a faster CPU NGBoost clone.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
