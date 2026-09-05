@@ -6,15 +6,24 @@ duplicating policy.
 
 ## Mission
 
-OpenBoost is a readable Python gradient-boosting research platform. Its current
-product focus is **calibration-first distributional boosting for tabular risk**:
-NaturalBoost, proper scoring, calibration, exposure-aware targets, custom
-distributions, and verified CPU/CUDA execution.
+OpenBoost is a **programmable boosting foundation for researchers and agents**.
+The product hypothesis is that readable, composable algorithm components and
+verified CPU/CUDA execution reduce the cost of making a correct algorithm change.
+Standard GBDT, NaturalBoost/NGBoost-style methods, FormulaBoost, and train-many
+are use cases that determine and test the foundation's abstraction boundaries.
+Distributional risk modeling remains an important use case, not the sole product.
+
+The active design and execution order is
+[`planning/agent-boosting-foundation-plan.md`](planning/agent-boosting-foundation-plan.md).
+The user explicitly permits a clean redesign: existing APIs, trainers, internal
+representations, and persistence formats need not remain backward compatible.
+Preserve mathematical correctness cases and reproducible evidence, not obsolete
+interfaces. This is design permission, not a claim that the new architecture exists.
 
 Do not position the repository as a drop-in replacement for XGBoost, LightGBM,
-or CatBoost. Standard GBDT, GAM, DART, linear leaves, Ray, multi-GPU, and
-train-many are supporting or experimental capabilities unless a committed,
-reproducible artifact proves otherwise.
+or CatBoost. A standard recipe does not establish full feature, quality, or speed
+parity. Existing experimental capabilities remain experimental until committed,
+reproducible artifacts verify their declared scope.
 
 ## Start Here
 
@@ -31,19 +40,30 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-1. Silent correctness and persistence bugs.
-2. Deterministic CPU behavior and reference parity.
-3. One verified single-GPU NaturalBoost path, including end-to-end quality.
-4. Third-party evidence through ScoringBench and real domain case studies.
-5. Stable packaging, versioned persistence, and a smaller public API.
-6. New features only after the above gates are satisfied.
+1. Explicit algorithm tasks, fair baselines, and independent correctness oracles.
+2. A minimal CPU foundation tested by structurally different use cases.
+3. Evidence that agents can make verified algorithm changes with less work.
+4. Verified single-GPU execution and scoped end-to-end cost, including train-many.
+5. Real use-case value and independent authors' repeated use.
+6. Stabilize packaging and the public contracts justified by that evidence.
+
+Silent correctness and persistence failures on any exercised path take priority
+within every stage. ScoringBench is a distributional quality instrument, not the
+gatekeeper for all foundation work. Follow F0–F5 in the active plan; the previous
+P0–P7 checklist is a historical implementation/evidence record.
 
 Treat Ray, multi-GPU, out-of-core training, GOSS speedups, and fused train-many
-as experimental. Do not expand or market them until exact correctness and
-scaling artifacts exist. The repository audit in
+as experimental. Train-many state semantics are an early design probe; fused
+execution and scaling claims require exact correctness and scaling artifacts.
+Ray, multi-GPU, and out-of-core expansion remain outside the active plan.
+The repository audit in
 `learnings/2026-08-15-repository-audit.md` records the current evidence gaps.
 
 ## Architecture
+
+The following describes the existing implementation, not constraints on the
+clean redesign. In particular, per-channel trees, the bin layout and process-global
+backend are not requirements for the new architecture.
 
 ```text
 Models (`src/openboost/_models/`)

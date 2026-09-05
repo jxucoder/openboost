@@ -1,5 +1,9 @@
 # GPU Python foundation：medium 执行清单
 
+> 历史 P0–P7 执行与证据记录，不再是当前待办。继续工作请从
+> [新计划 F0](agent-boosting-foundation-plan.md) 开始。用户明确 foundation 是产品，
+> 可以不兼容地重写现有架构；不再受本清单的旧接口或 trainer 复用要求约束。
+
 状态：P0–P6 已完成；P7.1 真实数据质量通过、性能预算失败（首次 13.899x；固定槽位优化后 12.888x）；P7.2 开发者材料已完成；P7.3 已完成无采样干扰的诊断与设计复查；精确显存峰值及 CUDA trace 仍未验证。G5 外部采用未完成。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
@@ -395,7 +399,8 @@ warm fit 2.079 -> 1.868 s；同轮 legacy 归一化比例 13.899x -> 12.888x。
 
 ### Bigger-goal review: immediate queue changed
 
-The [impact/adoption/value review](impact-adoption-value-next.md) pauses further
-GPU foundation optimization as the immediate priority. Retain the verified API;
-next close ScoringBench configuration/completion evidence gaps, run bounded Linux
-quality checks, and obtain actual outside-author experience when authorized.
+An earlier [impact/adoption/value review](impact-adoption-value-next.md) moved
+the queue to ScoringBench. The user's subsequent clarification supersedes that
+ordering: the foundation is the product, use cases drive its abstractions, and
+backward compatibility is not required. Continue with the
+[new F0–F5 plan](agent-boosting-foundation-plan.md); retain the old measurements.

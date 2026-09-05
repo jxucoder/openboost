@@ -34,6 +34,10 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Foundation product and clean redesign](2026-09-05-agent-foundation-reset.md) —
+  latest user direction, supersedes the earlier risk-first investment ordering;
+  active F0–F5 plan, no backward compatibility requirement.
+
 - [Independent GPU extension wheels](2026-09-05-foundation-p6-gpu-wheels.md)
 
 - [Strict CUDA extension trainer](2026-09-05-foundation-p5-trainer.md)

@@ -1,5 +1,9 @@
 # GPU Python boosting foundation：设计草案
 
+> 历史设计与证据记录。后续工作以 [新的 F0–F5 计划](agent-boosting-foundation-plan.md)
+> 为准：foundation 是产品，允许不兼容重写。本文中必须复用旧 trainer、固定接口及
+> distributional 产品优先等约束已被用户后续指示取代；原始测试和失败结果仍保留。
+
 状态：P0–P6 技术与安装验证已完成；P7 质量通过，GPU 性能预算失败，独立剖析与设计复查已完成；精确显存峰值和 CUDA trace 未验证。外部 adoption 未验证。日期：2026-09-05。
 
 本文件定义接口、边界、验证方法与执行顺序，供 medium 模型实施。

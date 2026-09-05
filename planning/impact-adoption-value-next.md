@@ -1,5 +1,12 @@
 # Impact, adoption and value: next investment gate
 
+> Superseded by the user's foundation-first, no-backward-compatibility direction
+> and [the active F0–F5 plan](agent-boosting-foundation-plan.md) on 2026-09-05.
+> The text below records the earlier strategic interpretation, not the current
+> work queue or mission. P7 falsifies its scoped performance target; it does not
+> establish that the foundation product hypothesis has failed. The completed
+> ScoringBench configuration fix remains useful evidence infrastructure.
+
 Review date: 2026-09-05. Replaces continued GPU micro-optimization as the immediate
 work queue; the experimental API and its negative results remain available.
 
