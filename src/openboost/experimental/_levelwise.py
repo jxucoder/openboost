@@ -82,6 +82,9 @@ class LevelWiseBuilder:
         frontier[0] = True
         leaves = frontier.copy()
         feature, threshold, left, right = (xp.full(slots, -1, xp.int32) for _ in range(4))
+        node = xp.arange(slots, dtype=xp.int32)
+        parent = xp.maximum((node - 1) // 2, 0)
+        nonroot = node != 0
         for _ in range(config.max_depth):
             hist = build_histograms(
                 binned.data, grad, hess, ids, frontier, memory_budget_bytes=budget
@@ -93,14 +96,15 @@ class LevelWiseBuilder:
                 min_gain=config.min_gain,
             )
             valid = splits.valid
-            feature[valid], threshold[valid] = splits.feature[valid], splits.threshold[valid]
-            left[valid], right[valid] = splits.left_child[valid], splits.right_child[valid]
-            leaves[valid] = False
+            # Keep fixed-size arrays instead of compacting boolean selections.
+            # Every nonroot slot is active iff its fixed parent split this round.
+            feature = xp.where(valid, splits.feature, feature)
+            threshold = xp.where(valid, splits.threshold, threshold)
+            left = xp.where(valid, splits.left_child, left)
+            right = xp.where(valid, splits.right_child, right)
             ids = partition(binned.data, ids, splits)
-            frontier = xp.zeros(slots, xp.bool_)
-            frontier[splits.left_child[valid]] = True
-            frontier[splits.right_child[valid]] = True
-            leaves |= frontier
+            frontier = valid[parent] & nonroot
+            leaves = (leaves & ~valid) | frontier
             # Do not retain the previous histogram while allocating the next.
             del hist, splits, valid
         values = leaf_values(

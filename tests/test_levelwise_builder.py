@@ -144,3 +144,40 @@ def test_zero_curvature_and_early_leaf():
         LevelWiseBuilder().build(
             binned, np.ones_like(g), np.zeros_like(h), config=cfg, context=context()
         )
+
+
+@pytest.mark.parametrize("early_leaf", [False, True])
+def test_fixed_slot_growth_does_not_compact_split_arrays(monkeypatch, early_leaf):
+    """Fixed-slot growth must not materialize variable-length masked split arrays."""
+    from dataclasses import replace
+
+    import openboost.experimental._levelwise as module
+
+    class FixedSlots(np.ndarray):
+        def __getitem__(self, index):
+            if isinstance(index, np.ndarray) and index.dtype == np.bool_:
+                raise AssertionError("Boolean compaction of fixed-slot split arrays")
+            return super().__getitem__(index)
+
+    original = module.find_splits
+
+    def splits(*args, **kwargs):
+        result = original(*args, **kwargs)
+        return replace(
+            result,
+            **{
+                name: getattr(result, name).view(FixedSlots)
+                for name in ("feature", "threshold", "left_child", "right_child", "valid")
+            },
+        )
+
+    monkeypatch.setattr(module, "find_splits", splits)
+    binned, g, h = example()
+    if early_leaf:
+        g = np.zeros_like(g)
+    cfg = TrainerConfig(max_depth=3)
+    built = LevelWiseBuilder().build(binned, g, h, config=cfg, context=context())
+    expected, prediction = oracle_tree(binned.data, g, h, cfg)
+    for name, values in expected.items():
+        np.testing.assert_allclose(getattr(built.tree, name), values, rtol=1e-6, atol=1e-6)
+    np.testing.assert_allclose(built.train_prediction, prediction, rtol=1e-6, atol=1e-6)
