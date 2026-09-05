@@ -46,7 +46,8 @@ None beyond initial red collection at implementation time.
 
 ## Risks and Follow-ups
 
-- Real T4 validation pending at the implementation commit.
+- The leaf primitive/rule passed on real T4; assembled GPU Booster remains
+  unverified.
 - Atomic float32 reduction order is not deterministic; scalar checks synchronize.
 - Default leaf arithmetic and clipped variants use the same existing numeric
   L2 split criterion; clipped split optimality is not claimed.
@@ -66,3 +67,19 @@ None beyond initial red collection at implementation time.
   -n 0 -q`: **107 passed**.
 - Production/changed-file lint and docs build passed; existing griffe warnings
   remain. GPU results must come from the committed wheel below.
+
+## Real-device evidence
+
+- Clean `4da7f4b`: **5 passed / 0 skipped** on Tesla T4. 23.90 s pytest,
+  28.17 s remote function. [Raw artifact](../benchmarks/results/foundation/20260905T152639Z-62d96727/README.md).
+- Direct row G/H sums and physical counts match exactly for the small, dyadic
+  random and empty fixtures. Newton/bounded values meet rtol=atol=1e-6.
+- Two GPU-composed rounds reproduce raw≈3.36 versus 1 and the independently
+  calculated second gradients. Actual CPU trainer integration passes separately.
+- Nondefault stream, wrong output device/dtype/finiteness, nonzero inactive
+  output and GPU input mutation checks pass. Scope remains named download
+  wrappers plus source/device checks, not profiler-level transfer accounting.
+- Offline validator accepted results; all uploaded source hashes and the embedded
+  JUnit were independently matched to the clean source. P4.3 complete.
+- Next: P4.4 LevelWiseBuilder; then independent CPU extension wheel examples per
+  the goal review, before full P5 GPU trainer integration.

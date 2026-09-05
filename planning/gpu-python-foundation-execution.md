@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1、P2、P3 已完成；P4.1–P4.2 已完成，下一项 P4.3。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0、P1、P2、P3 已完成；P4.1–P4.3 已完成，下一项 P4.4。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -202,7 +202,13 @@ G/H 独立 sample oracle 最大误差分别 9.835e-7 / 1.252e-6，计数完全�
 - 设备 partition 后的 node IDs 与 CPU oracle 对应；下一层 histogram 必须来源于实际 routed rows。
 - 不使用父 histogram 按比例近似 child。默认完整固定槽位，空槽明确 masked。
 
-**P4.3 — leaf reduction / rule。**
+**P4.3 — leaf reduction / rule。已完成。**
+
+`4da7f4b`：107 项相关 CPU 测试通过，真实 T4 上 5 passed / 0 skipped。
+逐样本归约参考、加权 Newton/裁剪叶值、下一轮梯度变化和规则所有权检查通过。
+[原始证据与边界](../benchmarks/results/foundation/20260905T152639Z-62d96727/README.md)。
+CPU 已经由实际 trainer 接入 root builder；GPU 目前是两轮 primitive 组合，尚非完整 Booster。
+
 
 - 真正的 GPU sum/reduce；非均匀权重与零有效节点独立核对。
 - 公开 leaf rule 返回同设备数组。bounded leaf 的值与下一轮梯度都要改变。
