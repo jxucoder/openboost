@@ -34,6 +34,10 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [F0.1 foundation task cards](2026-09-05-foundation-f0-task-cards.md) —
+  all A1–A13 tasks specified, independent failure cases and fair baseline paths;
+  F0.2 is next, runtime and benchmark gates remain unverified.
+
 - [OpenBoost v1 scope, releases and evaluation](2026-09-05-openboost-v1-plan.md) —
   real v1 planning baseline; all A1–A13 use cases individually required, no
   privileged insurance/AFT focus; releases/plans and quantitative acceptance.

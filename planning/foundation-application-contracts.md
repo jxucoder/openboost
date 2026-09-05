@@ -3,6 +3,8 @@
 日期：2026-09-05。状态：用户要求纳入的设计与验收范围，**不代表新架构已实现**。
 补充 [v1 主计划](agent-boosting-foundation-plan.md) 与
 [E0–E7 eval](openboost-v1-evaluation.md)，代码审阅基线 `f30c2ed`。
+F0.1 的 [完整任务卡](foundation-tasks.md) 已选定各项数据、切分与数学约定；
+下载后的数据 hash、实际基线运行和 v1 实现仍未完成。
 
 用户明确：**以下用例都需要，全部属于 v1 必需范围，逐项交付和验收**。
 每个用例有自己的目标语义、recipe、真实工作流和独立证据。保险/AFT 与其他用例
@@ -25,9 +27,9 @@ hash、许可、切分、特征可用时点和任务定义；数据选择不改�
 | A7 / R4 | 事件计数 / 频率 | frequency 数据上的 Poisson + exposure；交付 count 与单位 exposure 的 rate 预测 | offset/权重只生效一次、预测单位、Poisson deviance；exposure 缩放反例 |
 | A8 / R4 | 正值金额 / 严重度 | severity 数据上的 Gamma；声明 claim 级或保单平均目标 | 正值域、样本选择、claim 权重、Gamma deviance；不能以 A7 通过代替 |
 | A9 / R4 | 总损失 / 纯保费 | 关联 frequency/severity 数据；Tweedie 与 frequency × severity 流程 | 零值、power、aggregate/annualized 单位、Tweedie deviance；不能以 A7/A8 代替 |
-| A10 / R5 | Censored survival / AFT | 真实随访或寿命数据；固定噪声族/尺度的事件与右删失流程 | 删失 likelihood、risk/time/survival 输出、censored NLL 与适用的概率/排序评价 |
+| A10 / R5 | Censored survival / AFT | Veterans' Administration lung cancer；固定噪声尺度 log-normal AFT 的事件与右删失流程 | 删失 likelihood、risk/time/survival 输出、censored NLL 与适用的概率/排序评价 |
 | A11 / R6 | 分布预测 / NaturalBoost | 真实回归来源或正式 ScoringBench 子任务；Normal 双参数与方向/步长变体 | proper score、Fisher/普通方向、参数 link、calibration/width；不能只报 coverage |
-| A12 / R7 | 结构化关系 / FormulaBoost | F0 选定有明确结构假设的真实数据；双参数 formula、link、结构输入、参数输出；另有参数恢复/错设实验 | 独立 Jacobian/方向、可识别性反例、真实任务预测质量及结构基线；合成实验不能替代真实任务 |
+| A12 / R7 | 结构化关系 / FormulaBoost | UCI Concrete Compressive Strength；配方 Z、龄期 x 的双参数饱和公式假设；另有参数恢复/错设实验 | 独立 Jacobian/方向、可识别性反例、真实任务预测质量及结构基线；合成实验不能替代真实任务 |
 | A13 / R9 | 模型选择 / train-many | 在真实任务上训练并选择多个配置/目标/分组；M=1/8/32，报告所选模型 | prepared-data identity、独立 seed/停止/失败、所选模型质量、完整集合与模型选择成本 |
 
 验收按 A1–A13 的身份逐项判断，不能用一个“至少若干任务”的计数替代覆盖。
