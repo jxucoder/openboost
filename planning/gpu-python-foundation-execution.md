@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1、P2 已完成；下一项 P3。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0、P1、P2、P3 已完成；下一项 P4。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -139,6 +139,14 @@ P2 验收：真实 T4 共 14 passed / 0 skipped；12 个基线配置、24 次拟
 
 ## P3：CPU 上冻结最小公开契约
 
+已完成：CPU facade、严格 objective、显式 builder、逐 channel schedule、
+插件无关 raw inference 持久化和 coefficient-aware early stopping。
+182 项相关测试通过；3 项旧 GBDT 长训练测试中断，未计为通过。
+干净 `f414b8c` wheel 在隔离 Python 3.12 环境验证预测完全一致。
+[契约、安装限制与复现](../learnings/2026-09-05-foundation-p3-cpu-contract.md)。
+P3 只支持 CPU；native extension adapter 留到 P5。默认 CPU builder 暂拒绝
+`reg_lambda=0/min_child_weight=0` 组合。G1 在这个明确边界内通过。
+
 **P3.1 — 实验 facade 与 objective contract。** 主要文件：新
 `src/openboost/experimental/__init__.py`、薄接口/类型模块、`_trainer.py`。
 
@@ -161,7 +169,7 @@ P2 验收：真实 T4 共 14 passed / 0 skipped；12 个基线配置、24 次拟
 - 红测试：非常数逐 channel schedule 的 fit raw / predict / save-load 一致；
   early stopping 截断和 restore 同时处理 tree 与 coefficient。
 - 实验模型保存后，在不安装扩展包的干净 CPU 环境仍可 raw inference；不 pickle 训练插件。
-- 旧模型没有 coefficients 的文件按旧 learning_rate 加载；已有 categorical 旧版本拒绝规则保留。
+- 旧模型没有 coefficients 的文件按旧 learning_rate 加载；实验 facade 拒绝旧 categorical state；共享旧加载器原有警告策略保持不变。
 - 共享 persistence 被触及的所有 tree state round trip 测试通过，特别是 missing/categorical/specialized leaves。
 
 验收：实验 CPU 契约已实现、默认模型无相关回归、G1 通过。

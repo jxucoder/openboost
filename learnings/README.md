@@ -34,6 +34,7 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [2026-09-05-foundation-p3-cpu-contract.md](2026-09-05-foundation-p3-cpu-contract.md) — experimental CPU objective/builder/schedule, plugin-free wheel inference, coefficient persistence and installation limits.
 - [2026-09-05-foundation-p2-boundaries-baseline.md](2026-09-05-foundation-p2-boundaries-baseline.md) — real T4 boundary verification and frozen California Housing baseline; P2 complete.
 - [2026-09-05-foundation-p2-correctness.md](2026-09-05-foundation-p2-correctness.md) — real T4 weighted regression before/after evidence, scoped RNG and explicit execution boundaries.
 - [2026-09-05-foundation-p1-modal.md](2026-09-05-foundation-p1-modal.md) — isolated Modal wheel smoke, provenance checks, and explicit failure propagation.

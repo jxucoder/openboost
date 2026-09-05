@@ -89,3 +89,40 @@ CUDA either fails preflight or warns and selects the entire CPU path.
   Numba threads did not remove that cost. These three long tests are not claimed
   as passed. Focused callback and new coefficient restoration checks substitute
   for this slice; no unrelated predictor optimization was made.
+
+## P3 completion and isolated wheel evidence
+
+- Focused legacy callbacks: 8 passed / 3 deselected; combined with the 174-case
+  run, 182 relevant tests passed. The three deselected long early-stopping
+  tests remain unverified in this slice, not a passing full CPU suite.
+- Clean source `f414b8c` built wheel `openboost-1.0.0rc1-py3-none-any.whl`,
+  SHA256 `5d0560682f7940252c15c9d5f8a67ccbe64849fdd8515aeaf600778c5595439c`.
+- Isolated Python 3.12.12 CPU environment: NumPy 2.2.6, Numba 0.61.2,
+  llvmlite 0.44.0, SciPy 1.16.3, joblib 1.5.3. Actual import came from temporary
+  uv `site-packages`, with `python -I`; no training fixture module was imported.
+  Three rounds of nonconstant coefficients reproduced both raw channels exactly.
+- Failed installation attempts: offline cache lacked joblib; unpinned uv selected
+  Python 3.14 / Numba 0.67 / llvmlite 0.49 and failed building against local LLVM
+  20 (required 22). Pinning the development Numba 0.63.1 still required an x86
+  macOS source build and failed in setuptools with `dry_run`. Public binary
+  wheels for Numba 0.61.2 succeeded with `--no-build`. No broad fresh-install
+  compatibility claim follows; dependency/platform packaging remains a follow-up.
+- Reproducible harness: `tests/check_experimental_wheel_inference.py` (create
+  mode imports deliberately unpicklable test plugins; verify mode imports only
+  NumPy and the installed public OpenBoost API). From the repository, run:
+
+```sh
+OPENBOOST_BACKEND=cpu uv run --no-sync python -m tests.check_experimental_wheel_inference create /tmp/ob-inference
+uv build --wheel
+OPENBOOST_BACKEND=cpu uv run --isolated --no-project --python 3.12 --no-build \
+  --with /absolute/path/to/dist/openboost-1.0.0rc1-py3-none-any.whl \
+  --with numba==0.61.2 --with numpy==2.2.6 --with scipy==1.16.3 --with joblib==1.5.3 \
+  python -I /absolute/path/to/tests/check_experimental_wheel_inference.py verify /tmp/ob-inference
+```
+
+- G1 is satisfied within the documented CPU/scalar-tree boundary. GPU extension
+  primitives and dispatch are P4/P5; independent extension packages are P6.
+  No external adoption or performance gain has been demonstrated by P3.
+- Implementation commits: `50b3631` objective facade, `b2b3a7a` builder/schedule,
+  `f414b8c` persistence/callback state. Subsequent changes only document evidence
+  and add the standalone verification harness; library source is unchanged.
