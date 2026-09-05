@@ -119,3 +119,9 @@ P4.1 histogram validation uses `prepare --suite histograms` and Modal entrypoint
 batch histogram device case, and requires all three without skips. The device
 case covers small exact, random and empty aggregates; this is not a GPU extension
 trainer or performance benchmark.
+
+P4.2 uses `prepare --suite splits` and entrypoint `foundation_splits`, adding
+`test_splits.py` and the CPU row-mask oracle (`split_oracle.py`). It reruns the
+two smoke cases and histogram case, then verifies split/gain/routing, exact ties,
+invalid routes, and rebuilding child histograms from real routed rows. All four
+GPU cases and their evidence fields are required; no skips satisfy the gate.

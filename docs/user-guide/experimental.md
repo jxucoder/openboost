@@ -88,3 +88,28 @@ retains aggregation results on device, and synchronizes scalar validation checks
 Floating-point CUDA accumulation order is not deterministic. No speed claim is
 made. This primitive is separate from `Booster`, which remains CPU-only; split,
 routing, leaf rules and builder integration follow in later P4/P5 steps.
+
+## Numeric split and routing primitives
+
+`find_splits(histograms, reg_lambda=1., min_child_weight=1., min_gain=0.)`
+returns `SplitBatch`: int32 feature/threshold/left_child/right_child arrays,
+float64 gain, and bool valid mask for each fixed slot. Prefix sums and scores
+use float64 from the float32 histograms. Gain is the unhalved L2 score; it must
+be positive and at least min_gain. Both children require positive H and at
+least min_child_weight, including when min_child_weight=0. Exact ties select
+the first feature, then the first threshold. Inactive, empty, terminal and
+unsplittable slots have -1 indices, zero gain and valid=False.
+
+`partition(binned, sample_node_ids, splits)` returns a new int32 array of routed
+IDs. It preserves -1 and nodes without a valid split. Children use fixed indices
+`2*i+1` and `2*i+2`; routing never modifies the input IDs. Construct the next
+active mask from valid children and call `build_histograms` on these routed IDs
+to build actual child statistics.
+
+These operations accept the same contiguous NumPy/current-device CuPy boundary
+as histograms. GPU arrays stay on device; scalar input checks synchronize.
+Only numeric L2 splitting is supported. Histogram missing-bin G/H must be zero,
+and routing rejects bin 255 even for zero-weight rows. Callers must provide
+numeric bins; categorical metadata is outside this primitive API. A future
+builder must reject missing/categorical inputs before growth. This does not
+yet make experimental Booster GPU-capable or establish an end-to-end speedup.

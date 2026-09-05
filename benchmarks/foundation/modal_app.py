@@ -197,3 +197,8 @@ def foundation_baseline():
 @app.local_entrypoint()
 def foundation_histograms():
     run_suite("histograms")
+
+
+@app.local_entrypoint()
+def foundation_splits():
+    run_suite("splits")

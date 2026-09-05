@@ -134,3 +134,14 @@ def test_histogram_suite_requires_device_check(evidence):
         validate_result(manifest, result)
     result['checks']['batch_histograms'] = {'device_arrays': True, 'legacy_download_wrappers_blocked': True, 'cases': [{}, {}, {}]}
     validate_result(manifest, result)
+
+
+def test_split_suite_requires_routing_evidence(evidence):
+    manifest, result = evidence
+    manifest['suite'] = 'splits'
+    result['junit'] = result['junit'].replace('</testsuite>', '<testcase name="test_batch_histogram_device_oracle" /><testcase name="test_batch_split_routing_oracle" /></testsuite>')
+    result['checks']['batch_histograms'] = {'device_arrays': True, 'legacy_download_wrappers_blocked': True, 'cases': [{}, {}, {}]}
+    with pytest.raises(ValueError, match='split/routing'):
+        validate_result(manifest, result)
+    result['checks']['batch_splits'] = {'device_arrays': True, 'routed_child_oracle': True, 'exact_ties_and_gain_boundary': True, 'cases': [{}, {}, {}, {}]}
+    validate_result(manifest, result)

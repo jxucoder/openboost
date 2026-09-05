@@ -1,6 +1,6 @@
 # GPU Python boosting foundation：设计草案
 
-状态：P0–P3 已完成，实验 CPU 契约落地；P4 起设备扩展仍待实现。日期：2026-09-05。
+状态：P0–P3、P4.1 已完成；P4.2 split/routing 正在验证，后续设备扩展仍待实现。日期：2026-09-05。
 
 本文件定义接口、边界、验证方法与执行顺序，供 medium 模型实施。
 已完成阶段的实际行为与证据见执行清单；P2 基线不代表新扩展 API 的 GPU 路径已验证。
@@ -68,7 +68,7 @@
 
 | 项目 | MVP 决定 |
 |---|---|
-| GPU | 单 NVIDIA GPU，CUDA 12，Numba CUDA 内核；扩展数组使用 CuPy |
+| GPU | 单 NVIDIA GPU，CUDA 12，Numba/CuPy RawKernel 内核；扩展数组使用 CuPy |
 | CPU | NumPy oracle 与可运行的实验引擎；不要求与 GPU 位级一致 |
 | 数据 | 稠密数值特征；sample-major 输入，bin 后 feature-major；一维 y，多 channel raw |
 | 树 | level-wise、标量叶、每 channel 每 round 一棵树；深度至多 8 |
@@ -336,3 +336,33 @@ Modal 支持构建镜像时安装依赖与显式包含本地文件，也有运�
 
 竞争背景与更广泛路线见 [impact/adoption/value 研究](../learnings/2026-09-05-impact-adoption-value-strategy.md)。
 本计划要获得的是一个可以被采用或被证伪的窄基座，尚不宣称已经拥有 ecosystem。
+
+## 2026-09-05 goal review after P4.1
+
+The larger objective remains useful, trustworthy distributional/risk modeling
+and a shorter path from a research idea to a usable implementation. The GPU
+foundation is one bounded hypothesis supporting that objective. Passing kernels,
+more APIs and more Python code are not adoption or value evidence.
+
+G0/G1/G2 and one histogram primitive have evidence. G3 (independent GPU
+extensions), G4 (matched-quality end-to-end cost) and G5 (external author use)
+remain open. Continue the smallest path through numeric split/routing, one
+bounded leaf rule and two-channel Normal training to the two independent wheels.
+Do not add tree families, custom split criteria or extra device support on the
+way. The next product checkpoint is a reproducible method implemented through
+public APIs, with implementation effort, installation obstacles and runtime
+cost recorded; then an external author task, not another list of kernels.
+
+Keep the existing stop conditions: if authors only need custom distributions,
+return investment to the distributional product; if GPU gives no end-to-end
+benefit, keep it optional. Prepare author materials without sending invitations
+or publishing. External attempts and retention still require actual users.
+
+Implementation clarifications: P4.1 uses a small CuPy RawKernel for its separate
+layout/count contract; Python percentage and Numba-only kernels are not goals.
+Its non-default stream test covers that primitive only, not the future whole
+trainer. P4.2 numeric splitting requires positive curvature in both children,
+including when min_child_weight=0; this avoids inventing information about empty
+versus zero-weight bins from G/H alone. Zero-curvature nodes stay leaves; missing
+and categorical builder support remains out of scope. These limits must remain
+visible in the public contract and independently tested.
