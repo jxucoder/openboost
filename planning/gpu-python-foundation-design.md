@@ -294,7 +294,8 @@ Normal 比较 held-out NLL、CRPS 和区间覆盖率；Poisson 用确定生成�
 
 ## 9. Modal 验证设计
 
-复用 `tests/modal_gpu_tests.py` 的 app，新增限定入口；现有 runner 只复制单个测试文件、
+P1 实施调整：使用独立 `benchmarks/foundation/modal_app.py`，保留旧 runner。
+旧 app 注册了源码挂载和宽松依赖的其他作业，直接复用会破坏 wheel 隔离边界。现有 runner 只复制单个测试文件、
 宽松依赖、部分入口只打印失败，不足以直接当本轮证据。
 Modal 支持构建镜像时安装依赖与显式包含本地文件，也有运行测试的官方示例。
 使用当前 SDK 的 uv 安装路径，不再新增随意 pip 安装。

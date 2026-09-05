@@ -75,7 +75,7 @@ uv build
 
 ## P1：建立可失败、可追溯的 Modal 测试通路
 
-**P1.1 — 结果协议与测试包。** 主要文件：`tests/modal_gpu_tests.py`、
+**P1.1 — 结果协议与测试包。** 主要文件：`benchmarks/foundation/`（独立 app，避免旧源码挂载）、
 新 `tests/foundation/`、必要的依赖锁/测试配置、`benchmarks/results/.gitignore`。
 
 - 先写本地单元测试：远端结果 failure、timeout、缺失报告、必跑 GPU test skipped 时，本地入口退出非零。
@@ -94,7 +94,7 @@ uv build
 计划命令（P1 实现后才存在）：
 
 ```bash
-uv run modal run tests/modal_gpu_tests.py::foundation_smoke
+uv run modal run benchmarks/foundation/modal_app.py::foundation_smoke
 ```
 
 验收：本地收到与源码 wheel 对应的真实 GPU 结果，失败状态能传播至 CLI。

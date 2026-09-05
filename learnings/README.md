@@ -34,6 +34,7 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [2026-09-05-foundation-p1-modal.md](2026-09-05-foundation-p1-modal.md) — isolated Modal wheel smoke, provenance checks, and explicit failure propagation.
 - [2026-09-05-foundation-p0-integration.md](2026-09-05-foundation-p0-integration.md) — integrate unified trainer, preserve local fixes, and cover generic loading of the new models.
 - [2026-09-05-gpu-python-foundation-design.md](2026-09-05-gpu-python-foundation-design.md) — scoped GPU Python foundation design, branch integration, experimental contracts, and medium execution checklist.
 - [2026-09-05-impact-adoption-value-strategy.md](2026-09-05-impact-adoption-value-strategy.md) — impact/adoption/value research, current online versus local evidence, and proposed validation gates.
