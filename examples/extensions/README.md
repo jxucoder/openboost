@@ -106,3 +106,10 @@ that guard failed when CUDA availability discovery spawned a Python worker and
 re-entered top-level training. Keep training out of import-time execution; the
 CPU installer explicitly tests importing the demo as `__mp_main__` without
 creating a model. The failed real-device run is retained in foundation evidence.
+
+
+## Independent author trial
+
+[AUTHOR_TASK.md](AUTHOR_TASK.md) provides an unsolved extension task and a record
+for elapsed time, assistance, private imports/core changes, GPU results and
+willingness to depend on the package. No outside author has completed it yet.

@@ -48,3 +48,13 @@ A+B+C changes the math, so it gets a separate quality/cost report.
   passed. Standalone CPU worker rerun passed after adding path profiling and
   partial-record checkpoints. A missing list bracket in the new profile code
   was caught by lint and fixed before any device execution.
+
+## Developer materials
+
+- Added a one-page objective/leaf/schedule cookbook and CPU/strict-CUDA capability
+  matrix; corrected the older guide's CPU-only input/view description for CUDA.
+- Added an unsolved independent-author task and observation form. It records
+  actual time/help/private imports/core edits/GPU evidence and willingness to
+  depend on OpenBoost. No author has attempted it and nobody was contacted.
+- MkDocs build passed with existing griffe warnings. Core and plugin wheel
+  hashes in the P7 bundle match P6; documentation changes do not alter that code.
