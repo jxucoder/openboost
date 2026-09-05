@@ -140,3 +140,43 @@ next round's gradients, while keeping the split criterion unchanged.
 CUDA reduction and rule arithmetic stay on device; scalar validation checks
 synchronize. Named download-wrapper checks are not a complete profiler trace.
 The assembled level-wise builder and GPU Booster integration are still pending.
+
+## Level-wise builder
+
+Select `LevelWiseBuilder(leaf_rule=..., memory_budget_bytes=...)` explicitly to
+compose the batch primitives. It supports numeric, nonmissing features, L2,
+full row/feature sampling and depth 0–8. Both children must have positive
+curvature to split. Unsupported metadata/parameters and insufficient histogram
+budgets fail before growth. The existing CPU default builder remains available.
+
+```python
+import numpy as np
+from openboost.experimental import (
+    Booster, DistributionObjectiveAdapter, LevelWiseBuilder, TrainerConfig,
+)
+
+rng = np.random.default_rng(7)
+X = rng.normal(size=(64, 3)).astype(np.float32)
+y = (0.5 * X[:, 0] + 0.3 * rng.normal(size=64)).astype(np.float32)
+model = Booster(
+    objective=DistributionObjectiveAdapter("normal", natural=True),
+    tree_builder=LevelWiseBuilder(),
+    config=TrainerConfig(n_trees=2, max_depth=2, random_state=7),
+).fit(X, y)
+raw = model.predict_raw(X)
+```
+
+Direct `LevelWiseBuilder.build` also accepts a BinnedArray with contiguous CuPy
+data and matching CUDA ExecutionContext. Metadata stays on host. This entry
+currently requires the default CUDA stream. It returns a standard host
+TreeStructure and an owned CuPy training prediction in BuiltTree. Only five
+compact tree arrays are downloaded after growth; sample statistics, routed IDs
+and histograms stay on device. Fixed slots and previous histogram release keep
+one histogram batch live between levels; the budget excludes input arrays,
+prediction caches, compact tree arrays and transient validation masks.
+
+The device cache survives release of input views. Host tree arrays support
+CPU prediction and existing persistence. Direct GPU builder composition is
+validated separately from `Booster.fit`, which remains CPU-only until P5.
+The default numeric CPU builder is not replaced: this opt-in builder has a
+narrower feature boundary and no established end-to-end performance advantage.

@@ -132,3 +132,10 @@ must pass. Leaf evidence checks direct row sums, empty/zero-curvature behavior,
 plugin output/ownership errors and two rounds where clipping changes the next
 weighted gradient. The GPU two-round check composes primitives; it is not an
 assembled experimental GPU Booster validation.
+
+P4.4 uses `prepare --suite builder` / `foundation_builder`, adding `test_builder.py`
+and the whole-tree row oracle `builder_oracle.py`. Six required cases include
+prior primitives, whole-tree topology/leaf checks, input-view lifetime,
+compact-only finalization, two-round/two-channel Normal composition at 16 and
+4,097 rows, bounded rules, and CPU inference after persistence. Synthetic
+NLL/CRPS check numerical agreement; this is not a product-quality benchmark.

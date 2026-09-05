@@ -7,6 +7,7 @@ from .._trainer import TrainerConfig
 from ._booster import Booster
 from ._builders import BuiltTree, ConstantSchedule, CPUHistogramBuilder, TreeStructure
 from ._contracts import DistributionObjectiveAdapter, ExecutionContext
+from ._levelwise import LevelWiseBuilder
 
 __all__ = ['Booster', 'TrainerConfig', 'DistributionObjectiveAdapter', 'ExecutionContext',
-           'BuiltTree', 'TreeStructure', 'CPUHistogramBuilder', 'ConstantSchedule', 'HistogramBatch', 'build_histograms', 'SplitBatch', 'find_splits', 'partition', 'LeafStatistics', 'NewtonLeafRule', 'reduce_leaves', 'leaf_values']
+           'BuiltTree', 'TreeStructure', 'CPUHistogramBuilder', 'ConstantSchedule', 'HistogramBatch', 'build_histograms', 'SplitBatch', 'find_splits', 'partition', 'LeafStatistics', 'NewtonLeafRule', 'reduce_leaves', 'leaf_values', 'LevelWiseBuilder']

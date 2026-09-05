@@ -207,3 +207,8 @@ def foundation_splits():
 @app.local_entrypoint()
 def foundation_leaves():
     run_suite("leaves")
+
+
+@app.local_entrypoint()
+def foundation_builder():
+    run_suite("builder")

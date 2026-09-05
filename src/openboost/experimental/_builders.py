@@ -12,7 +12,7 @@ from ._contracts import ExecutionContext, exact_keys, readonly, vector
 @dataclass(frozen=True)
 class BuiltTree:
     tree: TreeStructure
-    train_prediction: np.ndarray | None = None
+    train_prediction: object | None = None
 
 
 class ConstantSchedule:
