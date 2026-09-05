@@ -86,3 +86,23 @@ def test_cli_returns_nonzero_for_missing_report(tmp_path, evidence):
     )
     assert run.returncode != 0
     assert "results.json" in run.stderr
+
+
+def test_correctness_requires_weighted_cases(evidence):
+    manifest, result = evidence
+    manifest['suite'] = 'correctness'
+    with pytest.raises(ValueError, match='missing'):
+        validate_result(manifest, result)
+    extra = ''.join(f'<testcase name="{name}" />' for name in (
+        'test_weighted_newton', 'test_weighted_distribution[normal]',
+        'test_weighted_distribution[poisson]',
+    ))
+    result['junit'] = result['junit'].replace('</testsuite>', extra + '</testsuite>')
+    validate_result(manifest, result)
+
+
+def test_unknown_suite_rejected(evidence):
+    manifest, result = evidence
+    manifest['suite'] = 'unknown'
+    with pytest.raises(ValueError, match='Unknown'):
+        validate_result(manifest, result)

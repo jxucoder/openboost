@@ -20,9 +20,15 @@ def validate_result(manifest, result):
         root = ET.fromstring(result.get("junit", ""))
     except ET.ParseError as exc:
         raise ValueError("Missing or invalid JUnit report") from exc
+    required = set(REQUIRED_TESTS)
+    suite = manifest.get("suite", "smoke")
+    if suite == "correctness":
+        required.update({"test_weighted_newton", "test_weighted_distribution[normal]", "test_weighted_distribution[poisson]"})
+    elif suite != "smoke":
+        raise ValueError("Unknown evidence suite")
     cases = list(root.iter("testcase"))
     names = [case.get("name") for case in cases]
-    if len(names) != len(REQUIRED_TESTS) or set(names) != REQUIRED_TESTS:
+    if len(names) != len(required) or set(names) != required:
         raise ValueError("Required GPU cases missing or duplicated")
     if any(list(root.iter(tag)) for tag in ("failure", "error", "skipped")):
         raise ValueError("GPU cases failed, errored, or skipped")

@@ -109,7 +109,7 @@ def smoke_job():
         "pytest",
         "-c",
         "pytest.ini",
-        "test_smoke.py",
+        *source.get("test_files", ["test_smoke.py"]),
         "--junitxml=junit.xml",
     ]
     result = {
@@ -146,8 +146,9 @@ def smoke_job():
     return result
 
 
-@app.local_entrypoint()
-def foundation_smoke():
+def run_suite(suite):
+    if manifest.get("suite", "smoke") != suite:
+        raise ValueError(f"Prepare --suite {suite} first")
     run_id = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid4().hex[:8]
     directory = ROOT / "benchmarks/results/foundation" / run_id
     directory.mkdir(parents=True)
@@ -164,4 +165,14 @@ def foundation_smoke():
     print(f"Evidence saved to {directory}")
     print(result.get("stdout", ""))
     validate_result(saved_manifest, result)
-    print("Foundation smoke passed; full CUDA parity remains P2.")
+    print(f"Foundation {suite} passed.")
+
+
+@app.local_entrypoint()
+def foundation_smoke():
+    run_suite("smoke")
+
+
+@app.local_entrypoint()
+def foundation_correctness():
+    run_suite("correctness")

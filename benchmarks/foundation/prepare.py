@@ -1,5 +1,6 @@
 """Build an allowlisted upload bundle from a clean committed source tree."""
 
+import argparse
 import hashlib
 import json
 import shutil
@@ -16,7 +17,7 @@ def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def prepare():
+def prepare(suite="smoke"):
     def git(*args):
         return subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()
 
@@ -36,10 +37,14 @@ def prepare():
         "pytest.ini": ROOT / "tests/foundation/pytest.ini",
         "requirements.txt": ROOT / "benchmarks/foundation/requirements.txt",
     }
+    if suite == "correctness":
+        sources["test_correctness.py"] = ROOT / "tests/foundation/test_correctness.py"
     for name, source in sources.items():
         shutil.copyfile(source, BUNDLE / name)
     manifest = {
         "schema_version": 1,
+        "suite": suite,
+        "test_files": ["test_smoke.py"] + (["test_correctness.py"] if suite == "correctness" else []),
         "source_sha": git("rev-parse", "HEAD"),
         "source_dirty": False,
         "wheel": wheels[0].name,
@@ -49,7 +54,7 @@ def prepare():
         "base_image": IMAGE,
         "python": "3.12",
         "uv_version": "0.12.1",
-        "command": COMMAND,
+        "command": ["uv", "run", "--no-sync", "modal", "run", f"benchmarks/foundation/modal_app.py::foundation_{suite}"],
         "gpu": "T4",
         "timeout_s": 300,
         "retries": 0,
@@ -65,4 +70,6 @@ def prepare():
 
 
 if __name__ == "__main__":
-    prepare()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--suite", choices=("smoke", "correctness"), default="smoke")
+    prepare(parser.parse_args().suite)

@@ -49,3 +49,14 @@ for these NumPy/CuPy/Numba smoke cases. Record the exact installed versions in
 each run. The CUDA base digest is Linux amd64 CUDA 12.4.0 devel Ubuntu 22.04,
 resolved from NVIDIA's registry; the image's Python patch version is recorded
 at runtime. The uv image installer is pinned to 0.12.1.
+
+P2 weighted correctness regression (includes the smoke cases):
+
+```bash
+uv run python -m benchmarks.foundation.prepare --suite correctness
+uv run modal run benchmarks/foundation/modal_app.py::foundation_correctness
+```
+
+This currently covers fixed-bin weighted histograms/Newton predictions and
+three-round weighted Normal/Poisson CPU/CUDA comparisons. It does not yet
+constitute the complete P2 baseline gate.
