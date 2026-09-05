@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "suite": "extensions",
+  "test_files": [
+    "test_smoke.py",
+    "test_extensions.py"
+  ],
+  "source_sha": "43fcda31b70a5970b0e588c1d0e4b836707af90e",
+  "source_dirty": false,
+  "wheel": "openboost-1.0.0rc1-py3-none-any.whl",
+  "wheel_sha256": "5dde197f412ffa9a1b0d59e445b043359c7dfef2a6e2170b9d1a849a0969e4ed",
+  "uv_lock_sha256": "076f55ce347cae1071c902021b0e7b1b7ab4eec7eab4d95ad2a8f177d8cc9ca1",
+  "files": {
+    "test_smoke.py": "1e1eddf1f7e6ca4f4a744f426268e23da806241d0a32be9a83c720e12d28ea8d",
+    "conftest.py": "74551355ebf2a700cf28ebcf41e9826540f23309b1d0eb41e13a624e9924703f",
+    "pytest.ini": "3497504c3be101997137e28318681bdf533d7eb0f6d7b31e7206656b6308422d",
+    "requirements.txt": "9b2c6b9fe476b5c728deacf558d726437fc16e64998376e78f3676c41cbf0d4a",
+    "test_extensions.py": "3db0274563b12349d74b6e6f58f09c6291fe881cdfdae6fa384f614be6fc2bf7",
+    "check_extension_inference.py": "24dcbcd2e3ed392b91b51ce228e9ac2ed4eb9e8797941854e47558dbd062104e",
+    "extension_demo.py": "3eb0e67f0f4cd4f30283ff93a3b1a15a6aa6a8d24fd31115888ad45bcac1b8e3"
+  },
+  "base_image": "nvidia/cuda@sha256:14c54fad24b376ab78a70e1ef6595a2b7c8cdbf187e4f9b76de99a926fb62460",
+  "python": "3.12",
+  "uv_version": "0.12.1",
+  "command": [
+    "uv",
+    "run",
+    "--no-sync",
+    "modal",
+    "run",
+    "benchmarks/foundation/modal_app.py::foundation_extensions"
+  ],
+  "gpu": "T4",
+  "timeout_s": 300,
+  "retries": 0,
+  "dataset": {
+    "generator": "numpy.default_rng",
+    "seed": 31,
+    "shape": [
+      256,
+      4
+    ],
+    "split": "smoke uses training data; no held-out quality claim"
+  },
+  "extension_wheels": {
+    "openboost_example_normal_fisher-0.2.0-py3-none-any.whl": "47ddff3a87c85b3f4bb187d7b53b650180a6072983a20bc48f0fb8d379da4e1b",
+    "openboost_example_bounded_leaves-0.2.0-py3-none-any.whl": "dc236c0f207f7fdf0a52e6bdb8e7330f1ffbb6f63e082bb5226c49294a0f02c3"
+  },
+  "extension_sources": {
+    "examples/extensions/normal_fisher/README.md": "78a5142eaf92a81df9c5908861a1ce66e5ae8b03bf753e0b84a834c5f2a5d0eb",
+    "examples/extensions/normal_fisher/pyproject.toml": "ab70495fafa430dfb1377a873cbb821c9484c9008cea26575fa3c3fa2a91e40d",
+    "examples/extensions/normal_fisher/src/normal_fisher/__init__.py": "cabafae48d9ad251eea62230b1d38ba7407fbb113dec116b3e840c05e032afd3",
+    "examples/extensions/normal_fisher/tests/test_normal.py": "6dcb48f9434879b054fe9a9e8b6fca5f4ba01782d8c45ed4c566a8306ee867c3",
+    "examples/extensions/bounded_leaves/README.md": "749f68fafb9e8cb5911c16aa79ab7a82593599e5c196c20be3ec9923172144e9",
+    "examples/extensions/bounded_leaves/pyproject.toml": "8731c3fa03f03341fcc987b449c04658c5bde3e7a4d24772e3bc2199ceb55eac",
+    "examples/extensions/bounded_leaves/src/bounded_leaves/__init__.py": "d53927c63c71ea3cf37083e0d71d11aff58941dbed1df430838c2d6b2912efff",
+    "examples/extensions/bounded_leaves/tests/test_leaf.py": "41339c49f146181811dd0680d2b1abc563448ce35b4a79e8d4f0559c5d949baf"
+  },
+  "run_id": "20260905T181351Z-1aee9568",
+  "modal_image_id": "im-5t2tgVcNHJsjGxYTfMVI8u"
+}

@@ -148,3 +148,11 @@ ordinary/natural adapter modes and invalid-statistic rejection. Counts and
 reports distinguish compact downloads, CPU initialization/binning and device
 input copies. The frozen run has no nsys executable: profiler evidence is open.
 See `results/foundation/20260905T180000Z-7d73ba83` under benchmarks for raw evidence.
+
+
+`--suite extensions` / `foundation_extensions` installs the two independent
+example wheels alongside OpenBoost. The three-case suite checks installed module
+contents, independent GPU mathematics, eight CPU/CUDA composition cells and a
+standalone GPU demo, then removes the plugins and checks nine exact CPU model
+roundtrips in a new interpreter. `20260905T181351Z-1aee9568` is the passing raw
+artifact; the initial standalone-script failure is retained separately.

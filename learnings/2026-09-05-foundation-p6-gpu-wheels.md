@@ -47,7 +47,7 @@ Initialization stays CPU; loss is an explicit scalar; constrain preserves device
 
 ## Risks and Follow-ups
 
-- Real T4 package execution pending at implementation commit; no skipped pass.
+- Real T4 package conformance passed below; no skipped GPU tests.
 - Repository-maintained examples are not third-party adoption. No algorithm
   novelty, held-out quality, speed or cost advantage is established here.
 - P5 device copies/scalar synchronization and profiler gap remain. Next after
@@ -71,3 +71,21 @@ Initialization stays CPU; loss is an explicit scalar; constrain preserves device
 - Entry-guard fix verified locally: 7 fresh-wheel tests and six plugin-free CPU
   roundtrips, plus no-side-effect worker import; evidence runner 21 passed.
   Preserve partial GPU metrics before launching the demo on future failed runs.
+
+## Frozen successful evidence
+
+- `43fcda3`: [passing T4 artifact](../benchmarks/results/foundation/20260905T181351Z-1aee9568/README.md),
+  3 passed / 0 skipped. Independent installed GPU math plus eight combination
+  cells and standalone GPU demo; nine exact CPU predictions after both plugins
+  were uninstalled and a new interpreter started.
+- Maximum raw error 3.58e-7, NLL difference 2.31e-8, CRPS difference 2.86e-8.
+  These are numerical fixture agreement, not held-out quality or speed evidence.
+- Named compact copies: 160 / 4,480 bytes over eight GPU fits; separate demo and
+  reference transfers excluded. Device copies/scalar synchronization remain.
+- Main-guard fix resolved the standalone CUDA discovery failure. Preserve its
+  original JUnit whitespace verbatim; the commit's whitespace check excluded
+  only that immutable traceback file, not implementation files.
+- All uploaded file, package source, wheel and lock hashes verified; JUnit copies
+  matched; strengthened offline result gate and private-path scan passed.
+- P6/G3 technical package gate passes. Next: P7/G4 matched-quality cost and
+  developer materials; G5 remains open until an external author's actual use.

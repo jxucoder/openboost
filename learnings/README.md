@@ -34,6 +34,8 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Independent GPU extension wheels](2026-09-05-foundation-p6-gpu-wheels.md)
+
 - [Strict CUDA extension trainer](2026-09-05-foundation-p5-trainer.md)
 
 - [Independent CPU extension wheels](2026-09-05-foundation-p6-cpu-wheels.md)

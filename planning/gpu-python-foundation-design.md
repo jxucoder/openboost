@@ -1,6 +1,6 @@
 # GPU Python boosting foundation：设计草案
 
-状态：P0–P3、P4.1–P4.4 已完成；P6 CPU 独立扩展 wheel 验证已完成；P5 核心 GPU 扩展训练已验证（无 profiler trace）；下一项 P6 GPU 独立包验证。日期：2026-09-05。
+状态：P0–P3、P4.1–P4.4 已完成；P6 CPU 独立扩展 wheel 验证已完成；P5 核心 GPU 扩展训练已验证（无 profiler trace）；P6 CPU/GPU 独立包安装已验证；下一项 P7 工程价值评估。日期：2026-09-05。
 
 本文件定义接口、边界、验证方法与执行顺序，供 medium 模型实施。
 已完成阶段的实际行为与证据见执行清单；P2 基线不代表新扩展 API 的 GPU 路径已验证。
