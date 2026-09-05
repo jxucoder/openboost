@@ -196,3 +196,10 @@ The 600-second diagnostic job does not replace the original timing matrix.
 It checks quality against that committed parent result, carries its hash, and
 adds synchronized inclusive boundary timers. Nested timers overlap and include
 synchronization overhead; they are diagnostic, not production latency claims.
+
+
+P7 outcome: [original resident matrix](../results/foundation/20260905T183820Z-3c245f2d/README.md)
+passes default quality but fails the performance budget (13.899x legacy CUDA fit
+median). The [isolated diagnostic](../results/foundation/20260905T184856Z-dcd49569/README.md)
+points to tree construction and its boundary as the dominant cost. Neither run
+establishes a general GPU speed/cost advantage or external adoption.

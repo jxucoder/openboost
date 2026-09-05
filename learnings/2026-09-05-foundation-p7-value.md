@@ -85,3 +85,26 @@ A+B+C changes the math, so it gets a separate quality/cost report.
   failed and now passes after enforcing exactly four seed-0 cells.
 - Standalone CPU profile worker passed; production/harness lint and original
   matrix's offline validation passed. No core/plugin modifications.
+
+## Isolated result and design review
+
+- `9bb1ff3`: [isolated T4 artifact](../benchmarks/results/foundation/20260905T184856Z-dcd49569/README.md),
+  3 passed / 0 skipped; four seed-0 profiles, quality matches parent. No original
+  timing cells replaced. Core/plugin wheels still match P6 exactly.
+- Default diagnostic fit 2.260 s: tree/session boundary 2.123 s, nested builder
+  1.588 s, objective boundary .0885 s. Prioritize tree/validation/synchronization
+  investigation; objective math is not the main measured cost. Do not remove
+  contracts or infer promised savings from inclusive timers.
+- Original performance verdict remains 13.899x, budget failed. No core speed fix
+  or broader GPU capability expansion is included. Retain bounded research API.
+- Developer guide and unsolved author task completed. G5 remains open; no outside
+  author was contacted. Exact per-fit GPU memory peak and full CUDA trace remain
+  unverified. Nominal coverage is overconservative; no calibration win claimed.
+- P5 CPU regression (904 passed) and P6 CPU/GPU installation evidence apply to
+  the identical core/plugin wheels. This slice changes only harness/docs; 27
+  focused tests, production/changed-file lint and MkDocs passed. Both new GPU
+  artifacts validate offline. Full hash/JUnit/privacy checks completed below.
+- Final audit passed: every uploaded file and wheel hash, parent results hash,
+  JUnit equality, unchanged executed implementation, private-path scan, and
+  absence of memGetInfo from isolated host profiles. Final focused rerun:
+  27 passed; production/harness lint and both offline evidence gates passed.

@@ -1,6 +1,6 @@
 # GPU Python boosting foundation：设计草案
 
-状态：P0–P3、P4.1–P4.4 已完成；P6 CPU 独立扩展 wheel 验证已完成；P5 核心 GPU 扩展训练已验证（无 profiler trace）；P6 CPU/GPU 独立包安装已验证；下一项 P7 工程价值评估。日期：2026-09-05。
+状态：P0–P6 技术与安装验证已完成；P7 质量通过，GPU 性能预算失败，独立剖析与设计复查已完成；精确显存峰值和 CUDA trace 未验证。外部 adoption 未验证。日期：2026-09-05。
 
 本文件定义接口、边界、验证方法与执行顺序，供 medium 模型实施。
 已完成阶段的实际行为与证据见执行清单；P2 基线不代表新扩展 API 的 GPU 路径已验证。
@@ -373,3 +373,17 @@ integration. Record public/private imports, installation failures, method code
 and steps to correct output. Fix demonstrated API obstacles first. GPU parity
 and independent GPU wheels remain mandatory afterward; no external adoption
 is claimed from examples we write ourselves.
+
+## P7 observed value boundary
+
+The [committed resident matrix](../benchmarks/results/foundation/20260905T183820Z-3c245f2d/README.md)
+passes quality but shows 13.899x default CUDA fit time versus the paired legacy
+CUDA path. The 20% regression budget failed. P6/G3 proves independent installed
+extensions; it does not justify replacing the legacy path. G4 retains negative
+performance evidence and explicit profiler/peak-memory limits. G5 is still open.
+The product mission remains calibration-first distributional risk, with this
+API available for bounded research rather than a claimed general GPU speed layer.
+
+The [isolated follow-up](../benchmarks/results/foundation/20260905T184856Z-dcd49569/README.md)
+places most diagnostic wall time in tree construction and its extension boundary,
+not objective math. The original uninstrumented timing verdict remains unchanged.

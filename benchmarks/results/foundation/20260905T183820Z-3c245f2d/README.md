@@ -77,3 +77,9 @@ uv run --no-sync python -m benchmarks.foundation.runner benchmarks/results/found
 Decision: retain the experimental API for research; do not replace the legacy GPU
 path or claim speed/cost superiority. G3 technical extension capability holds;
 G4 has a negative performance result plus profiling/peak-memory gaps; G5 is open.
+
+
+[Isolated follow-up](../20260905T184856Z-dcd49569/README.md) subsequently passed
+with unchanged quality and separate host/memory fits. It localizes most diagnostic
+time to the tree/session boundary. The original timings and raw profiles above
+remain unchanged.

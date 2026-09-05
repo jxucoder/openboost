@@ -67,7 +67,10 @@ attach a leaf rule and call the objective's `constrain` to obtain sigma. Separat
 package metadata/builds and dependency selection are real setup costs. Source
 hashes, wheel hashes, installed versions, module paths and test outcomes are
 recorded so this narrow installation result is reproducible. A clean-room
-external author experiment and end-to-end GPU value remain unverified.
+external author experiment remains unverified. The subsequent
+[P7 resident value matrix](../../benchmarks/results/foundation/20260905T183820Z-3c245f2d/README.md)
+passes default quality but fails the GPU performance budget; the independent
+example also has worse proper scores on that dataset/configuration.
 
 
 ## Real CUDA installation check

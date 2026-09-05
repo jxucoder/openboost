@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1、P2、P3 已完成；P4.1–P4.4 已完成，P6 CPU 独立扩展 wheel 验证已完成，P5 核心 GPU 集成已通过（profiler 缺口保留），P6 GPU 独立包验证已完成，下一项 P7 质量/成本与开发者材料。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0–P6 已完成；P7.1 真实数据质量通过、性能预算失败（13.899x）；P7.2 开发者材料已完成；P7.3 已完成无采样干扰的诊断与设计复查；精确显存峰值及 CUDA trace 仍未验证。G5 外部采用未完成。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -353,3 +353,32 @@ collect 时间与 measured 时间分开；自报的 GPU label 不能代替设备
 > 已授权用 Modal 做计划内单 GPU 验证；先做可追溯 smoke，再做 correctness，最后 benchmark。
 > 不扩大到多 GPU/通用训练图，不跳过持久化，不用 CPU fallback 冒充 GPU 通过。
 > 不 push 或合并 main。遇到证伪结果就据实记录并调整最小设计；明确区分技术验收和外部 adoption。
+
+## P7 工程价值复查（2026-09-05）
+
+[固定矩阵](../benchmarks/results/foundation/20260905T183820Z-3c245f2d/README.md)
+保留 12 cells、48 个计时 fits、全部 seed 和失败判据。新默认 GPU warm fit
+2.078694 s，对照旧 GPU .149556 s，13.899x；质量逐 fit/seed 均通过。
+独立 A+B+C proper scores 更差，不能拿较接近 90% 的 coverage 单独宣布优胜。
+原 profile 与内存采样并发，host 归因受污染；单独补测，不替换原时间矩阵。
+
+结论约束：保留实验性扩展 API，不替换旧 GPU 路径，不主张速度/成本优势。
+下一步优化必须保留借用输入不变、缓存预测验证及最终质量；先验证同步/验证开销的
+具体来源，再决定是否值得优化。现有结果不支持继续扩展多 GPU、train-many 或
+“通用 GPU Python 基座”定位。产品主线仍是校准优先的风险分布建模。
+
+[作者任务与记录表](../examples/extensions/AUTHOR_TASK.md) 已准备，尚无外部作者
+尝试或独立依赖意愿证据。G5 明确未通过；下一项 adoption 验证是一次真实试用，
+不是再增加我们自己编写的示例。没有联系他人、push、发布或更新外部榜单。
+
+
+[无采样干扰的补测](../benchmarks/results/foundation/20260905T184856Z-dcd49569/README.md)
+3 passed / 0 skipped，质量保持原值。默认路径诊断 fit 2.260 s 中树/session边界
+2.123 s（builder 内部 1.588 s），objective 边界 .0885 s。优先调查树构建、重复
+验证和同步，不以换 objective 数学作为主要性能修复。同步计时嵌套且有测量开销，
+不能代替原始未插桩性能结果；也不能用它推算某个优化的收益。
+
+最终验证沿用相同 core/plugin wheel 的 P5 CPU 904 passed、P6 独立安装与真实
+CUDA conformance；本轮没有修改对应代码。新增 harness 的 27 项 focused tests、
+production/changed-file lint、文档构建及两个新 artifact 的离线检查通过。
+G4 的性能预算失败；精确 peak/完整 transfer trace 留作明确缺口，不标为通过。
