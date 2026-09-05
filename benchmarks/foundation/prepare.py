@@ -37,10 +37,20 @@ def prepare(suite="smoke"):
         "pytest.ini": ROOT / "tests/foundation/pytest.ini",
         "requirements.txt": ROOT / "benchmarks/foundation/requirements.txt",
     }
-    if suite in ("correctness", "boundaries"):
+    if suite in ("correctness", "boundaries", "baseline"):
         sources["test_correctness.py"] = ROOT / "tests/foundation/test_correctness.py"
-    if suite == "boundaries":
+    if suite in ("boundaries", "baseline"):
         sources["test_boundaries.py"] = ROOT / "tests/foundation/test_boundaries.py"
+    if suite == "baseline":
+        from .dataset import describe
+
+        archive = ROOT / "build/foundation_data/cal_housing.tgz"
+        expected = json.loads((ROOT / "benchmarks/foundation/housing.json").read_text())
+        if describe(archive) != expected:
+            raise RuntimeError("Frozen dataset/split mismatch")
+        sources.update({name: ROOT / "benchmarks/foundation" / name for name in ("dataset.py", "baseline_worker.py", "housing.json")})
+        sources["test_baseline.py"] = ROOT / "tests/foundation/test_baseline.py"
+        sources["cal_housing.tgz"] = archive
     for name, source in sources.items():
         shutil.copyfile(source, BUNDLE / name)
     manifest = {
@@ -58,7 +68,7 @@ def prepare(suite="smoke"):
         "uv_version": "0.12.1",
         "command": ["uv", "run", "--no-sync", "modal", "run", f"benchmarks/foundation/modal_app.py::foundation_{suite}"],
         "gpu": "T4",
-        "timeout_s": 300,
+        "timeout_s": 1800 if suite == "baseline" else 300,
         "retries": 0,
         "dataset": {
             "generator": "numpy.default_rng",
@@ -67,11 +77,14 @@ def prepare(suite="smoke"):
             "split": "smoke uses training data; no held-out quality claim",
         },
     }
+    if suite == "baseline":
+        manifest["dataset"] = expected
+        manifest["baseline_protocol"] = {"seeds": [0, 1, 2], "modes": ["resident", "eval"], "backends": ["cpu", "cuda"], "repeats_per_cell": 2, "nll_abs_tolerance": "0.01 * max(1, abs(cpu_nll))", "crps_max_ratio": 1.01, "coverage90_abs_tolerance": 0.01}
     (BUNDLE / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(f"Prepared wheel {manifest['wheel_sha256']} from {manifest['source_sha']}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries"), default="smoke")
+    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries", "baseline"), default="smoke")
     prepare(parser.parse_args().suite)

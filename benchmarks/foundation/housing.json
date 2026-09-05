@@ -1,0 +1,41 @@
+{
+  "name": "California Housing",
+  "source_url": "https://ndownloader.figshare.com/files/5976036",
+  "archive_sha256": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681",
+  "member": "CaliforniaHousing/cal_housing.data",
+  "features": [
+    "MedInc",
+    "HouseAge",
+    "AveRooms",
+    "AveBedrms",
+    "Population",
+    "AveOccup",
+    "Latitude",
+    "Longitude"
+  ],
+  "shape": [
+    20640,
+    8
+  ],
+  "target_unit": "100,000 USD",
+  "arrays_sha256": "34fc72e53a6329a89a9ae792e92f37853cea98adfbc6feea28cc08dc06f68ca1",
+  "dtype": "little-endian float32",
+  "split": "numpy.default_rng(seed), permutation, 60/20/20",
+  "split_sha256": {
+    "0": [
+      "7d07544c6c3fddd72d0cfc8d0aa0c19cf00250f1890420bdb10bd80efb0c9c04",
+      "5f6d9931d5a5239c7933da9bb62df2c631e79017658f185742db94f139be358a",
+      "877744733fe0213e716ca084333f39385c30654169f117f772c53a6af8bcff37"
+    ],
+    "1": [
+      "99578d3ef329ef275fd41e3834df7dab763525f9374db203b6f748b783eed05a",
+      "a161a60cd85d1ec54cbfd590f6befdb58b1a9a695c635bfbb562b4064d265caf",
+      "039c4fc07f6596a3cfdf73cb55820de4baa13f93251ede4c215796f283d46256"
+    ],
+    "2": [
+      "51ab6cbe0019b5bea9f9da8a81b3fafa874d8c992062f65ee8d1b09a3b7898a1",
+      "14509d20c7d87948ac6ea9060c476995583dd130af0ff928a9c24709e5ecf9d4",
+      "ff6426d360c75b637dd866cd73d9fd1b9fcf310a886dc05fbac0f80dcf256ec8"
+    ]
+  }
+}

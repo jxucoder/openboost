@@ -53,7 +53,7 @@ image = image.uv_pip_install(
     memory=8192,
     max_containers=1,
     retries=0,
-    timeout=300,
+    timeout=manifest["timeout_s"],
     scaledown_window=2,
     serialized=True,
     include_source=False,
@@ -86,6 +86,11 @@ def smoke_job():
         "packages": {d.metadata["Name"]: d.version for d in importlib.metadata.distributions()},
     }
     try:
+        cpuinfo = Path("/proc/cpuinfo").read_text()
+        environment["cpu_model"] = next((line.split(":", 1)[1].strip() for line in cpuinfo.splitlines() if line.startswith("model name")), "not exposed")
+    except OSError:
+        environment["cpu_model"] = "not exposed"
+    try:
         import cupy
         from numba import cuda
 
@@ -111,6 +116,7 @@ def smoke_job():
         "pytest.ini",
         *source.get("test_files", ["test_smoke.py"]),
         "--junitxml=junit.xml",
+        *(["--maxfail=1"] if source.get("suite") == "baseline" else []),
     ]
     result = {
         "environment": environment,
@@ -120,7 +126,7 @@ def smoke_job():
         "timed_out": False,
     }
     try:
-        completed = subprocess.run(argv, cwd=directory, capture_output=True, text=True, timeout=240)
+        completed = subprocess.run(argv, cwd=directory, capture_output=True, text=True, timeout=source["timeout_s"] - 60)
         result.update(
             returncode=completed.returncode, stdout=completed.stdout, stderr=completed.stderr
         )
@@ -141,7 +147,7 @@ def smoke_job():
     )
     result["remote_function_wall_s"] = time.monotonic() - start
     result["timing_scope"] = (
-        "smoke execution including environment checks/JIT; not a performance benchmark or billed duration"
+        "suite execution including environment checks/JIT; excludes image/startup, not billed duration; baseline cell timings have separate scopes"
     )
     return result
 
@@ -181,3 +187,8 @@ def foundation_correctness():
 @app.local_entrypoint()
 def foundation_boundaries():
     run_suite("boundaries")
+
+
+@app.local_entrypoint()
+def foundation_baseline():
+    run_suite("baseline")

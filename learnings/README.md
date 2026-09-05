@@ -34,6 +34,7 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [2026-09-05-foundation-p2-boundaries-baseline.md](2026-09-05-foundation-p2-boundaries-baseline.md) — execution boundary harness and frozen real-data baseline protocol; new Modal upload pending.
 - [2026-09-05-foundation-p2-correctness.md](2026-09-05-foundation-p2-correctness.md) — real T4 weighted regression before/after evidence, scoped RNG and explicit execution boundaries; broader baseline pending.
 - [2026-09-05-foundation-p1-modal.md](2026-09-05-foundation-p1-modal.md) — isolated Modal wheel smoke, provenance checks, and explicit failure propagation.
 - [2026-09-05-foundation-p0-integration.md](2026-09-05-foundation-p0-integration.md) — integrate unified trainer, preserve local fixes, and cover generic loading of the new models.

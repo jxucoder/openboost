@@ -130,6 +130,8 @@ def test_eval_callback_persistence(distribution, monkeypatch, tmp_path, checks):
             np.testing.assert_allclose(v, expected[k], rtol=2e-5, atol=2e-6)
         cpu_model = ob.NaturalBoost(distribution=distribution, n_trees=3, max_depth=1).fit(X, y)
         cpu_expected = cpu_model.predict_params(X)
+        for k in expected:
+            np.testing.assert_allclose(cpu_expected[k], expected[k], rtol=2e-5, atol=2e-6)
         cpu_path = tmp_path / 'cpu.ob'
         cpu_model.save(cpu_path)
     with ob.backend_context('cuda'):

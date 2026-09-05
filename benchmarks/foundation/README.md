@@ -60,3 +60,52 @@ uv run modal run benchmarks/foundation/modal_app.py::foundation_correctness
 This currently covers fixed-bin weighted histograms/Newton predictions and
 three-round weighted Normal/Poisson CPU/CUDA comparisons. It does not yet
 constitute the complete P2 baseline gate.
+
+## Remaining P2 execution boundaries and baseline
+
+The `boundaries` suite adds eight real-device tests to the five correctness
+cases: custom/exposure/generic fallback, device-error rollback, row/column
+sampling preflight and Normal/Poisson callback/eval/cross-device persistence.
+
+```bash
+uv run python -m benchmarks.foundation.prepare --suite boundaries
+uv run modal run benchmarks/foundation/modal_app.py::foundation_boundaries
+```
+
+The `baseline` suite includes all 13 boundary/correctness cases and stops on
+any failure before entering its real-data matrix. Download the public
+California Housing archive once into the ignored data directory:
+
+```bash
+uv run python -c 'from benchmarks.foundation.dataset import fetch; fetch("build/foundation_data/cal_housing.tgz")'
+uv run python -m benchmarks.foundation.prepare --suite baseline
+uv run modal run benchmarks/foundation/modal_app.py::foundation_baseline
+```
+
+The archive hash is sklearn 1.8.0's published hash, and the transformation was
+checked against that installed sklearn loader. `housing.json` freezes the
+archive/array/split hashes. Float32 conversion follows the original per-row
+ratio transformations; no learned scaling is applied. Each seed 0/1/2 uses a
+60/20/20 train/validation/test permutation. Only training data fits bin edges.
+
+The predefined Normal model uses 30 rounds, depth 3, learning rate .05 and 64
+bins. For every CPU/CUDA × seed × no-eval/eval cell, a fresh Python subprocess
+and empty NUMBA_CACHE_DIR measure first and repeated fit. Fits include binning,
+objective math, copies and compilation; imports, dataset loading and container
+startup are excluded. Prediction includes test binning. Small path-counting
+wrappers are included in timings. Repeated CUDA predictions use rtol=2e-5 /
+atol=2e-6 because floating-point atomic reductions need not be bit-identical.
+
+CPU/CUDA quality gates are frozen before collection: per seed/mode NLL absolute
+difference <= .01 * max(1, abs(CPU NLL)), CRPS regression <= 1%, and coverage90
+absolute difference <= .01. These real-data gates cannot override the strict
+micro-oracle tests. Three seeds do not establish statistical significance.
+
+The baseline function is limited to one T4, two CPU cores, 8 GiB requested
+memory, no retries and 1800 seconds. Its pytest subprocess is capped at 1740
+seconds and each matrix worker at 150 seconds. Failure output and partial
+completed cells are retained. Exact CPU model is recorded if /proc exposes it.
+The trainer transfer counter is partial, and is not total PCIe traffic or a
+zero-transfer assertion. GPU memory peaks and scaling remain later gates.
+
+Status: locally validated harness; P2.2/P2.3 GPU execution remains pending.

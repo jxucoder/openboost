@@ -122,6 +122,10 @@ uv run modal run benchmarks/foundation/modal_app.py::foundation_smoke
   调用前后全局 NumPy RNG 状态不变。MVP GPU 未支持采样时要拒绝；旧 CPU 采样需接 seed。
 - 不支持参数在首次更新之前失败；测试 fitted attributes 不留下看似完成的半模型。
 
+当前进度：新增 GPU 边界测试与 California Housing 基线 harness 已完成本地验证；
+新文件上传 Modal 被自动审批拦截，完整运行待确认。
+见 [P2 边界与基线记录](../learnings/2026-09-05-foundation-p2-boundaries-baseline.md)。
+
 **P2.3 — 冻结整合后可用基线。**
 
 - 用 `::foundation_correctness` 跑 Normal/Poisson 的 gradient → split → leaf → raw → metric；

@@ -1,6 +1,7 @@
 """Validate returned smoke evidence; usable offline without Modal installed."""
 
 import json
+import math
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -22,12 +23,14 @@ def validate_result(manifest, result):
         raise ValueError("Missing or invalid JUnit report") from exc
     required = set(REQUIRED_TESTS)
     suite = manifest.get("suite", "smoke")
-    if suite in ("correctness", "boundaries"):
+    if suite in ("correctness", "boundaries", "baseline"):
         required.update({"test_weighted_newton", "test_weighted_distribution[normal]", "test_weighted_distribution[poisson]"})
     elif suite != "smoke":
         raise ValueError("Unknown evidence suite")
-    if suite == "boundaries":
+    if suite in ("boundaries", "baseline"):
         required.update({"test_visible_fallback[custom]", "test_visible_fallback[exposure]", "test_visible_fallback[generic]", "test_device_error_rolls_back", "test_device_sampling_preflight[subsample]", "test_device_sampling_preflight[colsample_bytree]", "test_eval_callback_persistence[normal]", "test_eval_callback_persistence[poisson]"})
+    if suite == "baseline":
+        required.add("test_baseline_matrix")
     cases = list(root.iter("testcase"))
     names = [case.get("name") for case in cases]
     if len(names) != len(required) or set(names) != required:
@@ -46,6 +49,40 @@ def validate_result(manifest, result):
         and checks.get("dataset_sha256")
     ):
         raise ValueError("Missing installed-wheel/device-path checks (possible fallback)")
+    if suite == "baseline":
+        validate_baseline(checks.get("baseline_cells", []))
+
+
+def validate_baseline(cells):
+    expected = {(seed, mode, backend) for seed in (0, 1, 2) for mode in ("resident", "eval") for backend in ("cpu", "cuda")}
+    if len(cells) != len(expected):
+        raise ValueError("Incomplete baseline matrix")
+    indexed = {(c.get("seed"), c.get("mode"), c.get("backend")): c for c in cells}
+    if set(indexed) != expected:
+        raise ValueError("Missing or duplicated baseline cells")
+    for (_, _, backend), cell in indexed.items():
+        records = cell.get("records", [])
+        if [r.get("phase") for r in records] != ["first_fit", "repeat_fit"]:
+            raise ValueError("Missing first/repeated fit")
+        for r in records:
+            if r.get("fallback_warnings") != []:
+                raise ValueError("Baseline fallback")
+            path = r.get("fit_path", {})
+            if path.get("objective_calls") != 30 or path.get("native_tree_calls") != (60 if backend == "cuda" else 0):
+                raise ValueError("Baseline device path mismatch")
+            for name in ("fit_s", "predict_params_s"):
+                if not math.isfinite(r.get(name, float("nan"))) or r[name] <= 0:
+                    raise ValueError("Invalid baseline timing")
+            for name in ("nll", "crps", "coverage90"):
+                if not math.isfinite(r.get("metrics", {}).get(name, float("nan"))):
+                    raise ValueError("Invalid baseline metric")
+    for seed in (0, 1, 2):
+        for mode in ("resident", "eval"):
+            a, b = (indexed[seed, mode, backend]["records"][1]["metrics"] for backend in ("cpu", "cuda"))
+            if (abs(b["nll"] - a["nll"]) > .01 * max(1, abs(a["nll"]))
+                    or b["crps"] > a["crps"] * 1.01
+                    or abs(b["coverage90"] - a["coverage90"]) > .01):
+                raise ValueError("Baseline quality gate failed")
 
 
 def main():
@@ -57,7 +94,7 @@ def main():
     except (OSError, ValueError, TypeError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
-    print("Foundation smoke evidence passed")
+    print(f"Foundation {manifest.get('suite', 'smoke')} evidence passed")
     return 0
 
 
