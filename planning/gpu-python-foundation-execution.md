@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1、P2、P3 已完成；P4.1–P4.4 已完成，P6 CPU 独立扩展 wheel 验证已完成，下一项 P5 严格 GPU 集成。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0、P1、P2、P3 已完成；P4.1–P4.4 已完成，P6 CPU 独立扩展 wheel 验证已完成，P5 核心 GPU 集成已通过（profiler 缺口保留），下一项 P6 GPU 独立包验证。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -240,6 +240,15 @@ GPU 不可用时可以完成 CPU 与测试准备，但不得跳过 GPU 关卡继
 CPU 自编包仍不是外部 adoption；G5 保持未完成。随后完成 P5 和 P6 的 GPU 验证。
 
 ## P5：集成严格 GPU 执行与报告
+
+**核心执行已验证，profiler trace 缺口保留。** `8c34b26` 实现、`4299858`
+扩展测试：真实 T4 7 passed / 0 skipped；Normal/Poisson 普通/自然梯度、
+默认/外部 builder、加权双 channel schedule、CPU 加载与错误回滚通过。
+[原始证据](../benchmarks/results/foundation/20260905T180000Z-7d73ba83/README.md)。
+完整 CPU 回归 904 passed / 34 skipped；最终定向 89 passed。
+nsys 不可用，没有 profiler trace；仅报告具名传输包装器检查与设备内复制成本。
+GPU eval/callbacks/early stopping 明确拒绝。下一项为 P6 的 GPU 独立 wheel 部分。
+
 
 **P5.1 — 实际 dispatch 与驻留。**
 

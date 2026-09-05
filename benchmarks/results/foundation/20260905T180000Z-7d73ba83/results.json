@@ -1,0 +1,635 @@
+{
+  "environment": {
+    "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.35",
+    "python": "3.12.1 (main, Jan  8 2024, 04:46:10) [Clang 17.0.6 ]",
+    "cpu": "x86_64",
+    "visible_cpu_count": 18,
+    "requested_cpu": 2,
+    "requested_memory_mib": 8192,
+    "host_ram_bytes": 404784234496,
+    "threads": {
+      "OMP_NUM_THREADS": "2",
+      "NUMBA_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2"
+    },
+    "packages": {
+      "setuptools": "69.0.3",
+      "numba": "0.63.1",
+      "packaging": "25.0",
+      "pytest-xdist": "3.8.0",
+      "cuda-pathfinder": "1.4.0",
+      "pytest": "9.0.2",
+      "coverage": "7.13.1",
+      "pluggy": "1.6.0",
+      "cuda-core": "0.6.0",
+      "numpy": "2.3.5",
+      "fastrlock": "0.8.3",
+      "pytest-cov": "7.0.0",
+      "scipy": "1.16.3",
+      "numba-cuda": "0.27.0",
+      "Pygments": "2.19.2",
+      "llvmlite": "0.46.0",
+      "joblib": "1.5.3",
+      "cupy-cuda12x": "13.6.0",
+      "iniconfig": "2.3.0",
+      "pip": "23.3.2",
+      "openboost": "1.0.0rc1",
+      "cuda-bindings": "13.1.1",
+      "execnet": "2.1.2",
+      "certifi": "2025.4.26",
+      "propcache": "0.3.1",
+      "typing_extensions": "4.13.2",
+      "yarl": "1.20.0",
+      "multidict": "6.4.4",
+      "attrs": "25.3.0",
+      "cbor2": "5.7.0",
+      "grpclib": "0.4.8",
+      "aiohappyeyeballs": "2.6.1",
+      "hyperframe": "6.1.0",
+      "protobuf": "6.31.1",
+      "frozenlist": "1.6.0",
+      "h2": "4.2.0",
+      "aiosignal": "1.3.2",
+      "idna": "3.10",
+      "hpack": "4.1.0",
+      "aiohttp": "3.12.7"
+    },
+    "cpu_model": "unknown",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "cuda_runtime": 12090,
+    "cuda_driver": 13000,
+    "nvidia_smi": "Tesla T4, 580.95.05, 15360 MiB"
+  },
+  "source_sha": "42998587ff9e2461d8f1935643f18d8dc20864cb",
+  "wheel_sha256": "5dde197f412ffa9a1b0d59e445b043359c7dfef2a6e2170b9d1a849a0969e4ed",
+  "argv": [
+    "/usr/local/bin/python",
+    "-m",
+    "pytest",
+    "-c",
+    "pytest.ini",
+    "test_smoke.py",
+    "test_histograms.py",
+    "test_splits.py",
+    "test_leaves.py",
+    "test_builder.py",
+    "test_trainer.py",
+    "--junitxml=junit.xml"
+  ],
+  "timed_out": false,
+  "returncode": 0,
+  "stdout": ".......                                                                  [100%]\n=============================== warnings summary ===============================\ntest_smoke.py: 12 warnings\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\ntest_smoke.py::test_normal_gpu_fit\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 4 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 8 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\ntest_trainer.py::test_strict_extension_trainer\ntest_trainer.py::test_strict_extension_trainer\ntest_trainer.py::test_strict_extension_trainer\ntest_trainer.py::test_strict_extension_trainer\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 2 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_histograms.py::test_batch_histogram_device_oracle\n  /usr/local/lib/python3.12/site-packages/numba/cpython/hashing.py:477: UserWarning: FNV hashing is not implemented in Numba. See PEP 456 https://www.python.org/dev/peps/pep-0456/ for rationale over not using FNV. Numba will continue to work, but hashes for built in types will be computed using siphash24. This will permit e.g. dictionaries to continue to behave as expected, however anything relying on the value of the hash opposed to hash as a derived property is likely to not work as expected.\n    warnings.warn(msg)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n7 passed, 22 warnings in 44.20s\n",
+  "stderr": "",
+  "junit": "<?xml version=\"1.0\" encoding=\"utf-8\"?><testsuites name=\"pytest tests\"><testsuite name=\"pytest\" errors=\"0\" failures=\"0\" skipped=\"0\" tests=\"7\" time=\"44.198\" timestamp=\"2026-09-05T18:00:10.747268+00:00\" hostname=\"modal\"><testcase classname=\"test_smoke\" name=\"test_device_interop\" time=\"3.280\" /><testcase classname=\"test_smoke\" name=\"test_normal_gpu_fit\" time=\"4.004\" /><testcase classname=\"test_histograms\" name=\"test_batch_histogram_device_oracle\" time=\"16.112\" /><testcase classname=\"test_splits\" name=\"test_batch_split_routing_oracle\" time=\"1.730\" /><testcase classname=\"test_leaves\" name=\"test_batch_leaf_rule_oracle\" time=\"2.112\" /><testcase classname=\"test_builder\" name=\"test_levelwise_builder_device_oracle\" time=\"2.052\" /><testcase classname=\"test_trainer\" name=\"test_strict_extension_trainer\" time=\"14.666\" /></testsuite></testsuites>",
+  "checks": {
+    "installed_files_verified": 46,
+    "installed_module": "/usr/local/lib/python3.12/site-packages/openboost/__init__.py",
+    "interop": true,
+    "dataset_sha256": "a6ebf89ed613d8f792084b55e7f6a3ce93360add808cd1729aa8e2842cce18ec",
+    "nll": 1.3506839275360107,
+    "native_tree_calls": 4,
+    "device_objective_calls": 2,
+    "batch_histograms": {
+      "device_arrays": true,
+      "cases": [
+        {
+          "input_sha256": "eb00262be585e171ab37b32c1ea39a71c45d86b95a243c3760918664e2b968ff",
+          "seed": null,
+          "samples": 6,
+          "features": 2,
+          "slots": 4,
+          "max_abs_errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bytes": 16404
+        },
+        {
+          "input_sha256": "9b3d6fc9090a17c8e05ab26c7cba643004e7b80e99f2ee57f6c6f721c7244365",
+          "seed": 103,
+          "samples": 4097,
+          "features": 3,
+          "slots": 7,
+          "max_abs_errors": [
+            9.834766387939453e-07,
+            1.4007091522216797e-06,
+            0.0
+          ],
+          "bytes": 43043
+        },
+        {
+          "input_sha256": "75c8fd04ad916aec3e3d5cb76a452b116b3d4d0912a0a485e9fb8e3d240e210c",
+          "seed": null,
+          "samples": 0,
+          "features": 2,
+          "slots": 3,
+          "max_abs_errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bytes": 12303
+        }
+      ],
+      "legacy_download_wrappers_blocked": true,
+      "scope": "named host wrappers only; scalar validation synchronization allowed; no profiler trace"
+    },
+    "batch_splits": {
+      "device_arrays": true,
+      "routed_child_oracle": true,
+      "cases": [
+        {
+          "parameters": {},
+          "input_sha256": "c1ab5ceda0b0613a6a04bc2c60a96ac85810371aac778926727a78c6a3a27ce6",
+          "feature": [
+            0,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "threshold": [
+            1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "gain": [
+            65.05263157894737,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "routed_ids": [
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+            2,
+            -1
+          ]
+        },
+        {
+          "parameters": {
+            "reg_lambda": 0.0,
+            "min_child_weight": 0.0
+          },
+          "input_sha256": "c1ab5ceda0b0613a6a04bc2c60a96ac85810371aac778926727a78c6a3a27ce6",
+          "feature": [
+            0,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "gain": [
+            83.16577540106952,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "routed_ids": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            -1
+          ]
+        },
+        {
+          "parameters": {
+            "min_gain": 1000000.0
+          },
+          "input_sha256": "c1ab5ceda0b0613a6a04bc2c60a96ac85810371aac778926727a78c6a3a27ce6",
+          "feature": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "threshold": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "gain": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "routed_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "parameters": {
+            "min_child_weight": 20.0
+          },
+          "input_sha256": "c1ab5ceda0b0613a6a04bc2c60a96ac85810371aac778926727a78c6a3a27ce6",
+          "feature": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "threshold": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "gain": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "routed_ids": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -1
+          ]
+        }
+      ],
+      "exact_ties_and_gain_boundary": true,
+      "scope": "numeric L2 positive-curvature children; no full-array named downloads; no whole-trainer claim"
+    },
+    "batch_leaves": {
+      "device_arrays": true,
+      "row_sum_oracle": true,
+      "bounded_changes_next_gradient": true,
+      "cases": [
+        {
+          "input_sha256": "6798811eba51f86e0857c90969b3d6628bd88328a97dc9a5c1c40a879a65a8da",
+          "samples": 6,
+          "slots": 4,
+          "seed": null,
+          "counts": [
+            3,
+            0,
+            1,
+            0
+          ],
+          "grad": [
+            -14.0,
+            0.0,
+            -3.0,
+            0.0
+          ],
+          "hess": [
+            4.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          "values": [
+            2.799999952316284,
+            -0.0,
+            1.5,
+            -0.0
+          ],
+          "bounded": [
+            0.5,
+            -0.0,
+            0.5,
+            -0.0
+          ]
+        },
+        {
+          "input_sha256": "4dc60aca864b164786f1008cdb7789c82778b78df569e1a92207c5209b3a9ccf",
+          "samples": 4097,
+          "slots": 7,
+          "seed": 109,
+          "counts": [
+            519,
+            0,
+            512,
+            475,
+            0,
+            531,
+            539
+          ],
+          "grad": [
+            -2.5,
+            0.0,
+            176.0,
+            228.0,
+            0.0,
+            120.0,
+            4.5
+          ],
+          "hess": [
+            612.0,
+            0.0,
+            535.5,
+            521.5,
+            0.0,
+            607.5,
+            623.5
+          ],
+          "values": [
+            0.004078303463757038,
+            -0.0,
+            -0.32805219292640686,
+            -0.4363636374473572,
+            -0.0,
+            -0.19720624387264252,
+            -0.007205764763057232
+          ],
+          "bounded": [
+            0.004078303463757038,
+            -0.0,
+            -0.32805219292640686,
+            -0.4363636374473572,
+            -0.0,
+            -0.19720624387264252,
+            -0.007205764763057232
+          ]
+        },
+        {
+          "input_sha256": "75c8fd04ad916aec3e3d5cb76a452b116b3d4d0912a0a485e9fb8e3d240e210c",
+          "samples": 0,
+          "slots": 3,
+          "seed": null,
+          "counts": [
+            0,
+            0,
+            0
+          ],
+          "grad": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hess": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "values": [
+            -0.0,
+            -0.0,
+            -0.0
+          ],
+          "bounded": [
+            -0.0,
+            -0.0,
+            -0.0
+          ]
+        }
+      ],
+      "two_rounds": [
+        {
+          "raw": [
+            3.3600001335144043,
+            3.3600001335144043
+          ],
+          "second_gradient": [
+            0.7999999523162842,
+            -3.6000001430511475
+          ]
+        },
+        {
+          "raw": [
+            1.0,
+            1.0
+          ],
+          "second_gradient": [
+            -1.5,
+            -10.5
+          ]
+        }
+      ],
+      "scope": "GPU primitive composition; CPU trainer tested separately; not assembled GPU Booster"
+    },
+    "levelwise_builder": {
+      "device_cache_survives_owner_release": true,
+      "compact_transfer_calls": 85,
+      "compact_transfer_bytes": 2380,
+      "two_channel_cases": [
+        {
+          "samples": 16,
+          "seed": 127,
+          "clipped": false,
+          "data_sha256": "0e528a11a3f672aa06b360d29bd0e9f27925aa60756452ffd14304990632c080",
+          "cpu": {
+            "nll": 1.376172378638702,
+            "crps": 0.5607174393426145
+          },
+          "cuda": {
+            "nll": 1.3761723780246782,
+            "crps": 0.5607174390134131
+          },
+          "max_raw_error": 7.450580596923828e-09
+        },
+        {
+          "samples": 16,
+          "seed": 127,
+          "clipped": true,
+          "data_sha256": "0e528a11a3f672aa06b360d29bd0e9f27925aa60756452ffd14304990632c080",
+          "cpu": {
+            "nll": 1.4545325936069222,
+            "crps": 0.6108751652432844
+          },
+          "cuda": {
+            "nll": 1.4545325948769345,
+            "crps": 0.6108751656755558
+          },
+          "max_raw_error": 7.450580596923828e-09
+        },
+        {
+          "samples": 4097,
+          "seed": 127,
+          "clipped": false,
+          "data_sha256": "27bc432d9b960ae7843fd98d5b33218e646d990c643e1f5067c8449af1df29e8",
+          "cpu": {
+            "nll": 1.339077446639963,
+            "crps": 0.5416246632667225
+          },
+          "cuda": {
+            "nll": 1.3390774100065654,
+            "crps": 0.5416246370616199
+          },
+          "max_raw_error": 1.9371509552001953e-07
+        },
+        {
+          "samples": 4097,
+          "seed": 127,
+          "clipped": true,
+          "data_sha256": "27bc432d9b960ae7843fd98d5b33218e646d990c643e1f5067c8449af1df29e8",
+          "cpu": {
+            "nll": 1.5450022972468154,
+            "crps": 0.6447824943510968
+          },
+          "cuda": {
+            "nll": 1.5450022976836335,
+            "crps": 0.6447824953605893
+          },
+          "max_raw_error": 1.4901161193847656e-08
+        }
+      ],
+      "cpu_load_prediction": true,
+      "scope": "direct GPU builder composition; GPU Booster.fit remains P5; named transfers only"
+    },
+    "strict_extension_trainer": {
+      "adapter_cases": [
+        {
+          "distribution": "normal",
+          "natural": false,
+          "target_sha256": "e53a62533eed353d90ace7744347822d8a31b9dc2ad4e93af74c6195a608f32a",
+          "max_raw_error": 1.1920928955078125e-07
+        },
+        {
+          "distribution": "normal",
+          "natural": true,
+          "target_sha256": "e53a62533eed353d90ace7744347822d8a31b9dc2ad4e93af74c6195a608f32a",
+          "max_raw_error": 1.1920928955078125e-07
+        },
+        {
+          "distribution": "poisson",
+          "natural": false,
+          "target_sha256": "90d27f84e5a24dfaa5d3c66768b05130e46842a9b3b3fd6b01dd35ec59f0af6c",
+          "max_raw_error": 5.960464477539063e-08
+        },
+        {
+          "distribution": "poisson",
+          "natural": true,
+          "target_sha256": "90d27f84e5a24dfaa5d3c66768b05130e46842a9b3b3fd6b01dd35ec59f0af6c",
+          "max_raw_error": 5.960464477539063e-08
+        }
+      ],
+      "additional_invalid_statistics": 3,
+      "actual_fit": true,
+      "legacy_dispatch_blocked": true,
+      "rollback": true,
+      "cpu_load_prediction": true,
+      "cases": [
+        {
+          "explicit_builder": false,
+          "fit_report": {
+            "requested_device": "cuda",
+            "actual_device": "cuda",
+            "binning_device": "cpu",
+            "initialization_device": "cpu",
+            "objective_device": "cuda",
+            "tree_device": "cuda",
+            "update_device": "cuda",
+            "eval_device": null,
+            "builder_path": "LevelWiseBuilder",
+            "fallback_reason": null,
+            "random_state": 7,
+            "tree_counts": {
+              "loc": 2,
+              "scale": 2
+            },
+            "timing_scope": "No performance timing collected",
+            "transfer_scope": "one-time binned/y/weights upload; compact tree finalization downloads; device-only defensive input copies and cache verification; scalar validation syncs; predict_raw uses CPU trees; no profiler proof"
+          },
+          "max_raw_error": 1.1920928955078125e-07,
+          "cpu_crps": 0.5792920059096566,
+          "cuda_crps": 0.5792920073406618,
+          "cpu_nll": 1.462673544883728,
+          "cuda_nll": 1.462673544883728
+        },
+        {
+          "explicit_builder": true,
+          "fit_report": {
+            "requested_device": "cuda",
+            "actual_device": "cuda",
+            "binning_device": "cpu",
+            "initialization_device": "cpu",
+            "objective_device": "cuda",
+            "tree_device": "cuda",
+            "update_device": "cuda",
+            "eval_device": null,
+            "builder_path": "ExternalBuilder",
+            "fallback_reason": null,
+            "random_state": 7,
+            "tree_counts": {
+              "loc": 2,
+              "scale": 2
+            },
+            "timing_scope": "No performance timing collected",
+            "transfer_scope": "one-time binned/y/weights upload; compact tree finalization downloads; device-only defensive input copies and cache verification; scalar validation syncs; predict_raw uses CPU trees; no profiler proof"
+          },
+          "max_raw_error": 5.960464477539063e-08,
+          "cpu_crps": 0.5792920059096566,
+          "cuda_crps": 0.57929200316153,
+          "cpu_nll": 1.462673544883728,
+          "cuda_nll": 1.462673544883728
+        }
+      ],
+      "compact_transfer_calls": 40,
+      "compact_transfer_bytes": 1120,
+      "data_sha256": "2b189618a4b1b0665498afa0ecd6abbe11e1d0231706995d747b65ad783ced6e",
+      "samples": 257,
+      "seed": 137,
+      "nsys_available": false,
+      "profiler_trace_collected": false,
+      "scope": "named transfer wrappers only; scalar syncs and device defensive copies allowed"
+    }
+  },
+  "remote_function_wall_s": 49.665708003999995,
+  "timing_scope": "suite execution including environment checks/JIT; excludes image/startup, not billed duration; baseline cell timings have separate scopes"
+}

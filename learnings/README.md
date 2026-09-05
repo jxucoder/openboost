@@ -34,6 +34,8 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Strict CUDA extension trainer](2026-09-05-foundation-p5-trainer.md)
+
 - [Independent CPU extension wheels](2026-09-05-foundation-p6-cpu-wheels.md)
 
 - [P4.4 level-wise builder and T4 evidence](2026-09-05-foundation-p4-builder.md)

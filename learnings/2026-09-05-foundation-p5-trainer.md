@@ -39,11 +39,14 @@ only when the existing objective exact-type capability permits it.
 
 ## Failed Attempts
 
-- Full CPU regression was started; its status and any limits are recorded below.
+- Full CPU regression completed during implementation: 904 passed, 34 skipped,
+  20 deselected in 325.15 s. No failures. The final targeted preflight/extension
+  run after the last preflight edits passed 89 tests; the expanded evidence runner
+  passed 20. Lint and MkDocs build passed (existing docstring warnings).
 
 ## Risks and Follow-ups
 
-- Real device result pending at implementation commit. A skipped test is not a pass.
+- Real-device core integration and declared adapter modes passed below.
 - Wrapper checks are not a profiler trace. Record profiler availability honestly.
 - Independent P6 packages still CPU-only; subsequent work must implement/test their
   GPU paths as installed wheels. Eval/early stopping remain CPU-only.
@@ -63,3 +66,19 @@ only when the existing objective exact-type capability permits it.
 - Follow-up test coverage verifies all advertised adapter modes (Normal/Poisson,
   ordinary/natural), a duck-typed external builder and invalid dtype/Hessian/alias
   outputs. This broadens checks without changing the implementation or tolerance.
+
+## Final declared-surface evidence
+
+- `4299858`: [final T4 artifact](../benchmarks/results/foundation/20260905T180000Z-7d73ba83/README.md),
+  7 passed / 0 skipped; Normal/Poisson × ordinary/natural modes and external
+  duck-typed builder all pass. Maximum raw CPU/CUDA error 1.19e-7; NLL/CRPS agree.
+- Invalid dtype, negative Hessian and output alias checks pass in addition to
+  runtime, mutation and cached-update failures. Source/lock hashes and JUnit
+  independently verified; offline validator and privacy scan passed.
+- Independent CPU wheel conformance also reran: 5 passed, weighted demo passed,
+  six exact predictions after plugin uninstall. That local result is marked
+  dirty because the initial GPU evidence directory appeared during the run;
+  its wheel hash exactly matches the clean T4 implementation wheel. Do not
+  present it as a separate clean-source evidence artifact.
+- P5 core execution gate passes with the documented profiler gap (nsys absent).
+  Next: P6 actual installed GPU extensions, then P7 profiling/quality/cost.

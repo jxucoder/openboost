@@ -139,3 +139,12 @@ prior primitives, whole-tree topology/leaf checks, input-view lifetime,
 compact-only finalization, two-round/two-channel Normal composition at 16 and
 4,097 rows, bounded rules, and CPU inference after persistence. Synthetic
 NLL/CRPS check numerical agreement; this is not a product-quality benchmark.
+
+
+`--suite trainer` / `foundation_trainer` extends the seven-case suite to actual
+strict experimental Booster.fit. It checks default/external dispatch, weighted
+scheduled Normal parity and CPU persistence/rollback, all Normal/Poisson ×
+ordinary/natural adapter modes and invalid-statistic rejection. Counts and
+reports distinguish compact downloads, CPU initialization/binning and device
+input copies. The frozen run has no nsys executable: profiler evidence is open.
+See `results/foundation/20260905T180000Z-7d73ba83` under benchmarks for raw evidence.
