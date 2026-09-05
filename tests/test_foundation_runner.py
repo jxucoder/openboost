@@ -145,3 +145,17 @@ def test_split_suite_requires_routing_evidence(evidence):
         validate_result(manifest, result)
     result['checks']['batch_splits'] = {'device_arrays': True, 'routed_child_oracle': True, 'exact_ties_and_gain_boundary': True, 'cases': [{}, {}, {}, {}]}
     validate_result(manifest, result)
+
+
+def test_leaf_suite_requires_changed_gradient(evidence):
+    manifest, result = evidence
+    manifest['suite'] = 'leaves'
+    extra = ''.join(f'<testcase name="{name}" />' for name in
+                    ('test_batch_histogram_device_oracle', 'test_batch_split_routing_oracle', 'test_batch_leaf_rule_oracle'))
+    result['junit'] = result['junit'].replace('</testsuite>', extra + '</testsuite>')
+    result['checks']['batch_histograms'] = {'device_arrays': True, 'legacy_download_wrappers_blocked': True, 'cases': [{}, {}, {}]}
+    result['checks']['batch_splits'] = {'device_arrays': True, 'routed_child_oracle': True, 'exact_ties_and_gain_boundary': True, 'cases': [{}, {}, {}, {}]}
+    with pytest.raises(ValueError, match='leaf rule'):
+        validate_result(manifest, result)
+    result['checks']['batch_leaves'] = {'device_arrays': True, 'row_sum_oracle': True, 'bounded_changes_next_gradient': True, 'cases': [{}, {}, {}], 'two_rounds': [{}, {}]}
+    validate_result(manifest, result)

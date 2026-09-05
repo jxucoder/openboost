@@ -202,3 +202,8 @@ def foundation_histograms():
 @app.local_entrypoint()
 def foundation_splits():
     run_suite("splits")
+
+
+@app.local_entrypoint()
+def foundation_leaves():
+    run_suite("leaves")

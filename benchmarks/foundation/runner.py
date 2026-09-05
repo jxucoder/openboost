@@ -25,10 +25,12 @@ def validate_result(manifest, result):
     suite = manifest.get("suite", "smoke")
     if suite in ("correctness", "boundaries", "baseline"):
         required.update({"test_weighted_newton", "test_weighted_distribution[normal]", "test_weighted_distribution[poisson]"})
-    elif suite in ("histograms", "splits"):
+    elif suite in ("histograms", "splits", "leaves"):
         required.add("test_batch_histogram_device_oracle")
-        if suite == "splits":
+        if suite in ("splits", "leaves"):
             required.add("test_batch_split_routing_oracle")
+        if suite == "leaves":
+            required.add("test_batch_leaf_rule_oracle")
     elif suite != "smoke":
         raise ValueError("Unknown evidence suite")
     if suite in ("boundaries", "baseline"):
@@ -53,14 +55,18 @@ def validate_result(manifest, result):
         and checks.get("dataset_sha256")
     ):
         raise ValueError("Missing installed-wheel/device-path checks (possible fallback)")
-    if suite in ("histograms", "splits"):
+    if suite in ("histograms", "splits", "leaves"):
         batch = checks.get("batch_histograms", {})
         if batch.get("device_arrays") is not True or batch.get("legacy_download_wrappers_blocked") is not True or len(batch.get("cases", [])) != 3:
             raise ValueError("Missing batch histogram device/oracle checks")
-    if suite == "splits":
+    if suite in ("splits", "leaves"):
         split = checks.get("batch_splits", {})
         if split.get("device_arrays") is not True or split.get("routed_child_oracle") is not True or split.get("exact_ties_and_gain_boundary") is not True or len(split.get("cases", [])) != 4:
             raise ValueError("Missing split/routing oracle checks")
+    if suite == "leaves":
+        leaf = checks.get("batch_leaves", {})
+        if leaf.get("device_arrays") is not True or leaf.get("row_sum_oracle") is not True or leaf.get("bounded_changes_next_gradient") is not True or len(leaf.get("cases", [])) != 3 or len(leaf.get("two_rounds", [])) != 2:
+            raise ValueError("Missing leaf rule/reduction oracle checks")
     if suite == "baseline":
         validate_baseline(checks.get("baseline_cells", []))
 

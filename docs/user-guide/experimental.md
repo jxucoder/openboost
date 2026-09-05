@@ -113,3 +113,30 @@ and routing rejects bin 255 even for zero-weight rows. Callers must provide
 numeric bins; categorical metadata is outside this primitive API. A future
 builder must reject missing/categorical inputs before growth. This does not
 yet make experimental Booster GPU-capable or establish an end-to-end speedup.
+
+## Leaf reduction and custom rules
+
+`reduce_leaves(grad, hess, sample_node_ids, active)` returns `LeafStatistics`:
+float32 grad/hess sums, int32 physical row counts, and an owned bool active mask,
+all `(slots,)` on the input device. Inputs use the same contiguous array and
+fixed-slot contract as histograms. Statistics are already weighted; zero-weight
+rows still count. ID -1 and inactive assignments are excluded.
+
+`leaf_values(..., leaf_rule=None, config=None, context=None)` performs this
+reduction and calls `rule.values(G, H, config=config, context=context)`. A rule
+declares `supported_devices` and returns contiguous finite float32 `(slots,)`
+on that device. Pass the fit's shared `ExecutionContext` when composing a
+builder. Standalone calls create a context from the config seed. The rule gets
+private compact G/H copies and a config copy; changing G/H is rejected. Returned
+values are detached from plugin scratch. No sample-sized defensive copy occurs.
+
+`NewtonLeafRule` implements L2 `-G/(H+reg_lambda)`. Zero denominator with zero G
+returns zero; nonzero G fails. Empty, inactive and zero-G/zero-H slots must be
+zero for every rule. L1 is rejected by the default rule. A bounded rule can use
+`context.xp.clip(NewtonLeafRule().values(G, H, config=config, context=context),
+-c, c)` with a validated positive bound. Clipping changes leaf outputs and the
+next round's gradients, while keeping the split criterion unchanged.
+
+CUDA reduction and rule arithmetic stay on device; scalar validation checks
+synchronize. Named download-wrapper checks are not a complete profiler trace.
+The assembled level-wise builder and GPU Booster integration are still pending.

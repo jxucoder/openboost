@@ -125,3 +125,10 @@ P4.2 uses `prepare --suite splits` and entrypoint `foundation_splits`, adding
 two smoke cases and histogram case, then verifies split/gain/routing, exact ties,
 invalid routes, and rebuilding child histograms from real routed rows. All four
 GPU cases and their evidence fields are required; no skips satisfy the gate.
+
+P4.3 uses `prepare --suite leaves` / `foundation_leaves`. The allowlist adds
+`test_leaves.py` and `leaf_oracle.py`; all five smoke/histogram/split/leaf cases
+must pass. Leaf evidence checks direct row sums, empty/zero-curvature behavior,
+plugin output/ownership errors and two rounds where clipping changes the next
+weighted gradient. The GPU two-round check composes primitives; it is not an
+assembled experimental GPU Booster validation.

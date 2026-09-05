@@ -41,12 +41,15 @@ def prepare(suite="smoke"):
         sources["test_correctness.py"] = ROOT / "tests/foundation/test_correctness.py"
     if suite in ("boundaries", "baseline"):
         sources["test_boundaries.py"] = ROOT / "tests/foundation/test_boundaries.py"
-    if suite in ("histograms", "splits"):
+    if suite in ("histograms", "splits", "leaves"):
         sources["test_histograms.py"] = ROOT / "tests/foundation/test_histograms.py"
         sources["histogram_oracle.py"] = ROOT / "tests/test_batch_histograms.py"
-    if suite == "splits":
+    if suite in ("splits", "leaves"):
         sources["test_splits.py"] = ROOT / "tests/foundation/test_splits.py"
         sources["split_oracle.py"] = ROOT / "tests/test_batch_splits.py"
+    if suite == "leaves":
+        sources["test_leaves.py"] = ROOT / "tests/foundation/test_leaves.py"
+        sources["leaf_oracle.py"] = ROOT / "tests/test_batch_leaves.py"
     if suite == "baseline":
         from .dataset import describe
 
@@ -92,5 +95,5 @@ def prepare(suite="smoke"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries", "baseline", "histograms", "splits"), default="smoke")
+    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries", "baseline", "histograms", "splits", "leaves"), default="smoke")
     prepare(parser.parse_args().suite)
