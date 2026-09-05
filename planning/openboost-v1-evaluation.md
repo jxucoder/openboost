@@ -1,6 +1,7 @@
 # OpenBoost v1：验收与 eval 协议
 
-版本：**v1-plan / 2026-09-05**。状态：预声明的设计门槛，尚未执行新 v1 评测。
+版本：**v1-plan-r2 / 2026-09-05**。状态：预声明的设计门槛，尚未执行新 v1 评测。
+范围修订：用户明确全部用例都需要；以 A1–A13 逐项验收替代此前八个代表任务的门槛。
 与 [v1 主计划](agent-boosting-foundation-plan.md) 联合使用。
 数字是本次提出的验收标准，不是既有成绩；F0 固定具体数据、实现与资源 manifest 后
 执行。测量后改阈值须新建协议版本，旧结果保留，不能回填成通过。
@@ -16,7 +17,7 @@ F0 需实现 `benchmarks/v1/` 下的 manifest、runner 和判卷器；路径是�
 
 - `manifest.json`：协议 hash、代码 SHA/dirty、数据版本/hash/行与 split ID、目标/
   预处理定义、版本及 wheel/build hash、OS/CPU/RAM/线程、GPU/驱动/CUDA、资源预算、
-  完整 CLI、种子、任务×模型×fold×device 预期矩阵。
+  完整 CLI、种子、A-ID→recipe/test/artifact 的映射、任务×模型×fold×device 预期矩阵。
 - `cases.jsonl`：逐单元状态、有效构造参数、后端/回退、计时范围、预测/模型 hash、
   指标与失败原因；不能只存平均数。Agent case 另有 prompt/tool/model/budget hash。
 - `report.json` / `README.md`：各 gate、比较表、最差 case、置信区间与未验证项。
@@ -28,10 +29,11 @@ F0 需实现 `benchmarks/v1/` 下的 manifest、runner 和判卷器；路径是�
 
 ## 2. E0：覆盖和接口语义
 
-以主计划 R1–R9 与 C1–C7 为 required 矩阵。每项有接口、CPU/CUDA 状态、失败语义、
+以主计划 R1–R9/C1–C7 和应用矩阵 A1–A13 为 required 范围。每项有接口、CPU/CUDA 状态、失败语义、
 测试入口和 artifact 链接，**100% 有记录，required 项 100% 通过**。
-按能力覆盖选代表任务，不执行没有意义的全部笛卡尔积；F0 列出的 required cells
-不能在看到结果后删除。能力支持与任务质量分开，不能互相抵消。
+每个 A-ID 都须在 manifest 和报告中出现，且有真实任务、对应实现和独立检查。
+不执行没有意义的全部笛卡尔积；但不能挑若干 A 项替代其余用例。F0 列出的 required
+cells 不能在看到结果后删除。能力支持与任务质量分开，不能互相抵消。
 
 ## 3. E1：数学、状态与持久化正确性
 
@@ -70,15 +72,21 @@ R1–R9 的可运行 reference recipes 使用安装后的公开 v1 接口，不�
 
 ### 数据覆盖与分割
 
-F0 形成至少 **8 个真实任务单元**：普通回归、二分类、多分类、group ranking、
-quantile、multi-output、计数/正值损失（保险可承担）、censored survival。
-可在同一数据上定义不同任务，但不得当作多个独立 dataset 的统计证据；至少 6 个
-独立来源数据集。另有 Normal distribution 与 Formula 结构实验，后者可先用合成
-识别/错设实验，只支持数学和结构结论；真实 Formula 价值要真实任务另证。
+F0 为 **A1–A13 每项**固定真实任务与验收入口：回归、二分类、多分类、ranking、
+quantile、多输出、Poisson 计数、Gamma 正值金额、Tweedie/组合总损失、survival/AFT、
+NaturalBoost 分布预测、Formula 结构化建模，以及 train-many 模型选择工作流。
+A1–A12 各有真实预测质量结果；A13 有真实模型选择结果及 E4 的完整集合成本。
+不能用 Poisson 代替 Gamma/Tweedie，也不能以普通回归分数代替分布或 Formula 验收。
+
+数据合计至少6个独立来源。同一数据可承担多个目标不同的用例，但不算多个独立
+dataset；同一组预测换标签/重复计数不算新用例。A13 复用数据也不增加来源数。
+Formula 必须同时有合成识别/错设反例与真实任务质量比较；选定前该项未完成，
+不能降级成以后再做的案例。数学模拟属于 E1，不能代替任何 A 项的真实任务证据。
 
 候选来源由 [应用矩阵](foundation-application-contracts.md) 给出；F0 下载/核验许可与
 版本后固定 dataset IDs 和原始 hash。没有可用数据就记录 unresolved，不能用复制
-样本充作真实规模。特殊权重/删失的合成反例属于 E1，不计真实数据单元。
+样本充作真实规模。数据选择可调整，但全部用例必需；unsupported/not_run 不能
+使该项或 E3 通过。
 
 一般任务固定 5 个 split seeds（0–4），train/validation/test = 60/20/20；按任务
 使用 stratified/group/time split，官方固定 split 优先。ranking 不跨 query；重复
@@ -110,7 +118,8 @@ unsupported 不是劣分；例如不能要求 CatBoost SurvivalAft 跑其未声�
 
 ratio 只用于 baseline loss > `1e-8`；否则用绝对差 `<=1e-8`，并标记 near-perfect
 case 不参加 ratio 总结。零/负值不能取不合法几何平均。以上是工程门槛，不能宣称
-已经证明普遍不劣于三大库；各真实任务都需通过，不让简单任务平均掉失败任务。
+已经证明普遍不劣于三大库；A1–A12 各自的预声明质量门槛都需通过，不让简单任务
+平均掉失败任务。A13 的所选模型须通过对应原任务的质量门槛，并验证选择过程无泄漏。
 
 分布/生存补充 proper score 与校准；coverage 必须连同 width，生存按删失假设与
 支持区间评价，不只看 C-index。量化指标不代替目标语义。报告每个 split、paired
@@ -186,7 +195,7 @@ core edit/private import、失败原因和独立正确率。失败按完整预�
 - 发布内容具备版本与许可，无私密数据。旧格式拒绝不算失败；新格式 round trip
   必须通过。发布、push、外部 leaderboard 仍需用户提出该外部动作。
 
-**工程 v1 完成：E0–E6 所有 required gate 通过。** 若只完成子集，称相应 milestone
+**工程 v1 完成：A1–A13 逐项证据齐全，E0–E6 所有 required gate 通过。** 若只完成子集，称相应 milestone
 或候选版，不称完整 v1；状态报告列出每个 gate 的证据路径，不能凭总测试数宣布通过。
 
 ## 9. E7：adoption / impact，独立于工程完成

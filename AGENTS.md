@@ -11,17 +11,19 @@ The product hypothesis is that readable, composable algorithm components and
 verified CPU/CUDA execution reduce the cost of making a correct algorithm change.
 Standard GBDT, NaturalBoost/NGBoost-style methods, FormulaBoost, and train-many
 are use cases that determine and test the foundation's abstraction boundaries.
-Distributional risk modeling remains an important use case, not the sole product.
 Real applications shape the design alongside algorithm families: classification,
 regression, ranking, quantiles, multi-output, counts/positive targets, survival,
-structured models and model selection. Insurance and survival/AFT are examples,
-not a closed application list or a vertical-only mission. See
+distributional and structured models, and model selection. All listed use-case
+families are required v1 scope, with individual implementation and evaluation
+evidence. Do not privilege insurance/AFT or substitute a few representative
+successes for complete coverage. Concrete datasets may be selected; required
+use cases may not be dropped. See the A1–A13
 [application contracts](planning/foundation-application-contracts.md).
 
 The user designates this planning round as the real **OpenBoost v1**. Its active
 design and execution order is
 [`planning/agent-boosting-foundation-plan.md`](planning/agent-boosting-foundation-plan.md).
-Required scope is R1–R9/C1–C7; acceptance and quantitative evaluation are in
+Required scope is R1–R9/C1–C7/A1–A13; acceptance and quantitative evaluation are in
 [`planning/openboost-v1-evaluation.md`](planning/openboost-v1-evaluation.md).
 Use the [current release/plan review](planning/boosting-release-review-2026-09-05.md)
 for XGBoost, CatBoost and LightGBM baselines; distinguish shipped features from

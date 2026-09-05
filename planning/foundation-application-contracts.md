@@ -4,34 +4,38 @@
 补充 [v1 主计划](agent-boosting-foundation-plan.md) 与
 [E0–E7 eval](openboost-v1-evaluation.md)，代码审阅基线 `f30c2ed`。
 
-用户随后澄清：保险和 survival/AFT **只是举例，不是应用上限**。
-Foundation 的设计要同时接受算法结构与真实应用的检验。XGBoost 基线包含对应任务
-的 objective、标签和预测协议；普通平方误差树不能代表保险或 survival 工作流。
-保持 foundation-first 与不要求 backward compatibility 的方向。
+用户明确：**以下用例都需要，全部属于 v1 必需范围，逐项交付和验收**。
+每个用例有自己的目标语义、recipe、真实工作流和独立证据。保险/AFT 与其他用例
+地位相同。保持 foundation-first 与不要求 backward compatibility 的方向。
 
-## 0. 开放的应用维度与 v1 代表任务
+## 0. v1 必需应用矩阵 A1–A13
 
-下面选的是不同的数据/算法压力，不代表每个行业都需要单独实现一套模型。
-数据仍是候选，F0 固定版本/hash、许可、切分、特征可用时点与范围后才能执行。
+以下每行都是 required，不能从中任选若干完成。数据来源仍可选择，F0 固定版本/
+hash、许可、切分、特征可用时点和任务定义；数据选择不改变用例的必需地位。
+各用例通过组合共同组件实现，不要求按行业复制 trainer。
 
-| 应用维度 | 代表任务与候选来源 | 基础语义 / 主评价 |
-|---|---|---|
-| 通用连续量预测 | 已有 California Housing 冻结数据；可补其他独立回归来源 | numeric/missing、泛化误差、RMSE；地理切分限制明确 |
-| 类别丰富的二分类 | [UCI Adult](https://archive.ics.uci.edu/dataset/2/adult) | category mapping、missing、class weights、概率空间；log-loss + 辅助 AUC |
-| 多分类与较大样本 | [UCI Covertype](https://archive.ics.uci.edu/dataset/31/covertype) | K 类输出、softmax、采样、线程/显存；multi-logloss |
-| 搜索/推荐中的 ranking | [Microsoft MSLR](https://www.microsoft.com/en-us/research/project/mslr/) | query/pair、组内依赖、官方 folds、NDCG@10；保留数据使用条件，不能跨 query 随机切分 |
-| 需求/容量分位数 | [UCI Bike Sharing](https://archive.ics.uci.edu/dataset/275) | temporal split、quantile/计数；若预测总量，删除 casual/registered 等目标组成字段；未来不可得变量须排除或声明 |
-| 多目标预测 | [UCI Parkinsons Telemonitoring](https://archive.ics.uci.edu/dataset/189/parkinsons%2Btelemonitoring) 的两个 UPDRS 目标 | subject 级切分、原数据评分/插值语义、K 轴/shared topology、各目标误差；基准预测不等于临床有效性 |
-| Count / positive / aggregate loss | 保险 frequency/severity/pure premium，亦覆盖其他事件计数和正值金额场景 | 权重、exposure、link 与预测单位；Poisson/Gamma/Tweedie deviance |
-| Time-to-event | 右删失 AFT；健康随访、设备寿命、合同终止等按具体事件定义 | censoring、risk/time/survival 的输出区别；censored NLL + 合适的概率/排序评价 |
-| 分布预测与尾部 | 上述合适回归任务上的 Normal/NaturalBoost；正式 ScoringBench 子任务 | proper score、参数 link、calibration/width；不能只报 coverage |
-| 结构化关系 | FormulaBoost 的独立公式、参数恢复、公式错设及真实领域关系 | model_input 与树特征分开；识别/预测分别评价，模拟不计真实数据来源 |
-| 模型选择与大量模型 | 在上列任务上训练多个配置/目标/分组 | prepared-data identity、独立 seed/停止/错误、完整集合成本 |
+| ID / recipe | 必需用例 | 数据选择与必须交付的行为 | 独立验收 / 主评价 |
+|---|---|---|---|
+| A1 / R1 | 连续量回归 | 已有 California Housing 冻结数据或其他真实回归来源；训练、预测、保存/加载 | numeric/missing、权重、泛化误差、RMSE；声明地理切分限制 |
+| A2 / R1 | 二分类 | [UCI Adult](https://archive.ics.uci.edu/dataset/2/adult)；含类别/缺失和概率输出的完整流程 | category mapping、unseen policy、class weights/link；log-loss + 辅助 AUC |
+| A3 / R1 | 多分类 | [UCI Covertype](https://archive.ics.uci.edu/dataset/31/covertype)；类别映射、K 类参数和概率输出 | softmax、概率归一化、各类表现、multi-logloss；线程/显存 |
+| A4 / R3 | Group ranking | [Microsoft MSLR](https://www.microsoft.com/en-us/research/project/mslr/)；pairwise 与 NDCG-weighted lambda 两条 recipe | query/pair、组内依赖、官方 folds、NDCG@10；保留数据使用条件，不跨 query 切分 |
+| A5 / R2 | 分位数回归 | [UCI Bike Sharing](https://archive.ics.uci.edu/dataset/275)；预声明分位数与加权叶求解 | temporal split、weighted pinball；删除 casual/registered 等目标组成字段，核对特征可用时点 |
+| A6 / R8 | 多输出 | [UCI Parkinsons Telemonitoring](https://archive.ics.uci.edu/dataset/189/parkinsons%2Btelemonitoring) 两个 UPDRS 目标；独立树与 shared topology/vector leaf | subject 级切分、原数据评分/插值语义、各目标误差；基准预测不等于临床有效性 |
+| A7 / R4 | 事件计数 / 频率 | frequency 数据上的 Poisson + exposure；交付 count 与单位 exposure 的 rate 预测 | offset/权重只生效一次、预测单位、Poisson deviance；exposure 缩放反例 |
+| A8 / R4 | 正值金额 / 严重度 | severity 数据上的 Gamma；声明 claim 级或保单平均目标 | 正值域、样本选择、claim 权重、Gamma deviance；不能以 A7 通过代替 |
+| A9 / R4 | 总损失 / 纯保费 | 关联 frequency/severity 数据；Tweedie 与 frequency × severity 流程 | 零值、power、aggregate/annualized 单位、Tweedie deviance；不能以 A7/A8 代替 |
+| A10 / R5 | Censored survival / AFT | 真实随访或寿命数据；固定噪声族/尺度的事件与右删失流程 | 删失 likelihood、risk/time/survival 输出、censored NLL 与适用的概率/排序评价 |
+| A11 / R6 | 分布预测 / NaturalBoost | 真实回归来源或正式 ScoringBench 子任务；Normal 双参数与方向/步长变体 | proper score、Fisher/普通方向、参数 link、calibration/width；不能只报 coverage |
+| A12 / R7 | 结构化关系 / FormulaBoost | F0 选定有明确结构假设的真实数据；双参数 formula、link、结构输入、参数输出；另有参数恢复/错设实验 | 独立 Jacobian/方向、可识别性反例、真实任务预测质量及结构基线；合成实验不能替代真实任务 |
+| A13 / R9 | 模型选择 / train-many | 在真实任务上训练并选择多个配置/目标/分组；M=1/8/32，报告所选模型 | prepared-data identity、独立 seed/停止/失败、所选模型质量、完整集合与模型选择成本 |
 
-这个候选集合可满足 E3 的8个任务/6个独立来源要求，但同一数据派生多个任务只算
-一个来源；不可把 synthetic duplication 当作真实规模。数据不可用时，F0 以具有
-相同语义压力的公开数据替换并留下理由，不能测完后换掉表现差的数据。
-保险和 AFT 的细化契约在下方；其他任务须在 F0 任务卡达到相同清晰程度。
+验收按 A1–A13 的身份逐项判断，不能用一个“至少若干任务”的计数替代覆盖。
+合计至少6个独立来源；同一数据上的不同任务只算一个来源，不可用复制样本充规模。
+数据不可用时，F0 选择具有相同语义要求的公开数据并留下理由；选定前该项待完成，
+不能删除用例，也不能测完后换掉表现差的数据。每项 F0 任务卡补齐数据/目标/输出、
+baseline、独立参考、CPU/CUDA 边界、质量与成本指标、实现阶段及证据路径。
+下面细化 A7–A10 的目标语义；所有行适用相同的交付和验收要求。
 
 ## 1. 保险：频率、严重度与纯保费分别定义
 
@@ -66,8 +70,8 @@ F0 固定数据版本/hash、claim-policy 关联、样本排除/截断、缺失/
   对完整分布另评 NLL/CRPS/尾部等指标。仅预测均值的 Gamma/Tweedie objective
   不自动提供完整已校准分布；均值按 exposure 缩放也不证明整个分布的聚合规律。
 
-先实现 Poisson exposure 小路径；Gamma/Tweedie 的任务卡和基线不可漏，完整 recipe
-按证据顺序推进。保险任务不意味着把整个产品重新限定为保险平台。
+A7、A8、A9 分别交付并验收。实现可按组件依赖排序，Poisson 小路径通过不意味着
+Gamma、Tweedie 或组合工作流完成。
 
 ## 2. Survival / AFT：观察到的标签不总是事件时间
 
@@ -121,18 +125,18 @@ OpenBoost 当前 `WeibullAFT` 的入口是 observed time + event，面向右删�
 
 ## 3. 对 foundation 和执行阶段的具体约束
 
-1. **F0.1：** 覆盖 R1–R9/C1–C7 与本文件应用维度，填写输入、目标、输出、三大库
+1. **F0.1：** 覆盖 R1–R9/C1–C7/A1–A13，逐项填写输入、目标、输出、三大库
    配置、质量指标及数据处理协议。F0.2 含 group/多输出/link/加权分位数/exposure/
-   删失等独立参考；保险和 AFT 的细化只是其中两类例子。
+   删失、分布/formula 和多 run 等独立参考；每个用例都要能独立判错。
 2. **F1.1：** Problem 保留 typed target、offset/exposure、sample weight 和标签边界；
    共用切分/索引必须保持对齐。上界 +inf 可合法，不能沿用所有标签必须 finite 的规则。
-3. **F1.5：** 同一组件管线实现 Poisson exposure 与右删失 AFT，至少两轮并验证
-   预测、接受状态和新格式 round trip；runner 无需增加 insurance/survival 专用分支。
+3. **F1.5/F1.6：** 接通各用例的数据/目标语义并完成全部 CPU recipes；至少两轮
+   验证预测、接受状态和新格式 round trip；runner 无需按应用名增加专用分支。
 4. **F2：** 任务变化可来自保险统计约束或 survival 更新/曲率规则；先比较既有配置，
    正确完成基础任务与新算法改善质量分别报告。
 5. **F3：** GPU 能力表分别列 offset、各删失类型、评价与预测支持；只通过 Normal
    GPU 路径不能宣称保险/AFT 也通过。声明支持时跑对应 CPU/GPU 语义与任务质量检查。
-6. **F4：** 按 E3 的广泛真实任务矩阵验收，保险频率与右删失 AFT 是其中的代表，
-   不能用它们替代分类/ranking/其他任务。记录全部失败与未实现删失类型。
+6. **F4：** A1–A13 全部完成真实任务验收；每项记录质量、成本、失败和未支持边界，
+   任意一项缺失或失败都不能宣布完整 v1 通过。
 
 本次只更新设计、任务范围和执行门槛；没有下载数据、执行基线或修改训练代码。

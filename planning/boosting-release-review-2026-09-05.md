@@ -80,8 +80,8 @@ issue 页面。检查记录不等于完整跟踪所有评论、PR、未公开计
 
 1. **目标是可验证的算法修改。** 基础分类/回归、概率建模、GPU custom loss、vector
    leaf 都已有替代方案，直接纳入对照而非排除。
-2. **算法覆盖与应用覆盖分开。** 保险和 AFT 是实例；分类、ranking、quantile、
-   multi-output、结构化与批量模型选择都要进入覆盖矩阵。
+2. **算法覆盖与应用覆盖分别验收。** 应用矩阵 A1–A13 全部属于 v1 必需范围，
+   逐项实现和评测；不从中只挑保险/AFT 或若干代表任务。
 3. **至少五种修改任务。** Objective/geometry、split/growth、leaf solver、update
    control、run scheduling，包含一个现有库擅长的 control 和未见任务。
 4. **实际工程成本进入 eval。** 类别/缺失、权重、offset、分组、持久化、冷启动与
