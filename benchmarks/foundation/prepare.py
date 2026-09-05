@@ -1,6 +1,7 @@
 """Build an allowlisted upload bundle from a clean committed source tree."""
 
 import argparse
+import ast
 import hashlib
 import json
 import shutil
@@ -55,6 +56,26 @@ def prepare(suite="smoke"):
         sources["builder_oracle.py"] = ROOT / "tests/test_levelwise_builder.py"
     if suite == "trainer":
         sources["test_trainer.py"] = ROOT / "tests/foundation/test_trainer.py"
+    extension_wheels, extension_sources = {}, {}
+    if suite == "extensions":
+        sources["test_extensions.py"] = ROOT / "tests/foundation/test_extensions.py"
+        sources["check_extension_inference.py"] = ROOT / "tests/foundation/check_extension_inference.py"
+        sources["extension_demo.py"] = ROOT / "examples/extensions/demo.py"
+        for package in ("normal_fisher", "bounded_leaves"):
+            project = ROOT / "examples/extensions" / package
+            for source in sorted(project.rglob("*")):
+                if source.is_file() and source.suffix in (".py", ".toml", ".md"):
+                    extension_sources[str(source.relative_to(ROOT))] = sha256(source)
+                    if source.suffix == ".py" and "src" in source.parts:
+                        for node in ast.walk(ast.parse(source.read_text())):
+                            names = [node.module or ""] if isinstance(node, ast.ImportFrom) else [n.name for n in node.names] if isinstance(node, ast.Import) else []
+                            if any(name.startswith("openboost") and name not in {"openboost", "openboost.experimental"} for name in names):
+                                raise ValueError("Private OpenBoost import in extension package")
+            for old in BUNDLE.glob(f"openboost_example_{package}-*.whl"):
+                old.unlink()
+            subprocess.run(["uv", "build", "--wheel", "--out-dir", str(BUNDLE), str(project)], cwd=ROOT, check=True)
+            wheel = next(BUNDLE.glob(f"openboost_example_{package}-*.whl"))
+            extension_wheels[wheel.name] = sha256(wheel)
     if suite == "baseline":
         from .dataset import describe
 
@@ -91,6 +112,9 @@ def prepare(suite="smoke"):
             "split": "smoke uses training data; no held-out quality claim",
         },
     }
+    if suite == "extensions":
+        manifest["extension_wheels"] = extension_wheels
+        manifest["extension_sources"] = extension_sources
     if suite == "baseline":
         manifest["dataset"] = expected
         manifest["baseline_protocol"] = {"seeds": [0, 1, 2], "modes": ["resident", "eval"], "backends": ["cpu", "cuda"], "repeats_per_cell": 2, "nll_abs_tolerance": "0.01 * max(1, abs(cpu_nll))", "crps_max_ratio": 1.01, "coverage90_abs_tolerance": 0.01}
@@ -100,5 +124,5 @@ def prepare(suite="smoke"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries", "baseline", "histograms", "splits", "leaves", "builder", "trainer"), default="smoke")
+    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries", "baseline", "histograms", "splits", "leaves", "builder", "trainer", "extensions"), default="smoke")
     prepare(parser.parse_args().suite)

@@ -4,7 +4,7 @@
 uses the existing unified trainer. CPU supports the wider extension surface;
 strict `device="cuda"` uses declared CUDA objectives and builders with resident
 CuPy raw scores, targets, weights and updates. The built-in Normal/Poisson
-adapter declares CUDA support; independent example packages still declare CPU.
+adapter declares CUDA support; independent example packages provide NumPy/CuPy implementations.
 Unsupported capability with `fallback="warn"` selects the entire CPU path before
 training; runtime plugin/kernel failures raise and restore prior model state.
 
@@ -185,7 +185,7 @@ narrower feature boundary and no established end-to-end performance advantage.
 
 ## Independent extension packages
 
-The repository's `examples/extensions/` contains two separately buildable CPU
+The repository's `examples/extensions/` contains two separately buildable CPU/CUDA
 packages. `normal_fisher` implements weighted Gaussian NLL gradients, expected
 Fisher curvature and a nonconstant per-channel schedule. `bounded_leaves`
 implements a bounded Newton leaf rule through the public API. They compose in
@@ -205,7 +205,8 @@ CPU dependency pins avoid the failed Intel macOS source build encountered with
 Numba 0.63.1 / llvmlite 0.46.0; see its README for the tested versions and setup.
 
 This verifies a CPU extension installation boundary. These repository-authored
-examples do not establish external adoption or GPU package support.
+examples do not establish external adoption. GPU installation is checked separately
+with the foundation `extensions` suite described below.
 
 ## Strict CUDA fit boundary
 
@@ -230,3 +231,13 @@ These copies, compact uploads and scalar synchronization have a performance cost
 execution, fallback reason and transfer scope. Named transfer-wrapper tests do
 not prove whole-process transfer absence. Profiler availability and real-device
 results are recorded in the foundation evidence; no speedup is claimed here.
+
+
+The independent examples at version 0.2.0 support explicit CUDA context arithmetic.
+Use `python demo.py --device cuda` after installing both extension wheels and CUDA
+dependencies. CPU initialization and host input requirements remain unchanged.
+The foundation `extensions` suite installs all three wheels in an isolated T4
+container, checks GPU objective mathematics and composed training, then uninstalls
+both training plugins before CPU inference in a new interpreter. See
+`examples/extensions/README.md` for build and Modal commands. This establishes
+an installation/conformance boundary, not third-party adoption or performance.

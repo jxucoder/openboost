@@ -4,10 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "openboost-example-bounded-leaves"
-version = "0.1.0"
+version = "0.2.0"
 description = "Independent OpenBoost experimental bounded_leaves example"
 requires-python = ">=3.10"
 dependencies = ["openboost==1.0.0rc1", "numpy>=1.24"]
+
+[project.optional-dependencies]
+cuda = ["openboost[cuda]==1.0.0rc1"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/bounded_leaves"]

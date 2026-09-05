@@ -60,4 +60,10 @@ def test_schedule_and_invalid_inputs():
         obj.init_raw(np.ones(2), extra={"exposure": np.ones(2)})
     with pytest.raises(ValueError):
         obj.step({"mu": np.ones(2), "log_sigma": np.full(2, -1000)}, np.ones(2), context=ctx())
+    with pytest.raises(ValueError):
+        obj.step({"mu": np.ones(2), "log_sigma": np.full(2, 1000)}, np.ones(2), context=ctx())
     assert obj.init_raw(np.ones(2))["log_sigma"] == pytest.approx(0.5 * np.log(1e-6))
+
+
+def test_declared_devices():
+    assert NormalFisher.supported_devices == frozenset({"cpu", "cuda"})

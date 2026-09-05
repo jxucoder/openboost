@@ -19,7 +19,7 @@ if (
     != manifest["source_sha"]
 ):
     raise RuntimeError("Bundle is stale; run the prepare command again")
-for name, digest in {**manifest["files"], manifest["wheel"]: manifest["wheel_sha256"]}.items():
+for name, digest in {**manifest["files"], **manifest.get("extension_wheels", {}), manifest["wheel"]: manifest["wheel_sha256"]}.items():
     if Path(name).name != name or sha256(BUNDLE / name) != digest:
         raise RuntimeError(f"Bundle integrity failure: {name}")
 
@@ -29,7 +29,7 @@ image = modal.Image.from_registry(IMAGE, add_python="3.12").uv_pip_install(
     extra_options="--require-hashes",
     uv_version="0.12.1",
 )
-for name in [*manifest["files"], manifest["wheel"], "manifest.json"]:
+for name in [*manifest["files"], *manifest.get("extension_wheels", {}), manifest["wheel"], "manifest.json"]:
     image = image.add_local_file(BUNDLE / name, f"/opt/foundation/{name}", copy=True)
 image = image.uv_pip_install(
     f"/opt/foundation/{manifest['wheel']}",
@@ -44,6 +44,9 @@ image = image.uv_pip_install(
         "PYTHONPATH": "",
     }
 )
+
+for wheel in manifest.get("extension_wheels", {}):
+    image = image.uv_pip_install(f"/opt/foundation/{wheel}", extra_options="--no-deps", uv_version="0.12.1")
 
 
 @app.function(
@@ -145,6 +148,24 @@ def smoke_job():
         if (directory / "checks.json").exists()
         else {}
     )
+    if source.get("suite") == "extensions" and result.get("returncode") == 0:
+        try:
+            uninstall = subprocess.run(
+                ["/.uv/uv", "pip", "uninstall", "--system", "openboost-example-normal-fisher", "openboost-example-bounded-leaves"],
+                cwd=directory, capture_output=True, text=True, timeout=30,
+            )
+            inference = subprocess.run(
+                [sys.executable, "check_extension_inference.py"], cwd=directory,
+                capture_output=True, text=True, timeout=30,
+            )
+            result["checks"]["extension_uninstall"] = {
+                "uninstall_returncode": uninstall.returncode,
+                "inference_returncode": inference.returncode,
+                "inference_stdout": inference.stdout,
+                "stderr": uninstall.stderr + inference.stderr,
+            }
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            result["checks"]["extension_uninstall"] = {"error": f"{type(exc).__name__}: {exc}"}
     result["remote_function_wall_s"] = time.monotonic() - start
     result["timing_scope"] = (
         "suite execution including environment checks/JIT; excludes image/startup, not billed duration; baseline cell timings have separate scopes"
@@ -217,3 +238,8 @@ def foundation_builder():
 @app.local_entrypoint()
 def foundation_trainer():
     run_suite("trainer")
+
+
+@app.local_entrypoint()
+def foundation_extensions():
+    run_suite("extensions")

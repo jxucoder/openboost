@@ -35,6 +35,8 @@ def validate_result(manifest, result):
             required.add("test_levelwise_builder_device_oracle")
         if suite == "trainer":
             required.add("test_strict_extension_trainer")
+    elif suite == "extensions":
+        required.add("test_installed_gpu_extensions")
     elif suite != "smoke":
         raise ValueError("Unknown evidence suite")
     if suite in ("boundaries", "baseline"):
@@ -79,6 +81,22 @@ def validate_result(manifest, result):
         execution = checks.get("strict_extension_trainer", {})
         if not all(execution.get(k) is True for k in ("actual_fit", "legacy_dispatch_blocked", "rollback", "cpu_load_prediction")) or execution.get("compact_transfer_calls") != 40 or len(execution.get("cases", [])) != 2 or len(execution.get("adapter_cases", [])) != 4 or execution.get("additional_invalid_statistics") != 3:
             raise ValueError("Missing strict extension trainer evidence")
+    if suite == "extensions":
+        packages = checks.get("installed_gpu_extensions", {})
+        uninstall = checks.get("extension_uninstall", {})
+        if (len(manifest.get("extension_wheels", {})) != 2 or not manifest.get("extension_sources")
+                or packages.get("math_oracle") is not True
+                or packages.get("clipping_changes_next_gradient") is not True
+                or packages.get("schedule_changes_prediction") is not True
+                or packages.get("compact_transfer_calls") != 160
+                or len(packages.get("cases", [])) != 8
+                or packages.get("models_saved") != 9
+                or uninstall.get("uninstall_returncode") != 0
+                or uninstall.get("inference_returncode") != 0):
+            raise ValueError("Missing installed GPU extension conformance")
+        inference = json.loads(uninstall.get("inference_stdout", "{}"))
+        if inference != {"extensions_absent": True, "exact_cpu_roundtrips": 9}:
+            raise ValueError("Missing plugin-free CPU inference evidence")
     if suite == "baseline":
         validate_baseline(checks.get("baseline_cells", []))
 

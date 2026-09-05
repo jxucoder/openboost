@@ -16,3 +16,7 @@ def test_bounded_reference_and_zero_nodes():
     for value in (0, -1, np.nan, np.inf):
         with pytest.raises(ValueError):
             BoundedNewton(value)
+
+
+def test_declared_devices():
+    assert BoundedNewton.supported_devices == frozenset({"cpu", "cuda"})

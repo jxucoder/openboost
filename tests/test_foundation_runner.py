@@ -189,3 +189,24 @@ def test_trainer_suite_requires_execution_checks():
     manifest['suite'] = 'trainer'
     with pytest.raises(ValueError, match='Required GPU cases'):
         validate_result(manifest, result)
+
+
+def test_extension_wheel_uninstall_gate(evidence):
+    manifest, result = evidence
+    manifest.update(suite='extensions', extension_wheels={'a.whl':'a','b.whl':'b'},
+                    extension_sources={'src.py':'c'})
+    result['junit'] = result['junit'].replace('</testsuite>', '<testcase name="test_installed_gpu_extensions" /></testsuite>')
+    result['checks']['installed_gpu_extensions'] = {
+        'math_oracle':True,'clipping_changes_next_gradient':True,'schedule_changes_prediction':True,
+        'compact_transfer_calls':160,'cases':[{}]*8,'models_saved':9,
+    }
+    with pytest.raises(ValueError, match='conformance'):
+        validate_result(manifest, result)
+    result['checks']['extension_uninstall'] = {
+        'uninstall_returncode':0,'inference_returncode':0,
+        'inference_stdout':json.dumps({'extensions_absent':True,'exact_cpu_roundtrips':9}),
+    }
+    validate_result(manifest, result)
+    result['checks']['extension_uninstall']['inference_stdout'] = '{}'
+    with pytest.raises(ValueError, match='plugin-free'):
+        validate_result(manifest, result)

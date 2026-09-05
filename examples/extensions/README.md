@@ -1,4 +1,4 @@
-# Independent CPU extension wheels
+# Independent CPU/CUDA extension wheels
 
 Two small packages demonstrate three extension points without private imports,
 core edits or a fork:
@@ -8,9 +8,8 @@ core edits or a fork:
 - `bounded_leaves`: `BoundedNewton` clips Newton leaf values during training.
 
 These are repository-maintained examples, not evidence of external adoption.
-They currently declare CPU support only. GPU package conformance remains after
-P5 experimental trainer integration; prior primitive GPU tests do not establish
-these packages' GPU support. Numerical fixtures are not quality benchmarks.
+Version 0.2.0 declares NumPy/CuPy support. Real-device installed-wheel conformance
+is a separate gate from the primitive and built-in adapter tests. Numerical fixtures are not quality benchmarks.
 
 ## Reproduce the installation boundary
 
@@ -55,7 +54,7 @@ triggers early stopping and checks tree/coefficient restoration.
 
 The objective initializes weighted mean/variance (variance floor 1e-6), weights
 both gradients and curvature exactly once, and rejects unsupported extra targets.
-No raw clipping is applied. Non-finite states fail. Builder scope is numeric,
+No raw clipping is applied. Non-finite states and zero precision from extreme-scale underflow fail. Builder scope is numeric,
 nonmissing, L2, full sampling, depth 0–8. Clipping retains the original split
 criterion. Loading requires only OpenBoost; the saved model is inference-only.
 
@@ -69,3 +68,34 @@ package metadata/builds and dependency selection are real setup costs. Source
 hashes, wheel hashes, installed versions, module paths and test outcomes are
 recorded so this narrow installation result is reproducible. A clean-room
 external author experiment and end-to-end GPU value remain unverified.
+
+
+## Real CUDA installation check
+
+From a clean committed checkout with Modal configured:
+
+```sh
+uv run --no-sync python -m benchmarks.foundation.prepare --suite extensions
+uv run --no-sync modal run benchmarks/foundation/modal_app.py::foundation_extensions
+```
+
+Only the three built wheels, exact test/demo files and a hashed manifest upload
+into an isolated Linux T4 container; repository source is not mounted. The two
+extension modules are compared byte-for-byte with the installed wheel contents.
+GPU finite-difference NLL/Fisher checks precede actual two-round fits at 16 and
+4097 rows, separately enabling schedule and clipping and then composing all three
+extensions. CPU/CUDA raw/NLL/CRPS agreement, changed subsequent gradients, bounded
+leaf values and nonconstant coefficients are checked. The public example runs as
+`python extension_demo.py --device cuda` in a new process. Both extension packages
+are then uninstalled and another interpreter checks exact CPU predictions for
+nine GPU-trained saved models without the plugins importable.
+
+For an independent CUDA environment, install the extension's `cuda` extra or
+OpenBoost's CUDA extra as well as both wheels. CUDA requires supported NVIDIA
+hardware; CPU imports do not import CuPy. `step` uses the explicit context's
+array module and rejects mixed/host arrays in CUDA calls; `constrain` accepts
+same-device NumPy/CuPy raw arrays. Initialization remains on CPU. `loss_value`
+returns an explicit host scalar; step/rule vector arithmetic stays on device.
+The strict trainer's copies/scalar synchronization and unsupported eval/callbacks
+remain as documented in the public experimental guide. No profiler trace or
+speed/cost/adoption conclusion follows from this conformance suite.
