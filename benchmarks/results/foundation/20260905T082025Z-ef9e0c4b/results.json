@@ -1,0 +1,139 @@
+{
+  "environment": {
+    "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.35",
+    "python": "3.12.1 (main, Jan  8 2024, 04:46:10) [Clang 17.0.6 ]",
+    "cpu": "x86_64",
+    "visible_cpu_count": 18,
+    "requested_cpu": 2,
+    "requested_memory_mib": 8192,
+    "host_ram_bytes": 404784181248,
+    "threads": {
+      "OMP_NUM_THREADS": "2",
+      "NUMBA_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2"
+    },
+    "packages": {
+      "cuda-bindings": "13.1.1",
+      "numba": "0.63.1",
+      "pip": "23.3.2",
+      "pluggy": "1.6.0",
+      "numba-cuda": "0.27.0",
+      "coverage": "7.13.1",
+      "setuptools": "69.0.3",
+      "cuda-core": "0.6.0",
+      "cuda-pathfinder": "1.4.0",
+      "Pygments": "2.19.2",
+      "openboost": "1.0.0rc1",
+      "pytest-cov": "7.0.0",
+      "pytest": "9.0.2",
+      "llvmlite": "0.46.0",
+      "cupy-cuda12x": "13.6.0",
+      "packaging": "25.0",
+      "fastrlock": "0.8.3",
+      "scipy": "1.16.3",
+      "pytest-xdist": "3.8.0",
+      "numpy": "2.3.5",
+      "execnet": "2.1.2",
+      "joblib": "1.5.3",
+      "iniconfig": "2.3.0",
+      "certifi": "2025.4.26",
+      "aiosignal": "1.3.2",
+      "cbor2": "5.7.0",
+      "idna": "3.10",
+      "attrs": "25.3.0",
+      "protobuf": "6.31.1",
+      "hpack": "4.1.0",
+      "propcache": "0.3.1",
+      "hyperframe": "6.1.0",
+      "h2": "4.2.0",
+      "grpclib": "0.4.8",
+      "yarl": "1.20.0",
+      "frozenlist": "1.6.0",
+      "typing_extensions": "4.13.2",
+      "multidict": "6.4.4",
+      "aiohappyeyeballs": "2.6.1",
+      "aiohttp": "3.12.7"
+    },
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "cuda_runtime": 12090,
+    "cuda_driver": 13000,
+    "nvidia_smi": "Tesla T4, 580.95.05, 15360 MiB"
+  },
+  "source_sha": "8609f70dd5f3cfb030d76f1358e6b53f966e0e0d",
+  "wheel_sha256": "40a5ec42661eba6f72bf340147f29d0fd2ffed37877e77b6981d78cd1d0f888b",
+  "argv": [
+    "/usr/local/bin/python",
+    "-m",
+    "pytest",
+    "-c",
+    "pytest.ini",
+    "test_smoke.py",
+    "test_correctness.py",
+    "--junitxml=junit.xml"
+  ],
+  "timed_out": false,
+  "returncode": 0,
+  "stdout": ".....                                                                    [100%]\n=============================== warnings summary ===============================\ntest_smoke.py: 12 warnings\ntest_correctness.py: 3 warnings\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\ntest_smoke.py::test_normal_gpu_fit\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 4 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 8 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 2 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_correctness.py::test_weighted_newton\n  /usr/local/lib/python3.12/site-packages/numba/cpython/hashing.py:477: UserWarning: FNV hashing is not implemented in Numba. See PEP 456 https://www.python.org/dev/peps/pep-0456/ for rationale over not using FNV. Numba will continue to work, but hashes for built in types will be computed using siphash24. This will permit e.g. dictionaries to continue to behave as expected, however anything relying on the value of the hash opposed to hash as a derived property is likely to not work as expected.\n    warnings.warn(msg)\n\ntest_correctness.py::test_weighted_newton\n  /usr/local/lib/python3.12/site-packages/openboost/_trainer.py:136: RuntimeWarning: CUDA objective fallback to CPU: objective capability; tree execution may still use CUDA\n    return fit(model, *args, **kwargs)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n5 passed, 22 warnings in 9.97s\n",
+  "stderr": "",
+  "junit": "<?xml version=\"1.0\" encoding=\"utf-8\"?><testsuites name=\"pytest tests\"><testsuite name=\"pytest\" errors=\"0\" failures=\"0\" skipped=\"0\" tests=\"5\" time=\"9.975\" timestamp=\"2026-09-05T08:20:35.584628+00:00\" hostname=\"modal\"><testcase classname=\"test_smoke\" name=\"test_device_interop\" time=\"3.133\" /><testcase classname=\"test_smoke\" name=\"test_normal_gpu_fit\" time=\"3.274\" /><testcase classname=\"test_correctness\" name=\"test_weighted_newton\" time=\"3.142\" /><testcase classname=\"test_correctness\" name=\"test_weighted_distribution[normal]\" time=\"0.127\" /><testcase classname=\"test_correctness\" name=\"test_weighted_distribution[poisson]\" time=\"0.141\" /></testsuite></testsuites>",
+  "checks": {
+    "installed_files_verified": 37,
+    "installed_module": "/usr/local/lib/python3.12/site-packages/openboost/__init__.py",
+    "interop": true,
+    "dataset_sha256": "a6ebf89ed613d8f792084b55e7f6a3ce93360add808cd1729aa8e2842cce18ec",
+    "nll": 1.3506839275360107,
+    "native_tree_calls": 4,
+    "device_objective_calls": 2,
+    "weighted_newton": {
+      "cpu_hist_hess": [
+        7.0,
+        10.0
+      ],
+      "gpu_hist_hess": [
+        7.0,
+        10.0
+      ],
+      "expected_leaves": [
+        2.625,
+        -1.8181818723678589
+      ],
+      "cpu_raw": [
+        0.26250001788139343,
+        0.26250001788139343,
+        0.26250001788139343,
+        0.26250001788139343,
+        -0.1818181872367859,
+        -0.1818181872367859,
+        -0.1818181872367859,
+        -0.1818181872367859
+      ],
+      "gpu_raw": [
+        0.26250001788139343,
+        0.26250001788139343,
+        0.26250001788139343,
+        0.26250001788139343,
+        -0.1818181872367859,
+        -0.1818181872367859,
+        -0.1818181872367859,
+        -0.1818181872367859
+      ]
+    },
+    "weighted_normal": {
+      "nll": {
+        "cpu": 2.241002082824707,
+        "cuda": 2.241002082824707
+      },
+      "raw_max_abs_error": 0.0
+    },
+    "weighted_poisson": {
+      "nll": {
+        "cpu": 2.1998133659362793,
+        "cuda": 2.1998133659362793
+      },
+      "raw_max_abs_error": 0.0
+    }
+  },
+  "remote_function_wall_s": 15.654803316999999,
+  "timing_scope": "smoke execution including environment checks/JIT; not a performance benchmark or billed duration"
+}

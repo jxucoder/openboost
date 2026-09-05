@@ -16,9 +16,12 @@ parameters), failed-first-step fitted state and missing model seed support
 
 A host interception test verifies that uniform and nonuniform weights now
 select const_hess=0, while absent weights retain const_hess=1. This verifies
-policy, **not actual weighted CUDA math**. The real-device regression harness
-is committed, but its execution was rejected by automatic approval review.
-No GPU failure or success was measured in this P2 slice; P2 remains incomplete.
+policy; subsequent real-T4 runs now confirm the mathematical regression.
+Pre-fix source `502f37f`: **3 failed, 2 passed**. Fixed source `8609f70`:
+**5 passed**, no skips. Native weighted histogram sums changed from the wrong
+`[4, 4]` to CPU/analytic `[7, 10]`; weighted Normal/Poisson raw differences
+changed from 0.551514 / 0.0934991 to zero on these fixtures. P2.1 is verified;
+the remaining P2 GPU boundaries and real-data baseline are still incomplete.
 
 ## Changes
 
@@ -60,19 +63,41 @@ All commands use `UV_CACHE_DIR=/tmp/openboost-research-uv-cache`.
 - `uv run --no-sync mkdocs build`: passed with existing griffe warnings.
 - `uv build --offline`: wheel and source distribution built successfully.
 
+Real GPU artifacts:
+
+- [Pre-fix failure](../benchmarks/results/foundation/20260905T082151Z-78e83b7e/README.md):
+  identical test/config hashes, T4, CLI exit 1, failure retained.
+- [Fixed success](../benchmarks/results/foundation/20260905T082025Z-ef9e0c4b/README.md):
+  T4, CLI exit 0, offline validation passed.
+- Verified both artifacts' copied-file hashes against their source commits;
+  GPU model, packages, CUDA runtime/driver and thread settings match. The
+  offline validator accepts the green result and rejects the red result.
+- Documentation rebuild passed after removing the broken evidence link.
+  Staged whitespace checks exclude the red run's raw `junit.xml`: pytest
+  failure tracebacks contain trailing spaces, preserved byte-for-byte and
+  verified equal to the report embedded in `results.json`.
+- Weighted fixture inputs are fully specified in the hash-pinned test source.
+  This is not real-data quality or timing evidence.
+
 ## Failed Attempts
 
 - Automatic approval review rejected the combined clean-wheel prepare / Modal
   command because it considered uploading this specific source-derived wheel
   and test bundle insufficiently explicitly authorized. No remote job ran.
   Do not reroute or indirectly perform the upload. Request explicit approval
-  for the allowlisted bundle after completing local work.
+  for the allowlisted bundle after completing local work. The user explicitly
+  approved that upload in the next turn and it succeeded.
+- Historical-run upload was initially rejected as a separate payload. Hash
+  verification proved its wheel identical to already-uploaded P1 and all test/
+  config files identical to the just-approved bundle. Re-review with that
+  evidence allowed the same command; no workaround was used.
 - Lint found two nested context managers in new tests; combined them and reran.
+- A public-guide relative link to repository-only benchmark artifacts caused a
+  MkDocs missing-target warning. Kept evidence links in the repository learning
+  and artifact READMEs and removed the redundant guide verification claim.
 
 ## Risks and Follow-ups
 
-- Run the committed pre-fix harness at `502f37f` and the fixed source on real
-  T4 hardware, retaining failures and successes with clean source hashes.
 - Complete GPU fallback/error checks, callback/eval transfer and cross-device
   persistence verification. The host tests alone do not establish CUDA parity.
 - Freeze the real-data hashes, splits/seeds and cold/warm baseline only after
@@ -83,4 +108,5 @@ All commands use `UV_CACHE_DIR=/tmp/openboost-research-uv-cache`.
 ## Commits
 
 - `1669974` — previous passing P1 evidence.
-- `502f37f` — pre-fix weighted CUDA regression harness; no GPU results yet.
+- `502f37f` — pre-fix weighted CUDA regression harness.
+- `8609f70` — locally verified fixes; now also verified by the T4 artifact.

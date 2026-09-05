@@ -137,7 +137,5 @@ these mixed execution paths must be distinguished in benchmark provenance.
 Kernel compilation or execution errors propagate as failed fits.
 
 Sample weights multiply both gradient and Hessian. Weighted fits disable the
-unit-Hessian bandwidth hint, including uniform weights. The foundation P2
-real-device weighted parity gate is pending; this is not a new GPU quality or
-performance claim. Initialization still uses the existing unweighted
-`distribution.init_params(y)` estimate.
+unit-Hessian bandwidth hint, including uniform weights. Initialization still
+uses the existing unweighted `distribution.init_params(y)` estimate.
