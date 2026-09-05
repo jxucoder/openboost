@@ -9,6 +9,7 @@ from .._array import BinnedArray
 from .._backends import backend_context
 from .._trainer import TrainerConfig, fit_boosting, predict_raw
 from .._validation import validate_sample_weight
+from ._builders import ConstantSchedule, CPUHistogramBuilder, ExtensionSession
 from ._contracts import ObjectiveBridge, channels_of
 
 
@@ -63,8 +64,10 @@ def features(X, n=None):
 class Booster:
     """Experimental CPU boosting. Plugin objects are training-time dependencies."""
 
-    def __init__(self, *, objective, config=None, device='cpu', fallback='error'):
+    def __init__(self, *, objective, tree_builder=None, step_schedule=None, config=None, device='cpu', fallback='error'):
         self.objective = objective
+        self.tree_builder = tree_builder if tree_builder is not None else CPUHistogramBuilder()
+        self.step_schedule = step_schedule if step_schedule is not None else ConstantSchedule()
         self.config = replace(config) if config is not None else TrainerConfig()
         self.device = device
         self.fallback = fallback
@@ -74,6 +77,17 @@ class Booster:
             early_stopping_rounds=None):
         validate_config(self.config)
         channels = channels_of(self.objective)
+        if (not isinstance(getattr(self.tree_builder, 'supported_devices', None), frozenset)
+                or 'cpu' not in self.tree_builder.supported_devices
+                or not callable(getattr(self.tree_builder, 'build', None))):
+            raise ValueError('P3 builder must declare supported_devices including CPU and implement build')
+        if not callable(getattr(self.step_schedule, 'coefficients', None)):
+            raise ValueError('StepSchedule must implement coefficients')
+        if type(self.tree_builder) is CPUHistogramBuilder and self.config.reg_lambda == 0 and self.config.min_child_weight == 0:
+            raise ValueError('CPUHistogramBuilder requires positive min_child_weight when reg_lambda=0')
+        from .._callbacks import LearningRateScheduler
+        if any(isinstance(cb, LearningRateScheduler) for cb in callbacks or []):
+            raise ValueError('Use StepSchedule instead of a learning-rate-mutating callback')
         if self.device not in ('cpu', 'cuda') or self.fallback not in ('error', 'warn'):
             raise ValueError('Invalid device or fallback policy')
         if 'cpu' not in self.objective.supported_devices:
@@ -102,11 +116,11 @@ class Booster:
         with backend_context('cpu'):
             fit_boosting(self, bridge, X, y, config=replace(self.config), sample_weight=sample_weight,
                          eval_sets=prepared, callbacks=callbacks, early_stopping_rounds=early_stopping_rounds,
-                         rng=rng)
+                         rng=rng, extension=ExtensionSession(bridge, self.tree_builder, self.step_schedule, replace(self.config)))
         self.channel_names_ = channels
         self.fit_report_ = dict(requested_device=self.device, actual_device='cpu',
                                 objective_device='cpu', tree_device='cpu', update_device='cpu',
-                                eval_device='cpu' if prepared else None, builder_path='cpu_histogram',
+                                eval_device='cpu' if prepared else None, builder_path=type(self.tree_builder).__name__,
                                 fallback_reason=reason, random_state=self.config.random_state,
                                 tree_counts={k: len(v) for k, v in self.trees_.items()},
                                 timing_scope='No performance timing collected; synchronous CPU execution')

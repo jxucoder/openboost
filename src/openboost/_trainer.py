@@ -119,10 +119,16 @@ def predict_raw(model: Any, X) -> RawScores:
     n = X_binned.n_samples
     raw = _empty_raw(n, model._base_scores)
     lr = model.learning_rate
+    coefficients = getattr(model, "coefficients_", None)
+    if coefficients is not None and set(coefficients) != set(model.trees_):
+        raise ValueError("Coefficient channels do not match trees")
     for name, trees in model.trees_.items():
+        weights = coefficients[name] if coefficients is not None else [lr] * len(trees)
+        if len(weights) != len(trees):
+            raise ValueError("Coefficient count does not match trees")
         pred = raw[name]
-        for tree in trees:
-            pred = pred + lr * _to_host(tree(X_binned))
+        for tree, weight in zip(trees, weights, strict=True):
+            pred = pred + weight * _to_host(tree(X_binned))
         raw[name] = pred
     return raw
 
@@ -158,6 +164,7 @@ def fit_boosting(
     eval_fn: Callable[[NDArray, RawScores, dict[str, Any] | None], float] | None = None,
     eval_metric_name: str = "loss",
     rng: np.random.Generator | None = None,
+    extension=None,
 ) -> Any:
     """Fit ``model`` in place. Returns ``model``.
 
@@ -194,7 +201,9 @@ def fit_boosting(
     model._base_scores = dict(base)
     model.trees_ = {name: [] for name in objective.channel_names}
 
-    use_native = _gpu_native_eligible(model.X_binned_, config)
+    if extension is not None:
+        model.coefficients_ = {name: [] for name in objective.channel_names}
+    use_native = extension is None and _gpu_native_eligible(model.X_binned_, config)
     if use_gpu and not use_native:
         warnings.warn("CUDA native tree fallback to generic tree path (constraints or feature metadata)",
                       RuntimeWarning, stacklevel=2)
@@ -258,6 +267,14 @@ def fit_boosting(
     )
 
     for round_idx in range(config.n_trees):
+        if extension is not None:
+            state.round_idx = round_idx
+            cb_manager.on_round_begin(state)
+            if model.learning_rate != config.learning_rate:
+                raise ValueError("Callbacks must not change learning_rate; use StepSchedule")
+            coefficients = extension.coefficients(round_idx)
+        else:
+            coefficients = dict.fromkeys(objective.channel_names, config.learning_rate)
         if device_state:
             grads = objective.step(raw, y_step, sw_step, extra)
         else:
@@ -272,7 +289,13 @@ def fit_boosting(
                 grad = np.ascontiguousarray(grad, dtype=np.float32)
                 hess = np.ascontiguousarray(hess, dtype=np.float32)
 
-            if use_native:
+            if extension is not None:
+                tree, update = extension.build(model.X_binned_, grad, hess, name)
+                raw[name] = raw[name] + coefficients[name] * update
+                from .experimental._contracts import vector
+                vector(raw[name], n_samples, "updated raw")
+                model.coefficients_[name].append(coefficients[name])
+            elif use_native:
                 pred_buf = raw[name] if device_state else None
                 legacy = fit_tree_gpu_native(
                     binned_gpu,
@@ -321,7 +344,7 @@ def fit_boosting(
 
             model.trees_[name].append(tree)
             for _n, X_e, _y_e, _extra_e, raw_e in prepared_eval:
-                raw_e[name] = raw_e[name] + config.learning_rate * _to_host(tree(X_e))
+                raw_e[name] = raw_e[name] + coefficients[name] * _to_host(tree(X_e))
 
         last_metric = None
         for name, _X_e, y_e, extra_e, raw_e in prepared_eval:

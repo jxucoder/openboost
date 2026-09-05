@@ -31,13 +31,31 @@ CUDA either fails preflight or warns and selects the entire CPU path.
   tests); production/new-test lint passed. No experimental GPU execution is
   claimed by P3.
 
+## Builder/update slice
+
+- Explicit builder dispatch precedes native eligibility; every channel uses a
+  single round-start objective evaluation. Schedule values are full coefficients
+  stored alongside trees and reused for prediction/eval.
+- Package-owned standard scalar trees are validated before prediction. Compact
+  arrays are detached, permitting builder scratch reuse without sample-sized
+  copies. Optional cached predictions must match the tree.
+- CPU zero-curvature root handling is explicit. The legacy split kernel does
+  not define 0/0 candidate scores, so the CPU adapter rejects the unverified
+  reg_lambda=0/min_child_weight=0 pair rather than silently changing it. This
+  is a declared P3 boundary; future primitive work can broaden it.
+- Slice 2: 93 focused/legacy tests passed; production and new-test lint passed.
+- Tests hand-check two channels/two rounds, explicit dispatch even when native
+  eligibility is true, unhalved split gain, cache consistency and zero curvature.
+
 ## Failed Attempts
 
 - All-zero weights initially passed; fixed at experimental preflight.
 
 ## Risks and Follow-ups
 
-- Builder/schedule dispatch and plugin-free inference persistence follow in P3.
+- Plugin-free inference persistence and coefficient-aware early stopping follow
+  in P3.3. A native extension adapter remains future CUDA work; no unverified
+  adapter is exported by this CPU contract.
 - Read-only views prevent accidental mutation; this is not a sandbox against
   deliberately hostile Python plugins accessing underlying memory.
 
