@@ -45,6 +45,7 @@ class TrainerConfig:
     colsample_bytree: float = 1.0
     n_bins: int = 254
     random_state: int | None = None
+    min_gain: float = 0.0
 
 
 def _to_host(pred: NDArray) -> NDArray:
@@ -156,6 +157,7 @@ def fit_boosting(
     eval_sets: list[dict[str, Any]] | None = None,
     eval_fn: Callable[[NDArray, RawScores, dict[str, Any] | None], float] | None = None,
     eval_metric_name: str = "loss",
+    rng: np.random.Generator | None = None,
 ) -> Any:
     """Fit ``model`` in place. Returns ``model``.
 
@@ -172,7 +174,7 @@ def fit_boosting(
         raise ValueError("sampling ratios must be in (0, 1]")
     if use_gpu and (config.subsample < 1 or config.colsample_bytree < 1):
         raise ValueError("GPU sampling is not supported by the unified trainer; use CPU or ratios=1")
-    rng = np.random.default_rng(config.random_state)
+    rng = rng if rng is not None else np.random.default_rng(config.random_state)
     device_state = (
         use_gpu
         and bool(getattr(objective, "device_capable", False))
@@ -279,6 +281,7 @@ def fit_boosting(
                     max_depth=config.max_depth,
                     min_child_weight=config.min_child_weight,
                     reg_lambda=config.reg_lambda,
+                    min_gain=config.min_gain,
                     pred_gpu=pred_buf,
                     learning_rate=config.learning_rate,
                     const_hess=1.0 if unit_hess else 0.0,
@@ -298,6 +301,7 @@ def fit_boosting(
                     max_depth=config.max_depth,
                     min_child_weight=config.min_child_weight,
                     reg_lambda=config.reg_lambda,
+                    min_gain=config.min_gain,
                     reg_alpha=config.reg_alpha,
                     subsample=config.subsample,
                     colsample_bytree=config.colsample_bytree,
