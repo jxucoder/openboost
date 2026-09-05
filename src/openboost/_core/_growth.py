@@ -160,6 +160,7 @@ class GrowthConfig:
     min_gain: float = 0.0
     subsample: float = 1.0  # Phase 11: row sampling
     colsample_bytree: float = 1.0  # Phase 11: column sampling
+    rng: np.random.Generator | None = field(default=None, repr=False)
 
 
 # =============================================================================
@@ -530,7 +531,8 @@ class LevelWiseGrowth(GrowthStrategy):
         # Column subsampling: select a random subset of features for this tree
         if config.colsample_bytree < 1.0:
             n_selected = max(1, int(n_features * config.colsample_bytree))
-            selected_features = np.sort(np.random.choice(n_features, size=n_selected, replace=False))
+            sampler = config.rng if config.rng is not None else np.random
+            selected_features = np.sort(sampler.choice(n_features, size=n_selected, replace=False))
             col_mask = np.zeros(n_features, dtype=np.bool_)
             col_mask[selected_features] = True
         else:

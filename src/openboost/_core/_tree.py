@@ -318,6 +318,7 @@ def fit_tree(
     max_leaves: int | None = None,
     subsample: float = 1.0,
     colsample_bytree: float = 1.0,
+    rng: np.random.Generator | None = None,
 ) -> TreeStructure:
     """Fit a single gradient boosting tree.
     
@@ -412,7 +413,8 @@ def fit_tree(
         n_subsample = int(n_samples * subsample)
         if n_subsample < 1:
             n_subsample = 1
-        subsample_indices = np.random.choice(n_samples, n_subsample, replace=False)
+        sampler = rng if rng is not None else np.random
+        subsample_indices = sampler.choice(n_samples, n_subsample, replace=False)
         subsample_indices = np.sort(subsample_indices)  # Keep order for cache efficiency
         # Create mask for sampling
         subsample_mask = np.zeros(n_samples, dtype=np.bool_)
@@ -433,6 +435,7 @@ def fit_tree(
         min_gain=min_gain,
         subsample=subsample,
         colsample_bytree=colsample_bytree,
+        rng=rng,
     )
     
     # Apply subsampling to gradients if needed

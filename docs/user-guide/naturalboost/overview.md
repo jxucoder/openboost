@@ -119,3 +119,25 @@ model = ob.NaturalBoostNormal(
 - [Weibull AFT](../survival.md): censored survival
 - [Custom distributions](custom-distributions.md)
 - [Benchmarks](../../benchmarks.md)
+
+### Execution and reproducibility boundary
+
+`NaturalBoost` and `DistributionalGBDT` accept `random_state` for CPU row and
+column sampling. Repeating a fit with the same integer seed uses the same
+sampling stream without changing NumPy's global RNG. `FormulaBoost` and
+`WeibullAFT` share this trainer behavior. With `random_state=None`, each fit
+creates its own unseeded generator. Legacy trainers have separate RNG paths.
+
+The unified CUDA trainer currently requires `subsample=1` and
+`colsample_bytree=1`; other sampling ratios fail before binning or updates.
+Only exact built-in Normal and Poisson distributions use device objective
+kernels. Custom distributions, subclasses and exposure offsets use host
+objective math with a visible warning. A native-tree fallback also warns;
+these mixed execution paths must be distinguished in benchmark provenance.
+Kernel compilation or execution errors propagate as failed fits.
+
+Sample weights multiply both gradient and Hessian. Weighted fits disable the
+unit-Hessian bandwidth hint, including uniform weights. The foundation P2
+real-device weighted parity gate is pending; this is not a new GPU quality or
+performance claim. Initialization still uses the existing unweighted
+`distribution.init_params(y)` estimate.

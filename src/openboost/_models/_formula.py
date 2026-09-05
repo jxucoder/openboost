@@ -76,6 +76,7 @@ class FormulaBoost(PersistenceMixin):
     subsample: float = 1.0
     colsample_bytree: float = 1.0
     n_bins: int = 254
+    random_state: int | None = None
 
     trees_: dict[str, list[TreeStructure]] = field(
         default_factory=dict, init=False, repr=False
@@ -157,6 +158,7 @@ class FormulaBoost(PersistenceMixin):
                 subsample=self.subsample,
                 colsample_bytree=self.colsample_bytree,
                 n_bins=self.n_bins,
+                random_state=self.random_state,
             ),
             sample_weight=sample_weight,
             extra={"model_input": x},

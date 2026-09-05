@@ -7,8 +7,10 @@ and every eval set incrementally.
 
 from __future__ import annotations
 
+import warnings
 from collections.abc import Callable
 from dataclasses import dataclass
+from functools import wraps
 from typing import Any
 
 import numpy as np
@@ -42,6 +44,7 @@ class TrainerConfig:
     subsample: float = 1.0
     colsample_bytree: float = 1.0
     n_bins: int = 254
+    random_state: int | None = None
 
 
 def _to_host(pred: NDArray) -> NDArray:
@@ -123,6 +126,22 @@ def predict_raw(model: Any, X) -> RawScores:
     return raw
 
 
+def _restore_on_failure(fit):
+    @wraps(fit)
+    def wrapped(model, *args, **kwargs):
+        # Training assigns new containers; restore trainer-owned state if
+        # objective execution or validation fails, including on the first step.
+        previous = model.__dict__.copy()
+        try:
+            return fit(model, *args, **kwargs)
+        except Exception:
+            model.__dict__.clear()
+            model.__dict__.update(previous)
+            raise
+    return wrapped
+
+
+@_restore_on_failure
 def fit_boosting(
     model: Any,
     objective: Objective,
@@ -148,6 +167,22 @@ def fit_boosting(
     sample_weight = validate_sample_weight(sample_weight, n_samples)
     extra = extra or {}
 
+    use_gpu = is_cuda()
+    if not (0 < config.subsample <= 1 and 0 < config.colsample_bytree <= 1):
+        raise ValueError("sampling ratios must be in (0, 1]")
+    if use_gpu and (config.subsample < 1 or config.colsample_bytree < 1):
+        raise ValueError("GPU sampling is not supported by the unified trainer; use CPU or ratios=1")
+    rng = np.random.default_rng(config.random_state)
+    device_state = (
+        use_gpu
+        and bool(getattr(objective, "device_capable", False))
+        and extra.get("log_offset") is None
+    )
+    if use_gpu and not device_state:
+        reason = "exposure offsets" if extra.get("log_offset") is not None else "objective capability"
+        warnings.warn(f"CUDA objective fallback to CPU: {reason}; tree execution may still use CUDA",
+                      RuntimeWarning, stacklevel=2)
+
     model.X_binned_ = _bin_features(X, None, config.n_bins)
     model.n_features_in_ = model.X_binned_.n_features
     model.learning_rate = config.learning_rate
@@ -157,14 +192,13 @@ def fit_boosting(
     model._base_scores = dict(base)
     model.trees_ = {name: [] for name in objective.channel_names}
 
-    use_gpu = is_cuda()
-    device_state = (
-        use_gpu
-        and bool(getattr(objective, "device_capable", False))
-        and extra.get("log_offset") is None
-    )
     use_native = _gpu_native_eligible(model.X_binned_, config)
-    unit_hess = bool(getattr(objective, "unit_hessian", False))
+    if use_gpu and not use_native:
+        warnings.warn("CUDA native tree fallback to generic tree path (constraints or feature metadata)",
+                      RuntimeWarning, stacklevel=2)
+    # Weighting turns an unweighted unit Hessian into sample_weight. Even
+    # uniform weights use the actual array rather than an inferred constant.
+    unit_hess = bool(getattr(objective, "unit_hessian", False)) and sample_weight is None
 
     if use_gpu:
         from numba import cuda
@@ -267,6 +301,7 @@ def fit_boosting(
                     reg_alpha=config.reg_alpha,
                     subsample=config.subsample,
                     colsample_bytree=config.colsample_bytree,
+                    rng=rng,
                 )
                 update = tree(model.X_binned_)
                 if device_state:

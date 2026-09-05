@@ -19,7 +19,7 @@ from typing import Any, Protocol
 import numpy as np
 from numpy.typing import NDArray
 
-from ._distributions import Distribution
+from ._distributions import Distribution, Normal, Poisson
 
 RawScores = dict[str, NDArray]
 GradHess = dict[str, tuple[NDArray, NDArray]]
@@ -108,7 +108,7 @@ class DistributionObjective:
     @property
     def device_capable(self) -> bool:
         """True when grad/hess can be computed on device-resident raw scores."""
-        return type(self.distribution).__name__ in ("Normal", "Poisson")
+        return type(self.distribution) in (Normal, Poisson)
 
     @property
     def unit_hessian(self) -> bool:
@@ -164,46 +164,24 @@ class DistributionObjective:
         y: NDArray,
         sample_weight: NDArray | None,
     ) -> GradHess:
-        try:
-            from ._backends._cuda import normal_step_gpu, poisson_step_gpu, scale_gh_gpu
+        from ._backends._cuda import normal_step_gpu, poisson_step_gpu, scale_gh_gpu
 
-            name = type(self.distribution).__name__
-            if name == "Normal":
-                g_loc, h_loc, g_scale, h_scale = normal_step_gpu(
-                    raw["loc"], raw["scale"], y, natural=self.natural
-                )
-                grads: GradHess = {"loc": (g_loc, h_loc), "scale": (g_scale, h_scale)}
-            elif name == "Poisson":
-                g, h = poisson_step_gpu(raw["rate"], y, natural=self.natural)
-                grads = {"rate": (g, h)}
-            else:  # pragma: no cover
-                raise RuntimeError(f"No device step for {name}")
-            if sample_weight is not None:
-                for g, h in grads.values():
-                    scale_gh_gpu(g, h, sample_weight)
-            return grads
-        except Exception:
-            self._device_kernels_ok = False
-            # Kernel compile can fail on some numpy/numba-cuda combos;
-            # fall back to the host path and let the trainer upload grads.
-            raw_host = {
-                k: (v.copy_to_host() if hasattr(v, "copy_to_host") else np.asarray(v))
-                for k, v in raw.items()
-            }
-            y_host = y.copy_to_host() if hasattr(y, "copy_to_host") else np.asarray(y)
-            sw_host = None
-            if sample_weight is not None:
-                sw_host = (
-                    sample_weight.copy_to_host()
-                    if hasattr(sample_weight, "copy_to_host")
-                    else np.asarray(sample_weight)
-                )
-            params = self.constrain(raw_host)
-            if self.natural:
-                grads = self.distribution.natural_gradient(y_host, params)
-            else:
-                grads = self.distribution.nll_gradient(y_host, params)
-            return _apply_sample_weight(grads, sw_host)
+        # Only exact built-ins share these kernels. Subclasses can override math.
+        if type(self.distribution) is Normal:
+            g_loc, h_loc, g_scale, h_scale = normal_step_gpu(
+                raw["loc"], raw["scale"], y, natural=self.natural
+            )
+            grads: GradHess = {"loc": (g_loc, h_loc), "scale": (g_scale, h_scale)}
+        elif type(self.distribution) is Poisson:
+            g, h = poisson_step_gpu(raw["rate"], y, natural=self.natural)
+            grads = {"rate": (g, h)}
+        else:
+            raise RuntimeError(f"No device step for {type(self.distribution).__name__}")
+        if sample_weight is not None:
+            for g, h in grads.values():
+                scale_gh_gpu(g, h, sample_weight)
+        # A runtime/compile error is a failed fit, never a silent host retry.
+        return grads
 
     def loss_value(
         self,

@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1 已完成；下一项 P2。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0、P1 已完成；P2 本地修复与回归已推进，真实 GPU 验证及基线尚未完成。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，

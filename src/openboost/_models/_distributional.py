@@ -169,6 +169,7 @@ class DistributionalGBDT(PersistenceMixin):
     subsample: float = 1.0
     colsample_bytree: float = 1.0
     n_bins: int = 254
+    random_state: int | None = None
     
     # Fitted attributes (not init)
     trees_: dict[str, list[TreeStructure]] = field(default_factory=dict, init=False, repr=False)
@@ -306,6 +307,7 @@ class DistributionalGBDT(PersistenceMixin):
                 subsample=self.subsample,
                 colsample_bytree=self.colsample_bytree,
                 n_bins=self.n_bins,
+                random_state=self.random_state,
             ),
             sample_weight=sample_weight,
             extra={"log_offset": train_log_offset},
