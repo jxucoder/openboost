@@ -34,6 +34,8 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Independent CPU extension wheels](2026-09-05-foundation-p6-cpu-wheels.md)
+
 - [P4.4 level-wise builder and T4 evidence](2026-09-05-foundation-p4-builder.md)
 
 - [2026-09-05-foundation-p4-leaves.md](2026-09-05-foundation-p4-leaves.md) — real-row CPU/CUDA leaf reduction, explicit leaf rule, bounded next-gradient checks and real T4 evidence.

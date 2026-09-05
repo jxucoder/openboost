@@ -62,3 +62,18 @@ remain CPU-only until real GPU package/trainer tests pass.
 ## Commits
 
 - `00ca3b2` — P4.4 frozen T4 builder evidence preceding this slice.
+
+## Frozen clean-source evidence
+
+- `3f8addd`: [artifact](../benchmarks/results/foundation/p6-cpu-3f8addd/README.md),
+  clean-source rebuild, 5 passed / 0 skipped; weighted public demo executed;
+  six exact CPU roundtrips after both plugins were uninstalled.
+- All recorded source hashes matched git objects; JUnit/test counts, absence of
+  plugins and sanitized paths verified. OpenBoost wheel hash matches P4.4:
+  no library core changes were needed for these packages.
+- Measured method source size (including blanks/docstrings): 89 lines for
+  objective/schedule, 22 for bounded leaves. Setup requires three wheel builds,
+  public builder selection and an explicit constrain call for sigma; dependency
+  selection on Intel macOS was the concrete installation obstacle.
+- CPU P6 portion is complete. Next is P5 strict GPU trainer integration, then
+  extend and test these actual installed packages on real CUDA hardware.

@@ -1,0 +1,91 @@
+{
+  "source_sha": "3f8addda5a6c9494164b5e69923538f0bf33b56b",
+  "source_dirty": false,
+  "files": {
+    "examples/extensions/README.md": "ddbd8c6e61a25cba1244909ea73ef4e46e1b11e5c5680ca837e9514e275a6655",
+    "examples/extensions/bounded_leaves/README.md": "45fa7deb9c04fcf980d495bd983847db5bce8eb3434741b0773ff7fe3d88c1e5",
+    "examples/extensions/bounded_leaves/pyproject.toml": "c2084f4993b9ecc9a9b82912b02d35ad14057cba062b35cd65081d7bd627a956",
+    "examples/extensions/bounded_leaves/src/bounded_leaves/__init__.py": "bd51b4fc99fa8aa85355a5c2dc9583c48584ebc47dd383b8a06e886a0dc9f000",
+    "examples/extensions/bounded_leaves/tests/test_leaf.py": "1ef335865a55b7b8d0b1e09fabe98cb1e5dbbfd17f9367be7783ce1ab00323d1",
+    "examples/extensions/check_inference.py": "f6edb46b17eba330044405e894185b2be2161ac304b9a7e60a6d9489d879d02f",
+    "examples/extensions/demo.py": "69bbd98813e4975b7da85d5a9b2aaa0e4b833b311b83cc7c438020b37bd2759b",
+    "examples/extensions/normal_fisher/README.md": "19b5ddc4905d0322cab5710ba721e592371bc4d39913e74fb412e56bd081c925",
+    "examples/extensions/normal_fisher/pyproject.toml": "59c5e7b8a1d2f6280fa4d6e9b6710c906e56d6c65d2158cf111c1cb07e966992",
+    "examples/extensions/normal_fisher/src/normal_fisher/__init__.py": "be28cd7cbd49ccd093005095f9527001a8d2fbf22877230a86b3540c216186ac",
+    "examples/extensions/normal_fisher/tests/test_normal.py": "1d2f2b1bc3a6bad8cb7ebf18ab6df19e389c9107bd5fc3bf0fd2e04be0a09427",
+    "examples/extensions/requirements-cpu.txt": "1f15e5d979db2378977adbdfa06ec08f60e5772d17c6bf9dfcd8b27a10f0c5c6",
+    "examples/extensions/test_composition.py": "a2b2b0e6fc99ba850846c4a2b1e91a7d2850326e383edc3005cefd93edf3e9c6",
+    "examples/extensions/verify_wheels.py": "4579f811882996a67e87908170765bd852d590af1343e8ea7ffa1a1da47e431a"
+  },
+  "wheel_hashes": {
+    "openboost-1.0.0rc1-py3-none-any.whl": "46dec4c697a5dfa21d8c6bca7e17a26019fd3c3373f0dd2ad539eed3ff819450",
+    "openboost_example_bounded_leaves-0.1.0-py3-none-any.whl": "3f19f3d600c798e12d2c759ccd480c2e431359399a2136868333253ac4e0a6e6",
+    "openboost_example_normal_fisher-0.1.0-py3-none-any.whl": "7024337a14fe927b9dfc830d619fa9b9faabc917c3ca0f0ba89adcf134ff9b88"
+  },
+  "uv_lock_sha256": "076f55ce347cae1071c902021b0e7b1b7ab4eec7eab4d95ad2a8f177d8cc9ca1",
+  "python": "3.12.12",
+  "os": "Darwin",
+  "machine": "x86_64",
+  "threads": 1,
+  "uv_version": "uv 0.12.1 (329541a50 2026-07-31 aarch64-apple-darwin)",
+  "packages": [
+    "Pygments==2.19.2",
+    "iniconfig==2.3.0",
+    "joblib==1.5.3",
+    "llvmlite==0.44.0",
+    "numba==0.61.2",
+    "numpy==2.2.6",
+    "openboost-example-bounded-leaves==0.1.0",
+    "openboost-example-normal-fisher==0.1.0",
+    "openboost==1.0.0rc1",
+    "packaging==25.0",
+    "pluggy==1.6.0",
+    "pytest==9.0.2",
+    "scipy==1.15.3"
+  ],
+  "module_paths_relative_to_venv": {
+    "openboost": "lib/python3.12/site-packages/openboost/__init__.py",
+    "normal_fisher": "lib/python3.12/site-packages/normal_fisher/__init__.py",
+    "bounded_leaves": "lib/python3.12/site-packages/bounded_leaves/__init__.py"
+  },
+  "extension_openboost_imports": [
+    "openboost.experimental"
+  ],
+  "method_source_lines": {
+    "bounded_leaves": 22,
+    "normal_fisher": 89
+  },
+  "inference_after_uninstall": {
+    "extensions_absent": true,
+    "exact_cpu_roundtrips": 6
+  },
+  "demo": {
+    "data_sha256": "30edad3a2fe4867d52eaf13dcf9742e241d4b4874a448bb4dc0ea617b75dfcf1",
+    "samples": 64,
+    "seed": 7,
+    "coefficients": {
+      "mu": [
+        0.2,
+        0.1
+      ],
+      "log_sigma": [
+        0.1,
+        0.05
+      ]
+    },
+    "finite_positive_scale": true
+  },
+  "composition": {
+    "models": 5,
+    "early_best_iteration": 0,
+    "channels": [
+      "mu",
+      "log_sigma"
+    ],
+    "seed": 7,
+    "samples": 4,
+    "two_round_oracle": true
+  },
+  "command": "uv run --no-sync python examples/extensions/verify_wheels.py OUTPUT",
+  "scope": "CPU installation and mathematical conformance; no external adoption or GPU claim"
+}

@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1、P2、P3 已完成；P4.1–P4.4 已完成，下一项 P6 的 CPU 独立扩展 wheel 验证。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0、P1、P2、P3 已完成；P4.1–P4.4 已完成，P6 CPU 独立扩展 wheel 验证已完成，下一项 P5 严格 GPU 集成。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -260,6 +260,15 @@ CPU 自编包仍不是外部 adoption；G5 保持未完成。随后完成 P5 和
 若默认路径显著变慢，先保正确，进入 P7 profiling；不把融合写回 builder 的隐式 side effect。
 
 ## P6：两个真实安装边界与可复现示例
+
+**CPU 部分已完成，GPU 部分待 P5 后验收。** `3f8addd`：两个独立 wheel
+仅用公开 API，在仓库外 fresh venv 安装运行。5 项独立数学/组合测试通过，
+64 行加权公开示例运行通过；卸载两插件并重启解释器后 6 个模型精确复现。
+现有相关回归 76 passed；[完整证据及安装障碍](../benchmarks/results/foundation/p6-cpu-3f8addd/README.md)。
+方法源码 89 + 22 行，无 core 修改。Intel macOS 的开发版 Numba/llvmlite
+源码安装失败，示例固定可安装 CPU 依赖。尚无外部 adoption 或 GPU package 声明。
+下一项返回 P5 严格 GPU trainer 集成，再完成以下 GPU 要求。
+
 
 **P6.1 — normal_fisher package。** 按设计 A/C 实现独立 objective 与 schedule，
 给 finite-difference gradient、Fisher analytic reference 和两轮更新例子。
