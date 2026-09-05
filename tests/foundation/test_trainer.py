@@ -64,11 +64,17 @@ def test_strict_extension_trainer(checks, monkeypatch, tmp_path):
     def forbidden(*args, **kwargs):
         raise AssertionError("Legacy dispatch or host sample download during strict fit")
 
+    class ExternalBuilder:
+        supported_devices = frozenset({"cpu", "cuda"})
+
+        def build(self, *args, **kwargs):
+            return LevelWiseBuilder().build(*args, **kwargs)
+
     records = []
     for explicit in (False, True):
         model = Booster(
             objective=objective,
-            tree_builder=LevelWiseBuilder() if explicit else None,
+            tree_builder=ExternalBuilder() if explicit else None,
             step_schedule=Decay(),
             config=config,
             device="cuda",
@@ -163,7 +169,58 @@ def test_strict_extension_trainer(checks, monkeypatch, tmp_path):
     with pytest.raises(ValueError, match="prediction"):
         model.fit(X, y, sample_weight=weights)
     np.testing.assert_array_equal(model.predict_raw(X)["loc"], before["loc"])
+    # The adapter advertises Normal/Poisson, natural and ordinary gradients.
+    # Verify the actual shared trainer across that whole declared surface.
+    adapters = []
+    for distribution in ("normal", "poisson"):
+        target = y if distribution == "normal" else rng.poisson(2, len(y)).astype(np.float32)
+        for natural in (False, True):
+            obj = DistributionObjectiveAdapter(distribution, natural=natural)
+            models = [
+                Booster(
+                    objective=obj, tree_builder=LevelWiseBuilder(), config=config, device=device
+                ).fit(X, target, sample_weight=weights)
+                for device in ("cpu", "cuda")
+            ]
+            outputs = [m.predict_raw(X) for m in models]
+            for channel in outputs[0]:
+                np.testing.assert_allclose(
+                    outputs[1][channel], outputs[0][channel], atol=2e-5, rtol=2e-5
+                )
+            adapters.append(
+                {
+                    "distribution": distribution,
+                    "natural": natural,
+                    "target_sha256": hashlib.sha256(target.tobytes()).hexdigest(),
+                    "max_raw_error": max(
+                        float(np.max(np.abs(outputs[1][k] - outputs[0][k]))) for k in outputs[0]
+                    ),
+                }
+            )
+
+    class InvalidStats(DistributionObjectiveAdapter):
+        def __init__(self, fault):
+            super().__init__("normal", natural=True)
+            self.fault = fault
+
+        def step(self, raw, y, *args, **kwargs):
+            out = super().step(raw, y, *args, **kwargs)
+            g, h = out["loc"]
+            if self.fault == "dtype":
+                out["loc"] = (g.astype(cp.float64), h)
+            elif self.fault == "negative":
+                out["loc"] = (g, -cp.ones_like(h))
+            elif self.fault == "alias":
+                out["loc"] = (raw["loc"], h)
+            return out
+
+    for fault, match in [("dtype", "float32"), ("negative", "nonnegative"), ("alias", "alias")]:
+        with pytest.raises(ValueError, match=match):
+            Booster(objective=InvalidStats(fault), device="cuda", config=config).fit(X, y)
+
     checks["strict_extension_trainer"] = {
+        "adapter_cases": adapters,
+        "additional_invalid_statistics": 3,
         "actual_fit": True,
         "legacy_dispatch_blocked": True,
         "rollback": True,

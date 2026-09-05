@@ -77,7 +77,7 @@ def validate_result(manifest, result):
             raise ValueError("Missing level-wise builder evidence")
     if suite == "trainer":
         execution = checks.get("strict_extension_trainer", {})
-        if not all(execution.get(k) is True for k in ("actual_fit", "legacy_dispatch_blocked", "rollback", "cpu_load_prediction")) or execution.get("compact_transfer_calls") != 40 or len(execution.get("cases", [])) != 2:
+        if not all(execution.get(k) is True for k in ("actual_fit", "legacy_dispatch_blocked", "rollback", "cpu_load_prediction")) or execution.get("compact_transfer_calls") != 40 or len(execution.get("cases", [])) != 2 or len(execution.get("adapter_cases", [])) != 4 or execution.get("additional_invalid_statistics") != 3:
             raise ValueError("Missing strict extension trainer evidence")
     if suite == "baseline":
         validate_baseline(checks.get("baseline_cells", []))

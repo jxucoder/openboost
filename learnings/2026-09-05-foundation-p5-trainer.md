@@ -53,3 +53,13 @@ only when the existing objective exact-type capability permits it.
 ## Commits
 
 - `a9d34f5` — preceding CPU independent wheel evidence.
+
+## Initial T4 result and coverage expansion
+
+- `8c34b26` actual trainer suite: 7 passed / 0 skipped; raw max error 1.19e-7,
+  matched NLL/CRPS and CPU save/load, runtime/input/cache failure rollback.
+  [Initial artifact](../benchmarks/results/foundation/20260905T175651Z-b1f9743a/README.md).
+- Profiler gap confirmed: nsys unavailable. Named transfer checks only.
+- Follow-up test coverage verifies all advertised adapter modes (Normal/Poisson,
+  ordinary/natural), a duck-typed external builder and invalid dtype/Hessian/alias
+  outputs. This broadens checks without changing the implementation or tolerance.
