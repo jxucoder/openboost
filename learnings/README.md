@@ -34,6 +34,10 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Foundation construction design](2026-09-05-foundation-construction-design.md) —
+  concrete module/data/operation/state/device contracts and B01–B14 build slices;
+  distinguishes the engineering design from task cards and independent oracles.
+
 - [F0.1 foundation task cards](2026-09-05-foundation-f0-task-cards.md) —
   all A1–A13 tasks specified, independent failure cases and fair baseline paths;
   F0.2 is next, runtime and benchmark gates remain unverified.

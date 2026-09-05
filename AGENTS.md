@@ -23,6 +23,11 @@ use cases may not be dropped. See the A1–A13
 The user designates this planning round as the real **OpenBoost v1**. Its active
 design and execution order is
 [`planning/agent-boosting-foundation-plan.md`](planning/agent-boosting-foundation-plan.md).
+The concrete construction design is
+[`planning/foundation-construction-design.md`](planning/foundation-construction-design.md):
+module dependencies, data/state records, composable operations, CPU/CUDA execution,
+and B01–B14 build slices. Task specifications and independent oracles do not
+constitute the foundation implementation; public components and recipes start in F1.
 Required scope is R1–R9/C1–C7/A1–A13; acceptance and quantitative evaluation are in
 [`planning/openboost-v1-evaluation.md`](planning/openboost-v1-evaluation.md).
 Use the [current release/plan review](planning/boosting-release-review-2026-09-05.md)
