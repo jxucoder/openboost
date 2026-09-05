@@ -52,3 +52,13 @@ histogram, leaf, validation or cached-prediction contract changes.
   bounded updates, Normal/Poisson ordinary/natural fits and rollback pass.
 - Maximum adapter raw error 1.19e-7. Existing compact transfer counts unchanged.
   Performance remains to be measured; no speed claim from correctness runtime.
+
+## Independent CPU package check
+
+- Clean `a5bf26d`: [CPU installed-wheel artifact](../benchmarks/results/foundation/p7-fixed-slot-cpu-a5bf26d/README.md),
+  7 passed plus public weighted demo and six exact plugin-free CPU predictions.
+  Core wheel matches the GPU correctness/value bundles; plugins unchanged.
+- Corrected prepare.py's descriptive profile metadata to say fifth host-profile
+  and sixth memory-only fit. Worker behavior already separated them; the current
+  running value bundle retains its original manifest verbatim. Its timed fits
+  are unaffected, and its per-profile memory scope records the actual separation.

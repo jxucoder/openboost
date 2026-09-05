@@ -1,0 +1,92 @@
+{
+  "source_sha": "a5bf26d3d54374e4c524375a02294f0c64abbc1c",
+  "source_dirty": false,
+  "files": {
+    "examples/extensions/README.md": "b6e1a624e514db03e67e0951c10f787806537b7eddf616322842b5f21b680511",
+    "examples/extensions/bounded_leaves/README.md": "749f68fafb9e8cb5911c16aa79ab7a82593599e5c196c20be3ec9923172144e9",
+    "examples/extensions/bounded_leaves/pyproject.toml": "8731c3fa03f03341fcc987b449c04658c5bde3e7a4d24772e3bc2199ceb55eac",
+    "examples/extensions/bounded_leaves/src/bounded_leaves/__init__.py": "d53927c63c71ea3cf37083e0d71d11aff58941dbed1df430838c2d6b2912efff",
+    "examples/extensions/bounded_leaves/tests/test_leaf.py": "41339c49f146181811dd0680d2b1abc563448ce35b4a79e8d4f0559c5d949baf",
+    "examples/extensions/check_inference.py": "f6edb46b17eba330044405e894185b2be2161ac304b9a7e60a6d9489d879d02f",
+    "examples/extensions/demo.py": "3eb0e67f0f4cd4f30283ff93a3b1a15a6aa6a8d24fd31115888ad45bcac1b8e3",
+    "examples/extensions/normal_fisher/README.md": "78a5142eaf92a81df9c5908861a1ce66e5ae8b03bf753e0b84a834c5f2a5d0eb",
+    "examples/extensions/normal_fisher/pyproject.toml": "ab70495fafa430dfb1377a873cbb821c9484c9008cea26575fa3c3fa2a91e40d",
+    "examples/extensions/normal_fisher/src/normal_fisher/__init__.py": "cabafae48d9ad251eea62230b1d38ba7407fbb113dec116b3e840c05e032afd3",
+    "examples/extensions/normal_fisher/tests/test_normal.py": "6dcb48f9434879b054fe9a9e8b6fca5f4ba01782d8c45ed4c566a8306ee867c3",
+    "examples/extensions/requirements-cpu.txt": "1f15e5d979db2378977adbdfa06ec08f60e5772d17c6bf9dfcd8b27a10f0c5c6",
+    "examples/extensions/test_composition.py": "a2b2b0e6fc99ba850846c4a2b1e91a7d2850326e383edc3005cefd93edf3e9c6",
+    "examples/extensions/verify_wheels.py": "0f9e75aa247625a4b1198f5a0c6a13953ab23f5c12c64e754a4a0289afe26b20"
+  },
+  "wheel_hashes": {
+    "openboost-1.0.0rc1-py3-none-any.whl": "8c94b62773f6541a983280b5970642de46c60a35e2bed0fcdf62e9d4a9cb3077",
+    "openboost_example_bounded_leaves-0.2.0-py3-none-any.whl": "dc236c0f207f7fdf0a52e6bdb8e7330f1ffbb6f63e082bb5226c49294a0f02c3",
+    "openboost_example_normal_fisher-0.2.0-py3-none-any.whl": "47ddff3a87c85b3f4bb187d7b53b650180a6072983a20bc48f0fb8d379da4e1b"
+  },
+  "uv_lock_sha256": "076f55ce347cae1071c902021b0e7b1b7ab4eec7eab4d95ad2a8f177d8cc9ca1",
+  "python": "3.12.12",
+  "os": "Darwin",
+  "machine": "x86_64",
+  "threads": 1,
+  "uv_version": "uv 0.12.1 (329541a50 2026-07-31 aarch64-apple-darwin)",
+  "packages": [
+    "Pygments==2.19.2",
+    "iniconfig==2.3.0",
+    "joblib==1.5.3",
+    "llvmlite==0.44.0",
+    "numba==0.61.2",
+    "numpy==2.2.6",
+    "openboost-example-bounded-leaves==0.2.0",
+    "openboost-example-normal-fisher==0.2.0",
+    "openboost==1.0.0rc1",
+    "packaging==25.0",
+    "pluggy==1.6.0",
+    "pytest==9.0.2",
+    "scipy==1.15.3"
+  ],
+  "module_paths_relative_to_venv": {
+    "openboost": "lib/python3.12/site-packages/openboost/__init__.py",
+    "normal_fisher": "lib/python3.12/site-packages/normal_fisher/__init__.py",
+    "bounded_leaves": "lib/python3.12/site-packages/bounded_leaves/__init__.py"
+  },
+  "extension_openboost_imports": [
+    "openboost.experimental"
+  ],
+  "method_source_lines": {
+    "bounded_leaves": 22,
+    "normal_fisher": 122
+  },
+  "inference_after_uninstall": {
+    "extensions_absent": true,
+    "exact_cpu_roundtrips": 6
+  },
+  "demo": {
+    "data_sha256": "30edad3a2fe4867d52eaf13dcf9742e241d4b4874a448bb4dc0ea617b75dfcf1",
+    "device": "cpu",
+    "samples": 64,
+    "seed": 7,
+    "coefficients": {
+      "mu": [
+        0.2,
+        0.1
+      ],
+      "log_sigma": [
+        0.1,
+        0.05
+      ]
+    },
+    "finite_positive_scale": true
+  },
+  "composition": {
+    "models": 5,
+    "early_best_iteration": 0,
+    "channels": [
+      "mu",
+      "log_sigma"
+    ],
+    "seed": 7,
+    "samples": 4,
+    "two_round_oracle": true
+  },
+  "command": "uv run --no-sync python examples/extensions/verify_wheels.py OUTPUT",
+  "scope": "CPU installation and mathematical conformance; no external adoption or GPU claim"
+}

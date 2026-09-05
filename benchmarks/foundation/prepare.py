@@ -125,7 +125,7 @@ def prepare(suite="smoke"):
     if suite in ("baseline", "value", "value_profile"):
         manifest["dataset"] = expected
     if suite in ("value", "value_profile"):
-        manifest["value_protocol"] = {"seeds": [0, 1, 2], "strategies": ["legacy_cpu", "legacy_cuda", "experimental_cuda", "extensions_cuda"], "mode": "resident", "repetitions": 4, "warm_fit_budget_ratio": 1.2, "extension_bound": 0.5, "extension_schedule_tau": 1, "cache_policy": "fresh process and NUMBA/CUPY cache directories per cell; device context startup/imports excluded; driver cache not cleared", "profile": "separate fifth warm fit, cProfile host attribution and 5 ms sampled device-wide memory; not a kernel trace", "cost": "T4 seconds only; billing unavailable"}
+        manifest["value_protocol"] = {"seeds": [0, 1, 2], "strategies": ["legacy_cpu", "legacy_cuda", "experimental_cuda", "extensions_cuda"], "mode": "resident", "repetitions": 4, "warm_fit_budget_ratio": 1.2, "extension_bound": 0.5, "extension_schedule_tau": 1, "cache_policy": "fresh process and NUMBA/CUPY cache directories per cell; device context startup/imports excluded; driver cache not cleared", "profile": "separate fifth host-profile fit and sixth memory-only fit with 5 ms device-wide sampling; not a kernel trace", "cost": "T4 seconds only; billing unavailable"}
     if suite == "value_profile":
         manifest["timeout_s"] = 600
         manifest["value_protocol"].update(seeds=[0], repetitions=1, profile="isolated synchronized host profile followed by a separate memory-only fit; no speed comparison")
