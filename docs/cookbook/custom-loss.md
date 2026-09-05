@@ -1,7 +1,7 @@
 # Recipe: Custom Loss with a True Loss Value
 
 Register a custom objective under a string name so it works everywhere a
-built-in loss name does — including correct train/validation loss reporting.
+built-in loss name does, including correct train/validation loss reporting.
 
 **You will use:** `ob.register_loss`, the `loss_value_fn` hook,
 `GradientBoosting(loss='<your name>')`.
@@ -10,7 +10,7 @@ built-in loss name does — including correct train/validation loss reporting.
 
 A callable passed as `loss=` only tells OpenBoost the *gradient* and *hessian*.
 When training needs a scalar loss (for `Logger`, `EarlyStopping`, or history),
-OpenBoost falls back to a second-order Taylor proxy `mean(grad² / (2·hess))` —
+OpenBoost falls back to a second-order Taylor proxy `mean(grad² / (2·hess))`,
 which is usually *not* your actual loss. Registering the loss with a
 `loss_value_fn` fixes that, and gives the loss a reusable name.
 

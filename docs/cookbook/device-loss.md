@@ -6,7 +6,7 @@ entirely on the GPU, skipping the per-round host round-trip.
 **You will use:** `ob.device_loss`, `GradientBoosting(loss=<callable>)`.
 
 !!! warning "This recipe needs CUDA to show a benefit"
-    `ob.device_loss` is a **no-op on the CPU backend** — the script below runs
+    `ob.device_loss` is a **no-op on the CPU backend**, so the script below runs
     anywhere (and is what CI runs), but the round-trip it eliminates only
     exists on the CUDA backend. The honest claim is: same results everywhere,
     faster only on GPU.
@@ -23,7 +23,7 @@ device. For big datasets that copy can dominate the round.
 Decorating a loss with `@ob.device_loss` sets `fn.__openboost_device__ = True`
 and changes what the CUDA path hands you:
 
-- `pred` is the **device** (CuPy) prediction array — no copy.
+- `pred` is the **device** (CuPy) prediction array: no copy.
 - `y` is the training target **already resident on the device** (moved once
   per `fit` and cached).
 - You **must return device `(grad, hess)` float32 arrays** with the same
@@ -94,7 +94,7 @@ model.fit(X_train, y_train)  # gradients never leave the GPU
 ## Notes
 
 - **Correctness first**: returning host arrays (or non-float32) from a marked
-  loss on the CUDA path violates the contract — if you cannot keep the math on
+  loss on the CUDA path violates the contract. If you cannot keep the math on
   the device, simply leave the loss unmarked and accept the round-trip.
 - Works with named registration too: `ob.register_loss('gpu_logcosh',
   gpu_logcosh)` keeps the device marker, since the callable itself carries it.

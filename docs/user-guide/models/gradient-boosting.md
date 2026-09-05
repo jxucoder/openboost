@@ -1,6 +1,9 @@
 # Gradient Boosting
 
-The core gradient boosting model for regression and binary classification.
+Mean-regression GBDT for regression and binary classification (`K = 1`):
+one parameter, scalar Hessian. For distributional regression or a
+varying-coefficient formula, start at
+[How it works](../how-it-works.md) instead.
 
 The examples on this page share this setup:
 

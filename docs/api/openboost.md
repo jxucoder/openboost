@@ -15,9 +15,10 @@ print(ob.get_backend())  # "cuda" or "cpu"
 X_binned = ob.array(X, n_bins=256)
 
 # Models
-model = ob.GradientBoosting(n_trees=100)
 model = ob.NaturalBoostNormal(n_trees=100)
-model = ob.OpenBoostGAM(n_rounds=500)
+model = ob.FormulaBoost(formula=f, n_params=2, links=("log", "identity"))
+model = ob.WeibullAFT(n_trees=300)
+model = ob.GradientBoosting(n_trees=100)
 ```
 
 ## Data Layer

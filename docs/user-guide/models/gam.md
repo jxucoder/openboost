@@ -1,6 +1,8 @@
 # OpenBoostGAM
 
-GPU-accelerated Generalized Additive Model - interpretable machine learning with feature-level explanations.
+GPU-accelerated Generalized Additive Model: interpretable main effects
+(and optional pairwise interactions). Point-estimate. For a distribution
+or a formula, see [How it works](../how-it-works.md).
 
 ## Why GAM?
 
@@ -12,7 +14,7 @@ prediction = f₁(x₁) + f₂(x₂) + ... + fₙ(xₙ) + intercept
 
 This means you can visualize exactly how each feature affects the prediction.
 
-**Scope:** By default OpenBoostGAM learns *main effects only* — one shape
+**Scope:** By default OpenBoostGAM learns *main effects only*: one shape
 function per feature. Setting `interactions=k` adds `k` pairwise interaction
 terms (GA2M-style, like InterpretML's EBM), which closes part of the accuracy
 gap to EBM while keeping every term inspectable. Be aware that the interaction
@@ -75,7 +77,7 @@ behavior. `n_trees` is accepted as an alias for `n_rounds`. There is no
 `max_depth` parameter: each round applies a regularized Newton update to every
 bin of every feature's shape function (a per-feature lookup table), so
 smoothness is controlled by `learning_rate`, `n_rounds`, `reg_lambda`, and
-`smoothing` — not tree depth.
+`smoothing`, not tree depth.
 
 ## Pairwise Interactions (GA2M)
 
@@ -96,7 +98,7 @@ the `(bin_i, bin_j)` grid and raises `KeyError` for pairs that were not
 selected. Interaction terms are used automatically by `predict`.
 
 **Honest scope note:** interactions close part of the gap to EBM (which enables
-them by default) but the interaction stage always trains on CPU — expect the
+them by default) but the interaction stage always trains on CPU, so expect the
 GPU speedup story to apply to the main-effects stage only.
 
 ## Smoothing and Monotone Constraints
@@ -113,7 +115,7 @@ gam.fit(X_train, y_train)
 
 - `smoothing` solves a fused-ridge (first-difference penalty) system per round,
   so occupied bins anchor the shape while empty bins interpolate between their
-  neighbors. It applies to ordinal (numeric) bins only — categorical features,
+  neighbors. It applies to ordinal (numeric) bins only. Categorical features,
   the missing-value bin, and 2D interaction tables are not smoothed.
 - `monotone` projects the accumulated shape function onto the constraint after
   every round with count-weighted isotonic regression (PAVA). Useful when
@@ -132,7 +134,7 @@ gam.fit(
     early_stopping_rounds=50,   # sugar for EarlyStopping(patience=50, restore_best=True)
 )
 
-gam.evals_result_     # {'eval_0': {'mse': [...]}} — per-round history per eval set
+gam.evals_result_     # {'eval_0': {'mse': [...]}}: per-round history per eval set
 gam.best_iteration_   # set when early stopping is used
 gam.best_score_
 ```
@@ -140,7 +142,7 @@ gam.best_score_
 Early stopping monitors the **last** eval set; with `restore_best=True` (the
 default via `early_stopping_rounds`) the shape tables are restored to the best
 round. With `interactions > 0`, the main-effect and interaction rounds form
-one monitored sequence — stopping during the main-effect phase skips the
+one monitored sequence, so stopping during the main-effect phase skips the
 interaction phase.
 
 **Backend note:** smoothing, monotone projection, the interaction stage, and
@@ -192,5 +194,5 @@ plt.savefig("gam_explanations.png")
 1. **Use more rounds** with lower learning rate for smoother shape functions
 2. **Normalize features** for easier interpretation
 3. **Check shape functions** for unexpected patterns (data issues)
-4. **Compare against a standard GBDT** — if it beats the GAM by a wide
+4. **Compare against a standard GBDT**: if it beats the GAM by a wide
    margin, your data likely has interactions the GAM cannot capture

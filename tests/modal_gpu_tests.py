@@ -16,7 +16,7 @@ app = modal.App("openboost-cuda-verification")
 image = (
     modal.Image.from_registry("nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.12")
     .pip_install(
-        "numpy>=1.24",
+        "numpy>=1.24,<2.5",
         "numba>=0.60",
         "numba-cuda>=0.23",
         "pytest>=8.0",
@@ -249,6 +249,25 @@ def test_all_models_gpu() -> dict:
         ("OpenBoostRegressor", ob.OpenBoostRegressor(n_estimators=10, max_depth=3), y),
         ("OpenBoostClassifier", ob.OpenBoostClassifier(n_estimators=10, max_depth=3), y_binary.astype(np.int32)),
     ]
+
+    def _curve(theta, xx):
+        a, b = theta
+        return a * np.abs(xx) ** (1.0 / (1.0 + np.exp(-np.clip(b * xx, -20, 20))))
+
+    try:
+        x_struct = np.abs(X[:, 0]) + 0.3
+        fb = ob.FormulaBoost(
+            formula=_curve, n_params=2, links=("log", "identity"),
+            n_trees=10, max_depth=3,
+        )
+        fb.fit(X, y_positive, model_input=x_struct)
+        pred = fb.predict(X, model_input=x_struct)
+        results["FormulaBoost"] = {
+            "status": "passed",
+            "prediction_shape": pred.shape,
+        }
+    except Exception as e:
+        results["FormulaBoost"] = {"status": "failed", "error": str(e)}
     
     for name, model, target in models_to_test:
         try:
@@ -265,6 +284,80 @@ def test_all_models_gpu() -> dict:
             }
     
     return results
+
+
+@app.function(gpu="T4", image=image, timeout=600)
+def verify_unified_gpu() -> dict:
+    """End-to-end check of the unified trainer on a real GPU."""
+    import sys
+    import traceback
+
+    import numpy as np
+
+    sys.path.insert(0, "/root/src")
+    import openboost as ob
+
+    out = {"backend": None, "checks": {}, "error": None}
+    try:
+        ob.set_backend("cuda")
+        out["backend"] = ob.get_backend()
+        rng = np.random.default_rng(0)
+        X = rng.normal(size=(800, 6)).astype(np.float32)
+        y = (X[:, 0] * 1.5 + rng.normal(size=800) * 0.4).astype(np.float32)
+
+        nb = ob.NaturalBoostNormal(n_trees=25, max_depth=3, learning_rate=0.1)
+        nb.fit(X, y)
+        nll = float(nb.nll(X, y))
+        lo, hi = nb.predict_interval(X, alpha=0.1)
+        out["checks"]["naturalboost_nll"] = nll
+        out["checks"]["naturalboost_interval_ok"] = bool(np.all(lo <= hi))
+        out["checks"]["naturalboost_trees"] = {
+            k: len(v) for k, v in nb.trees_.items()
+        }
+
+        poiss_y = rng.poisson(np.exp(0.2 + 0.4 * X[:, 0]), 800).astype(np.float32)
+        po = ob.NaturalBoostPoisson(n_trees=15, max_depth=3)
+        po.fit(X, poiss_y)
+        out["checks"]["poisson_mean_finite"] = bool(np.all(np.isfinite(po.predict(X))))
+
+        def curve(theta, xx):
+            a, b = theta
+            return a * xx ** (1.0 / (1.0 + np.exp(-np.clip(b * xx, -20.0, 20.0))))
+
+        x = np.abs(X[:, 1]) + 0.4
+        fb = ob.FormulaBoost(
+            formula=curve, n_params=2, links=("log", "identity"),
+            n_trees=20, max_depth=3,
+        )
+        fb.fit(X, np.abs(y) + 0.2, model_input=x)
+        pred = fb.predict(X, model_input=x)
+        params = fb.predict_params(X)
+        out["checks"]["formula_pred_finite"] = bool(np.all(np.isfinite(pred)))
+        out["checks"]["formula_a_positive"] = bool(np.all(params["theta_0"] > 0))
+        out["ok"] = all(
+            (
+                out["backend"] == "cuda",
+                np.isfinite(nll),
+                out["checks"]["naturalboost_interval_ok"],
+                out["checks"]["poisson_mean_finite"],
+                out["checks"]["formula_pred_finite"],
+                out["checks"]["formula_a_positive"],
+            )
+        )
+    except Exception as exc:
+        out["ok"] = False
+        out["error"] = f"{type(exc).__name__}: {exc}\n{traceback.format_exc()}"
+    return out
+
+
+@app.local_entrypoint()
+def unified():
+    """Run the unified-trainer GPU check."""
+    result = verify_unified_gpu.remote()
+    print(result)
+    if not result.get("ok"):
+        raise RuntimeError(f"Unified GPU check failed: {result.get('error')}")
+    print("Unified GPU check passed.")
 
 
 @app.local_entrypoint()

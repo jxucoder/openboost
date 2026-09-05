@@ -1,6 +1,9 @@
 # DART
 
-Dropout Additive Regression Trees - a regularization technique that randomly drops trees during training.
+Dropout Additive Regression Trees, a regularization technique that randomly
+drops trees during training. Mean-regression GBDT (`K = 1`). For
+distributional regression or a varying-coefficient formula, see
+[How it works](../how-it-works.md).
 
 ## Why DART?
 

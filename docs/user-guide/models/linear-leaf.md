@@ -1,6 +1,9 @@
 # Linear Leaf GBDT
 
-Trees with linear models in the leaves instead of constant values. Better for extrapolation and smooth relationships.
+Trees with linear models in the leaves instead of constant values. Better
+for *local* linear extrapolation. If the shape in `x` is a known formula
+and you want parameter surfaces `θ(z)`, use
+[FormulaBoost](../formulaboost.md) instead.
 
 ## Why Linear Leaves?
 
@@ -91,7 +94,7 @@ model.fit(
     early_stopping_rounds=20,   # sugar for EarlyStopping(patience=20, restore_best=True)
 )
 
-model.evals_result_     # {'eval_0': {'mse': [...]}} — per-round history per eval set
+model.evals_result_     # {'eval_0': {'mse': [...]}}: per-round history per eval set
 model.best_iteration_   # set when early stopping is used
 model.best_score_
 ```

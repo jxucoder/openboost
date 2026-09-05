@@ -1,89 +1,87 @@
 # GPU Setup
 
-OpenBoost automatically detects and uses CUDA GPUs when available.
+OpenBoost uses CUDA for histogram building and tree construction.
+NaturalBoost, FormulaBoost, and WeibullAFT share a tree-building path.
+FormulaBoost's finite-difference Jacobian and GGN solve run on CPU, as does
+WeibullAFT's expected-Fisher step. Normal and Poisson objectives have device
+kernels for eligible configurations.
 
-## Verify GPU Detection
+## Verify detection
+
+Install with `uv add --prerelease=allow "openboost[cuda]"`. For a repository
+checkout use `uv sync --extra cuda --extra dev`.
 
 ```python
 import openboost as ob
-
-print(f"Backend: {ob.get_backend()}")  # "cuda" or "cpu"
-print(f"Using GPU: {ob.is_cuda()}")    # True if GPU active
+print(ob.get_backend())
+print(ob.is_cuda())
 ```
 
-## Manual Backend Selection
+Detection confirms backend availability, not that every operation runs on GPU.
+The native builder excludes missing values, categorical features, L1
+regularization, and row/column sampling in the shared trainer. Such inputs
+may select another tree path. Check the actual model and configuration before
+interpreting timing as a fully device-resident fit.
+
+## Pin a backend
 
 ```python
-import openboost as ob
-
-# Force CPU (useful for debugging or comparison)
 ob.set_backend("cpu")
-
-# Force GPU
 ob.set_backend("cuda")
-
-# Or use environment variable
-# export OPENBOOST_BACKEND=cuda
+with ob.backend_context("cpu"):
+    print(ob.get_backend())
 ```
 
-## GPU Performance
+Alternatively set `OPENBOOST_BACKEND=cpu` or `OPENBOOST_BACKEND=cuda`.
+The backend is process-global; do not run mixed-backend fits concurrently in
+one process. A context restores the previous backend on exit.
+
+## Measure the relevant workload
 
 GPU benefit depends on dataset shape, tree parameters, distribution, CUDA
-stack, transfer policy, and JIT warm-up. OpenBoost does not publish a universal
-speedup table without a checked-in benchmark artifact.
+stack, transfers, and JIT warm-up. A universal crossover size or speedup is
+not established by backend detection.
 
-For a defensible comparison:
-
-1. force the backend with `ob.set_backend("cpu")` or `"cuda"`;
-2. run a warm-up that is excluded from timed repetitions;
-3. compare predictions and task metrics before comparing runtime;
-4. report repeated fit/predict timings, peak memory, failures, and hardware;
-5. save raw results with the OpenBoost commit and dependency versions.
+1. Force the backend for each comparison.
+2. Record first-use compilation separately from repeated warm timings.
+3. Compare predictions and task metrics before runtime.
+4. Measure end-to-end fit and prediction, peak memory, and failures.
+5. Save raw results with source SHA, data/split, hardware, dependencies,
+   actual execution path, and exact commands.
 
 The ScoringBench integration under `benchmarks/scoringbench/` defines separate
 official-quality and scale-extension protocols for probabilistic models.
+Historical benchmark summaries do not replace reproducible raw artifacts.
 
-## Multi-GPU Training
+## Experimental multi-GPU
 
-```python
-import openboost as ob
+The `distributed` extra installs Ray for experimental multi-GPU work.
+Exact correctness and scaling evidence are still required before treating
+that path as a supported production capability. NaturalBoost, FormulaBoost,
+and WeibullAFT currently use one GPU. A single-GPU result does not validate
+distributed training.
 
-# Use multiple GPUs with Ray (requires ray[default])
-model = ob.GradientBoosting(n_trees=100, n_gpus=4)
-model.fit(X, y)
+## Requirements and troubleshooting
 
-# Or specify exact GPU devices
-model = ob.GradientBoosting(n_trees=100, devices=[0, 2])
-model.fit(X, y)
+- An NVIDIA GPU supported by the installed CUDA and Numba stack.
+- A CUDA 12 runtime compatible with `cupy-cuda12x` from the CUDA extra.
+- `numba-cuda>=0.23` and `cupy-cuda12x>=13` as specified by the package.
+
+If CUDA is not detected, inspect `nvidia-smi` and run:
+
+```bash
+uv run python -c "from numba import cuda; print(cuda.is_available())"
 ```
 
-## Requirements
+If training is slow, use float32 features, account for compilation and data
+transfers, and inspect which objective/tree path actually executes. Report
+CPU and GPU resources separately when comparing different libraries.
 
-- NVIDIA GPU with CUDA Compute Capability 3.5+
-- CUDA Toolkit 11.0+ or 12.0+
-- Numba 0.60+ (`pip install numba`)
-
-## Troubleshooting
-
-### Training seems slow on GPU
-
-- Ensure data is `float32` (not `float64`)
-- Exclude first-use JIT compilation only when the benchmark protocol says so
-- Check that `ob.get_backend()` reports `"cuda"`
-- Measure fit and prediction separately; do not assume a crossover dataset size
-
-### Model trained on GPU, loading on CPU machine
+Saved models store host tree state and support CPU inference. Verify a
+prediction round trip for the model and feature types used in your workload:
 
 ```python
-# Models are saved in a backend-agnostic format
 model.save("model.joblib")
-
-# Load on any machine (CPU or GPU)
-loaded = ob.GradientBoosting.load("model.joblib")
+with ob.backend_context("cpu"):
+    loaded = ob.NaturalBoostNormal.load("model.joblib")
 ```
-
-### CUDA not detected
-
-1. Check CUDA installation: `nvcc --version`
-2. Check Numba can see GPU: `python -c "from numba import cuda; print(cuda.gpus)"`
-3. Ensure compatible CUDA version with Numba

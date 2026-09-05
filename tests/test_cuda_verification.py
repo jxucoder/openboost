@@ -248,6 +248,51 @@ class TestNaturalBoostGPU:
         mean = model.predict(X)
         assert mean.shape == (500,)
 
+    def test_natural_boost_normal_cpu_gpu_parity(self, sample_data):
+        """Device-resident Normal path should match the CPU trainer closely."""
+        X, y = sample_data
+        kwargs = dict(n_trees=30, max_depth=3, learning_rate=0.1, n_bins=64)
+
+        ob.set_backend("cpu")
+        cpu = ob.NaturalBoostNormal(**kwargs)
+        cpu.fit(X, y)
+        nll_cpu = cpu.nll(X, y)
+        pred_cpu = cpu.predict(X)
+
+        ob.set_backend("cuda")
+        gpu = ob.NaturalBoostNormal(**kwargs)
+        gpu.fit(X, y)
+        nll_gpu = gpu.nll(X, y)
+        pred_gpu = gpu.predict(X)
+
+        assert np.isfinite(nll_gpu)
+        assert abs(nll_gpu - nll_cpu) < 0.15
+        assert np.corrcoef(pred_cpu, pred_gpu)[0, 1] > 0.95
+
+    def test_formula_boost_gpu(self, sample_data):
+        """FormulaBoost builds trees on GPU (GGN stays on host)."""
+        X, y = sample_data
+        x = np.abs(X[:, 0]) + 0.3
+
+        def curve(theta, xx):
+            a, b = theta
+            return a * xx ** (1.0 / (1.0 + np.exp(-np.clip(b * xx, -20, 20))))
+
+        ob.set_backend("cuda")
+        model = ob.FormulaBoost(
+            formula=curve,
+            n_params=2,
+            links=("log", "identity"),
+            n_trees=15,
+            max_depth=3,
+        )
+        model.fit(X, np.abs(y) + 0.2, model_input=x)
+        pred = model.predict(X, model_input=x)
+        params = model.predict_params(X)
+        assert pred.shape == (len(y),)
+        assert np.all(np.isfinite(pred))
+        assert np.all(params["theta_0"] > 0)
+
 
 @pytest.mark.skipif(not CUDA_AVAILABLE, reason="CUDA not available")
 class TestOtherModelsGPU:

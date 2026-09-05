@@ -295,5 +295,8 @@ print(f"P(claim > $10k): {prob_large_claim[0]:.1%}")
 
 ## Next Steps
 
-- [Custom Loss Functions](custom-loss.md) - Define your own objectives
-- [Migration from XGBoost](../migration/from-xgboost.md) - Switching from XGBoost
+- [How it works](../user-guide/how-it-works.md)
+- [FormulaBoost](../user-guide/formulaboost.md): when the model is a formula, not a distribution
+- [Weibull AFT](../user-guide/survival.md)
+- [Custom Loss Functions](custom-loss.md)
+- [Migration from XGBoost](../migration/from-xgboost.md)

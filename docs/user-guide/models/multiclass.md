@@ -1,6 +1,8 @@
 # Multi-class Classification
 
-For classification problems with more than 2 classes.
+Softmax GBDT for 3+ classes. Point-estimate (`K = n_classes` logits, not
+a parametric family). For a distribution over a real-valued target, use
+[NaturalBoost](../naturalboost/overview.md).
 
 ## Basic Usage
 

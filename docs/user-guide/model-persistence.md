@@ -23,17 +23,16 @@ predictions = loaded_model.predict(X_test)
 
 All models support save/load:
 
-- `GradientBoosting`
-- `MultiClassGradientBoosting`
-- `DART`
-- `OpenBoostGAM`
-- `NaturalBoostNormal`, `NaturalBoostGamma`, etc.
-- `LinearLeafGBDT`
+- `NaturalBoostNormal`, `NaturalBoostGamma`, `NaturalBoostTweedie`, …
+- `FormulaBoost` (pickles the formula callable; keep it importable)
+- `WeibullAFT`
+- `GradientBoosting`, `MultiClassGradientBoosting`, `DART`
+- `OpenBoostGAM`, `LinearLeafGBDT`
 
 ## Using joblib/pickle Directly
 
 > **Security warning:** joblib and pickle deserialization executes arbitrary
-> code. Only load model files from sources you trust — never from untrusted
+> code. Only load model files from sources you trust, never from untrusted
 > uploads or downloads. The same caveat applies to `ob.load()` /
 > `Model.load()`, which emit a runtime `UserWarning` for this reason.
 

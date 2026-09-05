@@ -2,6 +2,34 @@
 
 All OpenBoost model classes.
 
+## Distributional and varying-coefficient models
+
+### FormulaBoost
+
+::: openboost.FormulaBoost
+    options:
+      show_root_heading: true
+      members:
+        - __init__
+        - fit
+        - predict
+        - predict_params
+
+### WeibullAFT
+
+::: openboost.WeibullAFT
+    options:
+      show_root_heading: true
+      members:
+        - __init__
+        - fit
+        - predict
+        - predict_params
+        - predict_quantile
+        - predict_median
+        - predict_survival
+        - nll
+
 ## Standard GBDT
 
 ### GradientBoosting

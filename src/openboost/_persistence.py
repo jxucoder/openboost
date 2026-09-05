@@ -536,8 +536,10 @@ def load(path: str | Path) -> PersistenceMixin:
         NaturalBoostStudentT,
         NaturalBoostTweedie,
     )
+    from ._models._formula import FormulaBoost
     from ._models._gam import OpenBoostGAM
     from ._models._linear_leaf import LinearLeafGBDT
+    from ._models._survival import WeibullAFT
 
     _CLASS_MAP: dict[str, type[PersistenceMixin]] = {
         cls.__name__: cls
@@ -556,6 +558,8 @@ def load(path: str | Path) -> PersistenceMixin:
             NaturalBoostTweedie,
             NaturalBoostNegBin,
             LinearLeafGBDT,
+            FormulaBoost,
+            WeibullAFT,
         ]
     }
 

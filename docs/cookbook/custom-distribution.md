@@ -14,7 +14,7 @@ models block maxima (floods, peak load, worst-case latency). Its NLL is
 
 $$\mathrm{NLL}(y; \mu, \beta) = \log \beta + z + e^{-z}, \qquad z = \frac{y - \mu}{\beta}$$
 
-You only write the NLL — gradients and hessians are derived automatically
+You only write the NLL; gradients and hessians are derived automatically
 (JAX autodiff when `jax` is installed, otherwise exact-chain-rule numerical
 differentiation; no extra dependency required).
 
@@ -71,7 +71,7 @@ assert np.all(lower <= upper)
 `create_custom_distribution` returns an **instance**, which is convenient for
 one-off use. To make the distribution available by name (in `NaturalBoost`,
 `DistributionalGBDT`, and the `OpenBoostDistributionalRegressor` sklearn
-wrapper), register a **class** that constructs with no arguments — the class is
+wrapper), register a **class** that constructs with no arguments. The class is
 instantiated fresh each time the name is resolved:
 
 ```python
@@ -98,7 +98,7 @@ print("'gumbel' listed:", 'gumbel' in ob.list_distributions())
 
 ## Notes
 
-- **Names are case-insensitive** — they are stored lowercased, matching
+- **Names are case-insensitive**: they are stored lowercased, matching
   `ob.get_distribution`. Duplicate names raise `ValueError` unless you pass
   `override=True`.
 - **Fisher information**: custom distributions use an empirical diagonal

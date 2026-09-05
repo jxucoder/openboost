@@ -1,166 +1,130 @@
 # Quickstart
 
-Get up and running with OpenBoost in 5 minutes.
+Distributional regression and a varying-coefficient formula in a few
+minutes. Each example is self-contained.
 
-## Basic Regression
+## NaturalBoost: a distribution, not a point
 
 ```python
 import numpy as np
 import openboost as ob
 
-# Generate sample data
-np.random.seed(42)
-X = np.random.randn(1000, 10).astype(np.float32)
-y = (X[:, 0] * 2 + X[:, 1] + np.random.randn(1000) * 0.1).astype(np.float32)
+rng = np.random.default_rng(0)
+X = rng.standard_normal((2000, 8)).astype(np.float32)
+noise = 0.4 + np.abs(X[:, 0])
+y = (2.0 * X[:, 0] + X[:, 1] + noise * rng.standard_normal(2000)).astype(np.float32)
+X_train, X_test = X[:1600], X[1600:]
+y_train, y_test = y[:1600], y[1600:]
 
-# Split data
-X_train, X_test = X[:800], X[800:]
-y_train, y_test = y[:800], y[800:]
-
-# Train model
-model = ob.GradientBoosting(
-    n_trees=100,
-    max_depth=6,
-    learning_rate=0.1,
-    loss='mse',
-)
+model = ob.NaturalBoostNormal(n_trees=200, max_depth=3, learning_rate=0.05)
 model.fit(X_train, y_train)
 
-# Predict
-predictions = model.predict(X_test)
-
-# Evaluate
-rmse = np.sqrt(np.mean((predictions - y_test) ** 2))
-print(f"RMSE: {rmse:.4f}")
-```
-
-## Binary Classification
-
-```python
-import openboost as ob
-
-model = ob.GradientBoosting(
-    n_trees=100,
-    max_depth=6,
-    loss='logloss',
-)
-model.fit(X_train, y_train)  # y_train: 0 or 1
-
-# Get probabilities
-logits = model.predict(X_test)
-probabilities = 1 / (1 + np.exp(-logits))
-
-# Get class predictions
-predictions = (probabilities > 0.5).astype(int)
-```
-
-## Multi-Class Classification
-
-```python
-import openboost as ob
-
-y_class = np.random.randint(0, 5, size=len(X_train))  # labels 0..4
-
-model = ob.MultiClassGradientBoosting(
-    n_classes=5,
-    n_trees=100,
-    max_depth=6,
-)
-model.fit(X_train, y_class)  # labels must be 0, 1, 2, 3, or 4
-
-# Get probabilities
-probabilities = model.predict_proba(X_test)  # Shape: (n_samples, n_classes)
-
-# Get class predictions
-predictions = model.predict(X_test)
-```
-
-## Uncertainty Quantification
-
-```python
-import openboost as ob
-
-# Train probabilistic model
-model = ob.NaturalBoostNormal(n_trees=100, max_depth=4)
-model.fit(X_train, y_train)
-
-# Point prediction (mean)
 mean = model.predict(X_test)
-
-# 90% prediction interval
-lower, upper = model.predict_interval(X_test, alpha=0.1)
-
-# Sample from predicted distribution
-samples = model.sample(X_test, n_samples=100)
+lo, hi = model.predict_interval(X_test, alpha=0.1)
+print(f"90% coverage: {np.mean((y_test >= lo) & (y_test <= hi)):.1%}")
 ```
 
-## sklearn-Compatible API
+Pick a family that matches the data (`NaturalBoostLogNormal`, `Gamma`,
+`Poisson`, `Tweedie`, `NegBin`, `StudentT`). See
+[distributions](../user-guide/naturalboost/distributions.md).
+
+## FormulaBoost: boost the parameters of a formula
+
+Features `Z` learn parameter surfaces; a structural input `x` (spend, dose,
+time) goes into a formula you write.
 
 ```python
-from openboost import OpenBoostRegressor, OpenBoostClassifier
-from sklearn.model_selection import cross_val_score, GridSearchCV
-
-# Regressor
-reg = OpenBoostRegressor(n_estimators=100, max_depth=6)
-reg.fit(X_train, y_train)
-print(f"R² Score: {reg.score(X_test, y_test):.4f}")
-
-# Cross-validation
-scores = cross_val_score(reg, X, y, cv=5)
-print(f"CV Score: {scores.mean():.4f} ± {scores.std():.4f}")
-
-# Grid search
-param_grid = {
-    'n_estimators': [50, 100, 200],
-    'max_depth': [4, 6, 8],
-    'learning_rate': [0.05, 0.1, 0.2],
-}
-grid = GridSearchCV(reg, param_grid, cv=3)
-grid.fit(X_train, y_train)
-print(f"Best params: {grid.best_params_}")
-```
-
-## Callbacks
-
-```python
+import numpy as np
 import openboost as ob
-from openboost import EarlyStopping, Logger
 
-model = ob.GradientBoosting(n_trees=500, max_depth=6)
+def sales(theta, x):
+    a, b = theta
+    return a * x ** (1.0 / (1.0 + np.exp(-np.clip(b * x, -30.0, 30.0))))
 
-callbacks = [
-    EarlyStopping(patience=10, min_delta=0.001),
-    Logger(period=10),
-]
+rng = np.random.default_rng(0)
+n = 4000
+Z = rng.uniform(0, 1, (n, 4)).astype(np.float32)
+x = rng.uniform(0.3, 2.5, n)
+a = np.exp(0.4 + 0.8 * Z[:, 0] - 0.5 * Z[:, 1])
+b = 0.6 + 1.5 * Z[:, 2]
+y = sales((a, b), x) + 0.05 * rng.standard_normal(n)
 
+model = ob.FormulaBoost(
+    formula=sales, n_params=2, links=("log", "identity"),
+    param_names=("a", "b"), precond="full",
+    n_trees=80, max_depth=3, learning_rate=0.1,
+)
+model.fit(Z[:3200], y[:3200], model_input=x[:3200])
+params = model.predict_params(Z[3200:])
+print(params["a"][:5], params["b"][:5])
+```
+
+`precond="full"` (default) is the GGN preconditioner. `plain` (raw
+gradient) diverges on this formula. Details:
+[FormulaBoost](../user-guide/formulaboost.md).
+
+## WeibullAFT: survival with a per-row shape
+
+```python
+import numpy as np
+import openboost as ob
+
+rng = np.random.default_rng(0)
+n = 3000
+Z = rng.standard_normal((n, 6)).astype(np.float32)
+lam = np.exp(0.5 + 0.8 * Z[:, 0])
+k = np.exp(0.2 + 0.6 * Z[:, 1])
+u = rng.random(n)
+time = lam * ((-np.log(u)) ** (1.0 / k))
+event = (rng.random(n) > 0.3).astype(np.float64)  # ~30% right-censored
+
+model = ob.WeibullAFT(n_trees=150, max_depth=3, learning_rate=0.1)
+model.fit(Z[:2400], time[:2400], event=event[:2400])
+params = model.predict_params(Z[2400:])
+t_hat = model.predict(Z[2400:])            # median time
+s = model.predict_survival(Z[2400:], t=1.0)
+print(params["scale"][:3], params["shape"][:3], t_hat[:3])
+```
+
+XGBoost's `survival:aft` cannot vary Weibull shape with covariates.
+[Weibull AFT](../user-guide/survival.md).
+
+## Point-estimate GBDT (also here)
+
+```python
+model = ob.GradientBoosting(n_trees=100, max_depth=6, loss="mse")
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+```
+
+Binary classification uses `loss="logloss"`. Multi-class uses
+`ob.MultiClassGradientBoosting`. sklearn wrappers
+(`OpenBoostRegressor`, `OpenBoostClassifier`,
+`OpenBoostDistributionalRegressor`) work with `GridSearchCV` and
+`Pipeline`. See [Gradient Boosting](../user-guide/models/gradient-boosting.md)
+and [sklearn integration](../user-guide/sklearn-integration.md).
+
+## Callbacks, GPU, persistence
+
+```python
+model = ob.NaturalBoostNormal(n_trees=500, max_depth=3)
 model.fit(
     X_train, y_train,
-    callbacks=callbacks,
     eval_set=[(X_test, y_test)],
+    callbacks=[ob.EarlyStopping(patience=20), ob.Logger(period=20)],
 )
-
-print(f"Stopped at {len(model.trees_)} trees")
+model.save("model.joblib")
+loaded = ob.NaturalBoostNormal.load("model.joblib")
 ```
 
-## Saving and Loading
+GPU trees are automatic when CUDA is installed
+(`pip install --pre "openboost[cuda]"`). Force a backend with
+`ob.set_backend("cuda")` or `OPENBOOST_BACKEND=cuda`. See
+[GPU setup](gpu-setup.md).
 
-```python
-import openboost as ob
+## Next
 
-# Train
-model = ob.GradientBoosting(n_trees=100)
-model.fit(X_train, y_train)
-
-# Save
-model.save('my_model.joblib')
-
-# Load
-loaded_model = ob.GradientBoosting.load('my_model.joblib')
-predictions = loaded_model.predict(X_test)
-```
-
-## Next Steps
-
-- [GPU Setup](gpu-setup.md) - Configure GPU acceleration
-- [Uncertainty Quantification](../tutorials/uncertainty.md) - Deep dive into NaturalBoost
-- [Custom Loss Functions](../tutorials/custom-loss.md) - Define your own objectives
+- [How it works](../user-guide/how-it-works.md): distributional regression and varying-coefficient models
+- [Uncertainty tutorial](../tutorials/uncertainty.md): intervals, sampling, NLL
+- [Benchmarks](../benchmarks.md): speed, quality, capability numbers
+- [Custom distributions](../user-guide/naturalboost/custom-distributions.md)

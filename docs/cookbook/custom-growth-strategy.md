@@ -9,7 +9,7 @@ next to the built-in `'levelwise'`, `'leafwise'`, and `'symmetric'` strategies.
 ## Complete script
 
 The easiest custom strategy wraps a built-in one and rewrites its
-`GrowthConfig`. Here: **depth-capped random-feature growth** — every tree is
+`GrowthConfig`. Here: **depth-capped random-feature growth**, where every tree is
 level-wise but capped at depth 3 and sees only a random 70% of the features,
 regardless of what the model was configured with. (Think of it as an
 extra-randomized, heavily regularized forest layer.)
@@ -42,8 +42,8 @@ class ShallowRandomGrowth(ob.LevelWiseGrowth):
         )
 
 
-# Register once (process-wide); the class must construct with no arguments —
-# it is instantiated fresh each time the name is resolved.
+# Register once (process-wide); the class must construct with no arguments,
+# because it is instantiated fresh each time the name is resolved.
 ob.register_growth_strategy('shallow_random', ShallowRandomGrowth)
 
 # --- Use it by name ----------------------------------------------------------
@@ -79,13 +79,13 @@ class MyGrowth(ob.GrowthStrategy):
         return tree  # an ob.TreeStructure
 ```
 
-- `binned` — binned features, shape `(n_features, n_samples)`, uint8 (bin 255
+- `binned`: binned features, shape `(n_features, n_samples)`, uint8 (bin 255
   is reserved for missing values).
-- `grad`, `hess` — float32 arrays of shape `(n_samples,)`.
-- `config` — an `ob.GrowthConfig` dataclass carrying `max_depth`,
+- `grad`, `hess`: float32 arrays of shape `(n_samples,)`.
+- `config`: an `ob.GrowthConfig` dataclass carrying `max_depth`,
   `max_leaves`, `min_child_weight`, `reg_lambda`, `reg_alpha`, `min_gain`,
   `subsample`, and `colsample_bytree`.
-- `has_missing` / `is_categorical` / `n_categories` — optional per-feature
+- `has_missing` / `is_categorical` / `n_categories`: optional per-feature
   metadata arrays; a minimal strategy may ignore them (numeric, fully-observed
   data), but then must not be used with missing values or categoricals.
 - Return an `ob.TreeStructure` (routing arrays + leaf values), which handles
