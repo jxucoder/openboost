@@ -34,6 +34,7 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [2026-09-05-impact-adoption-value-strategy.md](2026-09-05-impact-adoption-value-strategy.md) — impact/adoption/value research, current online versus local evidence, and proposed validation gates.
 - `2026-08-15-repository-audit.md` — product focus, correctness risks, and
   evidence gaps found in the deep audit.
 - `2026-08-15-scoringbench-integration.md` — third-party benchmark integration,
