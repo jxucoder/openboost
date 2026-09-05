@@ -58,3 +58,15 @@ A+B+C changes the math, so it gets a separate quality/cost report.
   depend on OpenBoost. No author has attempted it and nobody was contacted.
 - MkDocs build passed with existing griffe warnings. Core and plugin wheel
   hashes in the P7 bundle match P6; documentation changes do not alter that code.
+
+## First T4 value result
+
+- `eb61218`: [raw matrix](../benchmarks/results/foundation/20260905T183820Z-3c245f2d/README.md),
+  3 passed / 0 skipped, 12 complete cells. Quality passes; default candidate
+  warm median 2.078694 s versus legacy CUDA .149556 s: **13.899x**, budget fails.
+- Independent A+B+C has worse NLL/CRPS despite coverage closer to nominal.
+- Timings are uninstrumented. Separate profiles show sampling-thread calls and
+  inconsistent inclusive parent/child times; do not use their percentages for
+  causal attribution. Preserve them and collect isolated host profiles next.
+- Sampled memory delta zero is an allocator/context observation, not zero peak
+  memory. CUDA trace and exact peak remain gaps. No billing dollars inferred.

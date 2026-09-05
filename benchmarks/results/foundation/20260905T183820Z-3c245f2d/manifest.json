@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "suite": "value",
+  "test_files": [
+    "test_smoke.py",
+    "test_value.py"
+  ],
+  "source_sha": "eb6121868a0ddcc25d4aae7c108e331e0ff52f4b",
+  "source_dirty": false,
+  "wheel": "openboost-1.0.0rc1-py3-none-any.whl",
+  "wheel_sha256": "5dde197f412ffa9a1b0d59e445b043359c7dfef2a6e2170b9d1a849a0969e4ed",
+  "uv_lock_sha256": "076f55ce347cae1071c902021b0e7b1b7ab4eec7eab4d95ad2a8f177d8cc9ca1",
+  "files": {
+    "test_smoke.py": "1e1eddf1f7e6ca4f4a744f426268e23da806241d0a32be9a83c720e12d28ea8d",
+    "conftest.py": "74551355ebf2a700cf28ebcf41e9826540f23309b1d0eb41e13a624e9924703f",
+    "pytest.ini": "3497504c3be101997137e28318681bdf533d7eb0f6d7b31e7206656b6308422d",
+    "requirements.txt": "9b2c6b9fe476b5c728deacf558d726437fc16e64998376e78f3676c41cbf0d4a",
+    "dataset.py": "cee302d02c1f82e54c19693fdbff8a7671955f816cccb6fc5902860414109e2a",
+    "baseline_worker.py": "3abb07c372d2fae3ffc8973ff1b1220d207302b9f04282514762eb907e363e88",
+    "housing.json": "d511bf1b61c6e515598a91cc468b9c860dcde60f9e1e7a3e2570e9d8e8c3bc5b",
+    "test_value.py": "39657f535abf7640d2291739eb30d92b71927690072f740a632d94af3f7173a2",
+    "value_worker.py": "7e60f9d5a8478885b29bd7e71b86a49b049de39394bdf1a420b9d87316e56293",
+    "value_protocol.py": "0bed67ee94d26f66c37b6818c05fdfe723676f3af061d117b75ba2f6832a238a",
+    "p2_baseline.json": "1d024133ecd1975b7854eb7601b3a3a571981613aae8dd785dc98181ace78818",
+    "cal_housing.tgz": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681"
+  },
+  "base_image": "nvidia/cuda@sha256:14c54fad24b376ab78a70e1ef6595a2b7c8cdbf187e4f9b76de99a926fb62460",
+  "python": "3.12",
+  "uv_version": "0.12.1",
+  "command": [
+    "uv",
+    "run",
+    "--no-sync",
+    "modal",
+    "run",
+    "benchmarks/foundation/modal_app.py::foundation_value"
+  ],
+  "gpu": "T4",
+  "timeout_s": 1800,
+  "retries": 0,
+  "dataset": {
+    "name": "California Housing",
+    "source_url": "https://ndownloader.figshare.com/files/5976036",
+    "archive_sha256": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681",
+    "member": "CaliforniaHousing/cal_housing.data",
+    "features": [
+      "MedInc",
+      "HouseAge",
+      "AveRooms",
+      "AveBedrms",
+      "Population",
+      "AveOccup",
+      "Latitude",
+      "Longitude"
+    ],
+    "shape": [
+      20640,
+      8
+    ],
+    "target_unit": "100,000 USD",
+    "arrays_sha256": "34fc72e53a6329a89a9ae792e92f37853cea98adfbc6feea28cc08dc06f68ca1",
+    "dtype": "little-endian float32",
+    "split": "numpy.default_rng(seed), permutation, 60/20/20",
+    "split_sha256": {
+      "0": [
+        "7d07544c6c3fddd72d0cfc8d0aa0c19cf00250f1890420bdb10bd80efb0c9c04",
+        "5f6d9931d5a5239c7933da9bb62df2c631e79017658f185742db94f139be358a",
+        "877744733fe0213e716ca084333f39385c30654169f117f772c53a6af8bcff37"
+      ],
+      "1": [
+        "99578d3ef329ef275fd41e3834df7dab763525f9374db203b6f748b783eed05a",
+        "a161a60cd85d1ec54cbfd590f6befdb58b1a9a695c635bfbb562b4064d265caf",
+        "039c4fc07f6596a3cfdf73cb55820de4baa13f93251ede4c215796f283d46256"
+      ],
+      "2": [
+        "51ab6cbe0019b5bea9f9da8a81b3fafa874d8c992062f65ee8d1b09a3b7898a1",
+        "14509d20c7d87948ac6ea9060c476995583dd130af0ff928a9c24709e5ecf9d4",
+        "ff6426d360c75b637dd866cd73d9fd1b9fcf310a886dc05fbac0f80dcf256ec8"
+      ]
+    }
+  },
+  "extension_wheels": {
+    "openboost_example_normal_fisher-0.2.0-py3-none-any.whl": "47ddff3a87c85b3f4bb187d7b53b650180a6072983a20bc48f0fb8d379da4e1b",
+    "openboost_example_bounded_leaves-0.2.0-py3-none-any.whl": "dc236c0f207f7fdf0a52e6bdb8e7330f1ffbb6f63e082bb5226c49294a0f02c3"
+  },
+  "extension_sources": {
+    "examples/extensions/normal_fisher/README.md": "78a5142eaf92a81df9c5908861a1ce66e5ae8b03bf753e0b84a834c5f2a5d0eb",
+    "examples/extensions/normal_fisher/pyproject.toml": "ab70495fafa430dfb1377a873cbb821c9484c9008cea26575fa3c3fa2a91e40d",
+    "examples/extensions/normal_fisher/src/normal_fisher/__init__.py": "cabafae48d9ad251eea62230b1d38ba7407fbb113dec116b3e840c05e032afd3",
+    "examples/extensions/normal_fisher/tests/test_normal.py": "6dcb48f9434879b054fe9a9e8b6fca5f4ba01782d8c45ed4c566a8306ee867c3",
+    "examples/extensions/bounded_leaves/README.md": "749f68fafb9e8cb5911c16aa79ab7a82593599e5c196c20be3ec9923172144e9",
+    "examples/extensions/bounded_leaves/pyproject.toml": "8731c3fa03f03341fcc987b449c04658c5bde3e7a4d24772e3bc2199ceb55eac",
+    "examples/extensions/bounded_leaves/src/bounded_leaves/__init__.py": "d53927c63c71ea3cf37083e0d71d11aff58941dbed1df430838c2d6b2912efff",
+    "examples/extensions/bounded_leaves/tests/test_leaf.py": "41339c49f146181811dd0680d2b1abc563448ce35b4a79e8d4f0559c5d949baf"
+  },
+  "value_protocol": {
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "strategies": [
+      "legacy_cpu",
+      "legacy_cuda",
+      "experimental_cuda",
+      "extensions_cuda"
+    ],
+    "mode": "resident",
+    "repetitions": 4,
+    "warm_fit_budget_ratio": 1.2,
+    "extension_bound": 0.5,
+    "extension_schedule_tau": 1,
+    "cache_policy": "fresh process and NUMBA/CUPY cache directories per cell; device context startup/imports excluded; driver cache not cleared",
+    "profile": "separate fifth warm fit, cProfile host attribution and 5 ms sampled device-wide memory; not a kernel trace",
+    "cost": "T4 seconds only; billing unavailable"
+  },
+  "run_id": "20260905T183820Z-3c245f2d",
+  "modal_image_id": "im-hSRavxWM5HKjZyxDZNluhK"
+}
