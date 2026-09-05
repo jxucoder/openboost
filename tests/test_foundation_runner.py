@@ -175,3 +175,17 @@ def test_builder_suite_requires_cache_and_persistence(evidence):
         validate_result(manifest, result)
     result['checks']['levelwise_builder'] = {'device_cache_survives_owner_release': True, 'cpu_load_prediction': True, 'compact_transfer_calls': 85, 'two_channel_cases': [{}, {}, {}, {}]}
     validate_result(manifest, result)
+
+
+def test_trainer_suite_requires_execution_checks():
+    # A builder-only artifact cannot satisfy the stronger actual-fit suite.
+    import json
+    from pathlib import Path
+
+    from benchmarks.foundation.runner import validate_result
+    artifact = Path(__file__).resolve().parents[1] / 'benchmarks/results/foundation/20260905T163823Z-7b16b556'
+    manifest = json.loads((artifact / 'manifest.json').read_text())
+    result = json.loads((artifact / 'results.json').read_text())
+    manifest['suite'] = 'trainer'
+    with pytest.raises(ValueError, match='Required GPU cases'):
+        validate_result(manifest, result)

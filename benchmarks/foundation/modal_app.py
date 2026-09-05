@@ -212,3 +212,8 @@ def foundation_leaves():
 @app.local_entrypoint()
 def foundation_builder():
     run_suite("builder")
+
+
+@app.local_entrypoint()
+def foundation_trainer():
+    run_suite("trainer")

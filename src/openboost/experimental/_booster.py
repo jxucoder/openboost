@@ -1,4 +1,4 @@
-"""Thin CPU facade over the unified trainer."""
+"""Thin explicit-device facade over the unified trainer."""
 
 import warnings
 from dataclasses import fields, replace
@@ -63,12 +63,13 @@ def features(X, n=None):
 
 
 class Booster(PersistenceMixin):
-    """Experimental CPU boosting. Plugin objects are training-time dependencies."""
+    """Experimental boosting. Plugin objects are training-time dependencies."""
 
     def __init__(self, *, objective, tree_builder=None, step_schedule=None, config=None, device='cpu', fallback='error'):
         self._experimental_version = 1
         self._inference_only = False
         self.objective = objective
+        self._default_builder = tree_builder is None
         self.tree_builder = tree_builder if tree_builder is not None else CPUHistogramBuilder()
         self.step_schedule = step_schedule if step_schedule is not None else ConstantSchedule()
         self.config = replace(config) if config is not None else TrainerConfig()
@@ -83,26 +84,15 @@ class Booster(PersistenceMixin):
         validate_config(self.config)
         channels = channels_of(self.objective)
         if (not isinstance(getattr(self.tree_builder, 'supported_devices', None), frozenset)
-                or 'cpu' not in self.tree_builder.supported_devices
                 or not callable(getattr(self.tree_builder, 'build', None))):
-            raise ValueError('P3 builder must declare supported_devices including CPU and implement build')
+            raise ValueError('Builder must declare supported_devices and implement build')
         if not callable(getattr(self.step_schedule, 'coefficients', None)):
             raise ValueError('StepSchedule must implement coefficients')
-        if type(self.tree_builder) is CPUHistogramBuilder and self.config.reg_lambda == 0 and self.config.min_child_weight == 0:
-            raise ValueError('CPUHistogramBuilder requires positive min_child_weight when reg_lambda=0')
         from .._callbacks import LearningRateScheduler
         if any(isinstance(cb, LearningRateScheduler) for cb in callbacks or []):
             raise ValueError('Use StepSchedule instead of a learning-rate-mutating callback')
         if self.device not in ('cpu', 'cuda') or self.fallback not in ('error', 'warn'):
             raise ValueError('Invalid device or fallback policy')
-        if 'cpu' not in self.objective.supported_devices:
-            raise ValueError('P3 requires an objective supporting CPU')
-        reason = None
-        if self.device != 'cpu':
-            reason = 'Experimental P3 supports CPU execution only'
-            if self.fallback == 'error':
-                raise ValueError(reason)
-            warnings.warn(reason, RuntimeWarning, stacklevel=2)
         y = target(y)
         X = features(X, len(y))
         if hasattr(sample_weight, "__cuda_array_interface__"):
@@ -116,19 +106,82 @@ class Booster(PersistenceMixin):
                 raise ValueError('eval_sets entries accept X, y, and optional name only')
             y_e = target(item['y'])
             prepared.append({**item, 'X': features(item['X'], len(y_e)), 'y': y_e})
+        actual, reason = self.device, None
+        builder = self.tree_builder
+        if actual == 'cuda':
+            from ._levelwise import LevelWiseBuilder
+            if self._default_builder:
+                builder = LevelWiseBuilder()
+            reasons = []
+            if 'cuda' not in self.objective.supported_devices or 'cuda' not in builder.supported_devices:
+                reasons.append('objective/builder is CPU-only')
+            if prepared or callbacks or early_stopping_rounds is not None:
+                reasons.append('eval/callbacks/early stopping are unsupported')
+            if self.config.reg_alpha != 0 or self.config.subsample != 1 or self.config.colsample_bytree != 1:
+                reasons.append('require L2 and full sampling')
+            if isinstance(X, BinnedArray):
+                if (np.any(X.has_missing) or np.any(X.is_categorical)
+                        or any(m is not None for m in X.category_maps) or np.any(X.data == 255)):
+                    reasons.append('require numeric nonmissing features')
+            elif np.any(np.isnan(X)):
+                reasons.append('require numeric nonmissing features')
+            if isinstance(builder, LevelWiseBuilder):
+                if 'cuda' not in getattr(builder.leaf_rule, 'supported_devices', ()):
+                    reasons.append('leaf rule is CPU-only')
+                budget = builder.memory_budget_bytes
+                n_features = X.n_features if isinstance(X, BinnedArray) else X.shape[1]
+                required = (2**(self.config.max_depth+1)-1)*(n_features*256*8+5) if self.config.max_depth else 0
+                if isinstance(budget, bool) or not isinstance(budget, int) or budget < required:
+                    reasons.append('invalid or insufficient histogram budget')
+            if reasons:
+                reason = 'Strict CUDA preflight: ' + '; '.join(reasons)
+            else:
+                try:
+                    import cupy as cp
+                    if cp.cuda.runtime.getDeviceCount() < 1:
+                        raise RuntimeError('No CUDA device')
+                except (ImportError, RuntimeError) as exc:
+                    reason = f'Strict CUDA unavailable: {type(exc).__name__}'
+                if reason is None and cp.cuda.get_current_stream().ptr != 0:
+                    reason = 'Strict CUDA requires the default stream'
+            if reason:
+                if self.fallback == 'error':
+                    raise ValueError(reason)
+                warnings.warn(reason + '; full CPU fallback', RuntimeWarning, stacklevel=2)
+                actual = 'cpu'
+                if self._default_builder:
+                    builder = CPUHistogramBuilder()
+        if actual not in self.objective.supported_devices or actual not in builder.supported_devices:
+            raise ValueError(f'Objective and builder must support {actual}')
+        if type(builder) is CPUHistogramBuilder and self.config.reg_lambda == 0 and self.config.min_child_weight == 0:
+            raise ValueError('CPUHistogramBuilder requires positive min_child_weight when reg_lambda=0')
         rng = np.random.default_rng(self.config.random_state)
-        bridge = ObjectiveBridge(self.objective, rng)
-        with backend_context('cpu'):
+        if actual == 'cuda':
+            from .._array import array
+            from ._device import DeviceExtensionSession, DeviceObjectiveBridge
+            # CPU binning/initialization is explicit. Retain host metadata for persistence.
+            with backend_context('cpu'):
+                X = X if isinstance(X, BinnedArray) else array(X, n_bins=self.config.n_bins)
+            bridge = DeviceObjectiveBridge(self.objective, rng)
+            session = DeviceExtensionSession(bridge, builder, self.step_schedule, replace(self.config))
+        else:
+            bridge = ObjectiveBridge(self.objective, rng)
+            session = ExtensionSession(bridge, builder, self.step_schedule, replace(self.config))
+        with backend_context(actual):
             fit_boosting(self, bridge, X, y, config=replace(self.config), sample_weight=sample_weight,
                          eval_sets=prepared, callbacks=callbacks, early_stopping_rounds=early_stopping_rounds,
-                         rng=rng, extension=ExtensionSession(bridge, self.tree_builder, self.step_schedule, replace(self.config)))
+                         rng=rng, extension=session)
         self.channel_names_ = channels
-        self.fit_report_ = dict(requested_device=self.device, actual_device='cpu',
-                                objective_device='cpu', tree_device='cpu', update_device='cpu',
-                                eval_device='cpu' if prepared else None, builder_path=type(self.tree_builder).__name__,
+        self.fit_report_ = dict(requested_device=self.device, actual_device=actual,
+                                binning_device='cpu', initialization_device='cpu',
+                                objective_device=actual, tree_device=actual, update_device=actual,
+                                eval_device='cpu' if prepared else None, builder_path=type(builder).__name__,
                                 fallback_reason=reason, random_state=self.config.random_state,
                                 tree_counts={k: len(v) for k, v in self.trees_.items()},
-                                timing_scope='No performance timing collected; synchronous CPU execution')
+                                timing_scope='No performance timing collected',
+                                transfer_scope=('one-time binned/y/weights upload; compact tree finalization downloads; '
+                                                'device-only defensive input copies and cache verification; scalar validation syncs; '
+                                                'predict_raw uses CPU trees; no profiler proof' if actual == 'cuda' else 'CPU execution'))
         return self
 
     def predict_raw(self, X):

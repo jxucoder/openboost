@@ -1,9 +1,12 @@
-# Experimental CPU extensions
+# Experimental extensions
 
 `openboost.experimental` is a small, evolving research API. Its `Booster`
-uses the existing unified trainer and currently executes on CPU. CUDA requests
-fail before fitting; `fallback="warn"` explicitly selects the entire CPU path.
-The P2 legacy CUDA baseline does not establish experimental CUDA support.
+uses the existing unified trainer. CPU supports the wider extension surface;
+strict `device="cuda"` uses declared CUDA objectives and builders with resident
+CuPy raw scores, targets, weights and updates. The built-in Normal/Poisson
+adapter declares CUDA support; independent example packages still declare CPU.
+Unsupported capability with `fallback="warn"` selects the entire CPU path before
+training; runtime plugin/kernel failures raise and restore prior model state.
 
 An objective declares `channel_names` as a tuple of unique strings and
 `supported_devices` as a frozenset. It implements `init_raw`, `step`,
@@ -86,8 +89,8 @@ and transient device validation masks; allocation is rejected before creating
 histograms if it would exceed the budget. CUDA uses the current CuPy stream,
 retains aggregation results on device, and synchronizes scalar validation checks.
 Floating-point CUDA accumulation order is not deterministic. No speed claim is
-made. The primitives are composed by `LevelWiseBuilder` below. `Booster.fit` remains
-CPU-only pending strict GPU trainer integration.
+made. The primitives are composed by `LevelWiseBuilder` below and used by strict CUDA
+extension sessions in the shared trainer.
 
 ## Numeric split and routing primitives
 
@@ -111,8 +114,7 @@ as histograms. GPU arrays stay on device; scalar input checks synchronize.
 Only numeric L2 splitting is supported. Histogram missing-bin G/H must be zero,
 and routing rejects bin 255 even for zero-weight rows. Callers must provide
 numeric bins; categorical metadata is outside this primitive API. `LevelWiseBuilder`
-rejects missing/categorical inputs before growth. This does not
-yet make experimental Booster GPU-capable or establish an end-to-end speedup.
+rejects missing/categorical inputs before growth. These primitives alone do not establish an end-to-end speedup.
 
 ## Leaf reduction and custom rules
 
@@ -139,8 +141,7 @@ next round's gradients, while keeping the split criterion unchanged.
 
 CUDA reduction and rule arithmetic stay on device; scalar validation checks
 synchronize. Named download-wrapper checks are not a complete profiler trace.
-The assembled level-wise builder is described below; GPU Booster integration
-remains pending.
+The assembled level-wise builder is described below.
 
 ## Level-wise builder
 
@@ -178,7 +179,7 @@ prediction caches, compact tree arrays and transient validation masks.
 
 The device cache survives release of input views. Host tree arrays support
 CPU prediction and existing persistence. Direct GPU builder composition is
-validated separately from `Booster.fit`, which remains CPU-only until P5.
+validated separately from strict GPU `Booster.fit` integration.
 The default numeric CPU builder is not replaced: this opt-in builder has a
 narrower feature boundary and no established end-to-end performance advantage.
 
@@ -205,3 +206,27 @@ Numba 0.63.1 / llvmlite 0.46.0; see its README for the tested versions and setup
 
 This verifies a CPU extension installation boundary. These repository-authored
 examples do not establish external adoption or GPU package support.
+
+## Strict CUDA fit boundary
+
+Set `device="cuda"` with a CUDA-capable objective. When no builder is specified,
+CUDA selects `LevelWiseBuilder`; an explicit builder always takes precedence.
+CPU retains `CPUHistogramBuilder`. Host numeric features/targets/weights enter
+fit; binning and initialization run on CPU, then binned values, targets and
+weights upload once. Raw state and per-round arithmetic use CuPy. Standard host
+tree arrays finalize each tree; `predict_raw` remains CPU inference and saved
+models load without training plugins.
+
+Strict CUDA rejects missing/categorical data, L1, sampling, eval sets, callbacks,
+early stopping, unsupported leaf rules and non-default streams before training.
+The first version supports numeric nonmissing L2/full-sampling trees. Invalid
+plugin results, modified borrowed inputs or a cached prediction inconsistent with
+the returned tree fail rather than retrying on CPU. CuPy lacks NumPy read-only
+views, so the session copies borrowed inputs on-device and checks for mutation.
+It independently traverses compact trees on-device to validate prediction caches.
+These copies, compact uploads and scalar synchronization have a performance cost.
+
+`fit_report_` separates CPU binning/initialization, actual objective/tree/update
+execution, fallback reason and transfer scope. Named transfer-wrapper tests do
+not prove whole-process transfer absence. Profiler availability and real-device
+results are recorded in the foundation evidence; no speedup is claimed here.

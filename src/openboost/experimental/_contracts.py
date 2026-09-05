@@ -1,4 +1,4 @@
-"""Small CPU extension contracts; deliberately separate from the stable API."""
+"""Small extension contracts; deliberately separate from the stable API."""
 
 from dataclasses import dataclass
 from types import MappingProxyType
@@ -60,19 +60,23 @@ def exact_keys(values, channels, label):
 
 
 class DistributionObjectiveAdapter:
-    """Expose existing distribution math through the CPU extension contract."""
+    """Expose existing distribution math with exact-type CUDA capability."""
 
     supported_devices = frozenset({'cpu'})
 
     def __init__(self, distribution='normal', *, natural=False):
         self._objective = DistributionObjective(get_distribution(distribution), natural=natural)
         self.channel_names = tuple(self._objective.channel_names)
+        self.supported_devices = frozenset({'cpu', 'cuda'} if self._objective.device_capable else {'cpu'})
 
     def init_raw(self, y, sample_weight=None, extra=None):
         return self._objective.init_raw(y, sample_weight, extra)
 
     def step(self, raw, y, sample_weight=None, extra=None, *, context):
-        return self._objective.step(raw, y, sample_weight, extra)
+        out = self._objective.step(raw, y, sample_weight, extra)
+        if context.device == 'cuda':
+            return {k: tuple(context.xp.asarray(a) for a in pair) for k, pair in out.items()}
+        return out
 
     def loss_value(self, raw, y, sample_weight=None, extra=None, *, context):
         return self._objective.loss_value(raw, y, sample_weight, extra)

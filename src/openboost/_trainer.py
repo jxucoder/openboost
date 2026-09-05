@@ -204,14 +204,14 @@ def fit_boosting(
     if extension is not None:
         model.coefficients_ = {name: [] for name in objective.channel_names}
     use_native = extension is None and _gpu_native_eligible(model.X_binned_, config)
-    if use_gpu and not use_native:
+    if use_gpu and not use_native and extension is None:
         warnings.warn("CUDA native tree fallback to generic tree path (constraints or feature metadata)",
                       RuntimeWarning, stacklevel=2)
     # Weighting turns an unweighted unit Hessian into sample_weight. Even
     # uniform weights use the actual array rather than an inferred constant.
     unit_hess = bool(getattr(objective, "unit_hessian", False)) and sample_weight is None
 
-    if use_gpu:
+    if use_gpu and extension is None:
         from numba import cuda
 
         from ._core._predict import _add_inplace_cuda
@@ -224,7 +224,9 @@ def fit_boosting(
         _add_inplace_cuda = None  # type: ignore[assignment]
         binned_gpu = model.X_binned_.data
 
-    if device_state:
+    if device_state and extension is not None:
+        raw, y_step, sw_step = extension.initialize(model.X_binned_, model._base_scores, y, sample_weight)
+    elif device_state:
         raw = {
             name: cuda.to_device(np.full(n_samples, score, dtype=np.float32))
             for name, score in model._base_scores.items()
@@ -292,8 +294,7 @@ def fit_boosting(
             if extension is not None:
                 tree, update = extension.build(model.X_binned_, grad, hess, name)
                 raw[name] = raw[name] + coefficients[name] * update
-                from .experimental._contracts import vector
-                vector(raw[name], n_samples, "updated raw")
+                extension.validate_update(raw[name], n_samples)
                 model.coefficients_[name].append(coefficients[name])
             elif use_native:
                 pred_buf = raw[name] if device_state else None

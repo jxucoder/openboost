@@ -92,6 +92,9 @@ class ExtensionSession:
             result[k] = float(v)
         return result
 
+    def validate_update(self, raw, n):
+        vector(raw, n, "updated raw")
+
     def build(self, binned, grad, hess, channel):
         context = ExecutionContext('cpu', np, self.bridge.rng, self.bridge.round_idx, channel)
         borrowed = replace(binned, data=readonly(binned.data))

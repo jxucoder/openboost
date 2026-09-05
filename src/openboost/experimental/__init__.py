@@ -1,4 +1,4 @@
-"""Experimental extension API. Booster is CPU-only; primitives declare device support separately."""
+"""Experimental extension API. Objectives and builders declare device support."""
 
 from .._core._batch_leaf import LeafStatistics, NewtonLeafRule, leaf_values, reduce_leaves
 from .._core._batch_primitives import HistogramBatch, build_histograms
