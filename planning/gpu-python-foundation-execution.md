@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1、P2、P3 已完成；下一项 P4。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0、P1、P2、P3 已完成；P4.1 已完成，下一项 P4.2。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -180,7 +180,12 @@ P3 每步独立提交；不要等 GPU 完成后才发现预测/保存语义不�
 主要新增文件建议：`src/openboost/_core/_batch_primitives.py`，以及现有 CPU/CUDA backend。
 文件名可因代码组织调整，但职责与接口不能随意增加。
 
-**P4.1 — batch histogram / CPU oracle。**
+**P4.1 — batch histogram / CPU oracle。已完成。**
+
+CPU 74 项相关测试通过；干净 `cf61611` wheel 在真实 T4 上 3 passed / 0 skipped。
+G/H 独立 sample oracle 最大误差分别 9.835e-7 / 1.252e-6，计数完全一致。
+[证据与边界](../benchmarks/results/foundation/20260905T150940Z-a5c80f7f/README.md)。
+当前只完成 histogram primitive；Booster 仍为 CPU-only，P4.2–P4.4 待实现。
 
 - 独立用直接按样本求和作为 oracle，不能用生产 histogram 函数生成 expected。
 - 测 weighted/zero-weight、empty node、inactive slots、constant feature、保留 missing bin、memory budget。

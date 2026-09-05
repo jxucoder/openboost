@@ -43,7 +43,8 @@ None beyond the initial red test at the time of implementation commit.
 
 ## Risks and Follow-ups
 
-- GPU correctness is pending a real T4 run at this implementation commit.
+- The histogram primitive passed on real T4; downstream GPU tree integration
+  remains unverified.
 - Atomic summation order is nondeterministic. Scalar validations synchronize.
 - Split/routing, leaf reduction and LevelWiseBuilder remain P4.2–P4.4. Existing
   Booster training remains CPU-only; no downstream GPU split/quality claim.
@@ -51,3 +52,16 @@ None beyond the initial red test at the time of implementation commit.
 ## Commits
 
 - `cfd7dc5` — completed P3 evidence.
+
+## Real-device result
+
+- Clean `cf61611` wheel: **3 passed / 0 skipped** on Tesla T4, 19.47 s pytest,
+  23.49 s remote function. [Raw artifact](../benchmarks/results/foundation/20260905T150940Z-a5c80f7f/README.md).
+- Direct sample oracle: max absolute G error 9.835e-7, H error 1.252e-6,
+  counts exact. Small weighted/missing and empty fixtures are exact. Nondefault
+  stream and named host-download/legacy-wrapper blockers passed. Negative H,
+  invalid IDs, mixed devices and budget rejection passed on CUDA.
+- Offline runner accepted the result; uploaded file hashes match the clean
+  source and JUnit exactly matches the report embedded in results.json.
+- P4.1 complete. Next P4.2: exhaustive split oracle and routing from actual rows.
+  No P4.2–P4.4 or end-to-end experimental CUDA training claim is implied.
