@@ -51,7 +51,8 @@ or publication is authorized by this review.
 
 ## Risks and Follow-ups
 
-- Real CUDA verification pending at implementation commit.
+- Numeric split/routing passed on real T4; whole experimental GPU training
+  remains unverified.
 - Positive-curvature children are narrower than arbitrary custom objectives.
 - P4.3 leaf rule/reduction and P4.4 builder are next; no complete experimental
   GPU trainer, external adoption or matched-quality cost benefit is proved here.
@@ -69,3 +70,17 @@ or publication is authorized by this review.
   -n 0 -q`: **90 passed**.
 - Production/changed-support lint passed; docs build passed with existing griffe
   warnings. No end-to-end GPU extension training was executed locally.
+
+## Real-device verification and next value checkpoint
+
+- Clean source `b75b95a`: **4 passed / 0 skipped**, real T4. 20.23 s pytest,
+  24.79 s remote function. [Raw artifact](../benchmarks/results/foundation/20260905T151819Z-e5eb30b7/README.md).
+- Feature/threshold/IDs matched exhaustive row oracle exactly; gains matched
+  at rtol=atol=1e-10. Exact ties and gain/child equality, actual child aggregates,
+  next-layer split topology, invalid routes and missing rejection passed.
+- Source file hashes and embedded JUnit independently verified; offline runner
+  accepted the saved evidence. No runtime/performance claim beyond test duration.
+- P4.2 complete. After P4.3/P4.4, advance the CPU portions of P6's independent
+  packages ahead of full P5 integration to expose usability/installation costs
+  sooner. GPU gates stay mandatory. External author attempts remain G5, not
+  something self-authored examples can satisfy.

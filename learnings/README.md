@@ -34,6 +34,8 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [2026-09-05-foundation-p4-splits-goal-review.md](2026-09-05-foundation-p4-splits-goal-review.md) — goal/value checkpoint, earlier independent CPU package validation, numeric split/routing and real T4 evidence.
+
 - [2026-09-05-foundation-p4-histograms.md](2026-09-05-foundation-p4-histograms.md) — fixed-slot CPU/CUDA histogram contract, independent sample oracle and real T4 validation.
 
 - [2026-09-05-foundation-p3-cpu-contract.md](2026-09-05-foundation-p3-cpu-contract.md) — experimental CPU objective/builder/schedule, plugin-free wheel inference, coefficient persistence and installation limits.

@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1、P2、P3 已完成；P4.1 已完成，下一项 P4.2。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0、P1、P2、P3 已完成；P4.1–P4.2 已完成，下一项 P4.3。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -185,13 +185,18 @@ P3 每步独立提交；不要等 GPU 完成后才发现预测/保存语义不�
 CPU 74 项相关测试通过；干净 `cf61611` wheel 在真实 T4 上 3 passed / 0 skipped。
 G/H 独立 sample oracle 最大误差分别 9.835e-7 / 1.252e-6，计数完全一致。
 [证据与边界](../benchmarks/results/foundation/20260905T150940Z-a5c80f7f/README.md)。
-当前只完成 histogram primitive；Booster 仍为 CPU-only，P4.2–P4.4 待实现。
+该提交只完成 histogram primitive；后续 split/routing 验证见 P4.2。
 
 - 独立用直接按样本求和作为 oracle，不能用生产 histogram 函数生成 expected。
 - 测 weighted/zero-weight、empty node、inactive slots、constant feature、保留 missing bin、memory budget。
 - GPU 聚合结果留 device；不通过 legacy dict host wrapper。样本计数与 H 分开。
 
-**P4.2 — split / routing。**
+**P4.2 — split / routing。已完成。**
+
+`b75b95a`：90 项相关 CPU 测试通过，真实 T4 上 4 passed / 0 skipped。
+分割拓扑、精确 ties、gain 边界、实际样本 routing 和下一层统计通过独立 oracle。
+[原始证据与限制](../benchmarks/results/foundation/20260905T151819Z-e5eb30b7/README.md)。
+数值 L2、正曲率子节点；Booster GPU 集成仍待 P4.3/P4.4/P5。
 
 - 对极小矩阵穷举所有合法分割，验证 gain、min_gain/min_child_weight、tie 顺序与无合法 split。
 - 设备 partition 后的 node IDs 与 CPU oracle 对应；下一层 histogram 必须来源于实际 routed rows。
@@ -212,6 +217,14 @@ G/H 独立 sample oracle 最大误差分别 9.835e-7 / 1.252e-6，计数完全�
 每个 P4 小任务必须有真实 GPU parity 才能标记该 GPU 项通过。
 共享一个已有镜像/小测试 selector，避免每改一行都跑完整 Modal suite。
 GPU 不可用时可以完成 CPU 与测试准备，但不得跳过 GPU 关卡继续宣称设备路径完成。
+
+### 使用价值检查提前
+
+目标复查后的顺序调整：P4.4 的最小 builder 可运行后，先执行 P6.1/P6.2/P6.3
+的 **CPU 独立 wheel** 部分，再完善 P5 的严格 GPU 集成。原有 GPU 验收门槛不降低。
+记录公开接口之外的依赖、方法代码量、安装障碍、正确结果所需操作、保存后插件可移除性。
+如仍需改 core，先修最小接口问题；不要用更多 GPU 功能掩盖使用障碍。
+CPU 自编包仍不是外部 adoption；G5 保持未完成。随后完成 P5 和 P6 的 GPU 验证。
 
 ## P5：集成严格 GPU 执行与报告
 

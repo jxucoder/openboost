@@ -1,6 +1,6 @@
 # GPU Python boosting foundation：设计草案
 
-状态：P0–P3、P4.1 已完成；P4.2 split/routing 正在验证，后续设备扩展仍待实现。日期：2026-09-05。
+状态：P0–P3、P4.1–P4.2 已完成；下一项 P4.3，完整 GPU 扩展训练仍待实现。日期：2026-09-05。
 
 本文件定义接口、边界、验证方法与执行顺序，供 medium 模型实施。
 已完成阶段的实际行为与证据见执行清单；P2 基线不代表新扩展 API 的 GPU 路径已验证。
@@ -366,3 +366,10 @@ including when min_child_weight=0; this avoids inventing information about empty
 versus zero-weight bins from G/H alone. Zero-curvature nodes stay leaves; missing
 and categorical builder support remains out of scope. These limits must remain
 visible in the public contract and independently tested.
+
+Sequencing adjustment from this review: after the minimal P4.4 builder works,
+run P6's independent CPU wheel examples before completing P5's strict GPU
+integration. Record public/private imports, installation failures, method code
+and steps to correct output. Fix demonstrated API obstacles first. GPU parity
+and independent GPU wheels remain mandatory afterward; no external adoption
+is claimed from examples we write ourselves.
