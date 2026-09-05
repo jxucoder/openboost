@@ -62,3 +62,25 @@ histogram, leaf, validation or cached-prediction contract changes.
   and sixth memory-only fit. Worker behavior already separated them; the current
   running value bundle retains its original manifest verbatim. Its timed fits
   are unaffected, and its per-profile memory scope records the actual separation.
+
+## Measured value and decision
+
+- `a5bf26d`: [12-cell T4 matrix](../benchmarks/results/foundation/20260905T193308Z-5ebd75ab/README.md),
+  3 passed / 0 skipped. All default fits pass unchanged quality/fallback gates.
+- Recorded default warm median 2.078694 -> 1.868019 s (10.13% lower); paired
+  legacy ratio 13.899x -> 12.888x (7.27% lower). Legacy also got slightly faster,
+  so do not attribute every raw percentage point to this rewrite. No statistical
+  significance or general GPU advantage claimed from three splits.
+- Keep this small optimization; it preserves all checks and original-row/tree
+  parity. It addresses only part of the overhead. The original large regression
+  remains: G4 still fails and the strict path does not replace legacy CUDA.
+- Isolated seed-0 diagnostic tree/session 1.9099 s (builder 1.3641 s) versus
+  objective .0866 s in a 2.0466 s profile. Remaining work is in tree/session
+  validation/synchronization and cache traversal, not primarily objective math.
+- CPU 80 focused tests, real T4 trainer 7 tests, independent wheel 7 tests with
+  six exact plugin-free roundtrips, and value 3 tests passed. Lint and MkDocs
+  passed. Exact peak/whole-process transfer trace and external adoption stay open.
+- Final evidence audit: all uploaded file/wheel hashes, JUnit equality, unchanged
+  measured implementation, and private-path scan passed. Recorded percentage
+  reductions recomputed from raw medians/ratios. Final production/changed-file
+  lint passed; docs build completed with existing griffe warnings.

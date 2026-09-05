@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0–P6 已完成；P7.1 真实数据质量通过、性能预算失败（13.899x）；P7.2 开发者材料已完成；P7.3 已完成无采样干扰的诊断与设计复查；精确显存峰值及 CUDA trace 仍未验证。G5 外部采用未完成。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0–P6 已完成；P7.1 真实数据质量通过、性能预算失败（首次 13.899x；固定槽位优化后 12.888x）；P7.2 开发者材料已完成；P7.3 已完成无采样干扰的诊断与设计复查；精确显存峰值及 CUDA trace 仍未验证。G5 外部采用未完成。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -382,3 +382,12 @@ collect 时间与 measured 时间分开；自报的 GPU label 不能代替设备
 CUDA conformance；本轮没有修改对应代码。新增 harness 的 27 项 focused tests、
 production/changed-file lint、文档构建及两个新 artifact 的离线检查通过。
 G4 的性能预算失败；精确 peak/完整 transfer trace 留作明确缺口，不标为通过。
+
+
+### 固定槽位优化（2026-09-05）
+
+`81acf0b` 保留全部检查，移除 split 应用中的动态布尔压缩，以固定形状选择和父节点
+映射构建 frontier。[实测](../benchmarks/results/foundation/20260905T193308Z-5ebd75ab/README.md)
+warm fit 2.079 -> 1.868 s；同轮 legacy 归一化比例 13.899x -> 12.888x。
+这只是部分收益，不是达到 1.2 预算。质量、真实 CUDA conformance 和独立 wheel
+加载验证通过。保留改动；下一项仍是更精确地处理树/session验证与同步开销。

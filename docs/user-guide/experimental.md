@@ -182,7 +182,9 @@ one histogram batch live between levels; the budget excludes input arrays,
 prediction caches, compact tree arrays and transient validation masks.
 
 The device cache survives release of input views. Host tree arrays support
-CPU prediction and existing persistence. Direct GPU builder composition is
+CPU prediction and existing persistence. Fixed-slot growth applies splits with
+fixed-shape selections and derives the next frontier from parent slots, retaining
+unsplit leaves. Input validation and independent prediction-cache checks remain. Direct GPU builder composition is
 validated separately from strict GPU `Booster.fit` integration.
 The default numeric CPU builder is not replaced: this opt-in builder has a
 narrower feature boundary and no established end-to-end performance advantage.

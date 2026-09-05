@@ -203,3 +203,9 @@ passes default quality but fails the performance budget (13.899x legacy CUDA fit
 median). The [isolated diagnostic](../results/foundation/20260905T184856Z-dcd49569/README.md)
 points to tree construction and its boundary as the dominant cost. Neither run
 establishes a general GPU speed/cost advantage or external adoption.
+
+
+[Fixed-slot growth follow-up](../results/foundation/20260905T193308Z-5ebd75ab/README.md)
+retains all checks and records default warm fit 1.868 s versus the original
+2.079 s. The paired legacy ratio is still 12.888x: quality passes, performance
+budget fails. CUDA correctness and independent CPU wheel evidence accompany it.
