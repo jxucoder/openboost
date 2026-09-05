@@ -86,8 +86,8 @@ and transient device validation masks; allocation is rejected before creating
 histograms if it would exceed the budget. CUDA uses the current CuPy stream,
 retains aggregation results on device, and synchronizes scalar validation checks.
 Floating-point CUDA accumulation order is not deterministic. No speed claim is
-made. This primitive is separate from `Booster`, which remains CPU-only; split,
-routing, leaf rules and builder integration follow in later P4/P5 steps.
+made. The primitives are composed by `LevelWiseBuilder` below. `Booster.fit` remains
+CPU-only pending strict GPU trainer integration.
 
 ## Numeric split and routing primitives
 
@@ -110,8 +110,8 @@ These operations accept the same contiguous NumPy/current-device CuPy boundary
 as histograms. GPU arrays stay on device; scalar input checks synchronize.
 Only numeric L2 splitting is supported. Histogram missing-bin G/H must be zero,
 and routing rejects bin 255 even for zero-weight rows. Callers must provide
-numeric bins; categorical metadata is outside this primitive API. A future
-builder must reject missing/categorical inputs before growth. This does not
+numeric bins; categorical metadata is outside this primitive API. `LevelWiseBuilder`
+rejects missing/categorical inputs before growth. This does not
 yet make experimental Booster GPU-capable or establish an end-to-end speedup.
 
 ## Leaf reduction and custom rules
@@ -139,7 +139,8 @@ next round's gradients, while keeping the split criterion unchanged.
 
 CUDA reduction and rule arithmetic stay on device; scalar validation checks
 synchronize. Named download-wrapper checks are not a complete profiler trace.
-The assembled level-wise builder and GPU Booster integration are still pending.
+The assembled level-wise builder is described below; GPU Booster integration
+remains pending.
 
 ## Level-wise builder
 
@@ -180,3 +181,27 @@ CPU prediction and existing persistence. Direct GPU builder composition is
 validated separately from `Booster.fit`, which remains CPU-only until P5.
 The default numeric CPU builder is not replaced: this opt-in builder has a
 narrower feature boundary and no established end-to-end performance advantage.
+
+## Independent extension packages
+
+The repository's `examples/extensions/` contains two separately buildable CPU
+packages. `normal_fisher` implements weighted Gaussian NLL gradients, expected
+Fisher curvature and a nonconstant per-channel schedule. `bounded_leaves`
+implements a bounded Newton leaf rule through the public API. They compose in
+`demo.py` without core changes or private imports.
+
+From a development checkout, verify the real installation boundary with:
+
+```sh
+uv run --no-sync python examples/extensions/verify_wheels.py /tmp/openboost-extension-evidence
+```
+
+The verifier builds three wheels and installs them in a fresh environment outside
+the repository, runs independent mathematical and training checks, executes the
+public example, then uninstalls both plugins. A new interpreter checks exact CPU
+predictions for six saved models without the training packages. The example's
+CPU dependency pins avoid the failed Intel macOS source build encountered with
+Numba 0.63.1 / llvmlite 0.46.0; see its README for the tested versions and setup.
+
+This verifies a CPU extension installation boundary. These repository-authored
+examples do not establish external adoption or GPU package support.

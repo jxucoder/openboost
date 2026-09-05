@@ -1,0 +1,10 @@
+numpy==2.2.6
+numba==0.61.2
+llvmlite==0.44.0
+scipy==1.15.3
+joblib==1.5.3
+pytest==9.0.2
+iniconfig==2.3.0
+packaging==25.0
+pluggy==1.6.0
+pygments==2.19.2
