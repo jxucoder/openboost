@@ -106,3 +106,21 @@ def test_unknown_suite_rejected(evidence):
     manifest['suite'] = 'unknown'
     with pytest.raises(ValueError, match='Unknown'):
         validate_result(manifest, result)
+
+
+def test_boundaries_requires_all_execution_cases(evidence):
+    manifest, result = evidence
+    manifest['suite'] = 'boundaries'
+    names = [
+        'test_weighted_newton', 'test_weighted_distribution[normal]',
+        'test_weighted_distribution[poisson]', 'test_visible_fallback[custom]',
+        'test_visible_fallback[exposure]', 'test_visible_fallback[generic]',
+        'test_device_error_rolls_back', 'test_device_sampling_preflight[subsample]',
+        'test_device_sampling_preflight[colsample_bytree]',
+        'test_eval_callback_persistence[normal]', 'test_eval_callback_persistence[poisson]',
+    ]
+    for name in names:
+        with pytest.raises(ValueError, match='missing'):
+            validate_result(manifest, result)
+        result['junit'] = result['junit'].replace('</testsuite>', f'<testcase name="{name}" /></testsuite>')
+    validate_result(manifest, result)

@@ -22,10 +22,12 @@ def validate_result(manifest, result):
         raise ValueError("Missing or invalid JUnit report") from exc
     required = set(REQUIRED_TESTS)
     suite = manifest.get("suite", "smoke")
-    if suite == "correctness":
+    if suite in ("correctness", "boundaries"):
         required.update({"test_weighted_newton", "test_weighted_distribution[normal]", "test_weighted_distribution[poisson]"})
     elif suite != "smoke":
         raise ValueError("Unknown evidence suite")
+    if suite == "boundaries":
+        required.update({"test_visible_fallback[custom]", "test_visible_fallback[exposure]", "test_visible_fallback[generic]", "test_device_error_rolls_back", "test_device_sampling_preflight[subsample]", "test_device_sampling_preflight[colsample_bytree]", "test_eval_callback_persistence[normal]", "test_eval_callback_persistence[poisson]"})
     cases = list(root.iter("testcase"))
     names = [case.get("name") for case in cases]
     if len(names) != len(required) or set(names) != required:

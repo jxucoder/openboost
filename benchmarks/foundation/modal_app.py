@@ -176,3 +176,8 @@ def foundation_smoke():
 @app.local_entrypoint()
 def foundation_correctness():
     run_suite("correctness")
+
+
+@app.local_entrypoint()
+def foundation_boundaries():
+    run_suite("boundaries")

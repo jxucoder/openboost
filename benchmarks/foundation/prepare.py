@@ -37,14 +37,16 @@ def prepare(suite="smoke"):
         "pytest.ini": ROOT / "tests/foundation/pytest.ini",
         "requirements.txt": ROOT / "benchmarks/foundation/requirements.txt",
     }
-    if suite == "correctness":
+    if suite in ("correctness", "boundaries"):
         sources["test_correctness.py"] = ROOT / "tests/foundation/test_correctness.py"
+    if suite == "boundaries":
+        sources["test_boundaries.py"] = ROOT / "tests/foundation/test_boundaries.py"
     for name, source in sources.items():
         shutil.copyfile(source, BUNDLE / name)
     manifest = {
         "schema_version": 1,
         "suite": suite,
-        "test_files": ["test_smoke.py"] + (["test_correctness.py"] if suite == "correctness" else []),
+        "test_files": [name for name in sources if name.startswith("test_")],
         "source_sha": git("rev-parse", "HEAD"),
         "source_dirty": False,
         "wheel": wheels[0].name,
@@ -71,5 +73,5 @@ def prepare(suite="smoke"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--suite", choices=("smoke", "correctness"), default="smoke")
+    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries"), default="smoke")
     prepare(parser.parse_args().suite)
