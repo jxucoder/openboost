@@ -156,3 +156,33 @@ contents, independent GPU mathematics, eight CPU/CUDA composition cells and a
 standalone GPU demo, then removes the plugins and checks nine exact CPU model
 roundtrips in a new interpreter. `20260905T181351Z-1aee9568` is the passing raw
 artifact; the initial standalone-script failure is retained separately.
+
+## P7 resident value protocol
+
+`prepare --suite value` freezes the P2 Housing archive, splits, configuration and
+raw baseline plus both independent 0.2.0 wheels. Run
+`uv run --no-sync modal run benchmarks/foundation/modal_app.py::foundation_value`.
+One T4 (2 CPU, 8 GiB, 1800-second function limit, no retry) executes seeds 0/1/2
+and legacy CPU, legacy CUDA, strict experimental CUDA, independent A+B+C CUDA.
+Each cell uses a fresh subprocess and fresh Numba/CuPy cache directories, one
+process-first fit and three warm fits. Imports, data loading and context startup
+are excluded; binning, gradients, transfers and fit compilation are included.
+The driver cache is not cleared: this is not a machine-cold benchmark.
+
+Compare the default candidate with the same-run legacy CUDA reference, and check
+that reference against frozen P2 held-out quality. Historical first-fit timings
+have a different cache policy and are not a direct latency comparator. Require
+NLL difference <= 0.01 * max(1, abs(reference)), CRPS <= 1.01 * reference and
+coverage90 difference <= 0.01 on every repeat/seed. Report a regression instead
+of rejecting its artifact. A ratio of cross-seed median warm fit times above
+1.2 triggers design review. The independent Fisher/bounded/scheduled algorithm
+uses bound=0.5 and tau=1 without tuning; its math differs and its quality/cost
+is reported separately. Strict CUDA eval/callbacks remain unsupported; the P2
+eval cells have no strict-GPU performance counterpart.
+
+A separate fifth fit records cProfile host attribution, named transfer wrappers
+and device-wide used memory sampled every 5 ms. Inclusive times and nested
+wrapper counts overlap; they are not kernel times or a complete transfer audit.
+Sampled memory is a lower bound including contexts and allocator caches, not an
+exact per-fit peak. CuPy pool figures exclude Numba allocations. A CUDA trace is
+still a separate evidence gap. Report T4 seconds, not inferred billing dollars.

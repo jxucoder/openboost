@@ -61,6 +61,7 @@ def prepare(suite="smoke"):
         sources["test_extensions.py"] = ROOT / "tests/foundation/test_extensions.py"
         sources["check_extension_inference.py"] = ROOT / "tests/foundation/check_extension_inference.py"
         sources["extension_demo.py"] = ROOT / "examples/extensions/demo.py"
+    if suite in ("extensions", "value"):
         for package in ("normal_fisher", "bounded_leaves"):
             project = ROOT / "examples/extensions" / package
             for source in sorted(project.rglob("*")):
@@ -76,7 +77,7 @@ def prepare(suite="smoke"):
             subprocess.run(["uv", "build", "--wheel", "--out-dir", str(BUNDLE), str(project)], cwd=ROOT, check=True)
             wheel = next(BUNDLE.glob(f"openboost_example_{package}-*.whl"))
             extension_wheels[wheel.name] = sha256(wheel)
-    if suite == "baseline":
+    if suite in ("baseline", "value"):
         from .dataset import describe
 
         archive = ROOT / "build/foundation_data/cal_housing.tgz"
@@ -84,7 +85,11 @@ def prepare(suite="smoke"):
         if describe(archive) != expected:
             raise RuntimeError("Frozen dataset/split mismatch")
         sources.update({name: ROOT / "benchmarks/foundation" / name for name in ("dataset.py", "baseline_worker.py", "housing.json")})
-        sources["test_baseline.py"] = ROOT / "tests/foundation/test_baseline.py"
+        test_name = "test_baseline.py" if suite == "baseline" else "test_value.py"
+        sources[test_name] = ROOT / "tests/foundation" / test_name
+        if suite == "value":
+            sources.update({name: ROOT / "benchmarks/foundation" / name for name in ("value_worker.py", "value_protocol.py")})
+            sources["p2_baseline.json"] = ROOT / "benchmarks/results/foundation/20260905T084129Z-2574e387/results.json"
         sources["cal_housing.tgz"] = archive
     for name, source in sources.items():
         shutil.copyfile(source, BUNDLE / name)
@@ -103,7 +108,7 @@ def prepare(suite="smoke"):
         "uv_version": "0.12.1",
         "command": ["uv", "run", "--no-sync", "modal", "run", f"benchmarks/foundation/modal_app.py::foundation_{suite}"],
         "gpu": "T4",
-        "timeout_s": 1800 if suite == "baseline" else 300,
+        "timeout_s": 1800 if suite in ("baseline", "value") else 300,
         "retries": 0,
         "dataset": {
             "generator": "numpy.default_rng",
@@ -112,11 +117,14 @@ def prepare(suite="smoke"):
             "split": "smoke uses training data; no held-out quality claim",
         },
     }
-    if suite == "extensions":
+    if suite in ("extensions", "value"):
         manifest["extension_wheels"] = extension_wheels
         manifest["extension_sources"] = extension_sources
-    if suite == "baseline":
+    if suite in ("baseline", "value"):
         manifest["dataset"] = expected
+    if suite == "value":
+        manifest["value_protocol"] = {"seeds": [0, 1, 2], "strategies": ["legacy_cpu", "legacy_cuda", "experimental_cuda", "extensions_cuda"], "mode": "resident", "repetitions": 4, "warm_fit_budget_ratio": 1.2, "extension_bound": 0.5, "extension_schedule_tau": 1, "cache_policy": "fresh process and NUMBA/CUPY cache directories per cell; device context startup/imports excluded; driver cache not cleared", "profile": "separate fifth warm fit, cProfile host attribution and 5 ms sampled device-wide memory; not a kernel trace", "cost": "T4 seconds only; billing unavailable"}
+    if suite == "baseline":
         manifest["baseline_protocol"] = {"seeds": [0, 1, 2], "modes": ["resident", "eval"], "backends": ["cpu", "cuda"], "repeats_per_cell": 2, "nll_abs_tolerance": "0.01 * max(1, abs(cpu_nll))", "crps_max_ratio": 1.01, "coverage90_abs_tolerance": 0.01}
     (BUNDLE / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(f"Prepared wheel {manifest['wheel_sha256']} from {manifest['source_sha']}")
@@ -124,5 +132,5 @@ def prepare(suite="smoke"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries", "baseline", "histograms", "splits", "leaves", "builder", "trainer", "extensions"), default="smoke")
+    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries", "baseline", "histograms", "splits", "leaves", "builder", "trainer", "extensions", "value"), default="smoke")
     prepare(parser.parse_args().suite)

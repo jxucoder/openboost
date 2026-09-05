@@ -37,6 +37,8 @@ def validate_result(manifest, result):
             required.add("test_strict_extension_trainer")
     elif suite == "extensions":
         required.add("test_installed_gpu_extensions")
+    elif suite == "value":
+        required.add("test_value_matrix")
     elif suite != "smoke":
         raise ValueError("Unknown evidence suite")
     if suite in ("boundaries", "baseline"):
@@ -104,6 +106,14 @@ def validate_result(manifest, result):
         inference = json.loads(uninstall.get("inference_stdout", "{}"))
         if inference != {"extensions_absent": True, "exact_cpu_roundtrips": 9}:
             raise ValueError("Missing plugin-free CPU inference evidence")
+    if suite == "value":
+        from benchmarks.foundation.value_protocol import summarize, validate_profiles
+
+        cells = checks.get("value_cells", [])
+        expected_summary = summarize(cells, checks.get("frozen_baseline_cells", []))
+        validate_profiles(cells)
+        if checks.get("value_summary") != expected_summary:
+            raise ValueError("Value summary disagrees with raw evidence")
     if suite == "baseline":
         validate_baseline(checks.get("baseline_cells", []))
 

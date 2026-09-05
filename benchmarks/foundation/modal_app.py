@@ -243,3 +243,8 @@ def foundation_trainer():
 @app.local_entrypoint()
 def foundation_extensions():
     run_suite("extensions")
+
+
+@app.local_entrypoint()
+def foundation_value():
+    run_suite("value")
