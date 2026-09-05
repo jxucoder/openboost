@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "source_sha": "3101a4486034ff1848e764413ef50751a6b29678",
+  "source_dirty": false,
+  "wheel": "openboost-1.0.0rc1-py3-none-any.whl",
+  "wheel_sha256": "83f41ea79ef6f5af2c61b662570deba29292f667788d81776423371fae4a6284",
+  "uv_lock_sha256": "076f55ce347cae1071c902021b0e7b1b7ab4eec7eab4d95ad2a8f177d8cc9ca1",
+  "files": {
+    "test_smoke.py": "1e1eddf1f7e6ca4f4a744f426268e23da806241d0a32be9a83c720e12d28ea8d",
+    "conftest.py": "74551355ebf2a700cf28ebcf41e9826540f23309b1d0eb41e13a624e9924703f",
+    "pytest.ini": "3497504c3be101997137e28318681bdf533d7eb0f6d7b31e7206656b6308422d",
+    "requirements.txt": "9b2c6b9fe476b5c728deacf558d726437fc16e64998376e78f3676c41cbf0d4a"
+  },
+  "base_image": "nvidia/cuda@sha256:14c54fad24b376ab78a70e1ef6595a2b7c8cdbf187e4f9b76de99a926fb62460",
+  "python": "3.12",
+  "uv_version": "0.12.1",
+  "command": [
+    "uv",
+    "run",
+    "modal",
+    "run",
+    "benchmarks/foundation/modal_app.py::foundation_smoke"
+  ],
+  "gpu": "T4",
+  "timeout_s": 300,
+  "retries": 0,
+  "dataset": {
+    "generator": "numpy.default_rng",
+    "seed": 31,
+    "shape": [
+      256,
+      4
+    ],
+    "split": "smoke uses training data; no held-out quality claim"
+  },
+  "run_id": "20260905T080803Z-c5ced00e",
+  "modal_image_id": "im-r5q1SNasWZ2u2zWnaj3pn5",
+  "actual_command": [
+    "uv",
+    "run",
+    "--no-sync",
+    "modal",
+    "run",
+    "benchmarks/foundation/modal_app.py::foundation_smoke"
+  ]
+}

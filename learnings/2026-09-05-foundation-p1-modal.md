@@ -48,9 +48,21 @@ The host contract test initially failed collection because the implementation
 module did not exist; after implementation, all 12 tests passed. They exercise
 failure propagation and completeness, not GPU execution.
 
-Ruff checks/formatting cover the new support files. GPU execution and its
-artifact will be recorded after committing this independently tested harness
-and preparing a wheel from the resulting clean SHA.
+`uv run --no-sync ruff check src/openboost/ benchmarks/foundation
+tests/foundation tests/test_foundation_runner.py` passed, as did staged
+whitespace checks. The wheel was built from clean harness commit `3101a44`.
+
+The authorized single-T4 smoke completed successfully: **2 passed**, no skips,
+Modal CLI exit 0. Offline revalidation with `python -m
+benchmarks.foundation.runner` also passed. Raw evidence and reproduction:
+[20260905T080803Z-c5ced00e](../benchmarks/results/foundation/20260905T080803Z-c5ced00e/README.md).
+
+Verified 37 installed Python files against the wheel, device pointer/lifetime
+interop, 2 device objective calls and 4 native tree calls. Remote function wall
+time was 14.66 seconds (not billed GPU duration); pytest was 9.16 seconds.
+The T4 driver was 580.95.05. CuPy reported CUDA runtime 12.9 despite the pinned
+12.4 toolkit base; record runtime, toolkit and driver separately. Small-grid
+under-utilization warnings are expected for this smoke.
 
 ## Failed Attempts
 
@@ -58,16 +70,23 @@ and preparing a wheel from the resulting clean SHA.
   use its documented `uv_pip_install(requirements=[...])` API, confirmed by
   inspecting the installed SDK implementation.
 - The first lint found an import ordering issue in the host test; corrected.
+- Sandboxed wheel preparation could not resolve PyPI for hatchling. The same
+  clean-source preparation succeeded with the authorized network permission.
 
 ## Risks and Follow-ups
 
-- CUDA smoke is pending at the harness commit. P2 still owns weighted Hessian,
+- CUDA smoke passed for the harness commit. P2 still owns weighted Hessian,
   kernel fallback and full gradient/split/leaf/task parity checks.
 - Function wall time excludes image startup/build and is not billed GPU time.
+- The container reports architecture, visible CPU count and host RAM alongside
+  requested limits. Exact physical CPU model was not collected; add it to P2
+  performance provenance when available. No speed claim is made here.
 - The smoke's private imports/spies are test instrumentation; P6 external
   extension packages must use only the documented public API.
 
 ## Commits
 
 - `f7eaf25` — P0 integration baseline.
-- Harness code is committed before GPU evidence so the wheel has a clean SHA.
+- `3101a44` — harness implementation, independently verified before GPU use.
+- Raw GPU evidence is committed separately from its source to avoid circular
+  source hashes.
