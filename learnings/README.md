@@ -34,6 +34,10 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [OpenBoost v1 scope, releases and evaluation](2026-09-05-openboost-v1-plan.md) —
+  real v1 planning baseline; broad application coverage, current three-library
+  releases/plans, required capabilities and quantitative acceptance protocol.
+
 - [Foundation product and clean redesign](2026-09-05-agent-foundation-reset.md) —
   latest user direction, supersedes the earlier risk-first investment ordering;
   active F0–F5 plan, no backward compatibility requirement.

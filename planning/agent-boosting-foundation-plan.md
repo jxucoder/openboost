@@ -1,12 +1,25 @@
-# OpenBoost：面向 Agent 的 boosting 基座，从零设计与执行计划
+# OpenBoost v1：可编程 boosting 基座设计、执行与验收
 
-日期：2026-09-05。状态：**设计与执行计划，尚未实施新架构**。
+日期：2026-09-05。版本：**真正的 v1 规划基线**，由用户明确指定。
+状态：**计划已形成；新 v1 实现与 eval 尚未执行**。这里的 v1 是本次产品/架构目标，
+不是已有 PyPI 包版本或旧 P0–P7 工作已经完成 v1 的声明。
 代码审阅基线：`3ac1552`，分支：`codex/gpu-python-foundation-design`。
 
 本计划取代旧 GPU foundation 清单中的后续投资顺序，以及
 [ScoringBench 优先计划](impact-adoption-value-next.md)。旧实验及其失败结论仍有效。
 用户明确：foundation 是产品；use case 决定抽象；**不要求 backward compatibility，
 允许重写 API、trainer、内部表示和持久化格式**。本轮只规划，不启动重写或 GPU 作业。
+
+共同构成 v1 规格的文件：
+
+- 本文件：产品目标、范围、架构、工作依赖、阶段交付与完成定义。
+- [应用覆盖与案例契约](foundation-application-contracts.md)：应用维度与候选数据。
+- [验收与 eval](openboost-v1-evaluation.md)：E0–E7、量化门槛、对照、失败与结果协议。
+- [三大库最新 release 与公开 plans](boosting-release-review-2026-09-05.md)：带来源的
+  竞争事实、已发布/实验性/计划中状态，以及对 v1 的影响。
+
+保险、survival/AFT 是用户举例，**不是封闭清单或行业定位**。v1 的覆盖范围按
+不同算法决策、数据/目标语义及真实使用方式选取；不能每次只围绕最近一个例子设计。
 
 ## 1. 重新审视产品假设
 
@@ -41,6 +54,10 @@ Impact 看独立研究或实际决策中的复用；adoption 看独立完成与�
 - Py-Boost 明确提供 Python GPU boosting 和多种自定义能力，是基座方向的直接对照，
   不能只和 XGBoost/LightGBM 比较。
   [官方仓库](https://github.com/sb-ai-lab/Py-Boost)。
+- 当日正式版本为 XGBoost 3.4.1、CatBoost 1.2.10、LightGBM 4.7.0。XGBoost 3.4
+  已扩展 vector-leaf `hist`，CatBoost 已有 GPU custom objective，LightGBM 4.7
+  已发布新的 GPU 与数据互操作能力。具体版本、限制和公开后续工作见 release 核对，
+  不能沿用“对手完全封闭、没有多输出/自定义 GPU loss”的前提。
 
 以上是本日文档审阅，执行时仍须冻结实际版本并验证对应任务。机会在于改变算法的
 成本和可验证性，而不是声称别人没有扩展能力。对照允许使用现成 hook、外层循环，
@@ -67,8 +84,46 @@ Agent 修改都改善结果。提供可复现 baseline，用验证集选择，�
 当前 `fit_trees_batch` 已有共享 binned input 的顺序实现，应保留为语义参考，
 不能把新名字或重复封装当作 train-many 进展。
 
-除这四类外，留一个未参与接口设计的算法任务，检验是否只是为自己的示例量身定做。
+除这些设计探针外，保留两个未参与接口设计的算法任务，检验是否只是为自己的示例量身定做。
 最初允许用合成数据检验数学；采用与实际价值仍需要真实使用场景。
+
+另一个维度是 **真实应用**：分类、回归、ranking、分位数、计数/正值目标、删失、
+多输出、结构化模型与模型选择。保险/AFT 分别检验 offset/目标单位与删失语义；
+ranking 检验组内关系；分类检验 link/class mapping；多输出检验共享树与参数轴。
+算法结构 × 应用任务是设计矩阵，不要求第一轮运行全部笛卡尔积。
+
+### v1 最小交付范围
+
+这些是 v1 完成时的 required 能力；F1 可先完成小子集，但不能将它称为完整 v1。
+CPU 是独立参考与全部下列 recipe 的执行入口；GPU 按明确子集验收。
+
+| ID | Required recipe / 任务 | 最小行为与检验重点 | v1 CUDA 范围 |
+|---|---|---|---|
+| R1 | 标准回归、binary 与 multiclass | 平方误差/logistic/softmax；类别映射、权重、概率输出、缺失处理 | numeric dense（含数值缺失）required；原生类别输入 CUDA 可后续 |
+| R2 | Quantile / robust regression | 至少一个加权 quantile recipe；叶求解能读取 routed residual/weights，不能只接收 G/H | CPU required；CUDA optional 并显式声明 |
+| R3 | Group ranking | pairwise logistic 与 NDCG-weighted lambda 变体；group boundaries、pair generation 与 group metric | CPU required；CUDA optional |
+| R4 | Count / positive / aggregate targets | Poisson offset；Gamma/Tweedie 固定声明参数的均值 recipe；目标与 weights/exposure 分开 | Poisson offset required；Gamma/Tweedie optional |
+| R5 | Censored AFT | 一个固定噪声族/尺度，完整事件与右删失；规范 interval target，其他删失可拒绝 | 完整事件/右删失 numeric 路径 required |
+| R6 | Natural / distributional boosting | Normal 双参数，Fisher/普通方向、固定/回溯步长、proper-score 评价 | Normal numeric 路径 required |
+| R7 | FormulaBoost | 双参数 formula、link、结构输入、独立 Jacobian/方向，至少两轮 | CPU required；混合执行单列，不冒充全设备路径 |
+| R8 | Multi-output / vector leaf | 独立树与共享 topology/向量叶各一条；分裂统计可与叶求解统计不同 | numeric squared-error/对角统计路径 required |
+| R9 | Train-many | M=1/8/32，共享 prepared data，独立参数/种子/停止/失败，顺序参考 | 对兼容的 R1/R4/R8 组至少一条批量路径 required |
+
+| ID | 跨 recipe 的基础能力 | 完成标准 |
+|---|---|---|
+| C1 | Typed data / targets | numeric、数值 missing、CPU categorical；mapping/unseen policy；weights、offset、group、interval、structure inputs；仅训练集拟合预处理 |
+| C2 | 可组合 tree core | additive statistics + 至少一个额外统计；可改 split feasibility/score；depthwise、best-first、symmetric 三种 CPU policy；真实 routed rows |
+| C3 | 可替换弱学习器与叶求解 | scalar/vector payload；Newton 与 weighted quantile；输出 schema 与参数轴独立；一个自定义 split constraint |
+| C4 | Explicit runtime | scoped device/workspace/RNG，候选/接受/拒绝/停止语义，独立 run，明确 sync/transfer/fallback，无全局 backend 约束 |
+| C5 | Model artifacts | raw 与用户预测空间区别、类别 mapping、base/link/offset 约定、树/系数/向量叶、新版本 persistence、可读诊断 |
+| C6 | Evaluation / authoring | 独立 oracle、5 类算法修改、2 个未见任务、真实任务、完整失败记录和 wheel 外部包验证 |
+| C7 | 可用工作流 | 安装→baseline→读/改 recipe→验证→保存/加载→CPU 推理；能力表、错误定位、可复现实验 |
+
+Native categorical v1 可选定一种可验证的分裂方法；不要求复刻 CatBoost ordered
+boosting/全部 CTR 组合。CSR/CSC 稀疏数据、文本/embedding 特征、完整 Cox/竞争风险/
+截断生存、全部约束、线性叶、DART/GOSS、分布族目录、自动微分编译器、Ray、多 GPU、
+out-of-core 等进入有理由的后续清单；不能默默接受相应参数。
+F0 必须记录这些能力在三大库中的状态以及 v1 不实现的原因，保持边界可扩展。
 
 ## 3. 推荐架构：可直接编程的算法 + 明确状态 + 批量算子
 
@@ -118,11 +173,15 @@ feasibility → choose → partition → solve leaves。作者既能替换一段
   component 定义，不能随调度顺序变化。实现不要求每次复制完整数据或模型。
 - **共享统计可扩展。** 先支持 G/H/count 和一个额外的可加统计通道例子；声明 shape、
   dtype、归约含义、内存预算和支持的 score。暂不承诺任意 Python reducer 都能加速。
+- **叶求解不限于加法统计。** Weighted quantile 等规则需要 routed rows/residuals；
+  用显式 row view 或声明的额外统计提供，不强迫它伪装成二阶 Newton 更新。
+- **Objective 可有样本间依赖。** Ranking 的 query/pair、Cox 的风险集等不能被
+  逐样本独立协议排除；方向计算与树的 per-row 归约接口是不同边界。
 - **模型轴与参数轴分开。** 一个 run 可有 K 个参数；M 个 run 可各自有不同 K、树数、
   配置和停止状态。先用独立 state 列表，兼容组再打包，不强制巨大的 M×N×K 张量。
 - **弱学习器与参数更新分开。** 弱学习器声明输出 schema，recipe 决定映射到哪些
-  参数；runtime 不要求“一棵树等于一个 channel”。树拓扑与叶 payload 分离，先实现
-  标量叶；共享拓扑/vector leaf 的需求可增加 payload，而非推翻整个训练状态。
+  参数；runtime 不要求“一棵树等于一个 channel”。树拓扑与叶 payload 分离；
+  标量叶可先实现，但 v1 必须用 R8 的真实 vector-leaf recipe 验证，不能只留设计空间。
 - **数据复用有身份。** 只有训练行、分箱策略、影响分箱的权重及元数据等一致才共享
   prepared data。不得跨验证折用全量数据分箱。样本索引、结构输入和权重必须对齐。
 - **推理是显式能力。** 标准树/raw 参数可由核心 reader 推理；自定义 formula/link
@@ -171,45 +230,67 @@ CPU 是可安装的入口和独立参考，不应到最后才考虑设备执行�
 ### F0：先写“必须能够写出的算法”与判卷标准
 
 - [ ] **F0.1 — 任务卡与替代方案审计。** 新建 `planning/foundation-tasks.md`：
-  固定四类 recipe 的输入/输出、两轮状态变化、支持边界和独立验收。
+  从四类结构探针出发，固定全部 required recipes 的输入/输出、两轮状态变化、
+  支持边界和独立验收。
   明确 incumbent 的现成接口、可修改源码的路径及其成本；尤其纳入 Py-Boost。
-- [ ] **F0.2 — 原始 NumPy 参考与反例。** 新建 `tests/foundation_v2/reference/`，
+  按 R1–R9 / C1–C7 形成矩阵，涵盖应用契约中的不同任务。保险与 AFT 是其中的
+  语义探针；写清 release 已发布/计划中状态、scope 排除理由与数据/目标/评价。
+  交付任务卡 + 简短接口草图；每项需求能映射到 E0–E6，不再新增一套空泛路线图。
+- [ ] **F0.2 — 原始 NumPy 参考与反例。** 新建 `tests/v1/reference/`，
   独立枚举 split/逐样本归约/小矩阵求解，不导入待测 production 算法。
   写可失败的手算 fixture：重复阈值 tie、空/零权重子节点、非法候选、拒绝更新、
   参数更新次序，以及两个 run 交换执行顺序。标准 GBDT 与外部库比较时区分
   binning/并列选择差异；不能强求不同算法的整棵树逐位相等。
-- [ ] **F0.3 — 冻结比较协议。** 新建 `benchmarks/foundation_v2/protocol.md`：
+  加入 exposure offset/权重各施加一次、预测单位，以及事件密度和删失概率的独立
+  loss/导数参考；边界标签中的合法无穷大不能被通用 finite-vector 校验误拒绝。
+- [ ] **F0.3 — 冻结并实现比较协议。** 新建 `benchmarks/v1/` 的 manifest/runner/判卷器：
   固定库/Agent 版本、任务、公开示例与保留任务、预算、正确性容差、质量门槛、
   CPU/GPU 环境与预期结果矩阵。先用旧代码/参考跑 baseline，声明成本预算再测新代码。
-  不继承过时阶段的“完成”标记。
+  落实 [E0–E7 协议](openboost-v1-evaluation.md)，用缺项/污染缓存/失败记录验证判卷器。
+  v1 主基线固定三大库新 release，先 CPU capability smoke，再预检合适的 GPU 变体。
+  不继承过时阶段的“完成”标记。实际资源预算/数据 hash 未冻结时不能启动完整评测。
 
-首轮任务选择：一个现成工具擅长的控制任务（新增 loss/分布）；一个真正深入组件的
+首轮开发探针包括：一个现成工具擅长的控制任务（新增 loss/分布）；一个深入组件的
 任务（候选 split 必须满足各预定义 cohort 的最小 information mass，参考逐候选
 枚举，`information_weight` 与训练 sample weight 分开）；一个更新过程任务
 （对多参数候选做有界回溯并正确拒绝）。第二项是统计稳定性实验，不宣称算法创新
 或真实需求已证实。若现成工具已轻松满足，也记录这一结果，不临时加难度。
+完整 E2/E5 覆盖还包括叶求解和 run scheduling；上述探针不替代五类修改 eval。
 
 F0 出口：任务可判对错、比较对象公平、修改目标明确；还没有理由建立一套大框架。
 最先三个提交就是 F0.1、F0.2、F0.3，禁止夹带模型迁移或 kernel 优化。
 
-### F1：最小 CPU 基座，同时接受四类结构检验
+### F1：CPU 基座，先闭合小路径，再完成 v1 覆盖
 
 - [ ] **F1.1 — data/run/artifact 语义。** 显式 device/run identity，唯一权重语义，
   参数与模型轴、候选提交/拒绝、独立 RNG、输入所有权及新版本模型表示。
   用 F0 的 state fixtures 验证，不先搬迁全部旧模型。
 - [ ] **F1.2 — 可组合建树。** 实现 aggregate、候选统计、score/feasibility、
   partition、leaf solve 与 predict；把两种 growth policy 写成普通 Python。
-  先 numeric、有权重、标量常数叶；缺失/类别等未支持项显式拒绝。
+  先 numeric、有权重、标量常数叶形成最小提交，再完成 C1 的数值缺失/CPU 类别支持。
+  独立的 symmetric policy 复用统计/route；不先复制三套完整 builder。
   额外 information mass 能通过同一统计/分裂管线使用，不能在 trainer 特判任务名。
 - [ ] **F1.3 — 两个完整小 recipe。** 标准二阶 GBDT 和双参数 Normal；后一项包含
   固定步长及接受/拒绝。至少两轮，比较中间状态、最终预测与新格式保存/加载。
 - [ ] **F1.4 — 两个早期结构探针。** Formula 两轮含结构输入与参数链接；train-many
   先 M=1/2，再 M=8 的独立状态，含不同停止轮数与一个 run 失败的记录。
   故障不能污染其他 run，最终汇总不能隐去失败。按稳定 run ID 改变排列验证结果。
+- [ ] **F1.5 — 应用语义探针。** 同一基座组合 Poisson + log-exposure offset 与
+  固定噪声尺度的右删失 AFT，各至少两轮并验证推理/新格式 round trip。AFT 事件与
+  删失走不同 likelihood 项；interval/left censoring 首版若未支持须显式拒绝。
+  若必须修改通用 runner 才能传入这些标签或 offset，先修正 Problem/state 边界。
+- [ ] **F1.6 — 完整 CPU 覆盖。** 补齐 binary/multiclass、group ranking、weighted
+  quantile、Gamma/Tweedie 均值 recipe、vector leaf；分拆为各自验证的提交。新状态、
+  类别 mapping、输出语义及推理跨进程保存验证，完成 R1–R9 与 C1–C5 的 CPU cells，
+  提供 C6/C7 的本地执行入口；Agent 比较和干净环境交付分别留给 F2、F5。
 
-F1 出口：四类用法能通过相同语义组件表达。若 Formula 或 train-many 要绕开核心
-状态语义，先修改设计，不能称“以后再支持”而冻结接口。只证明小路径，不承诺
-完整 XGBoost、LightGBM 或 NGBoost 功能/速度相同。
+F1 出口：required CPU recipes 能通过相同语义组件表达。若 Formula 或 train-many
+要绕开核心状态语义，先修改设计，不能称“以后再支持”而冻结接口。不承诺完整
+XGBoost、LightGBM 或 NGBoost 功能/速度相同。
+F1.5 与 F1.6 也必须通过才能冻结 v1 CPU 接口；更广删失支持及真实质量单独记账。
+验收对应 E0 的 CPU 子集、E1、E2；先完成 F1.1–F1.3 只算最小架构里程碑。
+F2.1 的发现性试用在 F1.3 后即可开始，避免补齐全部 recipe 后才发现边界难用；
+F2.2 的正式比较仍等待所需 CPU 能力完整、接口与判卷器冻结。
 
 ### F2：Agent 改算法试验，决定接口是否值得固化
 
@@ -223,9 +304,10 @@ F1 出口：四类用法能通过相同语义组件表达。若 Formula 或 trai
   它就转成开发集，不能继续声称该任务是未见验证。独立 verifier 与最终评价记录
   不由候选实现覆写。小样本是方向性证据，不宣称统计显著或外部 adoption。
 
-F2 出口：至少一个超出现成配置的正确修改具有可观察的工作量收益，并保留控制任务
-的比较结果；若优势只来自文档或任务提示，应先修文档再公平重测。若持续必须修改
-core，说明抽象不合适；不是补更多包装后自动通过。
+F2 出口以 E5 为准：5 类开发题、2 个保留题、固定尝试数和预算，正确率与至少两类
+深层修改的成本收益均达标，并保留控制任务的比较结果。若优势只来自文档或任务
+提示，应先修文档再公平重测。若持续必须修改 core，说明抽象不合适；不是补更多
+包装后自动通过。接口语义改变后重跑受影响的 eval。
 
 ### F3：让已证明有用的组合在单 GPU 上成立
 
@@ -241,6 +323,9 @@ core，说明抽象不合适；不是补更多包装后自动通过。
 F3 出口：同一算法的可组合实现与优化实现语义一致，达到冻结工作负载预算。
 用已允许的 Modal 做有超时和完整 provenance 的有界运行。未通过可保留 CPU 研究
 价值，但不得宣传 GPU 成本优势，也不靠移除验证掩盖结构性开销。
+最终完成 R1/R4/R5/R6/R8 的 required CUDA 子集、R9 批量执行与 E4；性能门槛和
+全部同步/传输成本不能以单个 kernel 的加速比代替。CUDA optional 的 recipe 单列
+其 CPU 结果与设备状态。
 
 ### F4：真实 use case 与独立采用
 
@@ -250,13 +335,17 @@ F3 出口：同一算法的可组合实现与优化实现语义一致，达到�
 - [ ] 从有实际使用理由的 recipe 选一个真实数据任务；分布模型可用 ScoringBench，
   Formula 需要明确结构假设；train-many 需要完整模型选择成本。使用强 baseline、
   预注册质量指标、独立测试集、重复种子/折，发布失败到本地原始 artifact。
+  按 E3 完成至少8个真实任务单元、至少6个独立来源，覆盖分类、回归、ranking、
+  quantile、多输出、count/positive、survival。保险与 AFT 不能替代其余覆盖。
 - [ ] 准备作者可直接安装的 wheel、recipe 源码、最小复现、组件契约与诊断实例。
   第三方定义的任务价值高于继续添加自己编写的 demo。
 - [ ] 经用户授权联系后，让至少两名外部作者尝试，其中一人完成自己的方法并在
   后续任务复用。记录完成、阻碍和复用原因；当前没有外部尝试或留存证据。
 
-F4 出口：有具体作者愿意重复使用，并有一个可复现的实际收益。内部 Agent 成功
-不是 outside adoption；无需等待全生态、所有模型或完美 benchmark 才准备试用材料。
+F4 有两个独立出口：工程质量子任务按 E3 验收；外部采用按 E7 检验具体作者的
+重复使用与可复现收益。内部 Agent 成功不计 outside adoption；无需等待全生态、
+所有模型或完美 benchmark 才准备试用材料。不能把未获授权的外联当作其他工程
+任务的阻塞，也不能在 E7 未通过时声称已经验证采用。
 
 ### F5：依据证据稳定产品边界
 
@@ -265,6 +354,19 @@ F4 出口：有具体作者愿意重复使用，并有一个可复现的实际�
   不要求保留旧 import/signature/文件格式。旧行为通过历史版本复现。
 - [ ] 确认安装→运行 baseline→改算法→验证→保存/推理的完整路径；同步公共文档。
   公共 README 在实现通过前不能提前描述为已具备新架构。
+
+### v1 完成定义与依赖
+
+主依赖：F0 → F1 → F2 → F3 → F5；F4 的真实 baseline 准备可在 F0 开始，正式质量
+在相关 recipe 稳定后执行，外部试用可在 F2 后独立推进。
+每阶段 commit 附对应 E-gate、原始记录和未完成单元。F5 检查 E0–E6 全部 required
+通过才称“工程 v1 完成”；E7 单列，决定能否声称外部 adoption/impact。
+每个大阶段末重看任务与 component 的复用关系，不仅检查完成了多少函数。
+
+计划中的新增实现目录以公共模块/普通函数组织：data/targets、stats/ops、tree、
+runtime、recipes、artifacts；F0 用最小调用示例确定精确命名。可替换现有私有模块，
+无需永久维护 v1/v2 两套 trainer。测试在 `tests/v1/`，评测在 `benchmarks/v1/`；
+旧 baseline 通过固定历史 wheel/revision 复现，不为兼容旧调用牺牲新设计。
 
 ## 6. 执行纪律与停止条件
 
@@ -290,7 +392,9 @@ F4 出口：有具体作者愿意重复使用，并有一个可复现的实际�
 
 给后续执行模型的起始任务：
 
-> 先读 AGENTS.md、此计划和 foundation-reset learning。执行 F0.1：形成四类任务卡，
+> 先读 AGENTS.md、此计划、eval 协议、release 核对、应用契约和 v1 planning learning。
+> 执行 F0.1：形成
+> R1–R9/C1–C7 任务矩阵，使用最新三大库核对，覆盖不同应用及五类算法修改，
 > 核对最合适的替代方案，明确每项算法改动的输入、输出与判错条件。不维护旧 API
 > 兼容，不提前重写内核。检查链接与事实后提交；随后按 F0.2 建独立数学参考，
 > F0.3 冻结比较协议。每次提交报告通过与未验证的部分，保留失败结果。

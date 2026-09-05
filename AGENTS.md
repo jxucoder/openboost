@@ -12,9 +12,20 @@ verified CPU/CUDA execution reduce the cost of making a correct algorithm change
 Standard GBDT, NaturalBoost/NGBoost-style methods, FormulaBoost, and train-many
 are use cases that determine and test the foundation's abstraction boundaries.
 Distributional risk modeling remains an important use case, not the sole product.
+Real applications shape the design alongside algorithm families: classification,
+regression, ranking, quantiles, multi-output, counts/positive targets, survival,
+structured models and model selection. Insurance and survival/AFT are examples,
+not a closed application list or a vertical-only mission. See
+[application contracts](planning/foundation-application-contracts.md).
 
-The active design and execution order is
+The user designates this planning round as the real **OpenBoost v1**. Its active
+design and execution order is
 [`planning/agent-boosting-foundation-plan.md`](planning/agent-boosting-foundation-plan.md).
+Required scope is R1–R9/C1–C7; acceptance and quantitative evaluation are in
+[`planning/openboost-v1-evaluation.md`](planning/openboost-v1-evaluation.md).
+Use the [current release/plan review](planning/boosting-release-review-2026-09-05.md)
+for XGBoost, CatBoost and LightGBM baselines; distinguish shipped features from
+experimental capabilities, maintainer plans and feature requests.
 The user explicitly permits a clean redesign: existing APIs, trainers, internal
 representations, and persistence formats need not remain backward compatible.
 Preserve mathematical correctness cases and reproducible evidence, not obsolete
