@@ -180,9 +180,19 @@ uses bound=0.5 and tau=1 without tuning; its math differs and its quality/cost
 is reported separately. Strict CUDA eval/callbacks remain unsupported; the P2
 eval cells have no strict-GPU performance counterpart.
 
-A separate fifth fit records cProfile host attribution, named transfer wrappers
-and device-wide used memory sampled every 5 ms. Inclusive times and nested
+A separate fifth fit records cProfile host attribution and named transfer wrappers;
+a sixth memory-only fit samples device-wide used memory every 5 ms. Inclusive times and nested
 wrapper counts overlap; they are not kernel times or a complete transfer audit.
 Sampled memory is a lower bound including contexts and allocator caches, not an
 exact per-fit peak. CuPy pool figures exclude Numba allocations. A CUDA trace is
 still a separate evidence gap. Report T4 seconds, not inferred billing dollars.
+
+
+The original P7 value run used concurrent profiling/sampling; its cProfile times
+were contaminated by the sampler and remain retained with that limitation.
+`prepare --suite value_profile` / `foundation_value_profile` collect only seed 0
+for the four strategies, one compile warmup then isolated host and memory fits.
+The 600-second diagnostic job does not replace the original timing matrix.
+It checks quality against that committed parent result, carries its hash, and
+adds synchronized inclusive boundary timers. Nested timers overlap and include
+synchronization overhead; they are diagnostic, not production latency claims.

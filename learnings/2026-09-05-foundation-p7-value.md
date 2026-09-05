@@ -70,3 +70,18 @@ A+B+C changes the math, so it gets a separate quality/cost report.
   causal attribution. Preserve them and collect isolated host profiles next.
 - Sampled memory delta zero is an allocator/context observation, not zero peak
   memory. CUDA trace and exact peak remain gaps. No billing dollars inferred.
+
+## Isolated profiling repair
+
+- Split host profiling and memory sampling into separate fits. Add explicit
+  synchronized inclusive objective/builder/session timers; their nested times
+  overlap and synchronization overhead remains diagnostic-only.
+- Add a 600-second, seed-0/four-strategy profile-only suite referencing the
+  immutable original timing artifact/hash and checking unchanged quality.
+- Focused tests: 27 passed. The new isolation test checks that the memory phase
+  is absent from recorded profiler calls; Python 3.12 cProfile does not expose
+  its monitoring state through sys.getprofile, so that initial test was replaced
+  by direct recorded-call evidence. An incomplete-profile-matrix test first
+  failed and now passes after enforcing exactly four seed-0 cells.
+- Standalone CPU profile worker passed; production/harness lint and original
+  matrix's offline validation passed. No core/plugin modifications.

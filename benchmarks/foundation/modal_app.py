@@ -248,3 +248,8 @@ def foundation_extensions():
 @app.local_entrypoint()
 def foundation_value():
     run_suite("value")
+
+
+@app.local_entrypoint()
+def foundation_value_profile():
+    run_suite("value_profile")

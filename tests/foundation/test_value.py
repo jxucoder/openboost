@@ -14,7 +14,7 @@ pytestmark = pytest.mark.gpu
 
 def test_value_matrix(checks):
     from dataset import describe
-    from value_protocol import STRATEGIES, summarize
+    from value_protocol import STRATEGIES, summarize, validate_profiles
 
     root = Path(__file__).resolve().parent
     manifest = json.loads((root / "manifest.json").read_text())
@@ -23,7 +23,8 @@ def test_value_matrix(checks):
     cells = checks["value_cells"] = []
     checks["frozen_baseline_cells"] = frozen
     checks["unsupported_comparisons"] = ["strict CUDA eval/callbacks"]
-    for seed in (0, 1, 2):
+    profile_only = manifest["suite"] == "value_profile"
+    for seed in (0,) if profile_only else (0, 1, 2):
         for strategy in STRATEGIES:
             with tempfile.TemporaryDirectory() as temp:
                 output = Path(temp) / "cell.json"
@@ -35,6 +36,8 @@ def test_value_matrix(checks):
                     str(root / "cal_housing.tgz"),
                     str(output),
                 ]
+                if profile_only:
+                    argv.append("--profile-only")
                 try:
                     run = subprocess.run(
                         argv,
@@ -64,4 +67,20 @@ def test_value_matrix(checks):
                     )
                 cells.append(cell)
     # Do not assert quality/speed pass: regressions must survive in the artifact.
-    checks["value_summary"] = summarize(cells, frozen)
+    if profile_only:
+        import numpy as np
+
+        parent = json.loads((root / "value_parent.json").read_text())["checks"]["value_cells"]
+        for cell in cells:
+            old = next(c for c in parent if c["seed"] == 0 and c["strategy"] == cell["strategy"])
+            for key in ("nll", "crps", "coverage90"):
+                np.testing.assert_allclose(
+                    cell["records"][0]["metrics"][key],
+                    old["records"][1]["metrics"][key],
+                    rtol=1e-4,
+                    atol=1e-5,
+                )
+        checks["profile_quality_matches_parent"] = True
+        validate_profiles(cells, profile_only=True)
+    else:
+        checks["value_summary"] = summarize(cells, frozen)

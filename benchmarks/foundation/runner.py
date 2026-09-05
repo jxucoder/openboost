@@ -37,7 +37,7 @@ def validate_result(manifest, result):
             required.add("test_strict_extension_trainer")
     elif suite == "extensions":
         required.add("test_installed_gpu_extensions")
-    elif suite == "value":
+    elif suite in ("value", "value_profile"):
         required.add("test_value_matrix")
     elif suite != "smoke":
         raise ValueError("Unknown evidence suite")
@@ -106,14 +106,19 @@ def validate_result(manifest, result):
         inference = json.loads(uninstall.get("inference_stdout", "{}"))
         if inference != {"extensions_absent": True, "exact_cpu_roundtrips": 9}:
             raise ValueError("Missing plugin-free CPU inference evidence")
-    if suite == "value":
+    if suite in ("value", "value_profile"):
         from benchmarks.foundation.value_protocol import summarize, validate_profiles
 
         cells = checks.get("value_cells", [])
-        expected_summary = summarize(cells, checks.get("frozen_baseline_cells", []))
-        validate_profiles(cells)
-        if checks.get("value_summary") != expected_summary:
-            raise ValueError("Value summary disagrees with raw evidence")
+        if suite == "value_profile":
+            if not manifest.get("profile_parent", {}).get("results_sha256") or checks.get("profile_quality_matches_parent") is not True:
+                raise ValueError("Missing original timing reference")
+            validate_profiles(cells, profile_only=True)
+        else:
+            expected_summary = summarize(cells, checks.get("frozen_baseline_cells", []))
+            validate_profiles(cells)
+            if checks.get("value_summary") != expected_summary:
+                raise ValueError("Value summary disagrees with raw evidence")
     if suite == "baseline":
         validate_baseline(checks.get("baseline_cells", []))
 

@@ -94,8 +94,13 @@ def summarize(cells, frozen):
     }
 
 
-def validate_profiles(cells):
+def validate_profiles(cells, *, profile_only=False):
     """Reject a green matrix without the promised separate profile evidence."""
+    if profile_only and (
+        len(cells) != 4
+        or {(c["seed"], c["strategy"]) for c in cells} != {(0, s) for s in STRATEGIES}
+    ):
+        raise ValueError("Incomplete isolated profile matrix")
     for cell in cells:
         if (
             cell.get("config") != CONFIG
@@ -103,12 +108,10 @@ def validate_profiles(cells):
             or cell.get("split_sizes") != [12384, 4128, 4128]
         ):
             raise ValueError("Value configuration changed")
-        if [r.get("phase") for r in cell["records"]] != [
-            "process_first",
-            "warm_1",
-            "warm_2",
-            "warm_3",
-        ]:
+        expected_phases = (
+            ["untimed_warmup"] if profile_only else ["process_first", "warm_1", "warm_2", "warm_3"]
+        )
+        if [r.get("phase") for r in cell["records"]] != expected_phases:
             raise ValueError("Value repetition order changed")
         profile = cell.get("profile", {})
         if (
@@ -117,6 +120,11 @@ def validate_profiles(cells):
             or profile["wall_s"] <= 0
         ):
             raise ValueError("Missing separate profile")
+        if profile_only and (
+            profile.get("isolated_host_profile") is not True
+            or not profile.get("synchronized_inclusive_timers")
+        ):
+            raise ValueError("Missing isolated host profile")
         expected_device = "cpu" if cell["strategy"] == "legacy_cpu" else "cuda"
         if any(r.get("actual_device") != expected_device for r in cell["records"]):
             raise ValueError("Unexpected execution device")

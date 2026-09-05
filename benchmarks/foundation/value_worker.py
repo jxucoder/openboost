@@ -21,7 +21,7 @@ else:
     from dataset import load_housing, split_indices
 
 
-def run_cell(strategy, seed, archive, output=None):
+def run_cell(strategy, seed, archive, output=None, profile_only=False):
     import openboost as ob
     from openboost.experimental import Booster, DistributionObjectiveAdapter, TrainerConfig
 
@@ -82,7 +82,10 @@ def run_cell(strategy, seed, archive, output=None):
     )
     previous = None
     with ob.backend_context(backend):
-        for phase in ("process_first", "warm_1", "warm_2", "warm_3"):
+        phases = (
+            ("untimed_warmup",) if profile_only else ("process_first", "warm_1", "warm_2", "warm_3")
+        )
+        for phase in phases:
             model = create()
             with warnings.catch_warnings(record=True) as caught:
                 warnings.simplefilter("always")
@@ -127,56 +130,52 @@ def run_cell(strategy, seed, archive, output=None):
 
 def profile_fit(model, X, y, backend, sync):
     """Host attribution and sampled device-wide memory, never a CUDA trace."""
-    memory = {"scope": "not applicable to CPU"}
-    stop = threading.Event()
-    samples, errors = [], []
-    thread = None
-    if backend == "cuda":
-        import cupy as cp
+    # No sampling thread while cProfile runs. CUDA/Cython tracing can mix thread
+    # events into its call accounting; separate fit avoids that contamination.
+    from contextlib import ExitStack
+    from unittest.mock import patch
 
-        sync()
-        free, total = cp.cuda.runtime.memGetInfo()
-        initial = total - free
-        samples.append(initial)
+    import openboost._trainer as trainer
+    from openboost._objectives import DistributionObjective
+    from openboost.experimental import LevelWiseBuilder
+    from openboost.experimental._device import DeviceExtensionSession, DeviceObjectiveBridge
 
-        def sample():
+    wall_timers = {}
+
+    def timed(label, original):
+        def wrapper(*args, **kwargs):
+            sync()
+            before = time.perf_counter()
             try:
-                with cp.cuda.Device(0):
-                    while not stop.is_set():
-                        free_now, total_now = cp.cuda.runtime.memGetInfo()
-                        samples.append(total_now - free_now)
-                        stop.wait(0.005)
-            except Exception as exc:
-                errors.append(type(exc).__name__ + ": " + str(exc))
+                return original(*args, **kwargs)
+            finally:
+                sync()
+                entry = wall_timers.setdefault(label, dict(calls=0, inclusive_s=0.0))
+                entry["calls"] += 1
+                entry["inclusive_s"] += time.perf_counter() - before
 
-        thread = threading.Thread(target=sample, daemon=True)
-        thread.start()
+        return wrapper
+
     profiler = cProfile.Profile()
-    started = time.perf_counter()
-    try:
-        profiler.enable()
-        model.fit(X, y)
+    with ExitStack() as stack:
+        for owner, name, label in (
+            (DistributionObjective, "step", "legacy_objective"),
+            (DeviceObjectiveBridge, "step", "extension_objective_boundary"),
+            (DeviceExtensionSession, "build", "extension_tree_boundary"),
+            (LevelWiseBuilder, "build", "levelwise_builder"),
+            (trainer, "fit_tree_gpu_native", "legacy_native_tree"),
+        ):
+            stack.enter_context(patch.object(owner, name, timed(label, getattr(owner, name))))
         sync()
-    finally:
-        profiler.disable()
-        stop.set()
-        if thread:
-            thread.join(timeout=5)
-    elapsed = time.perf_counter() - started
-    if backend == "cuda":
-        memory = dict(
-            scope="5 ms sampled device-wide usage during separate warm profile fit; includes contexts/other allocations; lower bound, not exact per-fit peak",
-            initial_used_bytes=initial,
-            total_bytes=total,
-            sampled_peak_used_bytes=max(samples),
-            sampled_peak_delta_bytes=max(samples) - initial,
-            samples=len(samples),
-            errors=errors,
-            cupy_pool_used_bytes=cp.get_default_memory_pool().used_bytes(),
-            cupy_pool_total_bytes=cp.get_default_memory_pool().total_bytes(),
-        )
-        if errors or thread.is_alive():
-            raise RuntimeError("Memory sampler failed")
+        started = time.perf_counter()
+        try:
+            profiler.enable()
+            model.fit(X, y)
+            sync()
+        finally:
+            profiler.disable()
+        elapsed = time.perf_counter() - started
+    memory = sample_memory_fit(model, X, y, backend, sync)
     stats = pstats.Stats(profiler).stats
     rows = [
         dict(
@@ -208,6 +207,9 @@ def profile_fit(model, X, y, backend, sync):
     ]
     return dict(
         wall_s=elapsed,
+        isolated_host_profile=True,
+        synchronized_inclusive_timers=wall_timers,
+        timer_scope="separate profile fit with synchronized nested boundaries; overlaps and synchronization overhead, not production timing",
         memory=memory,
         top_host_functions=rows[:40],
         path_functions=path_functions,
@@ -219,6 +221,50 @@ def profile_fit(model, X, y, backend, sync):
     )
 
 
+def sample_memory_fit(model, X, y, backend, sync):
+    if backend != "cuda":
+        return {"scope": "not applicable to CPU"}
+    import cupy as cp
+
+    sync()
+    free, total = cp.cuda.runtime.memGetInfo()
+    initial = total - free
+    stop = threading.Event()
+    samples, errors = [initial], []
+
+    def sample():
+        try:
+            with cp.cuda.Device(0):
+                while not stop.is_set():
+                    f, t = cp.cuda.runtime.memGetInfo()
+                    samples.append(t - f)
+                    stop.wait(0.005)
+        except Exception as exc:
+            errors.append(type(exc).__name__ + ": " + str(exc))
+
+    thread = threading.Thread(target=sample, daemon=True)
+    thread.start()
+    try:
+        model.fit(X, y)
+        sync()
+    finally:
+        stop.set()
+        thread.join(timeout=5)
+    if errors or thread.is_alive():
+        raise RuntimeError("Memory sampler failed")
+    return dict(
+        scope="separate memory-only warm fit, no cProfile; 5 ms device-wide samples including contexts/caches; lower bound, not exact per-fit peak",
+        initial_used_bytes=initial,
+        total_bytes=total,
+        sampled_peak_used_bytes=max(samples),
+        sampled_peak_delta_bytes=max(samples) - initial,
+        samples=len(samples),
+        errors=errors,
+        cupy_pool_used_bytes=cp.get_default_memory_pool().used_bytes(),
+        cupy_pool_total_bytes=cp.get_default_memory_pool().total_bytes(),
+    )
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -227,7 +273,12 @@ if __name__ == "__main__":
     parser.add_argument("seed", type=int)
     parser.add_argument("archive")
     parser.add_argument("output")
+    parser.add_argument("--profile-only", action="store_true")
     args = parser.parse_args()
     Path(args.output).write_text(
-        json.dumps(run_cell(args.strategy, args.seed, args.archive, args.output), indent=2) + "\n"
+        json.dumps(
+            run_cell(args.strategy, args.seed, args.archive, args.output, args.profile_only),
+            indent=2,
+        )
+        + "\n"
     )

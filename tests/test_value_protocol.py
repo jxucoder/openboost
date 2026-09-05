@@ -102,3 +102,31 @@ def test_missing_profile_or_wrong_device_rejected():
     cell["profile"]["memory"]["sampled_peak_used_bytes"] = 101
     with pytest.raises(ValueError, match="memory"):
         validate_profiles([cell])
+
+
+def test_memory_sampling_runs_after_host_profiler_is_disabled(monkeypatch):
+    from benchmarks.foundation import value_worker
+
+    seen = []
+
+    class Model:
+        def fit(self, X, y):
+            seen.append("profile_fit")
+
+    def memory(model, X, y, backend, sync):
+        seen.append("memory_fit")
+        return {"scope": "test"}
+
+    monkeypatch.setattr(value_worker, "sample_memory_fit", memory)
+    result = value_worker.profile_fit(Model(), None, None, "cpu", lambda: None)
+    assert seen == ["profile_fit", "memory_fit"]
+    assert result["isolated_host_profile"] is True
+    names = {r["function"] for r in result["top_host_functions"]}
+    assert "fit" in names and "memory" not in names
+
+
+def test_isolated_profile_matrix_cannot_be_incomplete():
+    from benchmarks.foundation.value_protocol import validate_profiles
+
+    with pytest.raises(ValueError, match="Incomplete isolated"):
+        validate_profiles([], profile_only=True)
