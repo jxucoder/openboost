@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1、P2、P3 已完成；P4.1–P4.3 已完成，下一项 P4.4。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0、P1、P2、P3 已完成；P4.1–P4.4 已完成，下一项 P6 的 CPU 独立扩展 wheel 验证。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -214,9 +214,16 @@ CPU 已经由实际 trainer 接入 root builder；GPU 目前是两轮 primitive 
 - 公开 leaf rule 返回同设备数组。bounded leaf 的值与下一轮梯度都要改变。
 - 测不发生 grad/hess/node IDs 的下载，完整 histogram 不落 host。
 
-**P4.4 — LevelWiseBuilder assembly。**
+**P4.4 — LevelWiseBuilder assembly。已完成。**
 
-- 将以上 primitive 组成默认实验 builder，树完成后只下载紧凑 tree arrays。
+`e02403b`：120 项相关 CPU 测试通过；真实 T4 6 passed / 0 skipped。
+[原始证据](../benchmarks/results/foundation/20260905T163823Z-7b16b556/README.md)
+覆盖整棵树独立参考、设备缓存生命周期、16/4097 行两轮双 channel 和 CPU 加载预测。
+该 builder 可显式选择；为保留已有 CPU 参数边界，CPU 默认 builder 不替换。
+GPU 验证为直接 builder 组合，完整 GPU Booster.fit 仍待 P5。
+
+
+- 将以上 primitive 组成可显式选择的实验 builder，树完成后只下载紧凑 tree arrays。
 - 保留 device prediction cache；默认 stream/视图生命周期测试覆盖一次 fit 后预测、释放临时 buffers。
 - CPU/CUDA 上先验证一棵树、两轮两 channel，再扩大 n；不在这一步新写 vector leaves 或 leaf-wise。
 

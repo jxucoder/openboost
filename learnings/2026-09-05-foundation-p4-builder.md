@@ -49,7 +49,7 @@ path, not a validated default replacement or speed optimization.
 
 ## Risks and Follow-ups
 
-- CUDA assembly is pending real T4 verification at the implementation commit.
+- CUDA assembly passed the bounded real T4 suite below; full GPU trainer remains P5.
 - Only numeric L2/full sampling/default stream; fixed full slots may cost time.
 - Synthetic CPU/CUDA NLL/CRPS agreement is a numerical test, not external quality,
   speed or adoption evidence. CPU default is intentionally not broadened/replaced.
@@ -59,3 +59,16 @@ path, not a validated default replacement or speed optimization.
 ## Commits
 
 - `7dfeba4` — P4.3 frozen T4 evidence.
+
+## Frozen real-device evidence
+
+- `e02403b` implementation: real T4 6 passed / 0 skipped, pytest 25.22 s.
+- [Raw artifact](../benchmarks/results/foundation/20260905T163823Z-7b16b556/README.md)
+  validates independent whole-tree reference, input-view release/cache lifetime,
+  16/4097-row two-channel two-round composition, clipping and CPU save/load.
+- Maximum raw CPU/CUDA error 1.7881393432617188e-7; synthetic NLL/CRPS agree.
+  Named compact copies: 85 calls / 2,380 bytes over 17 trees. No profiler claim.
+- Offline evidence validator passed. All 12 upload hashes and lock hash matched
+  the clean commit; JUnit copies matched; private URL/local-path scan passed.
+- Next: independent CPU extension wheel installation and public API conformance
+  (P6 CPU subset), then P5 strict GPU integration. No adoption claim yet.
