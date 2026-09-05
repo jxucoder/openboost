@@ -147,3 +147,27 @@ The benchmark is allowed to disprove the product hypothesis. If OpenBoost is
 not competitive on proper scoring rules or does not accelerate at larger row
 counts, the result should be published and the implementation fixed before the
 README makes a performance claim.
+
+## Declared parameters and current evidence boundary
+
+The launcher passes `--seed` to OpenBoost, NGBoost, XGBLSS and CatBoost. For
+NGBoost, each factory creates a fresh clone of the installed default tree learner
+and applies `--max-depth` and the seed, preserving its other installed defaults.
+The manifest's `model_parameters` records constructed wrapper parameters and
+base-learner settings; CLI arguments alone are not proof of applied parameters.
+Equal round/depth settings do not imply equal computation across algorithms.
+
+Local parameter-contract tests run without the complete upstream metrics stack:
+
+```sh
+OPENBOOST_BACKEND=cpu uv run pytest tests/test_scoringbench_config.py -n 0 -q
+```
+
+They check constructor forwarding, independent base learners, JSON configuration
+and actual OpenBoost sampling reproducibility. Optional competitor constructors
+and upstream metric imports are isolated in these local tests; they do not verify
+full NGBoost fitting or ScoringBench metrics. The complete Linux integration and
+quality suite remain outstanding. Before interpreting resumable runs as complete
+quality evidence, validate cache/config compatibility and every requested fold,
+including dataset/model failures and effective per-dataset row caps. Existing
+smoke tests or an output manifest do not establish upstream acceptance.

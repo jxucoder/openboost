@@ -391,3 +391,11 @@ G4 的性能预算失败；精确 peak/完整 transfer trace 留作明确缺口�
 warm fit 2.079 -> 1.868 s；同轮 legacy 归一化比例 13.899x -> 12.888x。
 这只是部分收益，不是达到 1.2 预算。质量、真实 CUDA conformance 和独立 wheel
 加载验证通过。保留改动；下一项仍是更精确地处理树/session验证与同步开销。
+
+
+### Bigger-goal review: immediate queue changed
+
+The [impact/adoption/value review](impact-adoption-value-next.md) pauses further
+GPU foundation optimization as the immediate priority. Retain the verified API;
+next close ScoringBench configuration/completion evidence gaps, run bounded Linux
+quality checks, and obtain actual outside-author experience when authorized.

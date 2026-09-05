@@ -165,7 +165,7 @@ def _model_factories(args):
     }
 
     def openboost(backend: str):
-        return lambda: OpenBoostWrapper(backend=backend, **common)
+        return lambda: OpenBoostWrapper(backend=backend, model_params={"random_state": args.seed}, **common)
 
     factories = {
         "openboost_cpu": openboost("cpu"),
@@ -173,14 +173,21 @@ def _model_factories(args):
     }
 
     if "ngboost" in args.models:
+        from ngboost.learners import default_tree_learner
         from scoringbench.wrappers.ngboost_wrapper import NGBoostWrapper
+        from sklearn.base import clone
 
         factories["ngboost"] = lambda: NGBoostWrapper(
             dist="normal",
             n_estimators=args.n_trees,
             learning_rate=args.learning_rate,
             n_quantiles=args.n_quantiles,
-            ngb_params={"random_state": args.seed},
+            ngb_params={
+                "random_state": args.seed,
+                "Base": clone(default_tree_learner).set_params(
+                    max_depth=args.max_depth, random_state=args.seed
+                ),
+            },
         )
 
     if "xgblss" in args.models:
@@ -190,7 +197,7 @@ def _model_factories(args):
             n_quantiles=args.n_quantiles,
             num_boost_round=args.n_trees,
             distribution="Gaussian",
-            xgblss_params={"max_depth": args.max_depth, "eta": args.learning_rate},
+            xgblss_params={"max_depth": args.max_depth, "eta": args.learning_rate, "seed": args.seed},
         )
 
     if "catboost_quantile" in args.models:
@@ -221,12 +228,39 @@ def _model_factories(args):
     return {name: factories[name] for name in args.models}
 
 
+def _model_configuration(model):
+    """Record constructed wrapper parameters, including the cloned base learner.
+
+    This is configuration evidence, not proof of execution device or completion.
+    Exclude private fitted state and avoid lossy string representations.
+    """
+    def encode(value):
+        if value is None or isinstance(value, (str, bool, int, float)):
+            return value
+        if isinstance(value, np.generic):
+            return value.item()
+        if isinstance(value, np.ndarray):
+            return value.tolist()
+        if isinstance(value, (list, tuple)):
+            return [encode(v) for v in value]
+        if isinstance(value, dict):
+            return {k: encode(v) for k, v in value.items()}
+        if hasattr(value, "get_params"):
+            return {"class": f"{type(value).__module__}.{type(value).__name__}",
+                    "parameters": encode(value.get_params(deep=False))}
+        raise TypeError(f"Unrecordable model configuration: {type(value).__name__}")
+
+    return {"wrapper": f"{type(model).__module__}.{type(model).__name__}",
+            "parameters": encode({k: v for k, v in vars(model).items() if not k.startswith("_")})}
+
+
 def _write_provenance(
     output_dir: Path,
     scoringbench_dir: Path,
     args,
     datasets: list[dict],
     result_rows: int,
+    model_parameters: dict,
 ) -> Path:
     import openboost as ob
 
@@ -261,6 +295,7 @@ def _write_provenance(
         "openboost_git": _git_state(PROJECT_ROOT),
         "scoringbench_git": _git_state(scoringbench_dir),
         "arguments": vars(args),
+        "model_parameters": model_parameters,
         "datasets": [
             {
                 "name": dataset["name"],
@@ -356,6 +391,7 @@ def main() -> int:
         args.n_folds = 2
 
     model_factories = _model_factories(args)
+    model_parameters = {name: _model_configuration(make()) for name, make in model_factories.items()}
     output_dir = Path(args.output_dir).expanduser().resolve()
     result = run_benchmark(
         datasets_config=datasets,
@@ -372,6 +408,7 @@ def main() -> int:
         args,
         datasets,
         result_rows=len(result),
+        model_parameters=model_parameters,
     )
     print(f"OpenBoost provenance: {manifest}")
     return 0
