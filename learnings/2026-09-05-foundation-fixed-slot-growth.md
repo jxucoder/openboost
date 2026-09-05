@@ -44,3 +44,11 @@ histogram, leaf, validation or cached-prediction contract changes.
 
 - Focused CPU regression: 80 passed. Production code and changed-test lint passed;
   staged change preserves the prior numerical oracle unchanged.
+
+## Real CUDA correctness
+
+- `81acf0b`: [T4 trainer artifact](../benchmarks/results/foundation/20260905T193001Z-cece3e8f/README.md),
+  7 passed / 0 skipped. CPU/CUDA gradients, splits, leaves, tree predictions,
+  bounded updates, Normal/Poisson ordinary/natural fits and rollback pass.
+- Maximum adapter raw error 1.19e-7. Existing compact transfer counts unchanged.
+  Performance remains to be measured; no speed claim from correctness runtime.
