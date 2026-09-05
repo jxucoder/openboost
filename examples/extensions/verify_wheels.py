@@ -106,6 +106,9 @@ def verify(output):
         shutil.copy(HERE / "test_composition.py", work / "test_composition.py")
         shutil.copy(HERE / "check_inference.py", work / "check_inference.py")
         shutil.copy(HERE / "demo.py", work / "demo.py")
+        # Spawned CUDA discovery workers re-import __main__; importing the demo
+        # must not parse arguments, train or write model files.
+        run([python, "-c", "import runpy; from pathlib import Path; runpy.run_path('demo.py', run_name='__mp_main__'); assert not Path('demo.ob').exists()"], work, env)
         demo = json.loads(run([python, "demo.py"], work, env))
         test_output = run(
             [

@@ -99,3 +99,10 @@ returns an explicit host scalar; step/rule vector arithmetic stays on device.
 The strict trainer's copies/scalar synchronization and unsupported eval/callbacks
 remain as documented in the public experimental guide. No profiler trace or
 speed/cost/adoption conclusion follows from this conformance suite.
+
+
+The runnable demo uses a `main` entry guard. A standalone GPU script without
+that guard failed when CUDA availability discovery spawned a Python worker and
+re-entered top-level training. Keep training out of import-time execution; the
+CPU installer explicitly tests importing the demo as `__mp_main__` without
+creating a model. The failed real-device run is retained in foundation evidence.

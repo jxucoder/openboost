@@ -56,3 +56,18 @@ Initialization stays CPU; loss is an explicit scalar; constrain preserves device
 ## Commits
 
 - `baf029d` — preceding strict CUDA trainer evidence.
+
+## First real-device attempt
+
+- `5d10b77`: [failed artifact](../benchmarks/results/foundation/20260905T180943Z-e145df4a/README.md),
+  1 failed / 2 passed. GPU finite-difference/Fisher and eight training cells
+  reached the public demo call successfully, but the subprocess failed CUDA
+  availability discovery with a multiprocessing traceback. Demo fitting at
+  module top level lacked a main guard and could re-enter in spawned workers.
+- Added a main entry guard, a no-side-effect __mp_main__ import check in the CPU
+  installer, and full subprocess stderr on failure. Retain original failure;
+  rerun rather than suppress the CUDA failure or weaken parity tolerances.
+
+- Entry-guard fix verified locally: 7 fresh-wheel tests and six plugin-free CPU
+  roundtrips, plus no-side-effect worker import; evidence runner 21 passed.
+  Preserve partial GPU metrics before launching the demo on future failed runs.

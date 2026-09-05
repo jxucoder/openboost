@@ -216,14 +216,6 @@ def test_installed_gpu_extensions(checks, monkeypatch):
         assert not np.allclose(outputs[False, True]["mu"], outputs[True, True]["mu"])
         assert not np.allclose(next_gradients[False, True], next_gradients[True, True])
     assert len(downloads) == 160
-    demo = subprocess.run(
-        [sys.executable, "extension_demo.py", "--device", "cuda"],
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    for suffix in ("ob", "npz"):
-        Path("demo." + suffix).rename(saved / ("demo." + suffix))
     checks["installed_gpu_extensions"] = {
         "installed": installed,
         "math_oracle": True,
@@ -232,6 +224,14 @@ def test_installed_gpu_extensions(checks, monkeypatch):
         "schedule_changes_prediction": True,
         "compact_transfer_calls": len(downloads),
         "compact_transfer_bytes": sum(downloads),
-        "demo": json.loads(demo.stdout),
-        "models_saved": 9,
+        "models_saved": 8,
     }
+    demo = subprocess.run(
+        [sys.executable, "extension_demo.py", "--device", "cuda"],
+        text=True,
+        capture_output=True,
+    )
+    assert demo.returncode == 0, demo.stdout + demo.stderr
+    for suffix in ("ob", "npz"):
+        Path("demo." + suffix).rename(saved / ("demo." + suffix))
+    checks["installed_gpu_extensions"].update(demo=json.loads(demo.stdout), models_saved=9)

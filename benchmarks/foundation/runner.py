@@ -94,6 +94,13 @@ def validate_result(manifest, result):
                 or uninstall.get("uninstall_returncode") != 0
                 or uninstall.get("inference_returncode") != 0):
             raise ValueError("Missing installed GPU extension conformance")
+        installed = packages.get("installed", {})
+        expected_cells = {(n, b, s) for n in (16, 4097) for b in (False, True) for s in (False, True)}
+        cells = {(c.get("samples"), c.get("bounded"), c.get("scheduled")) for c in packages["cases"]}
+        if (set(installed) != {"normal_fisher", "bounded_leaves"}
+                or any(v.get("verified_python_files", 0) < 1 or "site-packages" not in v.get("path", "") for v in installed.values())
+                or cells != expected_cells or packages.get("demo", {}).get("device") != "cuda"):
+            raise ValueError("Missing installed package or combination evidence")
         inference = json.loads(uninstall.get("inference_stdout", "{}"))
         if inference != {"extensions_absent": True, "exact_cpu_roundtrips": 9}:
             raise ValueError("Missing plugin-free CPU inference evidence")
