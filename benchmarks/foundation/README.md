@@ -108,4 +108,7 @@ completed cells are retained. Exact CPU model is recorded if /proc exposes it.
 The trainer transfer counter is partial, and is not total PCIe traffic or a
 zero-transfer assertion. GPU memory peaks and scaling remain later gates.
 
-Status: locally validated harness; P2.2/P2.3 GPU execution remains pending.
+Status: P2.2/P2.3 completed on real T4: 14 passed, no skips, all 12 baseline
+cells completed. See [raw evidence and scoped timing/quality results](../results/foundation/20260905T084129Z-2574e387/README.md).
+First-fit timings do not clear CUDA driver caches; the container does not
+expose its physical CPU model. These limits are recorded in the artifact.

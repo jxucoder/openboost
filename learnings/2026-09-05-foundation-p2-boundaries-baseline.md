@@ -64,21 +64,44 @@ Local commands use `UV_CACHE_DIR=/tmp/openboost-research-uv-cache`.
   logged all 30 rounds. No development timing is promoted to baseline evidence:
   these checks ran before the harness commit and on a different local CPU.
 
+## Real-device verification
+
+- Tested clean source `99621ae9e640be9c1144a015a39de43d3bf50ae9`, same production
+  wheel as P2.1; [raw artifact](../benchmarks/results/foundation/20260905T084129Z-2574e387/README.md).
+- **14 passed, 0 skipped**, pytest 104.58s, remote function 108.88s.
+- All eight execution boundaries passed, including visible custom/exposure/
+  generic fallback, failed-kernel rollback, sampling preflight, callback/eval
+  and both CPU↔GPU persistence directions for Normal/Poisson.
+- All 12 CPU/CUDA × seed × eval-mode cells completed two fits. Maximum held-out
+  NLL difference 1.34e-8, CRPS difference 1.12e-8, coverage difference zero.
+  No fallback warnings; each GPU fit uses 30 objective calls and 60 native trees.
+- Offline validator accepted the result. Raw artifacts contain no local user
+  paths or private Modal app URLs. Copied source hashes, frozen dataset/
+  split metadata and exact JUnit content independently match the source commit.
+- Median repeated fit: CPU 2.401s / GPU .145s without eval; CPU 3.027s / GPU
+  .230s with eval. These measurements are scoped in the artifact and do not
+  establish a general library-level speed claim.
+
 ## Failed Attempts
 
 - Automatic review rejected the P2.2 Modal command because the new test file
   was outside the previously approved manifest, despite the wheel being
   byte-identical to the previously approved wheel. No remote job started.
-  Finish local work and request explicit approval for the complete new bundle;
-  do not bypass the rejection by rerouting execution.
+  The user subsequently explicitly approved the new files. The original Modal
+  upload/run command then succeeded; no rerouting was used.
 - Sandboxed public-data download failed DNS. A reviewed network-only download
   succeeded and its archive hash verified. No project content was uploaded.
 - Lint rejected a lambda assignment in the worker; replaced it with a function.
 
 ## Risks and Follow-ups
 
-- P2.2 and P2.3 GPU runs are still pending the new bundle upload approval. The
-  locally prepared harness is not proof that CUDA boundaries or quality pass.
+- P2.2 and P2.3 now pass on the tested T4 source. Next gate is P3, the minimal
+  CPU extension contract; do not infer new backend/extension capabilities from
+  this existing-trainer baseline.
+- Nominal 90% interval coverage is 96.39–96.78% in this untuned baseline.
+  CPU/GPU parity is excellent, but calibration and tuned product quality remain
+  separate work. First-fit timing does not clear CUDA driver caches; /proc
+  exposes CPU model as `unknown`. Neither missing fact is invented.
 - The trainer download spy/counter covers only named trainer boundaries;
   compact tree conversion and backend internals can still copy. No complete
   PCIe accounting, GPU peak memory measurement or zero-transfer claim.
@@ -89,4 +112,5 @@ Local commands use `UV_CACHE_DIR=/tmp/openboost-research-uv-cache`.
 ## Commits
 
 - `576702d` — P2.1 before/after T4 evidence.
-- `4423117` — eight-case execution boundary harness, not yet GPU-validated.
+- `4423117` — eight-case execution boundary harness.
+- `99621ae` — frozen baseline harness, now verified on real T4.

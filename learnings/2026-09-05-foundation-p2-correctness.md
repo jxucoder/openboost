@@ -21,7 +21,8 @@ Pre-fix source `502f37f`: **3 failed, 2 passed**. Fixed source `8609f70`:
 **5 passed**, no skips. Native weighted histogram sums changed from the wrong
 `[4, 4]` to CPU/analytic `[7, 10]`; weighted Normal/Poisson raw differences
 changed from 0.551514 / 0.0934991 to zero on these fixtures. P2.1 is verified;
-the remaining P2 GPU boundaries and real-data baseline are still incomplete.
+the remaining P2 GPU boundaries and real-data baseline subsequently passed;
+see [P2 completion](2026-09-05-foundation-p2-boundaries-baseline.md).
 
 ## Changes
 
@@ -98,10 +99,9 @@ Real GPU artifacts:
 
 ## Risks and Follow-ups
 
-- Complete GPU fallback/error checks, callback/eval transfer and cross-device
-  persistence verification. The host tests alone do not establish CUDA parity.
-- Freeze the real-data hashes, splits/seeds and cold/warm baseline only after
-  those correctness checks pass. Do not advance to P3 as if P2 were complete.
+- GPU boundary checks and the frozen real-data baseline are now complete in
+  the [follow-up entry](2026-09-05-foundation-p2-boundaries-baseline.md). P3 is
+  the next gate; this does not validate a new experimental API yet.
 - Rollback covers the trainer's assigned state. Arbitrary callback side effects
   and facade state modified before entering the trainer are outside that scope.
 

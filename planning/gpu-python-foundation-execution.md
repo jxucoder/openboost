@@ -1,6 +1,6 @@
 # GPU Python foundation：medium 执行清单
 
-状态：P0、P1 已完成；P2.1 已由真实 T4 前后对照验证；P2.2 本地修复通过，GPU 边界及 P2.3 基线待完成。对应 [设计契约](gpu-python-foundation-design.md)。
+状态：P0、P1、P2 已完成；下一项 P3。对应 [设计契约](gpu-python-foundation-design.md)。
 P1 结果：本地结果协议 12 passed，真实单 T4 smoke 2 passed / 0 skipped，
 wheel 来源和设备调用验证通过；[P1 learning 与原始结果](../learnings/2026-09-05-foundation-p1-modal.md)。
 P0 结果：CPU 回归 749 passed / 34 skipped，加载器定向回归 21 passed，
@@ -122,9 +122,9 @@ uv run modal run benchmarks/foundation/modal_app.py::foundation_smoke
   调用前后全局 NumPy RNG 状态不变。MVP GPU 未支持采样时要拒绝；旧 CPU 采样需接 seed。
 - 不支持参数在首次更新之前失败；测试 fitted attributes 不留下看似完成的半模型。
 
-当前进度：新增 GPU 边界测试与 California Housing 基线 harness 已完成本地验证；
-新文件上传 Modal 被自动审批拦截，完整运行待确认。
-见 [P2 边界与基线记录](../learnings/2026-09-05-foundation-p2-boundaries-baseline.md)。
+P2 验收：真实 T4 共 14 passed / 0 skipped；12 个基线配置、24 次拟合完成，
+三组 seed 的质量门槛、fallback、callback/eval 和双向保存加载全部通过。
+[基线与原始结果](../benchmarks/results/foundation/20260905T084129Z-2574e387/README.md)。
 
 **P2.3 — 冻结整合后可用基线。**
 
