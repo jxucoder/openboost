@@ -70,3 +70,21 @@ saved constant learning rate for each tree; this compatibility rule cannot
 recover a missing nonconstant schedule. Unsupported experimental format versions
 and old categorical states are rejected. Existing model persistence policies
 are unchanged.
+
+## Fixed-slot histogram primitive
+
+`build_histograms(binned, grad, hess, sample_node_ids, active,
+memory_budget_bytes=256 * 1024**2)` returns `HistogramBatch` with float32
+`grad`/`hess` arrays `(slots, features, 256)`, int32 `counts` `(slots,)`, and an
+owned bool `active` mask. Inputs are contiguous NumPy arrays or CuPy arrays on
+the current device. G/H already include objective weights: no second weighting
+occurs. Counts include zero-weight rows. ID -1 excludes a row; inactive slots
+ignore assigned rows. Empty slots are zero; bin 255 remains the missing bin.
+
+The limit is 511 slots. The budget covers returned arrays, excluding inputs
+and transient device validation masks; allocation is rejected before creating
+histograms if it would exceed the budget. CUDA uses the current CuPy stream,
+retains aggregation results on device, and synchronizes scalar validation checks.
+Floating-point CUDA accumulation order is not deterministic. No speed claim is
+made. This primitive is separate from `Booster`, which remains CPU-only; split,
+routing, leaf rules and builder integration follow in later P4/P5 steps.

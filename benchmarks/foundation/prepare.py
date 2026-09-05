@@ -41,6 +41,9 @@ def prepare(suite="smoke"):
         sources["test_correctness.py"] = ROOT / "tests/foundation/test_correctness.py"
     if suite in ("boundaries", "baseline"):
         sources["test_boundaries.py"] = ROOT / "tests/foundation/test_boundaries.py"
+    if suite == "histograms":
+        sources["test_histograms.py"] = ROOT / "tests/foundation/test_histograms.py"
+        sources["histogram_oracle.py"] = ROOT / "tests/test_batch_histograms.py"
     if suite == "baseline":
         from .dataset import describe
 
@@ -86,5 +89,5 @@ def prepare(suite="smoke"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries", "baseline"), default="smoke")
+    parser.add_argument("--suite", choices=("smoke", "correctness", "boundaries", "baseline", "histograms"), default="smoke")
     prepare(parser.parse_args().suite)

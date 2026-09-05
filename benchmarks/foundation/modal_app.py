@@ -192,3 +192,8 @@ def foundation_boundaries():
 @app.local_entrypoint()
 def foundation_baseline():
     run_suite("baseline")
+
+
+@app.local_entrypoint()
+def foundation_histograms():
+    run_suite("histograms")

@@ -124,3 +124,13 @@ def test_boundaries_requires_all_execution_cases(evidence):
             validate_result(manifest, result)
         result['junit'] = result['junit'].replace('</testsuite>', f'<testcase name="{name}" /></testsuite>')
     validate_result(manifest, result)
+
+
+def test_histogram_suite_requires_device_check(evidence):
+    manifest, result = evidence
+    manifest['suite'] = 'histograms'
+    result['junit'] = result['junit'].replace('</testsuite>', '<testcase name="test_batch_histogram_device_oracle" /></testsuite>')
+    with pytest.raises(ValueError, match='histogram'):
+        validate_result(manifest, result)
+    result['checks']['batch_histograms'] = {'device_arrays': True, 'legacy_download_wrappers_blocked': True, 'cases': [{}, {}, {}]}
+    validate_result(manifest, result)

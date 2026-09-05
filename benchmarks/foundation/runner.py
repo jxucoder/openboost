@@ -25,6 +25,8 @@ def validate_result(manifest, result):
     suite = manifest.get("suite", "smoke")
     if suite in ("correctness", "boundaries", "baseline"):
         required.update({"test_weighted_newton", "test_weighted_distribution[normal]", "test_weighted_distribution[poisson]"})
+    elif suite == "histograms":
+        required.add("test_batch_histogram_device_oracle")
     elif suite != "smoke":
         raise ValueError("Unknown evidence suite")
     if suite in ("boundaries", "baseline"):
@@ -49,6 +51,10 @@ def validate_result(manifest, result):
         and checks.get("dataset_sha256")
     ):
         raise ValueError("Missing installed-wheel/device-path checks (possible fallback)")
+    if suite == "histograms":
+        batch = checks.get("batch_histograms", {})
+        if batch.get("device_arrays") is not True or batch.get("legacy_download_wrappers_blocked") is not True or len(batch.get("cases", [])) != 3:
+            raise ValueError("Missing batch histogram device/oracle checks")
     if suite == "baseline":
         validate_baseline(checks.get("baseline_cells", []))
 

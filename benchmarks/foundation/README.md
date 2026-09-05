@@ -112,3 +112,10 @@ Status: P2.2/P2.3 completed on real T4: 14 passed, no skips, all 12 baseline
 cells completed. See [raw evidence and scoped timing/quality results](../results/foundation/20260905T084129Z-2574e387/README.md).
 First-fit timings do not clear CUDA driver caches; the container does not
 expose its physical CPU model. These limits are recorded in the artifact.
+
+P4.1 histogram validation uses `prepare --suite histograms` and Modal entrypoint
+`foundation_histograms`. It uploads the independent CPU test module as
+`histogram_oracle.py`, runs the existing two smoke cases plus one comprehensive
+batch histogram device case, and requires all three without skips. The device
+case covers small exact, random and empty aggregates; this is not a GPU extension
+trainer or performance benchmark.

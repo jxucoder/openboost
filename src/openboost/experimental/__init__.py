@@ -1,9 +1,10 @@
-"""Experimental extension API. CPU-only until the device contract is verified."""
+"""Experimental extension API. Booster is CPU-only; primitives declare device support separately."""
 
+from .._core._batch_primitives import HistogramBatch, build_histograms
 from .._trainer import TrainerConfig
 from ._booster import Booster
 from ._builders import BuiltTree, ConstantSchedule, CPUHistogramBuilder, TreeStructure
 from ._contracts import DistributionObjectiveAdapter, ExecutionContext
 
 __all__ = ['Booster', 'TrainerConfig', 'DistributionObjectiveAdapter', 'ExecutionContext',
-           'BuiltTree', 'TreeStructure', 'CPUHistogramBuilder', 'ConstantSchedule']
+           'BuiltTree', 'TreeStructure', 'CPUHistogramBuilder', 'ConstantSchedule', 'HistogramBatch', 'build_histograms']
