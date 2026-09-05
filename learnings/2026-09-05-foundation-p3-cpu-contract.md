@@ -53,8 +53,7 @@ CUDA either fails preflight or warns and selects the entire CPU path.
 
 ## Risks and Follow-ups
 
-- Plugin-free inference persistence and coefficient-aware early stopping follow
-  in P3.3. A native extension adapter remains future CUDA work; no unverified
+- A native extension adapter remains future CUDA work; no unverified
   adapter is exported by this CPU contract.
 - Read-only views prevent accidental mutation; this is not a sandbox against
   deliberately hostile Python plugins accessing underlying memory.
@@ -62,3 +61,31 @@ CUDA either fails preflight or warns and selects the entire CPU path.
 ## Commits
 
 - `4c16204` — completed P2 evidence.
+
+## Persistence slice
+
+- Reuse the existing version-2 tree/binner serializer with an experimental
+  version-1 marker and an explicit inference-state whitelist. Training plugins
+  and config are excluded; loaded models reject fitting. Missing coefficients
+  use the saved constant learning rate, while invalid counts/values fail.
+- Early stopping snapshots and restores coefficients alongside trees. Last-round
+  and train-end learning-rate mutations now fail for the experimental path.
+- Six initial persistence tests failed because Booster had no save/load API;
+  checkpoint fell back to pickling the custom objective. All 13 persistence and
+  callback-boundary tests now pass, including categorical/missing round trips,
+  nonconstant coefficients, unpicklable plugins and invalid versions.
+- Shared legacy version-1 categorical loading currently warns; the new facade
+  rejects that state without changing legacy policy.
+- Regression: 174 passed across experimental objective/dispatch/persistence,
+  foundation contracts, persistence/unified persistence, growth, formula,
+  survival and distributional tests. Run with `OPENBOOST_BACKEND=cpu
+  NUMBA_NUM_THREADS=1 uv run --no-sync pytest <these test files> -n 0 -q`.
+  Includes seed replay with plugin and builder RNG consumption and unchanged
+  global NumPy RNG state. Production/changed-test lint and docs build passed
+  (existing griffe documentation warnings remain).
+- The combined callback run was interrupted during the old 500/1000-round
+  GBDT early-stopping cases. Faulthandler showed repeated Python sample/tree
+  prediction through `_fit_cpu -> predict -> _predict_standard_cpu`; reducing
+  Numba threads did not remove that cost. These three long tests are not claimed
+  as passed. Focused callback and new coefficient restoration checks substitute
+  for this slice; no unrelated predictor optimization was made.

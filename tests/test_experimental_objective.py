@@ -124,3 +124,35 @@ def test_plugin_inputs_and_context_are_readonly(data):
                 raw['other'] = y
             return super().step(raw, y, sample_weight, extra, context=context)
     Booster(objective=Inspect(), config=TrainerConfig(n_trees=1)).fit(*data)
+
+
+def test_seed_shared_with_builder_and_global_rng_unchanged():
+    class RandomObjective(TwoSquared):
+        def step(self, raw, y, sample_weight, extra, *, context):
+            self.draw = context.rng.random()
+            return super().step(raw, y, sample_weight, extra, context=context)
+
+    from openboost.experimental import CPUHistogramBuilder
+
+    class WatchBuilder(CPUHistogramBuilder):
+        def build(self, binned, grad, hess, *, config, context):
+            self.draw = context.rng.random()
+            return super().build(binned, grad, hess, config=config, context=context)
+
+    rng = np.random.default_rng(42)
+    X = rng.normal(size=(32, 3)).astype(np.float32)
+    y = X[:, 0].copy()
+    before = np.random.get_state()
+    models = []
+    for _ in range(2):
+        objective, builder = RandomObjective(), WatchBuilder()
+        models.append(Booster(objective=objective, tree_builder=builder,
+                              config=TrainerConfig(n_trees=2, max_depth=2, random_state=13,
+                                                   subsample=.75, colsample_bytree=.67)).fit(X, y))
+    after = np.random.get_state()
+    assert before[0] == after[0] and before[2:] == after[2:]
+    np.testing.assert_array_equal(before[1], after[1])
+    assert models[0].objective.draw == models[1].objective.draw
+    assert models[0].tree_builder.draw == models[1].tree_builder.draw
+    for k, v in models[0].predict_raw(X).items():
+        np.testing.assert_array_equal(v, models[1].predict_raw(X)[k])

@@ -7,9 +7,10 @@ import numpy as np
 
 from .._array import BinnedArray
 from .._backends import backend_context
+from .._persistence import PersistenceMixin
 from .._trainer import TrainerConfig, fit_boosting, predict_raw
 from .._validation import validate_sample_weight
-from ._builders import ConstantSchedule, CPUHistogramBuilder, ExtensionSession
+from ._builders import ConstantSchedule, CPUHistogramBuilder, ExtensionSession, snapshot_tree
 from ._contracts import ObjectiveBridge, channels_of
 
 
@@ -61,10 +62,12 @@ def features(X, n=None):
     return X
 
 
-class Booster:
+class Booster(PersistenceMixin):
     """Experimental CPU boosting. Plugin objects are training-time dependencies."""
 
     def __init__(self, *, objective, tree_builder=None, step_schedule=None, config=None, device='cpu', fallback='error'):
+        self._experimental_version = 1
+        self._inference_only = False
         self.objective = objective
         self.tree_builder = tree_builder if tree_builder is not None else CPUHistogramBuilder()
         self.step_schedule = step_schedule if step_schedule is not None else ConstantSchedule()
@@ -75,6 +78,8 @@ class Booster:
 
     def fit(self, X, y, sample_weight=None, *, eval_sets=None, callbacks=None,
             early_stopping_rounds=None):
+        if self._inference_only:
+            raise RuntimeError('Loaded Booster is inference-only; create a fresh Booster to train')
         validate_config(self.config)
         channels = channels_of(self.objective)
         if (not isinstance(getattr(self.tree_builder, 'supported_devices', None), frozenset)
@@ -129,3 +134,61 @@ class Booster:
     def predict_raw(self, X):
         with backend_context('cpu'):
             return predict_raw(self, features(X))
+
+    def _get_persist_attrs(self):
+        return [
+            "trees_",
+            "coefficients_",
+            "_base_scores",
+            "learning_rate",
+            "n_bins",
+            "X_binned_",
+            "channel_names_",
+            "fit_report_",
+            "_experimental_version",
+        ]
+
+    def _validate_coefficients(self):
+        if not self.trees_:
+            raise ValueError("Booster must be fitted before saving or loading")
+        if not hasattr(self, "coefficients_"):
+            self.coefficients_ = {k: [self.learning_rate] * len(v) for k, v in self.trees_.items()}
+        if set(self.coefficients_) != set(self.trees_):
+            raise ValueError("Coefficient channels must match trees")
+        for k, trees in self.trees_.items():
+            values = self.coefficients_[k]
+            if len(values) != len(trees) or any(
+                not np.isscalar(v) or not np.isfinite(v) or v < 0 or v > np.finfo(np.float32).max
+                for v in values
+            ):
+                raise ValueError(
+                    "Coefficient counts and finite nonnegative values must match trees"
+                )
+
+    def _to_state_dict(self):
+        self._validate_coefficients()
+        return super()._to_state_dict()
+
+    def _from_state_dict(self, state):
+        if state.get("_experimental_version") != 1 or state.get("_serialization_version", 1) > 2:
+            raise ValueError("Unsupported experimental persistence version")
+        if state.get("_serialization_version", 1) < 2 and np.any(
+            state.get("_is_categorical", False)
+        ):
+            raise ValueError("Legacy categorical persistence is unsupported")
+        super()._from_state_dict(state)
+
+    def _post_load(self):
+        self._validate_coefficients()
+        self.channel_names_ = tuple(self.trees_)
+        if set(self._base_scores) != set(self.trees_) or not all(
+            np.isfinite(v) for v in self._base_scores.values()
+        ):
+            raise ValueError("Base scores must match tree channels and be finite")
+        self.trees_ = {
+            k: [snapshot_tree(t, self.X_binned_.n_features) for t in trees]
+            for k, trees in self.trees_.items()
+        }
+        self.objective = self.tree_builder = self.step_schedule = None
+        self.device, self.fallback = "cpu", "error"
+        self._inference_only = True

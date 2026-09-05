@@ -153,6 +153,7 @@ class EarlyStopping(Callback):
         self.wait: int = 0
         self.stopped_round: int | None = None
         self._best_trees: list | None = None
+        self._best_coefficients = None
         self._best_weights: list | None = None  # For DART
         self._best_tree_weights: list | None = None
         self._best_base_score: float | None = None
@@ -164,6 +165,7 @@ class EarlyStopping(Callback):
         self.wait = 0
         self.stopped_round = None
         self._best_trees = None
+        self._best_coefficients = None
         self._best_weights = None
         self._best_tree_weights = None
         self._best_base_score = None
@@ -184,6 +186,7 @@ class EarlyStopping(Callback):
             if self.restore_best:
                 # Snapshot current model state
                 self._best_trees = copy.deepcopy(state.model.trees_)
+                self._best_coefficients = copy.deepcopy(getattr(state.model, "coefficients_", None))
                 # Handle DART tree weights
                 self._best_tree_weights = copy.deepcopy(getattr(state.model, 'tree_weights_', None))
                 self._best_base_score = copy.deepcopy(getattr(state.model, 'base_score_', None))
@@ -202,6 +205,8 @@ class EarlyStopping(Callback):
         """Restore best model if requested."""
         if self.restore_best and self._best_trees is not None:
             state.model.trees_ = self._best_trees
+            if self._best_coefficients is not None:
+                state.model.coefficients_ = self._best_coefficients
             if self._best_tree_weights is not None and hasattr(state.model, 'tree_weights_'):
                 state.model.tree_weights_ = self._best_tree_weights
             if self._best_base_score is not None and hasattr(state.model, 'base_score_'):

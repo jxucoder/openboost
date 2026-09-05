@@ -57,4 +57,16 @@ prediction/evaluation. `ConstantSchedule` returns the configured learning rate.
 Use schedules rather than learning-rate-mutating callbacks. Only predetermined
 per-round coefficients are supported, not line search or reweighting old trees.
 
-Inference persistence and coefficient-aware early stopping follow in P3.3.
+Save with `model.save("model.ob")` and load with `Booster.load("model.ob")`.
+The saved state contains package-owned trees, binning metadata, base scores and
+per-tree coefficients. Objective, builder and schedule objects are excluded.
+Loading supports CPU `predict_raw` without installing the training plugins;
+loaded models are inference-only. Create a fresh Booster for further training.
+As with other OpenBoost persistence, load only trusted files (joblib).
+
+Early stopping restores trees and coefficients together. Checkpoints can be
+loaded through the same inference API. A state without coefficients uses the
+saved constant learning rate for each tree; this compatibility rule cannot
+recover a missing nonconstant schedule. Unsupported experimental format versions
+and old categorical states are rejected. Existing model persistence policies
+are unchanged.

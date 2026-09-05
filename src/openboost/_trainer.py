@@ -358,8 +358,13 @@ def fit_boosting(
             )
             if last_metric is not None:
                 state.val_loss = last_metric
-            if not cb_manager.on_round_end(state):
+            keep_training = cb_manager.on_round_end(state)
+            if extension is not None and model.learning_rate != config.learning_rate:
+                raise ValueError("Use StepSchedule instead of mutating learning_rate")
+            if not keep_training:
                 break
 
     cb_manager.on_train_end(state)
+    if extension is not None and model.learning_rate != config.learning_rate:
+        raise ValueError("Use StepSchedule instead of mutating learning_rate")
     return model
