@@ -116,3 +116,4 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 - [CPU/CUDA comparator preflight](2026-09-06-v1-comparator-capabilities.md): installed support, native failures and isolated T4 evidence.
 - [Validation-only baseline worker](2026-09-06-v1-baseline-worker.md): explicit inputs, saved offsets and the remaining search integration boundary.
+- [Validation selection and test release](2026-09-06-v1-validation-selection.md): independent scores, complete trials, pinned receipts and access-sequence limitations.

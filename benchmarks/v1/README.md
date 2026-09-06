@@ -248,3 +248,52 @@ count adapters. `worker_smoke.py` reproduces the checks with the locked interpre
 This is a fixed-round adapter: the search design's early stopping is explicitly
 rejected until implemented. Ranking, composed/structural controls, full validation
 selection, test unlocking and A13 execution remain required integration work.
+
+## Validation selection and sealed test release
+
+`selection.audit(protocol, records, directory, pinned_protocol_sha256)` independently
+recomputes validation metrics for exactly 16 configurations per declared method.
+The protocol is held and hashed by the trusted orchestrator before training; it
+binds application/fold, code/data/split/preprocessing/environment/search identities,
+training row IDs, validation truth, test-feature hash, methods/configurations and
+selection weights. Every task primary must have a positive frozen weight. A6
+weights must derive from training target scales; final quality still checks each
+output separately. A4 maximizes NDCG; the remaining tasks minimize their scores.
+Ties use the lexical trial ID. No test features are opened during selection.
+
+Trial records contain exactly `id`, `config`, `status`, `exit_code`,
+`protocol_sha256`, `prediction`, `model`, and `log`. Artifact descriptors contain
+relative `path` and `sha256`; validation predictions retain exact row identity.
+The evaluator rejects missing/duplicate/failed trials and producer-supplied scores.
+It checks every model/log hash, not only the eventual winner. Receipt contents
+include all recomputed metrics, selection scores, artifact descriptors and the
+selected trial. Reordering records does not change the receipt.
+
+`selection.seal` exclusively creates a receipt file and returns its byte hash;
+keep that hash separately under orchestrator control. `selection.release_test`
+checks this receipt and reruns the complete audit before loading hashed test
+features. It rejects training/validation row overlap, test targets, invalid
+encoded features and changed artifacts. It returns features and the selected
+model descriptor; downstream inference must recheck the model hash before loading.
+The audit does not deserialize model files or execute artifact code.
+
+This is an evaluator access sequence, not an operating-system security boundary.
+The protocol/digests must not be chosen by the producer after seeing results.
+The audit cannot prove when an external process accessed files or which code it
+executed; restricted worker mounts and execution provenance remain necessary.
+Query/entity identity constraints belong to frozen dataset adapters, in addition
+to this layer's row-disjointness checks. Neither a selection receipt nor the paired
+quality report certifies complete E3 coverage.
+
+Reproduce the actual-process synthetic integration check with the pinned baseline
+environment, using a fresh output directory:
+
+```bash
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 build/v1-env/bin/python -m benchmarks.v1.selection_smoke build/v1-selection-smoke-new
+```
+
+It executes 16 small fixed-round XGBoost jobs, seals validation selection and runs
+selected-model test inference in a new process. The generated packet includes raw
+inputs, predictions, models, records and receipt under ignored `build/` output.
+The committed [summary](evidence/selection-cpu.json) records source/environment
+hashes; it is synthetic harness evidence, not a real-data quality/performance result.

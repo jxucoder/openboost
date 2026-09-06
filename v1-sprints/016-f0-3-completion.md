@@ -86,3 +86,25 @@ F0.3 remains **in progress**, and F1 has not started. Remaining acceptance work:
    requires the user's delegation authorization; the pending request is unanswered.
 6. Re-run the complete F0.3 audit and close this sprint only with all requirements
    satisfied. Neither comparator smoke totals nor reference tests waive a gap.
+
+### Next slice: validation selection and test release
+
+1. Add adversarial fixtures for missing/failed trials, altered configurations,
+   invented validation scores, changed model bytes and overlapping row IDs.
+2. Independently recompute every trial's validation metrics against a separately
+   pinned protocol; select across all declared methods and seal an immutable receipt.
+3. Require the pinned receipt and unchanged artifacts before reading test features.
+   Verify the boundary with a synthetic complete 16-trial search and document the
+   distinction between this API ordering and operating-system access isolation.
+
+Selection slice result: 12 adversarial tests passed, and a complete synthetic
+16-trial XGBoost subprocess search passed audit/seal/release followed by new-process
+selected-model inference. Scores are recomputed independently; the receipt binds
+all trial outputs. Test features are not read by the selector. A forged winner,
+changed model, omitted trial or row overlap fails.
+
+Reflection: content hashes alone do not prove that a worker never accessed test
+files. The API enforces sequence and consistency; restricted mounts/execution
+provenance still need integration. The full required real-data matrix, early
+stopping, auxiliary metrics and independent held-outs remain open. Do not turn
+this synthetic orchestration success into a formal E3 or F0.3 pass.
