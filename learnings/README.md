@@ -34,6 +34,9 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Housing five splits](2026-09-06-v1-housing-data.md) — A1/A11 share verified
+  legacy inputs plus seeds 3–4; licensing and quality remain unresolved.
+
 - [A5 Bike data freeze](2026-09-06-v1-bike-data.md) — verified archive, calendar-only
   inputs and five complete-date rolling windows; no model quality result yet.
 

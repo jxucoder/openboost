@@ -17,6 +17,8 @@ An [artifact integrity judge](benchmarks/v1/README.md) has 48 additional adversa
 checks; real evaluation manifests, execution and quality gates are still pending.
 A5 [Bike Sharing data and rolling splits](benchmarks/v1/datasets/bike.json) are now
 frozen, with 24 adapter checks. No real model quality result is claimed yet.
+A1/A11 [Housing inputs and five splits](benchmarks/v1/datasets/housing.json) match
+historical hashes, with 20 adapter checks; license verification remains pending.
 
 - [Execution and reflections](v1-sprints/README.md)
 - [Construction design](planning/foundation-construction-design.md)

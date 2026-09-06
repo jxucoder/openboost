@@ -74,6 +74,8 @@ R1–R9 各 recipe 的全部 required 行都要闭合。E7 外部采用单列，
 - **数据：** California Housing，沿用 [已冻结定义](../benchmarks/foundation/housing.json)
   的原始 archive/array hash 和目标单位。seeds 0–2 有历史 split；F0.3 以同一规则生成
   3–4 的 hash，禁止把三个旧 split 当作五个。随机切分不代表地理外推。
+  Sprint013已补齐[五split数据记录](../benchmarks/v1/datasets/housing.json)，旧hash逐项一致；
+  许可核实、模型预算与真实质量仍待完成。
 - **算法/组件：** scalar stats、三种 growth、Newton leaf、predict/add；基准不采样，
   单独启用行/列采样验证 seed。三种 policy 都可通过普通 Python 组合调用。
 - **判错：** 手算 weighted base、两轮 G/H、最优 split 与叶值；缺失 routing、零权重、

@@ -24,6 +24,7 @@ Agent 用公开、可组合组件完成正确的算法修改，并验证其成�
 | 010 | B01 / F0.2 有限组合与出口审计 | 完成；总计288 tests passed | [组合参考与阶段出口](010-reference-integration-exit.md) |
 | 011 | B02 / F0.3 产物完整性判卷子集 | 完成；总计336 tests passed | [完整性判卷](011-artifact-integrity-judge.md) |
 | 012 | B02 / F0.3 A5数据与日期窗口 | 完成；总计360 tests passed | [Bike数据冻结](012-bike-data-freeze.md) |
+| 013 | B02 / F0.3 A1/A11数据五split | 完成；总计380 tests passed | [Housing五split](013-housing-five-splits.md) |
 
 接下来完成 B02/F0.3 的冻结评测。F1 公共 foundation 实现从 B03 开始，
 按 B04–B10 接通可组合组件与全部算法；不把 reference 代码称为产品实现。
@@ -60,5 +61,6 @@ Sprint008已补D1/D3/D4；Sprint009已补mixed/vector完整grow；Sprint010已�
 [F0.2验收映射](f0-2-acceptance-ledger.md)。
 Sprint011已实现完整性judge；F0.3真实数据/hash、基线实测、预算/保留题、runner与质量judge仍未完成。
 Sprint012已冻结A5原始数据、calendar适配与五个日期窗口；其余数据与全部质量结果仍待完成。
+Sprint013已补A1/A11 Housing数据hash与五split，许可待核实；其他required数据继续推进。
 E0–E6 没有因为创建本目录而通过；E7 独立作者采用尚无新证据。每项 A 的任务卡已定义，
 其 v1 production 实现和真实 eval 仍须逐项完成。

@@ -108,3 +108,31 @@ source or data/splits; replay provenance (revision/environment/argv) may differ.
 This **data preparation record is not an integrity-v0 run manifest**. It honestly
 records a dirty checkout and identifies the adapter bytes separately. It does not
 freeze training budgets/configurations, run any quantile model, or pass E3/A5.
+
+## A1/A11 Housing data preparation
+
+[Sprint 013](../../v1-sprints/013-housing-five-splits.md) adds
+[datasets/housing.json](datasets/housing.json). The local archive matches the historical
+source hash. The independent v1 adapter exactly reproduces the old X/y hash and
+seeds 0–2 split hashes, then adds seeds 3–4 without altering the historical record.
+
+```bash
+curl --fail --location 'https://ndownloader.figshare.com/files/5976036' -o /tmp/openboost-v1-housing.tgz
+uv run --no-sync python -m benchmarks.v1.housing /tmp/openboost-v1-housing.tgz --verify benchmarks/v1/datasets/housing.json
+```
+
+There are 20,640 rows and eight features; each seed has 12,384/4,128/4,128 rows.
+Source row positions define IDs. Household ratios are computed per row, and targets
+are divided by 100,000 before float32 conversion. No preprocessing is learned from
+the complete dataset. The hash format deliberately retains the legacy raw-byte
+convention; it differs from Bike's dtype/shape-prefixed hashes and is named explicitly.
+Independent tests check column mapping, ratios, units, RNG isolation and partitions.
+
+A1 regression and A11 Normal distribution predictions share inputs and splits but
+require separate scores and acceptance; this counts as one data source. Random
+partitions do not establish geographic generalization. The
+[scikit-learn description](https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset)
+provides dataset context. **License status remains unresolved**: the archive only
+contains data/domain files and the original source page timed out during this audit.
+No licensing label is inferred from public download availability. Data hashes are
+prepared; license review, all budgets and model-quality evaluation remain pending.
