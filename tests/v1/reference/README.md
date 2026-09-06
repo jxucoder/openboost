@@ -3,7 +3,8 @@
 These are small, deliberately slow NumPy oracles for [Sprint 001](../../../v1-sprints/001-scalar-tree-reference.md)
 [Sprint 003](../../../v1-sprints/003-data-classification-reference.md),
 [Sprint 004](../../../v1-sprints/004-ranking-quantile-vector-reference.md),
-and [Sprint 005](../../../v1-sprints/005-positive-aft-reference.md),
+[Sprint 005](../../../v1-sprints/005-positive-aft-reference.md),
+and [Sprint 006](../../../v1-sprints/006-normal-formula-reference.md),
 not a production OpenBoost implementation or a performance baseline.
 
 `scalar.py` implements weighted half-square loss, unweighted derivatives, explicit
@@ -72,6 +73,14 @@ It separates event density from survival probability, keeps a stable log-tail an
 inverse Mills curvature, and exposes median/mean/survival/quantile mathematics.
 The far-tail continued fraction is checked against independent quadrature. These
 are numerical fixtures, not clinical evaluation or persistence implementation.
+
+`coupled.py` defines Normal ordinary/Fisher geometry and Formula Jacobian/GGN,
+with ordinary, diagonal and explicit 2x2 full solves. Negative directions are fitted
+using scalar trees with training weight exactly once. A small immutable update
+record separates joint snapshots, ordered calls, finite fixed steps and strict-loss
+backtracking. It is not the public runtime or full transaction/best-state system.
+A separate Normal evaluator checks NLL/CRPS; rank-deficiency and misspecification
+fixtures prevent interpreting a full solve as proof of parameter identifiability.
 
 Remaining F0.2 work includes row alignment/identity, complete categorical/vector grow,
 other typed targets/objective families and transaction/run

@@ -37,6 +37,10 @@ assert gamma([0], [1])[1][0] == 0
 assert tweedie([0], [0])[1][0] == 1
 assert aft([0], [1], [1])[2][0] == 1
 assert normal_tail(40)[2] > .999
+from tests.v1.reference.coupled import normal, formula, directions
+_, g, fisher = normal([[0, 0]], [1])
+assert directions(g, fisher)[0, 0] == 1
+assert formula([[0, 0]], [1], [1])[0] > 0
 from tests.v1.reference.tree import boost_squared
 for policy in ("depthwise", "best_first", "symmetric"):
     result = boost_squared([[0], [0], [1], [1]], [-2, -2, 2, 2], policy=policy)
