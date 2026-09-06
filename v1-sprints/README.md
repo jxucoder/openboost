@@ -92,5 +92,8 @@ sequential heterogeneous execution probes.
 numeric policies. [Sprint 025 / B07 categories](025-b07-categorical.md) adds mixed
 input, category equality and typed dictionary persistence.
 [Sprint 026 / B08 binary](026-b08-binary.md) adds explicit class order and binary
-logistic inference/training. Multiclass/vector leaves are next; CUDA and full
+logistic inference/training.
+[Sprint 027 / B08 vectors](027-b08-vector-multiclass.md) adds joint multiclass,
+vector leaves, separate split/leaf statistics and output mappings (630 tests).
+B09 ranking/quantile/penalized leaves are next; full A6 workflows, CUDA and
 quality/performance evaluation remain incomplete.

@@ -67,7 +67,7 @@ fails before a new state is returned. Vector terms commit jointly.
 `openboost-ensemble-v2` JSON format. This replaces the earlier constant-only format
 and rejects earlier ensemble versions. Model replaces ConstantModel without a
 compatibility shim. Optional class order is bound to state and persisted. It records feature
-names, vector base, constant terms and scalar tree terms with explicit `[1, K]`
+names, vector base, constant terms and vector tree terms with explicit `[L, K]`
 output matrices and one coefficient each. `propose_terms` submits multiple terms
 as one atomic update. Offsets are supplied at inference and
 are never embedded as training-row offsets. Loading needs no training objective.

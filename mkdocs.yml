@@ -21,3 +21,4 @@ nav:
   - Formula and sequential runs: formula-runs.md
   - Categorical features: categorical.md
   - Binary classification: binary.md
+  - Multiclass and vectors: multiclass.md

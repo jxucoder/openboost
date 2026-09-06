@@ -1,4 +1,4 @@
-"""Composable CPU scalar tree growth with validated mixed-feature inference state."""
+"""Composable CPU scalar/vector tree growth with validated mixed-feature inference state."""
 
 import heapq
 import json
@@ -23,7 +23,7 @@ def _indices(value):
 class Tree:
     """Owned explicit topology; leaf feature/threshold/children use -1 sentinels.
 
-    Predictions are scalar learner outputs [N, 1], without a base or offset.
+    Predictions are learner outputs [N, L], without a base or offset.
     Training row membership is deliberately absent from inference artifacts.
     """
 
@@ -40,7 +40,8 @@ class Tree:
             raise ValueError("feature transformer required")
         for name in ("feature", "threshold", "left", "right"):
             object.__setattr__(self, name, _indices(getattr(self, name)))
-        values = _owned(self.value, ndim=1)
+        value = np.asarray(self.value, dtype=float)
+        values = _owned(value[:, None] if value.ndim == 1 else value, ndim=2)
         missing = np.asarray(self.missing_left)
         if missing.ndim != 1 or missing.dtype.kind != "b":
             raise ValueError("boolean missing routes required")
@@ -84,15 +85,19 @@ class Tree:
     def identity(self):
         return _identity(self.record())
 
+    @property
+    def output_width(self):
+        return self.value.shape[1]
+
     def predict(self, data):
         binned = self.binning.transform(data)
-        result = np.empty((len(data.values), 1))
+        result = np.empty((len(data.values), self.output_width))
         pending = [(0, np.arange(len(data.values)))]
         while pending:
             i, rows = pending.pop()
             f = self.feature[i]
             if f == -1:
-                result[rows, 0] = self.value[i]
+                result[rows] = self.value[i]
             else:
                 mask = np.where(
                     binned.missing[f, rows],
@@ -106,7 +111,7 @@ class Tree:
 
     def record(self):
         return dict(
-            format="openboost-tree-v2",
+            format="openboost-tree-v3",
             feature_names=list(self.binning.feature_names),
             cuts=[c.tolist() for c in self.binning.cuts],
             categories=[None if c is None else list(c) for c in self.binning.categories],
@@ -139,13 +144,14 @@ class Tree:
         if (
             not isinstance(record, dict)
             or set(record) != {"format", "feature_names", "cuts", "categories", *vectors}
-            or record["format"] != "openboost-tree-v2"
+            or record["format"] != "openboost-tree-v3"
             or any(
                 not isinstance(record[name], list)
                 for name in ("feature_names", "cuts", "categories", *vectors)
             )
             or any(not isinstance(c, list) for c in record["cuts"])
             or any(c is not None and not isinstance(c, list) for c in record["categories"])
+            or any(not isinstance(row, list) for row in record["value"])
         ):
             raise ValueError("unsupported or corrupt tree artifact schema")
         return cls(
@@ -157,7 +163,7 @@ class Tree:
 class _Growth:
     """Local construction scratch shared by ordinary policy loops."""
 
-    def __init__(self, data, fields, max_depth, max_leaves, scoring, legality, leaf):
+    def __init__(self, data, fields, max_depth, max_leaves, scoring, legality, leaf, leaf_fields):
         if type(max_depth) is not int or max_depth < 0:
             raise ValueError("nonnegative integer max_depth required")
         if max_leaves is None:
@@ -165,16 +171,25 @@ class _Growth:
         if type(max_leaves) is not int or not 1 <= max_leaves <= 2**30:
             raise ValueError("positive bounded integer max_leaves required")
         self.data, self.fields = data, fields
+        self.leaf_fields = fields if leaf_fields is None else leaf_fields
+        if self.leaf_fields.problem_identity != fields.problem_identity:
+            raise ValueError("split and leaf fields must belong to the same problem")
+        ops.histogram(data, fields, [])  # Validate split identity even for a root-only tree.
         self.max_depth, self.max_leaves = max_depth, max_leaves
         self.scoring, self.legality, self.leaf = scoring, legality, leaf
         self.nodes, self.memberships, self.depths = [], [], []
         self.append(None, 0)
 
     def append(self, rows, depth):
-        hist = ops.histogram(self.data, self.fields, rows)
-        value = float(self.leaf(hist.total, self.fields.names))
-        if not np.isfinite(value):
-            raise ValueError("nonfinite custom leaf")
+        hist = ops.histogram(self.data, self.leaf_fields, rows)
+        value = np.atleast_1d(
+            np.asarray(self.leaf(hist.total, self.leaf_fields.names), dtype=float)
+        )
+        if value.ndim != 1 or not value.size or not np.isfinite(value).all():
+            raise ValueError("nonfinite or invalid custom leaf")
+        value = _owned(value, ndim=1)
+        if self.nodes and value.shape != self.nodes[0][-1].shape:
+            raise ValueError("inconsistent learner output width")
         self.nodes.append([-1, -1, False, -1, -1, value])
         self.memberships.append(hist.rows)
         self.depths.append(depth)
@@ -224,9 +239,10 @@ def depthwise(
     scoring=ops.score,
     legality=ops.feasible,
     leaf=ops.newton_leaf,
+    leaf_fields=None,
 ):
     """Layer growth; highest-gain splits win a binding within-layer leaf budget."""
-    work = _Growth(data, fields, max_depth, max_leaves, scoring, legality, leaf)
+    work = _Growth(data, fields, max_depth, max_leaves, scoring, legality, leaf, leaf_fields)
     frontier, leaves = [0], 1
     while frontier and leaves < work.max_leaves:
         choices = []
@@ -252,13 +268,14 @@ def best_first(
     scoring=ops.score,
     legality=ops.feasible,
     leaf=ops.newton_leaf,
+    leaf_fields=None,
 ):
     """Heap of leaf gains; unchanged leaves retain their evaluated candidates.
 
     Ties use node ID then condition. Pure scoring/legality callbacks must depend
     on their candidate and immutable configuration, not an evolving call count.
     """
-    work = _Growth(data, fields, max_depth, max_leaves, scoring, legality, leaf)
+    work = _Growth(data, fields, max_depth, max_leaves, scoring, legality, leaf, leaf_fields)
     pending = []
 
     def enqueue(node):
@@ -289,13 +306,14 @@ def symmetric(
     scoring=ops.score,
     legality=ops.feasible,
     leaf=ops.newton_leaf,
+    leaf_fields=None,
 ):
     """One common condition per complete layer, legal in every active leaf.
 
     Sum gains for each common condition, including negative per-node gains.
     Split only for a positive total and a budget permitting the entire layer.
     """
-    work = _Growth(data, fields, max_depth, max_leaves, scoring, legality, leaf)
+    work = _Growth(data, fields, max_depth, max_leaves, scoring, legality, leaf, leaf_fields)
     frontier = [0]
     for _ in range(max_depth):
         if 2 * len(frontier) > work.max_leaves:

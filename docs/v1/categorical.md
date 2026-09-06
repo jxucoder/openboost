@@ -42,7 +42,7 @@ candidates and original-row routing. This is not category subset search, ordered
 target statistics or full CatBoost/LightGBM categorical parity.
 
 The public names `Binning` and `Tree` replace NumericBinning and NumericTree;
-there are no compatibility aliases. `openboost-tree-v2` persists typed dictionaries,
+there are no compatibility aliases. `openboost-tree-v3` persists typed dictionaries,
 numeric cuts, explicit topology and missing routes. Old tree formats fail loading.
 Inference validates feature kinds as well as names. Unknown tokens are allowed;
 invalid dictionaries, out-of-range conditions and corrupt topology fail. Raw
@@ -51,6 +51,7 @@ ensemble artifacts embed this tree record, so no category fitting is needed on l
 CPU squared, Normal and Formula recipes accept mixed features through the same
 preparation and learner path. This slice directly verifies complete squared
 composition and all three mixed-feature growth policies; it does not establish
-real classification or distributional quality parity. Vector/specialized leaves,
-multiclass recipes, CUDA and full evaluation remain required work.
+real classification or distributional quality parity. Specialized leaves,
+CUDA and full evaluation remain required work.
+[Multiclass and vector leaves](multiclass.md) now share this mixed-feature path.
 [Binary classification](binary.md) now includes a verified mixed-feature recipe.

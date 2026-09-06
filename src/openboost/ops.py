@@ -224,3 +224,56 @@ def partition(data, rows, candidate):
         else data.codes[candidate.feature, selected] <= candidate.threshold,
     )
     return _array(selected[mask], "<i8"), _array(selected[~mask], "<i8")
+
+
+def _vector_indices(names):
+    width = sum(n.startswith("gradient:") for n in names)
+    if width == 0:
+        raise ValueError("vector Newton fields required")
+    return (
+        [names.index(f"gradient:{k}") for k in range(width)],
+        [names.index(f"curvature:{k}") for k in range(width)],
+    )
+
+
+def vector_leaf(total, names, *, reg_lambda=1.0):
+    g, h = _vector_indices(names)
+    return _owned(
+        [
+            newton_leaf([total[i], total[j]], ("gradient", "curvature"), reg_lambda=reg_lambda)
+            for i, j in zip(g, h, strict=True)
+        ],
+        ndim=1,
+    )
+
+
+def vector_score(candidate, *, reg_lambda=1.0, split_penalty=0.0):
+    g, _h = _vector_indices(candidate.names)
+
+    def node(total):
+        with np.errstate(over="raise", invalid="raise"):
+            return -0.5 * np.dot(
+                total[g], vector_leaf(total, candidate.names, reg_lambda=reg_lambda)
+            )
+
+    gain = (
+        node(candidate.left)
+        + node(candidate.right)
+        - node(candidate.parent)
+        - _nonnegative(split_penalty)
+    )
+    if not np.isfinite(gain):
+        raise ValueError("nonfinite vector split score")
+    return float(gain)
+
+
+def vector_feasible(candidate, *, min_child_h=0.0):
+    _g, h = _vector_indices(candidate.names)
+    minimum = _nonnegative(min_child_h)
+    return (
+        min(candidate.left_count, candidate.right_count) > 0
+        and np.all(candidate.left[h] > 0)
+        and np.all(candidate.right[h] > 0)
+        and np.all(candidate.left[h] >= minimum)
+        and np.all(candidate.right[h] >= minimum)
+    )

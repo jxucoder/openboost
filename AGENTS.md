@@ -94,8 +94,9 @@ fixed/backtracking steps. Normal ordinary/Fisher joint mean/log-scale updates us
 the same state and learners. Initial B06 adds saturation Formula with explicit
 structure/full GGN directions and sequential heterogeneous run records. CUDA
 execution does not exist yet. Initial B08 adds ClassSchema, binary logistic
-geometry/recipes and schema-aware probability/label persistence; multiclass and
-vector leaves remain next. The user approved B03–B06 construction overlapping
+geometry/recipes and schema-aware probability/label persistence. B08 now also
+provides multiclass diagonal bounds, joint vector leaves and separate split/leaf
+statistics with mapped outputs; full A6 workflows remain unverified. The user approved B03–B06 construction overlapping
 unfinished F0.3; see Sprint 018 and the active plan amendment. The last full old implementation is Git revision
 `50acfc6`; historical tests/examples require that revision. There is no compatibility
 shim, legacy backend, trainer, or model facade in the current package.

@@ -1,6 +1,6 @@
 # Tree growth policies
 
-The CPU growers assemble public histogram, candidate, choice, routing and scalar
+The CPU growers assemble public histogram, candidate, choice, routing and scalar/vector
 leaf operations. Each accepts replacement scoring, legality and leaf functions.
 Child IDs are explicit and stable.
 
@@ -41,23 +41,26 @@ with tempfile.TemporaryDirectory() as directory:
 
 `scoring(candidate)` and `legality(candidate)` have the public operation contracts.
 Scoring executes once per legal candidate, including when ranking nodes within a
-layer. `leaf(total, names)` returns one finite scalar from weighted additive sums.
+layer. `leaf(total, names)` returns a finite scalar or nonempty vector from weighted
+additive sums. Every node must return the same width. Optional `leaf_fields` from
+the same problem separates split statistics from full leaf statistics. Vector
+Newton adapters and callbacks are described in [multiclass and vectors](multiclass.md).
 For custom Newton regularization, configure both scoring and leaf solving with
 the same regularizer. A custom legality callback must preserve nonempty children;
 the grower rejects an admitted empty child. Callbacks should be deterministic.
 
 `Tree` owns immutable int32 feature/threshold/child arrays, boolean missing
-routes and float64 values. Leaf children, feature and threshold use -1; prediction
+routes and float64 values shaped [nodes, L]. Leaf children, feature and threshold use -1; prediction
 uses explicit indices. Construction/load rejects cycles, shared or unreachable
 nodes, invalid indices, schema mismatches and nonfinite leaves. Artifacts contain
 numeric cuts, typed category dictionaries and ordered feature names. Numeric
 conditions use <=, categorical conditions use equality. The saved transformer
 defines condition kinds and routes unknown tokens as missing.
 
-`predict` returns raw scalar learner output `[N, 1]`. It applies no base, coefficient
+`predict` returns raw learner output `[N, L]` (L=1 for scalar leaves). It applies no base, coefficient
 or observation offset. Mapped tree terms integrate with the transaction model and the
 [squared](squared.md) and [Normal](normal.md) recipes. Artifacts
-are for inference, not training resumption. Vector/linear leaves,
+are for inference, not training resumption. Linear leaves,
 CUDA and performance claims remain outside this slice.
 
 

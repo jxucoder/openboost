@@ -2,7 +2,8 @@
 
 Numeric inputs, mapped ensemble artifacts and explicit run state are public.
 Numeric/categorical operations support depthwise, best-first and symmetric growth.
-Squared, Normal, Formula and binary CPU recipes plus sequential runs are public.
+Squared, Normal, Formula, binary and multiclass CPU recipes are public.
+Vector leaves, separate split/leaf statistics and sequential runs are available.
 CUDA execution is not implemented yet.
 """
 

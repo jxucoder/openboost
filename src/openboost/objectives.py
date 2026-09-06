@@ -282,3 +282,49 @@ class Binary:
     @classmethod
     def loss(cls, problem, raw):
         return cls.geometry(problem, raw)[0]
+
+
+class Multiclass:
+    """Softmax likelihood with 2*p*(1-p) diagonal upper bound, not exact Hessian."""
+
+    @staticmethod
+    def validate(problem):
+        if (
+            not isinstance(problem, Problem)
+            or problem.classes is None
+            or problem.raw_width != len(problem.classes.values)
+            or problem.structure
+        ):
+            raise ValueError(
+                "multiclass requires class schema, one raw column per class and no structure"
+            )
+
+    @classmethod
+    def base(cls, problem):
+        cls.validate(problem)
+        if len(np.unique(problem.target[:, 0])) != problem.raw_width:
+            raise ValueError("multiclass training requires every declared class")
+        return _owned(np.zeros(problem.raw_width), ndim=1)
+
+    @classmethod
+    def geometry(cls, problem, raw):
+        from .outputs import softmax_probabilities
+
+        cls.validate(problem)
+        values = problem.with_offset(raw)
+        probability = softmax_probabilities(values)
+        codes = problem.target[:, 0].astype(int)
+        with np.errstate(over="raise", invalid="raise", divide="raise"):
+            shifted = values - values.max(axis=1, keepdims=True)
+            losses = np.log(np.exp(shifted).sum(axis=1)) - shifted[np.arange(len(values)), codes]
+            gradient = probability.copy()
+            gradient[np.arange(len(values)), codes] -= 1
+            bound = 2 * probability * (1 - probability)
+            loss = float(np.dot(problem.weight / problem.weight.sum(), losses))
+        if not np.isfinite(loss):
+            raise ValueError("nonfinite multiclass loss")
+        return loss, _owned(gradient, ndim=2), _owned(bound, ndim=2)
+
+    @classmethod
+    def loss(cls, problem, raw):
+        return cls.geometry(problem, raw)[0]

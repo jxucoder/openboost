@@ -36,8 +36,8 @@ class TreeTerm:
         if not isinstance(self.learner, Tree):
             raise ValueError("tree learner required")
         mapping = _owned(self.mapping, ndim=2)
-        if mapping.shape[0] != 1:
-            raise ValueError("scalar learner requires a [1, K] output mapping")
+        if mapping.shape[0] != self.learner.output_width:
+            raise ValueError("learner requires an [L, K] output mapping")
         coefficient = ConstantTerm([0], self.coefficient).coefficient
         object.__setattr__(self, "mapping", mapping)
         object.__setattr__(self, "coefficient", coefficient)
@@ -47,7 +47,7 @@ class TreeTerm:
 class Model:
     """Numeric raw ensemble; observation offsets are supplied at inference time.
 
-    This replaces the B03 constant-only format. Explicit [1, K] maps let scalar
+    This replaces the B03 constant-only format. Explicit [L, K] maps let vector
     learners update multiple raw columns; constants update the entire base width.
     """
 
@@ -67,10 +67,12 @@ class Model:
         base = _owned(self.base, ndim=1)
         if self.classes is not None and (
             not isinstance(self.classes, ClassSchema)
-            or len(self.classes.values) != 2
-            or len(base) != 1
+            or not (
+                (len(self.classes.values) == 2 and len(base) == 1)
+                or len(base) == len(self.classes.values)
+            )
         ):
-            raise ValueError("current classifier model requires two classes and one raw column")
+            raise ValueError("classifier raw width must be one binary logit or one logit per class")
         terms = tuple(self.terms)
         bound = np.abs(base).copy()
         with np.errstate(over="raise", invalid="raise"):
@@ -81,13 +83,15 @@ class Model:
                     bound += abs(term.coefficient) * np.abs(term.value)
                 elif isinstance(term, TreeTerm):
                     if term.learner.binning.feature_names != names or term.mapping.shape != (
-                        1,
+                        term.learner.output_width,
                         len(base),
                     ):
                         raise ValueError("tree schema or output mapping differs from model")
                     # Conservative finite envelope over every leaf and every input.
-                    magnitude = np.max(np.abs(term.learner.value[term.learner.feature == -1]))
-                    bound += abs(term.coefficient) * magnitude * np.abs(term.mapping[0])
+                    magnitude = np.max(
+                        np.abs(term.learner.value[term.learner.feature == -1]), axis=0
+                    )
+                    bound += abs(term.coefficient) * (magnitude @ np.abs(term.mapping))
                 else:
                     raise ValueError("unsupported model term")
         object.__setattr__(self, "feature_names", names)
@@ -119,9 +123,10 @@ class Model:
     def predict_proba(self, data, *, offset=None):
         if self.classes is None:
             raise ValueError("probabilities require a classification schema")
-        from .outputs import binary_probabilities
+        from .outputs import binary_probabilities, softmax_probabilities
 
-        return binary_probabilities(self.predict(data, offset=offset))
+        raw = self.predict(data, offset=offset)
+        return binary_probabilities(raw) if len(self.base) == 1 else softmax_probabilities(raw)
 
     def predict_label(self, data, *, offset=None):
         probabilities = self.predict_proba(data, offset=offset)

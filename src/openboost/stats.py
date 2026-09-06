@@ -85,3 +85,22 @@ def least_squares(problem, direction):
     """Fit an unweighted scalar direction: G=-w*z, H=w, not likelihood curvature."""
     z = np.asarray(direction, dtype=float)
     return newton(problem, -z, np.ones(len(problem.target)))
+
+
+def vector_newton(problem, gradient, curvature):
+    """Unweighted diagonal [N,L] geometry -> once-weighted named vector fields."""
+    g, h = _owned(gradient, ndim=2), _owned(curvature, ndim=2)
+    if g.shape != h.shape or len(g) != len(problem.target) or np.any(h < 0):
+        raise ValueError("aligned vector gradients and nonnegative diagonal curvature required")
+    width = g.shape[1]
+    names = tuple(f"{kind}:{k}" for kind in ("gradient", "curvature") for k in range(width))
+    return apply_weight(
+        RowFields(
+            problem.identity,
+            problem.data.identity,
+            names,
+            np.column_stack((g, h)),
+            ("unweighted",) * (2 * width),
+        ),
+        problem,
+    )

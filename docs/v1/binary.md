@@ -47,7 +47,6 @@ now includes class labels; malformed/unsupported schemas and earlier formats fai
 loading. Regression recipes reject classification-tagged problems rather than
 silently treating class codes as numeric regression targets.
 
-This slice verifies binary geometry and complete mixed-feature inference. Schemas
-can describe multiple classes, but the current classifier model and recipe accept
-exactly two; multiclass bounds, joint vector leaves and broader classification
-quality evaluation remain next. No XGBoost/LightGBM/CatBoost parity or CUDA claim.
+This slice verifies binary geometry and complete mixed-feature inference. The binary
+recipe accepts exactly two classes. [Multiclass](multiclass.md) provides a separate
+joint vector-tree recipe. Broader classification quality evaluation remains open. No XGBoost/LightGBM/CatBoost parity or CUDA claim.

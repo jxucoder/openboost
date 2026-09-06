@@ -9,10 +9,26 @@ import numpy as np
 
 from .artifacts import Model, TreeTerm
 from .binning import Binning
-from .objectives import Binary, Formula, Normal, Squared, diagonal_direction, full_direction
-from .ops import _nonnegative, feasible, newton_leaf, score
+from .objectives import (
+    Binary,
+    Formula,
+    Multiclass,
+    Normal,
+    Squared,
+    diagonal_direction,
+    full_direction,
+)
+from .ops import (
+    _nonnegative,
+    feasible,
+    newton_leaf,
+    score,
+    vector_feasible,
+    vector_leaf,
+    vector_score,
+)
 from .runtime import AcceptedState, initialize, preview, propose_terms, resolve
-from .stats import least_squares, newton
+from .stats import least_squares, newton, vector_newton
 from .tree import depthwise
 
 
@@ -30,7 +46,7 @@ class SquaredStep:
 @dataclass(frozen=True)
 class FitResult:
     state: AcceptedState
-    steps: tuple[SquaredStep | NormalStep | FormulaStep | BinaryStep, ...]
+    steps: tuple[SquaredStep | NormalStep | FormulaStep | BinaryStep | MulticlassStep, ...]
 
 
 def squared(
@@ -407,6 +423,94 @@ def binary(
                 state.train_raw,
                 loss_before,
                 Binary.loss(train, state.train_raw),
+                coefficients,
+                accepted,
+                failures,
+            )
+        )
+    return FitResult(state, tuple(steps))
+
+
+@dataclass(frozen=True, eq=False)
+class MulticlassStep:
+    gradient: np.ndarray
+    diagonal_bound: np.ndarray
+    raw_before: np.ndarray
+    raw_after: np.ndarray
+    loss_before: float
+    loss_after: float
+    coefficients: tuple[float, ...]
+    accepted: bool
+    failures: tuple[str | None, ...]
+
+
+def multiclass(
+    train,
+    validation,
+    *,
+    context,
+    rounds=2,
+    learning_rate=0.1,
+    bins=254,
+    max_depth=2,
+    max_leaves=None,
+    reg_lambda=1.0,
+    min_child_h=0.0,
+    split_penalty=0.0,
+    step="fixed",
+    max_trials=6,
+    learner=None,
+):
+    """One joint vector tree per round from a common softmax raw snapshot."""
+    Multiclass.validate(train)
+    Multiclass.validate(validation)
+    custom = learner is not None
+    rate, learner = _configuration(
+        rounds,
+        learning_rate,
+        max_depth,
+        max_leaves,
+        reg_lambda,
+        min_child_h,
+        split_penalty,
+        step,
+        max_trials,
+        learner,
+    )
+    if not custom:
+        learner = partial(
+            depthwise,
+            max_depth=max_depth,
+            max_leaves=max_leaves,
+            scoring=partial(vector_score, reg_lambda=reg_lambda, split_penalty=split_penalty),
+            legality=partial(vector_feasible, min_child_h=min_child_h),
+            leaf=partial(vector_leaf, reg_lambda=reg_lambda),
+        )
+    base = Multiclass.base(train)
+    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    state = initialize(context, train, validation, base, score=Multiclass.loss)
+    steps = []
+    for _ in range(rounds):
+        before = state.train_raw
+        loss_before, gradient, bound = Multiclass.geometry(train, before)
+        tree = learner(binned, vector_newton(train, gradient, bound))
+        state, coefficients, accepted, failures = _trials(
+            state,
+            (TreeTerm(tree, np.eye(train.raw_width)),),
+            Multiclass.loss,
+            loss_before,
+            rate,
+            step,
+            max_trials,
+        )
+        steps.append(
+            MulticlassStep(
+                gradient,
+                bound,
+                before,
+                state.train_raw,
+                loss_before,
+                Multiclass.loss(train, state.train_raw),
                 coefficients,
                 accepted,
                 failures,

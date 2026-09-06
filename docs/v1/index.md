@@ -23,3 +23,5 @@ The old production API was retired. Historical examples require revision
 
 [Binary classification](binary.md) adds typed class schemas, stable logistic
 geometry and persisted probability/label output through the same foundation.
+[Multiclass and vector leaves](multiclass.md) add joint softmax updates, separate
+split/leaf statistics and arbitrary learner-to-model output mappings.

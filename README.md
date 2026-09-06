@@ -17,7 +17,7 @@ artifacts. See [B03 usage and boundaries](docs/v1/cpu-state.md).
 train-only dictionaries and explicit missing/unseen routing.
 
 Public [numeric operations](docs/v1/numeric-ops.md) now add quantile binning,
-weighted row fields, histograms, split callbacks, routing and scalar leaves.
+weighted row fields, histograms, split callbacks, routing and scalar/vector leaves.
 Public [depthwise, best-first and symmetric growers](docs/v1/trees.md) compose
 these operations and persist validated numeric/categorical trees. The first complete [squared-error recipe](docs/v1/squared.md)
 and [Normal recipe](docs/v1/normal.md) support weights, offsets and
@@ -26,6 +26,8 @@ joint mean/log-scale updates. [Formula and sequential runs](docs/v1/formula-runs
 add structured full-metric updates and independent heterogeneous jobs. CUDA
 execution is not implemented yet. [Binary classification](docs/v1/binary.md) now
 persists typed class order and exposes probability/label inference.
+[Multiclass and vector leaves](docs/v1/multiclass.md) add joint softmax updates
+and separate split/leaf statistics with arbitrary output mappings.
 
 Independent references and comparator/data checks remain evaluation preparation.
 F0.3 is still open; the user approved overlapping B03–B06 construction without
