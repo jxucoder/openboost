@@ -13,6 +13,8 @@ been retired; the package currently provides a namespace, not a training API.
 Independent data, tree, classification, ranking, quantile, vector-leaf, positive-target,
 AFT, Normal, Formula, isolated-run, author-task and finite integration references have 288 passing tests. They are
 correctness preparation, not proof of a completed foundation or product parity.
+An [artifact integrity judge](benchmarks/v1/README.md) has 48 additional adversarial
+checks; real evaluation manifests, execution and quality gates are still pending.
 
 - [Execution and reflections](v1-sprints/README.md)
 - [Construction design](planning/foundation-construction-design.md)

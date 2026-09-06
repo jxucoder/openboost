@@ -12,7 +12,9 @@
 required case 中任何非 pass 状态使对应 gate 未通过；optional 的 unsupported 仅能
 支持能力边界说明。没有设备产生 `not_run`，不算 GPU pass。缺少预期 case 是失败。
 
-F0 需实现 `benchmarks/v1/` 下的 manifest、runner 和判卷器；路径是未来交付，尚不存在。
+F0 需实现 `benchmarks/v1/` 下的 manifest、runner 和判卷器。
+Sprint 011 已交付[产物完整性检查](../benchmarks/v1/README.md)，仅验证声明矩阵/缓存身份/文件；
+真实manifest冻结、runner及独立质量/E-gate判卷仍未完成，不能以integrity_pass代替gate通过。
 每次 run 的不可变目录至少含：
 
 - `manifest.json`：协议 hash、代码 SHA/dirty、数据版本/hash/行与 split ID、目标/

@@ -34,6 +34,9 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [v1 artifact integrity](2026-09-06-v1-artifact-integrity.md) — missing cells,
+  stale cache identities and false pass claims fail; quality gates remain unevaluated.
+
 - [Reference integration and F0.2 exit](2026-09-06-v1-reference-integration-exit.md) —
   finite model/state compositions, 288 tests; next F0.3, production gates pending.
 

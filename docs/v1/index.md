@@ -13,6 +13,8 @@ namespace awaiting v1 components; there is no training or prediction API yet.
 Sprints 001 and 003–010 delivered independent data, tree, classification, ranking,
 quantile, vector-leaf, positive-target, AFT, Normal, Formula, isolated-run, author-task and finite integration references with 288 passing CPU tests.
 Those checks are preparation for implementation, not evidence that v1 is complete.
+F0.3 now includes an artifact integrity judge with 48 additional adversarial checks.
+Real data/protocol freezing, execution and independent quality evaluation remain pending.
 
 The repository's `v1-sprints/` directory contains execution plans, verification
 results and reflections. `planning/foundation-construction-design.md` defines
