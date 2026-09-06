@@ -14,8 +14,9 @@ Agent 用公开、可组合组件完成正确的算法修改，并验证其成�
 |---|---|---|---|
 | 001 | B01 / F0.2 的 scalar/tree 子集 | 完成，55 tests passed | [独立 scalar/tree 参考](001-scalar-tree-reference.md) |
 | 002 | 用户要求提前退役旧生产代码 | 完成，namespace/build/docs 检查通过 | [从干净实现起点构建 v1](002-retire-legacy-production.md) |
+| 003 | B01 / F0.2 的列转换与分类子集 | 完成；验收见记录 | [训练转换与分类参考](003-data-classification-reference.md) |
 
-接下来完成 F0.2 的其他参考（分类/类别、ranking/quantile/vector、正目标/AFT、Normal/
+接下来完成 F0.2 的其他参考（行身份/类别完整生长、ranking/quantile/vector、正目标/AFT、Normal/
 Formula、state/run），再完成 B02/F0.3 的冻结评测。F1 公共 foundation 实现从 B03 开始，
 按 B04–B10 接通可组合组件与全部算法；不把 reference 代码称为产品实现。
 具体后续 sprint 在开始时按依赖选定有限范围，不能跳过现有 F 阶段出口。
@@ -44,6 +45,7 @@ Formula、state/run），再完成 B02/F0.3 的冻结评测。F1 公共 foundati
 
 F0.1 规格与构建设计已提交。F0.2 进行中；F0.3、F1–F5 均未完成。
 Sprint 001 已交付独立 numeric scalar/tree 参考；Sprint 002 已按用户要求退役旧生产代码。
-下一 sprint 继续 typed data/binning/category/classification 的 F0.2 参考，再补其他数学与状态。
+Sprint 003 已补充列分箱/类别路由和 binary/softmax 数学。下一 sprint 优先 ranking/quantile/vector
+参考；行身份绑定、类别完整生长及其余数学与状态仍须补齐。
 E0–E6 没有因为创建本目录而通过；E7 独立作者采用尚无新证据。每项 A 的任务卡已定义，
 其 v1 production 实现和真实 eval 仍须逐项完成。

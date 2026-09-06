@@ -10,7 +10,8 @@ making a correct, reproducible algorithm change.
 
 The old production code has been retired. The current package is an empty
 namespace awaiting v1 components; there is no training or prediction API yet.
-Sprint 001 delivered independent scalar/tree references with 55 passing CPU tests.
+Sprints 001 and 003 delivered independent scalar/tree, column-transform and
+classification references with 95 passing CPU tests.
 Those checks are preparation for implementation, not evidence that v1 is complete.
 
 The repository's `v1-sprints/` directory contains execution plans, verification

@@ -10,7 +10,7 @@ of making a correct, reproducible algorithm change.
 
 This checkout is **under construction**. The old production implementation has
 been retired; the package currently provides a namespace, not a training API.
-The first independent scalar/tree references have 55 passing tests. They are
+Independent scalar/tree, column-transform and classification references have 95 passing tests. They are
 correctness preparation, not proof of a completed foundation or product parity.
 
 - [Execution and reflections](v1-sprints/README.md)

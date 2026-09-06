@@ -81,3 +81,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
   evidence gaps found in the deep audit.
 - `2026-08-15-scoringbench-integration.md` — third-party benchmark integration,
   validation, and Intel macOS runtime limitation.
+
+- [2026-09-05: v1 data and classification references](2026-09-05-v1-data-classification-reference.md) — independent column transforms, geometry and two-round checks.

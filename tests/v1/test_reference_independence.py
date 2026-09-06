@@ -17,6 +17,13 @@ class BlockProduction(importlib.abc.MetaPathFinder):
 
 sys.meta_path.insert(0, BlockProduction())
 sys.path.insert(0, sys.argv[1])
+from tests.v1.reference.data import NumericBinning, CategoryMap
+from tests.v1.reference.classification import ClassMap, binary, softmax
+assert NumericBinning.fit([0, 0, 0, 1], bins=2).cuts == (0.,)
+assert CategoryMap.fit(['a', 'b']).transform(['new'])[1] == (True,)
+assert ClassMap.fit(['b', 'a']).encode(['b']) == (1,)
+assert binary([0], [1])[1][0] == -.5
+assert abs(softmax([[0, 0, 0]], [0])[1][0, 0] - 1/3) < 1e-15
 from tests.v1.reference.tree import boost_squared
 for policy in ("depthwise", "best_first", "symmetric"):
     result = boost_squared([[0], [0], [1], [1]], [-2, -2, 2, 2], policy=policy)
