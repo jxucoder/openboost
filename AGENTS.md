@@ -74,7 +74,8 @@ not real-data quality acceptance. Sprint 045 adds A6 frozen target-scale binding
 and original-unit prediction on all five Parkinsons folds. Next: A13 selection
 and remaining adapters/D5 checks. Sprint 046 adds training-scale-verified A6
 selection and a synthetic 16-trial current search/release check. Real searches
-and remaining adapters/D5 checks are open. These internal trials
+and remaining adapters/D5 checks are open. Sprint 047 adds verified-scale A6
+standardized quality reporting alongside every per-target gate. These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
 preparation/M=1/8/32 fixed-budget equivalence are implemented (Sprints 036–037).

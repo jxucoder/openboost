@@ -126,3 +126,118 @@ def test_structural_auxiliary_preserves_row_identity(tmp_path):
     for cell in cells:
         cell["auxiliary"]["structure"] = entry(support)
     assert report(manifest, tmp_path)["errors"]
+
+
+def entry(path):
+    return {"path": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+
+
+def multioutput_fixture(root):
+    import json
+
+    from benchmarks.v1.preprocessing import fit_target_scale
+
+    cells = []
+    for fold in range(5):
+
+        def save(name, fold=fold, **values):
+            path = root / f"{fold}-{name}.npz"
+            np.savez(path, **values)
+            return entry(path)
+
+        target = np.array([[-1.0, -100.0, 7.0], [1.0, 100.0, 7.0]])
+        scale_path = root / f"{fold}-scale.json"
+        scale_path.write_text(json.dumps(fit_target_scale(target)))
+        cells.append(
+            dict(
+                application="A6",
+                fold=fold,
+                kind="loss",
+                primary=["rmse_0", "rmse_1", "rmse_2", "standardized_rmse"],
+                truth=save("truth", row_ids=[2, 3], y=np.zeros((2, 3))),
+                candidate=save(
+                    "candidate", row_ids=[2, 3], prediction=np.tile([1.0, 100.0, 0.0], (2, 1))
+                ),
+                baseline=save(
+                    "baseline", row_ids=[2, 3], prediction=np.tile([1.0, 100.0, 0.0], (2, 1))
+                ),
+                auxiliary=dict(
+                    train_rows=save("rows", row_ids=[0, 1]),
+                    train_targets=save("targets", row_ids=[0, 1], y=target),
+                    target_scale=entry(scale_path),
+                ),
+            )
+        )
+    return dict(schema="openboost-quality-pairs-v1", cells=cells)
+
+
+def test_a6_reports_standardized_average(tmp_path):
+    manifest = multioutput_fixture(tmp_path)
+    result = report(manifest, tmp_path)
+    assert not result["errors"]
+    actual = result["comparisons"]["A6"]
+    assert actual["pass"]
+    assert actual["fold_metrics"]["0"]["candidate"]["standardized_rmse"] == 2 / 3
+    assert set(actual["metrics"]) == {"rmse_0", "rmse_1", "rmse_2", "standardized_rmse"}
+    assert not result["E3_pass"]
+
+
+def test_a6_average_cannot_hide_target_regression(tmp_path):
+    manifest = multioutput_fixture(tmp_path)
+    for cell in manifest["cells"]:
+        path = tmp_path / cell["candidate"]["path"]
+        np.savez(path, row_ids=[2, 3], prediction=np.tile([1.2, 0.0, 0.0], (2, 1)))
+        cell["candidate"] = entry(path)
+    result = report(manifest, tmp_path)
+    assert not result["errors"]
+    comparison = result["comparisons"]["A6"]
+    assert comparison["metrics"]["standardized_rmse"]["pass"]
+    assert not comparison["metrics"]["rmse_0"]["pass"]
+    assert not comparison["pass"]
+
+
+def test_a6_bad_scale_support_is_rejected(tmp_path):
+    import copy
+    import json
+
+    manifest = multioutput_fixture(tmp_path)
+    original = copy.deepcopy(manifest)
+    manifest["cells"][0].pop("auxiliary")
+    assert report(manifest, tmp_path)["errors"]
+    manifest = copy.deepcopy(original)
+    manifest["cells"][0]["primary"].remove("rmse_0")
+    assert report(manifest, tmp_path)["errors"]
+    manifest = copy.deepcopy(original)
+    path = tmp_path / manifest["cells"][0]["auxiliary"]["target_scale"]["path"]
+    record = json.loads(path.read_text())
+    record["std"][1] = 1.0
+    path.write_text(json.dumps(record))
+    manifest["cells"][0]["auxiliary"]["target_scale"] = entry(path)
+    assert report(manifest, tmp_path)["errors"]
+
+
+def test_a6_training_overlap_and_target_permutation_fail(tmp_path):
+    manifest = multioutput_fixture(tmp_path)
+    support = manifest["cells"][0]["auxiliary"]
+    path = tmp_path / support["train_targets"]["path"]
+    np.savez(path, row_ids=[1, 0], y=[[-1.0, -100.0, 7.0], [1.0, 100.0, 7.0]])
+    support["train_targets"] = entry(path)
+    assert report(manifest, tmp_path)["errors"]
+    row_path = tmp_path / support["train_rows"]["path"]
+    np.savez(row_path, row_ids=[1, 2])
+    np.savez(path, row_ids=[1, 2], y=[[-1.0, -100.0, 7.0], [1.0, 100.0, 7.0]])
+    support.update(train_rows=entry(row_path), train_targets=entry(path))
+    assert report(manifest, tmp_path)["errors"]
+
+
+def test_a6_scale_cannot_use_evaluation_targets(tmp_path):
+    import json
+
+    from benchmarks.v1.preprocessing import fit_target_scale
+
+    manifest = multioutput_fixture(tmp_path)
+    cell = manifest["cells"][0]
+    path = tmp_path / cell["auxiliary"]["target_scale"]["path"]
+    path.write_text(json.dumps(fit_target_scale(np.zeros((2, 3)))))
+    cell["auxiliary"]["target_scale"] = entry(path)
+    assert report(manifest, tmp_path)["errors"]

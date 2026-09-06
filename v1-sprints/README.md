@@ -13,7 +13,7 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
 Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 827 passes;
+shared training preparation. The latest full regression records 832 passes;
 this includes references/evaluation infrastructure and is not a phase gate.
 Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
 Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
@@ -24,7 +24,9 @@ connects current A1/A11 workers to all five frozen housing folds.
 [Sprint 045](045-multioutput-worker.md) adds scale-bound A6 Parkinsons folds.
 [Sprint 046](046-scale-bound-selection.md) binds A6 selection to training scales
 and runs a current 16-configuration synthetic search with sealed model release.
-Next: remaining application adapters, real search integration and D5 checks.
+[Sprint 047](047-multioutput-quality.md) adds verified-scale A6 standardized
+quality reporting while retaining every per-target gate. Next: remaining
+application adapters, real search integration and D5 checks.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.
 

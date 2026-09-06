@@ -9,7 +9,8 @@ external result interoperability. [Sprint 043](043-expectile-extension.md) adds
 installed D1 expectile evidence. [Sprint 044](044-current-worker.md) starts M3 with
 current A1/A11 validation workers; [Sprint 045](045-multioutput-worker.md) adds A6
 scale-bound validation integration. [Sprint 046](046-scale-bound-selection.md)
-adds scale-bound selection and a synthetic current search. Remaining M2 and M3–M6 are open.
+adds scale-bound selection and a synthetic current search. [Sprint 047](047-multioutput-quality.md)
+adds standardized A6 quality reporting. Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), all

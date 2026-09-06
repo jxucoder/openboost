@@ -607,3 +607,19 @@ seals/re-audits the winner, and invokes fresh-process inference only after featu
 release. All trials and failures are retained. It scores no test labels and is
 not the frozen real-data quality grid, a speed benchmark or fused train-many.
 A6 final comparative quality reporting and the remaining real searches remain open.
+
+### A6 paired quality reporting
+
+A6 quality cells require all `rmse_k` primary metrics followed by
+`standardized_rmse`. Their `auxiliary` object must supply hashed `train_rows`
+(NPZ row_ids), `train_targets` (NPZ row_ids/y), and `target_scale` (JSON
+mean/std/constant). The report verifies aligned, unique training IDs, disjointness
+from evaluation rows, matching target width and an exactly recomputed unweighted
+training-population scale. Missing or inconsistent support is an error.
+
+The standardized metric is the arithmetic mean of per-target original-unit RMSE
+divided by each verified training standard deviation. Constant targets use scale
+one. It is reported for each fold and compared across five paired folds alongside
+every target. A passing average cannot override a failed target. As before, this
+layer never marks E3 complete: selected-model provenance, full required coverage
+and trusted source/protocol identity remain separate obligations.

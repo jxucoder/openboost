@@ -20,6 +20,7 @@ from benchmarks.v1.auxiliary import (
     survival,
 )
 from benchmarks.v1.judge import read_json
+from benchmarks.v1.preprocessing import fit_target_scale
 from benchmarks.v1.quality import compare_folds, metrics
 
 PRIMARY = {
@@ -107,8 +108,12 @@ def report(manifest, directory):
             ids = truth["row_ids"]
             if ids.ndim != 1 or len(np.unique(ids)) != len(ids) or len(ids) != len(truth["y"]):
                 raise ValueError("invalid target row IDs")
+            if app == "A6" and (truth["y"].ndim != 2 or not truth["y"].shape[1]):
+                raise ValueError("nonempty vector targets required")
             primary = (
-                [f"rmse_{k}" for k in range(truth["y"].shape[1])] if app == "A6" else PRIMARY[app]
+                [f"rmse_{k}" for k in range(truth["y"].shape[1])] + ["standardized_rmse"]
+                if app == "A6"
+                else PRIMARY[app]
             )
             kind = "nll" if app in ["A10", "A11"] else "ndcg" if app == "A4" else "loss"
             if cell["primary"] != primary or cell["kind"] != kind:
@@ -116,7 +121,31 @@ def report(manifest, directory):
             auxiliary = cell.get("auxiliary", {})
             if not isinstance(auxiliary, dict):
                 raise ValueError("auxiliary must be an object")
-            if app == "A10" and auxiliary:
+            if app == "A6":
+                if set(auxiliary) != {"train_rows", "train_targets", "target_scale"}:
+                    raise ValueError("A6 requires training rows, targets and scale")
+                rows = load(root, auxiliary["train_rows"])
+                targets = load(root, auxiliary["train_targets"])
+                if set(rows) != {"row_ids"} or set(targets) != {"row_ids", "y"}:
+                    raise ValueError("invalid A6 training schema")
+                train_ids = rows["row_ids"]
+                if (
+                    train_ids.ndim != 1
+                    or not len(train_ids)
+                    or len(np.unique(train_ids)) != len(train_ids)
+                    or train_ids.dtype.kind not in "iuUS"
+                    or ids.dtype.kind != train_ids.dtype.kind
+                    or not np.array_equal(train_ids, targets["row_ids"])
+                    or np.intersect1d(train_ids, ids).size
+                ):
+                    raise ValueError("A6 training row mismatch or evaluation overlap")
+                if targets["y"].shape != (len(train_ids), truth["y"].shape[1]):
+                    raise ValueError("A6 training target shape mismatch")
+                scale = read_json(load_bytes(root, auxiliary["target_scale"]))
+                expected_scale = fit_target_scale(targets["y"])
+                if json.dumps(scale, sort_keys=True) != json.dumps(expected_scale, sort_keys=True):
+                    raise ValueError("A6 scale differs from training population")
+            elif app == "A10" and auxiliary:
                 if set(auxiliary) != {"censoring"}:
                     raise ValueError("invalid survival auxiliary entry")
                 support = read_json(load_bytes(root, auxiliary["censoring"]))
@@ -144,7 +173,11 @@ def report(manifest, directory):
                     raise ValueError("prediction row identity mismatch")
                 kwargs = {k: v for k, v in truth.items() if k not in ["y", "row_ids"]}
                 measured = metrics(app, truth["y"], pred["prediction"], row_ids=ids, **kwargs)
-                if app in ["A2", "A3"]:
+                if app == "A6":
+                    measured["standardized_rmse"] = float(
+                        np.mean([measured[f"rmse_{k}"] / std for k, std in enumerate(scale["std"])])
+                    )
+                elif app in ["A2", "A3"]:
                     measured = classification(
                         app, truth["y"], pred["prediction"], truth.get("weight")
                     )
