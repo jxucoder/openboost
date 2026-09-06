@@ -11,7 +11,9 @@ current A1/A11 validation workers; [Sprint 045](045-multioutput-worker.md) adds 
 scale-bound validation integration. [Sprint 046](046-scale-bound-selection.md)
 adds scale-bound selection and a synthetic current search. [Sprint 047](047-multioutput-quality.md)
 adds standardized A6 quality reporting. [Sprint 048](048-classification-workers.md)
-adds classification adapters and Adult validation. Remaining M2 and M3–M6 are open.
+adds classification adapters and Adult validation. [Sprint 049](049-covertype-worker.md)
+records five Covertype worker timeouts: profile this full-data CPU path next,
+before additional adapters. Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), all

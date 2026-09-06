@@ -28,7 +28,9 @@ and runs a current 16-configuration synthetic search with sealed model release.
 quality reporting while retaining every per-target gate. Next: remaining
 application adapters, real search integration and D5 checks.
 [Sprint 048](048-classification-workers.md) adds A2/A3 probability adapters and
-five-fold Adult integration; full Covertype runs remain next.
+five-fold Adult integration. [Sprint 049](049-covertype-worker.md) records all
+five full Covertype folds timing out at 90 seconds. A3 validation remains
+incomplete; next profile this CPU path before further adapter expansion.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.
 
