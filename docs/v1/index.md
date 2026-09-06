@@ -5,7 +5,8 @@ construction. Initial public CPU ownership, run-state and constant-term artifact
 components are available; see [CPU state usage](cpu-state.md).
 
 [Numeric operations](numeric-ops.md) provide binning, histograms, candidate
-selection, routing and scalar leaves. Tree assembly, complete boosting recipes
+selection, routing and scalar leaves. [Depthwise trees](trees.md) compose these
+operations and support numeric inference/persistence. Complete boosting recipes
 and CUDA execution are not implemented yet.
 All R1–R9/C1–C7/A1–A13 remain required. Evaluation preparation continues alongside
 the user-approved B03–B06 construction overlap. No complete quality, speed or

@@ -15,8 +15,8 @@ artifacts. See [B03 usage and boundaries](docs/v1/cpu-state.md).
 
 Public [numeric operations](docs/v1/numeric-ops.md) now add quantile binning,
 weighted row fields, histograms, split callbacks, routing and scalar leaves.
-These components do not yet assemble trees or train boosting models; a depthwise
-grower, tree artifacts and complete recipes are next. CUDA execution is not
+A public [depthwise grower](docs/v1/trees.md) composes these operations and persists
+validated numeric trees. Tree terms in run state and complete boosting recipes are next. CUDA execution is not
 implemented in the new production package.
 
 Independent references and comparator/data checks remain evaluation preparation.

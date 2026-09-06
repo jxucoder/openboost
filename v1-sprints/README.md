@@ -79,5 +79,7 @@ The user approved the Sprint 017 overlap on 2026-09-06. Active construction:
 acceptance threshold was removed.
 
 [Sprint 019 / B04 operations](019-b04-numeric-operations.md) delivers numeric
-preparation and shared scalar split operations. Depthwise assembly and tree
-artifacts are next; no completed boosting or CUDA implementation is claimed.
+preparation and shared scalar split operations.
+[Sprint 020 / B04 trees](020-b04-depthwise-tree.md) adds depthwise assembly and
+validated numeric tree inference/persistence. Tree terms and complete recipes are
+next; no completed boosting or CUDA implementation is claimed.

@@ -2,7 +2,7 @@
 
 The initial B04 slice exposes CPU binning, named row fields, histograms, candidate
 statistics, scoring/feasibility callbacks, routing and scalar Newton leaves.
-There is no assembled tree grower or tree inference artifact yet.
+The [depthwise grower](trees.md) composes these operations into numeric trees.
 
 ```python
 import numpy as np
@@ -59,5 +59,5 @@ feature, threshold and missing direction (right first). Invalid custom scores fa
 `b.data.row_ids[rows]`. Applying a candidate to a different binning or routed row
 sequence fails. Leaf solving consumes already-weighted sums without weighting
 again. Operations are synchronous CPU NumPy/Python; no CUDA, sparse memory guarantee,
-fusion, throughput or complete boosting result is claimed. Next B04 work assembles
-these operations into a public depthwise grower with verified tree persistence.
+fusion, throughput or complete boosting result is claimed. The public depthwise grower uses
+these operations with verified numeric tree persistence.
