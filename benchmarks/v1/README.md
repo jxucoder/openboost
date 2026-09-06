@@ -520,3 +520,38 @@ build/v1-env/bin/python -m benchmarks.v1.worker_data_smoke build/positive-surviv
 The smoke accepts an explicit subset of supported applications and records it in
 its command. Without that option it checks every supported application. A4 and
 A13 remain unsupported here and required in the full evaluation plan.
+
+## Current OpenBoost worker (A1/A11 integration wave)
+
+`openboost_worker.py JOB.json` consumes the same encoded train/validation packet
+keys emitted by `worker_data.export`. It currently accepts A1 squared and A11
+joint natural/ordinary Normal only, library=openboost, device=cpu, threads=1.
+Run through `process_runner.execute(..., threads=1)` to set process thread limits.
+Both tasks require explicit validation labels, even without patience. Unknown
+options, unsupported tasks and test arrays fail rather than being ignored.
+Other required application adapters remain pending.
+
+A fixed budget exports the final model. Enabled patience exports the strict best
+validation snapshot, including the initial base if no step improves it. Training
+metadata records outer rounds, accepted commits, stop reason and selected model
+identity; these counts are not interchangeable. A1 selection uses half squared
+loss (same ordering as MSE); A11 uses Normal NLL. Internal training loss governs
+Normal backtracking separately from validation selection.
+
+`model.bin` is a versioned **JSON** evaluation bundle, not a pickle: a core raw
+model plus application/output semantics. A1 returns mean `[N]`; A11 returns
+mean and standard deviation `[N,2]` in the supplied target units. No target
+scaling or offsets are added by these encoded-data adapters. The separate
+`openboost_predict.py MODEL FEATURES OUTPUT` loads a packet with only `x` and
+`row_ids` and does not import training recipes. It rejects mismatched output
+semantics. The benchmark bundle is not a new stable public persistence API.
+
+```sh
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.openboost_worker_smoke /tmp/openboost-current-worker-044
+```
+
+This runs four-round A1/A11 trials on each of the five frozen housing folds and
+checks exact validation replay in a new process. It reads no test truth during
+training or scoring, performs no configuration search and makes no quality or
+performance claim. Exported packet separation is not an OS access boundary.
+Formal test-label isolation, all application bindings and E3 remain open.

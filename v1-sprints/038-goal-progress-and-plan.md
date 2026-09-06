@@ -6,7 +6,8 @@ Date: 2026-09-06. Status: review complete. M1 is delivered in
 evidence in [Sprint 040](040-installed-extensions.md) and ordered D4 evidence in
 [Sprint 041](041-ordered-updates.md). [Sprint 042](042-result-contract.md) closes
 external result interoperability. [Sprint 043](043-expectile-extension.md) adds
-installed D1 expectile evidence; remaining M2 and M3–M6 are open.
+installed D1 expectile evidence. [Sprint 044](044-current-worker.md) starts M3 with
+current A1/A11 validation workers; remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), all

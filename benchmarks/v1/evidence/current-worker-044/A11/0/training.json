@@ -1,0 +1,17 @@
+{
+  "selection": "best_validation",
+  "stop": {
+    "rounds": 4,
+    "patience": 3,
+    "min_delta": 0.0,
+    "reference_score": 1.3881190556099985,
+    "last_score": 1.3881190556099985,
+    "completed_rounds": 4,
+    "stale_rounds": 0,
+    "reason": "budget"
+  },
+  "accepted_commits": 4,
+  "selected_model_identity": "8428770340ff7481c5556ef396f5a01a4f5cede7fa42560dcd74b96519f9d697",
+  "best_validation_score": 1.3881190556099985,
+  "output": "normal_mean_scale"
+}
