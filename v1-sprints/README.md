@@ -21,8 +21,9 @@ Agent 用公开、可组合组件完成正确的算法修改，并验证其成�
 | 007 | B01 / F0.2 的 identity/A13/D5 探针 | 完成；总计229 tests passed | [identity/runs](007-identity-runs-reference.md) |
 | 008 | B01 / F0.2 的 D1/D3/D4 精确探针 | 完成；总计255 tests passed | [作者修改参考](008-author-mutation-reference.md) |
 | 009 | B01 / F0.2 的 mixed/vector完整grow | 完成；总计279 tests passed | [混合特征与向量树](009-mixed-vector-growth-reference.md) |
+| 010 | B01 / F0.2 有限组合与出口审计 | 完成；总计288 tests passed | [组合参考与阶段出口](010-reference-integration-exit.md) |
 
-接下来完成 F0.2 的组合模型与状态集成参考，再完成 B02/F0.3 的冻结评测。F1 公共 foundation 实现从 B03 开始，
+接下来完成 B02/F0.3 的冻结评测。F1 公共 foundation 实现从 B03 开始，
 按 B04–B10 接通可组合组件与全部算法；不把 reference 代码称为产品实现。
 具体后续 sprint 在开始时按依赖选定有限范围，不能跳过现有 F 阶段出口。
 
@@ -48,12 +49,12 @@ Agent 用公开、可组合组件完成正确的算法修改，并验证其成�
 
 ## 全局完成状态
 
-F0.1 规格与构建设计已提交。F0.2 进行中；F0.3、F1–F5 均未完成。
+F0.1 规格与构建设计、F0.2 独立参考已交付；F0.3、F1–F5 均未完成。
 Sprint 001 已交付独立 numeric scalar/tree 参考；Sprint 002 已按用户要求退役旧生产代码。
 Sprint 003 已补充列转换与分类；Sprint 004 已补充 ranking/quantile/vector 最小参考。
 Sprint 005 已补充正目标/count、policy join 与 event/right-censored AFT 参考。
 Sprint 006 已补充Normal/Formula；Sprint 007已补充identity/run隔离与模型选择。
-Sprint008已补D1/D3/D4；Sprint009已补mixed/vector完整grow。下一步有限组合与状态链路；缺口及收尾顺序见
+Sprint008已补D1/D3/D4；Sprint009已补mixed/vector完整grow；Sprint010已补有限组合与状态链路。出口及后续归属见
 [F0.2验收映射](f0-2-acceptance-ledger.md)。
 E0–E6 没有因为创建本目录而通过；E7 独立作者采用尚无新证据。每项 A 的任务卡已定义，
 其 v1 production 实现和真实 eval 仍须逐项完成。

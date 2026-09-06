@@ -53,6 +53,9 @@ assert ordered_normal([[0], [0]], [[0, 0], [0, 0]], [1, 3])[0].accepted
 from tests.v1.reference.mixed import Transformer, grow
 tr = Transformer.fit([['a'], ['b']], names=('c',), kinds=('categorical',))
 assert grow([['a'], ['b']], [[1], [-1]], [[1], [1]], tr).predict([['a']])[0, 0] == -.5
+from tests.v1.reference.integration import fit_positive
+model, trace = fit_positive([[0], [1]], [0, 2], kind='poisson', exposure=[1, 1])
+assert len(model.terms) == len(trace) == 2
 from tests.v1.reference.tree import boost_squared
 for policy in ("depthwise", "best_first", "symmetric"):
     result = boost_squared([[0], [0], [1], [1]], [-2, -2, 2, 2], policy=policy)

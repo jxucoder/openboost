@@ -10,8 +10,8 @@ of making a correct, reproducible algorithm change.
 
 This checkout is **under construction**. The old production implementation has
 been retired; the package currently provides a namespace, not a training API.
-Independent data, tree, classification, ranking, quantile, vector-leaf, positive-target
-AFT, Normal, Formula, isolated-run and author-task references have 279 passing tests. They are
+Independent data, tree, classification, ranking, quantile, vector-leaf, positive-target,
+AFT, Normal, Formula, isolated-run, author-task and finite integration references have 288 passing tests. They are
 correctness preparation, not proof of a completed foundation or product parity.
 
 - [Execution and reflections](v1-sprints/README.md)

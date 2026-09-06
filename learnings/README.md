@@ -34,6 +34,9 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Reference integration and F0.2 exit](2026-09-06-v1-reference-integration-exit.md) —
+  finite model/state compositions, 288 tests; next F0.3, production gates pending.
+
 - [Retire legacy production](2026-09-05-retire-legacy-production.md) — user-directed
   clean v1 package reset; historical code at `50acfc6`, current training API pending.
 

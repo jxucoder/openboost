@@ -453,6 +453,7 @@ partition→leaf solve。候选结构包含阈值/类别集合与missing route�
 
 **F0.1可验收项：** A1–A13逐项输入/输出、数据/切分、算法、独立判错和对照齐全；
 R1–R9/C1–C7覆盖无缺口；D1–D5内容可判对错；设备状态与接口草图明确。
-**仍未完成：** F0.2 oracle代码、F0.3下载/hash/运行capability/预算/保留题/判卷器；
-因此本文件不代表整个F0或任何E-gate通过。下一提交先写F0.2的独立数学参考与反例，
+**参考已交付：** F0.2 oracle与反例，见[出口审计](../v1-sprints/f0-2-acceptance-ledger.md)。
+**仍未完成：** F0.3下载/hash/运行capability/预算/保留题/判卷器；
+因此本文件不代表整个F0或任何E-gate通过。下一阶段冻结比较协议，
 不用production objective作为唯一oracle，不夹带新trainer或kernel。

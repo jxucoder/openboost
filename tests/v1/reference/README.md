@@ -102,5 +102,13 @@ their transform state for raw prediction; split projections preserve full leaf
 payloads. Original scalar/stump references remain independent comparisons. This
 probe has a depth limit but no leaf-budget option. See [Sprint 009](../../../v1-sprints/009-mixed-vector-growth-reference.md).
 
-Remaining F0.2 evidence is tracked in the [acceptance ledger](../../../v1-sprints/f0-2-acceptance-ledger.md).
+Completed F0.2 reference coverage is tracked in the [acceptance ledger](../../../v1-sprints/f0-2-acceptance-ledger.md).
 Production parity, persistence, CUDA and real task evaluation remain pending.
+
+`integration.py` composes two-round positive-target and three-quantile ensembles,
+paid-count/Gamma two-stage predictions, and immutable ordered Normal proposals.
+Best restoration restores terms, coefficients and both caches with a fresh version;
+foreign/stale proposals, non-finite validation and broadcastable row/shape mismatches
+are rejected atomically. Logical-step seed derivation survives retry/restoration.
+These finite probes are not a public runtime or persistence implementation.
+See [Sprint 010](../../../v1-sprints/010-reference-integration-exit.md); next is F0.3.

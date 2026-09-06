@@ -1,10 +1,10 @@
 # OpenBoost v1：可编程 boosting 基座设计、执行与验收
 
 日期：2026-09-05。版本：**真正的 v1 规划基线**，由用户明确指定。
-状态：**F0.1 已交付，F0.2 进行中（scalar/tree 参考已完成）；新 v1 production 与正式 eval 尚未执行**。这里的 v1 是本次产品/架构目标，
+状态：**F0.1/F0.2 已交付；下一阶段 F0.3；新 v1 production 与正式 eval 尚未执行**。这里的 v1 是本次产品/架构目标，
 不是已有 PyPI 包版本或旧 P0–P7 工作已经完成 v1 的声明。
 代码审阅基线：`3ac1552`，分支：`codex/gpu-python-foundation-design`。
-执行入口：[v1-sprints/](../v1-sprints/README.md)；Sprint 001 已完成 F0.2 的 scalar/tree 子集。
+执行入口：[v1-sprints/](../v1-sprints/README.md)；Sprint 010 完成 [F0.2 出口审计](../v1-sprints/f0-2-acceptance-ledger.md)。
 每个 sprint 在该目录记录计划、结果与 reflection，阶段完成状态按实际证据更新。
 用户在 Sprint 002 要求旧生产代码整体退役；清理已提前执行，旧实现用 `50acfc6`
 复现。当前包只有待构建的命名空间，F0.2/F0.3 与 F1 的依赖和验收仍按本计划。
@@ -241,7 +241,7 @@ CPU 是可安装的入口和独立参考，不应到最后才考虑设备执行�
 ## 5. 执行顺序与验收
 
 使用 F0–F5，避免和旧清单已完成的 P0–P7 混淆。每个子项应是可独立审查的小提交。
-F0.1 任务规格与构建设计已交付；接下来从 F0.2 独立参考程序开始，按依赖与证据门槛推进。
+F0.1 任务规格与构建设计、F0.2 独立参考已交付；接下来执行 F0.3，按依赖与证据门槛推进。
 工程构建设计第9节把 F0–F5 细化为 B01–B14，每步列出实现位置与最小验收。
 
 ### F0：先写“必须能够写出的算法”与判卷标准
@@ -258,7 +258,7 @@ F0.1 任务规格与构建设计已交付；接下来从 F0.2 独立参考程序
   在 F0.3 完成，不能凭任务卡宣布整个 F0 或 E-gate 已通过。
   用户要求的构建层已补为工程设计：具体记录、算子输入输出、三种 grow、事务、推理格式、
   CPU/CUDA 与 train-many 实现方法。它是实施规格，不代表公共组件已经存在。
-- [ ] **F0.2 — 原始 NumPy 参考与反例。** 新建 `tests/v1/reference/`，
+- [x] **F0.2 — 原始 NumPy 参考与反例。** 新建 `tests/v1/reference/`，
   独立枚举 split/逐样本归约/小矩阵求解，不导入待测 production 算法。
   写可失败的手算 fixture：重复阈值 tie、空/零权重子节点、非法候选、拒绝更新、
   参数更新次序，以及两个 run 交换执行顺序。标准 GBDT 与外部库比较时区分
@@ -421,9 +421,9 @@ objectives、runtime、recipes、artifacts 和 models；具体职责/依赖见�
 给后续执行模型的起始任务：
 
 > 先读 AGENTS.md、此计划、eval 协议、release 核对、应用契约和 v1 planning learning。
-> 读取 F0.1 任务卡与 foundation 工程构建设计，执行 B01 / F0.2：在 tests/v1/reference/ 按任务卡建立独立 NumPy
-> 数学参考与反例，先 scalar/tree，再扩展各任务几何和 state/run 语义，分提交验证。
+> 读取 F0.1 任务卡、foundation 工程构建设计及 Sprint 010 的 F0.2 出口审计，执行 B02 / F0.3：
+> 冻结真实数据/hash、库能力实测、预算及保留任务，建立 manifest/runner/判卷器，分提交验证。
 > 不导入 production objective 充当唯一 oracle，不维护旧 API 兼容，不提前重写内核。
-> F0.3 随后冻结数据/版本/预算/保留题并实现判卷器。每次提交报告通过与未验证部分，
+> 每次提交报告通过与未验证部分，
 > 保留失败结果，不漏掉任何 required 用例。F1 按 B03–B10 的组件与连接方式实施，
 > 不把任务卡、独立 oracle 或旧 trainer 的新包装当成 foundation 已构建。
