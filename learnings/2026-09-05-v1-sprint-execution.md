@@ -17,6 +17,9 @@ and architectural/correctness counterexamples. Keep concrete evidence and decisi
 - [Sprint 001](../v1-sprints/001-scalar-tree-reference.md) scopes the first B01/F0.2
   scalar/tree reference slice and names independent failure cases before implementation.
 - Agent guide and main plan point execution and reflection to the sprint directory.
+- Sprint 001 now delivers standalone NumPy scalar/tree oracles with three growth
+  policies, exact routed cohorts and two-round traces; details and reflection
+  remain in the sprint record rather than duplicated as another plan.
 
 ## Verification
 
@@ -24,6 +27,10 @@ and architectural/correctness counterexamples. Keep concrete evidence and decisi
   public experimental docs and tests. No `tests/v1/` or `v1-sprints/` existed.
 - Sprint bootstrap checks passed: six Markdown files, 43 resolving local links,
   balanced fences and `git diff --check`. No production behavior changed.
+- Reference implementation: 55 focused CPU tests passed, no skips; `uv run
+  --no-sync ruff check tests/v1` passed. Exact command/environment and the initial
+  missing-module failures are recorded in Sprint 001. A clean process blocks
+  all production imports while executing all three reference growth policies.
 
 ## Failed Attempts
 
@@ -39,3 +46,5 @@ and architectural/correctness counterexamples. Keep concrete evidence and decisi
 
 - `9700845` — preceding architecture design.
 - Sprint bootstrap: `docs: start v1 sprint execution and reflection log`.
+- `e76a2cd` — sprint bootstrap.
+- Reference slice: `test: add independent scalar and tree references for v1`.

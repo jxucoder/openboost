@@ -1,6 +1,6 @@
 # Sprint 001：独立 scalar/tree 参考
 
-开始日期：2026-09-05。起点：`9700845`。状态：**进行中**。
+开始日期：2026-09-05。起点：`9700845`。状态：**完成本 sprint；F0.2 仍进行中**。
 计划映射：B01 / F0.2 的第一部分；A1/R1、C2/C3 的 scalar 子集、D2；E1 的参考准备。
 
 ## 目的与范围
@@ -21,11 +21,11 @@
 ## 执行清单
 
 - [x] 读取设计、旧 split/插件语义及 tests；识别旧 gain 是两倍、旧测试入口导入 production。
-- [ ] 先写手算测试并确认在参考模块不存在时失败。
-- [ ] 编写 `tests/v1/reference/` 的独立 scalar 与 brute-force tree 函数。
-- [ ] 验证两轮 trace、三种 grow、missing/weight/cohort/tie/非法输入及 import 隔离。
-- [ ] 运行集中测试和 changed-file lint；审阅变更并提交。
-- [ ] 写 reflection、结果和下一 sprint 交接，更新目录状态。
+- [x] 先写手算测试并确认在参考模块不存在时失败。
+- [x] 编写 `tests/v1/reference/` 的独立 scalar 与 brute-force tree 函数。
+- [x] 验证两轮 trace、三种 grow、missing/weight/cohort/tie/非法输入及 import 隔离。
+- [x] 运行集中测试和 changed-file lint；审阅变更并提交。
+- [x] 写 reflection、结果和下一 sprint 交接，更新目录状态。
 
 ## 验收
 
@@ -40,7 +40,21 @@
 
 ## 执行与验证记录
 
-尚未完成；按实际结果补充，不预填 pass。
+交付：[scalar](../tests/v1/reference/scalar.py)、[tree](../tests/v1/reference/tree.py)、
+[手算与反例测试](../tests/v1/test_tree_reference.py)、
+[隔离验证](../tests/v1/test_reference_independence.py)、[运行说明](../tests/v1/reference/README.md)。
+
+```bash
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache OPENBOOST_BACKEND=cpu uv run --no-sync pytest tests/v1 --confcutdir=tests/v1 -n 0 -q
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync ruff check tests/v1
+```
+
+- Red：仅有测试时，两处 collection error，原因是 `tests.v1.reference` 尚不存在。
+- Green：**55 passed**，无 skipped；changed-file Ruff 全通过。
+- 环境：macOS、本地 CPU，Python 3.12.12、NumPy 2.3.5、pytest 9.0.2。
+- 子进程禁止所有 `openboost` imports，三个 policy 仍能运行两轮并得到手算结果。
+- 第一轮 gain=16/3，第二轮叶=±56/45、最终 raw=±58/225；D2 cut 从1变2。
+- 只证明这些 reference fixture 的行为，不是新 production parity 或运行成本证据。
 
 ## Reflection
 
@@ -49,6 +63,18 @@
 决定：先完成有限的 scalar/tree 参考，不修改生产 API 或提前做 GPU 优化。
 下一步：用手算 fixture 驱动实现，收尾时核对覆盖与剩余 F0.2。
 
+收尾观察：三个 grow 可以用同一候选/真实路由数学描述，但 symmetric 必须在选择前
+合并共同候选；节点各选赢家不能表达该算法。证据：左右节点分别偏好 feature1/2，
+独立 symmetric 参考选择两者共同的 feature2，保留左节点零 gain 的合法候选。
+决定：未来公共 candidate 层保留合法性与收益的区别，生长策略决定何时筛掉非正收益。
+
+覆盖反思：完成的是 numeric scalar 子集；类别/分箱、分类、ranking、quantile/vector、
+正目标/AFT、Normal/Formula、transaction/run 仍未闭合。下一轮继续 F0.2，不能因55个
+内部测试通过就称 foundation 完成。用户在执行中明确旧生产代码整体退役、v1重新构建；
+该清理单独记录/提交，保留已验证 reference 和历史实验，不改变数学/质量门槛。
+
 ## Commits
 
 - `9700845`：前置 foundation 构建设计。
+- `e76a2cd`：sprint 执行与反思机制。
+- 实现切片：`test: add independent scalar and tree references for v1`。
