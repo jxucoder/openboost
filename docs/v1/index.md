@@ -54,3 +54,6 @@ projected splits and persisted training-only target scaling. Real A6 evaluation 
 across independent jobs, verified at M=1/8/32.
 [Independent validation stopping](stopping.md) separates outer-round patience
 from model acceptance and strict best-model selection across all CPU recipes.
+
+[Public development extensions](extensions.md) exercise installed cohort split
+constraints and external penalized leaves, with core inference after plugin removal.

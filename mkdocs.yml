@@ -32,3 +32,4 @@ nav:
   - Multi-output squared regression: multioutput.md
   - Shared training preparation: preparation.md
   - Independent stopping: stopping.md
+  - Public development extensions: extensions.md

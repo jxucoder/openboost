@@ -64,7 +64,9 @@ themselves. Verify the actual call path and the tests that exercise it.
 ## Current Priority Order
 
 Current execution map: [Sprint 038 goal/progress review and plan](v1-sprints/038-goal-progress-and-plan.md).
-Next: installed public extension trials and current OpenBoost real-data integration.
+Installed public D2/D3 development wheels pass in Sprint 040 without core edits.
+Next: ordered Normal/Formula updates, remaining installed author tasks and current
+OpenBoost real-data integration. These internal trials do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
 preparation/M=1/8/32 fixed-budget equivalence are implemented (Sprints 036–037).
 Do not infer F1/B11 readiness from implemented objective count. The

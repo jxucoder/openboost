@@ -13,10 +13,11 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
 Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 765 passes;
+shared training preparation. The latest full regression records 767 passes;
 this includes references/evaluation infrastructure and is not a phase gate.
 Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
-Next: installed public extension trials and current OpenBoost real-data integration.
+Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
+Next: ordered updates, remaining installed author tasks and current real-data integration.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.
 
@@ -159,3 +160,8 @@ validation-driven stopping; prediction-time caching and performance remain open.
 validation patience across all twelve recipes, separate from transaction state,
 with M=1/8/32 heterogeneous stopping/failure/retry equivalence. Next: installed
 public D2/D3 extensions, ordered updates and current real-data integration.
+
+[Sprint 040 / installed extensions](040-installed-extensions.md) verifies public
+cohort-feasibility and penalized-leaf packages without core changes, including
+independent math checks and fresh-process inference after plugin removal. This is
+partial E2/E6 development evidence; formal agent/adoption results remain open.
