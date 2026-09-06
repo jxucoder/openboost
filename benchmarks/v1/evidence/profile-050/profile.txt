@@ -1,0 +1,68 @@
+         3061621 function calls (3058955 primitive calls) in 59.992 seconds
+
+   Ordered by: cumulative time
+   List reduced from 1399 to 60 due to restriction <60>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000   60.013   60.013 profile_worker.py:92(<lambda>)
+        1    0.000    0.000   60.013   60.013 <frozen runpy>:262(run_path)
+    272/2    0.008    0.000   60.011   30.006 {built-in method builtins.exec}
+        1    0.000    0.000   60.011   60.011 <frozen runpy>:91(_run_module_code)
+        1    0.000    0.000   60.010   60.010 <frozen runpy>:65(_run_code)
+        1    0.000    0.000   60.010   60.010 openboost_worker.py:1(<module>)
+        1    0.000    0.000   59.891   59.891 openboost_worker.py:152(main)
+        1    0.020    0.020   59.740   59.740 openboost_worker.py:26(fit)
+        1    0.001    0.001   58.270   58.270 recipes.py:492(multiclass)
+        2    0.000    0.000   54.542   27.271 tree.py:265(depthwise)
+       10    0.002    0.000   37.233    3.723 tree.py:233(best)
+        6    0.000    0.000   36.344    6.057 tree.py:230(options)
+       20   29.480    1.474   29.968    1.498 ops.py:35(histogram)
+        6    0.768    0.128   23.546    3.924 ops.py:97(candidates)
+     5451    0.328    0.000   22.995    0.004 data.py:20(_identity)
+    11228   22.316    0.002   22.316    0.002 {method 'update' of '_hashlib.HASH' objects}
+       12    0.000    0.000   17.161    1.430 tree.py:208(append)
+        5    0.000    0.000   10.927    2.185 tree.py:246(split)
+        2    0.000    0.000    6.381    3.191 tree.py:167(__init__)
+        7    0.000    0.000    2.281    0.326 binning.py:102(transform)
+        7    0.728    0.104    2.279    0.326 binning.py:114(__post_init__)
+        1    0.000    0.000    1.735    1.735 recipes.py:188(_trials)
+       10    0.015    0.001    1.633    0.163 artifacts.py:101(predict)
+        6    0.030    0.005    1.594    0.266 tree.py:93(predict)
+        1    0.000    0.000    1.326    1.326 binning.py:158(prepare_training)
+        1    0.000    0.000    1.326    1.326 binning.py:150(__post_init__)
+        2    0.033    0.017    1.238    0.619 data.py:46(__post_init__)
+     2700    0.003    0.000    1.220    0.000 fromnumeric.py:51(_wrapfunc)
+      756    0.001    0.000    1.209    0.002 fromnumeric.py:1446(searchsorted)
+      756    1.206    0.002    1.206    0.002 {method 'searchsorted' of 'numpy.ndarray' objects}
+      893    0.003    0.000    1.115    0.001 _arraysetops_impl.py:145(unique)
+      893    0.006    0.000    1.111    0.001 _arraysetops_impl.py:348(_unique1d)
+      893    0.978    0.001    0.978    0.001 {built-in method numpy._core._multiarray_umath._unique_hash}
+        6    0.006    0.001    0.887    0.148 ops.py:196(choose)
+     3916    0.004    0.000    0.737    0.000 tree.py:238(cached)
+     3916    0.008    0.000    0.733    0.000 ops.py:250(vector_score)
+    32638    0.695    0.000    0.695    0.000 {method 'tobytes' of 'numpy.ndarray' objects}
+    11748    0.039    0.000    0.678    0.000 ops.py:253(node)
+        1    0.000    0.000    0.663    0.663 runtime.py:153(resolve)
+    24815    0.098    0.000    0.639    0.000 data.py:12(_owned)
+    11759    0.044    0.000    0.622    0.000 ops.py:239(vector_leaf)
+        1    0.000    0.000    0.617    0.617 runtime.py:132(propose_terms)
+        1    0.284    0.284    0.608    0.608 binning.py:63(fit)
+        3    0.000    0.000    0.565    0.188 runtime.py:52(__post_init__)
+        7    0.084    0.012    0.505    0.072 objectives.py:309(geometry)
+       25    0.004    0.000    0.431    0.017 ops.py:12(_rows)
+    82313    0.194    0.000    0.398    0.000 ops.py:146(newton_leaf)
+     2274    0.003    0.000    0.351    0.000 binning.py:10(_array)
+    41831    0.331    0.000    0.331    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+      108    0.001    0.000    0.302    0.003 _function_base_impl.py:4302(quantile)
+      108    0.000    0.000    0.299    0.003 _function_base_impl.py:4560(_quantile_unchecked)
+      108    0.001    0.000    0.299    0.003 _function_base_impl.py:3857(_ureduce)
+      108    0.000    0.000    0.298    0.003 _function_base_impl.py:4715(_quantile_ureduce_func)
+        5    0.000    0.000    0.296    0.059 objectives.py:328(loss)
+      108    0.003    0.000    0.281    0.003 _function_base_impl.py:4788(_quantile)
+      108    0.268    0.002    0.268    0.002 {method 'partition' of 'numpy.ndarray' objects}
+       12    0.001    0.000    0.254    0.021 __init__.py:1(<module>)
+    54492    0.253    0.000    0.253    0.000 {built-in method numpy.array}
+        7    0.063    0.009    0.242    0.035 outputs.py:20(softmax_probabilities)
+        2    0.001    0.000    0.228    0.114 stats.py:90(vector_newton)
+
+

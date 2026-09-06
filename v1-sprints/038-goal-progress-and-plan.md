@@ -13,7 +13,9 @@ adds scale-bound selection and a synthetic current search. [Sprint 047](047-mult
 adds standardized A6 quality reporting. [Sprint 048](048-classification-workers.md)
 adds classification adapters and Adult validation. [Sprint 049](049-covertype-worker.md)
 records five Covertype worker timeouts: profile this full-data CPU path next,
-before additional adapters. Remaining M2 and M3–M6 are open.
+before additional adapters. [Sprint 050](050-covertype-profile.md) identifies
+histogram aggregation and repeated candidate row hashing; next remove invariant
+rehashing with exact conformance checks. Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), all

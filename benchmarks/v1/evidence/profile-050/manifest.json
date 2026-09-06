@@ -1,0 +1,70 @@
+{
+  "command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py",
+    "/tmp/openboost-covertype-049/A3/0/job.json",
+    "--seconds",
+    "60"
+  ],
+  "timeout_s": 90,
+  "threads": 1,
+  "status": "error",
+  "exit_code": 124,
+  "reason": "worker exited nonzero",
+  "wall_s": 60.219372749998,
+  "artifacts": {
+    "profile.pstats": "cb8599a012537eab59b75256f6e2587d54dc556c26b47e89c13c8a9fd3163093",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stacks.txt": "62f5c52374ead85eb9468f2a3858cc3be277fa1cfd1c2e410728405c277c4863",
+    "profile.json": "6e6eb241ebb6b23e2e1e12161903ca52055367f5fd05f6cbec2d1e8c951dda8c",
+    "profile.txt": "a24170558d579ba07ee6003182d914999e057f5aa73e114bf69545b3912f493d"
+  },
+  "job": {
+    "application": "A3",
+    "library": "openboost",
+    "device": "cpu",
+    "threads": 1,
+    "seed": 0,
+    "early_stopping_rounds": 3,
+    "config": {
+      "rounds": 4,
+      "learning_rate": 0.1,
+      "max_depth": 2,
+      "reg_lambda": 1,
+      "bins": 32
+    },
+    "input_npz": "/private/tmp/openboost-covertype-049/A3/0/worker-input.npz",
+    "classes": 7
+  },
+  "job_sha256": "af893941106b23a112a930cfc5a4b3c968c8f8d68a889cbcbe9ff89836cb5437",
+  "input_sha256": "9bc25256b6a57efa51f13e714c6b47496239858ac851e97c3d74ebe47db71f1a",
+  "revision": "078ca618604ad38e01a2913bf2cffe0fb8f1c593",
+  "dirty": true,
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "aa73cc40df7c79203505f91e3b86292dffbb3b9348467be60d8587e3bfd8c6ad",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/profile_worker.py": "fd070e691537ca093530b81b495792f83b619aa14df073c94bed6656a12d3218",
+    "benchmarks/v1/openboost_worker.py": "d53f4796353430002ca2231de1852c139492fd7de1c7e4936374da1befebd33d",
+    "benchmarks/v1/openboost_predict.py": "b0c21aca3046eb3ad40f52f4c845dc159872d10261a0afca2d1cd01357354d04",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  }
+}

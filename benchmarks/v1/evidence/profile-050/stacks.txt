@@ -1,0 +1,41 @@
+Timeout (0:00:20)!
+Thread 0x00000002008a3e40 (most recent call first):
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/ops.py", line 58 in histogram
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/tree.py", line 231 in options
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/tree.py", line 243 in best
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/tree.py", line 295 in depthwise
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/recipes.py", line 545 in multiclass
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py", line 116 in fit
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py", line 159 in main
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py", line 167 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 92 in <lambda>
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 43 in profile_call
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 91 in main
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 101 in <module>
+Timeout (0:00:20)!
+Thread 0x00000002008a3e40 (most recent call first):
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/data.py", line 28 in _identity
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/ops.py", line 133 in candidates
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/tree.py", line 231 in options
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/tree.py", line 243 in best
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/tree.py", line 295 in depthwise
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/recipes.py", line 545 in multiclass
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py", line 116 in fit
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py", line 159 in main
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py", line 167 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 98 in _run_module_code
+  File "<frozen runpy>", line 287 in run_path
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 92 in <lambda>
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 43 in profile_call
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 91 in main
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 101 in <module>
+Timeout (0:00:20)!
+Thread 0x00000002008a3e40 (most recent call first):
+  File "/Users/jiaruixu/.local/share/uv/python/cpython-3.12.12-macos-x86_64-none/lib/python3.12/cProfile.py", line 50 in dump_stats
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 53 in profile_call
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 91 in main
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py", line 101 in <module>

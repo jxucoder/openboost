@@ -1,0 +1,22 @@
+{
+  "artifacts": {
+    "profile.json": "6e6eb241ebb6b23e2e1e12161903ca52055367f5fd05f6cbec2d1e8c951dda8c",
+    "profile.pstats": "cb8599a012537eab59b75256f6e2587d54dc556c26b47e89c13c8a9fd3163093",
+    "profile.txt": "a24170558d579ba07ee6003182d914999e057f5aa73e114bf69545b3912f493d",
+    "stacks.txt": "62f5c52374ead85eb9468f2a3858cc3be277fa1cfd1c2e410728405c277c4863",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py",
+    "/tmp/openboost-covertype-049/A3/0/job.json",
+    "--seconds",
+    "60"
+  ],
+  "exit_code": 124,
+  "reason": "worker exited nonzero",
+  "status": "error",
+  "threads": 1,
+  "timeout_s": 90,
+  "wall_s": 60.219372749998
+}

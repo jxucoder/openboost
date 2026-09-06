@@ -80,6 +80,9 @@ A2/A3 probability adapters and five-fold Adult integration; full Covertype runs
 and remaining adapters/searches/D5 are open. Sprint 049 records all five full
 Covertype folds timing out at the 90-second fit cap. Next profile the current
 CPU path on that same input before expanding adapters; A3 validation is incomplete.
+Sprint 050 identifies histogram aggregation and repeated candidate row hashing
+in a bounded full-input profile. Next hoist invariant candidate row hashing with
+exact identity/candidate checks, then rerun the bounded workload.
 These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
