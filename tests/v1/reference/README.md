@@ -96,5 +96,11 @@ smooth derivative checks from nonsmooth subgradient optimality. These developmen
 oracles do not constitute a public extension or an E5 author-cost result.
 See [Sprint 008](../../../v1-sprints/008-author-mutation-reference.md).
 
+`mixed.py` integrates fitted numeric/category transforms with exhaustive multilevel
+scalar/vector trees for depthwise, best-first and symmetric policies. Trees retain
+their transform state for raw prediction; split projections preserve full leaf
+payloads. Original scalar/stump references remain independent comparisons. This
+probe has a depth limit but no leaf-budget option. See [Sprint 009](../../../v1-sprints/009-mixed-vector-growth-reference.md).
+
 Remaining F0.2 evidence is tracked in the [acceptance ledger](../../../v1-sprints/f0-2-acceptance-ledger.md).
 Production parity, persistence, CUDA and real task evaluation remain pending.

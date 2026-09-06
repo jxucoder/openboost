@@ -93,3 +93,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [2026-09-05: identity and isolated runs](2026-09-05-v1-identity-runs-reference.md) — prepared row binding, stable RNG and comparable selection.
 
 - [2026-09-05: exact author mutation references](2026-09-05-v1-author-mutation-reference.md) — expectile, penalized quantile and ordered acceptance.
+
+- [2026-09-05: mixed/vector growth references](2026-09-05-v1-mixed-vector-growth-reference.md) — fitted transforms, multilevel routing and full vector leaves.
