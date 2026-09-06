@@ -42,7 +42,10 @@ from observations, such as scalar Normal targets with two raw parameters.
 One explicit row-ID vector declares the order of all role arrays; binding rejects
 a mismatch instead of sorting. The caller is responsible for aligning each role
 before binding. Targets are finite numeric values; specialized target types,
-queries, structure and objective support arrive in later slices. Unknown arguments
+queries and further objective support arrive in later slices. Named `structure`
+arrays are separately owned `[N, S]` roles in the declared row order; they affect
+problem identity but are never automatically appended to features. Recipes must
+consume or reject them; squared and Normal reject supplied structure. Unknown arguments
 are rejected. Original weights are retained, never automatically applied here.
 
 `RunContext.rng(round_index, component, purpose)` returns a new deterministic
@@ -70,7 +73,7 @@ run RNG, best/stop history or input datasets. Unknown versions/fields, duplicate
 fields, nonfinite payloads and inconsistent output widths fail.
 
 B04 adds numeric preparation and shared tree operations. The squared recipe is
-available alongside joint Normal updates with ordinary/Fisher directions. B06 must exercise Formula and
-heterogeneous sequential runs before interfaces stabilize. Model construction
+available alongside joint Normal updates with ordinary/Fisher directions. Initial B06 now exercises Formula and
+heterogeneous sequential runs; interfaces remain provisional. Model construction
 uses a conservative absolute-value envelope to reject possible prediction
 overflow, which can reject extremely large terms even when they would cancel.

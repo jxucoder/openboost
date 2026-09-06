@@ -90,7 +90,9 @@ transactions, mapped tree/constant ensemble artifacts and B04 numeric/statistics
 split/routing/leaf operations, plus a depthwise numeric grower and validated tree
 inference artifacts. The first complete scalar squared-error CPU recipe supports
 fixed/backtracking steps. Normal ordinary/Fisher joint mean/log-scale updates use
-the same state and learners; CUDA execution does not exist yet. The user approved B03–B06 construction overlapping
+the same state and learners. Initial B06 adds saturation Formula with explicit
+structure/full GGN directions and sequential heterogeneous run records. CUDA
+execution does not exist yet. The user approved B03–B06 construction overlapping
 unfinished F0.3; see Sprint 018 and the active plan amendment. The last full old implementation is Git revision
 `50acfc6`; historical tests/examples require that revision. There is no compatibility
 shim, legacy backend, trainer, or model facade in the current package.

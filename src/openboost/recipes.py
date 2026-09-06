@@ -9,7 +9,7 @@ import numpy as np
 
 from .artifacts import Model, TreeTerm
 from .binning import NumericBinning
-from .objectives import Normal, Squared, diagonal_direction
+from .objectives import Formula, Normal, Squared, diagonal_direction, full_direction
 from .ops import _nonnegative, feasible, newton_leaf, score
 from .runtime import AcceptedState, initialize, preview, propose_terms, resolve
 from .stats import least_squares
@@ -30,7 +30,7 @@ class SquaredStep:
 @dataclass(frozen=True)
 class FitResult:
     state: AcceptedState
-    steps: tuple[SquaredStep | NormalStep, ...]
+    steps: tuple[SquaredStep | NormalStep | FormulaStep, ...]
 
 
 def squared(
@@ -253,6 +253,86 @@ def normal(
                 state.train_raw,
                 loss_before,
                 Normal.loss(train, state.train_raw),
+                coefficients,
+                accepted,
+                failures,
+            )
+        )
+    return FitResult(state, tuple(steps))
+
+
+@dataclass(frozen=True, eq=False)
+class FormulaStep:
+    gradient: np.ndarray
+    metric: np.ndarray
+    direction: np.ndarray
+    raw_before: np.ndarray
+    raw_after: np.ndarray
+    loss_before: float
+    loss_after: float
+    coefficients: tuple[float, ...]
+    accepted: bool
+    failures: tuple[str | None, ...]
+
+
+def formula(
+    train,
+    validation,
+    *,
+    context,
+    rounds=2,
+    learning_rate=0.1,
+    bins=254,
+    max_depth=2,
+    max_leaves=None,
+    reg_lambda=1.0,
+    min_child_h=0.0,
+    split_penalty=0.0,
+    step="backtracking",
+    max_trials=6,
+    learner=None,
+    damping=0.1,
+):
+    """Joint Formula updates through full GGN directions and shared scalar trees."""
+    Formula.validate(train)
+    Formula.validate(validation)
+    rate, learner = _configuration(
+        rounds,
+        learning_rate,
+        max_depth,
+        max_leaves,
+        reg_lambda,
+        min_child_h,
+        split_penalty,
+        step,
+        max_trials,
+        learner,
+    )
+    full_direction([[0, 0]], [[[1, 0], [0, 1]]], damping=damping)
+    base = Formula.base(train)
+    binned = NumericBinning.fit(train.data, bins=bins).transform(train.data)
+    state = initialize(context, train, validation, base, score=Formula.loss)
+    steps = []
+    for _ in range(rounds):
+        before = state.train_raw
+        loss_before, gradient, metric = Formula.geometry(train, before)
+        direction = full_direction(gradient, metric, damping=damping)
+        terms = tuple(
+            TreeTerm(learner(binned, least_squares(train, direction[:, k])), np.eye(2)[k : k + 1])
+            for k in range(2)
+        )
+        state, coefficients, accepted, failures = _trials(
+            state, terms, Formula.loss, loss_before, rate, step, max_trials
+        )
+        steps.append(
+            FormulaStep(
+                gradient,
+                metric,
+                direction,
+                before,
+                state.train_raw,
+                loss_before,
+                Formula.loss(train, state.train_raw),
                 coefficients,
                 accepted,
                 failures,

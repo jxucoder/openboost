@@ -15,6 +15,7 @@ class Squared:
             not isinstance(problem, Problem)
             or problem.target.shape[1] != 1
             or problem.raw_width != 1
+            or bool(problem.structure)
         ):
             raise ValueError("squared recipe requires scalar [N, 1] targets")
 
@@ -64,6 +65,7 @@ class Normal:
             not isinstance(problem, Problem)
             or problem.target.shape[1] != 1
             or problem.raw_width != 2
+            or bool(problem.structure)
         ):
             raise ValueError("Normal requires scalar targets and raw_width=2")
 
@@ -137,3 +139,91 @@ def diagonal_direction(gradient, metric, *, mode="natural", damping=0.0):
         if mode != "natural":
             raise ValueError("ordinary/natural direction required")
         return _owned(-g / (h + damping), ndim=2)
+
+
+class Formula:
+    """Saturation a*(1-exp(-b*x)); softplus parameters and explicit structure x."""
+
+    @staticmethod
+    def validate(problem):
+        if (
+            not isinstance(problem, Problem)
+            or problem.target.shape[1] != 1
+            or problem.raw_width != 2
+            or set(problem.structure) != {"x"}
+            or problem.structure["x"].shape != problem.target.shape
+            or np.any(problem.structure["x"] <= 0)
+        ):
+            raise ValueError(
+                "Formula requires scalar target, raw_width=2 and positive structure x [N,1]"
+            )
+
+    @staticmethod
+    def predict(raw, structure):
+        values, x = _owned(raw, ndim=2), _owned(structure, ndim=2)
+        if values.shape != (len(x), 2) or x.shape[1] != 1 or np.any(x <= 0):
+            raise ValueError("Formula requires aligned raw [N,2] and positive structure [N,1]")
+        with np.errstate(over="raise", invalid="raise"):
+            a, b = np.logaddexp(0, values).T
+            if np.any(a <= 0) or np.any(b <= 0):
+                raise ValueError("Formula parameters underflowed")
+            return _owned((a * -np.expm1(-b * x[:, 0]))[:, None], ndim=2)
+
+    @classmethod
+    def base(cls, problem):
+        cls.validate(problem)
+        # A deterministic initializer, not an optimum of the coupled objective.
+        with np.errstate(over="raise", invalid="raise", divide="raise"):
+            a = max(
+                float(np.dot(problem.weight / problem.weight.sum(), problem.target[:, 0])), 1e-6
+            )
+            positive = np.array([a, 1.0])
+            base = _owned(positive + np.log(-np.expm1(-positive)), ndim=1)
+        cls.loss(problem, np.broadcast_to(base, problem.offset.shape))
+        return base
+
+    @classmethod
+    def geometry(cls, problem, raw):
+        """Weighted loss, unweighted gradient and rank-one per-row GGN."""
+        cls.validate(problem)
+        values = problem.with_offset(raw)
+        x = problem.structure["x"][:, 0]
+        prediction = cls.predict(values, problem.structure["x"])[:, 0]
+        with np.errstate(over="raise", invalid="raise"):
+            a, b = np.logaddexp(0, values).T
+            sigmoid = np.exp(-np.logaddexp(0, -values))
+            jacobian = np.column_stack(
+                (sigmoid[:, 0] * -np.expm1(-b * x), sigmoid[:, 1] * a * x * np.exp(-b * x))
+            )
+            residual = prediction - problem.target[:, 0]
+            gradient = _owned(residual[:, None] * jacobian, ndim=2)
+            metric = _owned(np.einsum("ni,nj->nij", jacobian, jacobian), ndim=3)
+            loss = float(np.dot(problem.weight / problem.weight.sum(), residual**2 / 2))
+        if not np.isfinite(loss):
+            raise ValueError("nonfinite Formula loss")
+        return loss, gradient, metric
+
+    @classmethod
+    def loss(cls, problem, raw):
+        return cls.geometry(problem, raw)[0]
+
+
+def full_direction(gradient, metric, *, damping):
+    """Damped SPD solve; no silent diagonal approximation or pseudoinverse.
+
+    A relative eigenvalue check rejects numerically singular matrices even if a
+    floating point Cholesky implementation happens to accept them.
+    """
+    g, h = _owned(gradient, ndim=2), _owned(metric, ndim=3)
+    if h.shape != (len(g), g.shape[1], g.shape[1]) or not np.array_equal(h, h.swapaxes(1, 2)):
+        raise ValueError("aligned symmetric full metric required")
+    if not np.isscalar(damping) or not np.isfinite(damping) or damping < 0:
+        raise ValueError("nonnegative finite damping required")
+    with np.errstate(over="raise", invalid="raise", divide="raise"):
+        system = h + damping * np.eye(g.shape[1])
+        eigenvalues = np.linalg.eigvalsh(system)
+        if np.any(eigenvalues[:, 0] <= np.finfo(float).eps * eigenvalues[:, -1]):
+            raise ValueError("metric is not numerically positive definite; specify damping")
+        factor = np.linalg.cholesky(system)
+        rhs = np.linalg.solve(factor, -g[..., None])
+        return _owned(np.linalg.solve(factor.swapaxes(1, 2), rhs)[..., 0], ndim=2)

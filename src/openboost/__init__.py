@@ -2,7 +2,8 @@
 
 Numeric inputs, mapped ensemble artifacts and explicit run state are public.
 B04 adds composable numeric operations and depthwise tree inference.
-Squared and joint Normal CPU recipes are implemented; CUDA execution is not yet.
+Squared, joint Normal and Formula CPU recipes plus sequential runs are public.
+CUDA execution is not implemented yet.
 """
 
 from .data import NumericData, Problem

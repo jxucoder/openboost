@@ -2,7 +2,9 @@
 
 import hashlib
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass, field
+from types import MappingProxyType
 
 import numpy as np
 
@@ -83,6 +85,7 @@ class Problem:
     weight: np.ndarray | None = None
     offset: np.ndarray | None = None
     raw_width: int | None = None
+    structure: Mapping | None = None
     identity: str = field(init=False)
 
     def __post_init__(self):
@@ -106,12 +109,28 @@ class Problem:
         if offset.shape != (len(y), width):
             raise ValueError("offset must match raw parameter shape")
         object.__setattr__(self, "raw_width", width)
+        roles = {} if self.structure is None else self.structure
+        if not isinstance(roles, Mapping) or any(not isinstance(k, str) or not k for k in roles):
+            raise ValueError("named structural roles required")
+        roles = {k: _owned(v, ndim=2) for k, v in roles.items()}
+        if any(len(v) != len(y) for v in roles.values()):
+            raise ValueError("structure must match problem row order")
+        object.__setattr__(self, "structure", MappingProxyType(roles))
         object.__setattr__(self, "target", y)
         object.__setattr__(self, "weight", w)
         object.__setattr__(self, "offset", offset)
         object.__setattr__(self, "row_ids", self.data.row_ids)
         object.__setattr__(
-            self, "identity", _identity("problem-cpu-v1", self.data.identity, y, w, offset)
+            self,
+            "identity",
+            _identity(
+                "problem-cpu-v1",
+                self.data.identity,
+                y,
+                w,
+                offset,
+                tuple((k, _identity(roles[k])) for k in sorted(roles)),
+            ),
         )
 
     def with_offset(self, raw):

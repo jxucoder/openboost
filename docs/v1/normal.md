@@ -52,7 +52,7 @@ loss receives unoffset raw caches and applies Problem offsets once. The model is
 a raw predictor and does not persist a distribution tag or calibrated intervals.
 
 This is a joint-update CPU recipe, not full NGBoost parity. Ordered parameter
-updates, Formula/full-metric geometry, additional distributions and CUDA remain
-required later work. No real-dataset quality or speed advantage is claimed.
+updates, additional distributions and CUDA remain required later work.
+[Formula](formula-runs.md) now probes full GGN geometry through shared components. No real-dataset quality or speed advantage is claimed.
 Per-round traces retain arrays, and trial validation currently recomputes ensemble
-predictions. The next construction probe is B06 Formula and heterogeneous runs.
+predictions. Formula and heterogeneous sequential runs now provide the next construction probe.
