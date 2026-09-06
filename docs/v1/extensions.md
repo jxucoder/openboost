@@ -6,8 +6,8 @@ independent cohort information and custom split feasibility. `ob-penalized-leave
 replaces leaf solving with its own weighted pinball/quadratic optimizer.
 `ob-ordered-updates` provides ordered Normal/Formula parameter updates through
 public transactions, with fresh geometry after every accepted parameter and
-outer-round stopping. Built-in recipes remain joint. Its custom result is not
-yet accepted by run_many; that shared result contract remains a D5 follow-up.
+outer-round stopping. Built-in recipes remain joint. Its custom result is accepted
+by run_many through the [shared structural result contract](results.md).
 
 These reuse histogram/routing, recipe state and model artifacts. Three-round
 checks compare independent mathematical oracles and demonstrate that changed

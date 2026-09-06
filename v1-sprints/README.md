@@ -13,12 +13,13 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
 Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 783 passes;
+shared training preparation. The latest full regression records 794 passes;
 this includes references/evaluation infrastructure and is not a phase gate.
 Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
 Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
-Ordered updates pass in [Sprint 041](041-ordered-updates.md). Next: shared result
-contracts for external run_many recipes, D1/D5 and current real-data integration.
+Ordered updates pass in [Sprint 041](041-ordered-updates.md). Shared result
+interoperability passes in [Sprint 042](042-result-contract.md). Next: D1 and
+remaining D5 author probes, plus current real-data integration.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.
 
@@ -171,3 +172,7 @@ partial E2/E6 development evidence; formal agent/adoption results remain open.
 Formula update orders with independent references and verifies installed execution
 and inference after plugin removal. The OrderedResult/run_many incompatibility is
 retained as the next D5 integration counterexample. No core edits or E5 claim.
+
+[Sprint 042 / result contract](042-result-contract.md) resolves the counterexample
+with structural validation of completed results and installed mixed M=1/8/32
+equivalence. External result types and their diagnostic payloads are preserved.

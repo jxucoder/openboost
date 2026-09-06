@@ -37,11 +37,13 @@ with joint updates, full and partial rejection, recovery after a nonfinite trial
 invalid order and outer-round stopping. These are exploratory development checks,
 not timed E5, held-out evidence, real quality or adoption.
 
-## Remaining integration boundary
+## Scheduler integration
 
-OrderedResult contains state, nested per-round substeps and stop metadata. Current
-run_many requires the concrete built-in FitResult, whose annotated steps enumerate
-built-in records. It rejects OrderedResult even when context/problems match. The
-installed checker retains this counterexample explicitly. Resolve the shared
-result contract during D5 before claiming complete author/scheduler composability;
-do not add an objective-name special case or mislabel the failed run as supported.
+OrderedResult contains state, nested per-round substeps and stop metadata. Sprint
+041 recorded its rejection by run_many. Sprint 042 fixes that boundary with the
+structural RecipeResult protocol: no extension modification or conversion is
+required. The installed checker verifies independent/scheduled equality for all
+six ordered cases. Mixed built-in/ordered M=1/8/32 jobs also verify shared input,
+different stopping, failure isolation, reordering, regrouping and retry.
+Historical Sprint 041 artifacts retain the original failure; current passing
+evidence is recorded separately. Full D5 author evaluation remains open.

@@ -6,7 +6,7 @@ from types import MappingProxyType
 
 from .binning import PreparedData
 from .data import Problem
-from .recipes import FitResult
+from .results import RecipeResult, validate_result
 from .runtime import RunContext
 
 
@@ -43,7 +43,7 @@ class RunSpec:
 @dataclass(frozen=True)
 class RunOutcome:
     run_id: str
-    result: FitResult | None
+    result: RecipeResult | None
     error_type: str | None = None
     error_message: str | None = None
 
@@ -68,13 +68,9 @@ def run_many(specs, *, execution="sequential"):
             result = spec.recipe(
                 spec.train, spec.validation, context=spec.context, **spec.options, **preparation
             )
-            if (
-                not isinstance(result, FitResult)
-                or result.state.context != spec.context
-                or result.state.train.identity != spec.train.identity
-                or result.state.validation.identity != spec.validation.identity
-            ):
-                raise ValueError("recipe returned foreign run state")
+            validate_result(
+                result, context=spec.context, train=spec.train, validation=spec.validation
+            )
             outcomes.append(RunOutcome(spec.context.run_id, result))
         except Exception as error:
             outcomes.append(RunOutcome(spec.context.run_id, None, type(error).__name__, str(error)))

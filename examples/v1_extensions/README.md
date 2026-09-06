@@ -62,6 +62,9 @@ round-trip after plugin removal.
 
 Source development tests in `tests/v1/test_public_extensions.py` are distinct
 from the installed-wheel checks. These results are partial E2/E6 evidence;
-D1/D5, ordered-result scheduler integration, formal E5, CUDA, real-data quality/cost
-and external adoption remain open. D4 reference traces and installed results are
+D1, complete D5 author evaluation, formal E5, CUDA, real-data quality/cost
+and external adoption remain open. Structural result integration now permits
+ordered recipes in run_many; installed M=1/8/32 checks exercise mixed recipes,
+independent stopping, failure isolation and reorder/regroup/retry equivalence.
+D4 reference traces and installed results are
 recorded separately from the earlier D2/D3 evidence.

@@ -24,7 +24,7 @@ def main(output):
     report = {
         "schema": "openboost-v1-development-extensions-v1",
         "passed": False,
-        "claim": "repository-authored D2/D3/D4 installation and correctness only",
+        "claim": "repository-authored D2/D3/D4 and D5 scheduling development checks only",
         "commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip(),
@@ -83,7 +83,12 @@ def main(output):
                 ],
                 work,
             )
-            for name in ("checks.py", "core_inference.py", "ordered_checks.py"):
+            for name in (
+                "checks.py",
+                "core_inference.py",
+                "ordered_checks.py",
+                "scheduler_checks.py",
+            ):
                 shutil.copyfile(SOURCE / name, work / name)
             run([python, "-I", str(work / "checks.py"), str(output)], work)
             run(
@@ -96,6 +101,7 @@ def main(output):
                 ROOT,
             )
             run([python, "-I", str(work / "ordered_checks.py"), str(output)], work)
+            run([python, "-I", str(work / "scheduler_checks.py"), str(output)], work)
             report["versions"] = json.loads(
                 run(
                     [

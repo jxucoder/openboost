@@ -51,7 +51,9 @@ one explicit formula probe, not a general symbolic-expression engine.
 scalar options. Problems can share NumericData without sharing accepted state.
 `run_many` validates unique IDs before running, returns every outcome in requested
 order, and records recipe exceptions while continuing other jobs. Result context
-and problem identities must match the spec. KeyboardInterrupt/SystemExit propagate.
+and problem identities must match the spec. Completed results follow the
+[shared result contract](results.md); external recipes retain their own result
+types and per-round payloads. KeyboardInterrupt/SystemExit propagate.
 An expected injected failure tests isolation; actual required failures still fail
 evaluation. Reusing a run ID in a separate invocation replays its logical identity.
 

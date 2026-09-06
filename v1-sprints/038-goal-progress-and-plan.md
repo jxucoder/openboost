@@ -4,7 +4,8 @@ Reviewed revision: `8afce35`, clean branch `codex/gpu-python-foundation-design`.
 Date: 2026-09-06. Status: review complete. M1 is delivered in
 [Sprint 039](039-independent-stopping.md). M2 has installed D2/D3 development
 evidence in [Sprint 040](040-installed-extensions.md) and ordered D4 evidence in
-[Sprint 041](041-ordered-updates.md); remaining M2 and M3–M6 are open.
+[Sprint 041](041-ordered-updates.md). [Sprint 042](042-result-contract.md) closes
+external result interoperability; remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), all

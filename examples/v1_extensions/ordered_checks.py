@@ -2,6 +2,7 @@
 
 import json
 import sys
+from functools import partial
 from pathlib import Path
 
 import numpy as np
@@ -42,9 +43,20 @@ for i, case in enumerate(source["records"]):
     versions[name] = result.state.version
     assert result.stop.completed_rounds == 3
     assert result.state.version == sum(s["accepted"] for s in case["trace"])
-    # A retained integration counterexample, not a passing scheduler claim.
-    outcome = run_many([RunSpec(context, p, p, recipe, {"rounds": 0})])[0]
-    assert outcome.error_type == "ValueError" and outcome.result is None
+    outcome = run_many(
+        [
+            RunSpec(
+                context,
+                p,
+                p,
+                partial(recipe, order=case["order"], **options),
+                {"rounds": 3, "bins": 6},
+            )
+        ]
+    )[0]
+    assert outcome.error_type is None
+    assert outcome.result.state.identity == result.state.identity
+    assert outcome.result.stop == result.stop
 (root / "ordered-checks.json").write_text(
     json.dumps(
         dict(
@@ -52,7 +64,7 @@ for i, case in enumerate(source["records"]):
             predictions=predictions,
             versions=versions,
             max_absolute_error=max(errors),
-            scheduler_status="unsupported OrderedResult; D5 follow-up",
+            scheduler_status="structural result accepted; all six cases match independent execution",
         ),
         indent=2,
     )
