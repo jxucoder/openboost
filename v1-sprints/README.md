@@ -13,7 +13,7 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
 Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 846 passes;
+shared training preparation. The latest full regression records 848 passes;
 this includes references/evaluation infrastructure and is not a phase gate.
 Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
 Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
@@ -32,7 +32,9 @@ five-fold Adult integration. [Sprint 049](049-covertype-worker.md) records all
 five full Covertype folds timing out at 90 seconds. A3 validation remains
 incomplete. [Sprint 050](050-covertype-profile.md) profiles the full input:
 histogram aggregation and repeated candidate row hashing dominate the sampled
-window. Next hoist invariant row hashing and verify unchanged candidates/results.
+window. [Sprint 051](051-candidate-row-hash.md) hoists the invariant digest;
+fold zero completes within 90 seconds with exact fresh replay. Other folds remain
+unverified after the change. Next address measured histogram cost.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.
 

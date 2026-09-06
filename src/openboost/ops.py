@@ -97,6 +97,7 @@ class Candidate:
 def candidates(hist):
     """Prefix/suffix sums; enumerate both missing routes, including missing-only splits."""
     result = []
+    rows_identity = _identity(hist.rows)
     for feature, (sums, counts) in enumerate(zip(hist.sums, hist.counts, strict=True)):
         prefix = np.cumsum(sums[:-1], axis=0)
         suffix = np.cumsum(sums[:-1][::-1], axis=0)[::-1]
@@ -130,7 +131,7 @@ def candidates(hist):
                         nleft,
                         len(hist.rows) - nleft,
                         hist.data.identity,
-                        _identity(hist.rows),
+                        rows_identity,
                         "categorical" if categorical else "numeric",
                     )
                 )

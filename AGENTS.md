@@ -82,7 +82,10 @@ Covertype folds timing out at the 90-second fit cap. Next profile the current
 CPU path on that same input before expanding adapters; A3 validation is incomplete.
 Sprint 050 identifies histogram aggregation and repeated candidate row hashing
 in a bounded full-input profile. Next hoist invariant candidate row hashing with
-exact identity/candidate checks, then rerun the bounded workload.
+exact identity/candidate checks, then rerun the bounded workload. Sprint 051
+completes that change: fold zero passes in 87.4 seconds with exact fresh replay;
+other folds remain pending. Next optimize the separately measured histogram cost
+with exact statistic/routing checks, then repeat full-fold validation.
 These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
