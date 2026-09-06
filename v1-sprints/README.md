@@ -77,3 +77,7 @@ proposes a bounded CPU-construction overlap. The phase gate has not been changed
 The user approved the Sprint 017 overlap on 2026-09-06. Active construction:
 [Sprint 018 / B03](018-b03-cpu-state.md). F0.3 remains incomplete; no scope or
 acceptance threshold was removed.
+
+[Sprint 019 / B04 operations](019-b04-numeric-operations.md) delivers numeric
+preparation and shared scalar split operations. Depthwise assembly and tree
+artifacts are next; no completed boosting or CUDA implementation is claimed.

@@ -137,3 +137,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [F0 sequencing audit](2026-09-06-v1-sequencing-audit.md): literal prerequisites, later evaluation gates and an explicit overlap proposal.
 
 - [B03 public CPU components](2026-09-06-v1-b03-cpu-state.md): immutable inputs, keyed runs, atomic state and constant-term inference.
+
+- [B04 numeric operations](2026-09-06-v1-b04-numeric-ops.md): quantile preparation, weight ownership, histogram/reference parity and replaceable constraints.

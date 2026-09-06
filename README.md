@@ -13,8 +13,10 @@ Initial public CPU components now provide owned numeric inputs, explicit problem
 run identity, immutable proposal/accept/reject state and constant-term inference
 artifacts. See [B03 usage and boundaries](docs/v1/cpu-state.md).
 
-These components do not yet grow trees or train boosting models. Numeric binning,
-composable tree operations and complete recipes are next. CUDA execution is not
+Public [numeric operations](docs/v1/numeric-ops.md) now add quantile binning,
+weighted row fields, histograms, split callbacks, routing and scalar leaves.
+These components do not yet assemble trees or train boosting models; a depthwise
+grower, tree artifacts and complete recipes are next. CUDA execution is not
 implemented in the new production package.
 
 Independent references and comparator/data checks remain evaluation preparation.
