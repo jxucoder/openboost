@@ -1,31 +1,14 @@
 # OpenBoost v1
 
-**A programmable boosting foundation for researchers and AI agents.**
+OpenBoost is a programmable boosting foundation for researchers and agents, under
+construction. Initial public CPU ownership, run-state and constant-term artifact
+components are available; see [CPU state usage](cpu-state.md).
 
-The new design combines public algorithm components, ordinary Python recipes,
-and explicit data, model state and CPU/CUDA execution. It targets the cost of
-making a correct, reproducible algorithm change.
+Tree growth, complete boosting recipes and CUDA execution are not implemented yet.
+All R1–R9/C1–C7/A1–A13 remain required. Evaluation preparation continues alongside
+the user-approved B03–B06 construction overlap. No complete quality, speed or
+agent/adoption result is claimed for the new production foundation.
 
-## Implementation status
-
-The old production code has been retired. The current package is an empty
-namespace awaiting v1 components; there is no training or prediction API yet.
-Sprints 001 and 003–010 delivered independent data, tree, classification, ranking,
-quantile, vector-leaf, positive-target, AFT, Normal, Formula, isolated-run, author-task and finite integration references with 288 passing CPU tests.
-Those checks are preparation for implementation, not evidence that v1 is complete.
-F0.3 now includes an artifact integrity judge with 48 additional adversarial checks.
-Real data/protocol freezing, execution and independent quality evaluation remain pending.
-A5 Bike Sharing raw data and five rolling date splits are frozen, with 24 adapter
-checks. Other datasets, training budgets and all real quality results remain pending.
-A1/A11 Housing inputs and five seeded splits are also verified, with 20 adapter
-checks; the dataset license remains unresolved. No GPU performance is established.
-
-The repository's `v1-sprints/` directory contains execution plans, verification
-results and reflections. `planning/foundation-construction-design.md` defines
-what gets built; the task and evaluation documents require every listed use case.
-
-## Historical APIs
-
-Use Git revision `50acfc6` to reproduce the retired implementation and its examples.
-No compatibility layer is provided. Historical benchmarks remain available in
-the repository and retain their original scope; they do not measure the new design.
+The old production API was retired. Historical examples require revision
+`50acfc6`; current APIs are not backward compatible. See the repository's
+`v1-sprints/` for construction records and `planning/` for requirements and gates.

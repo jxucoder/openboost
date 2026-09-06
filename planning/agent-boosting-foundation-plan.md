@@ -1,13 +1,13 @@
 # OpenBoost v1: Programmable boosting foundation design, execution and acceptance
 
 Date: 2026-09-05. Version: **the real v1 planning baseline**, explicitly designated by the user.
-Status: **F0.1/F0.2 delivered; F0.3 next; new production and formal evaluation not yet executed**.
+Status: **F0.1/F0.2 delivered; F0.3 open; B03 initial CPU construction under approved overlap; formal evaluation not yet executed**.
 v1 denotes this product/architecture goal, not the existing PyPI version or a claim that P0–P7 completed v1.
 Code-review baseline: 3ac1552; branch: codex/gpu-python-foundation-design.
 Execution: [v1-sprints](../v1-sprints/README.md); Sprint 010 completed the
 [F0.2 exit audit](../v1-sprints/f0-2-acceptance-ledger.md). Each sprint records plan/results/reflection;
 phase status follows evidence. At the user's request, Sprint 002 retired old production early.
-Reproduce it at `50acfc6`. The package is an unbuilt namespace; phase dependencies/gates below still apply.
+Reproduce it at `50acfc6`. The package has initial B03 CPU records/state artifacts; amended phase dependencies/gates below apply.
 
 This plan supersedes future investment order in the old GPU checklist and the
 [ScoringBench-first plan](impact-adoption-value-next.md). Old experiments and failures remain valid.
@@ -272,8 +272,19 @@ stability experiment, not claimed innovation or proven demand. If incumbents sol
 that rather than increasing difficulty. Leaf solving/run scheduling complete the five E2/E5 change types.
 
 F0 exit: all A1–A13 cards, falsifiable judgments, fair comparators and explicit changes. Missing data
-or judges prevent exit; task totals cannot substitute. Complete F0.1–F0.3 before F1; separate design/
+or judges prevent exit; task totals cannot substitute. Complete F0.1–F0.3 before F1 except for the approved B03–B06 overlap below; separate design/
 reference commits must not smuggle in model migration or kernel optimization.
+
+### Approved sequencing amendment: 2026-09-06
+
+The user approved the [Sprint 017 audit](../v1-sprints/017-f0-sequencing-audit.md).
+B03–B06 CPU architecture construction may proceed while B02/F0.3 remains open.
+This changes order only: all R1–R9/C1–C7/A1–A13 scope, thresholds, source and
+protocol obligations remain required. No CPU interface freeze, formal agent
+comparison or quality/speed/v1-completion claim is permitted through this overlap.
+B03 starts with independent ownership, weight/offset, transaction and persistence
+checks; B06 must probe Formula and heterogeneous sequential runs before stabilization.
+See [Sprint 018](../v1-sprints/018-b03-cpu-state.md) for execution and acceptance.
 
 ### F1: CPU foundation, close a small path then all v1 coverage
 

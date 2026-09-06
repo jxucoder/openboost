@@ -135,3 +135,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [Counts and survival binding](2026-09-06-v1-positive-survival-binding.md): policy populations, exposure contracts and frozen censoring support.
 
 - [F0 sequencing audit](2026-09-06-v1-sequencing-audit.md): literal prerequisites, later evaluation gates and an explicit overlap proposal.
+
+- [B03 public CPU components](2026-09-06-v1-b03-cpu-state.md): immutable inputs, keyed runs, atomic state and constant-term inference.

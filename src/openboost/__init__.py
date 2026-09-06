@@ -1,8 +1,10 @@
-"""OpenBoost v1: programmable boosting foundation, under construction.
+"""Programmable boosting foundation: initial CPU records and state transactions.
 
-The old production implementation was retired after revision 50acfc6.
-Public components will be implemented through the v1 sprint plan. This
-namespace currently exposes no training, prediction or compatibility API.
+B03 supplies numeric inputs, constant-term artifacts and explicit run state.
+Tree growing, boosting recipes and CUDA execution are not implemented yet.
 """
 
-__all__ = ()
+from .data import NumericData, Problem
+from .runtime import RunContext
+
+__all__ = ("NumericData", "Problem", "RunContext")

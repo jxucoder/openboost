@@ -1,7 +1,8 @@
 # Sprint 017: F0 prerequisite and sequencing audit
 
-Audit base: `8565f77` (clean worktree). Status: audit complete; proposed sequencing
-amendment not adopted. No production implementation or remote publication in this slice.
+Audit base: `8565f77` (clean worktree). Status: audit complete; sequencing amendment approved by the user on 2026-09-06.
+The original proposal below is retained as the audit record; active adoption is
+in the main plan and Sprint 018. No production implementation or remote publication in this slice.
 
 ## Question and verdict
 

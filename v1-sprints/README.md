@@ -73,3 +73,7 @@ Every application's production and real evaluation still require individual comp
 Current sequencing review: [Sprint 017 audit](017-f0-sequencing-audit.md).
 It distinguishes existing F0.3 prerequisites from later evaluation results and
 proposes a bounded CPU-construction overlap. The phase gate has not been changed.
+
+The user approved the Sprint 017 overlap on 2026-09-06. Active construction:
+[Sprint 018 / B03](018-b03-cpu-state.md). F0.3 remains incomplete; no scope or
+acceptance threshold was removed.

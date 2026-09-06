@@ -85,8 +85,10 @@ The repository audit in
 ## Architecture
 
 The user requested retirement of all old production code during Sprint 002.
-`src/openboost/` now contains only the v1 namespace and typing marker, with no
-training/prediction APIs. The last full old implementation is Git revision
+`src/openboost/` now contains initial B03 numeric data/problem records, CPU run
+transactions and constant-term inference artifacts. No tree grower, boosting recipe
+or CUDA execution exists yet. The user approved B03–B06 construction overlapping
+unfinished F0.3; see Sprint 018 and the active plan amendment. The last full old implementation is Git revision
 `50acfc6`; historical tests/examples require that revision. There is no compatibility
 shim, legacy backend, trainer, or model facade in the current package.
 

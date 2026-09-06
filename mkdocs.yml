@@ -13,3 +13,4 @@ markdown_extensions:
   - tables
 nav:
   - Current v1 status: index.md
+  - CPU state components: cpu-state.md

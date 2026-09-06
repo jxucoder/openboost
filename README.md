@@ -8,19 +8,19 @@ of making a correct, reproducible algorithm change.
 
 ## Current state
 
-This checkout is **under construction**. The old production implementation has
-been retired; the package currently provides a namespace, not a training API.
-Independent data, tree, classification, ranking, quantile, vector-leaf, positive-target,
-AFT, Normal, Formula, isolated-run, author-task and finite integration references have 288 passing tests. They are
-correctness preparation, not proof of a completed foundation or product parity.
-An [artifact integrity judge](benchmarks/v1/README.md) has 48 additional adversarial
-checks; real evaluation manifests, execution and quality gates are still pending.
-A5 [Bike Sharing data and rolling splits](benchmarks/v1/datasets/bike.json) are now
-frozen, with 24 adapter checks. No real model quality result is claimed yet.
-A1/A11 [Housing inputs and five splits](benchmarks/v1/datasets/housing.json) match
-historical hashes, with 20 adapter checks; license verification remains pending.
-A2 [Adult raw records and five splits](benchmarks/v1/datasets/adult.json) preserve
-the official test set, with 16 adapter checks; encoding and quality remain pending.
+This checkout is **under construction**. The retired implementation is not restored.
+Initial public CPU components now provide owned numeric inputs, explicit problems,
+run identity, immutable proposal/accept/reject state and constant-term inference
+artifacts. See [B03 usage and boundaries](docs/v1/cpu-state.md).
+
+These components do not yet grow trees or train boosting models. Numeric binning,
+composable tree operations and complete recipes are next. CUDA execution is not
+implemented in the new production package.
+
+Independent references and comparator/data checks remain evaluation preparation.
+F0.3 is still open; the user approved overlapping B03–B06 construction without
+removing any v1 scope or acceptance requirements. No real quality, GPU performance
+or agent/adoption advantage has been established for the new foundation.
 
 - [Execution and reflections](v1-sprints/README.md)
 - [Construction design](planning/foundation-construction-design.md)
