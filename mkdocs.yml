@@ -31,3 +31,4 @@ nav:
   - Censored log-normal AFT: aft.md
   - Multi-output squared regression: multioutput.md
   - Shared training preparation: preparation.md
+  - Independent stopping: stopping.md

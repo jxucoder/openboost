@@ -51,4 +51,6 @@ persisted scale-aware survival outputs. Real A10 evaluation remains open.
 projected splits and persisted training-only target scaling. Real A6 evaluation remains open.
 
 [Shared training preparation](preparation.md) reuses fitted CPU binning/codes
-across independent jobs, verified at M=1/8/32. Independent stopping remains next.
+across independent jobs, verified at M=1/8/32.
+[Independent validation stopping](stopping.md) separates outer-round patience
+from model acceptance and strict best-model selection across all CPU recipes.

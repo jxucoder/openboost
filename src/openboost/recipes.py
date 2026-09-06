@@ -29,6 +29,7 @@ from .ops import (
 )
 from .runtime import AcceptedState, initialize, preview, propose_terms, resolve
 from .stats import least_squares, newton, vector_newton
+from .stopping import StopState
 from .tree import depthwise
 
 
@@ -61,6 +62,7 @@ class FitResult:
         | MultiSquaredStep,
         ...,
     ]
+    stop: StopState
 
 
 def squared(
@@ -69,6 +71,8 @@ def squared(
     *,
     context,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -85,8 +89,9 @@ def squared(
 
     Fixed steps always commit finite candidates. Backtracking tries alpha/2**j
     up to max_trials and requires strict training loss improvement. The learner
-    is fitted once each round. Validation only selects best_model. Custom learner
-    (binned_data, weighted_fields) replaces growth; tree options then are forbidden.
+    is fitted once each round. Validation selects best_model and optional patience
+    stopping. Custom learner (binned_data, weighted_fields) replaces growth; tree
+    options then are forbidden.
     """
     Squared.validate(train)
     Squared.validate(validation)
@@ -104,6 +109,7 @@ def squared(
     )
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, Squared.base(train), score=Squared.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -124,7 +130,10 @@ def squared(
                 accepted,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(Squared.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 def _configuration(
@@ -225,6 +234,8 @@ def normal(
     *,
     context,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -265,6 +276,7 @@ def normal(
     base = Normal.base(train, minimum_scale=minimum_scale)
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Normal.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -291,7 +303,10 @@ def normal(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(Normal.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -314,6 +329,8 @@ def formula(
     *,
     context,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -346,6 +363,7 @@ def formula(
     base = Formula.base(train)
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Formula.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -372,7 +390,10 @@ def formula(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(Formula.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -394,6 +415,8 @@ def binary(
     *,
     context,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -425,6 +448,7 @@ def binary(
     base = Binary.base(train, clip=clip)
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Binary.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -446,7 +470,10 @@ def binary(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(Binary.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -468,6 +495,8 @@ def multiclass(
     *,
     context,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -508,6 +537,7 @@ def multiclass(
     base = Multiclass.base(train)
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Multiclass.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -535,7 +565,10 @@ def multiclass(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(Multiclass.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -553,6 +586,8 @@ def ranking(
     *,
     context,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -585,6 +620,7 @@ def ranking(
     )
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, [0.0], score=objective.score)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -605,7 +641,10 @@ def ranking(
                 geometry.loss,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(objective.score(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -626,6 +665,8 @@ def quantile(
     context,
     q=0.5,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -673,6 +714,7 @@ def quantile(
     )
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=objective.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -707,7 +749,10 @@ def quantile(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(objective.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -729,6 +774,8 @@ def poisson(
     *,
     context,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -762,6 +809,7 @@ def poisson(
     )
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -789,7 +837,10 @@ def poisson(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(objective.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -811,6 +862,8 @@ def gamma(
     *,
     context,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -843,6 +896,7 @@ def gamma(
     )
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -870,7 +924,10 @@ def gamma(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(objective.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -894,6 +951,8 @@ def tweedie(
     power=1.5,
     minimum_mean=1e-6,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -926,6 +985,7 @@ def tweedie(
     )
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -953,7 +1013,10 @@ def tweedie(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(objective.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -976,6 +1039,8 @@ def aft(
     context,
     sigma=1.0,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -1008,6 +1073,7 @@ def aft(
     )
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -1035,7 +1101,10 @@ def aft(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(objective.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)
 
 
 @dataclass(frozen=True, eq=False)
@@ -1058,6 +1127,8 @@ def multi_squared(
     mode="shared",
     projection=None,
     rounds=2,
+    patience=None,
+    min_delta=0.0,
     learning_rate=0.1,
     bins=254,
     prepared=None,
@@ -1106,6 +1177,7 @@ def multi_squared(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     mapping = np.eye(train.raw_width)
+    stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     steps = []
     for _ in range(rounds):
         before = state.train_raw
@@ -1166,4 +1238,7 @@ def multi_squared(
                 failures,
             )
         )
-    return FitResult(state, tuple(steps))
+        stop = stop.observe(objective.loss(validation, state.validation_raw))
+        if stop.reason is not None:
+            break
+    return FitResult(state, tuple(steps), stop)

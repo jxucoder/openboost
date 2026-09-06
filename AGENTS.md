@@ -64,8 +64,8 @@ themselves. Verify the actual call path and the tests that exercise it.
 ## Current Priority Order
 
 Current execution map: [Sprint 038 goal/progress review and plan](v1-sprints/038-goal-progress-and-plan.md).
-Next: validation-driven independent stop state, then installed public extension
-trials and current OpenBoost real-data integration. A6 CPU workflows and shared
+Next: installed public extension trials and current OpenBoost real-data integration.
+Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
 preparation/M=1/8/32 fixed-budget equivalence are implemented (Sprints 036–037).
 Do not infer F1/B11 readiness from implemented objective count. The
 [Sprint 035 audit](v1-sprints/035-cpu-coverage-audit.md) remains historical evidence.
@@ -103,8 +103,9 @@ Normal, saturation Formula and multi-output squared. Normal ordinary/Fisher and
 Formula full-GGN updates currently commit jointly. Frequency-severity composition,
 class metadata, AFT scale and multi-output inverse scaling have persisted inference
 artifacts. PreparedData explicitly reuses fitted training binning/codes across
-independent heterogeneous runs. This is fixed-budget sequential execution;
-validation-driven independent stopping and CUDA execution are not implemented.
+independent heterogeneous runs. All recipes support independent validation patience
+through public StopState, separate from model acceptance and best-model selection.
+Execution is sequential; CUDA execution is not implemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 
 The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018

@@ -43,5 +43,7 @@ serialized training-resume checkpoint or a device workspace.
 Tests compare M=1/8/32 heterogeneous jobs with independent, reversed and
 regrouped execution, prohibit refitting after preparation, and verify distinct
 raw caches, config mismatch rejection and continued execution after a failure.
-These are equivalence checks, not timing/fusion evidence. Validation-driven
-stopping, real model selection, GPU batching and end-to-end cost remain open.
+These are equivalence checks, not timing/fusion evidence.
+[Independent validation stopping](stopping.md) is also available through scalar
+patience/min_delta run options. Real model selection, GPU batching and
+end-to-end cost remain open.

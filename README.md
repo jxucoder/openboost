@@ -92,11 +92,13 @@ and persists two-model inference with explicit output units. Real A9 evaluation 
 persisted scale-aware survival outputs. Real A10 evaluation remains open.
 
 [Current CPU coverage audit](v1-sprints/035-cpu-coverage-audit.md) identifies
-shared preparation/stopping and external author workflows as remaining CPU
+external author workflows and real-data integration as remaining CPU
 prerequisites; Sprint 036 supplies the audited A6 recipe/scaling gap.
 
 [Multi-output squared regression](docs/v1/multioutput.md) supports independent/shared trees,
 projected splits and persisted training-only target scaling. Real A6 evaluation remains open.
 
 [Shared training preparation](docs/v1/preparation.md) reuses fitted CPU binning/codes
-across independent jobs, verified at M=1/8/32. Independent stopping remains next.
+across independent jobs, verified at M=1/8/32.
+[Independent stopping](docs/v1/stopping.md) adds validation patience to every CPU
+recipe while keeping model acceptance and best-model selection independent.

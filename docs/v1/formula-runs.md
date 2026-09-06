@@ -57,7 +57,8 @@ evaluation. Reusing a run ID in a separate invocation replays its logical identi
 
 Only sequential execution is supported. This provides independent recipe results,
 per-run round budgets, best snapshots and errors, not process isolation, fused
-training, a resource scheduler or early stopping callbacks. Arbitrary recipe code
+training or a resource scheduler. [Validation patience](stopping.md) is a public
+operation also used by the built-in recipes. Arbitrary recipe code
 must respect the immutable input contract. M=1/2/8 comparisons verify deterministic
 same-ID independent and reordered execution; they establish no speed benefit.
 
