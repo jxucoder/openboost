@@ -83,5 +83,7 @@ preparation and shared scalar split operations.
 [Sprint 020 / B04 trees](020-b04-depthwise-tree.md) adds depthwise assembly and
 validated numeric tree inference/persistence.
 [Sprint 021 / B05 squared](021-b05-squared-recipe.md) adds mapped tree transactions
-and the first complete squared CPU recipe. Normal remains the next B05 slice;
-CUDA and full quality/performance evaluation remain incomplete.
+and the first complete squared CPU recipe.
+[Sprint 022 / B05 Normal](022-b05-normal-recipe.md) separates target/raw widths and
+adds joint Normal ordinary/Fisher updates. B06 Formula and heterogeneous runs are
+next; CUDA and full quality/performance evaluation remain incomplete.

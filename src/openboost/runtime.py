@@ -67,8 +67,8 @@ class AcceptedState:
             ):
                 raise ValueError("train/validation/model feature schema differs")
             if (
-                len(model.base) != self.train.target.shape[1]
-                or len(model.base) != self.validation.target.shape[1]
+                len(model.base) != self.train.raw_width
+                or len(model.base) != self.validation.raw_width
             ):
                 raise ValueError("problem and model output widths differ")
         object.__setattr__(self, "train_raw", _owned(self.model.predict(self.train.data), ndim=2))

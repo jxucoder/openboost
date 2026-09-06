@@ -43,6 +43,6 @@ They support unseen numeric values and missing values with the saved transformer
 
 `predict` returns raw scalar learner output `[N, 1]`. It applies no base, coefficient
 or observation offset. Mapped tree terms integrate with the transaction model and the
-[squared recipe](squared.md). Normal recipes remain next. Artifacts
+[squared](squared.md) and [Normal](normal.md) recipes. Artifacts
 are for inference, not training resumption. Categories, vector/linear leaves,
 best-first/symmetric growth, CUDA and performance claims remain outside this slice.

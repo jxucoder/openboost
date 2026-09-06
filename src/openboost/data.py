@@ -72,7 +72,7 @@ class NumericData:
 class Problem:
     """Numeric targets, original row weights and raw offsets in the given row order.
 
-    Targets/offsets are [N, K], even for K=1. Weight remains [N] and is not applied
+    Targets are [N, T]; offsets are [N, raw_width]. Weight remains [N] and is not applied
     here. The caller supplies one explicit row order for all aligned role arrays.
     Objective-specific target support and additional roles arrive in later slices.
     """
@@ -82,6 +82,7 @@ class Problem:
     row_ids: np.ndarray
     weight: np.ndarray | None = None
     offset: np.ndarray | None = None
+    raw_width: int | None = None
     identity: str = field(init=False)
 
     def __post_init__(self):
@@ -98,9 +99,13 @@ class Problem:
         w = _owned(np.ones(len(y)) if self.weight is None else self.weight, ndim=1)
         if w.shape != (len(y),) or np.any(w < 0) or not np.isfinite(w.sum()) or w.sum() <= 0:
             raise ValueError("nonnegative aligned weights with positive finite mass required")
-        offset = _owned(np.zeros_like(y) if self.offset is None else self.offset, ndim=2)
-        if offset.shape != y.shape:
-            raise ValueError("offset must match target shape")
+        width = y.shape[1] if self.raw_width is None else self.raw_width
+        if type(width) is not int or width < 1:
+            raise ValueError("positive integer raw_width required")
+        offset = _owned(np.zeros((len(y), width)) if self.offset is None else self.offset, ndim=2)
+        if offset.shape != (len(y), width):
+            raise ValueError("offset must match raw parameter shape")
+        object.__setattr__(self, "raw_width", width)
         object.__setattr__(self, "target", y)
         object.__setattr__(self, "weight", w)
         object.__setattr__(self, "offset", offset)
@@ -112,7 +117,7 @@ class Problem:
     def with_offset(self, raw):
         """Return prediction-space raw values; never mutate the cached raw input."""
         raw = np.asarray(raw, dtype=float)
-        if raw.shape != self.target.shape or not np.isfinite(raw).all():
+        if raw.shape != self.offset.shape or not np.isfinite(raw).all():
             raise ValueError("raw values must match the problem output shape")
         with np.errstate(over="raise", invalid="raise"):
             return raw + self.offset

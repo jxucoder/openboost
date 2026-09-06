@@ -8,7 +8,8 @@ components are available; see [CPU state usage](cpu-state.md).
 selection, routing and scalar leaves. [Depthwise trees](trees.md) compose these
 operations and support numeric inference/persistence. The first complete
 [squared-error recipe](squared.md) provides fixed/backtracking CPU boosting.
-Normal recipes and CUDA execution are not implemented yet.
+[Normal boosting](normal.md) uses the same state and scalar learners for joint
+mean/log-scale updates. CUDA execution is not implemented yet.
 All R1–R9/C1–C7/A1–A13 remain required. Evaluation preparation continues alongside
 the user-approved B03–B06 construction overlap. No complete quality, speed or
 agent/adoption result is claimed for the new production foundation.

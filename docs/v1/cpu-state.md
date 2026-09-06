@@ -36,7 +36,9 @@ is fitted by this record; use NumericBinning separately. Categories are not supp
 callers must not alter array metadata. Identity includes feature content/order,
 row IDs and schema, and is computed once on construction.
 
-`Problem` requires targets and offsets shaped `[N, K]` and row weights `[N]`.
+`Problem` requires targets shaped `[N, T]`, offsets `[N, raw_width]` and row
+weights `[N]`. `raw_width` defaults to T; set it explicitly when parameters differ
+from observations, such as scalar Normal targets with two raw parameters.
 One explicit row-ID vector declares the order of all role arrays; binding rejects
 a mismatch instead of sorting. The caller is responsible for aligning each role
 before binding. Targets are finite numeric values; specialized target types,
@@ -68,7 +70,7 @@ run RNG, best/stop history or input datasets. Unknown versions/fields, duplicate
 fields, nonfinite payloads and inconsistent output widths fail.
 
 B04 adds numeric preparation and shared tree operations. The squared recipe is
-available; Normal remains the next B05 slice. B06 must exercise Formula and
+available alongside joint Normal updates with ordinary/Fisher directions. B06 must exercise Formula and
 heterogeneous sequential runs before interfaces stabilize. Model construction
 uses a conservative absolute-value envelope to reject possible prediction
 overflow, which can reject extremely large terms even when they would cancel.

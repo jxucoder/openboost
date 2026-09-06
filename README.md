@@ -17,8 +17,9 @@ Public [numeric operations](docs/v1/numeric-ops.md) now add quantile binning,
 weighted row fields, histograms, split callbacks, routing and scalar leaves.
 A public [depthwise grower](docs/v1/trees.md) composes these operations and persists
 validated numeric trees. The first complete [squared-error recipe](docs/v1/squared.md)
-supports weights, offsets and fixed/backtracking steps on CPU. Normal boosting and
-CUDA execution are not implemented yet.
+and [Normal recipe](docs/v1/normal.md) support weights, offsets and
+fixed/backtracking steps on CPU. Normal exposes ordinary/Fisher directions and
+joint mean/log-scale updates. CUDA execution is not implemented yet.
 
 Independent references and comparator/data checks remain evaluation preparation.
 F0.3 is still open; the user approved overlapping B03–B06 construction without

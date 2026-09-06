@@ -17,3 +17,4 @@ nav:
   - Numeric operations: numeric-ops.md
   - Depthwise trees: trees.md
   - Squared boosting: squared.md
+  - Normal boosting: normal.md

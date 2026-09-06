@@ -34,7 +34,8 @@ weights once. Binning uses training features only. Validation selects an immutab
 rejection leaves terms, caches, best model and version unchanged. A learner is
 fitted once per round. The initial CPU implementation recomputes ensemble
 predictions during trial validation; prediction caching remains future work.
-Nonfinite arithmetic fails explicitly rather than silently accepting a candidate.
+Nonfinite fixed-step arithmetic raises; backtracking rejects an invalid numerical
+trial and continues at a smaller coefficient. Structural errors raise immediately.
 
 The defaults expose `max_depth`, `max_leaves`, `reg_lambda`, `min_child_h` and
 `split_penalty`. `learner(binned_data, weighted_fields)` can replace the default
@@ -43,8 +44,9 @@ at defaults. The recipe rejects conflicting nondefault growth options. Low-level
 code can instead use `Squared.fields`, `depthwise`, `TreeTerm`, `propose_terms`,
 `preview` and `resolve` directly, including explicit output mappings.
 
-This recipe accepts scalar `[N, 1]` targets. Normal/distributional geometry,
-classification, specialized targets, vector learners, callbacks/early stopping,
+This recipe accepts scalar `[N, 1]` targets and raw_width=1. The
+[Normal recipe](normal.md) provides two-parameter distributional geometry.
+Classification, specialized targets, vector learners, callbacks/early stopping,
 other growth policies and CUDA remain future slices. Unsupported arguments fail.
 The trace retains per-round arrays for correctness inspection, and is not a
 memory-efficient large-workload implementation or a training-resume checkpoint.

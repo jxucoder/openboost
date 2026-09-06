@@ -79,3 +79,9 @@ def newton(problem, gradient, curvature):
         ("unweighted", "unweighted"),
     )
     return apply_weight(fields, problem)
+
+
+def least_squares(problem, direction):
+    """Fit an unweighted scalar direction: G=-w*z, H=w, not likelihood curvature."""
+    z = np.asarray(direction, dtype=float)
+    return newton(problem, -z, np.ones(len(problem.target)))
