@@ -487,6 +487,88 @@
         "weak_depth": 4
       }
     ],
+    "paid_composition": [
+      {
+        "count_alpha": 1e-06,
+        "max_iter": 1000,
+        "severity_alpha": 1e-06
+      },
+      {
+        "count_alpha": 1e-06,
+        "max_iter": 1000,
+        "severity_alpha": 0.001
+      },
+      {
+        "count_alpha": 1e-06,
+        "max_iter": 1000,
+        "severity_alpha": 1.0
+      },
+      {
+        "count_alpha": 1e-06,
+        "max_iter": 1000,
+        "severity_alpha": 100.0
+      },
+      {
+        "count_alpha": 0.001,
+        "max_iter": 1000,
+        "severity_alpha": 1e-06
+      },
+      {
+        "count_alpha": 0.001,
+        "max_iter": 1000,
+        "severity_alpha": 0.001
+      },
+      {
+        "count_alpha": 0.001,
+        "max_iter": 1000,
+        "severity_alpha": 1.0
+      },
+      {
+        "count_alpha": 0.001,
+        "max_iter": 1000,
+        "severity_alpha": 100.0
+      },
+      {
+        "count_alpha": 1.0,
+        "max_iter": 1000,
+        "severity_alpha": 1e-06
+      },
+      {
+        "count_alpha": 1.0,
+        "max_iter": 1000,
+        "severity_alpha": 0.001
+      },
+      {
+        "count_alpha": 1.0,
+        "max_iter": 1000,
+        "severity_alpha": 1.0
+      },
+      {
+        "count_alpha": 1.0,
+        "max_iter": 1000,
+        "severity_alpha": 100.0
+      },
+      {
+        "count_alpha": 100.0,
+        "max_iter": 1000,
+        "severity_alpha": 1e-06
+      },
+      {
+        "count_alpha": 100.0,
+        "max_iter": 1000,
+        "severity_alpha": 0.001
+      },
+      {
+        "count_alpha": 100.0,
+        "max_iter": 1000,
+        "severity_alpha": 1.0
+      },
+      {
+        "count_alpha": 100.0,
+        "max_iter": 1000,
+        "severity_alpha": 100.0
+      }
+    ],
     "xgboost": [
       {
         "learning_rate": 0.03,

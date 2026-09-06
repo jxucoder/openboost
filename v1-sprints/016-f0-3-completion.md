@@ -144,3 +144,14 @@ named-NDCG stopping and reload. Five group/weight/overlap counterexamples passed
 The original smoke's metric-order assumption failed on CatBoost and is retained;
 selecting a metric by position is unsafe when a library adds a second history.
 Real ranking data/agreement remains unresolved; A4 quality is not passed.
+
+Parametric adapter result: A7/A8/A9 GLMs, matched paid-count × severity, and the
+A12 global formula now execute through strict validation workers. Five subprocess
+checks matched independent hand-calculated outputs. Six input/math tests reject
+invalid joins/structure. The full suite is 460 passing tests. Composition penalty
+pairs are declared before real quality evaluation.
+
+Reflection: paying claims and recorded claims are distinct target populations.
+Validate exact paid-record reconstruction before fitting either component; the
+same output units must survive model composition and reload. These controls do
+not implement FormulaBoost's coupled updates or finish full task/matrix binding.

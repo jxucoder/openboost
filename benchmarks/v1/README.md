@@ -363,3 +363,46 @@ The initial smoke assertion selected the last metric in CatBoost's history,
 which is PairLogit rather than NDCG; its source/error record is retained. The
 corrected check locates NDCG by name. Real MSLR data/agreement and CUDA execution
 of this worker remain unverified; these probes do not pass real A4 quality.
+
+## Parametric and composed validation workers
+
+`parametric_worker.py JOB.json` runs the `glm` A7/A8/A9, `paid_composition` A9,
+or `formula_global` A12 controls through the same fresh-output process runner.
+The strict job has `application`, `method`, `config`, and `input_npz`; test arrays
+and unsupported fields fail. It writes predictions, a trusted local model bundle
+and training configuration after verifying replay. GLMs treat convergence warnings
+as failures; nonlinear optimization must report successful finite convergence.
+
+- GLM A7 consumes period counts plus exposure; A9 consumes period paid totals plus
+  exposure. Both fit annualized targets with exposure times business weight once.
+  A7 emits period count predictions; A9 emits annualized premium predictions.
+  A8 consumes positive individual payments and emits positive payment means.
+- Paid composition additionally requires `paid_count`, `claim_policy` indices and
+  `claim_amount`. Their exact counts and summed positive payments must reconstruct
+  policy targets. Orphans, nonpositive payments, and mismatches fail. Frequency is
+  paid-record frequency, not raw ClaimNb. Severity weights inherit each policy's
+  business weight once per claim. Annualized predictions multiply paid frequency
+  and severity; period totals multiply exposure once.
+- Global formula consumes `age_train`, `age_validation` already in days/28 and
+  training MPa targets. It fits positive global amplitude/rate through softplus
+  and records training age support. It is a structural comparator, not FormulaBoost
+  or a claim of parameter identifiability on arbitrary real datasets.
+
+All numeric GLM scaling fits training inputs only. [Search design](search-design.json)
+now includes 16 paid-composition penalty pairs fixed before real quality runs.
+Existing GLM/global-formula grids map directly to worker configuration. These
+adapters still need binding to complete real-data/search manifests.
+
+[Hand-worked evidence](evidence/parametric-cpu.json) verifies weighted means,
+paid-record composition, exposure scaling and known-curve parameter recovery.
+[CLI evidence](evidence/parametric-worker-cpu.json) verifies all five controls in
+bounded processes and exact output units/IDs. Reproduce with the locked CPU
+interpreter and two numerical threads:
+
+```bash
+build/v1-env/bin/python -m benchmarks.v1.parametric_smoke
+build/v1-env/bin/python -m benchmarks.v1.parametric_worker_smoke build/v1-parametric-workers-new
+```
+
+These are synthetic correctness checks. Real A9/A12 quality, outer coupled tree
+controls, support-stratified reports and full F0.3 integration remain unfinished.
