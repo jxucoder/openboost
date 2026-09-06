@@ -12,10 +12,17 @@ from pathlib import Path
 import numpy as np
 
 from benchmarks.v1.process_runner import execute
-from benchmarks.v1.worker_data import export
+from benchmarks.v1.worker_data import NAMES, export
 
 
-def run(directory):
+def run(directory, applications=None):
+    applications = list(NAMES) if applications is None else list(applications)
+    if (
+        not applications
+        or len(set(applications)) != len(applications)
+        or set(applications) - set(NAMES)
+    ):
+        raise ValueError("unique supported applications required")
     root = Path(directory).resolve()
     root.mkdir(parents=True, exist_ok=True)
     if any(root.iterdir()):
@@ -25,7 +32,14 @@ def run(directory):
         scope="Real-data validation worker plumbing only; four rounds, no test scores or search selection, no quality or performance claim",
         source_sha=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
         dirty=bool(subprocess.check_output(["git", "status", "--porcelain"])),
-        argv=[sys.executable, "-m", "benchmarks.v1.worker_data_smoke", str(directory)],
+        argv=[
+            sys.executable,
+            "-m",
+            "benchmarks.v1.worker_data_smoke",
+            str(directory),
+            "--applications",
+            *applications,
+        ],
         python=platform.python_version(),
         os=platform.platform(),
         packages={d.metadata["Name"]: d.version for d in importlib.metadata.distributions()},
@@ -45,7 +59,7 @@ def run(directory):
         data={},
         cells=[],
     )
-    for app in ["A1", "A2", "A3", "A5", "A6", "A11", "A12"]:
+    for app in applications:
         packet = root / app
         manifest = export(app, packet)
         result["data"][app] = manifest
@@ -88,13 +102,17 @@ def run(directory):
                     ) as truth,
                 ):
                     expected_shape = (
-                        (len(truth["y"]), {"A11": 2, "A3": 7, "A5": 3}[app])
-                        if app in ["A11", "A3", "A5"]
+                        (len(truth["y"]), {"A11": 2, "A10": 2, "A3": 7, "A5": 3}[app])
+                        if app in ["A10", "A11", "A3", "A5"]
                         else truth["y"].shape
                     )
                     assert predictions["prediction"].shape == expected_shape
                     assert np.isfinite(predictions["prediction"]).all()
                     np.testing.assert_array_equal(predictions["row_ids"], truth["row_ids"])
+                    if app in ["A7", "A8", "A9"]:
+                        assert np.all(predictions["prediction"] > 0)
+                    if app == "A10":
+                        np.testing.assert_array_equal(predictions["prediction"][:, 1], 1)
                     if app in ["A2", "A3"]:
                         assert np.all(
                             (predictions["prediction"] >= 0) & (predictions["prediction"] <= 1)
@@ -115,8 +133,9 @@ def run(directory):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
+    parser.add_argument("--applications", nargs="+", choices=NAMES)
     args = parser.parse_args()
-    result = run(args.directory)
+    result = run(args.directory, args.applications)
     print(
         {
             "cells": len(result["cells"]),

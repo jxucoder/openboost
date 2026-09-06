@@ -1,0 +1,2329 @@
+{
+  "scope": "Real-data validation worker plumbing only; four rounds, no test scores or search selection, no quality or performance claim",
+  "source_sha": "7e64176a866c9609d0ef917fdbb14655f38a7528",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+    "-m",
+    "benchmarks.v1.worker_data_smoke",
+    "build/v1-worker-positive-survival-001",
+    "--applications",
+    "A7",
+    "A8",
+    "A9",
+    "A10"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "packages": {
+    "autograd": "1.9.1",
+    "threadpoolctl": "3.6.0",
+    "pandas": "3.0.5",
+    "cloudpickle": "3.1.2",
+    "kiwisolver": "1.5.1",
+    "packaging": "26.3",
+    "joblib": "1.6.0",
+    "lifelines": "0.30.0",
+    "contourpy": "1.3.3",
+    "ngboost": "0.5.11",
+    "autograd-gamma": "0.5.0",
+    "numpy": "2.3.5",
+    "matplotlib": "3.11.1",
+    "formulaic": "1.2.2",
+    "sympy": "1.14.0",
+    "xlrd": "2.0.2",
+    "narwhals": "2.25.0",
+    "plotly": "7.0.0",
+    "wrapt": "2.4.0",
+    "python-dateutil": "2.9.0.post0",
+    "mpmath": "1.3.0",
+    "scipy": "1.16.3",
+    "fonttools": "4.64.0",
+    "cycler": "0.12.1",
+    "pyparsing": "3.3.2",
+    "lightgbm": "4.7.0",
+    "graphviz": "0.21",
+    "tqdm": "4.70.0",
+    "interface_meta": "2.0.1",
+    "typing_extensions": "4.16.0",
+    "pillow": "12.3.0",
+    "catboost": "1.2.10",
+    "six": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "xgboost": "3.4.1"
+  },
+  "device": "cpu",
+  "gpu": null,
+  "memory_cap": null,
+  "threads": 2,
+  "source_hashes": {
+    "worker_data.py": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+    "worker_data_smoke.py": "eecc1aec3a1ffbf6550219f2d9af60dafc213530d742905c18db7223c76e41cc",
+    "baseline_worker.py": "23a77399fe0d8f22ca8562801e43ea50e6ca492501c2feae278937e8c44b69b0",
+    "process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "data": {
+    "A7": {
+      "application": "A7",
+      "dataset": "insurance",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "0ae4d0a206449d6df81dbc470fd1654d8f33e72f0f5fbd52bec89c27257671ac"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "ae02673c24506bbcab8b6aa80affd2631d19bd11e5dc14065b23f987beecac59"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "72af1635e878c0524add52ee4c8d8f70cfb0c4705c10f75eb8d0d66a4fd35c56"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "ecc90640de9fce6c1ef627406f672173ea6a2864e198124a0353ea0d1d9175bc"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "12f542a463d871e64bf08e9ea5984779c4ce0167ea59e864d3262900b5722a0b"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "e0b36f2fbff96b6f8ddacd97603548f8db752cbcce9af696ac1bc3de86f86ba3"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "b18f410fb6e3a5f10fdb2969abff571aa7ffd953dd95931da33a582ac0c63a2e"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "5f8b9d853ea30d7f5f539ba7824e5c5c56ef0a3c10e68fda464be00e645c6aa9"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "2f34597a81ee7b1bda9c5ca59dc0f42b8b9ff9f83e95397fe46774e978a34c05"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "d2e51308260a3463c71ea77ab2d1c2263e3f5fc6d7f0a7c4c484b08f374502f6"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "c0aa76b4f8a137dfaa3d7d17aa7004445e12681c2e3941e2a25def2e03f7a8c7"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "ab4d1c7b433009c417e74d0f3d65427c5bcb67eabb036e7403a04813f294eb6c"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "d6ee43a322790bbc503a5e241a21ba1f616901efb96d0a2b513381982d86ebb3"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "b55efde0c0ab9b912a7a6a456fb92cd4353f65ccddc92b0c4bdba8a4d0ad8284"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "a937ab72404e6bf594fe0521e71f8027b42668e2305cffd6e684cb51c9922edb"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "2855dd7fb3504747e141f31126324463b928191c5676e7ed7527c71dd820d407"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "6607785a3a6d5c4cae9c35176d79fc1a1fe1cec82b6023578b3585d08203b528"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "ca4d768608b607071dd949acd6e1f79d65bb89387dd9bb925a5356ca6099a580"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "4011f9ac79a4428c817ab04571cd89adde54dbee0a20478c62f80d8a8e76be54"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "7d02ebaaab85c9125403d2cf88c1c4f91e06e4ab7b847d87969533668ec0ec26"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "dd2ce518a7a30d3450ac9482d1ac590704b54049db3be7ae5103a4d4cb140545"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "ca2a814621a984aa23b62ef2d1d5e6b94bfc1e470f5cbc5e6abaed46bc22d0c3"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "e8e5c584010cae9fc538baf3e58dcf0c6afe276bb5e350ee269132f771b76145"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "a05ac0c8203720466d313518d36e72d940f2d75b716c28a453ee2a2bcb27fcb4"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "d0820179812781e72c26a433a71de8113c1c83c00b9740dae328bfe030cb082a"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        }
+      ],
+      "source_freeze_sha256": "ff95579dd1b95595e87027f38afd512cd986b3182f08f50a7a2139ffb63f291f",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    },
+    "A8": {
+      "application": "A8",
+      "dataset": "insurance",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "03db952aced3525dca5ec3cde4f0eaa6dca3c5212bab622230589564c6dfca8c"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "a0a52a08c3ec5721b50f1b9ae5e01ed24ba9f8a05cfc8a555a9a0a65f902bb90"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "33b30a6a888539777d662a221e772fbb90450b55373537c6050a73d3965617a8"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "54c5440028676ce444f4a4624f50357ac7148dcde7f1be6c8982c261738d7cb7"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "3a255c99d30eb1fbfd9d1c8b9171d86552cdab6857f92cacd532e5c5a620aebe"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "3d6d292ab33e4197544b9c792a426521b41b081a39b5bf1bd46025f57856c0e0"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "b95d35fdb052d7e0cd06a0adca88d710cdce173acf464fcaf9970aa12ab9a131"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "971f4a3b233d466669c895c9fe5ff1a62f9b63b607eed1e915028e2358033c7b"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "716684d70e40449adb55683e76e4489ee978b8d2411ef9cba065a978c3f38ad8"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "c6e5a0382c8d34b4985c4b05099cc31b7ae8500258af9a2ebeb084ca668cbb55"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "01fcbd94e702e793ca2919bdf9d8e3cd8cf2bf3074d1b310424fa0d59fe77f15"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "63a9af461ceb0e2443458610714545957b9797ff00579f41235d0826b6150c3e"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "3175895473a6e26f076fc80732baef91e55846d3f74482c481fff32999a1d73f"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "63cf82193cf0093052db810795d95016c0814557766aa210d001fb8faa67c8ae"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "c3bc7d268c3abeb0ed959e7cd957e4e239c5ebd15de38c932d014918fc6cacc6"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "61415468301edfb6fd706ccf62039d2b80000efccd0e717af24e01c1bebea9d6"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "f0645b5b368af10c5c78992e3273af397db2058ab4a4c61c74a5f0bb9e141f37"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "47e674c02e2baa771dc1cbad9f2e98939c8cbc58b9ca77952c3b66f970753624"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "9d89345272c27e30cc53b0fe62de5d8762ba2d398dde088efdf79219cec1a579"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "0548af93866271046298dbab7b1e21eb8f190468a071d2f74e2ef88249c8b422"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "9fba67e2769974330b33011748b57079326eef3d3e3831cd97d0f7a7ec3eab58"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "747aec63e7f4ce87bc17a5e2356b64948c5237efd7bf9e3d4e67a2a76e98612a"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "6386c1498846e98e30532877c10fc8f74961602df5d5b53a29f1093d329b84d3"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "f8168c59cb3df1c96b52cda6429622667cd9571be9581338cc4cce26f886d5fe"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "a0de74ec3da252ecdf928f4d1d151240052569e7a6191644f49bb2a550b27bb5"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        }
+      ],
+      "source_freeze_sha256": "ff95579dd1b95595e87027f38afd512cd986b3182f08f50a7a2139ffb63f291f",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    },
+    "A9": {
+      "application": "A9",
+      "dataset": "insurance",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "1e3cd8d7e7bd157745bff7db14534bd1fbcecff3abef8f4341fa1f58a9583f0f"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "89ca61cb3b97a660065989fc29d4083af85a8b78081ff71dba6f316710421bbb"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "e9d6286fffd61b5c7dd91b7a027684fa561d72fe0d57a14f0b846b3eae1e8c20"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "6dcf4429e95ed60936e9fce3a8ce1ad4cfe23524dc1ec3115f5ab2ea2a686153"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "0b43c2d68dcea2f014cc1ef202e89fce4055b61723a241d71dbefd6be62efcaf"
+            },
+            "validation-period": {
+              "path": "0/validation-period.npz",
+              "sha256": "38b3c8adea524a454dbceb35cb3b18f97a77e332da742607b505cb263d38bdc0"
+            },
+            "test-period": {
+              "path": "0/test-period.npz",
+              "sha256": "4a65bf4de6a61bd5434bc9301092c35e4cd0cc636675978d48e0b703978c9a36"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "e8c4d49a1008615af63446d04a049fadb9eb2c65243942defc4765272d1e8dac"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "34d0dd6b71e9c4c95461c3eb03fd32da250352b89fc9c113f9c44ff6b9f2f8b9"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "0e80cdbb30a5f39d7a0aa66133f65d5f59bdc9a0cdab73560c3606ff09130f4e"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "8db330118e63840ca6ba192426d475f17c43478418a684fa1283698c80f789b4"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "722b45843d3dfa5494bdf2ad027a398b74d0dbe3ca3ffe3f432d12549bed3a40"
+            },
+            "validation-period": {
+              "path": "1/validation-period.npz",
+              "sha256": "cc873cd194e217b151323af8c6ca5078357f5b8fc45c97d0c286d1cd624417a4"
+            },
+            "test-period": {
+              "path": "1/test-period.npz",
+              "sha256": "627c93a4f32751fc739ac8a6f1d1b9f6ee36d3213ade9cf5c31847073abdcf7b"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "c2a2c40926e231d1e596f7e4c662219d923e6f926a96df27b4717abd7445f420"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "605ce72c18c2ab8b1b00045782ae01f5a7f22bdb38d4ac24074715e39628a3ab"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "55528b0dadba7c2a172ca8eae888750afa418c91ca22991d62873957466b84a9"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "cabecd0aced4f18a10a6029f372f6f7657a45d5fff5d5bbfafedceb7b1190439"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "aba1155b233c75fc269f02c7ce530fda1146d192d7352c4aa9bf1d0b13907e09"
+            },
+            "validation-period": {
+              "path": "2/validation-period.npz",
+              "sha256": "7b42a1c4f591debe3866e1d42886de0a5d74c7a58dc9586296c20e2c16dd80c3"
+            },
+            "test-period": {
+              "path": "2/test-period.npz",
+              "sha256": "eb23a461b880d1053a00c712426a1f7132d4e1e86c8bfffeffc0db4338cb8438"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "7b3cd2b815775626af17f54545b2bbbc1c0bffd23882005f76a8e67e066cfbf2"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "ccc9af5cc82c64fe0ed87d85e8ce2192fc4c685a7c49695a053ec23ff1b49ead"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "5a8f2913e280a26ace47d7d703759109bf6bcc944de930a3aa1bc4f3dc0da054"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "a77c65f78cd60d0ef0765f78721ad123d509c0b911071ea830efa838aee90e2e"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "96ef0af1e84246bec68d60b9d75655873faa375a2d52b436e83e44becd6c4955"
+            },
+            "validation-period": {
+              "path": "3/validation-period.npz",
+              "sha256": "1f023d3f7bc39802a59b329474b1e2c80dafd07f29fc6fef6b1fd82447548dc5"
+            },
+            "test-period": {
+              "path": "3/test-period.npz",
+              "sha256": "e2c56c144be922042ea2bd671dfd0e99a7d8353d1c8380c767d3418bf7725539"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "668e0a57c88afc0ab5b6cf73cd578f7b84c6327670cf4a312f450ca65a558781"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "d11bbf0515574a7e4b7d42ef82e433a7e279f587bf353b8e06fc50db5de1861b"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "cfc3c8aa97ef035aceb7ed96d798f7ee922c4a2e86c076e4ddd7431b2ee6a27d"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "df794e119ee5272352c86b5400198061d8a289ccf782ff85c4af81c2d1d22abd"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "ffd62d22198e3cbd25e42308cc6e1509cbc5c386fdecd66bf7282ac8292196c8"
+            },
+            "validation-period": {
+              "path": "4/validation-period.npz",
+              "sha256": "e5f545a742edbd9e9a768ad386f2ce59430c3d2a8c7dec99a95edd9885a91b91"
+            },
+            "test-period": {
+              "path": "4/test-period.npz",
+              "sha256": "19a4f4480b0c627a83f3a331fe94004368effa70aa56eb0959d7fdec5bccfbbd"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        }
+      ],
+      "source_freeze_sha256": "ff95579dd1b95595e87027f38afd512cd986b3182f08f50a7a2139ffb63f291f",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    },
+    "A10": {
+      "application": "A10",
+      "dataset": "veteran",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "b46c7c5faa65cdb3f616e54dc5e771b3b6d5368b7a126b5cbb2c182056efafcd"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "512bac52ced4ef2af4ede510794725fe168d2eca943379b7df4f19c892a8ef07"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "e36d420b130310c437be3f66b0205a8c0b53707f001cd337add8d50e8cae1b19"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "19487e0beeb624dfe4a91da55b42ac2d399eeef8ab9415e2c217aab127d8729e"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "0cd10008dc9bf1489c0d0dca4168255d951b273e596ce6d8a892b0a92683b27b"
+            },
+            "censoring": {
+              "path": "0/censoring.json",
+              "sha256": "b14818e27c68515cf319b317529c7d8350d5b408813c60146310f5053940cf84"
+            }
+          },
+          "metadata": {
+            "censoring_support": {
+              "times": [
+                4.0,
+                7.0,
+                8.0,
+                10.0,
+                12.0,
+                13.0,
+                15.0,
+                19.0,
+                20.0,
+                21.0,
+                22.0,
+                24.0,
+                25.0,
+                27.0,
+                29.0,
+                30.0,
+                31.0,
+                33.0,
+                35.0,
+                36.0,
+                42.0,
+                43.0,
+                51.0,
+                52.0,
+                53.0,
+                54.0,
+                59.0,
+                61.0,
+                73.0,
+                80.0,
+                82.0,
+                87.0,
+                92.0,
+                97.0,
+                99.0,
+                111.0,
+                117.0,
+                118.0,
+                122.0,
+                123.0,
+                126.0,
+                139.0,
+                140.0,
+                144.0,
+                151.0,
+                153.0,
+                164.0,
+                177.0,
+                182.0,
+                186.0,
+                216.0,
+                228.0,
+                231.0,
+                242.0,
+                278.0,
+                283.0,
+                314.0,
+                340.0,
+                357.0,
+                378.0,
+                389.0,
+                392.0,
+                411.0,
+                467.0,
+                553.0,
+                991.0,
+                999.0
+              ],
+              "survival": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                0.975,
+                0.975,
+                0.9493421052631579,
+                0.9493421052631579,
+                0.9493421052631579,
+                0.9493421052631579,
+                0.9493421052631579,
+                0.9493421052631579,
+                0.9166061705989111,
+                0.9166061705989111,
+                0.9166061705989111,
+                0.9166061705989111,
+                0.9166061705989111,
+                0.9166061705989111,
+                0.9166061705989111,
+                0.9166061705989111,
+                0.9166061705989111,
+                0.8707758620689655,
+                0.8707758620689655,
+                0.8707758620689655,
+                0.8707758620689655,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345,
+                0.8127241379310345
+              ],
+              "strict_upper": 999.0,
+              "grid": [
+                13.0,
+                25.0,
+                35.0,
+                53.0,
+                87.0,
+                117.0,
+                144.00000000000006,
+                228.0,
+                357.0
+              ],
+              "tie_rule": "events removed before censoring risk"
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "812c66eaa230f736907f4f84cfee8a393bc9c347352f919ef853d1ccfaf03813"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "a4d168b7aae5b6f7ebe9fbb631ea35bf5ffdc9bff63cd5c76d713e2b96d39fc8"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "bff1110a8c722c4a5012e39611a0268f88d58f35fc7d79d7a3aea51105a48b31"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "34baa5e4427ca7b96c270d60a7343ed6e49c2a3e792d2611fcbf1de58c996e65"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "1733238b3ae3e757fb30363071f9ca1d2d6d3b86a28c54790e1a7f799a336926"
+            },
+            "censoring": {
+              "path": "1/censoring.json",
+              "sha256": "e3c4e01883d9131b32cf907ced855710919b78a36b143c587bc57a5ed5db4d97"
+            }
+          },
+          "metadata": {
+            "censoring_support": {
+              "times": [
+                2.0,
+                3.0,
+                4.0,
+                7.0,
+                8.0,
+                10.0,
+                12.0,
+                13.0,
+                15.0,
+                16.0,
+                18.0,
+                19.0,
+                20.0,
+                21.0,
+                22.0,
+                24.0,
+                25.0,
+                27.0,
+                30.0,
+                31.0,
+                35.0,
+                43.0,
+                44.0,
+                45.0,
+                48.0,
+                51.0,
+                52.0,
+                53.0,
+                54.0,
+                56.0,
+                59.0,
+                63.0,
+                73.0,
+                82.0,
+                90.0,
+                99.0,
+                100.0,
+                103.0,
+                105.0,
+                110.0,
+                112.0,
+                117.0,
+                122.0,
+                123.0,
+                126.0,
+                132.0,
+                139.0,
+                140.0,
+                143.0,
+                151.0,
+                162.0,
+                164.0,
+                182.0,
+                216.0,
+                242.0,
+                260.0,
+                278.0,
+                283.0,
+                287.0,
+                314.0,
+                340.0,
+                384.0,
+                392.0,
+                467.0,
+                587.0,
+                991.0,
+                999.0
+              ],
+              "survival": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9532614278376991,
+                0.9225110591977733,
+                0.9225110591977733,
+                0.9225110591977733,
+                0.9225110591977733,
+                0.9225110591977733,
+                0.9225110591977733,
+                0.8840730983978662,
+                0.8840730983978662,
+                0.8840730983978662,
+                0.8840730983978662,
+                0.8840730983978662,
+                0.8840730983978662,
+                0.8840730983978662,
+                0.8840730983978662,
+                0.8840730983978662,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085,
+                0.8251348918380085
+              ],
+              "strict_upper": 999.0,
+              "grid": [
+                13.0,
+                21.0,
+                30.0,
+                48.0,
+                59.0,
+                100.0,
+                122.0,
+                162.0,
+                287.0
+              ],
+              "tie_rule": "events removed before censoring risk"
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "d3cc59fa8a1ba44777bcb366ca375becb9ae54778915882f2b6ab0b0341b8d32"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "f18d5c0cf3d8a80b76681bc37147abe8ddc17a2f62a39778525c21320cb6066c"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "6f827ea44dcc7269cefab9b2f922efd88827eb5fb7cd4c7061d841a15c31a0c6"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "90bbe12444fd37d3ec88118e2d630cbce9d1cee8c01ef9c4cf30a68e7c526998"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "923910be22567d05310b0cd036127877ee76dcc2f43cdae2c0c13aef6c8e21f9"
+            },
+            "censoring": {
+              "path": "2/censoring.json",
+              "sha256": "e3c1722ae5274ffd338b0281812abde037fda1e482067988d775670e1997e215"
+            }
+          },
+          "metadata": {
+            "censoring_support": {
+              "times": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                8.0,
+                10.0,
+                13.0,
+                15.0,
+                16.0,
+                18.0,
+                19.0,
+                20.0,
+                21.0,
+                22.0,
+                24.0,
+                25.0,
+                27.0,
+                29.0,
+                30.0,
+                31.0,
+                36.0,
+                42.0,
+                45.0,
+                48.0,
+                49.0,
+                51.0,
+                52.0,
+                53.0,
+                59.0,
+                73.0,
+                80.0,
+                82.0,
+                83.0,
+                87.0,
+                90.0,
+                92.0,
+                95.0,
+                99.0,
+                103.0,
+                110.0,
+                111.0,
+                112.0,
+                118.0,
+                122.0,
+                123.0,
+                126.0,
+                132.0,
+                133.0,
+                139.0,
+                140.0,
+                144.0,
+                153.0,
+                162.0,
+                164.0,
+                201.0,
+                216.0,
+                231.0,
+                242.0,
+                260.0,
+                278.0,
+                314.0,
+                384.0,
+                389.0,
+                392.0,
+                553.0,
+                587.0
+              ],
+              "survival": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                0.9743589743589743,
+                0.9480249480249481,
+                0.9480249480249481,
+                0.9480249480249481,
+                0.9480249480249481,
+                0.9480249480249481,
+                0.9164241164241165,
+                0.9164241164241165,
+                0.9164241164241165,
+                0.9164241164241165,
+                0.9164241164241165,
+                0.9164241164241165,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.8782397782397783,
+                0.7904158004158005,
+                0.7904158004158005,
+                0.7904158004158005,
+                0.7904158004158005,
+                0.7904158004158005,
+                0.7904158004158005,
+                0.7904158004158005,
+                0.7904158004158005,
+                0.7904158004158005,
+                0.7904158004158005
+              ],
+              "strict_upper": 587.0,
+              "grid": [
+                13.0,
+                20.0,
+                29.000000000000004,
+                49.0,
+                80.0,
+                99.0,
+                122.0,
+                153.0,
+                242.0
+              ],
+              "tie_rule": "events removed before censoring risk"
+            }
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "8bd3e638350bf9122f22af900a959dc28a132f8ca79f3522bf2eb228b694eef3"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "2853ecdf3e18994ccfd9d53dcd7734c239fc2532a0e7dfdcce0b298bc3debf78"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "3423bcc22a47c0723b0ca0d0ab8767bfa6ad1109d34c93ccee5bf48e1abcefc4"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "bb918d3abebb9f7f7db97fe35d8400f3dbcbc6e9039efe7934ffe765da9b6950"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "fc3d4dfb3f40aeefc1b98ddc6c45276279473ab48b3276c40e0c61e72534b922"
+            },
+            "censoring": {
+              "path": "3/censoring.json",
+              "sha256": "7234f1ee28dab66d1b8ab9ee323273009e4069f05b5aa62ba774104dc21a79b6"
+            }
+          },
+          "metadata": {
+            "censoring_support": {
+              "times": [
+                1.0,
+                2.0,
+                3.0,
+                4.0,
+                7.0,
+                8.0,
+                10.0,
+                11.0,
+                12.0,
+                13.0,
+                15.0,
+                19.0,
+                20.0,
+                21.0,
+                22.0,
+                24.0,
+                25.0,
+                27.0,
+                30.0,
+                31.0,
+                33.0,
+                35.0,
+                36.0,
+                45.0,
+                49.0,
+                51.0,
+                52.0,
+                53.0,
+                54.0,
+                56.0,
+                72.0,
+                80.0,
+                84.0,
+                87.0,
+                90.0,
+                92.0,
+                95.0,
+                99.0,
+                100.0,
+                103.0,
+                105.0,
+                111.0,
+                117.0,
+                118.0,
+                122.0,
+                123.0,
+                126.0,
+                132.0,
+                139.0,
+                140.0,
+                144.0,
+                151.0,
+                153.0,
+                156.0,
+                162.0,
+                164.0,
+                182.0,
+                228.0,
+                231.0,
+                242.0,
+                250.0,
+                278.0,
+                287.0,
+                340.0,
+                389.0,
+                411.0,
+                467.0,
+                553.0,
+                991.0,
+                999.0
+              ],
+              "survival": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9830508474576272,
+                0.9532614278376991,
+                0.923472008217771,
+                0.923472008217771,
+                0.923472008217771,
+                0.923472008217771,
+                0.923472008217771,
+                0.923472008217771,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8865331278890601,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416,
+                0.8232093330398416
+              ],
+              "strict_upper": 999.0,
+              "grid": [
+                11.0,
+                21.0,
+                30.000000000000004,
+                52.0,
+                87.0,
+                100.0,
+                123.00000000000003,
+                156.0,
+                278.0
+              ],
+              "tie_rule": "events removed before censoring risk"
+            }
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "edef5619d2912c008b5c3086586c999138ccb1ae5e7e226e07bbfd5820d19f0a"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "cee772b41d946c6fd3fd2eb47be0478868242d9e099a89bf74894e3d3279832a"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "3c79f4937978fcd01526cbd2ada24a14d74c85592229bdadd8ee75be39d32c51"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "932132f5b11b85385e1d6fa1ee14e91c8a82bf46e88b2991290fee4846f8effd"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "0a98c618ef1ca9945912c236a0fa758e8537557d0d6ba9db33f91ce97e79e7a2"
+            },
+            "censoring": {
+              "path": "4/censoring.json",
+              "sha256": "d70df2478c19e88e51134bef9d1dca62966f8c25f3ecc888aa704457ce8d1efa"
+            }
+          },
+          "metadata": {
+            "censoring_support": {
+              "times": [
+                7.0,
+                8.0,
+                10.0,
+                11.0,
+                12.0,
+                15.0,
+                18.0,
+                22.0,
+                24.0,
+                25.0,
+                27.0,
+                29.0,
+                30.0,
+                31.0,
+                33.0,
+                35.0,
+                36.0,
+                43.0,
+                48.0,
+                51.0,
+                52.0,
+                54.0,
+                63.0,
+                72.0,
+                82.0,
+                83.0,
+                84.0,
+                87.0,
+                92.0,
+                95.0,
+                99.0,
+                100.0,
+                103.0,
+                110.0,
+                111.0,
+                112.0,
+                117.0,
+                122.0,
+                123.0,
+                126.0,
+                132.0,
+                139.0,
+                143.0,
+                144.0,
+                153.0,
+                156.0,
+                162.0,
+                186.0,
+                200.0,
+                201.0,
+                216.0,
+                228.0,
+                231.0,
+                260.0,
+                278.0,
+                287.0,
+                314.0,
+                378.0,
+                384.0,
+                389.0,
+                392.0,
+                467.0,
+                587.0,
+                991.0,
+                999.0
+              ],
+              "survival": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9841269841269842,
+                0.9617604617604618,
+                0.9617604617604618,
+                0.9617604617604618,
+                0.9617604617604618,
+                0.9617604617604618,
+                0.9617604617604618,
+                0.9350448933782267,
+                0.9350448933782267,
+                0.9350448933782267,
+                0.9350448933782267,
+                0.9350448933782267,
+                0.9350448933782267,
+                0.9350448933782267,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.9028019660203569,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868,
+                0.833355660941868
+              ],
+              "strict_upper": 999.0,
+              "grid": [
+                11.0,
+                25.0,
+                33.00000000000001,
+                52.0,
+                92.0,
+                111.0,
+                143.0,
+                201.0,
+                314.0
+              ],
+              "tie_rule": "events removed before censoring risk"
+            }
+          }
+        }
+      ],
+      "source_freeze_sha256": "daa35b5b691db5e8ae4f2d804ac60070863913fb22f02187adfdac7b0b95c84d",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    }
+  },
+  "cells": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A7/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 2.168413125007646,
+      "artifacts": {
+        "model.bin": "2c6cf0b910adaca44b782079bac424838adbd829a5f1c1a57428a6d767c6d320",
+        "training.json": "cd51ebbfff004d960463dd58ad837bdf553d946232abf25346577d4cdbcad865",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "f546ee5675de194af160690007a74a5f5275e3dc922612f6d0688e15565b5400"
+      },
+      "application": "A7",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "poisson-nloglik": [
+                  0.212856665331469,
+                  0.21231485175178436,
+                  0.2117806474360564,
+                  0.21127564429907983
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A7/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.7269726249942323,
+      "artifacts": {
+        "model.bin": "9707c6b7e7f42ad062fcfcd6d42389f54f3375b07295f70b5a79e6bd8f3e698c",
+        "training.json": "c1f748546183edfbea2ded76ddeb2d12f1de150b401b1c8e59f3bf3dab53dc7e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "b0dfcdda9da4267f61cf53c28c51094dbc665b94dc0f5da94b9b399a3aad0155"
+      },
+      "application": "A7",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "poisson-nloglik": [
+                  0.21982441482327875,
+                  0.21922480381867532,
+                  0.218657480432984,
+                  0.21810482048052024
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A7/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.7059634589968482,
+      "artifacts": {
+        "model.bin": "e1da0ac526e6425f5eefc8f0b0c67656ee041543be31867446775899610401cf",
+        "training.json": "0600c293aa5aa4dd1a153d4e310b74d5f616905dc355ee7101b57255d09ad8ac",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "1cef87929fd6ba2591adc4a02300d25062d3b1f4142f293948026094702eb667"
+      },
+      "application": "A7",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "poisson-nloglik": [
+                  0.21369409200762787,
+                  0.2131007307204482,
+                  0.21250679512063386,
+                  0.21195018149494782
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A7/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.7050566249963595,
+      "artifacts": {
+        "model.bin": "c44014465b1a665621a996be4e5fc076c3de6bba133d808c830b49fffba554f4",
+        "training.json": "2f3d6a85cd9cef2ea8233bf167b90b78244167eb2a7cefdfc87a15dd190ec163",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "a914bf341c0e302da05d6f463e5e191ff24fa4ca78d3dc5bbcc1514356772763"
+      },
+      "application": "A7",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "poisson-nloglik": [
+                  0.21544828531689675,
+                  0.21485549251646016,
+                  0.21428456107476293,
+                  0.2137408869698876
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A7/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.6101616669911891,
+      "artifacts": {
+        "model.bin": "4c9241f897b9953fcb41172fe7270bc344a6e8c9e28427a854fd867f7c8c481d",
+        "training.json": "a03a571a8179363726e0c49f2573fa7706b8df926a778ae5d1ae7e6bf2d0b5f4",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "30d81b352387cf0d673ac9ce153b3895daedc1927f4005539b0fe9c033d98da9"
+      },
+      "application": "A7",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "poisson-nloglik": [
+                  0.21439550835066978,
+                  0.21384721007037913,
+                  0.21331977720188375,
+                  0.2127522896128628
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A8/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1320687090046704,
+      "artifacts": {
+        "model.bin": "a59c20b0eaf4aa561d65523dfc690b7a79a3c707a11c2db726ae631785b2e892",
+        "training.json": "87751e5c2814cb1eb4b3e302f480677f2c2f06e0af02b137ec4c6de941906c96",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "81b837a0ff44755810ff86e49a8959355f4fc292d442ba3499b39641e20f5855"
+      },
+      "application": "A8",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 1,
+        "stopping": [
+          {
+            "selected_rounds": 1,
+            "history": {
+              "validation": {
+                "gamma-deviance": [
+                  1.7295517443975177,
+                  1.7310231820347421,
+                  1.7330472533779555,
+                  1.7354325598679154
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A8/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1744736660039052,
+      "artifacts": {
+        "model.bin": "be9cebf5065b7924fd173f37cbfd2be666ec7bfe2536960a3f58f7b602987d1f",
+        "training.json": "83de8d4601b47d0e00c4b107e2e351ca360e79691f81898d4b7d48ab2c4857b7",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "772f8602deacc5f3208055c9105f3b2e12f98606e441ee0abff53532dca5deca"
+      },
+      "application": "A8",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "gamma-deviance": [
+                  1.831063456996314,
+                  1.82554241331858,
+                  1.8190115881500777,
+                  1.8171090499549813
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A8/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1827809159876779,
+      "artifacts": {
+        "model.bin": "642c6c446bc6e0b897ec3568f56b70b09b9d20cd65b3538d2694dfabbe5d1105",
+        "training.json": "f784ce4cae16b53a82e4e6b22d90634746bddd8d13685c6e1aebf90b71bf2dd6",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "3b1d2dc76855c95b92ae412d1e2b3cd68ad69569e28dd7bd70b83a468444d15d"
+      },
+      "application": "A8",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "gamma-deviance": [
+                  1.6702219194178436,
+                  1.6640765426508486,
+                  1.6594285031360096,
+                  1.6552576835623445
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A8/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.3260123750078492,
+      "artifacts": {
+        "model.bin": "a7fbef7bab1254ce9e2221df0fd48987dd030401ca43d6e017957d9ca33185cd",
+        "training.json": "05556cc46ff4f0cc81d9f38139140046d8a2d8a8fad778a98ba2915d54acbc7e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "f70271a490bc1e083ae3357c332d967846cf76bad03cc437d9874319da0bc4c9"
+      },
+      "application": "A8",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "gamma-deviance": [
+                  1.345808005319315,
+                  1.3432433329151998,
+                  1.3415275324133888,
+                  1.340494034834219
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A8/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.4955464170052437,
+      "artifacts": {
+        "model.bin": "bab1ac738f8f7d0cdccb184c2164d60b47fb899af6c21a931c94808ed7e5fdb9",
+        "training.json": "449f9e25ccc686e43827a4e4dec255828bedeb64309cdc1c6c1f93f2b6d22e75",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "3e72632383fdbb33e1fc03b0a6808f81c29433bc6a16b3ca3872102ccc0a1cec"
+      },
+      "application": "A8",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 2,
+        "stopping": [
+          {
+            "selected_rounds": 2,
+            "history": {
+              "validation": {
+                "gamma-deviance": [
+                  1.389290035543888,
+                  1.3883576631949284,
+                  1.3888961848986818,
+                  1.3887524140595808
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A9/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 2.4369379580020905,
+      "artifacts": {
+        "model.bin": "d4763725e3dfc7466463774ae9f3c3bb9bed9ec50d77dd7af7116de75c328d06",
+        "training.json": "e4eaba41108848c75739365c522879049fe4f47263363e227a5af971f3e9ab71",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "de5b9c48176bafb2ca0f6f50b2552b63a19a75f4c0a88d48a786f3f59983ba78"
+      },
+      "application": "A9",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "tweedie-nloglik@1.5": [
+                  52.14906288425846,
+                  51.957170024263824,
+                  51.79177555890604,
+                  51.67460321621662
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A9/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.7749429590039654,
+      "artifacts": {
+        "model.bin": "0a6f2e758b705be1639bf4dc5d33d35b1b0efd9fb3baa99084b118837eeb300b",
+        "training.json": "b8fd6bb11d310e7e95fd8204a4209803efa527f276a7aee5ea30e36a532025e3",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "c96bcdfdc957b9c0e579c0794ab3a07d1f2967e2bf0adbccefb62733043762d3"
+      },
+      "application": "A9",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "tweedie-nloglik@1.5": [
+                  53.39811488735966,
+                  53.00187163281508,
+                  52.65604421198682,
+                  52.38109618472195
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A9/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.7555047920031939,
+      "artifacts": {
+        "model.bin": "0d6d21f041c02be7f7b40d0cdd77bd5794826547db0646b1b89588d0c208ce15",
+        "training.json": "d812182889f05f92b6ada1ce6828888f113e3eddc485b1df43e46bd97668ba13",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "0638d345dca1aa85101f1bdc24217f29764230270136750fd8412ef60ba0bf2e"
+      },
+      "application": "A9",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "tweedie-nloglik@1.5": [
+                  50.24732490590859,
+                  49.79886345768801,
+                  49.40961316842392,
+                  49.06945504688432
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A9/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.651383958000224,
+      "artifacts": {
+        "model.bin": "19ba950ee45fdf6f97f3bf8a1b58ed349bd9411972b9e1afed524109b49c43e1",
+        "training.json": "772b993a0593393ed84e633f0c616cbe05ea1705da4d70544d945d8557789c2f",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "0065c99a7b8cff4d42ce8060ba2d18e087b4933b5b1490e6cb8e3ce5e8d8e2dc"
+      },
+      "application": "A9",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "tweedie-nloglik@1.5": [
+                  46.857653574174044,
+                  46.67954583816954,
+                  46.52104201233198,
+                  46.38517572118167
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A9/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.6602982500044163,
+      "artifacts": {
+        "model.bin": "7ac95bb7c9d6136faa5c45e9af15c3ac163e0de32328fc98c7f9d0a2f3d8ee45",
+        "training.json": "634ed691e13b89bc0b35d9df9de38401567b13488a0443d87344881f54e88a9d",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "b7a8e5cc5de877ba30a4a016b932ffebea60320a47a6bd1767010cec0bd68af2"
+      },
+      "application": "A9",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "tweedie-nloglik@1.5": [
+                  47.09109566237687,
+                  46.861772673488474,
+                  46.66488720723748,
+                  46.49625394342061
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A10/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.3898752919922117,
+      "artifacts": {
+        "model.bin": "30cbcc481529dda44fa62ff59cd1d2312907ac74a1237ff30b3302146df20e03",
+        "training.json": "a81f31494fc7e6d0363d81ea1b72ad52d4ae52bbe989a61b464fd8d9ffe29f0e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "4dbf2c6cafb9c46d8daa94d1bd3c523bdad9b5fbebaf43d5b2b3053b658a360e"
+      },
+      "application": "A10",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "aft-nloglik": [
+                  14.119231461348566,
+                  12.390939992348333,
+                  11.080796545111381,
+                  9.900725795182966
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A10/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1576068750000559,
+      "artifacts": {
+        "model.bin": "cb626236a1a9b29dbb87dc8924c9741b76cbd0ab139c9dca9180fcc3eb34363f",
+        "training.json": "77faeff2705413000b18ca715679440ced9b79b7b4009991d2a179ecc992ad51",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "85c307f57a88d764e8dd9347b112de485de6eaf6c7616b2457effd4443266735"
+      },
+      "application": "A10",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "aft-nloglik": [
+                  14.224506008106774,
+                  12.438404184931063,
+                  10.996652044321483,
+                  9.830153483295659
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A10/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1702475830097683,
+      "artifacts": {
+        "model.bin": "430bf5342c2070969dd798780635b702d3886e72818a0565b5852ae45e066b34",
+        "training.json": "ad0963e6035ed4e04936a242535b610ba610646ceae22795ee9ecb3a7a361352",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "690e5a8a919dcae51690a04f4a351b8914c5cb410975a2ef00abc5f58536cc06"
+      },
+      "application": "A10",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "aft-nloglik": [
+                  14.7369516556354,
+                  13.010274545222087,
+                  11.556047423517352,
+                  10.345953276223725
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A10/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.2233430419873912,
+      "artifacts": {
+        "model.bin": "0880b28b8097aa4e2e4a2c6f9212c431ec02483618fd49874494dbe7f2ecc84b",
+        "training.json": "c98d687b8fa6644cd5bccc2851c1fc701d242b626a7b66212d0a26ecb5616fb1",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "d16a5fbb403291769a93d907c3e55c55d3be38907322f469c40b506c04f027e9"
+      },
+      "application": "A10",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "aft-nloglik": [
+                  15.078735539756986,
+                  13.361840215733737,
+                  11.95188874774984,
+                  10.798564298566605
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-positive-survival-001/A10/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.172200166998664,
+      "artifacts": {
+        "model.bin": "30b338c148689eebe784a0e05fb25197a577ff2d80d39a17036cc70d95d9a679",
+        "training.json": "3992c1110bb68e1b45cf3134e83243897dfeba8391370dcfcc2fbf17de05d552",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "1ef3ae78fab202efc0a47cbaceda0eef981c4e6a621202e9a01e4c8adc5ad3e9"
+      },
+      "application": "A10",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "aft-nloglik": [
+                  12.718391968497404,
+                  11.13434621034207,
+                  9.858743670097324,
+                  8.818336434184383
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    }
+  ]
+}

@@ -103,3 +103,80 @@ def test_rolling_gap_and_same_day_boundary_are_rejected():
     parts["test"] = np.arange(7, 9)
     with pytest.raises(ValueError, match="prefix"):
         bind("A5", data, parts, frozen)
+
+
+def insurance_fixture():
+    from benchmarks.v1.worker_data import insurance_population
+
+    raw = dict(
+        x=np.arange(18, dtype=float).reshape(9, 2),
+        group=np.arange(100, 109),
+        y=np.array([2, 0, 1, 2, 0, 0, 1, 0, 1]),
+        exposure=np.arange(1, 10, dtype=float),
+        paid_total=np.array([30, 0, 0, 70, 0, 0, 50, 0, 60]),
+        aggregate_eligible=np.array([1, 1, 0, 1, 1, 1, 1, 1, 1], dtype=bool),
+        severity_policy_row=np.array([0, 0, 3, 3, 6, 8]),
+        severity_y=np.array([10, 20, 30, 40, 50, 60]),
+    )
+    split = (np.arange(3), np.arange(3, 6), np.arange(6, 9))
+    return raw, split, insurance_population
+
+
+def test_paid_claims_share_policy_split_and_keep_individual_amounts():
+    raw, split, population = insurance_fixture()
+    data, folds, _ = population("A8", raw, [split])
+    np.testing.assert_array_equal(folds[0][0], [0, 1])
+    np.testing.assert_array_equal(data["y"][:2], [10, 20])
+    np.testing.assert_array_equal(data["group"][:2], [100, 100])
+    parts = dict(zip(("train", "validation", "test"), folds[0], strict=True))
+    frozen = prepare("severity", data, [parts])[0]
+    packets, _ = bind("A8", data, parts, frozen)
+    assert "weight_train" not in packets["worker-input"]
+    assert "exposure_train" not in packets["worker-input"]
+
+
+def test_aggregate_annualization_and_exposure_weight_exactly_once():
+    raw, split, population = insurance_fixture()
+    data, folds, _ = population("A9", raw, [split])
+    assert 102 not in data["row_ids"]  # Positive raw count without paid records excluded.
+    parts = dict(zip(("train", "validation", "test"), folds[0], strict=True))
+    frozen = prepare("aggregate", data, [parts])[0]
+    packets, _ = bind("A9", data, parts, frozen)
+    worker = packets["worker-input"]
+    np.testing.assert_array_equal(worker["y_train"], [30, 0])
+    np.testing.assert_array_equal(worker["weight_train"], [1, 2])
+    np.testing.assert_array_equal(worker["y_validation"], [17.5, 0, 0])
+    np.testing.assert_array_equal(packets["validation"]["weight"], [4, 5, 6])
+    assert "exposure_train" not in worker
+    data["paid_total"][0] += 1
+    with pytest.raises(ValueError, match="reconstruct"):
+        bind("A9", data, parts, frozen)
+
+
+def test_frequency_keeps_integer_counts_and_offset_inputs():
+    raw, split, population = insurance_fixture()
+    data, folds, _ = population("A7", raw, [split])
+    parts = dict(zip(("train", "validation", "test"), folds[0], strict=True))
+    frozen = prepare("insurance", data, [parts])[0]
+    packets, _ = bind("A7", data, parts, frozen)
+    np.testing.assert_array_equal(packets["worker-input"]["y_train"], [2, 0, 1])
+    np.testing.assert_array_equal(packets["test-features"]["exposure"], [7, 8, 9])
+    assert "weight_train" not in packets["worker-input"]
+    data["exposure"][0] = 0
+    with pytest.raises(ValueError, match="exposure"):
+        bind("A7", data, parts, frozen)
+
+
+def test_survival_events_and_training_support_are_not_recomputed_on_validation():
+    data, parts, _ = fixture()
+    data.pop("group")
+    data["y"] = np.arange(1, 10, dtype=float)
+    data["event"] = np.array([1, 0, 1, 1, 0, 1, 1, 0, 1])
+    frozen = prepare("veteran", data, [parts])[0]
+    packets, meta = bind("A10", data, parts, frozen)
+    np.testing.assert_array_equal(packets["worker-input"]["event_train"], [1, 0, 1])
+    np.testing.assert_array_equal(packets["test-truth"]["event"], [1, 0, 1])
+    assert meta["censoring_support"] == frozen["censoring_support"]
+    frozen["censoring_support"]["survival"][0] = 0
+    with pytest.raises(ValueError, match="censoring support"):
+        bind("A10", data, parts, frozen)

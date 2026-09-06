@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 
 from benchmarks.v1 import adult, bike, housing, real_data
-from benchmarks.v1.preprocessing import fit_encoder, fit_target_scale, transform
+from benchmarks.v1.preprocessing import censoring_support, fit_encoder, fit_target_scale, transform
 
 NAMES = {
     "A1": "housing",
@@ -20,9 +20,44 @@ NAMES = {
     "A5": "bike",
     "A11": "housing",
     "A6": "parkinsons",
+    "A7": "insurance",
+    "A8": "insurance",
+    "A9": "insurance",
+    "A10": "veteran",
     "A12": "concrete",
 }
 PARTS = ("train", "validation", "test")
+
+
+def insurance_population(application, raw, splits):
+    """Map policy partitions to the exact preregistered application population."""
+    if application not in ["A7", "A8", "A9"]:
+        raise ValueError("unsupported insurance application")
+    if application == "A8":
+        rows = raw["severity_policy_row"]
+        target = raw["severity_y"]
+        name = "insurance_severity"
+    elif application == "A9":
+        rows = np.flatnonzero(raw["aggregate_eligible"])
+        target = raw["paid_total"][rows] / raw["exposure"][rows]
+        name = "insurance_aggregate"
+    else:
+        rows = np.arange(len(raw["y"]))
+        target = raw["y"]
+        name = "insurance"
+    data = dict(
+        x=raw["x"][rows],
+        y=target,
+        group=raw["group"][rows],
+        row_ids=np.arange(len(rows)) if application == "A8" else raw["group"][rows],
+        categories={k[9:]: v[rows] for k, v in raw.items() if k.startswith("category_")},
+    )
+    if application in ["A7", "A9"]:
+        data["exposure"] = raw["exposure"][rows]
+    if application == "A9":
+        data["paid_total"] = raw["paid_total"][rows]
+    mapped = [tuple(np.flatnonzero(np.isin(rows, part)) for part in split) for split in splits]
+    return data, mapped, name
 
 
 def bind(application, data, parts, frozen):
@@ -65,6 +100,26 @@ def bind(application, data, parts, frozen):
         metadata["target_scale"] = fit_target_scale(y[train])
         if metadata["target_scale"] != frozen["target_scale"]:
             raise ValueError("training target scale differs from freeze")
+    if application in ["A7", "A8", "A9"]:
+        if y.ndim != 1 or np.any(y < 0) or (application == "A8" and np.any(y <= 0)):
+            raise ValueError("invalid count/amount targets")
+        if application == "A7" and np.any(y != np.floor(y)):
+            raise ValueError("integer counts required")
+    if application in ["A7", "A9"]:
+        exposure = data["exposure"]
+        if exposure.shape != y.shape or not np.isfinite(exposure).all() or np.any(exposure <= 0):
+            raise ValueError("positive finite exposure required")
+        if application == "A9" and not np.allclose(
+            y * exposure, data["paid_total"], rtol=1e-12, atol=1e-8
+        ):
+            raise ValueError("annualized targets do not reconstruct period totals")
+    if application == "A10":
+        event = data["event"]
+        if event.shape != y.shape or not np.isin(event, [0, 1]).all() or np.any(y <= 0):
+            raise ValueError("invalid censoring targets")
+        metadata["censoring_support"] = censoring_support(y[train], event[train])
+        if metadata["censoring_support"] != frozen["censoring_support"]:
+            raise ValueError("training censoring support differs from freeze")
     encoded = {}
     for part, rows in parts.items():
         result = transform(frozen["encoder"], x[rows], {k: v[rows] for k, v in categories.items()})
@@ -97,6 +152,31 @@ def bind(application, data, parts, frozen):
         "test-features": {"row_ids": ids[parts["test"]], "x": encoded["test"]},
         "test-truth": {"row_ids": ids[parts["test"]], "y": y[parts["test"]]},
     }
+    if application == "A7":
+        worker.update(
+            exposure_train=exposure[train], exposure_validation=exposure[parts["validation"]]
+        )
+        packets["test-features"]["exposure"] = exposure[parts["test"]]
+        metadata["target_units"] = "period count; exposure is an offset, unit training weights"
+    if application == "A9":
+        worker.update(weight_train=exposure[train], weight_validation=exposure[parts["validation"]])
+        packets["validation"]["weight"] = exposure[parts["validation"]]
+        packets["test-truth"]["weight"] = exposure[parts["test"]]
+        metadata["target_units"] = "annualized paid total; exposure weight once, no offset"
+        for part in ("validation", "test"):
+            packets[part + "-period"] = dict(
+                row_ids=ids[parts[part]],
+                exposure=exposure[parts[part]],
+                paid_total=data["paid_total"][parts[part]],
+            )
+    if application == "A8":
+        metadata["row_identity"] = (
+            "zero-based retained positive joined claim position; group is policy ID"
+        )
+    if application == "A10":
+        worker.update(event_train=event[train], event_validation=event[parts["validation"]])
+        packets["validation"]["event"] = event[parts["validation"]]
+        packets["test-truth"]["event"] = event[parts["test"]]
     if application == "A12":
         for part in ("validation", "test"):
             packets[part + "-structure"] = dict(
@@ -172,24 +252,44 @@ def export(
         if housing.digest(x.tobytes() + y.tobytes()) != source["arrays_sha256"]:
             raise ValueError("source targets/features differ from freeze")
     else:
-        data, _ = real_data.load(root, name)
+        data, _ = real_data.insurance(root) if name == "insurance" else real_data.load(root, name)
         for field, expected in source["arrays"].items():
             if real_data.array_hash(data[field]) != expected["sha256"]:
                 raise ValueError("source arrays differ from freeze")
         splits = [
-            real_data.stratified_splits(data["y"], s)
-            if name == "covertype"
+            real_data.stratified_splits(data["event"] if name == "veteran" else data["y"], s)
+            if name in ["covertype", "veteran"]
             else real_data.group_splits(data["group"], s)
             for s in range(5)
         ]
+    preprocessing_name = name
+    if name == "insurance":
+        data, splits, preprocessing_name = insurance_population(application, data, splits)
+    if name == "veteran":
+        data["categories"] = {}
+        for col, key, labels in [
+            (0, "Treatment", ["standard", "test"]),
+            (1, "Celltype", ["adeno", "large", "smallcell", "squamous"]),
+            (5, "Prior_therapy", ["no", "yes"]),
+        ]:
+            data["categories"][key] = np.asarray(labels)[data["x"][:, col].astype(int)]
+        data["x"] = data["x"][:, 2:5]
     records = []
     # Validate every fold before writing any worker input.
     for seed, split in enumerate(splits):
-        bind(application, data, dict(zip(PARTS, split, strict=True)), prep["datasets"][name][seed])
+        bind(
+            application,
+            data,
+            dict(zip(PARTS, split, strict=True)),
+            prep["datasets"][preprocessing_name][seed],
+        )
     # Keep only one encoded fold in memory (Covertype is substantially larger).
     for seed, split in enumerate(splits):
         packets, metadata = bind(
-            application, data, dict(zip(PARTS, split, strict=True)), prep["datasets"][name][seed]
+            application,
+            data,
+            dict(zip(PARTS, split, strict=True)),
+            prep["datasets"][preprocessing_name][seed],
         )
         folder = directory / str(seed)
         folder.mkdir()
@@ -198,6 +298,13 @@ def export(
             path = folder / (key + ".npz")
             np.savez(path, **arrays)
             artifacts[key] = dict(
+                path=str(path.relative_to(directory)),
+                sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+            )
+        if application == "A10":
+            path = folder / "censoring.json"
+            path.write_text(json.dumps(metadata["censoring_support"], indent=2) + "\n")
+            artifacts["censoring"] = dict(
                 path=str(path.relative_to(directory)),
                 sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
             )

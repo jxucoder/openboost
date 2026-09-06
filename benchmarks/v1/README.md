@@ -461,7 +461,8 @@ for standardized-average RMSE.
 ## Frozen real-data worker packets
 
 `worker_data.py` exports all five Housing (A1/A11), Adult (A2), Covertype (A3),
-Bike (A5), Parkinsons (A6), and Concrete (A12 ordinary GBDT) folds. It checks source arrays, reader hashes, recomputed
+Bike (A5), Parkinsons (A6), insurance (A7/A8/A9), Veteran (A10), and Concrete
+(A12 ordinary GBDT) folds. It checks source arrays, reader hashes, recomputed
 training encoders, exact partition hashes, group disjointness and A6 target scale
 against the existing freezes. Other applications are explicitly unsupported by
 this exporter and remain required work.
@@ -496,3 +497,26 @@ packets carry the original row IDs where provided.
 The exporter validates all folds before writing packets, then materializes one
 fold at a time to limit memory use on Covertype. It still emits dense controls;
 this is not a memory or throughput claim for the future foundation.
+
+The exporter also binds policy counts (A7), positive individual paid claims (A8),
+eligible-policy annualized paid totals (A9), and event/right-censored AFT inputs
+(A10). Insurance applications inherit the same policy partitions; claims and
+eligible policies use their separately frozen training encoders. A7 preserves
+raw integer counts and supplies exposure for the worker's offset. A8 uses unit
+weights per paid claim; its row ID is the retained joined claim position, while
+policy ID controls grouping. A9 uses paid total/exposure and exposure weights,
+with no exposure offset; separate period artifacts retain totals and exposure.
+These numeric worker packets are not inputs for the parametric composition worker.
+
+A10 restores the source-declared categorical features, exports event indicators
+and hashes a `censoring.json` containing the frozen training reverse-KM estimate
+and supported grid. Veteran original-source license review remains unresolved;
+local adapter checks do not resolve that source gate or certify survival quality.
+
+```bash
+build/v1-env/bin/python -m benchmarks.v1.worker_data_smoke build/positive-survival-smoke --applications A7 A8 A9 A10
+```
+
+The smoke accepts an explicit subset of supported applications and records it in
+its command. Without that option it checks every supported application. A4 and
+A13 remain unsupported here and required in the full evaluation plan.

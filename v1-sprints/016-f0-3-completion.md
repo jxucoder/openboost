@@ -234,3 +234,28 @@ Reflection: source row identities and positional preprocessing indices serve
 different purposes and must not be conflated. Chronological evaluation also
 requires deliberately unused future data; universal full-coverage validation
 would silently change the task. No required application was dropped.
+
+### Counts, paid amounts and survival binding
+
+1. Bind A7 policy counts, A8 positive paid claims, and A9 eligible-policy paid
+   totals using the already frozen policy splits and population-specific encoders.
+2. Preserve A7 exposure as an offset input; convert A9 totals to annualized targets
+   and apply exposure weights exactly once. Bind A10 events and frozen training G.
+3. Test hand-worked population/weight/censor counterexamples and real five-fold
+   CPU worker execution. Keep source-license and full quality gates separate.
+
+First counterexamples: two claims from one policy must not cross folds; A9 must
+not receive both exposure weights and an exposure offset or use raw claim counts.
+
+Reflection after three binding slices: real-data packet coverage now exercises
+scalar, categorical, quantile, vector, positive/count and survival contracts.
+Population selection, target-space conversion and row identity are independently
+checked rather than left implicit in workers. This is evaluation infrastructure;
+it does not provide production foundation components or certify complete recipe
+coverage. Next binding gaps are ranking and train-many, with parametric/composed
+and coupled controls still requiring their own execution paths.
+
+Result: all 20 new real-data CPU validation fits passed across A7/A8/A9/A10
+and five folds. All 488 v1 tests, Ruff and strict MkDocs passed. Raw evidence:
+`benchmarks/v1/evidence/real-positive-survival-binding-cpu.json`. No quality gate
+or source-license gate was promoted by these plumbing checks.
