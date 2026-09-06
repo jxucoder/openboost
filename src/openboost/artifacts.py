@@ -1,4 +1,4 @@
-"""Versioned constant-term inference for B03 state checks; no tree trainer yet."""
+"""Immutable numeric ensembles with explicit term coefficients and output maps."""
 
 import json
 from dataclasses import dataclass
@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 
 from .data import NumericData, _identity, _owned
+from .tree import NumericTree
 
 
 @dataclass(frozen=True, eq=False)
@@ -26,16 +27,33 @@ class ConstantTerm:
 
 
 @dataclass(frozen=True, eq=False)
-class ConstantModel:
-    """Immutable numeric raw predictor, with offset supplied at prediction time.
+class TreeTerm:
+    learner: NumericTree
+    mapping: np.ndarray
+    coefficient: float = 1.0
 
-    Coefficients apply once. This minimal artifact deliberately supports constant
-    terms only; later tree/mapping artifacts must declare their own state schema.
+    def __post_init__(self):
+        if not isinstance(self.learner, NumericTree):
+            raise ValueError("numeric tree learner required")
+        mapping = _owned(self.mapping, ndim=2)
+        if mapping.shape[0] != 1:
+            raise ValueError("scalar learner requires a [1, K] output mapping")
+        coefficient = ConstantTerm([0], self.coefficient).coefficient
+        object.__setattr__(self, "mapping", mapping)
+        object.__setattr__(self, "coefficient", coefficient)
+
+
+@dataclass(frozen=True, eq=False)
+class Model:
+    """Numeric raw ensemble; observation offsets are supplied at inference time.
+
+    This replaces the B03 constant-only format. Explicit [1, K] maps let scalar
+    learners update multiple raw columns; constants update the entire base width.
     """
 
     feature_names: tuple[str, ...]
     base: np.ndarray
-    terms: tuple[ConstantTerm, ...] = ()
+    terms: tuple[ConstantTerm | TreeTerm, ...] = ()
 
     def __post_init__(self):
         names = tuple(self.feature_names)
@@ -47,38 +65,68 @@ class ConstantModel:
             raise ValueError("unique nonempty feature names required")
         base = _owned(self.base, ndim=1)
         terms = tuple(self.terms)
-        if any(not isinstance(t, ConstantTerm) or t.value.shape != base.shape for t in terms):
-            raise ValueError("constant term output width differs from base")
+        bound = np.abs(base).copy()
+        with np.errstate(over="raise", invalid="raise"):
+            for term in terms:
+                if isinstance(term, ConstantTerm):
+                    if term.value.shape != base.shape:
+                        raise ValueError("constant term output width differs from base")
+                    bound += abs(term.coefficient) * np.abs(term.value)
+                elif isinstance(term, TreeTerm):
+                    if term.learner.binning.feature_names != names or term.mapping.shape != (
+                        1,
+                        len(base),
+                    ):
+                        raise ValueError("tree schema or output mapping differs from model")
+                    # Conservative finite envelope over every leaf and every input.
+                    magnitude = np.max(np.abs(term.learner.value[term.learner.feature == -1]))
+                    bound += abs(term.coefficient) * magnitude * np.abs(term.mapping[0])
+                else:
+                    raise ValueError("unsupported model term")
         object.__setattr__(self, "feature_names", names)
         object.__setattr__(self, "base", base)
         object.__setattr__(self, "terms", terms)
-        self._value()  # Reject overflow before accepting or serializing a model.
-
-    def _value(self):
-        result = self.base.copy()
-        with np.errstate(over="raise", invalid="raise"):
-            for term in self.terms:
-                result += term.coefficient * term.value
-        return result
 
     def predict(self, data, *, offset=None):
         if not isinstance(data, NumericData) or data.feature_names != self.feature_names:
             raise ValueError("inference feature schema differs from model")
-        raw = np.broadcast_to(self._value(), (len(data.values), len(self.base))).copy()
-        if offset is not None:
-            a = np.asarray(offset, dtype=float)
-            if a.shape != raw.shape or not np.isfinite(a).all():
-                raise ValueError("finite aligned inference offset required")
-            with np.errstate(over="raise", invalid="raise"):
+        raw = np.broadcast_to(self.base, (len(data.values), len(self.base))).copy()
+        with np.errstate(over="raise", invalid="raise"):
+            for term in self.terms:
+                delta = (
+                    term.value
+                    if isinstance(term, ConstantTerm)
+                    else term.learner.predict(data) @ term.mapping
+                )
+                raw += term.coefficient * delta
+            if offset is not None:
+                a = np.asarray(offset, dtype=float)
+                if a.shape != raw.shape or not np.isfinite(a).all():
+                    raise ValueError("finite aligned inference offset required")
                 raw += a
         return raw
 
     def record(self):
+        terms = []
+        for term in self.terms:
+            if isinstance(term, ConstantTerm):
+                terms.append(
+                    dict(kind="constant", value=term.value.tolist(), coefficient=term.coefficient)
+                )
+            else:
+                terms.append(
+                    dict(
+                        kind="tree",
+                        learner=term.learner.record(),
+                        mapping=term.mapping.tolist(),
+                        coefficient=term.coefficient,
+                    )
+                )
         return dict(
-            format="openboost-constant-v1",
+            format="openboost-ensemble-v1",
             feature_names=list(self.feature_names),
             base=self.base.tolist(),
-            terms=[dict(value=t.value.tolist(), coefficient=t.coefficient) for t in self.terms],
+            terms=terms,
         )
 
     @property
@@ -102,17 +150,31 @@ class ConstantModel:
         if (
             not isinstance(record, dict)
             or set(record) != {"format", "feature_names", "base", "terms"}
-            or record["format"] != "openboost-constant-v1"
+            or record["format"] != "openboost-ensemble-v1"
+            or any(
+                not isinstance(record[name], list) for name in ("feature_names", "base", "terms")
+            )
         ):
             raise ValueError("unsupported or corrupt artifact schema")
-        if not isinstance(record["feature_names"], list) or not isinstance(record["base"], list):
-            raise ValueError("invalid artifact vector fields")
-        if not isinstance(record["terms"], list) or any(
-            not isinstance(t, dict) or set(t) != {"value", "coefficient"} for t in record["terms"]
-        ):
-            raise ValueError("invalid artifact terms")
-        return cls(
-            record["feature_names"],
-            record["base"],
-            tuple(ConstantTerm(**t) for t in record["terms"]),
-        )
+        terms = []
+        for term in record["terms"]:
+            if not isinstance(term, dict):
+                raise ValueError("invalid artifact term")
+            if term.get("kind") == "constant" and set(term) == {"kind", "value", "coefficient"}:
+                terms.append(ConstantTerm(term["value"], term["coefficient"]))
+            elif term.get("kind") == "tree" and set(term) == {
+                "kind",
+                "learner",
+                "mapping",
+                "coefficient",
+            }:
+                terms.append(
+                    TreeTerm(
+                        NumericTree.from_record(term["learner"]),
+                        term["mapping"],
+                        term["coefficient"],
+                    )
+                )
+            else:
+                raise ValueError("invalid artifact term schema")
+        return cls(record["feature_names"], record["base"], tuple(terms))

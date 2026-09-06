@@ -10,14 +10,15 @@ of making a correct, reproducible algorithm change.
 
 This checkout is **under construction**. The retired implementation is not restored.
 Initial public CPU components now provide owned numeric inputs, explicit problems,
-run identity, immutable proposal/accept/reject state and constant-term inference
+run identity, immutable proposal/accept/reject state and mapped tree/constant ensemble
 artifacts. See [B03 usage and boundaries](docs/v1/cpu-state.md).
 
 Public [numeric operations](docs/v1/numeric-ops.md) now add quantile binning,
 weighted row fields, histograms, split callbacks, routing and scalar leaves.
 A public [depthwise grower](docs/v1/trees.md) composes these operations and persists
-validated numeric trees. Tree terms in run state and complete boosting recipes are next. CUDA execution is not
-implemented in the new production package.
+validated numeric trees. The first complete [squared-error recipe](docs/v1/squared.md)
+supports weights, offsets and fixed/backtracking steps on CPU. Normal boosting and
+CUDA execution are not implemented yet.
 
 Independent references and comparator/data checks remain evaluation preparation.
 F0.3 is still open; the user approved overlapping B03–B06 construction without

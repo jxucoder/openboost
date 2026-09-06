@@ -117,6 +117,11 @@ class NumericTree:
             return result
 
         record = json.loads(Path(path).read_text(), object_pairs_hook=pairs)
+        return cls.from_record(record)
+
+    @classmethod
+    def from_record(cls, record):
+        """Validate a nested inference record without a filesystem round trip."""
         vectors = ("feature", "threshold", "missing_left", "left", "right", "value")
         if (
             not isinstance(record, dict)

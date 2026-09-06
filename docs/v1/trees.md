@@ -42,7 +42,7 @@ numeric cuts and ordered feature names, including missing-only split thresholds.
 They support unseen numeric values and missing values with the saved transformer.
 
 `predict` returns raw scalar learner output `[N, 1]`. It applies no base, coefficient
-or observation offset. These trees are not yet terms in the B03 transaction model;
-that integration and complete squared/Normal boosting recipes are next. Artifacts
+or observation offset. Mapped tree terms integrate with the transaction model and the
+[squared recipe](squared.md). Normal recipes remain next. Artifacts
 are for inference, not training resumption. Categories, vector/linear leaves,
 best-first/symmetric growth, CUDA and performance claims remain outside this slice.

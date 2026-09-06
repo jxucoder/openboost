@@ -1,7 +1,7 @@
 # Initial CPU state components
 
 B03 provides public numeric inputs, run identity, immutable state transitions and
-constant-term artifacts. It is an architecture slice, not a boosting trainer.
+ensemble artifacts. The [squared recipe](squared.md) now composes these components.
 
 ```python
 import numpy as np
@@ -32,7 +32,7 @@ state arithmetic; real evaluation must use the prescribed separate partitions.
 
 `NumericData` owns float64 CPU features and unique integer row IDs. Feature names
 are ordered. NaN represents numeric missingness; infinity is rejected. No binning
-or category transformer is fitted yet. Owned array values cannot be made writable;
+is fitted by this record; use NumericBinning separately. Categories are not supported. Owned array values cannot be made writable;
 callers must not alter array metadata. Identity includes feature content/order,
 row IDs and schema, and is computed once on construction.
 
@@ -56,15 +56,19 @@ model when appropriate. A rejected proposal returns the identical state. Stale
 parents, other runs and divergent parent histories are rejected. Nonfinite scoring
 fails before a new state is returned. Vector terms commit jointly.
 
-`ConstantModel.save(path)` / `ConstantModel.load(path)` use the explicit
-`openboost-constant-v1` JSON format. It records feature names, vector base and
-constant terms with one coefficient each. Offsets are supplied at inference and
+`Model.save(path)` / `Model.load(path)` use the explicit
+`openboost-ensemble-v1` JSON format. This replaces the earlier constant-only format
+and Model replaces ConstantModel without a compatibility shim. It records feature
+names, vector base, constant terms and scalar tree terms with explicit `[1, K]`
+output matrices and one coefficient each. `propose_terms` submits multiple terms
+as one atomic update. Offsets are supplied at inference and
 are never embedded as training-row offsets. Loading needs no training objective.
 This is an inference artifact, not a training-resume checkpoint; it does not store
 run RNG, best/stop history or input datasets. Unknown versions/fields, duplicate
 fields, nonfinite payloads and inconsistent output widths fail.
 
-B04 adds numeric preparation and shared tree operations. B05 adds complete
-squared-error and Normal recipes; B06 must exercise Formula and heterogeneous
-sequential runs before interfaces stabilize. The constant-only artifact format
-makes no promise of representing those future learners or mappings.
+B04 adds numeric preparation and shared tree operations. The squared recipe is
+available; Normal remains the next B05 slice. B06 must exercise Formula and
+heterogeneous sequential runs before interfaces stabilize. Model construction
+uses a conservative absolute-value envelope to reject possible prediction
+overflow, which can reject extremely large terms even when they would cancel.

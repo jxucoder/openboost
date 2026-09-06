@@ -8,7 +8,7 @@ import sys
 import numpy as np
 import pytest
 
-from openboost.artifacts import ConstantModel, ConstantTerm
+from openboost.artifacts import ConstantTerm, Model
 from openboost.data import NumericData, Problem
 from openboost.runtime import RunContext, initialize, preview, propose, resolve
 
@@ -105,13 +105,13 @@ def test_invalid_score_is_atomic():
 
 
 def test_fresh_process_inference_and_artifact_corruption(tmp_path):
-    model = ConstantModel(("x",), [1, 2], (ConstantTerm([2, 4], 0.5),))
+    model = Model(("x",), [1, 2], (ConstantTerm([2, 4], 0.5),))
     path = tmp_path / "model.json"
     model.save(path)
     code = """import sys, numpy as np
-from openboost.artifacts import ConstantModel
+from openboost.artifacts import Model
 from openboost.data import NumericData
-m=ConstantModel.load(sys.argv[1])
+m=Model.load(sys.argv[1])
 x=NumericData([[float('nan')],[3]],[11,12],('x',))
 np.testing.assert_array_equal(m.predict(x,offset=[[1,2],[3,4]]),[[3,6],[5,8]])
 """
@@ -122,11 +122,11 @@ np.testing.assert_array_equal(m.predict(x,offset=[[1,2],[3,4]]),[[3,6],[5,8]])
     raw["terms"][0]["value"] = [1]
     path.write_text(json.dumps(raw))
     with pytest.raises(ValueError):
-        ConstantModel.load(path)
+        Model.load(path)
     raw["format"] = "unknown"
     path.write_text(json.dumps(raw))
     with pytest.raises(ValueError, match="schema"):
-        ConstantModel.load(path)
+        Model.load(path)
 
 
 @pytest.mark.parametrize("kwargs", [dict(device="cuda"), dict(seed=-1), dict(run_id="")])
@@ -167,7 +167,7 @@ def test_vector_proposal_is_atomic_and_owned():
 
 @pytest.mark.parametrize("change", ["unknown", "duplicate", "nan", "wrong_width"])
 def test_corrupt_artifacts_fail_closed(tmp_path, change):
-    model = ConstantModel(("x",), [0], (ConstantTerm([1]),))
+    model = Model(("x",), [0], (ConstantTerm([1]),))
     path = tmp_path / "m.json"
     model.save(path)
     record = json.loads(path.read_text())
@@ -181,7 +181,7 @@ def test_corrupt_artifacts_fail_closed(tmp_path, change):
     if change == "duplicate":
         path.write_text(path.read_text().replace('"format":', '"base": [1], "format":'))
     with pytest.raises(ValueError):
-        ConstantModel.load(path)
+        Model.load(path)
 
 
 @pytest.mark.parametrize(

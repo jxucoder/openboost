@@ -4,7 +4,7 @@ from dataclasses import dataclass, field, replace
 
 import numpy as np
 
-from .artifacts import ConstantModel, ConstantTerm
+from .artifacts import ConstantTerm, Model, TreeTerm
 from .data import Problem, _identity, _owned
 
 
@@ -41,8 +41,8 @@ class AcceptedState:
     context: RunContext
     train: Problem
     validation: Problem
-    model: ConstantModel
-    best_model: ConstantModel
+    model: Model
+    best_model: Model
     best_score: float
     version: int = 0
     train_raw: np.ndarray = field(init=False)
@@ -58,10 +58,8 @@ class AcceptedState:
             raise ValueError("explicit context and problems required")
         if type(self.version) is not int or self.version < 0 or not np.isfinite(self.best_score):
             raise ValueError("valid version and finite best score required")
-        if not isinstance(self.model, ConstantModel) or not isinstance(
-            self.best_model, ConstantModel
-        ):
-            raise ValueError("B03 state requires constant-model artifacts")
+        if not isinstance(self.model, Model) or not isinstance(self.best_model, Model):
+            raise ValueError("state requires ensemble artifacts")
         for model in (self.model, self.best_model):
             if (
                 model.feature_names != self.train.data.feature_names
@@ -97,16 +95,27 @@ class AcceptedState:
 @dataclass(frozen=True)
 class Proposal:
     parent_identity: str
-    term: ConstantTerm
+    terms: tuple[ConstantTerm | TreeTerm, ...]
+
+    def __post_init__(self):
+        terms = tuple(self.terms)
+        if (
+            not isinstance(self.parent_identity, str)
+            or not self.parent_identity
+            or not terms
+            or any(not isinstance(t, (ConstantTerm, TreeTerm)) for t in terms)
+        ):
+            raise ValueError("valid parent and nonempty supported proposal terms required")
+        object.__setattr__(self, "terms", terms)
 
 
 def initialize(context, train, validation, base, *, score):
     """Initialize with a finite validation score; smaller scores are better.
 
     score(problem, raw) owns objective weighting/offset semantics. Runtime raw
-    caches exclude input offsets. Constant terms provide the B03 state probe only.
+    caches exclude input offsets. Terms and best snapshots are immutable.
     """
-    model = ConstantModel(train.data.feature_names, base)
+    model = Model(train.data.feature_names, base)
     initial = AcceptedState(context, train, validation, model, model, 0.0)
     value = float(score(validation, initial.validation_raw))
     if not np.isfinite(value):
@@ -115,8 +124,15 @@ def initialize(context, train, validation, base, *, score):
 
 
 def propose(state, value, *, coefficient=1.0):
-    proposal = Proposal(state.identity, ConstantTerm(value, coefficient))
-    preview(state, proposal)  # Validate width and finite candidate before exposing it.
+    return propose_terms(state, (ConstantTerm(value, coefficient),))
+
+
+def propose_terms(state, terms):
+    """Propose an atomic tuple of mapped learner/constant updates."""
+    proposal = Proposal(state.identity, tuple(terms))
+    candidate = preview(state, proposal)
+    _owned(candidate.predict(state.train.data), ndim=2)
+    _owned(candidate.predict(state.validation.data), ndim=2)
     return proposal
 
 
@@ -124,9 +140,7 @@ def preview(state, proposal):
     """Build a candidate model without changing any accepted or best state."""
     if not isinstance(proposal, Proposal) or proposal.parent_identity != state.identity:
         raise ValueError("stale or foreign proposal parent")
-    return ConstantModel(
-        state.model.feature_names, state.model.base, (*state.model.terms, proposal.term)
-    )
+    return Model(state.model.feature_names, state.model.base, (*state.model.terms, *proposal.terms))
 
 
 def resolve(state, proposal, *, accept, score):

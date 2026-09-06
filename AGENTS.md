@@ -86,10 +86,10 @@ The repository audit in
 
 The user requested retirement of all old production code during Sprint 002.
 `src/openboost/` now contains initial B03 numeric data/problem records, CPU run
-transactions, constant-term inference artifacts and initial B04 numeric/statistics/
+transactions, mapped tree/constant ensemble artifacts and B04 numeric/statistics/
 split/routing/leaf operations, plus a depthwise numeric grower and validated tree
-inference artifacts. No complete boosting recipe
-or CUDA execution exists yet. The user approved B03–B06 construction overlapping
+inference artifacts. The first complete scalar squared-error CPU recipe supports
+fixed/backtracking steps; Normal recipes and CUDA execution do not exist yet. The user approved B03–B06 construction overlapping
 unfinished F0.3; see Sprint 018 and the active plan amendment. The last full old implementation is Git revision
 `50acfc6`; historical tests/examples require that revision. There is no compatibility
 shim, legacy backend, trainer, or model facade in the current package.

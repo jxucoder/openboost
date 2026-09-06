@@ -1,8 +1,8 @@
 """Programmable boosting foundation: initial CPU records and state transactions.
 
-B03 supplies numeric inputs, constant-term artifacts and explicit run state.
+Numeric inputs, mapped ensemble artifacts and explicit run state are public.
 B04 adds composable numeric operations and depthwise tree inference.
-Boosting recipes and CUDA execution are not implemented yet.
+The scalar squared recipe is implemented; Normal and CUDA execution are not yet.
 """
 
 from .data import NumericData, Problem

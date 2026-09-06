@@ -81,5 +81,7 @@ acceptance threshold was removed.
 [Sprint 019 / B04 operations](019-b04-numeric-operations.md) delivers numeric
 preparation and shared scalar split operations.
 [Sprint 020 / B04 trees](020-b04-depthwise-tree.md) adds depthwise assembly and
-validated numeric tree inference/persistence. Tree terms and complete recipes are
-next; no completed boosting or CUDA implementation is claimed.
+validated numeric tree inference/persistence.
+[Sprint 021 / B05 squared](021-b05-squared-recipe.md) adds mapped tree transactions
+and the first complete squared CPU recipe. Normal remains the next B05 slice;
+CUDA and full quality/performance evaluation remain incomplete.
