@@ -31,3 +31,6 @@ fixed-step recipes with validation NDCG selection. Real A4 evaluation remains op
 
 [Quantile and penalized leaves](quantile.md) expose routed residuals/original
 weights and compose all three CPU growth policies. Real A5 evaluation remains open.
+
+[Poisson counts and exposure](poisson.md) add a CPU count recipe with explicit
+rate/count outputs. Real A7 evaluation remains open.

@@ -105,3 +105,7 @@ are next; real A4 evaluation and the broader incomplete gates remain open.
 [Sprint 029 / B09 quantiles](029-b09-quantile-leaves.md) adds routed residual
 views, weighted quantile and anchored penalized leaves (655 tests). B10 positive
 target/exposure and AFT construction is next; real application gates remain open.
+
+[Sprint 030 / B10 Poisson](030-b10-poisson.md) adds explicit exposure/count
+geometry and rate/count inference (665 tests). Gamma/A8 is next, followed by
+Tweedie/composition/A9 and AFT/A10. Real A7 evaluation remains open.

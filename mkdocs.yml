@@ -24,3 +24,4 @@ nav:
   - Multiclass and vectors: multiclass.md
   - Query-local ranking: ranking.md
   - Quantile and penalized leaves: quantile.md
+  - Poisson counts and exposure: poisson.md

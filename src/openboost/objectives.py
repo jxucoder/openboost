@@ -361,3 +361,72 @@ class Quantile:
     def fields(self, problem, raw):
         residual = self.residuals(problem, raw)
         return newton(problem, (residual < 0).astype(float) - self.q, np.ones(len(residual)))
+
+
+class Poisson:
+    """Count likelihood with raw log rate, explicit exposure and additive offset."""
+
+    def __init__(self, minimum_rate=1e-6):
+        if not np.isscalar(minimum_rate) or not np.isfinite(minimum_rate) or minimum_rate <= 0:
+            raise ValueError("positive finite minimum_rate required")
+        self.minimum_rate = float(minimum_rate)
+
+    @staticmethod
+    def validate(problem):
+        if (
+            not isinstance(problem, Problem)
+            or problem.classes is not None
+            or problem.target.shape[1] != 1
+            or problem.raw_width != 1
+            or set(problem.structure) != {"exposure"}
+        ):
+            raise ValueError("Poisson requires scalar counts and an explicit exposure role")
+        y, e = problem.target[:, 0], problem.structure["exposure"]
+        if e.shape != problem.target.shape or np.any(e <= 0):
+            raise ValueError("aligned positive exposure required")
+        if np.any(y < 0) or np.any(y != np.floor(y)):
+            raise ValueError("nonnegative integer counts required")
+
+    def base(self, problem):
+        self.validate(problem)
+        positive = problem.weight > 0
+        y = problem.target[:, 0]
+        counted = positive & (y > 0)
+        if not np.any(counted):
+            return [float(np.log(self.minimum_rate))]
+
+        def log_sum(values):
+            maximum = np.max(values)
+            return maximum + np.log(np.exp(values - maximum).sum())
+
+        with np.errstate(over="raise", invalid="raise", divide="raise"):
+            numerator = log_sum(np.log(problem.weight[counted]) + np.log(y[counted]))
+            denominator = log_sum(
+                np.log(problem.weight[positive])
+                + np.log(problem.structure["exposure"][positive, 0])
+                + problem.offset[positive, 0]
+            )
+            value = numerator - denominator
+        if not np.isfinite(value):
+            raise ValueError("nonfinite Poisson intercept")
+        return [float(value)]
+
+    def geometry(self, problem, raw):
+        import math
+
+        self.validate(problem)
+        with np.errstate(over="raise", invalid="raise"):
+            log_mean = problem.with_offset(raw)[:, 0] + np.log(problem.structure["exposure"][:, 0])
+            mean = np.exp(log_mean)
+            if np.any(mean <= 0):
+                raise ValueError("Poisson mean underflows float64")
+            y = problem.target[:, 0]
+            losses = mean - y * log_mean + np.array([math.lgamma(v + 1) for v in y])
+            gradient = mean - y
+            loss = float(np.dot(problem.weight / problem.weight.sum(), losses))
+        if not np.isfinite(loss):
+            raise ValueError("nonfinite Poisson likelihood")
+        return loss, _owned(gradient, ndim=1), _owned(mean, ndim=1)
+
+    def loss(self, problem, raw):
+        return self.geometry(problem, raw)[0]
