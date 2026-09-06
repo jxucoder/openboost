@@ -178,3 +178,8 @@ real-data trials.
 
 Result: 30 fixed and 30 stopping CPU cells pass, including fresh-process A6
 replay across three comparators. All 474 tests, Ruff and strict MkDocs pass.
+
+Source review: the exact Housing archive matches Figshare version 2's MD5 and
+CC BY 4.0 declaration. A dated overlay preserves the original freeze and records
+uploader attribution. MSLR agreement retrieval still returned HTTP 401; Veteran
+original-source license remains unresolved.

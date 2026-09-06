@@ -132,10 +132,14 @@ A1 regression and A11 Normal distribution predictions share inputs and splits bu
 require separate scores and acceptance; this counts as one data source. Random
 partitions do not establish geographic generalization. The
 [scikit-learn description](https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset)
-provides dataset context. **License status remains unresolved**: the archive only
-contains data/domain files and the original source page timed out during this audit.
-No licensing label is inferred from public download availability. Data hashes are
-prepared; license review, all budgets and model-quality evaluation remain pending.
+provides dataset context. The original freeze recorded an unresolved license.
+A subsequent [dated source review](datasets/housing-license-review.json) verifies
+that the exact downloaded file matches Figshare's published MD5 and carries its
+uploader's CC BY 4.0 declaration. Attribution: Nelson Liu (2016), *scikit-learn
+california housing dataset cal_housing.tgz*,
+[Figshare version 2](https://doi.org/10.6084/m9.figshare.3829992.v2). Original StatLib
+rights provenance was not separately verified. The historical data/preprocessing
+freeze is preserved; this review changes no bytes or folds. Model quality is pending.
 
 ## A2 Adult data preparation
 
@@ -191,8 +195,9 @@ UCI [Covertype](https://archive.ics.uci.edu/dataset/31/covertype),
 pages declare CC BY 4.0. OpenML metadata for
 [frequency](https://www.openml.org/api/v1/json/data/41214) and
 [severity](https://www.openml.org/api/v1/json/data/41215) declares CC0; downloaded
-files also match their published MD5 checksums. Housing/Veteran license evidence
-is unresolved because the original StatLib endpoints returned HTTP 403.
+files also match their published MD5 checksums. Housing now has a matching hosted
+CC BY 4.0 declaration in the dated review above. Veteran's original-source license
+evidence remains unresolved; StatLib endpoints returned HTTP 403.
 Microsoft's linked MSLR download/agreement could not be retrieved; A4 remains
 required and unresolved. No missing case is converted into a passing result.
 

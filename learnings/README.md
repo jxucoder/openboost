@@ -123,3 +123,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [Auxiliary quality metrics](2026-09-06-v1-auxiliary-metrics.md): calibration/class diagnostics, supported IPCW scoring and descriptive paired intervals.
 
 - [A6 target scaling](2026-09-06-v1-target-scaling.md): train-only normalization and saved original-unit predictions.
+
+- [Housing hosted license](2026-09-06-v1-source-license-review.md): matched archive and dated attribution evidence.
