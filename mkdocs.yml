@@ -22,3 +22,4 @@ nav:
   - Categorical features: categorical.md
   - Binary classification: binary.md
   - Multiclass and vectors: multiclass.md
+  - Query-local ranking: ranking.md

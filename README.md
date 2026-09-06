@@ -69,3 +69,6 @@ runs `tests/v1/` only. Old tests are not counted as v1 passes or skips.
 The current documentation build uses `docs/v1/`; other documentation describes
 the retired implementation. Published packages and historical results do not
 establish the new architecture's quality, speed or adoption.
+
+[Query-local ranking](docs/v1/ranking.md) adds pairwise/lambda CPU geometry and
+fixed-step recipes with validation NDCG selection. Real A4 evaluation remains open.

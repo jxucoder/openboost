@@ -4,6 +4,7 @@ Numeric inputs, mapped ensemble artifacts and explicit run state are public.
 Numeric/categorical operations support depthwise, best-first and symmetric growth.
 Squared, Normal, Formula, binary and multiclass CPU recipes are public.
 Vector leaves, separate split/leaf statistics and sequential runs are available.
+Query-local pairwise/lambda ranking composes the same scalar tree operations.
 CUDA execution is not implemented yet.
 """
 

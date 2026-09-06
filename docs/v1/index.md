@@ -25,3 +25,6 @@ The old production API was retired. Historical examples require revision
 geometry and persisted probability/label output through the same foundation.
 [Multiclass and vector leaves](multiclass.md) add joint softmax updates, separate
 split/leaf statistics and arbitrary learner-to-model output mappings.
+
+[Query-local ranking](ranking.md) adds pairwise/lambda CPU geometry and
+fixed-step recipes with validation NDCG selection. Real A4 evaluation remains open.

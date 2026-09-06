@@ -97,3 +97,7 @@ logistic inference/training.
 vector leaves, separate split/leaf statistics and output mappings (630 tests).
 B09 ranking/quantile/penalized leaves are next; full A6 workflows, CUDA and
 quality/performance evaluation remain incomplete.
+
+[Sprint 028 / B09 ranking](028-b09-ranking.md) adds query-local pairwise/lambda
+geometry and fixed-step ranking (642 tests). Quantile/penalized routed leaves
+are next; real A4 evaluation and the broader incomplete gates remain open.

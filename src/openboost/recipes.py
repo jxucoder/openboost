@@ -46,7 +46,9 @@ class SquaredStep:
 @dataclass(frozen=True)
 class FitResult:
     state: AcceptedState
-    steps: tuple[SquaredStep | NormalStep | FormulaStep | BinaryStep | MulticlassStep, ...]
+    steps: tuple[
+        SquaredStep | NormalStep | FormulaStep | BinaryStep | MulticlassStep | RankingStep, ...
+    ]
 
 
 def squared(
@@ -514,6 +516,75 @@ def multiclass(
                 coefficients,
                 accepted,
                 failures,
+            )
+        )
+    return FitResult(state, tuple(steps))
+
+
+@dataclass(frozen=True, eq=False)
+class RankingStep:
+    gradient: np.ndarray
+    curvature: np.ndarray
+    raw_before: np.ndarray
+    raw_after: np.ndarray
+    pair_loss: float
+
+
+def ranking(
+    train,
+    validation,
+    *,
+    context,
+    rounds=2,
+    learning_rate=0.1,
+    bins=254,
+    max_depth=2,
+    max_leaves=None,
+    reg_lambda=1.0,
+    min_child_h=0.0,
+    split_penalty=0.0,
+    lambdas=False,
+    k=10,
+    learner=None,
+):
+    """Fixed-step ranking; validation query-weighted NDCG selects the best model."""
+    from .ranking import Ranking
+
+    objective = Ranking(lambdas=lambdas, k=k)
+    objective.validate(train)
+    objective.validate(validation)
+    rate, learner = _configuration(
+        rounds,
+        learning_rate,
+        max_depth,
+        max_leaves,
+        reg_lambda,
+        min_child_h,
+        split_penalty,
+        "fixed",
+        1,
+        learner,
+    )
+    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    state = initialize(context, train, validation, [0.0], score=objective.score)
+    steps = []
+    for _ in range(rounds):
+        before = state.train_raw
+        geometry = objective.geometry(train, before)
+        tree = learner(binned, newton(train, geometry.gradient, geometry.curvature))
+        state = resolve(
+            state,
+            propose_terms(state, (TreeTerm(tree, [[1]], rate),)),
+            accept=True,
+            score=objective.score,
+        )
+        steps.append(
+            RankingStep(
+                geometry.gradient,
+                geometry.curvature,
+                before,
+                state.train_raw,
+                geometry.loss,
             )
         )
     return FitResult(state, tuple(steps))
