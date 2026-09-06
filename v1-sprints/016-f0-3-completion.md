@@ -62,3 +62,27 @@ or prove mixed-library context safety. No end-to-end quality/speed claim follows
 Py-Boost 0.5.2 also passed weighted scalar/vector GPU fitting and JSON reload.
 Its initial zero-verbosity callback failure remains in the evidence directory.
 These checks do not cover all Py-Boost E5 arms or real task metrics.
+
+### Validation worker slice
+
+The fixed-round numeric worker passed 30 CPU task/library fit/reload cells and
+exposure doubling in the three count adapters. Nine adversarial checks reject
+invalid exposure, censoring, weights/IDs and unsupported options/test arrays.
+The complete suite is 431 passing tests. This worker explicitly rejects the
+search design's early-stopping option; search execution is not ready to freeze.
+
+### Current exit audit
+
+F0.3 remains **in progress**, and F1 has not started. Remaining acceptance work:
+
+1. Resolve A4 ranking source/agreement and Housing/Veteran license evidence.
+2. Complete query-aware, composed A9, structural A12 and A13 adapters; implement
+   early stopping and the validation-selection/test-release path, with corruption
+   and leakage counterexamples. Bind the independently expected full matrix.
+3. Complete auxiliary application reports, including classification and IPCW
+   survival metrics, plus paired uncertainty reports and the E-gate reconstruction.
+4. Freeze exact native builds, agent cohort/settings/accounting and E4 workloads.
+5. Freeze H1/H2 outside the foundation designer's context. A separate evaluator
+   requires the user's delegation authorization; the pending request is unanswered.
+6. Re-run the complete F0.3 audit and close this sprint only with all requirements
+   satisfied. Neither comparator smoke totals nor reference tests waive a gap.

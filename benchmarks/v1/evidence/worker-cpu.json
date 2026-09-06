@@ -1,0 +1,338 @@
+{
+  "scope": "synthetic numeric fixed-round baseline worker checks, not real quality",
+  "cells": [
+    {
+      "library": "xgboost",
+      "application": "A1",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "xgboost",
+      "application": "A2",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "xgboost",
+      "application": "A3",
+      "status": "pass",
+      "shape": [
+        24,
+        3
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "xgboost",
+      "application": "A5",
+      "status": "pass",
+      "shape": [
+        24,
+        3
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "xgboost",
+      "application": "A6",
+      "status": "pass",
+      "shape": [
+        24,
+        2
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "xgboost",
+      "application": "A7",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0,
+      "exposure_doubling_max_abs_error": 1.430511474609375e-06
+    },
+    {
+      "library": "xgboost",
+      "application": "A8",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "xgboost",
+      "application": "A9",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "xgboost",
+      "application": "A10",
+      "status": "pass",
+      "shape": [
+        24,
+        2
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "xgboost",
+      "application": "A12",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "lightgbm",
+      "application": "A1",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "lightgbm",
+      "application": "A2",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "lightgbm",
+      "application": "A3",
+      "status": "pass",
+      "shape": [
+        24,
+        3
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "lightgbm",
+      "application": "A5",
+      "status": "pass",
+      "shape": [
+        24,
+        3
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "lightgbm",
+      "application": "A6",
+      "status": "pass",
+      "shape": [
+        24,
+        2
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "lightgbm",
+      "application": "A7",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 8.881784197001252e-16,
+      "exposure_doubling_max_abs_error": 8.881784197001252e-16
+    },
+    {
+      "library": "lightgbm",
+      "application": "A8",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "lightgbm",
+      "application": "A9",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "lightgbm",
+      "application": "A12",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "catboost",
+      "application": "A1",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "catboost",
+      "application": "A2",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "catboost",
+      "application": "A3",
+      "status": "pass",
+      "shape": [
+        24,
+        3
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "catboost",
+      "application": "A5",
+      "status": "pass",
+      "shape": [
+        24,
+        3
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "catboost",
+      "application": "A6",
+      "status": "pass",
+      "shape": [
+        24,
+        2
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "catboost",
+      "application": "A7",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0,
+      "exposure_doubling_max_abs_error": 1.7763568394002505e-15
+    },
+    {
+      "library": "catboost",
+      "application": "A9",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "catboost",
+      "application": "A10",
+      "status": "pass",
+      "shape": [
+        24,
+        2
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "catboost",
+      "application": "A11",
+      "status": "pass",
+      "shape": [
+        24,
+        2
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "catboost",
+      "application": "A12",
+      "status": "pass",
+      "shape": [
+        24
+      ],
+      "reload_max_abs_error": 0.0
+    },
+    {
+      "library": "ngboost",
+      "application": "A11",
+      "status": "pass",
+      "shape": [
+        24,
+        2
+      ],
+      "reload_max_abs_error": 0.0
+    }
+  ],
+  "seed": 41,
+  "threads": 2,
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "packages": {
+    "autograd": "1.9.1",
+    "threadpoolctl": "3.6.0",
+    "pandas": "3.0.5",
+    "cloudpickle": "3.1.2",
+    "kiwisolver": "1.5.1",
+    "packaging": "26.3",
+    "joblib": "1.6.0",
+    "lifelines": "0.30.0",
+    "contourpy": "1.3.3",
+    "ngboost": "0.5.11",
+    "autograd-gamma": "0.5.0",
+    "numpy": "2.3.5",
+    "matplotlib": "3.11.1",
+    "formulaic": "1.2.2",
+    "sympy": "1.14.0",
+    "xlrd": "2.0.2",
+    "narwhals": "2.25.0",
+    "plotly": "7.0.0",
+    "wrapt": "2.4.0",
+    "python-dateutil": "2.9.0.post0",
+    "mpmath": "1.3.0",
+    "scipy": "1.16.3",
+    "fonttools": "4.64.0",
+    "cycler": "0.12.1",
+    "pyparsing": "3.3.2",
+    "lightgbm": "4.7.0",
+    "graphviz": "0.21",
+    "tqdm": "4.70.0",
+    "interface_meta": "2.0.1",
+    "typing_extensions": "4.16.0",
+    "pillow": "12.3.0",
+    "catboost": "1.2.10",
+    "six": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "xgboost": "3.4.1"
+  },
+  "source_sha": "6f144d270648e03b7bad2d66db7334bfaacbc04c",
+  "dirty": true,
+  "source_hashes": {
+    "worker_smoke.py": "7f17ad465fae4cc15bc701ba492545cfb4c7880073270ec60c9bb55f9ed65c00",
+    "baseline_worker.py": "d32f00f63043a4b71077017d47b4eb0e845262e318d43edbb07e4765ea338fdd"
+  }
+}

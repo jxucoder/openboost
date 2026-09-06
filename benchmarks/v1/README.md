@@ -232,3 +232,19 @@ matrix, native-build failures and corrected isolated runs. Built-in support is
 scoped per task/device. It does not establish real-data quality or OpenBoost GPU
 execution. The CUDA environment is hash-locked at the package level; complete
 native build provenance remains a final protocol requirement.
+
+## Numeric validation worker
+
+`baseline_worker.py JOB.json` writes `predictions.npz` and a trusted local pickle
+`model.bin` in its working directory. Jobs name application/library/configuration,
+seed, threads, device and input NPZ. Arrays contain training X/y, validation X/IDs,
+optional training weights, and task-specific exposure or censoring fields. Unknown
+options and test arrays fail. Reloaded predictions must match before files are
+written. Use a fresh process through `process_runner.execute`.
+
+[Worker evidence](evidence/worker-cpu.json) verifies 30 synthetic CPU task/library
+fits and in-process reload, including external exposure doubling in all three
+count adapters. `worker_smoke.py` reproduces the checks with the locked interpreter.
+This is a fixed-round adapter: the search design's early stopping is explicitly
+rejected until implemented. Ranking, composed/structural controls, full validation
+selection, test unlocking and A13 execution remain required integration work.

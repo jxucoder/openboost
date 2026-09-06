@@ -115,3 +115,4 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [2026-09-05: mixed/vector growth references](2026-09-05-v1-mixed-vector-growth-reference.md) — fitted transforms, multilevel routing and full vector leaves.
 
 - [CPU/CUDA comparator preflight](2026-09-06-v1-comparator-capabilities.md): installed support, native failures and isolated T4 evidence.
+- [Validation-only baseline worker](2026-09-06-v1-baseline-worker.md): explicit inputs, saved offsets and the remaining search integration boundary.
