@@ -19,6 +19,8 @@ A5 [Bike Sharing data and rolling splits](benchmarks/v1/datasets/bike.json) are 
 frozen, with 24 adapter checks. No real model quality result is claimed yet.
 A1/A11 [Housing inputs and five splits](benchmarks/v1/datasets/housing.json) match
 historical hashes, with 20 adapter checks; license verification remains pending.
+A2 [Adult raw records and five splits](benchmarks/v1/datasets/adult.json) preserve
+the official test set, with 16 adapter checks; encoding and quality remain pending.
 
 - [Execution and reflections](v1-sprints/README.md)
 - [Construction design](planning/foundation-construction-design.md)

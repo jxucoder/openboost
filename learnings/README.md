@@ -34,6 +34,9 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Adult official test and stratified splits](2026-09-06-v1-adult-data.md) — A2 raw
+  data freeze, with missing categories retained and fnlwgt excluded.
+
 - [Housing five splits](2026-09-06-v1-housing-data.md) — A1/A11 share verified
   legacy inputs plus seeds 3–4; licensing and quality remain unresolved.
 

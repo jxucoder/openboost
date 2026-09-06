@@ -1,0 +1,246 @@
+{
+  "application": "A2",
+  "archive_sha256": "7537312dd56c2b98035880805ce99e68183a30ee468aa5329d6df0fbb3cc21bb",
+  "categorical": [
+    "workclass",
+    "education",
+    "marital-status",
+    "occupation",
+    "relationship",
+    "race",
+    "sex",
+    "native-country"
+  ],
+  "citation": "Becker, B. & Kohavi, R. (1996). Adult. UCI. DOI:10.24432/C5XW20",
+  "features": [
+    "age",
+    "workclass",
+    "education",
+    "education-num",
+    "marital-status",
+    "occupation",
+    "relationship",
+    "race",
+    "sex",
+    "capital-gain",
+    "capital-loss",
+    "hours-per-week",
+    "native-country"
+  ],
+  "folds": [
+    {
+      "seed": 0,
+      "test": {
+        "class_counts": [
+          12435,
+          3846
+        ],
+        "row_ids_sha256": "9c503b617d3a3d7b6cb9ab198129bcaafcdf1fe29b0c246e93e457d63b64dc51",
+        "rows": 16281
+      },
+      "train": {
+        "class_counts": [
+          19776,
+          6272
+        ],
+        "row_ids_sha256": "ef57d48b3dc4f5d042c247836af5c6303497bda250a03ea458fcf730557962fd",
+        "rows": 26048
+      },
+      "validation": {
+        "class_counts": [
+          4944,
+          1569
+        ],
+        "row_ids_sha256": "6fb7f2820606406639d874ce5460fbfed6ca5e542354b4c02f1ce098e14d1019",
+        "rows": 6513
+      }
+    },
+    {
+      "seed": 1,
+      "test": {
+        "class_counts": [
+          12435,
+          3846
+        ],
+        "row_ids_sha256": "9c503b617d3a3d7b6cb9ab198129bcaafcdf1fe29b0c246e93e457d63b64dc51",
+        "rows": 16281
+      },
+      "train": {
+        "class_counts": [
+          19776,
+          6272
+        ],
+        "row_ids_sha256": "0b7be8aea92bc54fd863195d0b20b84886327d3c946e38d58e83445329572dd7",
+        "rows": 26048
+      },
+      "validation": {
+        "class_counts": [
+          4944,
+          1569
+        ],
+        "row_ids_sha256": "8e2f2ced4a68efe047202be0055e315c2a0c7e6a4d75ec1f88798a1fa131105e",
+        "rows": 6513
+      }
+    },
+    {
+      "seed": 2,
+      "test": {
+        "class_counts": [
+          12435,
+          3846
+        ],
+        "row_ids_sha256": "9c503b617d3a3d7b6cb9ab198129bcaafcdf1fe29b0c246e93e457d63b64dc51",
+        "rows": 16281
+      },
+      "train": {
+        "class_counts": [
+          19776,
+          6272
+        ],
+        "row_ids_sha256": "71a251c9447ee0bc3e97c1756b0ec0256017eda108fa2240d91b9876398df70f",
+        "rows": 26048
+      },
+      "validation": {
+        "class_counts": [
+          4944,
+          1569
+        ],
+        "row_ids_sha256": "0bd4e39e464d933925a216e29e703a4feedf4fde268c55859a12499086fab194",
+        "rows": 6513
+      }
+    },
+    {
+      "seed": 3,
+      "test": {
+        "class_counts": [
+          12435,
+          3846
+        ],
+        "row_ids_sha256": "9c503b617d3a3d7b6cb9ab198129bcaafcdf1fe29b0c246e93e457d63b64dc51",
+        "rows": 16281
+      },
+      "train": {
+        "class_counts": [
+          19776,
+          6272
+        ],
+        "row_ids_sha256": "b5734005f8e877367065c95b08813553e5e2dcae59cfdc44e2807ab96c5d0586",
+        "rows": 26048
+      },
+      "validation": {
+        "class_counts": [
+          4944,
+          1569
+        ],
+        "row_ids_sha256": "8cff4f624aece5b82112230b660d6204c9588a6c9f368dd2befca97ae39acfed",
+        "rows": 6513
+      }
+    },
+    {
+      "seed": 4,
+      "test": {
+        "class_counts": [
+          12435,
+          3846
+        ],
+        "row_ids_sha256": "9c503b617d3a3d7b6cb9ab198129bcaafcdf1fe29b0c246e93e457d63b64dc51",
+        "rows": 16281
+      },
+      "train": {
+        "class_counts": [
+          19776,
+          6272
+        ],
+        "row_ids_sha256": "3a82bd9046a0ac1064fa553b0dfb52f892ce8471c7ea07eaf0ce26f2f0646190",
+        "rows": 26048
+      },
+      "validation": {
+        "class_counts": [
+          4944,
+          1569
+        ],
+        "row_ids_sha256": "d723e20e41379e967b38c7e683123b57fbbff207137462a2db23e8c04f662891",
+        "rows": 6513
+      }
+    }
+  ],
+  "hash_format": "SHA256(canonical JSON with sorted keys and compact separators; ensure_ascii=True)",
+  "identity_note": "source:physical-line IDs; repeated predictor rows retained; no person IDs available",
+  "labels": [
+    "<=50K",
+    ">50K"
+  ],
+  "license": "CC-BY-4.0",
+  "license_source": "https://archive.ics.uci.edu/dataset/2/adult",
+  "member_sha256": {
+    "adult.data": "5b00264637dbfec36bdeaab5676b0b309ff9eb788d63554ca0a249491c86603d",
+    "adult.test": "a2a9044bc167a35b2361efbabec64e89d69ce82d9790d2980119aac5fd7e9c05"
+  },
+  "numeric": [
+    "age",
+    "education-num",
+    "capital-gain",
+    "capital-loss",
+    "hours-per-week"
+  ],
+  "provenance": {
+    "adapter_sha256": "9766e4323e018fbdca1182b5ff89cb154336d5e1c48120382a8b6a38513f626f",
+    "argv": [
+      "python",
+      "-m",
+      "benchmarks.v1.adult",
+      "/tmp/openboost-v1-adult.zip"
+    ],
+    "dirty": true,
+    "git_sha": "f74df584189b59f5248c804ccdd517527db532c5",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "python": "3.12.12"
+  },
+  "schema": "openboost-adult-data-v1",
+  "source_records": {
+    "adult.data": {
+      "data_sha256": "bfc371119520d55a7c7404d2b2d049207c0721150ee6b42dc4262a36314adb07",
+      "missing_by_feature": [
+        0,
+        1836,
+        0,
+        0,
+        0,
+        1843,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        583
+      ],
+      "rows": 32561
+    },
+    "adult.test": {
+      "data_sha256": "6e29d2959bacd2b57fa02eeec8ee852349260934f2846c9608db3ff4342875ca",
+      "missing_by_feature": [
+        0,
+        963,
+        0,
+        0,
+        0,
+        966,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        274
+      ],
+      "rows": 16281
+    }
+  },
+  "source_url": "https://archive.ics.uci.edu/static/public/2/adult.zip",
+  "split_rule": "official test unchanged; per seed PCG64 default_rng, class 0 then 1 permutation; floor(0.8*n_class) train, rest validation; sort source indices",
+  "status": "raw data/splits only; numeric encoding, budgets and quality pending",
+  "test_rows_with_predictors_seen_in_official_train": 2979,
+  "weight": "unit; fnlwgt excluded"
+}

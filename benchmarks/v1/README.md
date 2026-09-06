@@ -136,3 +136,22 @@ provides dataset context. **License status remains unresolved**: the archive onl
 contains data/domain files and the original source page timed out during this audit.
 No licensing label is inferred from public download availability. Data hashes are
 prepared; license review, all budgets and model-quality evaluation remain pending.
+
+## A2 Adult data preparation
+
+[Adult freeze](datasets/adult.json) preserves official test and creates five
+80/20 stratified partitions of official training. Source:
+[Becker and Kohavi (1996), UCI Adult](https://archive.ics.uci.edu/dataset/2/adult),
+DOI 10.24432/C5XW20, CC BY 4.0. Download and verify with:
+
+```bash
+curl --fail --location 'https://archive.ics.uci.edu/static/public/2/adult.zip' -o /tmp/openboost-v1-adult.zip
+uv run --no-sync python -m benchmarks.v1.adult /tmp/openboost-v1-adult.zip --verify benchmarks/v1/datasets/adult.json
+```
+
+The adapter exposes mixed numeric/string/None records with 13 features; fnlwgt is
+excluded, and weights remain unit. Test labels lose exactly one suffix dot. IDs
+combine official filename and physical line number. All records remain present.
+No fitted categorical encoding is included; subsequent encoding must learn only
+from each training partition. Shared predictor values are audited in the artifact
+but are not assumed to identify repeated people. The official test is unchanged.
