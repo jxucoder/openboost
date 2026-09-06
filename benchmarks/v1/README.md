@@ -224,3 +224,11 @@ required and unresolved. No missing case is converted into a passing result.
 None of these modules is OpenBoost production training code. Missing ranking
 inputs, licenses, held-out tasks, and full runner/judge integration still prevent
 F0.3 exit; existing data and metric checks cannot waive those requirements.
+
+## Installed comparator preflight
+
+[Capability evidence](evidence/README.md) records the installed CPU and real T4
+matrix, native-build failures and corrected isolated runs. Built-in support is
+scoped per task/device. It does not establish real-data quality or OpenBoost GPU
+execution. The CUDA environment is hash-locked at the package level; complete
+native build provenance remains a final protocol requirement.

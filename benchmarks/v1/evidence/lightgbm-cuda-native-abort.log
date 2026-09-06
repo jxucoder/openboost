@@ -1,0 +1,333 @@
+✓ Initialized. View run at 
+[private run URL omitted]
+Building image im-yg45ADNcfMZygzjlF9xmqY
+
+=> Step 0: FROM base
+
+=> Step 1: ENV CC=gcc
+
+=> Step 2: ENV CXX=g++
+
+=> Step 3: ENV CMAKE_BUILD_PARALLEL_LEVEL=2
+Saving image...
+Image saved, took 547.46ms
+
+Built image im-yg45ADNcfMZygzjlF9xmqY in 2.90s
+
+
+Building image im-DNfm8DoqUf9JAdcqWhZhcI
+
+=> Step 0: FROM base
+
+=> Step 1: COPY --from=ghcr.io/astral-sh/uv:0.12.1 /uv /.uv/uv
+Getting image source signatures
+Copying blob sha256:7445d66de2378275b55f712aedb693474de22c09b1a32c55e3d3bd46d2f4f4c9
+Copying blob sha256:788dd9aef29e3de18dc5b0e9d3d01eb448d8963d57ce5a0dd33149e2714272d5
+Copying config sha256:17c878e0974e1e0c450b21fa0fd3ad4bfeda10e1d7c599337f85f837d9113555
+Writing manifest to image destination
+Unpacking OCI image
+   • unpacking rootfs ...     
+   • ... done                 
+   • unpacked image rootfs: /tmp/task-data/ta-01M1VMHT0T97RZZP5MK9W0C48B/registry-unpackeDxc3R
+
+=> Step 2: COPY /.0_requirements-cuda.txt /.uv/0/requirements-cuda.txt
+
+=> Step 3: RUN /.uv/uv pip install --python $(command -v python) --compile-bytecode --require-hashes --reinstall-package lightgbm --no-binary lightgbm --config-settings=cmake.define.USE_CUDA=ON --config-settings=cmake.define.CMAKE_CUDA_ARCHITECTURES=75 --requirements /.uv/0/requirements-cuda.txt
+Using Python 3.12.1 environment at: /usr/local
+Resolved 49 packages in 1.05s
+   Building lightgbm==4.7.0
+      Built lightgbm==4.7.0
+Prepared 3 packages in 2m 59s
+Uninstalled 3 packages in 19ms
+Installed 3 packages in 8ms
+Bytecode compiled 41 files in 106ms
+ ~ lightgbm==4.7.0
+ ~ treelite==3.9.1
+ ~ treelite-runtime==3.9.1
+Saving image...
+Image saved, took 2.13s
+
+Built image im-DNfm8DoqUf9JAdcqWhZhcI in 191.14s
+
+
+✓ Created objects.
+├── 🔨 Created mount 
+│   /Users/jiaruixu/work_space/openboost/benchmarks/v1/capability_smoke.py
+└── 🔨 Created function preflight.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.4.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[gpu-health] [WARN] GPU-d5d08c28-91c0-3a59-6e20-29b04e0fcaf7: XID: NVRM: Xid (PCI:0000:e8:00): 13, Graphics SM Warp Exception on (GPC 0, TPC 0, SM 0): Out Of Range Address
+
+[gpu-health] [WARN] GPU-d5d08c28-91c0-3a59-6e20-29b04e0fcaf7: XID: NVRM: Xid (PCI:0000:e8:00): 13, Graphics Exception: ESR 0x504730=0xc02000e 0x504734=0x20 0x504728=0x4c1eb72 0x50472c=0x174
+
+[gpu-health] [WARN] GPU-d5d08c28-91c0-3a59-6e20-29b04e0fcaf7: XID: NVRM: Xid (PCI:0000:e8:00): 43, pid=131552, name=exe, channel 0x0000000b
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/objective/cuda/cuda_regression_objective.cu 441
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+Runner aborted (SIGABRT), exit code: 134
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.4.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[gpu-health] [WARN] GPU-0849165a-8b6f-894c-d4f9-3ad1646d6524: XID: NVRM: Xid (PCI:0000:19:00): 13, Graphics SM Warp Exception on (GPC 0, TPC 0, SM 0): Out Of Range Address
+
+[gpu-health] [WARN] GPU-0849165a-8b6f-894c-d4f9-3ad1646d6524: XID: NVRM: Xid (PCI:0000:19:00): 13, Graphics Exception: ESR 0x504730=0xc03000e 0x504734=0x20 0x504728=0x4c1eb72 0x50472c=0x174
+
+[gpu-health] [WARN] GPU-0849165a-8b6f-894c-d4f9-3ad1646d6524: XID: NVRM: Xid (PCI:0000:19:00): 43, pid=15623, name=exe, channel 0x0000000b
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/objective/cuda/cuda_regression_objective.cu 441
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+Runner aborted (SIGABRT), exit code: 134
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.4.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[gpu-health] [WARN] GPU-7a07efdf-c4a0-6364-8ae7-49ace2c246cd: XID: NVRM: Xid (PCI:0000:19:00): 13, Graphics SM Warp Exception on (GPC 0, TPC 0, SM 0): Out Of Range Address
+
+[gpu-health] [WARN] GPU-7a07efdf-c4a0-6364-8ae7-49ace2c246cd: XID: NVRM: Xid (PCI:0000:19:00): 13, Graphics Exception: ESR 0x504730=0xc01000e 0x504734=0x20 0x504728=0x4c1eb72 0x50472c=0x174
+
+[gpu-health] [WARN] GPU-7a07efdf-c4a0-6364-8ae7-49ace2c246cd: XID: NVRM: Xid (PCI:0000:19:00): 43, pid=488555, name=exe, channel 0x0000000b
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/objective/cuda/cuda_regression_objective.cu 441
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+Runner aborted (SIGABRT), exit code: 134
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.4.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[gpu-health] [WARN] GPU-af1bf42c-0461-82b5-6f9f-00d062d15f85: XID: NVRM: Xid (PCI:0000:f5:00): 13, Graphics SM Warp Exception on (GPC 0, TPC 0, SM 0): Out Of Range Address
+
+[gpu-health] [WARN] GPU-af1bf42c-0461-82b5-6f9f-00d062d15f85: XID: NVRM: Xid (PCI:0000:f5:00): 13, Graphics Exception: ESR 0x504730=0xc02000e 0x504734=0x20 0x504728=0x4c1eb72 0x50472c=0x174
+
+[gpu-health] [WARN] GPU-af1bf42c-0461-82b5-6f9f-00d062d15f85: XID: NVRM: Xid (PCI:0000:f5:00): 43, pid=1883768, name=exe, channel 0x0000000b
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/objective/cuda/cuda_regression_objective.cu 441
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+Runner aborted (SIGABRT), exit code: 134
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.4.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[gpu-health] [WARN] GPU-a8ea32a1-7ff4-a1a2-5625-97a05155663f: XID: NVRM: Xid (PCI:0000:e8:00): 13, pid=1714705, name=nvc:[driver], Graphics SM Warp Exception on (GPC 0, TPC 0, SM 0): Out Of Range Address
+
+[gpu-health] [WARN] GPU-a8ea32a1-7ff4-a1a2-5625-97a05155663f: XID: NVRM: Xid (PCI:0000:e8:00): 13, pid=1714705, name=nvc:[driver], Graphics Exception: ESR 0x504730=0xc01000e 0x504734=0x20 0x504728=0x4c1eb72 0x50472c=0x174
+
+[gpu-health] [WARN] GPU-a8ea32a1-7ff4-a1a2-5625-97a05155663f: XID: NVRM: Xid (PCI:0000:e8:00): 43, pid=1714060, name=exe, channel 0x0000000b
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/objective/cuda/cuda_regression_objective.cu 441
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+Runner aborted (SIGABRT), exit code: 134
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.4.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[gpu-health] [WARN] GPU-ee14fea2-5b1f-c4c3-bb85-7b35f074b8db: XID: NVRM: Xid (PCI:0000:18:00): 13, Graphics SM Warp Exception on (GPC 0, TPC 0, SM 0): Out Of Range Address
+
+[gpu-health] [WARN] GPU-ee14fea2-5b1f-c4c3-bb85-7b35f074b8db: XID: NVRM: Xid (PCI:0000:18:00): 13, Graphics Exception: ESR 0x504730=0xc01000e 0x504734=0x20 0x504728=0x4c1eb72 0x50472c=0x174
+
+[gpu-health] [WARN] GPU-ee14fea2-5b1f-c4c3-bb85-7b35f074b8db: XID: NVRM: Xid (PCI:0000:18:00): 43, pid=786431, name=exe, channel 0x0000000b
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/objective/cuda/cuda_regression_objective.cu 441
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+Runner aborted (SIGABRT), exit code: 134
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.4.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[gpu-health] [WARN] GPU-d7e75570-27cc-4a1a-6517-14da93c561f2: XID: NVRM: Xid (PCI:0000:19:00): 13, Graphics SM Warp Exception on (GPC 0, TPC 0, SM 0): Out Of Range Address
+
+[gpu-health] [WARN] GPU-d7e75570-27cc-4a1a-6517-14da93c561f2: XID: NVRM: Xid (PCI:0000:19:00): 13, Graphics Exception: ESR 0x504730=0xc02000e 0x504734=0x20 0x504728=0x4c1eb72 0x50472c=0x174
+
+[gpu-health] [WARN] GPU-d7e75570-27cc-4a1a-6517-14da93c561f2: XID: NVRM: Xid (PCI:0000:19:00): 43, pid=2017101, name=exe, channel 0x0000000b
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/objective/cuda/cuda_regression_objective.cu 441
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+Runner aborted (SIGABRT), exit code: 134
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.4.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[gpu-health] [WARN] GPU-ad9c7bc5-6aa7-63c3-625c-09e00b71525a: XID: NVRM: Xid (PCI:0000:18:00): 13, Graphics SM Warp Exception on (GPC 0, TPC 0, SM 0): Out Of Range Address
+
+[gpu-health] [WARN] GPU-ad9c7bc5-6aa7-63c3-625c-09e00b71525a: XID: NVRM: Xid (PCI:0000:18:00): 13, Graphics Exception: ESR 0x504730=0xc02000e 0x504734=0x20 0x504728=0x4c1eb72 0x50472c=0x174
+
+[gpu-health] [WARN] GPU-ad9c7bc5-6aa7-63c3-625c-09e00b71525a: XID: NVRM: Xid (PCI:0000:18:00): 43, pid=2242932, name=exe, channel 0x0000000b
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/objective/cuda/cuda_regression_objective.cu 441
+
+[LightGBM] [Fatal] [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  [CUDA] an illegal memory access was encountered /tmp/.tmpObN5zh/sdists-v9/index/c7ae78c95e4a8025/lightgbm/4.7.0/LdSDZoL666C8KeEm/src/src/io/cuda/cuda_tree.cpp 38
+
+Runner aborted (SIGABRT), exit code: 134
+Stopping app - uncaught exception raised locally: InternalFailure('Server has lost track of input').
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /Users/jiaruixu/work_space/openboost/benchmarks/v1/modal_preflight.py:78 in  │
+│ main                                                                         │
+│                                                                              │
+│   77 def main():                                                             │
+│ ❱ 78 │   result = preflight.remote()                                         │
+│   79 │   result.update(                                                      │
+│                                                                              │
+│ /Users/jiaruixu/work_space/openboost/.venv/lib/python3.12/site-packages/moda │
+│ l/_object.py:340 in wrapped                                                  │
+│                                                                              │
+│   339 │   │   await self.hydrate()                                           │
+│ ❱ 340 │   │   return await method(self, *args, **kwargs)                     │
+│   341                                                                        │
+│                                                                              │
+│ /Users/jiaruixu/work_space/openboost/.venv/lib/python3.12/site-packages/moda │
+│ l/_functions.py:1766 in remote                                               │
+│                                                                              │
+│   1765 │   │                                                                 │
+│ ❱ 1766 │   │   return await self._call_function(args, kwargs)                │
+│   1767                                                                       │
+│                                                                              │
+│ /Users/jiaruixu/work_space/openboost/.venv/lib/python3.12/site-packages/moda │
+│ l/_functions.py:1710 in _call_function                                       │
+│                                                                              │
+│   1709 │   │                                                                 │
+│ ❱ 1710 │   │   return await invocation.run_function()                        │
+│   1711                                                                       │
+│                                                                              │
+│ /Users/jiaruixu/work_space/openboost/.venv/lib/python3.12/site-packages/moda │
+│ l/_functions.py:496 in run_function                                          │
+│                                                                              │
+│    495 │   │   │   # No more retries left.                                   │
+│ ❱  496 │   │   │   return await _process_result(                             │
+│    497 │   │   │   │   await_response.output.result, await_response.output.d │
+│                                                                              │
+│ /Users/jiaruixu/work_space/openboost/.venv/lib/python3.12/site-packages/moda │
+│ l/_utils/function_utils.py:493 in _process_result                            │
+│                                                                              │
+│   492 │   elif result.status == api_pb2.GenericResult.GENERIC_STATUS_INTERNA │
+│ ❱ 493 │   │   raise InternalFailure(result.exception)                        │
+│   494 │   elif result.status != api_pb2.GenericResult.GENERIC_STATUS_SUCCESS │
+╰──────────────────────────────────────────────────────────────────────────────╯
+InternalFailure: Server has lost track of input

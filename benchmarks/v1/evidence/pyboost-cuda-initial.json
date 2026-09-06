@@ -1,0 +1,21 @@
+{
+  "cells": [
+    {
+      "outputs": 1,
+      "reason": "Traceback (most recent call last):\n  File \"/Users/jiaruixu/work_space/openboost/benchmarks/v1/modal_preflight.py\", line 172, in pyboost_job\n  File \"/usr/local/lib/python3.12/site-packages/py_boost/gpu/boosting.py\", line 267, in fit\n    self._fit(builder, build_info)\n  File \"/usr/local/lib/python3.12/site-packages/py_boost/gpu/boosting.py\", line 236, in _fit\n    if self.callbacks.after_iteration(build_info):\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/py_boost/callbacks/callback.py\", line 118, in after_iteration\n    stop = stop or callback.after_iteration(build_info)\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/py_boost/callbacks/callback.py\", line 198, in after_iteration\n    if ((num_iter % self.verbose) == 0) or (num_iter == (self.ntrees - 1)):\n         ~~~~~~~~~^~~~~~~~~~~~~~\nZeroDivisionError: integer modulo by zero\n",
+      "status": "error"
+    },
+    {
+      "outputs": 2,
+      "reason": "Traceback (most recent call last):\n  File \"/Users/jiaruixu/work_space/openboost/benchmarks/v1/modal_preflight.py\", line 172, in pyboost_job\n  File \"/usr/local/lib/python3.12/site-packages/py_boost/gpu/boosting.py\", line 267, in fit\n    self._fit(builder, build_info)\n  File \"/usr/local/lib/python3.12/site-packages/py_boost/gpu/boosting.py\", line 236, in _fit\n    if self.callbacks.after_iteration(build_info):\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/py_boost/callbacks/callback.py\", line 118, in after_iteration\n    stop = stop or callback.after_iteration(build_info)\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/site-packages/py_boost/callbacks/callback.py\", line 198, in after_iteration\n    if ((num_iter % self.verbose) == 0) or (num_iter == (self.ntrees - 1)):\n         ~~~~~~~~~^~~~~~~~~~~~~~\nZeroDivisionError: integer modulo by zero\n",
+      "status": "error"
+    }
+  ],
+  "cuda_runtime": 12090,
+  "dirty": true,
+  "harness_sha256": "f7a1416e60385c5cfb74b7099dda124d57345e46afe9a7bda7445c4554ca0b9e",
+  "lock_sha256": "8a34f52cbd747faf6c496ce7981f23dc3652c36b115c935f8128265662289801",
+  "pyboost_path": "py_boost",
+  "scope": "weighted scalar/vector GPU fit and JSON reload only",
+  "source_sha": "6f144d270648e03b7bad2d66db7334bfaacbc04c"
+}

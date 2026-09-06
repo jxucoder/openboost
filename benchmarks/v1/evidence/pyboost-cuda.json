@@ -1,0 +1,21 @@
+{
+  "cells": [
+    {
+      "outputs": 1,
+      "reload_max_abs_error": 0.0,
+      "status": "pass"
+    },
+    {
+      "outputs": 2,
+      "reload_max_abs_error": 0.0,
+      "status": "pass"
+    }
+  ],
+  "cuda_runtime": 12090,
+  "dirty": true,
+  "harness_sha256": "71202c6b72062a5518ff3e9104d6b2d945e8521b315134bbcb938f1faf721eb4",
+  "lock_sha256": "8a34f52cbd747faf6c496ce7981f23dc3652c36b115c935f8128265662289801",
+  "pyboost_path": "py_boost",
+  "scope": "weighted scalar/vector GPU fit and JSON reload only",
+  "source_sha": "6f144d270648e03b7bad2d66db7334bfaacbc04c"
+}

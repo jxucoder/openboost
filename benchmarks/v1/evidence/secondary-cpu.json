@@ -1,0 +1,79 @@
+{
+  "dirty": true,
+  "environment": {
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "packages": {
+      "autograd": "1.9.1",
+      "autograd-gamma": "0.5.0",
+      "catboost": "1.2.10",
+      "cloudpickle": "3.1.2",
+      "contourpy": "1.3.3",
+      "cycler": "0.12.1",
+      "fonttools": "4.64.0",
+      "formulaic": "1.2.2",
+      "graphviz": "0.21",
+      "interface_meta": "2.0.1",
+      "joblib": "1.6.0",
+      "kiwisolver": "1.5.1",
+      "lifelines": "0.30.0",
+      "lightgbm": "4.7.0",
+      "matplotlib": "3.11.1",
+      "mpmath": "1.3.0",
+      "narwhals": "2.25.0",
+      "ngboost": "0.5.11",
+      "numpy": "2.3.5",
+      "packaging": "26.3",
+      "pandas": "3.0.5",
+      "pillow": "12.3.0",
+      "plotly": "7.0.0",
+      "pyparsing": "3.3.2",
+      "python-dateutil": "2.9.0.post0",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.16.3",
+      "six": "1.17.0",
+      "sympy": "1.14.0",
+      "threadpoolctl": "3.6.0",
+      "tqdm": "4.70.0",
+      "typing_extensions": "4.16.0",
+      "wrapt": "2.4.0",
+      "xgboost": "3.4.1",
+      "xlrd": "2.0.2"
+    },
+    "python": "3.12.12"
+  },
+  "records": [
+    {
+      "case": "NGBoost weighted Normal",
+      "mean_nll": 1.4375449061185919,
+      "status": "pass"
+    },
+    {
+      "case": "Poisson rate/exposure",
+      "reload_max_abs_error": 0.0,
+      "status": "pass"
+    },
+    {
+      "case": "Gamma severity",
+      "reload_max_abs_error": 0.0,
+      "status": "pass"
+    },
+    {
+      "case": "Tweedie annualized",
+      "reload_max_abs_error": 0.0,
+      "status": "pass"
+    },
+    {
+      "case": "fixed-sigma linear lognormal AFT",
+      "mean_nll": 0.9735669248465422,
+      "status": "pass"
+    },
+    {
+      "case": "global saturating formula",
+      "max_residual": 4.351668258487951e-11,
+      "status": "pass"
+    }
+  ],
+  "scope": "tiny synthetic comparator smoke, not real quality",
+  "source_file_sha256": "7e769063e3f0227b29e743ac2320f5595e9c0e92c5aae0e95997eb06dad3b0e5",
+  "source_sha": "861d31d332c20c2d9edb5cfe39872cf32b7aff7b"
+}

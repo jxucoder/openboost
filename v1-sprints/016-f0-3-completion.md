@@ -46,3 +46,19 @@ matters. Artifact/metric checks and baseline probes remain distinct from complet
 task execution. Full validation-selection receipts, expected recipe/device matrix,
 auxiliary task metrics and held-out cohort integration are still unfinished;
 partial modules must not create an F0.3 completion label.
+
+### Comparator capability slice
+
+A real T4 isolated-process matrix completed: 29 CPU / 28 CUDA passing built-in
+cells, four/five explicit unsupported cells. Nonunit weights, native mixed data,
+external offset persistence and secondary algorithms have separate CPU artifacts.
+See the [evidence index](../benchmarks/v1/evidence/README.md).
+
+Reflection: the standard LightGBM wheel is not the CUDA comparator. Source builds
+and process isolation were necessary. Keep the failed build, native abort and
+original tolerance mismatch; a later passing preflight does not erase failures
+or prove mixed-library context safety. No end-to-end quality/speed claim follows.
+
+Py-Boost 0.5.2 also passed weighted scalar/vector GPU fitting and JSON reload.
+Its initial zero-verbosity callback failure remains in the evidence directory.
+These checks do not cover all Py-Boost E5 arms or real task metrics.
