@@ -155,3 +155,14 @@ Reflection: paying claims and recorded claims are distinct target populations.
 Validate exact paid-record reconstruction before fitting either component; the
 same output units must survive model composition and reload. These controls do
 not implement FormulaBoost's coupled updates or finish full task/matrix binding.
+
+Auxiliary slice: weighted classification diagnostics, Normal PIT, supported-grid
+IPCW Brier, separately named Harrell C, training-age support errors and descriptive
+paired intervals are implemented. The quality report retains complete fold metrics
+and explicitly lists missing A10/A12 auxiliary inputs. Rehashed invalid support
+still fails. Thirteen focused metric/artifact tests pass.
+
+Reflection after these three implementation slices: component-level adapters and
+judges now cover more task semantics, but a complete pinned real-data execution
+matrix, outer coupled controls, A13 scheduling, native-build/agent provenance and
+held-out independence still require work. Green synthetic checks cannot close F0.3.

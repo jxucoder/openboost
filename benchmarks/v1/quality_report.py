@@ -12,6 +12,13 @@ from pathlib import Path
 
 import numpy as np
 
+from benchmarks.v1.auxiliary import (
+    classification,
+    normal_pit,
+    paired_interval,
+    structure_errors,
+    survival,
+)
 from benchmarks.v1.judge import read_json
 from benchmarks.v1.quality import compare_folds, metrics
 
@@ -30,7 +37,7 @@ PRIMARY = {
 }
 
 
-def load(root, entry):
+def load_bytes(root, entry):
     if set(entry) != {"path", "sha256"}:
         raise ValueError("invalid artifact entry")
     rel = Path(entry["path"])
@@ -42,7 +49,11 @@ def load(root, entry):
     raw = path.read_bytes()
     if hashlib.sha256(raw).hexdigest() != entry["sha256"]:
         raise ValueError("artifact hash mismatch")
-    with np.load(io.BytesIO(raw), allow_pickle=False) as data:
+    return raw
+
+
+def load(root, entry):
+    with np.load(io.BytesIO(load_bytes(root, entry)), allow_pickle=False) as data:
         arrays = {k: data[k] for k in data.files}
     return arrays
 
@@ -53,6 +64,7 @@ def report(manifest, directory):
         "E3_pass": False,
         "comparisons": {},
         "errors": [],
+        "auxiliary_missing": [],
         "scope": "paired metrics only; selection provenance and complete recipe/device coverage not certified",
     }
     root = Path(directory).resolve()
@@ -66,7 +78,7 @@ def report(manifest, directory):
         groups = {}
         seen = set()
         for cell in manifest["cells"]:
-            if set(cell) != {
+            if set(cell) - {"auxiliary"} != {
                 "application",
                 "fold",
                 "kind",
@@ -101,6 +113,28 @@ def report(manifest, directory):
             kind = "nll" if app in ["A10", "A11"] else "ndcg" if app == "A4" else "loss"
             if cell["primary"] != primary or cell["kind"] != kind:
                 raise ValueError("cannot remove primary metrics or change comparison kind")
+            auxiliary = cell.get("auxiliary", {})
+            if not isinstance(auxiliary, dict):
+                raise ValueError("auxiliary must be an object")
+            if app == "A10" and auxiliary:
+                if set(auxiliary) != {"censoring"}:
+                    raise ValueError("invalid survival auxiliary entry")
+                support = read_json(load_bytes(root, auxiliary["censoring"]))
+            elif app == "A12" and auxiliary:
+                if set(auxiliary) != {"structure"}:
+                    raise ValueError("invalid structure auxiliary entry")
+                support = load(root, auxiliary["structure"])
+                if (
+                    set(support) != {"age", "row_ids", "train_min", "train_max"}
+                    or not np.array_equal(support["row_ids"], ids)
+                    or support["train_min"].shape != ()
+                    or support["train_max"].shape != ()
+                ):
+                    raise ValueError("invalid structural support arrays")
+            elif auxiliary:
+                raise ValueError("unexpected auxiliary entry")
+            if app in ["A10", "A12"] and not auxiliary:
+                result["auxiliary_missing"].append({"application": app, "fold": fold})
             scores = []
             for role in ["candidate", "baseline"]:
                 pred = load(root, cell[role])
@@ -108,15 +142,28 @@ def report(manifest, directory):
                     ids, pred["row_ids"]
                 ):
                     raise ValueError("prediction row identity mismatch")
-                scores.append(
-                    metrics(
-                        app,
+                kwargs = {k: v for k, v in truth.items() if k not in ["y", "row_ids"]}
+                measured = metrics(app, truth["y"], pred["prediction"], row_ids=ids, **kwargs)
+                if app in ["A2", "A3"]:
+                    measured = classification(
+                        app, truth["y"], pred["prediction"], truth.get("weight")
+                    )
+                elif app == "A11":
+                    measured = normal_pit(truth["y"], pred["prediction"], truth.get("weight"))
+                elif app == "A10" and auxiliary:
+                    measured = survival(
+                        truth["y"], truth["event"], pred["prediction"], support, truth.get("weight")
+                    )
+                elif app == "A12" and auxiliary:
+                    measured["structure_errors"] = structure_errors(
+                        support["age"],
                         truth["y"],
                         pred["prediction"],
-                        row_ids=ids,
-                        **{k: v for k, v in truth.items() if k not in ["y", "row_ids"]},
+                        float(support["train_min"]),
+                        float(support["train_max"]),
+                        truth.get("weight"),
                     )
-                )
+                scores.append(measured)
             groups.setdefault(app, {})[fold] = (scores, kind, primary)
         for app, folds in groups.items():
             if set(folds) != set(range(5)):
@@ -133,9 +180,18 @@ def report(manifest, directory):
                 )
                 for name in primary
             }
+            for name in primary:
+                comparisons[name]["paired_summary"] = paired_interval(
+                    [folds[f][0][0][name] for f in range(5)],
+                    [folds[f][0][1][name] for f in range(5)],
+                )
             result["comparisons"][app] = {
                 "pass": all(c["pass"] for c in comparisons.values()),
                 "metrics": comparisons,
+                "fold_metrics": {
+                    str(f): dict(candidate=folds[f][0][0], baseline=folds[f][0][1])
+                    for f in range(5)
+                },
             }
     except (
         ValueError,

@@ -406,3 +406,42 @@ build/v1-env/bin/python -m benchmarks.v1.parametric_worker_smoke build/v1-parame
 
 These are synthetic correctness checks. Real A9/A12 quality, outer coupled tree
 controls, support-stratified reports and full F0.3 integration remain unfinished.
+
+## Auxiliary quality diagnostics
+
+`auxiliary.py` adds weighted classification accuracy/Brier/per-class counts,
+binary AUC with half credit for score ties, Normal PIT decile mass, survival
+IPCW Brier/Harrell C, structural errors by frozen training-age support, and an
+exact five-fold empirical bootstrap of paired mean differences. Absent classes,
+empty structural strata and no comparable survival pairs produce explicit null
+statistics. These diagnostics cannot replace primary gates.
+
+The [Brier definition](https://scikit-survival.readthedocs.io/en/stable/api/generated/sksurv.metrics.brier_score.html)
+uses the training censoring distribution. We use its frozen right-continuous G(t)
+with the existing event-before-censor risk convention. Grid points must lie
+strictly inside positive training support. For each grid point, only observed
+deaths by that point need G at their event times; later observations use G at the
+grid point. This avoids extrapolating G for longer test follow-up. It is a direct
+formula implementation, not a call to scikit-survival's more restrictive API.
+No-contribution grids fail rather than returning a misleading zero.
+
+Harrell C uses unit comparable pairs, risk = negative log-time location and a
+1e-8 risk-tie tolerance. An event tied with a censor is comparable; tied deaths
+are not. It is explicitly **not** an IPCW C-index. See the
+[concordance definition](https://scikit-survival.readthedocs.io/en/stable/api/generated/sksurv.metrics.concordance_index_censored.html).
+Nonunit weights are rejected by this survival auxiliary contract.
+
+The paired quality report now includes all measured fold metrics and descriptive
+paired-difference intervals. Its optional per-cell `auxiliary` entry is:
+
+- A10: `{"censoring": {"path": "censoring.json", "sha256": "..."}}`, pointing
+  to the frozen training `censoring_support` object.
+- A12: `{"structure": {"path": "structure.npz", "sha256": "..."}}`, with aligned
+  `row_ids`, `age`, and scalar `train_min`/`train_max` arrays.
+
+Missing A10/A12 auxiliary inputs are listed in `auxiliary_missing`; invalid or
+corrupt inputs produce errors. Primary paired comparisons can be reported while
+auxiliaries are missing, but `E3_pass` remains false. Training provenance and full
+expected coverage must still be bound independently. Bootstrap intervals enumerate
+all 5^5 empirical resamples and are descriptive; overlapping folds are not IID
+replications and do not support a population-superiority claim.
