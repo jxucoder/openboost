@@ -471,3 +471,70 @@ class Gamma:
     @classmethod
     def loss(cls, problem, raw):
         return cls.geometry(problem, raw)[0]
+
+
+class Tweedie:
+    """Nonnegative mean objective with fixed variance power strictly between 1 and 2."""
+
+    def __init__(self, power=1.5, minimum_mean=1e-6):
+        if (
+            not np.isscalar(power)
+            or not np.isfinite(power)
+            or not 1 < power < 2
+            or not np.isscalar(minimum_mean)
+            or not np.isfinite(minimum_mean)
+            or minimum_mean <= 0
+        ):
+            raise ValueError("power in (1,2) and positive finite minimum_mean required")
+        self.power, self.minimum_mean = float(power), float(minimum_mean)
+
+    @staticmethod
+    def validate(problem):
+        Squared.validate(problem)
+        if np.any(problem.target < 0):
+            raise ValueError("Tweedie targets must be nonnegative")
+
+    def base(self, problem):
+        self.validate(problem)
+        positive = problem.weight > 0
+        counted = positive & (problem.target[:, 0] > 0)
+        if not np.any(counted):
+            return _owned([np.log(self.minimum_mean)], ndim=1)
+
+        def log_sum(values):
+            maximum = values.max()
+            return maximum + np.log(np.exp(values - maximum).sum())
+
+        with np.errstate(over="raise", invalid="raise", divide="raise"):
+            numerator = log_sum(
+                np.log(problem.weight[counted])
+                + np.log(problem.target[counted, 0])
+                + (1 - self.power) * problem.offset[counted, 0]
+            )
+            denominator = log_sum(
+                np.log(problem.weight[positive]) + (2 - self.power) * problem.offset[positive, 0]
+            )
+            value = numerator - denominator
+        return _owned([value], ndim=1)
+
+    def geometry(self, problem, raw):
+        self.validate(problem)
+        with np.errstate(over="raise", invalid="raise"):
+            values = problem.with_offset(raw)[:, 0]
+            y = problem.target[:, 0]
+            a = np.exp((2 - self.power) * values)
+            b = np.zeros_like(y)
+            positive = y > 0
+            b[positive] = np.exp(np.log(y[positive]) + (1 - self.power) * values[positive])
+            if np.any(a <= 0) or np.any(b[positive] <= 0):
+                raise ValueError("Tweedie positive terms underflow float64")
+            losses = b / (self.power - 1) + a / (2 - self.power)
+            loss = float(np.dot(problem.weight / problem.weight.sum(), losses))
+            gradient = a - b
+            curvature = (2 - self.power) * a + (self.power - 1) * b
+        if not np.isfinite(loss):
+            raise ValueError("nonfinite Tweedie objective")
+        return loss, _owned(gradient, ndim=1), _owned(curvature, ndim=1)
+
+    def loss(self, problem, raw):
+        return self.geometry(problem, raw)[0]

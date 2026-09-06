@@ -101,7 +101,9 @@ geometry and fixed-step ranking with validation NDCG; routed quantile/penalized 
 share all three growers. Real A4/A5 evaluation remains open. B10 starts with Poisson counts,
 explicit exposure and rate/count transforms; A7 real evaluation and the other
 positive-target/AFT recipes remain open. Gamma mean regression now supports
-positive targets and original-weight semantics; real A8 evaluation remains open. The user approved B03–B06 construction overlapping
+positive targets and original-weight semantics; real A8 evaluation remains open.
+Tweedie now supports nonnegative means with fixed power and explicit weights;
+frequency-severity composition and real A9 evaluation remain open. The user approved B03–B06 construction overlapping
 unfinished F0.3; see Sprint 018 and the active plan amendment. The last full old implementation is Git revision
 `50acfc6`; historical tests/examples require that revision. There is no compatibility
 shim, legacy backend, trainer, or model facade in the current package.

@@ -113,3 +113,7 @@ Tweedie/composition/A9 and AFT/A10. Real A7 evaluation remains open.
 [Sprint 031 / B10 Gamma](031-b10-gamma.md) adds weighted positive-target means
 (674 tests). Tweedie/frequency-severity composition and AFT are next; real A8
 evaluation remains open.
+
+[Sprint 032 / B10 Tweedie](032-b10-tweedie.md) adds fixed-power nonnegative
+means (684 tests). Frequency-severity composition and AFT are next; real A9
+quality and complete application artifacts remain open.
