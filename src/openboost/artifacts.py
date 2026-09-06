@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .data import MixedData, NumericData, _identity, _owned
+from .data import ClassSchema, MixedData, NumericData, _identity, _owned
 from .tree import Tree
 
 
@@ -54,6 +54,7 @@ class Model:
     feature_names: tuple[str, ...]
     base: np.ndarray
     terms: tuple[ConstantTerm | TreeTerm, ...] = ()
+    classes: ClassSchema | None = None
 
     def __post_init__(self):
         names = tuple(self.feature_names)
@@ -64,6 +65,12 @@ class Model:
         ):
             raise ValueError("unique nonempty feature names required")
         base = _owned(self.base, ndim=1)
+        if self.classes is not None and (
+            not isinstance(self.classes, ClassSchema)
+            or len(self.classes.values) != 2
+            or len(base) != 1
+        ):
+            raise ValueError("current classifier model requires two classes and one raw column")
         terms = tuple(self.terms)
         bound = np.abs(base).copy()
         with np.errstate(over="raise", invalid="raise"):
@@ -109,6 +116,17 @@ class Model:
                 raw += a
         return raw
 
+    def predict_proba(self, data, *, offset=None):
+        if self.classes is None:
+            raise ValueError("probabilities require a classification schema")
+        from .outputs import binary_probabilities
+
+        return binary_probabilities(self.predict(data, offset=offset))
+
+    def predict_label(self, data, *, offset=None):
+        probabilities = self.predict_proba(data, offset=offset)
+        return self.classes.decode(np.argmax(probabilities, axis=1))
+
     def record(self):
         terms = []
         for term in self.terms:
@@ -126,10 +144,11 @@ class Model:
                     )
                 )
         return dict(
-            format="openboost-ensemble-v1",
+            format="openboost-ensemble-v2",
             feature_names=list(self.feature_names),
             base=self.base.tolist(),
             terms=terms,
+            classes=None if self.classes is None else list(self.classes.values),
         )
 
     @property
@@ -152,13 +171,16 @@ class Model:
         record = json.loads(Path(path).read_text(), object_pairs_hook=pairs)
         if (
             not isinstance(record, dict)
-            or set(record) != {"format", "feature_names", "base", "terms"}
-            or record["format"] != "openboost-ensemble-v1"
+            or set(record) != {"format", "feature_names", "base", "terms", "classes"}
+            or record["format"] != "openboost-ensemble-v2"
             or any(
                 not isinstance(record[name], list) for name in ("feature_names", "base", "terms")
             )
         ):
             raise ValueError("unsupported or corrupt artifact schema")
+        if record["classes"] is not None and not isinstance(record["classes"], list):
+            raise ValueError("invalid class schema record")
+        classes = None if record["classes"] is None else ClassSchema(record["classes"])
         terms = []
         for term in record["terms"]:
             if not isinstance(term, dict):
@@ -180,4 +202,4 @@ class Model:
                 )
             else:
                 raise ValueError("invalid artifact term schema")
-        return cls(record["feature_names"], record["base"], tuple(terms))
+        return cls(record["feature_names"], record["base"], tuple(terms), classes)

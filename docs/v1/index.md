@@ -20,3 +20,6 @@ agent/adoption result is claimed for the new production foundation.
 The old production API was retired. Historical examples require revision
 `50acfc6`; current APIs are not backward compatible. See the repository's
 `v1-sprints/` for construction records and `planning/` for requirements and gates.
+
+[Binary classification](binary.md) adds typed class schemas, stable logistic
+geometry and persisted probability/label output through the same foundation.

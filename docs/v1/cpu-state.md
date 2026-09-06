@@ -43,7 +43,8 @@ from observations, such as scalar Normal targets with two raw parameters.
 One explicit row-ID vector declares the order of all role arrays; binding rejects
 a mismatch instead of sorting. The caller is responsible for aligning each role
 before binding. Targets are finite numeric values; specialized target types,
-queries and further objective support arrive in later slices. Named `structure`
+queries and further objective support arrive in later slices. [ClassSchema](binary.md)
+binds typed training-label order to encoded classification targets. Named `structure`
 arrays are separately owned `[N, S]` roles in the declared row order; they affect
 problem identity but are never automatically appended to features. Recipes must
 consume or reject them; squared and Normal reject supplied structure. Unknown arguments
@@ -63,8 +64,9 @@ parents, other runs and divergent parent histories are rejected. Nonfinite scori
 fails before a new state is returned. Vector terms commit jointly.
 
 `Model.save(path)` / `Model.load(path)` use the explicit
-`openboost-ensemble-v1` JSON format. This replaces the earlier constant-only format
-and Model replaces ConstantModel without a compatibility shim. It records feature
+`openboost-ensemble-v2` JSON format. This replaces the earlier constant-only format
+and rejects earlier ensemble versions. Model replaces ConstantModel without a
+compatibility shim. Optional class order is bound to state and persisted. It records feature
 names, vector base, constant terms and scalar tree terms with explicit `[1, K]`
 output matrices and one coefficient each. `propose_terms` submits multiple terms
 as one atomic update. Offsets are supplied at inference and

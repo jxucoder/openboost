@@ -52,4 +52,5 @@ CPU squared, Normal and Formula recipes accept mixed features through the same
 preparation and learner path. This slice directly verifies complete squared
 composition and all three mixed-feature growth policies; it does not establish
 real classification or distributional quality parity. Vector/specialized leaves,
-classification recipes, CUDA and full evaluation remain required work.
+multiclass recipes, CUDA and full evaluation remain required work.
+[Binary classification](binary.md) now includes a verified mixed-feature recipe.

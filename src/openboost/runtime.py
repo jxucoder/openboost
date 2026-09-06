@@ -61,6 +61,8 @@ class AcceptedState:
         if not isinstance(self.model, Model) or not isinstance(self.best_model, Model):
             raise ValueError("state requires ensemble artifacts")
         for model in (self.model, self.best_model):
+            if model.classes != self.train.classes or model.classes != self.validation.classes:
+                raise ValueError("train/validation/model class schemas differ")
             if (
                 model.feature_names != self.train.data.feature_names
                 or model.feature_names != self.validation.data.feature_names
@@ -115,7 +117,7 @@ def initialize(context, train, validation, base, *, score):
     score(problem, raw) owns objective weighting/offset semantics. Runtime raw
     caches exclude input offsets. Terms and best snapshots are immutable.
     """
-    model = Model(train.data.feature_names, base)
+    model = Model(train.data.feature_names, base, classes=train.classes)
     initial = AcceptedState(context, train, validation, model, model, 0.0)
     value = float(score(validation, initial.validation_raw))
     if not np.isfinite(value):
@@ -140,7 +142,12 @@ def preview(state, proposal):
     """Build a candidate model without changing any accepted or best state."""
     if not isinstance(proposal, Proposal) or proposal.parent_identity != state.identity:
         raise ValueError("stale or foreign proposal parent")
-    return Model(state.model.feature_names, state.model.base, (*state.model.terms, *proposal.terms))
+    return Model(
+        state.model.feature_names,
+        state.model.base,
+        (*state.model.terms, *proposal.terms),
+        state.model.classes,
+    )
 
 
 def resolve(state, proposal, *, accept, score):

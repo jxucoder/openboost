@@ -137,6 +137,50 @@ class MixedData:
         return np.array(self._values, dtype=object)
 
 
+@dataclass(frozen=True)
+class ClassSchema:
+    values: tuple[str | int, ...]
+
+    def __post_init__(self):
+        values = tuple(category_token(v) for v in self.values)
+        if (
+            len(values) < 2
+            or any(v is None for v in values)
+            or len({type(v) for v in values}) != 1
+            or len(set(values)) != len(values)
+            or values != tuple(sorted(values))
+        ):
+            raise ValueError("sorted unique homogeneous class labels required")
+        object.__setattr__(self, "values", values)
+
+    @classmethod
+    def fit(cls, labels):
+        labels = tuple(category_token(v) for v in labels)
+        if not labels or any(v is None for v in labels) or len({type(v) for v in labels}) != 1:
+            raise ValueError("homogeneous nonmissing training labels required")
+        return cls(tuple(sorted(set(labels))))
+
+    def encode(self, labels):
+        mapping = {v: i for i, v in enumerate(self.values)}
+        tokens = tuple(category_token(v) for v in labels)
+        if any(v not in mapping for v in tokens):
+            raise ValueError("unknown or missing class label")
+        return _owned([[mapping[v]] for v in tokens], ndim=2)
+
+    def decode(self, codes):
+        a = np.asarray(codes)
+        if (
+            a.ndim != 1
+            or a.dtype.kind not in "iuf"
+            or not np.isfinite(a).all()
+            or np.any(a != np.floor(a))
+            or np.any(a < 0)
+            or np.any(a >= len(self.values))
+        ):
+            raise ValueError("in-range integer class codes required")
+        return tuple(self.values[int(i)] for i in a)
+
+
 @dataclass(frozen=True, eq=False)
 class Problem:
     """Numeric targets, original row weights and raw offsets in the given row order.
@@ -153,6 +197,7 @@ class Problem:
     offset: np.ndarray | None = None
     raw_width: int | None = None
     structure: Mapping | None = None
+    classes: ClassSchema | None = None
     identity: str = field(init=False)
 
     def __post_init__(self):
@@ -166,6 +211,10 @@ class Problem:
         y = _owned(self.target, ndim=2)
         if len(y) != len(self.data.values):
             raise ValueError("target rows differ from data")
+        if self.classes is not None:
+            if not isinstance(self.classes, ClassSchema) or y.shape[1] != 1:
+                raise ValueError("class schema requires encoded scalar labels")
+            self.classes.decode(y[:, 0])
         w = _owned(np.ones(len(y)) if self.weight is None else self.weight, ndim=1)
         if w.shape != (len(y),) or np.any(w < 0) or not np.isfinite(w.sum()) or w.sum() <= 0:
             raise ValueError("nonnegative aligned weights with positive finite mass required")
@@ -197,6 +246,7 @@ class Problem:
                 w,
                 offset,
                 tuple((k, _identity(roles[k])) for k in sorted(roles)),
+                None if self.classes is None else self.classes.values,
             ),
         )
 

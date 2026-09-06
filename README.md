@@ -24,7 +24,8 @@ and [Normal recipe](docs/v1/normal.md) support weights, offsets and
 fixed/backtracking steps on CPU. Normal exposes ordinary/Fisher directions and
 joint mean/log-scale updates. [Formula and sequential runs](docs/v1/formula-runs.md)
 add structured full-metric updates and independent heterogeneous jobs. CUDA
-execution is not implemented yet.
+execution is not implemented yet. [Binary classification](docs/v1/binary.md) now
+persists typed class order and exposes probability/label inference.
 
 Independent references and comparator/data checks remain evaluation preparation.
 F0.3 is still open; the user approved overlapping B03–B06 construction without

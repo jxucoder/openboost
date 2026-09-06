@@ -90,5 +90,7 @@ adds joint Normal ordinary/Fisher updates.
 sequential heterogeneous execution probes.
 [Sprint 024 / B07 growth](024-b07-growth-policies.md) adds best-first and symmetric
 numeric policies. [Sprint 025 / B07 categories](025-b07-categorical.md) adds mixed
-input, category equality and typed dictionary persistence. B08 classification and
-vector leaves are next; CUDA and full quality/performance evaluation remain incomplete.
+input, category equality and typed dictionary persistence.
+[Sprint 026 / B08 binary](026-b08-binary.md) adds explicit class order and binary
+logistic inference/training. Multiclass/vector leaves are next; CUDA and full
+quality/performance evaluation remain incomplete.

@@ -20,3 +20,4 @@ nav:
   - Normal boosting: normal.md
   - Formula and sequential runs: formula-runs.md
   - Categorical features: categorical.md
+  - Binary classification: binary.md

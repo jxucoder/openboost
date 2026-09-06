@@ -13,6 +13,7 @@ class Squared:
     def validate(problem):
         if (
             not isinstance(problem, Problem)
+            or problem.classes is not None
             or problem.target.shape[1] != 1
             or problem.raw_width != 1
             or bool(problem.structure)
@@ -63,6 +64,7 @@ class Normal:
     def validate(problem):
         if (
             not isinstance(problem, Problem)
+            or problem.classes is not None
             or problem.target.shape[1] != 1
             or problem.raw_width != 2
             or bool(problem.structure)
@@ -148,6 +150,7 @@ class Formula:
     def validate(problem):
         if (
             not isinstance(problem, Problem)
+            or problem.classes is not None
             or problem.target.shape[1] != 1
             or problem.raw_width != 2
             or set(problem.structure) != {"x"}
@@ -227,3 +230,55 @@ def full_direction(gradient, metric, *, damping):
         factor = np.linalg.cholesky(system)
         rhs = np.linalg.solve(factor, -g[..., None])
         return _owned(np.linalg.solve(factor.swapaxes(1, 2), rhs)[..., 0], ndim=2)
+
+
+class Binary:
+    """Signed-margin logistic loss with unweighted stable first/second derivatives."""
+
+    @staticmethod
+    def validate(problem):
+        if (
+            not isinstance(problem, Problem)
+            or problem.raw_width != 1
+            or problem.classes is None
+            or len(problem.classes.values) != 2
+            or problem.structure
+        ):
+            raise ValueError(
+                "binary requires two-class encoded targets, raw_width=1 and no structure"
+            )
+
+    @classmethod
+    def base(cls, problem, *, clip=1e-6):
+        cls.validate(problem)
+        if not np.isscalar(clip) or not np.isfinite(clip) or not 0 < clip < 0.5 or 1 - clip == 1:
+            raise ValueError("representable probability clip in (0, 0.5) required")
+        if len(np.unique(problem.target[:, 0])) != 2:
+            raise ValueError("binary training requires both classes")
+        with np.errstate(over="raise", invalid="raise"):
+            mass = problem.weight / problem.weight.sum()
+            p = np.clip(np.dot(mass, problem.target[:, 0]), clip, 1 - clip)
+            # Offset-centred prior; a deterministic initializer, not an offset MLE.
+            return _owned([np.log(p) - np.log1p(-p) - np.dot(mass, problem.offset[:, 0])], ndim=1)
+
+    @classmethod
+    def geometry(cls, problem, raw):
+        from .outputs import binary_probabilities
+
+        cls.validate(problem)
+        values = problem.with_offset(raw)
+        r, y = values[:, 0], problem.target[:, 0]
+        probabilities = binary_probabilities(values)
+        tail = np.exp(-np.abs(r))
+        gradient = _owned(np.where(y == 1, -probabilities[:, 0], probabilities[:, 1]), ndim=1)
+        curvature = _owned(tail / (1 + tail) ** 2, ndim=1)
+        with np.errstate(over="raise", invalid="raise"):
+            losses = np.logaddexp(0, np.where(y == 1, -r, r))
+            loss = float(np.dot(problem.weight / problem.weight.sum(), losses))
+        if not np.isfinite(loss):
+            raise ValueError("nonfinite binary loss")
+        return loss, gradient, curvature
+
+    @classmethod
+    def loss(cls, problem, raw):
+        return cls.geometry(problem, raw)[0]
