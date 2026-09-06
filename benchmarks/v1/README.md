@@ -195,3 +195,32 @@ files also match their published MD5 checksums. Housing/Veteran license evidence
 is unresolved because the original StatLib endpoints returned HTTP 403.
 Microsoft's linked MSLR download/agreement could not be retrieved; A4 remains
 required and unresolved. No missing case is converted into a passing result.
+
+## Independent evaluation machinery
+
+- `preprocessing.py` fits numeric medians/missing indicators and categorical
+  one-hot vocabularies on training rows only; unknown categories use the missing
+  indicator. Target standardization preserves constant outputs. Training-only
+  reverse Kaplan-Meier support uses event-before-censor tie handling.
+- `freeze_preprocessing.py` freezes encoded arrays for five splits, including
+  separate claim-level and eligible-policy insurance encoders. Replay with
+  `build/v1-env/bin/python -m benchmarks.v1.freeze_preprocessing --verify benchmarks/v1/datasets/preprocessing.json`.
+- `quality.py` independently recomputes prediction-space primary metrics and
+  applies the v1-plan-r2 five-fold thresholds. A6 checks every target and A5 every
+  quantile. Probabilities are validated before the fixed 1e-15 log-loss clipping.
+- `quality_report.py` reads hashed NPZ targets/predictions with exact row-ID
+  alignment. A run directory contains `quality-manifest.json` with declared
+  paired cells. `python -m benchmarks.v1.quality_report DIRECTORY` reports paired
+  comparisons; it deliberately does **not** certify E3, because selection receipts
+  and complete required recipe/device coverage still need integration.
+- `process_runner.execute` runs an argv in a fresh directory, captures logs,
+  enforces wall time and thread settings, kills timed-out process groups, and
+  requires model/prediction artifacts. Container memory enforcement is separate.
+  A zero process exit or an execution pass is not a quality pass.
+- [Search design](search-design.json) fixes 16 configurations per listed method
+  family and resource budgets before real quality runs. It remains a partial
+  design until task adapters, the full matrix, and the agent cohort are bound.
+
+None of these modules is OpenBoost production training code. Missing ranking
+inputs, licenses, held-out tasks, and full runner/judge integration still prevent
+F0.3 exit; existing data and metric checks cannot waive those requirements.

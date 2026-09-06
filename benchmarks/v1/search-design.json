@@ -1,0 +1,634 @@
+{
+  "budgets": {
+    "agent_attempt_wall_s": 1800,
+    "agent_attempts_per_task_arm": 3,
+    "agent_generated_tokens": 20000,
+    "cpu_threads": 2,
+    "gpu": "T4",
+    "gpu_count": 1,
+    "gpu_memory_mib": 15360,
+    "gpu_trial_wall_s": 1800,
+    "ram_mib": 8192,
+    "trial_retries": 0,
+    "trial_wall_s": 1800
+  },
+  "families": {
+    "catboost": [
+      {
+        "depth": 4,
+        "l2_leaf_reg": 0.0,
+        "learning_rate": 0.03,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 4,
+        "l2_leaf_reg": 0.0,
+        "learning_rate": 0.03,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 4,
+        "l2_leaf_reg": 10.0,
+        "learning_rate": 0.03,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 4,
+        "l2_leaf_reg": 10.0,
+        "learning_rate": 0.03,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 6,
+        "l2_leaf_reg": 0.0,
+        "learning_rate": 0.03,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 6,
+        "l2_leaf_reg": 0.0,
+        "learning_rate": 0.03,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 6,
+        "l2_leaf_reg": 10.0,
+        "learning_rate": 0.03,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 6,
+        "l2_leaf_reg": 10.0,
+        "learning_rate": 0.03,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 4,
+        "l2_leaf_reg": 0.0,
+        "learning_rate": 0.1,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 4,
+        "l2_leaf_reg": 0.0,
+        "learning_rate": 0.1,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 4,
+        "l2_leaf_reg": 10.0,
+        "learning_rate": 0.1,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 4,
+        "l2_leaf_reg": 10.0,
+        "learning_rate": 0.1,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 6,
+        "l2_leaf_reg": 0.0,
+        "learning_rate": 0.1,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 6,
+        "l2_leaf_reg": 0.0,
+        "learning_rate": 0.1,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 6,
+        "l2_leaf_reg": 10.0,
+        "learning_rate": 0.1,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "depth": 6,
+        "l2_leaf_reg": 10.0,
+        "learning_rate": 0.1,
+        "rounds": 1000,
+        "seed_from_fold": true
+      }
+    ],
+    "formula_global": [
+      {
+        "initial_amplitude_multiplier": 0.5,
+        "initial_rate": 0.1,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 0.5,
+        "initial_rate": 0.5,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 0.5,
+        "initial_rate": 1.0,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 0.5,
+        "initial_rate": 2.0,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 1.0,
+        "initial_rate": 0.1,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 1.0,
+        "initial_rate": 0.5,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 1.0,
+        "initial_rate": 1.0,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 1.0,
+        "initial_rate": 2.0,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 2.0,
+        "initial_rate": 0.1,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 2.0,
+        "initial_rate": 0.5,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 2.0,
+        "initial_rate": 1.0,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 2.0,
+        "initial_rate": 2.0,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 4.0,
+        "initial_rate": 0.1,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 4.0,
+        "initial_rate": 0.5,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 4.0,
+        "initial_rate": 1.0,
+        "max_nfev": 2000
+      },
+      {
+        "initial_amplitude_multiplier": 4.0,
+        "initial_rate": 2.0,
+        "max_nfev": 2000
+      }
+    ],
+    "glm": [
+      {
+        "alpha": 1e-06,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 3.414548873833601e-06,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 1.165914401179831e-05,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 3.9810717055349695e-05,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 0.00013593563908785255,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 0.00046415888336127773,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 0.001584893192461114,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 0.0054116952654646375,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 0.018478497974222907,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 0.0630957344480193,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 0.21544346900318823,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 0.7356422544596406,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 2.5118864315095824,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 8.576958985908945,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 29.286445646252375,
+        "max_iter": 1000
+      },
+      {
+        "alpha": 100.0,
+        "max_iter": 1000
+      }
+    ],
+    "lightgbm": [
+      {
+        "lambda_l2": 0.0,
+        "learning_rate": 0.03,
+        "num_leaves": 15,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 0.0,
+        "learning_rate": 0.03,
+        "num_leaves": 15,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 10.0,
+        "learning_rate": 0.03,
+        "num_leaves": 15,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 10.0,
+        "learning_rate": 0.03,
+        "num_leaves": 15,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 0.0,
+        "learning_rate": 0.03,
+        "num_leaves": 31,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 0.0,
+        "learning_rate": 0.03,
+        "num_leaves": 31,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 10.0,
+        "learning_rate": 0.03,
+        "num_leaves": 31,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 10.0,
+        "learning_rate": 0.03,
+        "num_leaves": 31,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 0.0,
+        "learning_rate": 0.1,
+        "num_leaves": 15,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 0.0,
+        "learning_rate": 0.1,
+        "num_leaves": 15,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 10.0,
+        "learning_rate": 0.1,
+        "num_leaves": 15,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 10.0,
+        "learning_rate": 0.1,
+        "num_leaves": 15,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 0.0,
+        "learning_rate": 0.1,
+        "num_leaves": 31,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 0.0,
+        "learning_rate": 0.1,
+        "num_leaves": 31,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 10.0,
+        "learning_rate": 0.1,
+        "num_leaves": 31,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "lambda_l2": 10.0,
+        "learning_rate": 0.1,
+        "num_leaves": 31,
+        "rounds": 1000,
+        "seed_from_fold": true
+      }
+    ],
+    "ngboost": [
+      {
+        "learning_rate": 0.03,
+        "minibatch_frac": 0.7,
+        "rounds": 300,
+        "weak_depth": 2
+      },
+      {
+        "learning_rate": 0.03,
+        "minibatch_frac": 0.7,
+        "rounds": 1000,
+        "weak_depth": 2
+      },
+      {
+        "learning_rate": 0.03,
+        "minibatch_frac": 1.0,
+        "rounds": 300,
+        "weak_depth": 2
+      },
+      {
+        "learning_rate": 0.03,
+        "minibatch_frac": 1.0,
+        "rounds": 1000,
+        "weak_depth": 2
+      },
+      {
+        "learning_rate": 0.03,
+        "minibatch_frac": 0.7,
+        "rounds": 300,
+        "weak_depth": 4
+      },
+      {
+        "learning_rate": 0.03,
+        "minibatch_frac": 0.7,
+        "rounds": 1000,
+        "weak_depth": 4
+      },
+      {
+        "learning_rate": 0.03,
+        "minibatch_frac": 1.0,
+        "rounds": 300,
+        "weak_depth": 4
+      },
+      {
+        "learning_rate": 0.03,
+        "minibatch_frac": 1.0,
+        "rounds": 1000,
+        "weak_depth": 4
+      },
+      {
+        "learning_rate": 0.1,
+        "minibatch_frac": 0.7,
+        "rounds": 300,
+        "weak_depth": 2
+      },
+      {
+        "learning_rate": 0.1,
+        "minibatch_frac": 0.7,
+        "rounds": 1000,
+        "weak_depth": 2
+      },
+      {
+        "learning_rate": 0.1,
+        "minibatch_frac": 1.0,
+        "rounds": 300,
+        "weak_depth": 2
+      },
+      {
+        "learning_rate": 0.1,
+        "minibatch_frac": 1.0,
+        "rounds": 1000,
+        "weak_depth": 2
+      },
+      {
+        "learning_rate": 0.1,
+        "minibatch_frac": 0.7,
+        "rounds": 300,
+        "weak_depth": 4
+      },
+      {
+        "learning_rate": 0.1,
+        "minibatch_frac": 0.7,
+        "rounds": 1000,
+        "weak_depth": 4
+      },
+      {
+        "learning_rate": 0.1,
+        "minibatch_frac": 1.0,
+        "rounds": 300,
+        "weak_depth": 4
+      },
+      {
+        "learning_rate": 0.1,
+        "minibatch_frac": 1.0,
+        "rounds": 1000,
+        "weak_depth": 4
+      }
+    ],
+    "xgboost": [
+      {
+        "learning_rate": 0.03,
+        "max_depth": 4,
+        "reg_lambda": 0.0,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.03,
+        "max_depth": 4,
+        "reg_lambda": 0.0,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.03,
+        "max_depth": 4,
+        "reg_lambda": 10.0,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.03,
+        "max_depth": 4,
+        "reg_lambda": 10.0,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.03,
+        "max_depth": 6,
+        "reg_lambda": 0.0,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.03,
+        "max_depth": 6,
+        "reg_lambda": 0.0,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.03,
+        "max_depth": 6,
+        "reg_lambda": 10.0,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.03,
+        "max_depth": 6,
+        "reg_lambda": 10.0,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "reg_lambda": 0.0,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "reg_lambda": 0.0,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "reg_lambda": 10.0,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "reg_lambda": 10.0,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.1,
+        "max_depth": 6,
+        "reg_lambda": 0.0,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.1,
+        "max_depth": 6,
+        "reg_lambda": 0.0,
+        "rounds": 1000,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.1,
+        "max_depth": 6,
+        "reg_lambda": 10.0,
+        "rounds": 300,
+        "seed_from_fold": true
+      },
+      {
+        "learning_rate": 0.1,
+        "max_depth": 6,
+        "reg_lambda": 10.0,
+        "rounds": 1000,
+        "seed_from_fold": true
+      }
+    ]
+  },
+  "limits": [
+    "Configurations are not claims of optimal tuning.",
+    "Method adapters must translate round counts and early stopping without ignoring parameters.",
+    "GLM and global formula searches use convergence budgets, not tree-only parameters.",
+    "Train-many M=1/8/32 sets are separate from these 16-trial E3 searches.",
+    "A6 target scaling and all categorical vocabularies fit training only.",
+    "Resource caps require actual host/container enforcement; the process runner alone enforces wall time and thread environment only."
+  ],
+  "schema": "openboost-search-design-v1",
+  "selection": {
+    "failed_trial": "record failure; no replacement or free retry; required search cannot pass",
+    "folds": 5,
+    "primary_only": true,
+    "test_access": "after all validation trials and method selection",
+    "trials_per_method": 16
+  },
+  "shared": {
+    "aft_sigma": 1.0,
+    "bin_budget": 255,
+    "early_stopping_rounds": 50,
+    "probability_epsilon": 1e-15,
+    "quantiles": [
+      0.1,
+      0.5,
+      0.9
+    ],
+    "tweedie_evaluation_power": 1.5
+  },
+  "status": "configuration design fixed before quality runs; dataset/matrix and agent-cohort completion pending"
+}

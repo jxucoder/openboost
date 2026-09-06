@@ -32,3 +32,17 @@ policies. Grouped partitions preserve subjects, recipes, and policies. This
 validates target/data semantics without creating any new production implementation.
 Remaining source blockers: MSLR retrieval/agreement and Housing/Veteran license
 confirmation. Required applications and all original gates remain intact.
+
+### Evaluation machinery slice
+
+Actual train-only encoding hashes now cover available data, with separate A8/A9
+training populations and A10 censoring support. Independent metrics and five-fold
+comparisons retain every target/quantile; altered prediction row order fails even
+when file hashes are recomputed. Worker zero exit without artifacts, nonzero exit,
+and timeout fail. Seventeen focused checks and 422 total tests passed.
+
+Reflection: a real CUDA comparator abort showed why the evaluation process boundary
+matters. Artifact/metric checks and baseline probes remain distinct from complete
+task execution. Full validation-selection receipts, expected recipe/device matrix,
+auxiliary task metrics and held-out cohort integration are still unfinished;
+partial modules must not create an F0.3 completion label.
