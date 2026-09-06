@@ -1,6 +1,6 @@
 # Current v1 development extension wheels
 
-Two repository-authored packages exercise the installed public CPU foundation:
+Three repository-authored packages exercise the installed public CPU foundation:
 
 - `ob-cohort-splits`: D2 adds cohort information independent of training weights
   and rejects candidates unless each child has at least one unit per cohort.
@@ -8,9 +8,12 @@ Two repository-authored packages exercise the installed public CPU foundation:
 - `ob-penalized-leaves`: D3 replaces routed leaf solving with an independent
   bisection implementation of weighted pinball plus an anchored quadratic penalty.
   The built-in leaf solver uses a different breakpoint algorithm.
+- `ob-ordered-updates`: D4 recomputes Normal/Formula geometry after each accepted
+  parameter and applies bounded backtracking through public transactions. See
+  [ordered update semantics and limits](ordered_updates/README.md).
 
 These are exploratory development examples, not independent authors, timed agent
-comparisons, held-out tasks or adoption evidence. Both use public imports and
+comparisons, held-out tasks or adoption evidence. All use public imports and
 require no core edits. The historical `examples/extensions/` packages remain separate.
 
 ## Reproduce
@@ -19,11 +22,11 @@ require no core edits. The historical `examples/extensions/` packages remain sep
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python examples/v1_extensions/verify.py /tmp/openboost-extension-check
 ```
 
-The verifier builds three wheels offline, creates a fresh environment, installs
+The verifier builds four wheels offline, creates a fresh environment, installs
 the wheels and NumPy 2.3.5, and executes copied checks from outside the repository
 using Python `-I`. Installed module paths must be under site-packages. It then
-uninstalls both extensions and starts another interpreter to load both saved
-models and verify exact predictions with neither extension importable.
+uninstalls all three extensions and starts another interpreter to load eight saved
+models and verify exact predictions with none of the extensions importable.
 The report records source/wheel hashes, revision/dirty state, environment,
 commands, three-round outputs and failures. Offline dependencies must already be
 cached. Nothing is uploaded or published. Run with Python 3.12 for the recorded
@@ -59,4 +62,6 @@ round-trip after plugin removal.
 
 Source development tests in `tests/v1/test_public_extensions.py` are distinct
 from the installed-wheel checks. These results are partial E2/E6 evidence;
-D1/D4/D5, formal E5, CUDA, real-data quality/cost and external adoption remain open.
+D1/D5, ordered-result scheduler integration, formal E5, CUDA, real-data quality/cost
+and external adoption remain open. D4 reference traces and installed results are
+recorded separately from the earlier D2/D3 evidence.

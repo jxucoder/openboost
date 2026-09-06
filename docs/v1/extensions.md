@@ -1,9 +1,13 @@
 # Public development extensions
 
-The repository's `examples/v1_extensions/` contains two separately installable CPU
+The repository's `examples/v1_extensions/` contains three separately installable CPU
 packages using only public OpenBoost interfaces. `ob-cohort-splits` supplies
 independent cohort information and custom split feasibility. `ob-penalized-leaves`
 replaces leaf solving with its own weighted pinball/quadratic optimizer.
+`ob-ordered-updates` provides ordered Normal/Formula parameter updates through
+public transactions, with fresh geometry after every accepted parameter and
+outer-round stopping. Built-in recipes remain joint. Its custom result is not
+yet accepted by run_many; that shared result contract remains a D5 follow-up.
 
 These reuse histogram/routing, recipe state and model artifacts. Three-round
 checks compare independent mathematical oracles and demonstrate that changed

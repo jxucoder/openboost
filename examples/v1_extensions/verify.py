@@ -24,7 +24,7 @@ def main(output):
     report = {
         "schema": "openboost-v1-development-extensions-v1",
         "passed": False,
-        "claim": "repository-authored D2/D3 installation and correctness only",
+        "claim": "repository-authored D2/D3/D4 installation and correctness only",
         "commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip(),
@@ -42,6 +42,10 @@ def main(output):
             if p.is_file() and p.suffix in (".py", ".toml")
         },
     }
+    report["reference_sources"] = {
+        str(p.relative_to(ROOT)): digest(p)
+        for p in sorted((ROOT / "tests/v1/reference").glob("*.py"))
+    }
     env = dict(os.environ, OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1")
 
     def run(command, cwd):
@@ -55,7 +59,12 @@ def main(output):
         with tempfile.TemporaryDirectory(prefix="openboost-v1-extensions-") as temporary:
             work = Path(temporary)
             wheels = work / "wheels"
-            for project in (ROOT, SOURCE / "cohort_splits", SOURCE / "penalized_leaves"):
+            for project in (
+                ROOT,
+                SOURCE / "cohort_splits",
+                SOURCE / "penalized_leaves",
+                SOURCE / "ordered_updates",
+            ):
                 run(["uv", "build", "--wheel", "--offline", "--out-dir", str(wheels)], project)
             paths = sorted(wheels.glob("*.whl"))
             report["wheels"] = {p.name: digest(p) for p in paths}
@@ -74,9 +83,19 @@ def main(output):
                 ],
                 work,
             )
-            for name in ("checks.py", "core_inference.py"):
+            for name in ("checks.py", "core_inference.py", "ordered_checks.py"):
                 shutil.copyfile(SOURCE / name, work / name)
             run([python, "-I", str(work / "checks.py"), str(output)], work)
+            run(
+                [
+                    sys.executable,
+                    "-m",
+                    "examples.v1_extensions.ordered_oracle",
+                    str(output / "ordered-expected.json"),
+                ],
+                ROOT,
+            )
+            run([python, "-I", str(work / "ordered_checks.py"), str(output)], work)
             report["versions"] = json.loads(
                 run(
                     [
@@ -84,7 +103,7 @@ def main(output):
                         "-I",
                         "-c",
                         "import json,importlib.metadata as m; print(json.dumps({n:m.version(n) for n in "
-                        "['openboost','numpy','ob-cohort-splits','ob-penalized-leaves']}))",
+                        "['openboost','numpy','ob-cohort-splits','ob-penalized-leaves','ob-ordered-updates']}))",
                     ],
                     work,
                 )
@@ -98,6 +117,7 @@ def main(output):
                     python,
                     "ob-cohort-splits",
                     "ob-penalized-leaves",
+                    "ob-ordered-updates",
                 ],
                 work,
             )
@@ -114,7 +134,7 @@ def main(output):
         raise
     finally:
         (output / "manifest.json").write_text(json.dumps(report, indent=2) + "\n")
-    print("Installed D2/D3 checks and plugin-free inference passed.")
+    print("Installed D2/D3/D4 checks and plugin-free inference passed.")
 
 
 if __name__ == "__main__":
