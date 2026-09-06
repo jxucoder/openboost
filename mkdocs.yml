@@ -15,7 +15,7 @@ nav:
   - Current v1 status: index.md
   - CPU state components: cpu-state.md
   - Numeric operations: numeric-ops.md
-  - Depthwise trees: trees.md
+  - Numeric tree policies: trees.md
   - Squared boosting: squared.md
   - Normal boosting: normal.md
   - Formula and sequential runs: formula-runs.md

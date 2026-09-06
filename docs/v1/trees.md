@@ -1,9 +1,21 @@
-# Depthwise numeric trees
+# Numeric tree growth policies
 
-The CPU grower assembles public histogram, candidate, choice, routing and scalar
-leaf operations. It accepts replacement scoring, legality and leaf functions.
-Each layer chooses positive-gain splits; when a leaf cap binds, higher gains win,
-then node ID and condition break ties. Child IDs are explicit and stable.
+The CPU growers assemble public histogram, candidate, choice, routing and scalar
+leaf operations. Each accepts replacement scoring, legality and leaf functions.
+Child IDs are explicit and stable.
+
+- `depthwise`: choose positive-gain splits within each layer; a leaf cap selects
+  higher gains, with node ID and condition breaking ties.
+- `best_first`: a heap selects the highest-gain active leaf across depths, then
+  node ID and condition. Only newly created children need candidate evaluation.
+- `symmetric`: choose one common condition legal in every active leaf, maximizing
+  total gain across the complete layer. Individual gains may be negative; their
+  total must be positive. A leaf budget must admit the entire next layer.
+
+Scoring and legality callbacks should be pure functions of candidate statistics
+and immutable configuration. Unchanged best-first candidates retain cached scores;
+changing behavior by call order is unsupported. All three policies preserve
+exact condition tie rules and use the same inference format.
 
 ```python
 import tempfile
@@ -45,4 +57,26 @@ They support unseen numeric values and missing values with the saved transformer
 or observation offset. Mapped tree terms integrate with the transaction model and the
 [squared](squared.md) and [Normal](normal.md) recipes. Artifacts
 are for inference, not training resumption. Categories, vector/linear leaves,
-best-first/symmetric growth, CUDA and performance claims remain outside this slice.
+CUDA and performance claims remain outside this slice.
+
+
+Recipes accept a custom learner, so growth policy changes do not require editing
+the objective or transaction loop:
+
+```python
+from functools import partial
+from openboost import NumericData, Problem, RunContext
+from openboost.recipes import squared
+from openboost.tree import best_first, symmetric
+
+x = NumericData([[0, 0], [0, 1], [1, 0], [1, 1]], [1, 2, 3, 4], ("a", "b"))
+p = Problem(x, [[-3], [-1], [1], [3]], x.row_ids)
+for grow in (best_first, symmetric):
+    result = squared(p, p, context=RunContext(grow.__name__, 1), rounds=2,
+                     learner=partial(grow, max_depth=3, max_leaves=4))
+    assert result.state.version == 2
+```
+
+This arithmetic example reuses train/validation data; real evaluation needs the
+prescribed distinct partitions. These growth policies do not establish LightGBM
+or CatBoost feature/quality parity. Categorical support remains the next B07 slice.

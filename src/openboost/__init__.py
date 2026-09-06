@@ -1,7 +1,7 @@
 """Programmable boosting foundation: initial CPU records and state transactions.
 
 Numeric inputs, mapped ensemble artifacts and explicit run state are public.
-B04 adds composable numeric operations and depthwise tree inference.
+Numeric operations support depthwise, best-first and symmetric tree growth.
 Squared, joint Normal and Formula CPU recipes plus sequential runs are public.
 CUDA execution is not implemented yet.
 """

@@ -5,7 +5,7 @@ construction. Initial public CPU ownership, run-state and mapped ensemble artifa
 components are available; see [CPU state usage](cpu-state.md).
 
 [Numeric operations](numeric-ops.md) provide binning, histograms, candidate
-selection, routing and scalar leaves. [Depthwise trees](trees.md) compose these
+selection, routing and scalar leaves. [Numeric tree policies](trees.md) compose these
 operations and support numeric inference/persistence. The first complete
 [squared-error recipe](squared.md) provides fixed/backtracking CPU boosting.
 [Normal boosting](normal.md) uses the same state and scalar learners for joint

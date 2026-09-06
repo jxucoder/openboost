@@ -87,5 +87,7 @@ and the first complete squared CPU recipe.
 [Sprint 022 / B05 Normal](022-b05-normal-recipe.md) separates target/raw widths and
 adds joint Normal ordinary/Fisher updates.
 [Sprint 023 / B06](023-b06-formula-runs.md) adds saturation Formula/full GGN and
-sequential heterogeneous execution probes. B07 growth policies/categories are
-next; CUDA and full quality/performance evaluation remain incomplete.
+sequential heterogeneous execution probes.
+[Sprint 024 / B07 growth](024-b07-growth-policies.md) adds best-first and symmetric
+numeric policies. Categorical support is next; CUDA and full quality/performance
+evaluation remain incomplete.

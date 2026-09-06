@@ -15,8 +15,8 @@ artifacts. See [B03 usage and boundaries](docs/v1/cpu-state.md).
 
 Public [numeric operations](docs/v1/numeric-ops.md) now add quantile binning,
 weighted row fields, histograms, split callbacks, routing and scalar leaves.
-A public [depthwise grower](docs/v1/trees.md) composes these operations and persists
-validated numeric trees. The first complete [squared-error recipe](docs/v1/squared.md)
+Public [depthwise, best-first and symmetric growers](docs/v1/trees.md) compose
+these operations and persist validated numeric trees. The first complete [squared-error recipe](docs/v1/squared.md)
 and [Normal recipe](docs/v1/normal.md) support weights, offsets and
 fixed/backtracking steps on CPU. Normal exposes ordinary/Fisher directions and
 joint mean/log-scale updates. [Formula and sequential runs](docs/v1/formula-runs.md)

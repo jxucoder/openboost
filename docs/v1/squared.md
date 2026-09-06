@@ -47,6 +47,7 @@ code can instead use `Squared.fields`, `depthwise`, `TreeTerm`, `propose_terms`,
 This recipe accepts scalar `[N, 1]` targets and raw_width=1. The
 [Normal recipe](normal.md) provides two-parameter distributional geometry.
 Classification, specialized targets, vector learners, callbacks/early stopping,
-other growth policies and CUDA remain future slices. Unsupported arguments fail.
+categorical support and CUDA remain future slices. Best-first and symmetric
+growers can be substituted through the learner argument. Unsupported arguments fail.
 The trace retains per-round arrays for correctness inspection, and is not a
 memory-efficient large-workload implementation or a training-resume checkpoint.
