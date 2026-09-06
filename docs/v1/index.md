@@ -28,3 +28,6 @@ split/leaf statistics and arbitrary learner-to-model output mappings.
 
 [Query-local ranking](ranking.md) adds pairwise/lambda CPU geometry and
 fixed-step recipes with validation NDCG selection. Real A4 evaluation remains open.
+
+[Quantile and penalized leaves](quantile.md) expose routed residuals/original
+weights and compose all three CPU growth policies. Real A5 evaluation remains open.

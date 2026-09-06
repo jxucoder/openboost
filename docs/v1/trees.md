@@ -47,7 +47,8 @@ the same problem separates split statistics from full leaf statistics. Vector
 Newton adapters and callbacks are described in [multiclass and vectors](multiclass.md).
 For custom Newton regularization, configure both scoring and leaf solving with
 the same regularizer. A custom legality callback must preserve nonempty children;
-the grower rejects an admitted empty child. Callbacks should be deterministic.
+the grower rejects an admitted empty child. Callbacks should be deterministic. For residual-based solvers, use the paired
+row_leaf and leaf_context arguments described in [quantile leaves](quantile.md).
 
 `Tree` owns immutable int32 feature/threshold/child arrays, boolean missing
 routes and float64 values shaped [nodes, L]. Leaf children, feature and threshold use -1; prediction

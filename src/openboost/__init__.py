@@ -5,6 +5,7 @@ Numeric/categorical operations support depthwise, best-first and symmetric growt
 Squared, Normal, Formula, binary and multiclass CPU recipes are public.
 Vector leaves, separate split/leaf statistics and sequential runs are available.
 Query-local pairwise/lambda ranking composes the same scalar tree operations.
+Routed residual views support quantile and anchored penalized leaves.
 CUDA execution is not implemented yet.
 """
 

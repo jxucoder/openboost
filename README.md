@@ -72,3 +72,6 @@ establish the new architecture's quality, speed or adoption.
 
 [Query-local ranking](docs/v1/ranking.md) adds pairwise/lambda CPU geometry and
 fixed-step recipes with validation NDCG selection. Real A4 evaluation remains open.
+
+[Quantile and penalized leaves](docs/v1/quantile.md) expose routed residuals/original
+weights and compose all three CPU growth policies. Real A5 evaluation remains open.

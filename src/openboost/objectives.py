@@ -328,3 +328,36 @@ class Multiclass:
     @classmethod
     def loss(cls, problem, raw):
         return cls.geometry(problem, raw)[0]
+
+
+class Quantile:
+    """Pinball loss and unit pseudo-curvature for split construction."""
+
+    def __init__(self, q=0.5):
+        if not np.isscalar(q) or not np.isfinite(q) or not 0 < q < 1:
+            raise ValueError("q must lie strictly between zero and one")
+        self.q = float(q)
+
+    validate = staticmethod(Squared.validate)
+
+    def residuals(self, problem, raw):
+        self.validate(problem)
+        with np.errstate(over="raise", invalid="raise"):
+            return _owned((problem.target - problem.with_offset(raw))[:, 0], ndim=1)
+
+    def base(self, problem):
+        from .leaves import ResidualContext, quantile_leaf
+
+        residual = self.residuals(problem, np.zeros_like(problem.target))
+        view = ResidualContext(problem, residual).view(np.arange(len(residual)))
+        return [quantile_leaf(view, q=self.q)]
+
+    def loss(self, problem, raw):
+        residual = self.residuals(problem, raw)
+        with np.errstate(over="raise", invalid="raise"):
+            value = np.maximum(self.q * residual, (self.q - 1) * residual)
+            return float(np.dot(problem.weight / problem.weight.sum(), value))
+
+    def fields(self, problem, raw):
+        residual = self.residuals(problem, raw)
+        return newton(problem, (residual < 0).astype(float) - self.q, np.ones(len(residual)))

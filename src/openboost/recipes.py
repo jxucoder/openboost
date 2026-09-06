@@ -47,7 +47,14 @@ class SquaredStep:
 class FitResult:
     state: AcceptedState
     steps: tuple[
-        SquaredStep | NormalStep | FormulaStep | BinaryStep | MulticlassStep | RankingStep, ...
+        SquaredStep
+        | NormalStep
+        | FormulaStep
+        | BinaryStep
+        | MulticlassStep
+        | RankingStep
+        | QuantileStep,
+        ...,
     ]
 
 
@@ -585,6 +592,107 @@ def ranking(
                 before,
                 state.train_raw,
                 geometry.loss,
+            )
+        )
+    return FitResult(state, tuple(steps))
+
+
+@dataclass(frozen=True, eq=False)
+class QuantileStep:
+    raw_before: np.ndarray
+    raw_after: np.ndarray
+    loss_before: float
+    loss_after: float
+    coefficients: tuple[float, ...]
+    accepted: bool
+    failures: tuple[str | None, ...]
+
+
+def quantile(
+    train,
+    validation,
+    *,
+    context,
+    q=0.5,
+    rounds=2,
+    learning_rate=0.1,
+    bins=254,
+    max_depth=2,
+    max_leaves=None,
+    reg_lambda=1.0,
+    min_child_h=0.0,
+    split_penalty=0.0,
+    penalty=0.0,
+    anchor=0.0,
+    step="fixed",
+    max_trials=6,
+    grower=depthwise,
+):
+    """Pinball splits with exact routed quantile or penalized residual leaves.
+
+    reg_lambda affects split scoring; penalty is the distinct leaf penalty.
+    Acceptance/validation use unpenalized prediction pinball loss.
+    """
+    from .leaves import ResidualContext, quantile_leaf
+    from .objectives import Quantile
+
+    objective = Quantile(q)
+    objective.validate(train)
+    objective.validate(validation)
+    rate, _ = _configuration(
+        rounds,
+        learning_rate,
+        max_depth,
+        max_leaves,
+        reg_lambda,
+        min_child_h,
+        split_penalty,
+        step,
+        max_trials,
+        None,
+    )
+    base = objective.base(train)
+    solver = partial(quantile_leaf, q=q, penalty=penalty, anchor=anchor)
+    # Validate leaf configuration even for zero-round runs.
+    solver(
+        ResidualContext(train, objective.residuals(train, np.zeros_like(train.target))).view(
+            np.arange(len(train.target))
+        )
+    )
+    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    state = initialize(context, train, validation, base, score=objective.loss)
+    steps = []
+    for _ in range(rounds):
+        before = state.train_raw
+        loss_before = objective.loss(train, before)
+        tree = grower(
+            binned,
+            objective.fields(train, before),
+            max_depth=max_depth,
+            max_leaves=max_leaves,
+            scoring=partial(score, reg_lambda=reg_lambda, split_penalty=split_penalty),
+            legality=partial(feasible, min_child_h=min_child_h),
+            row_leaf=solver,
+            leaf_context=ResidualContext(train, objective.residuals(train, before)),
+        )
+        state, coefficients, accepted, failures = _trials(
+            state,
+            (TreeTerm(tree, [[1]]),),
+            objective.loss,
+            loss_before,
+            rate,
+            step,
+            max_trials,
+        )
+        steps.append(
+            QuantileStep(
+                before,
+                state.train_raw,
+                loss_before,
+                objective.loss(train, state.train_raw),
+                coefficients,
+                accepted,
+                failures,
             )
         )
     return FitResult(state, tuple(steps))

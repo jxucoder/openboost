@@ -10,6 +10,7 @@ import numpy as np
 from . import ops
 from .binning import Binning, _array
 from .data import _identity, _owned
+from .leaves import ResidualContext
 
 
 def _indices(value):
@@ -163,13 +164,37 @@ class Tree:
 class _Growth:
     """Local construction scratch shared by ordinary policy loops."""
 
-    def __init__(self, data, fields, max_depth, max_leaves, scoring, legality, leaf, leaf_fields):
+    def __init__(
+        self,
+        data,
+        fields,
+        max_depth,
+        max_leaves,
+        scoring,
+        legality,
+        leaf,
+        leaf_fields,
+        row_leaf,
+        leaf_context,
+    ):
         if type(max_depth) is not int or max_depth < 0:
             raise ValueError("nonnegative integer max_depth required")
         if max_leaves is None:
             max_leaves = len(data.data.values)
         if type(max_leaves) is not int or not 1 <= max_leaves <= 2**30:
             raise ValueError("positive bounded integer max_leaves required")
+        if (row_leaf is None) != (leaf_context is None):
+            raise ValueError("routed leaf solver and context must be supplied together")
+        if row_leaf is not None and (
+            leaf is not ops.newton_leaf
+            or not callable(row_leaf)
+            or not isinstance(leaf_context, ResidualContext)
+            or leaf_context.problem.identity != fields.problem_identity
+        ):
+            raise ValueError(
+                "routed leaf context must match problem; additive leaf must be default"
+            )
+        self.row_leaf, self.leaf_context = row_leaf, leaf_context
         self.data, self.fields = data, fields
         self.leaf_fields = fields if leaf_fields is None else leaf_fields
         if self.leaf_fields.problem_identity != fields.problem_identity:
@@ -183,7 +208,14 @@ class _Growth:
     def append(self, rows, depth):
         hist = ops.histogram(self.data, self.leaf_fields, rows)
         value = np.atleast_1d(
-            np.asarray(self.leaf(hist.total, self.leaf_fields.names), dtype=float)
+            np.asarray(
+                self.leaf(hist.total, self.leaf_fields.names)
+                if self.row_leaf is None
+                else self.row_leaf(
+                    self.leaf_context.view(hist.rows), hist.total, self.leaf_fields.names
+                ),
+                dtype=float,
+            )
         )
         if value.ndim != 1 or not value.size or not np.isfinite(value).all():
             raise ValueError("nonfinite or invalid custom leaf")
@@ -240,9 +272,22 @@ def depthwise(
     legality=ops.feasible,
     leaf=ops.newton_leaf,
     leaf_fields=None,
+    row_leaf=None,
+    leaf_context=None,
 ):
     """Layer growth; highest-gain splits win a binding within-layer leaf budget."""
-    work = _Growth(data, fields, max_depth, max_leaves, scoring, legality, leaf, leaf_fields)
+    work = _Growth(
+        data,
+        fields,
+        max_depth,
+        max_leaves,
+        scoring,
+        legality,
+        leaf,
+        leaf_fields,
+        row_leaf,
+        leaf_context,
+    )
     frontier, leaves = [0], 1
     while frontier and leaves < work.max_leaves:
         choices = []
@@ -269,13 +314,26 @@ def best_first(
     legality=ops.feasible,
     leaf=ops.newton_leaf,
     leaf_fields=None,
+    row_leaf=None,
+    leaf_context=None,
 ):
     """Heap of leaf gains; unchanged leaves retain their evaluated candidates.
 
     Ties use node ID then condition. Pure scoring/legality callbacks must depend
     on their candidate and immutable configuration, not an evolving call count.
     """
-    work = _Growth(data, fields, max_depth, max_leaves, scoring, legality, leaf, leaf_fields)
+    work = _Growth(
+        data,
+        fields,
+        max_depth,
+        max_leaves,
+        scoring,
+        legality,
+        leaf,
+        leaf_fields,
+        row_leaf,
+        leaf_context,
+    )
     pending = []
 
     def enqueue(node):
@@ -307,13 +365,26 @@ def symmetric(
     legality=ops.feasible,
     leaf=ops.newton_leaf,
     leaf_fields=None,
+    row_leaf=None,
+    leaf_context=None,
 ):
     """One common condition per complete layer, legal in every active leaf.
 
     Sum gains for each common condition, including negative per-node gains.
     Split only for a positive total and a budget permitting the entire layer.
     """
-    work = _Growth(data, fields, max_depth, max_leaves, scoring, legality, leaf, leaf_fields)
+    work = _Growth(
+        data,
+        fields,
+        max_depth,
+        max_leaves,
+        scoring,
+        legality,
+        leaf,
+        leaf_fields,
+        row_leaf,
+        leaf_context,
+    )
     frontier = [0]
     for _ in range(max_depth):
         if 2 * len(frontier) > work.max_leaves:

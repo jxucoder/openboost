@@ -97,8 +97,8 @@ execution does not exist yet. Initial B08 adds ClassSchema, binary logistic
 geometry/recipes and schema-aware probability/label persistence. B08 now also
 provides multiclass diagonal bounds, joint vector leaves and separate split/leaf
 statistics with mapped outputs; full A6 workflows remain unverified. Initial B09 adds query-local pairwise/lambda
-geometry and fixed-step ranking with validation NDCG; quantile/penalized leaves
-and real A4 evaluation remain open. The user approved B03–B06 construction overlapping
+geometry and fixed-step ranking with validation NDCG; routed quantile/penalized leaves now
+share all three growers. Real A4/A5 evaluation remains open. The user approved B03–B06 construction overlapping
 unfinished F0.3; see Sprint 018 and the active plan amendment. The last full old implementation is Git revision
 `50acfc6`; historical tests/examples require that revision. There is no compatibility
 shim, legacy backend, trainer, or model facade in the current package.
