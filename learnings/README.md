@@ -83,3 +83,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
   validation, and Intel macOS runtime limitation.
 
 - [2026-09-05: v1 data and classification references](2026-09-05-v1-data-classification-reference.md) — independent column transforms, geometry and two-round checks.
+
+- [2026-09-05: ranking, quantile and vector references](2026-09-05-v1-ranking-quantile-vector-reference.md) — separate pair geometry, split statistics and leaf solvers.

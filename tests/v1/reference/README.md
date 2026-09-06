@@ -1,7 +1,8 @@
 # Independent v1 references
 
 These are small, deliberately slow NumPy oracles for [Sprint 001](../../../v1-sprints/001-scalar-tree-reference.md)
-and [Sprint 003](../../../v1-sprints/003-data-classification-reference.md),
+[Sprint 003](../../../v1-sprints/003-data-classification-reference.md),
+and [Sprint 004](../../../v1-sprints/004-ranking-quantile-vector-reference.md),
 not a production OpenBoost implementation or a performance baseline.
 
 `scalar.py` implements weighted half-square loss, unweighted derivatives, explicit
@@ -43,6 +44,22 @@ Softmax returns both the exact full Hessian and the explicitly named diagonal
 upper bound. Tests check calculus, class permutations, integer-weight replication,
 and two-round joint-snapshot updates through the independent tree reference.
 
-Remaining F0.2 work includes row alignment/identity, complete categorical grow,
-other typed targets/objective families, quantile/vector leaves and transaction/run
+`ranking.py` enumerates all strict-relevance pairs within each query. Query loss
+is the mean over eligible pair count, scaled by query weight; explicit pair weights
+scale the numerator, not the count. Row weights fail. Lambda weights are frozen
+absolute swap deltas from the current NDCG ranking, with stable row-ID ties; the
+returned loss is a surrogate, not NDCG. Zero-IDCG query NDCG is one.
+
+`quantile.py` supplies pinball loss and pseudo split fields, then replaces terminal
+leaves using their original routed residuals/weights. Its weighted quantile uses
+the left endpoint convention and ignores zero weights. A ties fixture shows that
+a correct leaf solver can coexist with no profitable pseudo split.
+
+`vector.py` fits a shared stump by summing output split gains; optional projected
+gradients and diagonal projected curvatures select topology while leaves always
+use full original output statistics. It is a stump probe, not full vector growth.
+Target scaling uses train-only unweighted population mean/std and constant flags.
+
+Remaining F0.2 work includes row alignment/identity, complete categorical/vector grow,
+other typed targets/objective families and transaction/run
 fixtures with their independent tests. New production parity, persistence, CUDA and real task evaluation are pending.
