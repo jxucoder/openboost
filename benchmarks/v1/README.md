@@ -623,3 +623,28 @@ one. It is reported for each fold and compared across five paired folds alongsid
 every target. A passing average cannot override a failed target. As before, this
 layer never marks E3 complete: selected-model provenance, full required coverage
 and trusted source/protocol identity remain separate obligations.
+
+### A2/A3 current classification workers
+
+Current classification jobs require `classes=2` for A2 or an integer count of at
+least three for A3. Targets are integer codes in `[0, classes)`; every declared
+class must occur in training. Class order is persisted as `0,1,...,K-1`. The
+prediction loader rejects missing or reordered class schemas. A2 emits P(class=1)
+as `[N]`; A3 emits `[N,K]` probabilities in canonical encoded order. Patience/best
+selection uses weighted log loss, and fixed-budget selection uses the final model.
+
+External validation IDs may be unique integers or strings. Workers validate and
+preserve them in emitted artifacts, while public data records use local integer
+indices. These indices are execution-local and never replace exported source IDs.
+Unsupported fields and label/class mismatches fail explicitly.
+
+```sh
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.openboost_worker_smoke /tmp/openboost-classification-048-fixed --applications A2
+```
+
+A2 has five-fold frozen Adult validation integration evidence. A3 has weighted
+synthetic direct-recipe/fresh-process checks in this slice; full Covertype runs
+remain pending. The smoke accepts explicit A2/A3 selections, with seven classes
+for Covertype. Defaults remain A1/A6/A11 to avoid silently broadening existing
+runs. These four-round probes establish no classification quality/calibration,
+search, CUDA or speed claim.

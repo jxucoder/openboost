@@ -1,4 +1,4 @@
-"""Bounded current A1/A6/A11 worker integration on all five frozen folds."""
+"""Bounded current A1/A2/A3/A6/A11 worker integration on all five frozen folds."""
 
 import argparse
 import hashlib
@@ -20,7 +20,7 @@ def run(directory, applications=("A1", "A6", "A11")):
     if (
         not applications
         or len(set(applications)) != len(applications)
-        or set(applications) - {"A1", "A6", "A11"}
+        or set(applications) - {"A1", "A2", "A3", "A6", "A11"}
     ):
         raise ValueError("unique supported applications required")
     root = Path(directory).resolve()
@@ -29,7 +29,7 @@ def run(directory, applications=("A1", "A6", "A11")):
         raise ValueError("fresh output directory required")
     repo = Path(__file__).resolve().parents[2]
     report = dict(
-        scope="Current A1/A6/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+        scope="Current A1/A2/A3/A6/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
         revision=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
         dirty=bool(subprocess.check_output(["git", "status", "--porcelain"])),
         argv=[
@@ -82,6 +82,8 @@ def run(directory, applications=("A1", "A6", "A11")):
                 config=dict(rounds=4, learning_rate=0.1, max_depth=2, reg_lambda=1, bins=32),
                 input_npz=str(packet / fold["artifacts"]["worker-input"]["path"]),
             )
+            if app in {"A2", "A3"}:
+                job["classes"] = 2 if app == "A2" else 7
             job_path = packet / str(seed) / "job.json"
             job_path.write_text(json.dumps(job, indent=2) + "\n")
             output = packet / str(seed) / "fit"
@@ -129,7 +131,9 @@ def run(directory, applications=("A1", "A6", "A11")):
                     ):
                         np.testing.assert_array_equal(actual["row_ids"], restored["row_ids"])
                         np.testing.assert_array_equal(actual["prediction"], restored["prediction"])
-                        expected_width = () if app == "A1" else (2,)
+                        expected_width = (
+                            () if app in {"A1", "A2"} else (7,) if app == "A3" else (2,)
+                        )
                         if app == "A6":
                             expected_width = (len(fold["metadata"]["target_scale"]["mean"]),)
                         assert actual["prediction"].shape == (
@@ -139,6 +143,10 @@ def run(directory, applications=("A1", "A6", "A11")):
                         assert np.isfinite(actual["prediction"]).all()
                         if app == "A11":
                             assert (actual["prediction"][:, 1] > 0).all()
+                        if app in {"A2", "A3"}:
+                            assert ((actual["prediction"] >= 0) & (actual["prediction"] <= 1)).all()
+                            if app == "A3":
+                                np.testing.assert_allclose(actual["prediction"].sum(axis=1), 1.0)
                         record["prediction_shape"] = list(actual["prediction"].shape)
                     record["fresh_process_exact"] = True
                     record["training"] = json.loads((output / "training.json").read_text())
@@ -160,7 +168,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
     parser.add_argument(
-        "--applications", nargs="+", choices=("A1", "A6", "A11"), default=["A1", "A6", "A11"]
+        "--applications",
+        nargs="+",
+        choices=("A1", "A2", "A3", "A6", "A11"),
+        default=["A1", "A6", "A11"],
     )
     args = parser.parse_args()
     result = run(args.directory, args.applications)

@@ -11,7 +11,13 @@ from openboost.artifacts import Model
 from openboost.multioutput import MultiOutputModel, TargetScale
 from openboost.objectives import Normal
 
-OUTPUTS = {"A1": "mean", "A11": "normal_mean_scale", "A6": "multioutput_original_units"}
+OUTPUTS = {
+    "A1": "mean",
+    "A2": "positive_class_probability",
+    "A3": "class_probabilities",
+    "A11": "normal_mean_scale",
+    "A6": "multioutput_original_units",
+}
 
 
 def predict_saved(saved, x):
@@ -35,12 +41,27 @@ def predict_saved(saved, x):
             raise ValueError("invalid evaluation target scale")
         scale = TargetScale(record["mean"], record["std"], record["constant"])
     width = len(scale.mean) if scale is not None else 1 if saved["application"] == "A1" else 2
-    if model.base.shape != (width,) or model.classes is not None:
+    classification = saved["application"] in {"A2", "A3"}
+    if classification:
+        if model.classes is None:
+            raise ValueError("classification output requires class schema")
+        count = len(model.classes.values)
+        if model.classes.values != tuple(range(count)) or any(
+            type(v) is not int for v in model.classes.values
+        ):
+            raise ValueError("canonical encoded class order required")
+        if count != 2 if saved["application"] == "A2" else count < 3:
+            raise ValueError("class count differs from task")
+        width = 1 if saved["application"] == "A2" else count
+    if model.base.shape != (width,) or (not classification and model.classes is not None):
         raise ValueError("model differs from declared output semantics")
     x = np.asarray(x)
     if x.ndim != 2 or not np.isfinite(x).all():
         raise ValueError("finite encoded prediction matrix required")
     data = NumericData(x, np.arange(len(x)), model.feature_names)
+    if classification:
+        probability = model.predict_proba(data)
+        return probability[:, 1] if saved["application"] == "A2" else probability
     if scale is not None:
         return MultiOutputModel(model, scale).predict(data)
     raw = model.predict(data)

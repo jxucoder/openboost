@@ -1,0 +1,556 @@
+{
+  "scope": "Current A1/A2/A3/A6/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+  "revision": "b430df0fcd668a5cc524e7be4c9b3ab92003e62f",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "-m",
+    "benchmarks.v1.openboost_worker_smoke",
+    "/private/tmp/openboost-classification-048-fixed",
+    "--applications",
+    "A2"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "machine": "x86_64",
+  "cpu_count": 16,
+  "device": "cpu",
+  "gpu": null,
+  "threads": 1,
+  "memory_cap": null,
+  "packages": {
+    "numpy": "2.3.5",
+    "openboost": "1.0.0rc1"
+  },
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "aa73cc40df7c79203505f91e3b86292dffbb3b9348467be60d8587e3bfd8c6ad",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/openboost_worker.py": "d53f4796353430002ca2231de1852c139492fd7de1c7e4936374da1befebd33d",
+    "benchmarks/v1/openboost_predict.py": "b0c21aca3046eb3ad40f52f4c845dc159872d10261a0afca2d1cd01357354d04",
+    "benchmarks/v1/openboost_worker_smoke.py": "42461c49d72f23a8a1896d3ec3f09bd6e2352f6b9d513865c1c1e6e7e410c020",
+    "benchmarks/v1/worker_data.py": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "data": {
+    "A2": {
+      "application": "A2",
+      "dataset": "adult",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "e04e33fd11559a52e9f899fa332d7291d55569b2e824de8d6ce2858338817092"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "9f45ed87577102e8486a09f1c19bb4067fea4ae8d9aca43283c1cb67707ae832"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "f8e859a818998f2c994b98dedbb0171be1eb0b4c6f54dc6fe305b94d448a53bd"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "2e72125409d9cf1fe27e45dd2b614afb7f9dd02ef17597eb5c6172d00cf8f7cc"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "cb1193a91a859878036a72cc2c1712aa0b5fe24d730519a0f484d6ae166f6278"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "54db181f0f5ab5c7fa90595a308f7584d079c066cc9d1ef4e7118631e27be888"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "bee5ad1786121477fd4d262197bc66eee98cefad9eb9662b2f385da02958ce98"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "c57b4786ab885b7da2fd5dc2725adba94c25836501757fce55e8811f45ac489e"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "181f31e71c136cd6335c4077ea29a39dfa47abd3eefed55f4b05db70289cc070"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "6d758560150d299bf28b5b9c0093b742918c17bd6b0f8318af88534249263ee2"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "00bdb2099f2313e3b7655d3ba41f3f5509665e36e6f269e7c74d6ecc89f688b7"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "c5bda1ce25eb633c6d73572b5b8ce5a48b14e0c837fdf6ef2010ad64e2f2cbab"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "035f87ddc1ffda1c5ddd877456ccb79f25c579486f558335467212b1a9c118f8"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "e11c4eb51ff1d7a1fa54924e8cc30d5e562fc775380a2045be8e43317ea42a02"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "f8341f7a2900ac706f37f2eca92745d0a0d771b33fcdfbe61496d2e6ebf52b3d"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "source_freeze_sha256": "6f4eb8e49ee7879149de5ace3c26ea9c6a79d9f9a59c6c18bfb99bccd5747c72",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    }
+  },
+  "cells": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 4.983045166009106,
+      "artifacts": {
+        "model.bin": "1d000c2c34e06d48b211bcf067e058c2c79deca2a989380a2a01155c4acd7f72",
+        "training.json": "f62fd3c2c845a584108e1e6fb52765e36b0c3bc1f957e93999d4471cd601f4fa",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "0b55339b55274573a1e5f5a3392d3c39743f972c538dbd928b2cbfccd9efa763"
+      },
+      "application": "A2",
+      "fold": 0,
+      "job": {
+        "application": "A2",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-classification-048-fixed/A2/0/worker-input.npz",
+        "classes": 2
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/0/fit/model.bin",
+        "/private/tmp/openboost-classification-048-fixed/A2/0/fit/features.npz",
+        "/private/tmp/openboost-classification-048-fixed/A2/0/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        6513
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.4656077040877246,
+          "last_score": 0.4656077040877246,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "82ce4e57bc65e3443e40dcf1201fb39f6ddde78c0d29287322f9632cf45440b1",
+        "best_validation_score": 0.4656077040877246,
+        "output": "positive_class_probability",
+        "class_order": [
+          0,
+          1
+        ],
+        "selection_metric": "logloss"
+      },
+      "replay_sha256": "0b55339b55274573a1e5f5a3392d3c39743f972c538dbd928b2cbfccd9efa763"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 4.582771666988265,
+      "artifacts": {
+        "model.bin": "5c9ac6e62b90f3a02a31ee49e1e13d29d98e1269a900d482d0e47b464d13cb58",
+        "training.json": "de6d5ebc2f46a73cbf9fb97e586e334f688357a8d211e4d557b9b62fe220e527",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "1313f9399da012ab46ba2288cd4233f4a375756f409f729b16ef8f2d03ba2960"
+      },
+      "application": "A2",
+      "fold": 1,
+      "job": {
+        "application": "A2",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-classification-048-fixed/A2/1/worker-input.npz",
+        "classes": 2
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/1/fit/model.bin",
+        "/private/tmp/openboost-classification-048-fixed/A2/1/fit/features.npz",
+        "/private/tmp/openboost-classification-048-fixed/A2/1/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        6513
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.4623905852192714,
+          "last_score": 0.4623905852192714,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "0cfecd85ea1c6290095fbb9f97f681c6f4da8aa2d711773f1d2624b3cbee34d6",
+        "best_validation_score": 0.4623905852192714,
+        "output": "positive_class_probability",
+        "class_order": [
+          0,
+          1
+        ],
+        "selection_metric": "logloss"
+      },
+      "replay_sha256": "1313f9399da012ab46ba2288cd4233f4a375756f409f729b16ef8f2d03ba2960"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 4.735486207995564,
+      "artifacts": {
+        "model.bin": "af869caacf551903546fec33243dd5c0c2f35122926442b650f8fc9b37465465",
+        "training.json": "db568b8daed5ede594be8db676f5dc5f82f39560ed7fb13e2d27da8cc4eb0f7e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "07a6ccf24c6233ba7bb8380dba7825df8b9e0e17efdc13c6a37a3275044548ab"
+      },
+      "application": "A2",
+      "fold": 2,
+      "job": {
+        "application": "A2",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-classification-048-fixed/A2/2/worker-input.npz",
+        "classes": 2
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/2/fit/model.bin",
+        "/private/tmp/openboost-classification-048-fixed/A2/2/fit/features.npz",
+        "/private/tmp/openboost-classification-048-fixed/A2/2/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        6513
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.46506133562491814,
+          "last_score": 0.46506133562491814,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "e66e09e89580f83072ca05d70ed9d249af598946e7ccc2f7a9ce85d5652b9151",
+        "best_validation_score": 0.46506133562491814,
+        "output": "positive_class_probability",
+        "class_order": [
+          0,
+          1
+        ],
+        "selection_metric": "logloss"
+      },
+      "replay_sha256": "07a6ccf24c6233ba7bb8380dba7825df8b9e0e17efdc13c6a37a3275044548ab"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 4.678132083994569,
+      "artifacts": {
+        "model.bin": "b55710a82dce488d0cb850ebec8a94827514dfbda666ab4bf69915e692fb80b6",
+        "training.json": "6df1a6dad14d77b2af9969a93866d7201fbf511e824e776ef308de63abb374f4",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "e97fd0cf4ad336a213e011bc692204deb35884ce92151d59e2081ae0567680eb"
+      },
+      "application": "A2",
+      "fold": 3,
+      "job": {
+        "application": "A2",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-classification-048-fixed/A2/3/worker-input.npz",
+        "classes": 2
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/3/fit/model.bin",
+        "/private/tmp/openboost-classification-048-fixed/A2/3/fit/features.npz",
+        "/private/tmp/openboost-classification-048-fixed/A2/3/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        6513
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.4657678402367944,
+          "last_score": 0.4657678402367944,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "0f71605492652acbb37b97b377dd9a839bb8389ea972972a364ff650e739c0d7",
+        "best_validation_score": 0.4657678402367944,
+        "output": "positive_class_probability",
+        "class_order": [
+          0,
+          1
+        ],
+        "selection_metric": "logloss"
+      },
+      "replay_sha256": "e97fd0cf4ad336a213e011bc692204deb35884ce92151d59e2081ae0567680eb"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 4.623000916995807,
+      "artifacts": {
+        "model.bin": "09ab948564a487b6799b16be085a8d97ff5fbf1d7e9b0f69340f5aa7ca20c8e5",
+        "training.json": "2b6d510d0d5869c2e5f1c1fb74e1f32746d8c2aa73975945354dc6e3f9adea53",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "8b2bbaca6593b544cdd3c6fc9c364a7ecf5c2ae53bd83c2563fa63d27309629a"
+      },
+      "application": "A2",
+      "fold": 4,
+      "job": {
+        "application": "A2",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-classification-048-fixed/A2/4/worker-input.npz",
+        "classes": 2
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-classification-048-fixed/A2/4/fit/model.bin",
+        "/private/tmp/openboost-classification-048-fixed/A2/4/fit/features.npz",
+        "/private/tmp/openboost-classification-048-fixed/A2/4/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        6513
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.4660557097861674,
+          "last_score": 0.4660557097861674,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "86454694cb1d995c18cf3cbdf34c37ad733d81b378c15473a1215e12cee3cc13",
+        "best_validation_score": 0.4660557097861674,
+        "output": "positive_class_probability",
+        "class_order": [
+          0,
+          1
+        ],
+        "selection_metric": "logloss"
+      },
+      "replay_sha256": "8b2bbaca6593b544cdd3c6fc9c364a7ecf5c2ae53bd83c2563fa63d27309629a"
+    }
+  ]
+}

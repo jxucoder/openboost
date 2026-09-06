@@ -44,14 +44,6 @@ def fit(job, arrays):
     needed = {"x_train", "y_train", "x_validation", "y_validation", "validation_row_ids"}
     if not needed <= set(arrays) or set(arrays) - needed - {"weight_train", "weight_validation"}:
         raise ValueError("explicit train/validation arrays only; no test arrays")
-    external_ids = np.asarray(arrays["validation_row_ids"])
-    if (
-        external_ids.ndim != 1
-        or external_ids.dtype.kind not in "iuUS"
-        or len(external_ids) != len(arrays["x_validation"])
-        or len(np.unique(external_ids)) != len(external_ids)
-    ):
-        raise ValueError("unique aligned external validation row IDs required")
     cfg = dict(job["config"])
     if cfg.pop("seed_from_fold", True) is not True:
         raise ValueError("seed semantics differ")
@@ -95,8 +87,7 @@ def fit(job, arrays):
             target_scale = fit_target_scale(y)
             scale = TargetScale(target_scale["mean"], target_scale["std"], target_scale["constant"])
         names = tuple(f"x{i}" for i in range(x.shape[1])) if names is None else names
-        # Packet IDs remain in emitted artifacts; public data uses local integer rows.
-        ids = np.arange(len(x))
+        ids = np.arange(len(x)) if part == "train" else arrays["validation_row_ids"]
         data = NumericData(x, ids, names)
         problems.append(
             Problem(

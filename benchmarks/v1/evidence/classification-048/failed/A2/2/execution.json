@@ -1,0 +1,16 @@
+{
+  "artifacts": {
+    "worker.log": "dc6176d63aad70b292eb708d778311f9c3a6992f97e2813cfb6475b69321c45b"
+  },
+  "command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+    "/private/tmp/openboost-classification-048/A2/2/job.json"
+  ],
+  "exit_code": 1,
+  "reason": "worker exited nonzero",
+  "status": "error",
+  "threads": 1,
+  "timeout_s": 90,
+  "wall_s": 0.2513757090055151
+}

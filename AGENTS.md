@@ -75,7 +75,9 @@ and original-unit prediction on all five Parkinsons folds. Next: A13 selection
 and remaining adapters/D5 checks. Sprint 046 adds training-scale-verified A6
 selection and a synthetic 16-trial current search/release check. Real searches
 and remaining adapters/D5 checks are open. Sprint 047 adds verified-scale A6
-standardized quality reporting alongside every per-target gate. These internal trials
+standardized quality reporting alongside every per-target gate. Sprint 048 adds
+A2/A3 probability adapters and five-fold Adult integration; full Covertype runs
+and remaining adapters/searches/D5 are open. These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
 preparation/M=1/8/32 fixed-budget equivalence are implemented (Sprints 036–037).

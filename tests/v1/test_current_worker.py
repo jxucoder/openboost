@@ -187,3 +187,101 @@ def test_a6_scaled_selection_and_fresh_replay(mode, patience, tmp_path):
     saved["target_scale"]["std"][0] = 0
     with pytest.raises(ValueError):
         predict_saved(saved, arrays["x_validation"])
+
+
+def test_binary_worker_probabilities():
+    job, arrays = fixture("A2")
+    job["classes"] = 2
+    arrays["y_train"] = np.arange(8) % 2
+    arrays["y_validation"] = np.arange(4) % 2
+    prediction, saved, _ = fit(job, arrays)
+    assert prediction.shape == (4,)
+    assert np.all((prediction >= 0) & (prediction <= 1))
+    assert saved["output"] == "positive_class_probability"
+
+
+@pytest.mark.parametrize("app, count", [("A2", 2), ("A3", 3)])
+@pytest.mark.parametrize("patience", [None, 1])
+def test_classification_direct_and_fresh_probability_order(app, count, patience, tmp_path):
+    from openboost import ClassSchema
+    from openboost.recipes import binary, multiclass
+
+    job, arrays = fixture(app)
+    job.update(classes=count, early_stopping_rounds=patience)
+    arrays["validation_row_ids"] = np.array([f"validation:{i}" for i in range(4)])
+    problems = []
+    for part in ("train", "validation"):
+        x = arrays["x_" + part]
+        arrays["y_" + part] = np.arange(len(x)) % count
+        data = NumericData(x, np.arange(len(x)), ("x0",))
+        problems.append(
+            Problem(
+                data,
+                arrays["y_" + part][:, None],
+                data.row_ids,
+                classes=ClassSchema(tuple(range(count))),
+                raw_width=1 if app == "A2" else count,
+                weight=arrays["weight_" + part],
+            )
+        )
+    direct = (binary if app == "A2" else multiclass)(
+        *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
+    )
+    prediction, saved, training = fit(job, arrays)
+    model = direct.state.model if patience is None else direct.state.best_model
+    probability = model.predict_proba(problems[1].data)
+    np.testing.assert_array_equal(prediction, probability[:, 1] if app == "A2" else probability)
+    np.testing.assert_allclose(probability.sum(axis=1), 1.0)
+    assert training["class_order"] == list(range(count))
+    assert training["best_validation_score"] == direct.state.best_score
+    model_path = tmp_path / "model.bin"
+    model_path.write_text(json.dumps(saved))
+    packet = tmp_path / "features.npz"
+    np.savez(packet, x=arrays["x_validation"], row_ids=arrays["validation_row_ids"])
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [sys.executable, str(script), str(model_path), str(packet), str(tmp_path / "replay.npz")],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as replay:
+        np.testing.assert_array_equal(replay["prediction"], prediction)
+        np.testing.assert_array_equal(replay["row_ids"], arrays["validation_row_ids"])
+    saved["model"]["classes"] = list(reversed(saved["model"]["classes"]))
+    with pytest.raises(ValueError):
+        predict_saved(saved, arrays["x_validation"])
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        "missing_count",
+        "bool_count",
+        "wrong_count",
+        "fractional",
+        "range",
+        "missing_class",
+        "foreign_option",
+    ],
+)
+def test_classification_invalid_contracts_fail(bad):
+    job, arrays = fixture("A3")
+    job["classes"] = 3
+    arrays["y_train"] = np.arange(8) % 3
+    arrays["y_validation"] = np.arange(4) % 3
+    if bad == "missing_count":
+        job.pop("classes")
+    elif bad == "bool_count":
+        job["classes"] = True
+    elif bad == "wrong_count":
+        job["classes"] = 2
+    elif bad == "fractional":
+        arrays["y_train"] = arrays["y_train"].astype(float) + 0.5
+    elif bad == "range":
+        arrays["y_validation"][0] = 3
+    elif bad == "missing_class":
+        arrays["y_train"][:] = 0
+    else:
+        job["config"]["mode"] = "natural"
+    with pytest.raises(ValueError):
+        fit(job, arrays)
