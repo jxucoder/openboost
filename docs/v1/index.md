@@ -10,8 +10,8 @@ making a correct, reproducible algorithm change.
 
 The old production code has been retired. The current package is an empty
 namespace awaiting v1 components; there is no training or prediction API yet.
-Sprints 001 and 003–007 delivered independent data, tree, classification, ranking,
-quantile, vector-leaf, positive-target, AFT, Normal, Formula and isolated-run references with 229 passing CPU tests.
+Sprints 001 and 003–008 delivered independent data, tree, classification, ranking,
+quantile, vector-leaf, positive-target, AFT, Normal, Formula, isolated-run and author-task references with 255 passing CPU tests.
 Those checks are preparation for implementation, not evidence that v1 is complete.
 
 The repository's `v1-sprints/` directory contains execution plans, verification

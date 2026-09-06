@@ -46,6 +46,10 @@ assert derive_seed(7, 'run-α', 2, 'tree', 'rows') == 6175955064790668999
 record = run_many([RunSpec('r', 0, 1, .1, 2, 2)], [[0], [1]], [[0], [1]],
                   {'r': ([[-1], [1]], [[-1], [1]])})['r']
 assert record.status == 'completed' and record.best_round == 1
+from tests.v1.reference.author import expectile_base, penalized_quantile, ordered_normal
+assert abs(expectile_base([0, 2]) - 1.6) < 1e-12
+assert penalized_quantile([0, 2, 10], .5, [1, 3, 1], penalty=1, anchor=0) == 1.5
+assert ordered_normal([[0], [0]], [[0, 0], [0, 0]], [1, 3])[0].accepted
 from tests.v1.reference.tree import boost_squared
 for policy in ("depthwise", "best_first", "symmetric"):
     result = boost_squared([[0], [0], [1], [1]], [-2, -2, 2, 2], policy=policy)

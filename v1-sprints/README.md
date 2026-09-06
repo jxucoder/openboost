@@ -19,8 +19,9 @@ Agent 用公开、可组合组件完成正确的算法修改，并验证其成�
 | 005 | B01 / F0.2 的 A7–A10 数学探针 | 完成；总计183 tests passed | [正目标与 AFT](005-positive-aft-reference.md) |
 | 006 | B01 / F0.2 的 A11/A12/D4 探针 | 完成；总计208 tests passed | [Normal/Formula](006-normal-formula-reference.md) |
 | 007 | B01 / F0.2 的 identity/A13/D5 探针 | 完成；总计229 tests passed | [identity/runs](007-identity-runs-reference.md) |
+| 008 | B01 / F0.2 的 D1/D3/D4 精确探针 | 完成；总计255 tests passed | [作者修改参考](008-author-mutation-reference.md) |
 
-接下来完成 F0.2 的其他参考（行身份/类别和向量完整生长、带惩罚叶、组合模型、state/run），再完成 B02/F0.3 的冻结评测。F1 公共 foundation 实现从 B03 开始，
+接下来完成 F0.2 的其他参考（类别和向量完整生长、组合模型与状态集成），再完成 B02/F0.3 的冻结评测。F1 公共 foundation 实现从 B03 开始，
 按 B04–B10 接通可组合组件与全部算法；不把 reference 代码称为产品实现。
 具体后续 sprint 在开始时按依赖选定有限范围，不能跳过现有 F 阶段出口。
 
@@ -51,7 +52,7 @@ Sprint 001 已交付独立 numeric scalar/tree 参考；Sprint 002 已按用户�
 Sprint 003 已补充列转换与分类；Sprint 004 已补充 ranking/quantile/vector 最小参考。
 Sprint 005 已补充正目标/count、policy join 与 event/right-censored AFT 参考。
 Sprint 006 已补充Normal/Formula；Sprint 007已补充identity/run隔离与模型选择。
-下一 sprint 完成D1/D3/D4精确fixture；其余缺口及收尾顺序见
+Sprint008已补D1/D3/D4精确fixture。下一步补完整grow与有限组合链路；缺口及收尾顺序见
 [F0.2验收映射](f0-2-acceptance-ledger.md)。
 E0–E6 没有因为创建本目录而通过；E7 独立作者采用尚无新证据。每项 A 的任务卡已定义，
 其 v1 production 实现和真实 eval 仍须逐项完成。

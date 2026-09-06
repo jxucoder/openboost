@@ -89,5 +89,12 @@ random keys, budgets, early stopping, failure records and immutable best terms a
 checked at M=1/8/32. Selection rejects different problem identities. Regrouping is
 a semantic simulation, not batched execution or a measured cache optimization.
 
+`author.py` supplies D1 expectile stationary-interval initialization, D3 penalized
+pinball breakpoint/stationary-point enumeration and D4's exact six-trial ordered
+rule. Row weight mass is not normalized away from the penalty. Tests distinguish
+smooth derivative checks from nonsmooth subgradient optimality. These development
+oracles do not constitute a public extension or an E5 author-cost result.
+See [Sprint 008](../../../v1-sprints/008-author-mutation-reference.md).
+
 Remaining F0.2 evidence is tracked in the [acceptance ledger](../../../v1-sprints/f0-2-acceptance-ledger.md).
 Production parity, persistence, CUDA and real task evaluation remain pending.

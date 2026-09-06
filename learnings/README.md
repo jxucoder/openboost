@@ -91,3 +91,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [2026-09-05: Normal and Formula references](2026-09-05-v1-normal-formula-reference.md) — direction fitting and immutable candidate updates.
 
 - [2026-09-05: identity and isolated runs](2026-09-05-v1-identity-runs-reference.md) — prepared row binding, stable RNG and comparable selection.
+
+- [2026-09-05: exact author mutation references](2026-09-05-v1-author-mutation-reference.md) — expectile, penalized quantile and ordered acceptance.
