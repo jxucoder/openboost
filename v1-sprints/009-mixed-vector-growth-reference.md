@@ -1,63 +1,65 @@
-# Sprint 009：混合特征与多层向量树
+# Sprint 009: Mixed features and multilevel vector trees
 
-起点：`a6b3eeb`。状态：完成本 sprint；F0.2进行中。B01/F0.2，A2/A6/C1–C3 的参考集成缺口。
+Starting revision: `a6b3eeb`. Status: sprint complete; F0.2 ongoing.
+B01/F0.2, A2/A6/C1–C3 reference integration gaps.
 
-## 计划与验收
+## Plan and acceptance
 
-1. 训练拟合numeric/category转换器；树保留转换器，raw验证预测复用cuts/字典。
-2. 独立逐行枚举多层scalar/vector树，支持depthwise/best-first/symmetric；类别按
-   one-vs-rest相等判断，missing两方向，分裂可投影而叶仍使用完整输出统计。
-3. 两轮binary混合输入与两轮多输出；K=1与已有scalar oracle比较，多层routing行守恒，
-   unknown/missing、输出置换、权重复制、无合法split、冻结snapshot检验。
-4. 完整回归/lint、验收映射和reflection；offset/两阶段模型留给下一有限集成切片。
+1. Fit numeric/category transformers on training; trees retain them for raw validation prediction.
+2. Independently enumerate original rows for multilevel scalar/vector depthwise/best-first/symmetric
+   trees. Categories use one-vs-rest equality, both missing directions; projected splits retain full leaf statistics.
+3. Two-round mixed binary and multioutput tasks; compare K=1 against scalar oracle, check row conservation,
+   unknown/missing, output permutations, replication, no legal split and immutable snapshots.
+4. Full regression/lint, ledger and reflection; offset/two-stage models belong to the next finite slice.
 
-不新增生产API或GPU路径。参考输出使用[N,K]，内部布局不是生产约束。已有scalar
-oracle继续作为结构不同的对照，不将其替换成新实现以获得自洽测试。
+No production API/GPU path. Reference outputs are[N, K]; internal layout is not a production constraint.
+Keep the existing structurally different scalar oracle rather than replacing it to obtain self-consistency.
 
-## 结果与验证
+## Results and verification
 
-本 sprint 有限范围完成。新增 `mixed.py`、24项测试及生产import隔离检查。
-**279 passed，无 skipped**；训练转换、scalar/vector完整树和raw预测在同一fixture中连通。
+Added mixed.py, 24 tests and import isolation. **279 passed, no skips**. Training transforms,
+full scalar/vector trees and raw prediction connect in the same fixtures.
 
-- Transformer只由训练X拟合，保留names/kinds/cuts/类别字典；predict再次使用保存的
-  转换器，unknown保持missing路由。identity同时绑定原始内容、row IDs与拟合转换状态。
-- grow逐候选重新路由原始行并逐行归约，depthwise/best-first/symmetric均支持多层。
-  类别是相等判断、numeric是阈值；没有histogram或生产backend依赖。没有leaf-budget
-  配置，本参考按max_depth终止；不以参数缺省冒充所有生长配置均已覆盖。
-- 多输出候选用所有split通道收益和；可显式投影gP/diag(PᵀHP)，叶仍求完整K维。
-  三policy两轮四叶树逐叶对应一行，预测为y/2、.95*y/2，raw2=.0975*y。
-  K=1在numeric/missing上与旧scalar oracle比较；输出置换、权重复制通过。
-- 混合numeric/category三级树产生6个单行叶，lambda=0的声明fixture恢复精确向量；
-  symmetric独立检查每层共享condition。原scalar/stump参考保留，未重写对照以求一致。
-- binary mixed两轮梯度/树/raw预测串联，验证大于训练范围的numeric值、未见类别、
-  missing；训练cuts/字典不因验证数据变化。中间类别m被单独隔离，unknown走同missing分支。
-- 两种missing方向、zero-weight行、全缺失/零曲率、非法schema/projection/depth、
-  输入修改不改变树、行守恒及无重复路由均有检查。
+- Transformer fits training X only, retaining names/kinds/cuts/category dictionaries. Predict reuses
+  it; unknown follows missing. Identity binds original contents, row IDs and fitted transform state.
+- Growth reroutes/reduces original rows for every candidate. All three policies support multiple
+  levels. Category equality and numeric thresholds require no histogram/backend. No leaf-budget
+  option exists: this reference stops at max_depth, not a claim that all growth options are covered.
+- Candidate gain sums split channels; explicit gP/diag(PᵀHP) projection retains full K leaves.
+  Three-policy two-round four-leaf fixtures map one row per leaf: predictions y/2,.95*y/2,
+  raw2=.0975*y. K=1 matches scalar on numeric/missing; permutations and replication pass.
+- Mixed numeric/category three-level tree yields six single-row leaves and exact vectors at lambda0.
+  Symmetric checks common per-level conditions. Original scalar/stump references remain unchanged comparisons.
+- Two-round mixed binary joins gradients/trees/raw predictions. Out-of-range numeric, unseen categories
+  and missing values do not refit cuts/dictionaries. Middle category m is isolated; unknown follows missing.
+- Both missing directions, zero-weight/all-missing/zero-curvature rows, invalid schema/projection/depth,
+  input mutation, row conservation and no duplicate routing are covered.
 
 ```bash
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync pytest tests/ -n 0 -q
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync ruff check src/openboost tests/v1 tests/conftest.py
 ```
 
-本地macOS CPU、Python3.12.12、NumPy2.3.5。实现前missing-module失败；初批8/11通过，
-三个失败来自下述错误预期，保留反例后采用正收益多层fixture。无CUDA、真实质量、
-生产API或持久化结果。Transformer是不可变参考记录，不是生产布局或序列化格式。
+Local macOS CPU/Python 3.12.12/NumPy 2.3.5. Missing-module failure first; initial8/11 passed.
+Three failures reflected the incorrect expectation below. Preserve the counterexample and use
+positive-gain multilevel fixtures. No CUDA, real quality, production API or persistence results.
+Transformer is an immutable reference record, not a production layout/serialization format.
 
-## Reflection：向量分裂的正则代价
+## Reflection: Regularization cost of vector splits
 
-观察 → 最初y第一轴±1、第二轴±3的fixture预期第二层继续分裂，实际三policy都停在一层。
-证据 → 第二层分裂的收益为第一轴+.5，第二轴因为重复正则化常数叶产生-1.5，总收益-1。
-这符合按输出收益求和的契约，不是grow故障。决定 → 保留“不应继续分裂”测试，另把
-第一轴设为±2使第二层收益为正，再验证完整两轮；未降低算法门槛。
+Initially first-axis±1/second-axis±3 targets were expected to split again, but all policies stopped
+at one level. Second-level first-axis gain is+.5; repeated regularization of constant second-axis
+leaves costs-1.5, totaling-1. This follows summed-output gain, not a grow bug. Keep the no-more-split
+test and use first-axis±2 for positive second-level gain and full two-round checks; do not lower thresholds.
 
-观察 → 现在类别/向量参考从训练转换走到raw预测，并保留独立scalar/stump对照。
-决定 → 对应F0.2缺口可记为已覆盖；仍不代表C1/C2/C3生产组件通过。
-下一步 → 按验收清单完成offset/两阶段模型及best/per-run RNG有限状态组合，核对所有
-未决F0.2项，再转F0.3。避免把已完成数学重做成更多孤立fixture，全部A1–A13仍required。
+Categorical/vector references now connect training transforms to raw prediction with independent
+scalar/stump comparisons. Those F0.2 gaps are covered, not C1/C2/C3 production conformance.
+Next complete offset/two-stage and best/per-run RNG compositions, audit remaining F0.2, then F0.3.
+Avoid endlessly redoing completed mathematics in isolated fixtures. All A1–A13 remain required.
 
 ## Commits
 
-- 本切片：`test: add mixed feature and full vector growth references for v1`。
+- This slice: `test: add mixed feature and full vector growth references for v1`.
 
-提交前review补充：单个node score有限不保证左右gain之和有限。新增溢出反例，
-对candidate/layer总收益显式检查，避免inf成为最优候选；最终计24项新增、279项通过。
+Precommit review: finite node scores do not guarantee a finite sum of child gains. Add an overflow
+counterexample and explicit candidate/layer-total checks so infinity cannot win. Final count: 24 new, 279 passed.

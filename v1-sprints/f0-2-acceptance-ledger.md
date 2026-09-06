@@ -1,50 +1,50 @@
-# F0.2 独立参考验收映射
+# F0.2 independent reference acceptance mapping
 
-截至 Sprint 010。只评价参考证据；**F0.2 已关闭，F0.3未执行，F1生产未开始**。
-来源：[任务契约](../planning/foundation-tasks.md)、[主计划](../planning/agent-boosting-foundation-plan.md)。
-不得把此表的“已有”解释为对应A/R/C或E-gate已通过。
+As of Sprint 010: reference evidence only. **F0.2 closed; F0.3 not yet executed; F1 not started**
+at this audit. Sources: [tasks](../planning/foundation-tasks.md), [plan](../planning/agent-boosting-foundation-plan.md).
+Existing evidence here does not mean the corresponding A/R/C or E-gate passed.
 
-## 用例参考证据
+## Application references
 
-| 范围 | 已有独立证据 | 尚待补齐或衔接 |
+| Scope | Independent evidence | Remaining work |
 |---|---|---|
-| A1/R1 | Sprint001 scalar数学、三种grow、两轮预测 | 公共组件conformance与外部差异解释在F1/F0.3 |
-| A2/A3/R1 | Sprint003分类；Sprint009 native categorical完整grow与raw-transform两轮预测 | 公共组件与真实质量在F1/F4 |
-| A4/R3 | Sprint004 pair/query归一化、lambda权重、两轮、NDCG | 后续真实query评测/采样估计协议；不是F0.2速度任务 |
-| A5/R2 | Sprint004三q的加权quantile、routed叶、两轮；Sprint008惩罚叶；Sprint010三q模型预测组合 | 持久化与公共组件在F1 |
-| A6/R8 | Sprint004 stump；Sprint009三policy多层vector、投影/K=1/两轮 | 公共组件与真实质量在F1/F4；两种结构继续保留 |
-| A7/A8/R4 | Sprint005 Poisson/Gamma、exposure、权重、两轮；Sprint010 offset只应用一次、新exposure预测 | 真实adapter在F0.3 |
-| A9/R4 | Sprint005 Tweedie、paid-count join；Sprint010 paid-count/Gamma各两轮训练→乘积预测 | 真实质量在F4，持久化在F1 |
-| A10/R5 | Sprint005 event/censored、尾概率、单位、两轮 | output/persistence协议后续；真实IPCW由F0.3固定 |
-| A11/R6 | Sprint006 Fisher/ordinary、NLL/CRPS、joint/ordered；Sprint008 D4精确规则；Sprint010版本化接受/best恢复 | 公共runtime和真实质量在F1/F4 |
-| A12/R7 | Sprint006 Jacobian/GGN、三方向、重复Z两轮、错设/不可识别 | 真实质量与公式artifact在F1/F4；不能由合成参数推真实物理结论 |
-| A13/R9 | Sprint007 K=1/2隔离、M=1/8/32顺序、best/失败/RNG | 批量执行、真实成本与多recipe整合不由顺序模拟证明 |
+| A1/R1 | Sprint 001 scalar math, three growth policies, two rounds | Public conformance/external differences in F1/F0.3 |
+| A2/A3/R1 | Sprint 003 classification; 009 full native categorical growth/raw-transform two rounds | Public components/real quality in F1/F4 |
+| A4/R3 | Sprint 004 pair/query normalization, lambda, two rounds, NDCG | Real query evaluation/sampling protocol; not a F0.2 speed task |
+| A5/R2 | Sprint 004 three weighted quantiles/routed leaves/two rounds; 008 penalty; 010 composed predictions | Persistence/public components in F1 |
+| A6/R8 | Sprint 004 stump; 009 three-policy multilevel vector/projection/K=1/two rounds | Public components/real quality in F1/F4; retain both structures |
+| A7/A8/R4 | Sprint 005 Poisson/Gamma/exposure/weights/two rounds; 010 offset once/new exposure | Real adapters in F0.3 |
+| A9/R4 | Sprint 005 Tweedie/paid-count joins; 010 two-round Poisson/Gamma fits and product | Real quality F4, persistence F1 |
+| A10/R5 | Sprint 005 event/censoring, tails, units, two rounds | Output/persistence later; real IPCW fixed in F0.3 |
+| A11/R6 | Sprint 006 Fisher/ordinary, NLL/CRPS, joint/ordered; 008 exact D4; 010 versioned acceptance/best | Public runtime/real quality F1/F4 |
+| A12/R7 | Sprint 006 Jacobian/GGN, three directions, repeated Z, two rounds, misspecification/nonidentifiability | Real quality/formula artifacts F1/F4; synthetic parameters do not prove physical truth |
+| A13/R9 | Sprint 007 K=1/2 isolation, M=1/8/32 sequential, best/failures/RNG | Sequential simulation does not prove batching, cost or multiple-recipe integration |
 
-## 作者修改与跨用例边界
+## Author changes and cross-case boundaries
 
-| 范围 | 状态与下一步 |
+| Scope | Evidence and next step |
 |---|---|
-| D1 expectile | Sprint008已有tau=.8、加权base、两轮、tau=.5退化与r=0约定 |
-| D2 cohort split | Sprint001已有逐候选可行性/无合法split/独立信息权重 |
-| D3 penalized quantile | Sprint008已有断点+驻点枚举、subgradient、anchor/lambda、两轮routed叶 |
-| D4 ordered acceptance | Sprint008指定六次alpha、反号/NaN拒绝；Sprint010两轮有序提交、best恢复、逻辑step派生key |
-| D5 scheduling | Sprint007顺序/独立/重排/重组、故障重试、停止、ID seed与内容变化 |
-| C1 identity/bind | Sprint009接通mixed转换、fitted identity与raw预测；生产typed contracts仍待F1 |
-| C2/C3 tree/leaf | scalar、D3、类别与多层vector参考已有；不等于production通过 |
-| C4 state/run | Sprint007/009/010覆盖run隔离、映射、offset/两阶段组合、版本化提交与best缓存/terms恢复；公共runtime仍待F1 |
-| C5 artifacts | 序列化round trips属于F1构建要求；不可将内存snapshot当作持久化证据 |
-| C6/C7 eval/workflow | F0.3冻结/判卷器、F2作者评估、F5安装工作流均未完成 |
+| D1 expectile | Sprint 008 tau=.8, weighted base, two rounds, tau=.5 reduction, r=0 convention |
+| D2 cohort split | Sprint 001 candidate feasibility, no legal split, independent information weights |
+| D3 penalized quantile | Sprint 008 breakpoint/stationary enumeration, subgradient, anchor/lambda, two-round routed leaves |
+| D4 ordered acceptance | Sprint 008 six alphas, reverse/NaN rejection; 010 two-round commits, best, logical-step keys |
+| D5 scheduling | Sprint 007 independent/sequential/reordered/regrouped, retry, stop, ID seed/content changes |
+| C1 identity/bind | Sprint 009 mixed transforms/fitted identity/raw prediction; production typed contracts F1 |
+| C2/C3 tree/leaf | Scalar, D3, categories, multilevel vectors; not production conformance |
+| C4 state/run | Sprint 007/009/010 isolation, mapping, offset/two-stage, versioned commit, best caches/terms; runtime F1 |
+| C5 artifacts | Serialization round trips are F1 construction; memory snapshots are not persistence evidence |
+| C6/C7 eval/workflow | F0.3 freeze/judge, F2 author evaluation, F5 installed workflows incomplete |
 
-## 出口审计与下一阶段
+## Exit audit and next phase
 
-1. D1/D3/D4精确定义与反例已由Sprint008补充；不计作E5作者评测。
-2. Sprint009已补类别/多层vector与混合数据；Sprint010补offset/双模型和有限状态组合。
-3. F0.2参考准备已完成：288项测试通过，隔离进程禁止导入openboost仍能运行参考；不把F1要求提前标记通过。
-4. 开始F0.3的真实数据manifest、capability smoke、预算/保留任务/judge冻结。
+1. Sprint 008 supplies exact D1/D3/D4 definitions/counterexamples, not E5 author-cost evaluation.
+2. Sprint 009 supplies categories/multilevel vectors/mixed data; 010 supplies offset/dual-model/finite state compositions.
+3. F0.2 preparation is complete: 288 tests pass and references run with openboost imports blocked.
+   Do not mark F1 requirements passed early.
+4. Begin real manifests, capability smoke, budgets/held-out tasks/judge freezing in F0.3.
 
-R1–R9/C1–C7/A1–A13始终全部required。GPU列的optional不能被误读为CPU用例optional。
-
-可复现命令、组合反例与阶段反思见[Sprint010](010-reference-integration-exit.md)。
-数学证据对应 `tests/v1/test_{scalar,tree,data,classification,extended,positive_aft,coupled,runs,author,mixed,integration}_reference.py`；
-独立性检查为 `tests/v1/test_reference_independence.py`。所有表内“已有”均限小型CPU参考，
-不证明外部库同构、真实任务质量、序列化、作者修改成本或CUDA正确性。
+R1–R9/C1–C7/A1–A13 all remain required. Optional GPU entries never make CPU applications optional.
+Commands/counterexamples/reflection: [Sprint 010](010-reference-integration-exit.md).
+Mathematics: `tests/v1/test_{scalar,tree,data,classification,extended,positive_aft,coupled,runs,author,mixed,integration}_reference.py`.
+Isolation: `tests/v1/test_reference_independence.py`. All evidence is tiny CPU reference work,
+not external-library equivalence, real quality, serialization, author-cost or CUDA correctness.

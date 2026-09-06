@@ -1,81 +1,86 @@
-# Sprint 001：独立 scalar/tree 参考
+# Sprint 001: Independent scalar/tree references
 
-开始日期：2026-09-05。起点：`9700845`。状态：**完成本 sprint；F0.2 仍进行中**。
-计划映射：B01 / F0.2 的第一部分；A1/R1、C2/C3 的 scalar 子集、D2；E1 的参考准备。
+Started: 2026-09-05. Starting revision: `9700845`. Status: **this sprint complete; F0.2 ongoing**.
+Plan mapping: first part of B01/F0.2; A1/R1, scalar subset of C2/C3, D2; E1 reference preparation.
 
-## 目的与范围
+## Purpose and scope
 
-为 F1 的 histogram/split/route/leaf/grow 建立独立判卷依据，避免新实现和 oracle
-共同调用旧 production 算法而重复同一个错误。测试只在微型 fixture 上穷举、逐行归约。
+Provide independent judging for F1 histogram/split/route/leaf/grow. The new implementation
+and oracle must not share old production algorithms and repeat the same mistake.
+Tests exhaustively enumerate and reduce original rows only on tiny fixtures.
 
-- scalar 加权半平方损失、base、Newton 叶与半 gain；权重只乘一次。
-- 固定 numeric bins 的所有候选、两种 missing route、ties、无合法候选和真实子节点。
-- D2 的独立 cohort information mass；不能只检查总 H。
-- depthwise、best-first、symmetric 的明确 topology 与预算；两轮平方误差更新 trace。
-- 无 production import 的隔离执行。root `tests/conftest.py` 会导入旧 openboost，
-  因此新参考的独立测试使用 `--confcutdir=tests/v1`，另用干净子进程检验 import 独立性。
+- Scalar weighted half-squared loss, base, Newton leaves and half gain; apply weight once.
+- All fixed numeric-bin candidates, both missing routes, ties, infeasible candidates and actual children.
+- D2 independent cohort information mass; total H alone is insufficient.
+- Explicit topology and budgets for depthwise, best-first and symmetric growth; two-round squared-error traces.
+- Isolated execution without production imports. Root `tests/conftest.py` imports old
+  openboost, so reference tests use `--confcutdir=tests/v1` and a clean subprocess import check.
 
-不在本 sprint 声称完成：类别/向量/其他目标参考、生产 trainer、持久化格式、CUDA、
-真实数据/基线评测，或整个 F0.2。其余用例继续按主计划实现，不降级为 optional。
+Not completed here: categorical/vector/other objectives, production trainers, persistence,
+CUDA, real-data/baseline evaluation, or all F0.2. Other required cases remain required.
 
-## 执行清单
+## Execution checklist
 
-- [x] 读取设计、旧 split/插件语义及 tests；识别旧 gain 是两倍、旧测试入口导入 production。
-- [x] 先写手算测试并确认在参考模块不存在时失败。
-- [x] 编写 `tests/v1/reference/` 的独立 scalar 与 brute-force tree 函数。
-- [x] 验证两轮 trace、三种 grow、missing/weight/cohort/tie/非法输入及 import 隔离。
-- [x] 运行集中测试和 changed-file lint；审阅变更并提交。
-- [x] 写 reflection、结果和下一 sprint 交接，更新目录状态。
+- [x] Read design, old split/plugin semantics and tests; identify doubled old gain and production imports.
+- [x] Write hand-calculated tests and confirm failure before reference modules exist.
+- [x] Implement independent scalar and brute-force tree functions in `tests/v1/reference/`.
+- [x] Verify two rounds, three growth policies, missing/weight/cohort/ties/invalid inputs and import isolation.
+- [x] Run focused tests and changed-file lint; review and commit.
+- [x] Record reflection, results and handoff; update the index.
 
-## 验收
+## Acceptance
 
-1. `[-2,-2,2,2]`、两个 feature bins、lambda=1 的首轮叶为 ±4/3、净 gain=16/3。
-   eta=.1 后第二轮残差必须改变，不能复用首轮梯度；具体两轮数字由手算期望检查。
-2. 整数权重等价于复制行（固定 bins）；零权重不能制造可分节点；非法分母与负/非有限值拒绝。
-3. 缺失左右路由均有最优反例；精确 ties 按 feature/candidate/missing-direction 排序。
-4. D2 六行例中无约束选 cut 1，cohort 约束后选 cut 2；无可行项返回无 split。
-5. 三种生长各有区分行为的 fixture；symmetric 先合并同一候选的层收益，不能拼节点赢家。
-6. reference 只用标准库/NumPy，不调用 OpenBoost 的 objective、split、histogram 或 trainer。
-   参考自身不计 E1 production parity；独立判卷仍需未来被测组件。
+1. For `[-2,-2,2,2]`, two feature bins and lambda=1, first leaves are ±4/3 and net gain=16/3.
+   With eta=.1, second-round residuals must change; hand calculations check both rounds.
+2. Integer weights equal replicated rows with fixed bins. Zero weights cannot create splittable
+   nodes; invalid denominators and negative/non-finite values are rejected.
+3. Both missing directions have optimal counterexamples; exact ties follow feature/candidate/missing order.
+4. In D2's six-row fixture, unconstrained cut 1 becomes cut 2 with cohort constraints; no feasible candidate means no split.
+5. Distinct fixtures exercise all three policies. Symmetric growth combines layer gains for a
+   common candidate before selecting; it cannot combine independently selected node winners.
+6. References use only stdlib/NumPy, never OpenBoost objectives, splits, histograms or trainers.
+   They prepare E1; production parity still needs future components under test.
 
-## 执行与验证记录
+## Execution and verification
 
-交付：[scalar](../tests/v1/reference/scalar.py)、[tree](../tests/v1/reference/tree.py)、
-[手算与反例测试](../tests/v1/test_tree_reference.py)、
-[隔离验证](../tests/v1/test_reference_independence.py)、[运行说明](../tests/v1/reference/README.md)。
+Deliverables: [scalar](../tests/v1/reference/scalar.py), [tree](../tests/v1/reference/tree.py),
+[hand calculations and counterexamples](../tests/v1/test_tree_reference.py),
+[isolation](../tests/v1/test_reference_independence.py), [instructions](../tests/v1/reference/README.md).
 
 ```bash
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache OPENBOOST_BACKEND=cpu uv run --no-sync pytest tests/v1 --confcutdir=tests/v1 -n 0 -q
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync ruff check tests/v1
 ```
 
-- Red：仅有测试时，两处 collection error，原因是 `tests.v1.reference` 尚不存在。
-- Green：**55 passed**，无 skipped；changed-file Ruff 全通过。
-- 环境：macOS、本地 CPU，Python 3.12.12、NumPy 2.3.5、pytest 9.0.2。
-- 子进程禁止所有 `openboost` imports，三个 policy 仍能运行两轮并得到手算结果。
-- 第一轮 gain=16/3，第二轮叶=±56/45、最终 raw=±58/225；D2 cut 从1变2。
-- 只证明这些 reference fixture 的行为，不是新 production parity 或运行成本证据。
+- Red: two collection errors because `tests.v1.reference` did not exist.
+- Green: **55 passed**, no skips; changed-file Ruff passed.
+- Environment: local macOS CPU, Python 3.12.12, NumPy 2.3.5, pytest 9.0.2.
+- A subprocess blocks all `openboost` imports; all three policies still produce two-round hand results.
+- First gain=16/3; second leaves=±56/45; final raw=±58/225. D2 changes cut 1 to 2.
+- This verifies reference fixtures, not new production parity or execution cost.
 
 ## Reflection
 
-开工观察：上一阶段已把架构写具体；当前缺少能与未来组件独立比较的 executable oracle。
-证据：`tests/v1/` 不存在；旧测试使用旧 gain/权重约定，且 root conftest 导入 production。
-决定：先完成有限的 scalar/tree 参考，不修改生产 API 或提前做 GPU 优化。
-下一步：用手算 fixture 驱动实现，收尾时核对覆盖与剩余 F0.2。
+Opening observation: the architecture is concrete, but executable independent oracles are missing.
+Evidence: `tests/v1/` does not exist; old tests use old gain/weight conventions and import production.
+Decision: build a bounded scalar/tree reference first, without changing APIs or optimizing GPUs.
+Next: implement against hand fixtures, then audit coverage and remaining F0.2 work.
 
-收尾观察：三个 grow 可以用同一候选/真实路由数学描述，但 symmetric 必须在选择前
-合并共同候选；节点各选赢家不能表达该算法。证据：左右节点分别偏好 feature1/2，
-独立 symmetric 参考选择两者共同的 feature2，保留左节点零 gain 的合法候选。
-决定：未来公共 candidate 层保留合法性与收益的区别，生长策略决定何时筛掉非正收益。
+Closing observation: all policies share candidate/routing mathematics, but symmetric selection
+must combine common candidates first. The left/right nodes prefer features 1/2 individually;
+the symmetric oracle chooses common feature2, retaining the valid zero-gain left candidate.
+Decision: public candidates must distinguish validity from gain; growth policy decides when
+to discard nonpositive gain.
 
-覆盖反思：完成的是 numeric scalar 子集；类别/分箱、分类、ranking、quantile/vector、
-正目标/AFT、Normal/Formula、transaction/run 仍未闭合。下一轮继续 F0.2，不能因55个
-内部测试通过就称 foundation 完成。用户在执行中明确旧生产代码整体退役、v1重新构建；
-该清理单独记录/提交，保留已验证 reference 和历史实验，不改变数学/质量门槛。
+Coverage: only numeric scalar references are complete. Categorical/binning, classification,
+ranking, quantile/vector, positive/AFT, Normal/Formula and transaction/run work remain.
+Fifty-five internal tests do not complete the foundation. During execution the user requested
+retirement of all old production code and a clean v1 rebuild. Record/commit that separately,
+preserving references and historical experiments without changing mathematical/quality gates.
 
 ## Commits
 
-- `9700845`：前置 foundation 构建设计。
-- `e76a2cd`：sprint 执行与反思机制。
-- 实现切片：`test: add independent scalar and tree references for v1`。
-- `50acfc6`：独立参考与55个测试的已验证提交。
+- `9700845`: prerequisite construction design.
+- `e76a2cd`: sprint execution and reflection process.
+- Implementation slice: `test: add independent scalar and tree references for v1`.
+- `50acfc6`: verified independent references and 55 tests.

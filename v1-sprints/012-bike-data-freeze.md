@@ -1,30 +1,30 @@
-# Sprint 012：A5 Bike Sharing 数据与日期切分冻结
+# Sprint 012: A5 Bike Sharing data and date splits
 
-起点：`e2f2c6b`。状态：完成；仅A5数据准备。
+Starting revision: `e2f2c6b`. Status: complete for A5 data preparation only.
 
-## 计划与验收
+## Plan and acceptance
 
-1. 获取UCI原始zip，记录许可、zip/member hash与实际行数。只读hour.csv，calendar白名单，
-   排除实测天气、casual/registered、instant与日期；原始instant仅作行ID。
-2. 日期rolling origins训练前50/55/60/65/70%，后接10% validation和10% test；
-   边界定义为floor(D*p/100)，固定每个split的日期/行数/row ID hash。
-   最小失败测试：同一天不能跨split，天气/分项计数不能影响模型输入。
-3. CLI验证冻结archive，生成可重现数据准备记录；反例、回归/lint、学习与提交。
+1. Fetch the UCI ZIP and record license, archive/member hashes and actual rows. Read hour.csv only,
+   allow calendar predictors, exclude measured weather, casual/registered, instant and date from X.
+   Original instant is a row ID only.
+2. Rolling origins train on the first50/55/60/65/70% of full dates, followed by10% validation and 10% test.
+   Endpoints are floor(D*p/100); freeze dates/counts/row-ID hashes. Smallest failure: dates cannot
+   cross partitions; weather/component counts cannot affect X.
+3. Verify pinned archives with a reproducible CLI record; counterexamples, regression/lint, learning and commit.
 
-不训练/评估模型，不使用test结果选协议；本轮仅A5数据准备，其他全部required用例继续保留。
+No model training/evaluation or test-driven protocol choice. This is A5 only; all other required cases remain.
 
-## 结果与证据
+## Results and evidence
 
-[冻结记录](../benchmarks/v1/datasets/bike.json)包含原始zip/member、X/y/row IDs hash、
-五个窗口的日期/行数/hash和运行provenance。实测17,379行、731天、7个calendar特征；
-UCI页面标注17,389，保留差异，不以页面数字覆盖原始解析。
-源码以adapter_sha256固定；记录诚实保留父revision与dirty=true，不冒充已提交代码运行。
-本记录不是integrity-v0运行manifest，未触发完整训练评测。
+[Freeze](../benchmarks/v1/datasets/bike.json) records archive/member/X/y/row-ID hashes, five windows'
+dates/counts/hashes and provenance. Actual data: 17,379 rows, 731 dates, 7 calendar features. UCI's page
+says17,389; retain the discrepancy rather than overriding parsed bytes. adapter_sha256 identifies
+source; parent revision and dirty=true are honest. This is not an integrity-v0 run manifest or a full training evaluation.
 
-五窗口(train/validation/test)行数依次为：
-8645/1744/1750、9529/1746/1752、10389/1750/1752、11275/1752/1752、12139/1752/1752。
-窗口内row ID和日期均不重叠；跨origin重叠符合rolling设计，不能按独立随机fold解读。
-日期百分比按731个完整日期取floor，不按行数百分比分割，不填充缺失小时。
+Window train/validation/test row counts: 8645/1744/1750,9529/1746/1752,10389/1750/1752,
+11275/1752/1752,12139/1752/1752. Dates/IDs are disjoint within windows, overlapping across rolling
+origins; do not interpret them as independent random folds. Use floor over731 dates, not row percentages;
+do not synthesize missing hours.
 
 ```bash
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.bike /tmp/openboost-v1-bike.zip --verify benchmarks/v1/datasets/bike.json
@@ -33,19 +33,20 @@ UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync ruff check src/op
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync mkdocs build --strict
 ```
 
-实际archive重放完全匹配全部数据字段；手动损坏frozen test行数后CLI非零退出。
-新增24项测试，总计360通过，无跳过；覆盖日期隔离、不均匀小时数、泄漏列、非法calendar/count、
-重复ID/timestamp、archive损坏与adapter源码身份。macOS/Python3.12.12/NumPy2.3.5。
+Real archive replay matched all data fields; corrupting a frozen test count made CLI exit nonzero.
+Added24 tests; 360 passed, no skips. Cases cover full dates, uneven hours, leaking fields, invalid
+calendar/count, duplicate IDs/timestamps, corrupted archives and adapter source identity.
+macOS/Python 3.12.12/NumPy 2.3.5.
 
 ## Reflection
 
-观察 → 来源网页行数与实际文件不同，且每日期小时数不固定。
-决定 → 使用字节hash及实际解析，不把网页元数据或行数比例当作数据切分真值。
-失败 → 沙箱内curl DNS不可用，获准网络下载后成功；初始测试模块不存在，后续新增参数化
-用例时补回此前被lint移除的pytest import，最终全量通过。
-下一步 → 接入其余数据，优先复用A1/A11 Housing已有原始hash并补seeds3–4；
-再推进其他全部用例的数据/基线能力与预算。A5仍无模型结果，F0.3不关闭。
+Source-page row counts differ from actual files, and hourly records per date vary. Use byte hashes
+and parsed data, not webpage metadata or row percentages as split truth. Sandboxed curl DNS failed;
+authorized download succeeded. Initial tests lacked the module; later parametrized cases needed
+pytest reimported after earlier unused-import cleanup. Final regression passed.
+Next: remaining datasets, starting with A1/A11 Housing archive hashes and seeds 3–4; then other
+required data/baseline capabilities/budgets. A5 has no model result and F0.3 remains open.
 
 ## Commits
 
-- 本切片：`data: freeze A5 bike sharing inputs and rolling splits`。
+- This slice: `data: freeze A5 bike sharing inputs and rolling splits`.

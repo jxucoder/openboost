@@ -1,114 +1,131 @@
-# GPU Python boosting foundation：设计草案
+# GPU Python boosting foundation: design draft
 
-> 历史设计与证据记录。后续工作以 [新的 F0–F5 计划](agent-boosting-foundation-plan.md)
-> 为准：foundation 是产品，允许不兼容重写。本文中必须复用旧 trainer、固定接口及
-> distributional 产品优先等约束已被用户后续指示取代；原始测试和失败结果仍保留。
+> Historical design and evidence record. Follow the [new F0–F5 plan](agent-boosting-foundation-plan.md)
+> for subsequent work: the foundation is the product and incompatible redesign is permitted.
+> Later user instructions supersede this document's requirements to reuse the old trainer,
+> preserve fixed interfaces, and prioritize a distributional product. Original tests and failures remain evidence.
 
-状态：P0–P6 技术与安装验证已完成；P7 质量通过，GPU 性能预算失败，独立剖析与设计复查已完成；精确显存峰值和 CUDA trace 未验证。外部 adoption 未验证。日期：2026-09-05。
+Status: P0–P6 technical and installation verification complete; P7 quality passed,
+GPU performance budget failed, and isolated profiling and design review completed.
+Exact peak device memory and CUDA traces remain unverified. External adoption is
+unverified. Date: 2026-09-05.
 
-本文件定义接口、边界、验证方法与执行顺序，供 medium 模型实施。
-已完成阶段的实际行为与证据见执行清单；P2 基线不代表新扩展 API 的 GPU 路径已验证。
-执行任务见 [执行清单](gpu-python-foundation-execution.md)。
+This document defines interfaces, boundaries, verification, and execution order for
+implementation by a medium model. Consult the execution checklist for actual
+behavior and evidence from completed phases. The P2 baseline does not verify the
+new extension API's GPU path. See the [execution checklist](gpu-python-foundation-execution.md).
 
-## 1. 要验证的产品假设
+## 1. Product hypothesis to test
 
-> 一个 Python 研究者可以在独立包中改变 boosting 的目标、建树行为或更新规则，
-> 复用 OpenBoost 的 CPU 参考实现、GPU 数据通路、预测与验证工具，而不维护自己的 fork。
+> A Python researcher can change boosting objectives, tree construction, or update
+> rules in an independent package, reusing OpenBoost's CPU reference, GPU data path,
+> prediction, and verification tools without maintaining a fork.
 
-这是有待验证的研究基础设施方向。Python 实现比例、GPU 标签和 API 数量不作为成功指标。
-现有 [产品使命与证据规则](../AGENTS.md) 继续有效；NaturalBoost 是首个真实使用方，
-本次不把整个仓库改名或重新宣传为通用替代品。
+This research infrastructure direction is a hypothesis. Python implementation
+percentage, GPU labels, and API counts are not success metrics. The existing
+[product mission and evidence rules](../AGENTS.md) remain applicable; NaturalBoost
+is the first real consumer. This iteration does not rename or promote the whole
+repository as a general replacement.
 
-第一轮投资控制在建议的 6–8 周探索窗口内，按技术关卡推进；这是范围约束，非工期承诺。
-先做到一个窄路径可信且可改，再决定是否扩展到更多树结构和算法。
+Bound the initial investment to a suggested 6–8 week exploration window with
+technical gates. This limits scope; it is not a delivery promise. Establish one
+trustworthy, modifiable path before expanding tree structures or algorithms.
 
-| 目标 | 本轮可验证的证据 | 尚不能由此推导的结论 |
+| Goal | Evidence available in this iteration | Conclusions it cannot establish |
 |---|---|---|
-| Impact | 三类扩展实际改变训练结果，有独立数学/路由参考 | 算法新颖性、论文影响力 |
-| Adoption | 两个独立 wheel 只依赖公开实验接口，能在干净环境运行 | 自编示例不能证明外部 adoption |
-| Value | 实现工作量、端到端时间、质量、显存与迁移阻碍记录 | 未做访谈，不能推导付费意愿 |
+| Impact | Three extension types change training results, checked against independent mathematical/routing references | Algorithmic novelty or publication impact |
+| Adoption | Two independent wheels depend only on public experimental interfaces and run in clean environments | Self-authored examples do not prove external adoption |
+| Value | Record implementation effort, end-to-end time, quality, device memory, and migration obstacles | Willingness to pay without interviews |
 
-继续扩大投入的产品关卡：至少两位外部开发者尝试扩展，其中一位在不改 core 的情况下
-完成自己的方法；记录实际所需帮助和失败原因。联系与发送邀请需要用户另行授权，
-执行模型先准备可运行材料，不自行发消息。软件技术验收不冒充这个产品关卡。
+The product gate for further investment is at least two external developers
+trying extensions, with one completing their own method without core changes.
+Record assistance and failures. Contact and invitations require separate user
+authorization; prepare runnable materials without sending messages. Technical
+acceptance does not substitute for this product gate.
 
-## 2. 起点：先整合已有工作
+## 2. Starting point: integrate existing work first
 
-设计分支：`codex/gpu-python-foundation-design`，从本地 `main` 的
-`82cf1e25b21a69093e85a270af7eb93c9ae7aa19` 创建。
+Design branch: `codex/gpu-python-foundation-design`, created from local `main` at
+`82cf1e25b21a69093e85a270af7eb93c9ae7aa19`.
 
-2026-09-05 fetch 后，远端基线固定为
-`6ebe3a8ced0e621b17e3cf63e31721af58471053`。
-共同祖先 `504fdd0bfc60e5d8e7518250e087fb7e4766d1b4`；本地独有 12 个提交，
-远端独有 9 个提交。此数字指创建设计分支时，不包括后续设计提交。
+After fetching on 2026-09-05, the remote baseline was fixed at
+`6ebe3a8ced0e621b17e3cf63e31721af58471053`. The common ancestor was
+`504fdd0bfc60e5d8e7518250e087fb7e4766d1b4`; there were 12 local-only and 9
+remote-only commits at branch creation, excluding later design commits.
 
-远端已有 `_trainer.py`、`_objectives.py`、FormulaBoost、WeibullAFT，必须复用。
-本地有 categorical persistence/cardinality 修复、batch fail-fast、ScoringBench、
-性能 CI 与 AGENTS/learnings，必须保留。不可用 reset 覆盖任一边，也不重新写一个训练循环。
+The remote already has `_trainer.py`, `_objectives.py`, FormulaBoost, and
+WeibullAFT; reuse them. Preserve local categorical persistence/cardinality fixes,
+batch fail-fast behavior, ScoringBench, performance CI, and AGENTS/learnings.
+Do not reset away either side or write another training loop.
 
-只读 `git merge-tree` 发现文本冲突位于 `CLAUDE.md`、
-`docs/getting-started/gpu-setup.md` 和 `docs/getting-started/installation.md`。
-这不是完整的语义冲突清单；自动合并成功也必须检查 persistence、CUDA eligibility 与文档证据。
-实际合并留给执行阶段 P0。
+Read-only `git merge-tree` found textual conflicts in `CLAUDE.md`,
+`docs/getting-started/gpu-setup.md`, and `docs/getting-started/installation.md`.
+This is not a complete semantic conflict list. Even a successful automatic merge
+requires persistence, CUDA eligibility, and documentation evidence review.
+Perform the merge in P0.
 
-| 已核对的调用路径 | 设计后果 |
+| Inspected call path | Design consequence |
 |---|---|
-| 远端 `fit_boosting` 已按 channel 调 objective，但直接选择 native tree / `fit_tree` | 在此增加 builder 与 schedule 参数；显式扩展必须参与 dispatch |
-| 远端 `TrainerConfig` 无 seed；现有 growth 存在全局 `numpy.random` 调用 | 将 seed/RNG 沿实际选中的路径传递，不能只给配置加字段 |
-| 可扩展 primitive 把 histogram / sample node IDs 下载；`compute_leaf_values_gpu` 委托 CPU | 新增设备批量表示和设备 leaf reduction，不能把现有接口改名后宣称驻留 GPU |
-| native builder 可原地更新 raw，旧 tree facade 以 host arrays 为持久化来源 | 明确 raw 更新归 trainer；树完成后允许小规模结构下载 |
-| 远端以 distribution 类名选择 device kernel，并捕获宽泛异常后回落 CPU | 明确能力声明、严格模式与可见回落；禁止按名字误选内置实现 |
-| 远端 `unit_hessian` 与 `sample_weight` 分开决定 | 非均匀权重可能被 native `const_hess=1` 覆盖，先复现再修复 |
-| eval/callback 目前会触发 host raw 或预测下载 | 将其列为单独能力和成本，不声称所有训练配置全程驻留 GPU |
+| Remote `fit_boosting` invokes the objective by channel but directly selects native trees / `fit_tree` | Add builder and schedule arguments here; explicit extensions must participate in dispatch |
+| Remote `TrainerConfig` has no seed; growth uses global `numpy.random` calls | Pass seed/RNG through the selected path, not merely a new configuration field |
+| Extensible primitives download histograms / sample node IDs; `compute_leaf_values_gpu` delegates to CPU | Add device batch representations and leaf reduction; renaming interfaces does not establish GPU residency |
+| Native builder can update raw in place; old tree facade uses host arrays for persistence | Trainer owns raw updates; allow compact structure downloads after tree completion |
+| Remote selects device kernels by distribution class name and broadly catches exceptions before CPU fallback | Declare capabilities, strict mode, and visible fallback; prohibit name-based builtin selection |
+| Remote decides `unit_hessian` separately from `sample_weight` | Native `const_hess=1` may override nonuniform weights; reproduce before fixing |
+| Eval/callbacks currently download host raw or predictions | Report their capability and cost separately; do not claim residency for every training configuration |
 
-以上为源码检查；疑似 weighted-Hessian 问题尚未经 GPU 复现。
-旧扩展测试本地基线为 **35 passed, 1 skipped**，不能证明上述 GPU 路径正确。
-远端原设计中的速度数字不作为本设计已验证的依据。
+These are source observations. The suspected weighted-Hessian issue has not yet
+been reproduced on GPU. The local extension baseline is **35 passed, 1 skipped**,
+which does not establish correctness of those GPU paths. Remote design speed
+numbers are not verified evidence for this design.
 
-## 3. MVP 支持边界
+## 3. MVP support boundary
 
-新增接口在 `openboost.experimental` 下；初期只在同一明确版本内承诺契约。
-现有模型默认行为保留，NaturalBoost 接入并承担回归测试；暂不迁移所有模型。
+Add interfaces under `openboost.experimental`, initially promising contracts only
+within one explicit version. Preserve existing model defaults; connect NaturalBoost
+and cover it with regression tests. Do not migrate every model immediately.
 
-| 项目 | MVP 决定 |
+| Item | MVP decision |
 |---|---|
-| GPU | 单 NVIDIA GPU，CUDA 12，Numba/CuPy RawKernel 内核；扩展数组使用 CuPy |
-| CPU | NumPy oracle 与可运行的实验引擎；不要求与 GPU 位级一致 |
-| 数据 | 稠密数值特征；sample-major 输入，bin 后 feature-major；一维 y，多 channel raw |
-| 树 | level-wise、标量叶、每 channel 每 round 一棵树；深度至多 8 |
-| 目标 | 任意显式提供 CPU/CUDA 实现的多 channel objective，首个验收是两参数 Normal |
-| 权重 | 有限非负 sample weight，总权重大于零；只施加一次，包括零权重 |
-| 采样 | 实验 GPU 首版仅 subsample=colsample=1；其他值明确拒绝，不默默忽略 |
-| 正则 | 实验 GPU 首版 L2，reg_alpha=0；min_child_weight 与 min_gain 按契约执行 |
-| 缺失/类别 | 首版实验 builder 明确拒绝；旧模型已有支持继续测试，类别上限修复不得丢失 |
-| 元数据 | 首版 experimental fit 不接受 exposure/censoring；传入即明确拒绝，旧模型按原能力处理 |
-| callbacks/eval | CPU 可先接现有流程；严格 GPU 首版仅无 callbacks/eval 的训练驻留声明；有评估的混合路径显式报告 |
-| 预测/保存 | CPU raw prediction 必须可用；GPU prediction、GPU 保存后 CPU 加载须验证 |
-| 不做 | Ray、多 GPU、out-of-core、GOSS、train-many、vector leaf、autodiff 框架互通、任意动态训练图 |
+| GPU | One NVIDIA GPU, CUDA 12, Numba/CuPy RawKernel kernels; extensions receive CuPy arrays |
+| CPU | NumPy oracle and runnable experimental engine; no GPU bitwise equality requirement |
+| Data | Dense numeric features; sample-major input, feature-major bins; one-dimensional y, multichannel raw |
+| Trees | Level-wise, scalar leaves, one tree per channel per round; maximum depth 8 |
+| Objectives | Multichannel objectives with explicit CPU/CUDA implementations; two-parameter Normal is first acceptance case |
+| Weights | Finite nonnegative sample weights with positive total; applied once, including zero weights |
+| Sampling | Initial experimental GPU requires subsample=colsample=1; reject other values explicitly |
+| Regularization | Initial experimental GPU uses L2, reg_alpha=0; enforce min_child_weight and min_gain |
+| Missing/categories | Initial experimental builder rejects them; continue testing old model support and preserve category cardinality fixes |
+| Metadata | Initial experimental fit rejects exposure/censoring; old models retain their existing capabilities |
+| Callbacks/eval | CPU may use the existing flow; strict GPU residency initially covers training without callbacks/eval; report hybrid evaluation paths explicitly |
+| Prediction/storage | CPU raw prediction required; verify GPU prediction and GPU save followed by CPU load |
+| Excluded | Ray, multi-GPU, out-of-core, GOSS, train-many, vector leaves, autodiff framework interoperability, arbitrary dynamic training graphs |
 
-“纯 Python”指用户和维护者以 Python/CuPy/Numba 修改算法；不会承诺无需编译、
-无需 CUDA runtime 或任意 Python 函数自动变成 GPU 内核。
+“Pure Python” means users and maintainers modify algorithms with Python/CuPy/Numba.
+It does not promise no compilation, no CUDA runtime, or automatic GPU compilation
+of arbitrary Python functions.
 
-## 4. 接口与训练语义
+## 4. Interfaces and training semantics
 
-### 4.1 一个循环，三个显式扩展点
+### 4.1 One loop, three explicit extension points
 
 ```text
-NaturalBoost 等现有 facade       experimental.Booster
-              \                 /
-                 fit_boosting
-                      |
-        Objective.step(raw at round start)
-                      |
-           TreeBuilder.build per channel
-                      |
-       trainer applies StepSchedule coefficients
-                      |
-        tree storage / eval / persistence / report
+Existing facades such as NaturalBoost       experimental.Booster
+                         \                 /
+                            fit_boosting
+                                 |
+                   Objective.step(raw at round start)
+                                 |
+                      TreeBuilder.build per channel
+                                 |
+                  trainer applies StepSchedule coefficients
+                                 |
+                   tree storage / eval / persistence / report
 ```
 
-以下是目标契约，不是现在可执行的 API。名字在 P3 确认后固定；不建立插件发现系统，
-直接传对象即可。现有 Objective 由薄 adapter 对接，避免改动每个分布的数学实现。
+The following is a target contract, not an executable current API. Freeze names
+in P3. Pass objects directly without a plugin discovery system. Thin adapters
+connect existing Objectives without rewriting distribution mathematics.
 
 ```python
 class Objective:
@@ -136,210 +153,273 @@ class StepSchedule:
 ```
 
 `experimental.Booster(objective=..., tree_builder=..., step_schedule=..., config=...,
-device="cpu"|"cuda", fallback="error"|"warn")` 是现有 trainer 的薄 facade。
-提供 `fit(X,y,sample_weight=None,eval_sets=None,callbacks=None,early_stopping_rounds=None)`、
-`predict_raw(X)`、`save(path)`、`load(path)`；评估参数首版 CPU 支持，严格 GPU 在首次更新前拒绝。
-不在第一版再复制一套 distribution prediction API。
-用户可调用 `objective.constrain(booster.predict_raw(X))`。
+device="cpu"|"cuda", fallback="error"|"warn")` is a thin facade over the existing
+trainer. It offers
+`fit(X,y,sample_weight=None,eval_sets=None,callbacks=None,early_stopping_rounds=None)`,
+`predict_raw(X)`, `save(path)`, and `load(path)`. Initially CPU supports evaluation
+arguments; strict GPU rejects them before the first update. Do not duplicate the
+distribution prediction API. Users can call
+`objective.constrain(booster.predict_raw(X))`.
 
-`TrainerConfig` 增加 `random_state` 和缺少的 `min_gain`，已有超参数只设一个来源。
-`ExecutionContext` 提供 `device`、`xp`（NumPy/CuPy）、本次 fit 的 `rng`、
-`round_idx`、`channel`。新接口对象不读全局 backend 来猜执行位置；内部 legacy adapter
-仍用 `backend_context`，fit 后恢复，禁止同进程混合 backend 并发。
-objective 的 context.channel 为 None，builder 的为当前 channel；context 不由插件原地修改。
-内置 adapter 消化新增 context 参数，再调用现有 objective 方法，保留现有数学实现。
+Add `random_state` and the missing `min_gain` to `TrainerConfig`, keeping one source
+for each hyperparameter. `ExecutionContext` supplies `device`, `xp` (NumPy/CuPy),
+fit-scoped `rng`, `round_idx`, and `channel`. New interface objects do not infer
+execution location from a global backend. Internal legacy adapters still use
+`backend_context`, restoring it after fit; mixed-backend concurrent fits in one
+process are prohibited. Objective context.channel is None; builder context.channel
+is the current channel. Plugins do not mutate context. Builtin adapters consume
+the added context argument before invoking existing objective mathematics.
 
-### 4.2 不可含糊的数学/数组契约
+### 4.2 Explicit mathematical and array contracts
 
-1. raw/gradient/Hessian 每个 channel 均为连续 float32 `(n_samples,)`；key 必须完整，
-   不允许额外或缺失 channel。channel 顺序固定。初始 y 维度不符合一维要求即拒绝，不能 ravel 隐藏错误。
-2. `grad` 符号是损失增大的方向。默认叶值 `-sum(grad)/(sum(hess)+reg_lambda)`。
-   `hess` 是供树优化使用的非负有效曲率，可以是 Fisher/preconditioner，未必是精确 Hessian。
-   正则参数有限且非负；分母为零且 G=0 时返回零叶，分母为零但 G 非零时报错，不隐式除零。
-3. objective 负责把 sample weight 同时乘入 grad 与 hess **一次**，trainer/builder 不再乘。
-   默认 loss 为 weighted mean。所有权重为零、负数、NaN/Inf 明确报错。
-4. 初版禁用自定义 objective 的常数 Hessian hint。内置优化只能在适用目标、无 sample weight、
-   无改变 Hessian 的采样/转换时启用，并有对照测试；不能只依据 `natural=True`。
-5. `step` 一次读取本轮开始时所有 raw，返回所有 channel 的统计；本轮按固定顺序建树，
-   不在每个 channel 更新后重新算其他 channel 梯度。输入视为只读，返回缓冲区至少存活至本轮结束。
-6. `F[r+1,k] = F[r,k] + eta[r,k] * tree[r,k](X)`；builder 不得修改 raw。
-   `BuiltTree` 是 tree 加可选训练预测的简单容器，不带隐式“已经更新 raw”状态。
-   trainer 负责且仅负责一次更新，并存储实际 `eta[r,k]`。
-7. `StepSchedule` 首版只支持预定的逐轮逐 channel 系数，不能读/修改 raw 或整组旧树。
-   line search、momentum、重新加权全部旧树不是本轮契约；这个接口有意窄于通用 UpdateRule。
-8. CUDA 扩展收到 CuPy 数组，内部 Numba 通过 CUDA Array Interface 零拷贝视图互通。
-   MVP 使用默认 stream，调用方自定义 stream 不在支持面；测试保留 owner 引用和生命周期，不能
-   把 host ndarray 误判为 device。初始化/最终输出可复制，热路径不做隐式 `.get()`。
-9. CPU seed 可重现且不改变全局 RNG 状态。旧采样路径接收同一个 scoped Generator；
-   CPU/CUDA 对比可复用明确索引。没有 GPU 位级确定性的声明。
+1. Each raw/gradient/Hessian channel is contiguous float32 `(n_samples,)`.
+   Keys must be complete with no extras and fixed channel order. Reject y that
+   is not one-dimensional rather than hiding errors with ravel.
+2. `grad` points toward increasing loss. Default leaf value is
+   `-sum(grad)/(sum(hess)+reg_lambda)`. `hess` is nonnegative effective curvature
+   for tree optimization, possibly Fisher/preconditioning rather than the exact
+   Hessian. Regularization is finite and nonnegative. A zero denominator with
+   G=0 yields a zero leaf; a zero denominator with nonzero G is an error.
+3. The objective applies sample weights to both grad and hess **once**; trainer
+   and builder do not reapply them. Default loss is a weighted mean. Reject all-zero,
+   negative, NaN, or infinite weights.
+4. Initially disable constant-Hessian hints for custom objectives. Builtin hints
+   require a suitable objective, no sample weights, and no sampling/transformation
+   that changes Hessians, with comparison tests; `natural=True` alone is insufficient.
+5. `step` reads all raw channels at round start once and returns all channel
+   statistics. Build trees in fixed order without recomputing other channel
+   gradients after each update. Inputs are read-only; returned buffers live at
+   least until the round ends.
+6. `F[r+1,k] = F[r,k] + eta[r,k] * tree[r,k](X)`. Builders cannot modify raw.
+   `BuiltTree` contains a tree and optional training predictions, with no implicit
+   “raw already updated” state. The trainer updates exactly once and stores the
+   actual `eta[r,k]`.
+7. Initial `StepSchedule` only supplies predetermined per-round/channel coefficients.
+   It cannot read/modify raw or the old tree collection. Line search, momentum, and
+   reweighting all old trees are outside this deliberately narrower-than-UpdateRule contract.
+8. CUDA extensions receive CuPy arrays; internal Numba uses zero-copy CUDA Array
+   Interface views. MVP uses the default stream; caller-provided streams are
+   unsupported. Test owner references and lifetime; do not mistake host ndarrays
+   for device arrays. Initialization/final output may copy; no implicit `.get()`
+   in the hot path.
+9. CPU seeds reproduce results without changing global RNG state. Old sampling
+   paths receive the same scoped Generator; explicit indices may be reused in
+   CPU/CUDA comparisons. No GPU bitwise determinism claim.
 
-### 4.3 dispatch、错误与报告
+### 4.3 Dispatch, errors, and reports
 
-显式 builder 必须优先，不能因输入适合 native path 而被绕过。默认 builder 可以选择
-已验证 native kernel；adapter 传 `pred_gpu=None`，统一由 trainer 应用更新。
-初版允许因此失去部分 fusion；测量其代价，不能为一个速度数字破坏更新契约。
-`_models/_boosting.py` 的独立旧循环暂不整体重写。
+Explicit builders take precedence even when inputs qualify for a native path.
+Default builders may select verified native kernels; adapters pass `pred_gpu=None`
+and the trainer applies updates. Some fusion may initially be lost: measure its
+cost without breaking update semantics for a speed number. Do not yet rewrite
+all of the separate old `_models/_boosting.py` loop.
 
-CUDA 能力用显式声明和内置实现身份检查，不用 `type(...).__name__`。
-`fallback="error"` 是实验 GPU 默认值：能力不满足在首次训练更新前报错。
-`fallback="warn"` 只允许已知能力缺口在 fit 开始前选择并报告完整 CPU 路径；
-不在某轮捕获任意异常、复制 raw 后悄悄继续。运行时数值错误、非法 shape、kernel 失败应保留原因并失败。
-现有 facade 的合法混合执行可以保留，但必须在报告中清楚表示。
+CUDA capability checks use explicit declarations and builtin implementation
+identity, not `type(...).__name__`. Experimental GPU defaults to `fallback="error"`:
+unsupported capabilities fail before the first training update. `fallback="warn"`
+may select and report a complete CPU path before fit only for known capability
+gaps. Do not catch arbitrary round-time exceptions and silently continue after
+copying raw. Numerical errors, invalid shapes, and kernel failures retain their
+causes and fail. Existing facades may retain legitimate hybrid execution if
+reports describe it clearly.
 
-`fit_report_` 至少记录 requested/actual device、objective/tree/update/eval 的实际执行位置、
-使用的 builder 路径、fallback 原因、seed、每 channel 树数以及计时同步边界。
-传输计数仅声称覆盖 OpenBoost 的包装边界；外部 CuPy 代码可能自行复制，不能将计数当全进程证明。
-驻留测试再用小规模 profiler trace 核对；不可用 shape 或 `cuda.is_available()` 代替。
+`fit_report_` records at least requested/actual device, actual objective/tree/update/eval
+locations, builder path, fallback reason, seed, trees per channel, and timing
+synchronization boundaries. Transfer counts cover only OpenBoost wrappers;
+external CuPy code may copy independently, so counts are not process-wide proof.
+Check residency with a small profiler trace as well; shapes or `cuda.is_available()`
+are not substitutes.
 
-## 5. 树 primitive：允许 Python 改法，保留 GPU 数据通路
+## 5. Tree primitives: Python modification with a GPU data path
 
-现有 `dict[int, NodeHistogram]` 是 host API，保留兼容，新增实验批量 API；不伪造返回类型兼容。
-底层优先复用已有 histogram/split/partition kernels，先证明边界再做性能优化。
+Keep the host `dict[int, NodeHistogram]` API compatible and add an experimental
+batch API without pretending return-type compatibility. Reuse histogram/split/partition
+kernels first, establishing boundaries before performance optimization.
 
-| 批量表示/操作 | 目标形状和职责 |
+| Batch representation/operation | Target shape and responsibility |
 |---|---|
-| HistogramBatch | grad/hess `(node_slots, features, 256)` float32；样本计数 int32，active mask bool，同设备 |
-| SplitBatch | 每 node_slot 的 feature/threshold/child IDs/gain/valid mask 数组，同设备 |
-| `build_histograms` | 按真实 sample node IDs 聚合，零权重、空节点与未激活槽位定义清楚 |
-| `find_splits` | 批量比较候选，排除 invalid child；相等增益按 feature、threshold 顺序确定 tie |
-| `partition` | 根据 split 更新样本 node IDs，返回新数组或显式声明原地缓冲区 |
-| `leaf_values` | 在设备完成 sum/reduce 和叶值规则；不下载 grad/hess/sample IDs |
+| HistogramBatch | grad/hess `(node_slots, features, 256)` float32; int32 sample counts and bool active mask on the same device |
+| SplitBatch | Per-node_slot feature/threshold/child IDs/gain/valid-mask arrays on the same device |
+| `build_histograms` | Aggregate actual sample node IDs; define zero weights, empty nodes, and inactive slots |
+| `find_splits` | Compare candidates in batches, exclude invalid children, break equal-gain ties by feature then threshold |
+| `partition` | Update sample node IDs using splits; return a new array or explicitly declare in-place buffers |
+| `leaf_values` | Device sum/reduction and leaf rule; no grad/hess/sample-ID download |
 
-为限制动态分配，level-wise 首版采用完整二叉树固定槽位与 device active mask，root=0，
-left=2i+1，right=2i+2。leaf 的 children=-1。每层可固定循环，不为获取 active node 数下载样本数组。
-最深 8 层，histogram 临时预算默认 256 MiB；超预算先明确拒绝，暂不实现 out-of-core。
-bin 255 始终保留为 missing；即使该路径拒绝 missing，也不把该 bin 当普通候选。
-常量特征、全零有效曲率、无有效 split、负/非有限增益必须有独立小例子。
+To bound dynamic allocation, initial level-wise growth uses fixed complete-binary-tree
+slots with a device active mask: root=0, left=2i+1, right=2i+2; leaf children=-1.
+Fixed per-level loops need not download sample arrays to count active nodes.
+Maximum depth is 8; default histogram temporary budget is 256 MiB. Reject budget
+excess rather than implementing out-of-core. Bin 255 remains reserved for missing
+values even on a path that rejects missing inputs. Independently test constant
+features, all-zero effective curvature, no valid split, and negative/nonfinite gain.
 
-`LevelWiseBuilder(leaf_rule=...)` 首先暴露最小树扩展：leaf rule 接收批量 G/H、config、context，
-返回同设备叶值。用户需要进一步修改 tree 时可以自己组合公开批量 primitives；
-不提供任意 Python callback 自动注入 compiled kernel 的承诺。
+`LevelWiseBuilder(leaf_rule=...)` exposes the first minimal tree extension: a leaf
+rule receives batched G/H, config, and context and returns same-device leaves.
+Users needing deeper changes can compose public batch primitives. Arbitrary
+Python callbacks are not automatically injected into compiled kernels.
 
-最终返回现有标量 `TreeStructure`：每棵树完成后允许 O(tree_nodes) 的结构/叶值下载，
-保留 device cache 供本轮训练预测复用。这样复用 CPU prediction 与 serializer，
-无需一次性重写所有树对象。允许的传输是初始化、每棵树的紧凑结构、必要的标量状态/错误检查、显式评估、最终输出；
-热路径不允许 O(samples) 的 raw/grad/hess/node IDs 或整个 histogram 下载。
+Return the existing scalar `TreeStructure`. Allow O(tree_nodes) structure/leaf
+downloads after each tree, retaining device caches for training predictions.
+This reuses CPU prediction and serialization without rewriting all tree objects.
+Allowed transfers are initialization, compact structures per tree, necessary
+scalar state/error checks, explicit evaluation, and final output. The hot path
+must not download O(samples) raw/grad/hess/node IDs or complete histograms.
 
-split gain 的标度和 min_gain 比较沿用已验证 CPU 实现，P3 将其写成独立公式测试。
-如现有 CPU/native 公式不一致，先记为正确性问题解决，禁止临时放宽 parity 阈值。
+Split-gain scaling and min_gain comparisons follow verified CPU behavior, with
+independent formula tests in P3. If CPU/native formulas disagree, fix the
+correctness issue instead of temporarily relaxing parity thresholds.
 
-## 6. 三个扩展实验，两个独立包
+## 6. Three extension experiments, two independent packages
 
-两个包放在 `examples/extensions/normal_fisher/` 与 `examples/extensions/bounded_leaves/`，
-各有 pyproject、README 和独立测试。build wheel 后在新环境安装 OpenBoost wheel 与扩展 wheel，
-从仓库外目录执行，禁止 editable/PYTHONPATH 注入、private import、复制 core 或 monkeypatch dispatch。
-源码可同仓维护，但测试必须证明安装边界；不要宣称这是外部用户。
+Place packages in `examples/extensions/normal_fisher/` and
+`examples/extensions/bounded_leaves/`, each with pyproject, README, and independent
+tests. Build and install the OpenBoost and extension wheels in fresh environments,
+then run outside the repository. Prohibit editable/PYTHONPATH injection, private
+imports, core copies, or dispatch monkeypatching. Sources may share a repository,
+but tests must verify the installation boundary; this is not external adoption.
 
-**A. 外部两参数 Gaussian/Fisher objective。** raw 为 mu 和 log_sigma；
-`s2=exp(2*log_sigma)`，`g_mu=(mu-y)/s2`、`h_mu=1/s2`，
-`g_log_sigma=1-(mu-y)^2/s2`、`h_log_sigma=2`，最后乘权重。
-初始位置与方差使用 weighted mean，方差下限 1e-6；最小测试选有限范围，非有限状态报错。
-梯度由独立 finite difference NLL 核对，Fisher 由解析参考核对。
-CPU/CUDA 都实现；这是独立实现与扩展性实验，不声称 Gaussian Fisher 是新算法。
+**A. External two-parameter Gaussian/Fisher objective.** Raw channels are mu and
+log_sigma; `s2=exp(2*log_sigma)`, `g_mu=(mu-y)/s2`, `h_mu=1/s2`,
+`g_log_sigma=1-(mu-y)^2/s2`, and `h_log_sigma=2`, then apply weights. Initialize
+location and variance using weighted means, with variance floor 1e-6. Minimal
+tests use a finite range and reject nonfinite state. Check gradients against
+independent finite-difference NLL and Fisher against an analytic reference.
+Implement CPU/CUDA. This tests independent implementation and extensibility,
+not Gaussian Fisher novelty.
 
-**B. 外部 bounded-Newton leaf。** 在 tree 生长期间使用
-`clip(-G/(H+lambda), -c, c)`，无有效样本的叶值为零；finite c>0。
-比较未裁剪参考，必须观测到真实叶值及下一轮 gradient 的变化。
-检验不止“callback 调到了”；GPU clipping 和 reduction 在设备，保存后结果保持。
-该方法沿用默认 split criterion，不能描述为重新优化了 clipped objective 的所有 split。
+**B. External bounded-Newton leaf.** During tree growth use
+`clip(-G/(H+lambda), -c, c)`, with zero leaves for no effective samples and finite
+c>0. Compare against an unclipped reference and observe changes in actual leaves
+and next-round gradients, not just callback invocation. GPU clipping/reduction
+runs on device and saved results persist. The method retains the default split
+criterion; it does not reoptimize every split for a clipped objective.
 
-**C. 非常数逐 channel schedule。** 在 A 的包中实现
-`eta[r,k] = base_lr * channel_scale[k] / (1 + r/tau)`，tau>0，
-mu scale=1、log_sigma scale=0.5。用手算两轮例子验证每轮、每个 channel 的实际系数，
-再验证训练 raw、重新 predict、early-stop 恢复及 save/load 相同。
-它验证更新接口，不是 line search，也不构成新的训练算法贡献。
+**C. Nonconstant per-channel schedule.** Implement in package A:
+`eta[r,k] = base_lr * channel_scale[k] / (1 + r/tau)`, tau>0, mu scale=1 and
+log_sigma scale=0.5. Hand-check all coefficients in a two-round example, then
+check training raw, new predictions, early-stop restoration, and save/load.
+This verifies the update interface, not line search or a new training algorithm.
 
-在 A/B 都完成后安排外部作者实验。如果真正的外部方法仍需 private import 或 fork，
-先记录缺哪个接口；不凭空添加十个“未来可能有用”的 hook。
+After A/B, arrange an external author experiment. If an actual external method
+still needs private imports or a fork, record the missing interface before
+adding speculative hooks.
 
-## 7. 持久化与兼容
+## 7. Persistence and compatibility
 
-保存 binner、base scores、channels、tree arrays、每棵树实际系数和版本信息。
-新 coefficient 状态必须进入 predict、eval、early-stop 截断/恢复和持久化的同一逻辑；
-不能只改变 fit。加载旧文件时若无 coefficient 状态，按旧 learning_rate 合成并测试。
+Save the binner, base scores, channels, tree arrays, actual per-tree coefficients,
+and version. Coefficients must share semantics across prediction, eval,
+early-stop truncation/restoration, and persistence, not just fit. For old files
+without coefficient state, synthesize it from old learning_rate and test.
 
-实验 Booster 的 raw inference 不依赖自定义 objective/builder/schedule 代码。
-不序列化 lambda 或任意训练对象来“解决”部署；load 后原始预测可运行，继续训练需要
-重新提供 objective，warm-start/resume 在首版明确不支持。
-现有内置模型的预测变换仍按现有模型处理。
+Experimental Booster raw inference does not depend on custom objective/builder/schedule
+code. Do not serialize lambdas or arbitrary training objects for deployment.
+Loaded raw predictions work; further training requires resupplying the objective.
+Initial warm-start/resume is explicitly unsupported. Existing builtin model
+prediction transforms retain their behavior.
 
-若共享 serializer 格式改变，按当前实际版本递增，保留旧版本拒绝规则；
-numeric、missing、categorical、symmetric/linear/vector 等被触及状态必须回归，
-不能为了实验路径删除不认识的字段。
+If the shared serializer changes, increment its actual current version and keep
+old-version rejection rules. Regress any touched numeric, missing, categorical,
+symmetric/linear/vector, or other specialized state; do not delete unrecognized
+fields for the experimental path.
 
-## 8. 正确性、性能与产品关卡
+## 8. Correctness, performance, and product gates
 
-| 关卡 | 必须拿到的证据 |
+| Gate | Required evidence |
 |---|---|
-| G0 整合 | 双方提交保留；本地正确性回归、远端新模型测试和 CPU suite 通过或明确现有失败 |
-| G1 CPU 契约 | 独立数学 oracle、seed、不重复权重/更新、显式 dispatch、错误路径、保存预测一致 |
-| G2 CUDA 基线 | 真实 GPU weighted/unweighted Normal/Poisson 端到端验证，已知故障不能带入新 API |
-| G3 扩展驻留 | A/B 独立 wheel 在 CPU/CUDA 运行，C 改变更新；梯度、split、leaf、prediction 与任务指标均核对 |
-| G4 工程价值 | 冷/热端到端时间、显存、传输与相同质量比较，原始结果 committed |
-| G5 外部 adoption | 外部作者自己的扩展及阻碍记录；无人尝试/全部要 fork 不能算通过 |
+| G0 Integration | Both histories preserved; local fixes, remote new models, and CPU suite pass or existing failures are explicit |
+| G1 CPU contract | Independent math oracle, seed, single weighting/update, explicit dispatch, error paths, saved prediction equality |
+| G2 CUDA baseline | Real GPU weighted/unweighted Normal/Poisson end-to-end checks; no known failures carried into the new API |
+| G3 Resident extensions | A/B independent wheels run on CPU/CUDA and C changes updates; verify gradients, splits, leaves, predictions, and task metrics |
+| G4 Engineering value | Cold/warm end-to-end time, device memory, transfers, and matched quality, with committed raw results |
+| G5 External adoption | External authors' extensions and obstacles; no attempts or all requiring forks does not pass |
 
-微型 oracle 优先用可精确表示、无近似 tie 的数据：hist/grad/leaf 起始容差
-rtol=1e-5、atol=1e-6，split topology 在这种数据上必须一致。
-并列最优用专门 tie 测试；大数据浮点归约差异用有解释的预测与质量门槛，不能要求所有树完全相同。
+Prefer exactly representable micro-oracles without approximate ties. Starting
+hist/grad/leaf tolerances: rtol=1e-5, atol=1e-6; split topology must match on these
+data. Test exact optimal ties separately. For larger floating reductions use
+explained prediction/quality bounds, not mandatory equality of every tree.
 
-预先固定 seeds=0,1,2；数值型真实回归数据先用 sklearn California Housing 的冻结版本/hash，
-下载失败就记失败，不换成合成数据冒充真实证据。训练/验证/测试 split 与预处理只用训练数据拟合。
-Normal 比较 held-out NLL、CRPS 和区间覆盖率；Poisson 用确定生成过程检验计数场景。
-大样本合成 scaling 与真实数据质量分开报告，不冒充官方 ScoringBench。
+Freeze seeds=0,1,2 in advance. Start numeric real regression with a frozen
+sklearn California Housing version/hash. Record download failures; do not replace
+real evidence with synthetic data. Fit preprocessing only on training partitions.
+Compare held-out Normal NLL, CRPS, and interval coverage; use a known Poisson
+generating process for count checks. Separate synthetic scaling and real-data
+quality from each other and from official ScoringBench.
 
-先冻结 P2 基线，再看实现结果。预设筛选阈值：相同算法相同配置下均值 NLL 的绝对差不超过
-`0.01*max(1,abs(baseline_NLL))`，CRPS 相对劣化不超过 1%，90% 区间覆盖率差不超过 1 个百分点；
-逐 seed 报告，失败必须调查，三 seed 不包装成统计显著性结论。
-微型 parity 是正确性关卡，以上宽一些的真实数据阈值不能拿来豁免它。
+Freeze P2 before observing implementation results. Prespecified screening bounds
+for the same algorithm/configuration: absolute mean NLL difference no more than
+`0.01*max(1,abs(baseline_NLL))`, CRPS relative degradation no more than 1%, and
+90% interval coverage difference no more than 1 percentage point. Report every
+seed and investigate failures. Three seeds do not establish statistical significance.
+These wider real-data bounds cannot waive micro-oracle correctness.
 
-默认配置 GPU 端到端 fit 中位数相对整合后旧路径退化超过 20% 触发 profiling 和设计复查，
-并不允许改质量或隐藏 warmup。这个数是设计预算，不是已测性能，也不是自定义算法的速度承诺。
-优先给出“实现这个方法需要多少公开接口、多少额外代码、多少 GPU 成本”的可复现记录。
+A default GPU median end-to-end fit regression above 20% versus the integrated
+old path triggers profiling and design review, without changing quality or
+hiding warmup. This is a design budget, not measured performance or a speed
+promise for custom algorithms. Prioritize reproducible records of public
+interfaces, additional method code, and GPU cost needed to implement a method.
 
-## 9. Modal 验证设计
+## 9. Modal verification design
 
-P1 实施调整：使用独立 `benchmarks/foundation/modal_app.py`，保留旧 runner。
-旧 app 注册了源码挂载和宽松依赖的其他作业，直接复用会破坏 wheel 隔离边界。现有 runner 只复制单个测试文件、
-宽松依赖、部分入口只打印失败，不足以直接当本轮证据。
-Modal 支持构建镜像时安装依赖与显式包含本地文件，也有运行测试的官方示例。
-使用当前 SDK 的 uv 安装路径，不再新增随意 pip 安装。
-来源：[镜像指南](https://modal.com/docs/guide/images)、
-[CI 示例](https://modal.com/docs/examples/ci-on-modal)。
+P1 adjustment: use a separate `benchmarks/foundation/modal_app.py`, preserving
+the old runner. The old app registers source mounts and other jobs with loose
+dependencies, which would compromise wheel isolation. It copies a single test
+file, uses loose dependencies, and some entry points only print failures; it
+cannot directly supply this iteration's evidence. Modal supports image-time
+dependency installation and explicit local-file inclusion, with official test
+examples. Use the current SDK's uv installation path, not ad-hoc pip installs.
+Sources: [image guide](https://modal.com/docs/guide/images),
+[CI example](https://modal.com/docs/examples/ci-on-modal).
 
-- Python 3.12、CUDA 12、固定镜像 digest 与 Linux 依赖锁；包含 numba-cuda、CuPy、pytest/xdist。
-  在 Linux 镜像中验证 lock，不能复用 macOS 的已装包清单作为 Linux 环境。
-- 本地从干净实现提交 build wheel，计算 SHA256；上传 wheel、必要测试/conftest/config、
-  扩展 wheel 与 manifest。安装后验证 import 来源是 site-packages、wheel hash 相符。
-  不上传工作区整个目录、.git、凭证或用户数据。
-- 默认单 T4、并发 1。`foundation_smoke` 远端 timeout=300 秒，
-  `foundation_correctness`=1800 秒，`foundation_benchmark`=1800 秒；pytest 子进程各留 60 秒收集结果。
-  初轮 smoke 加 correctness；通过后才跑 benchmark。默认不自动增加 GPU 型号或矩阵。
-- app 级 retry=0；收集累计远端运行秒数、失败与已有 run id，初轮计划最多约 1 GPU-hour。
-  这不是费用硬上限；镜像构建/启动和平台内部重启须单独记录。Modal timeout 是每次执行的限制，
-  平台还可能处理基础设施重试。[timeouts](https://modal.com/docs/guide/timeouts)、
-  [failure handling](https://modal.com/docs/guide/functions)。
-- 使用本地入口 `::foundation_smoke` 等控制结果；任何 pytest failure、缺失指定 GPU 测试、
-  选中必跑测试被 skip、环境校验失败或结果无法取回都使本地命令非零退出。
-  不把现有 CPU/CUDA 混合测试文件里合理的 CPU skip 当失败，必跑清单明确列 node IDs。
-- 每个结果带 run id、源码 SHA/dirty、wheel hash、数据/version/hash/split、精确命令、依赖、
-  CPU/RAM/threads、GPU/driver/runtime、CUDA 实际路径、fallback、同步/预热策略；返回 JSON、JUnit、日志。
-  本地保存到 `benchmarks/results/foundation/<run_id>/`，明确修改 ignore 规则纳入审核后的冻结结果。
-- correctness 不测宣传速度；benchmark 测完整 fit/predict，分别报告首次编译和 warm median、
-  质量/峰值显存，比较 CPU/GPU 资源不同。至少 3 次热运行，始终同步 GPU 后计时。
+- Python 3.12, CUDA 12, fixed image digest and Linux dependency lock including
+  numba-cuda, CuPy, pytest/xdist. Validate the lock in Linux; a macOS installed-package
+  list is not a Linux environment.
+- Build a wheel from a clean implementation commit and calculate SHA256. Upload
+  only the wheel, required tests/conftest/config, extension wheels, and manifest.
+  Verify site-packages import provenance and wheel hashes. Do not upload the
+  whole workspace, .git, credentials, or user data.
+- Default one T4, concurrency 1. Remote timeouts: `foundation_smoke`=300 seconds,
+  `foundation_correctness`=1800, `foundation_benchmark`=1800; leave 60 seconds per
+  pytest subprocess for collection. Run smoke then correctness before benchmarks;
+  do not automatically expand GPU models or matrix size.
+- App retry=0. Record cumulative remote seconds, failures, and existing run IDs.
+  Initial plan: at most approximately 1 GPU-hour. This is not a hard spending cap;
+  record image builds/startup and platform restarts separately. Modal timeouts
+  limit individual executions and infrastructure retries may occur.
+  [Timeouts](https://modal.com/docs/guide/timeouts),
+  [failure handling](https://modal.com/docs/guide/functions).
+- Local entry points such as `::foundation_smoke` control status. Any pytest
+  failure, missing required GPU test, skipped selected required test, environment
+  validation failure, or unretrievable result makes the local command fail.
+  Legitimate CPU skips in mixed files are not failures; list required node IDs.
+- Every result includes run ID, source SHA/dirty, wheel hash, dataset/version/hash/split,
+  exact commands, dependencies, CPU/RAM/threads, GPU/driver/runtime, actual CUDA
+  path, fallback, synchronization/warmup, JSON, JUnit, and logs. Save locally in
+  `benchmarks/results/foundation/<run_id>/`; explicitly adjust ignore rules to
+  commit reviewed frozen results.
+- Correctness jobs do not advertise speed. Benchmarks measure complete fit/predict,
+  first compilation separately from warm medians, quality/peak device memory,
+  and differing CPU/GPU resources. Use at least 3 warm runs and synchronize GPU
+  timing boundaries.
 
-本轮尚未验证 Modal 凭证、镜像可构建、GPU quota 或实际价格。执行时先做最小 smoke，
-失败保留结果并修复具体原因；不循环重试长作业。
+At planning time, Modal credentials, image builds, GPU quota, and actual prices
+were unverified. Start with a minimal smoke; preserve failures and fix their
+specific causes rather than repeatedly retrying long jobs.
 
-## 10. 方向调整条件
+## 10. Conditions for changing direction
 
-- 若两个独立扩展仍需 core 修改：接口假设未成立，先缩小或修正契约。
-- 若 GPU 可扩展路径在目标工作负载上持续无经济优势：保留 CPU 研究工具价值，暂停 GPU 平台扩张。
-- 若外部作者只需要自定义 distribution：把资源回到分布建模垂直产品，不为通用性扩大核心。
-- 若外部作者能持续提交不同算法，且愿意让其包依赖 OpenBoost：再评估 split-gradient/leaf-gradient
-  分离、vector leaves 和更深的更新接口；每项由实际算法提出。
+- If both independent extensions still need core changes, the interface hypothesis
+  failed: narrow or repair the contract first.
+- If extensible GPU execution consistently lacks economic benefit on target
+  workloads, preserve CPU research utility and pause GPU platform expansion.
+- If external authors only need custom distributions, return investment to the
+  distributional product instead of expanding the core for generality.
+- If authors repeatedly contribute different algorithms and want independent
+  packages to depend on OpenBoost, reconsider separate split/leaf gradients,
+  vector leaves, and deeper update interfaces, each motivated by an actual algorithm.
 
-竞争背景与更广泛路线见 [impact/adoption/value 研究](../learnings/2026-09-05-impact-adoption-value-strategy.md)。
-本计划要获得的是一个可以被采用或被证伪的窄基座，尚不宣称已经拥有 ecosystem。
+See the [impact/adoption/value study](../learnings/2026-09-05-impact-adoption-value-strategy.md)
+for competition and broader strategy. This plan seeks a narrow foundation that
+can be adopted or falsified; it does not claim an existing ecosystem.
 
 ## 2026-09-05 goal review after P4.1
 

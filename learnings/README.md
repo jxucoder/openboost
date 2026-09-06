@@ -34,6 +34,9 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [English repository prose](2026-09-06-english-repository.md) — repository-wide
+  translation with unchanged scope, gates, and historical evidence.
+
 - [Adult official test and stratified splits](2026-09-06-v1-adult-data.md) — A2 raw
   data freeze, with missing categories retained and fnlwgt excluded.
 

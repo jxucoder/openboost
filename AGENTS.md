@@ -157,6 +157,10 @@ GPU validation. ScoringBench has a separate Linux environment documented under
 
 ## Working and Commit Discipline
 
+- Use English for all repository prose, including documentation, comments,
+  instructions, and new sprint/learning records. Preserve literal dataset values,
+  identifiers, formulas, and raw evidence when translating existing prose.
+
 - Keep changes small and cohesive. Prefer root-cause fixes over compatibility
   shims that conceal invalid state.
 - Commit after each independently verified slice: test/benchmark harness,

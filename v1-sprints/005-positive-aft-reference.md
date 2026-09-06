@@ -1,68 +1,73 @@
-# Sprint 005：count、正目标与 log-normal AFT
+# Sprint 005: Counts, positive targets and log-normal AFT
 
-起点：`ddf1143`。状态：完成本 sprint；F0.2进行中。范围 B01/F0.2、A7–A10 的数学与最小数据探针。
+Starting revision: `ddf1143`. Status: sprint complete; F0.2 ongoing.
+Scope: B01/F0.2, A7–A10 mathematics and minimal data probes.
 
-## 计划与验收
+## Plan and acceptance
 
-1. 先写失败测试：Poisson exposure、Gamma/Tweedie 导数、事件/右删失与稳定尾概率。
-2. 独立 NumPy/stdlib 参考实现；手算、有限差分、权重复制、两轮树更新和输出单位验证。
-3. 补 A9 小型保单/正赔款关联与两阶段乘积探针；回归、lint、reflection、提交。
+1. Write failing tests for Poisson exposure, Gamma/Tweedie derivatives, events/right censoring and stable tails.
+2. Implement independent NumPy/stdlib references; verify hand values, finite differences,
+   weight replication, two-round tree updates and output units.
+3. Add a tiny A9 policy/positive-payment join and two-stage product probe; regression, lint, reflection, commit.
 
-- e 在 Poisson 中是 offset；annualized Tweedie 中是 weight，不能重复施加。
-- Gamma y>0；Tweedie y>=0 且1<p<2；溢出/非法输入明确失败，不静默截断。
-- AFT 接受有限正时间事件或正 lower/+inf upper 右删失；其他区间显式拒绝。
-  固定 sigma>0；稳定 log-tail/Mills；median/mean/survival/quantile 单位区分。
-- 每类 objective 通过两轮新 raw 的梯度、叶值及预测检查；输出保存/真实对手评测仍待后续。
-- 数据探针列出不一致/孤立/非正赔款，不将缺失赔款自动填0；正赔付次数与均值配对。
-- 不宣称产品、真实保险/生存效果或 E-gates 已完成；所有其他用例继续保留。
+- Exposure e is a Poisson offset but an annualized Tweedie weight; do not apply it twice.
+- Gamma requires y>0; Tweedie y>=0 and 1<p<2. Reject overflow/invalid inputs without silent clipping.
+- AFT accepts finite positive event times or positive lower/+inf upper right censoring, rejecting
+  other intervals. Fixed sigma>0, stable log-tail/Mills and distinct median/mean/survival/quantile units.
+- Every objective checks new-raw gradients, leaves and predictions over two rounds. Persistence
+  and real external evaluation remain later work.
+- Data probes report inconsistent/orphan/nonpositive payments. Missing payments are not automatically zero;
+  paid-count must pair with paid-mean.
+- No product, real insurance/survival result or E-gate is complete; other cases remain required.
 
-## 结果与 eval
+## Results and evaluation
 
-本 sprint 有限范围完成。新增 `positive.py`、`survival.py` 与61项测试，扩展
-生产 import 隔离检查。当前 **183 passed，无 skipped**，Ruff通过。
+Bounded scope complete. Added positive.py/survival.py, 61 tests and production-import isolation.
+**183 passed, no skips**; Ruff passed.
 
-- Poisson：rate base=log(7/5)手算；全零有效计数的 minimum_rate 必须显式指定。
-  e 翻倍仅使 count mean 翻倍；rate不变，weight不混入 exposure。Gamma base为
-  log(weighted mean)，Gamma/Tweedie 手算 loss/g/h与有限差分一致，均返回未加权几何。
-- 三种正目标的两轮 root leaf 用独立代数公式核对，整数权重与复制行 loss 一致；
-  非法support/power/e/weight拒绝。Gamma在 y=1e308、F=log(y) 时通过 log-ratio
-  保留有效几何；不可表示指数明确失败，无隐藏截断或最小curvature。
-- AFT：event与right-censored分支均通过有限差分；lower必须有限正数，upper只能
-  等于lower或为+inf，其他区间明确拒绝。混合事件/删失的两轮更新由erfc公式独立核对。
-- Normal右尾：z<=8用erfc/log1p；z>8用300层连分式，并直接保留 Mills-z correction
-  计算曲率。z=-10..30 与erfc核对，z=40/100与64点Gauss-Laguerre独立积分核对；
-  切换点连续性通过。没有把右尾SF减到0后再取log，也不通过裁剪假造曲率。
-- 输出：median/mean/quantile/survival分开检查；生存随时间递减。
-  时间单位放大7倍时，event NLL增加log(7)（密度Jacobian），censored NLL不变，
-  两者g/h均不变。输出序列化仍待后续，不以数学反变换代替持久化验收。
-- A9 join：按policy ID汇总正赔款，保留孤立/非正/计数矛盾排除原因；只对零计数且
-  无赔款保单填0。paid-count/exposure×paid-mean等于annualized amount；原ClaimNb
-  不替换paid-count，实体顺序改变结果不变。这里只是小表数学，不是实数据ETL或模型。
+- Poisson hand base=log(7/5); effective all-zero counts require explicit minimum_rate. Doubling e
+  doubles count mean only, not rate. Weight remains separate. Gamma base is log(weighted mean).
+  Gamma/Tweedie loss/g/h match hand values and finite differences; geometry is unweighted.
+- Independent algebra checks root leaves for two rounds of all three positive objectives;
+  integer weights match row-replicated losses. Invalid support/power/e/weight fail. Gamma log-ratio
+  retains valid geometry at y=1e308, F=log(y). Unrepresentable exponentials fail, with no hidden clipping/curvature floor.
+- AFT event/right-censored derivatives pass finite differences. Lower must be finite positive;
+  upper equals lower or +inf, otherwise fail. Mixed two-round updates independently match erfc formulas.
+- Normal tail: erfc/log1p for z<=8; 300-level continued fraction for z>8, retaining Mills-z correction
+  directly for curvature. Compare erfc over z=-10..30 and independent 64-point Gauss-Laguerre
+  integration at40/100; switching continuity passes. Never subtract SF to zero before logging or fake curvature by clipping.
+- Outputs: separate median/mean/quantile/survival checks; survival decreases with time. Multiplying
+  time units by7 adds log(7) to event NLL through the density Jacobian, leaves censored NLL and both
+  gradients/Hessians unchanged. Mathematical inverse transforms do not replace serialization checks.
+- A9 joins positive payments by policy ID and retains orphan/nonpositive/count-contradiction reasons.
+  Only zero-count policies without payments receive zero. paid-count/exposure×paid-mean equals
+  annualized amount; raw ClaimNb cannot replace paid-count. Entity ordering is irrelevant.
+  This is small-table mathematics, not real ETL or a trained model.
 
 ```bash
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync pytest tests/ -n 0 -q
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync ruff check src/openboost tests/v1 tests/conftest.py
 ```
 
-环境：本地macOS CPU、Python3.12.12、NumPy2.3.5、pytest9.0.2；无新依赖。
-实现前测试因缺模块失败；实现后数学初批21项全部通过。扩展测试曾把标量loss/数组g/h
-作为一个不规则数组比较而失败，改为逐项比较；lint变量命名问题已修正。
-未运行真实dataset/对手、IPCW、CUDA、完整两阶段训练/保存、正式E-gates。
+Local macOS CPU/Python 3.12.12/NumPy 2.3.5/pytest9.0.2; no new dependencies. Missing-module tests
+failed first; the first21 mathematical cases passed after implementation. An expanded check tried
+to compare scalar loss and array g/h as one ragged array; it was corrected to compare each separately.
+Lint naming issues were fixed. No real datasets/baselines, IPCW, CUDA, complete two-stage fit/save or E-gates ran.
 
-## Reflection：三个实现提交后的方向复核
+## Reflection: Direction after three implementation commits
 
-观察 → Sprint003–005完成了不同目标几何的准备，但当前生产包仍只有namespace。
-证据 → 所有新实现位于independent reference，隔离测试禁止生产import；没有性能、
-真实质量或Agent修改成本数据。决定 → 不把测试数增加当作foundation产品价值；
-这些反例须在F1成为public components的conformance测试，F2验证Agent修改成本。
+Sprints003–005 prepare different geometries, but production remains a namespace. All new code is
+independent reference with production imports blocked; no performance, real quality or agent-cost
+measurements exist. Test growth is not product value. These cases must become F1 component conformance
+checks; F2 must measure algorithm-change cost.
 
-观察 → 相似的exposure字段在A7/A9具有不同角色，删失/事件的相同时间也具有不同似然。
-证据 → e翻倍、paid-count乘积与time-Jacobian测试明确区分这些情况。
-决定 → 保持typed target/offset/weight/output schema边界，拒绝通用trainer隐式猜语义。
-下一步 → Normal/NaturalBoost与Formula参考；然后补行身份、state/run、完整类别/
-向量grow等F0.2缺口和F0.3冻结。所有A1–A13仍需各自真实实现与评测，不因本次选择
-保险与AFT样例而给予它们范围特权。
+Exposure plays different roles in A7/A9, and events/censoring have different likelihoods at the same
+time. Doubling exposure, paid-count products and time-Jacobian tests distinguish them. Preserve typed
+target/offset/weight/output contracts; no generic trainer should guess semantics.
+Next: Normal/NaturalBoost and Formula, then identity/state/run/full categorical/vector growth and
+F0.3 freezing. Every A1–A13 still needs its own implementation and real evaluation; insurance/AFT
+examples do not receive privileged scope.
 
 ## Commits
 
-- 本切片：`test: add positive target and AFT references for v1`。
+- This slice: `test: add positive target and AFT references for v1`.

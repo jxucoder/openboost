@@ -1,66 +1,71 @@
-# OpenBoost v1 执行与反思
+# OpenBoost v1 execution and reflection
 
-这里记录用户要求的 v1 sprint 计划、执行结果和反思。目标始终是：**帮助研究者与
-Agent 用公开、可组合组件完成正确的算法修改，并验证其成本和实际价值。**
+This directory records the user-requested sprint plans, results and reflections. The goal is
+**to help researchers and agents make correct algorithm changes using public composable components,
+and verify their cost and practical value.**
 
-设计依据：[主计划](../planning/agent-boosting-foundation-plan.md)、
-[构建设计](../planning/foundation-construction-design.md)、[任务契约](../planning/foundation-tasks.md)、
-[验收](../planning/openboost-v1-evaluation.md)。这些文件定义 scope/架构/门槛；本目录管理执行，
-不复制一套不同的路线图。R1–R9/C1–C7/A1–A13 都必需，不因某个 sprint 成功而缩减。
+Sources: [main plan](../planning/agent-boosting-foundation-plan.md),
+[construction design](../planning/foundation-construction-design.md), [tasks](../planning/foundation-tasks.md),
+[evaluation](../planning/openboost-v1-evaluation.md). These define scope/architecture/gates; this
+folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all remain required.
 
-## 当前执行位置
+## Current execution position
 
-| Sprint | 对应计划 | 状态 | 交付与记录 |
+| Sprint | Plan mapping | Status | Deliverable and record |
 |---|---|---|---|
-| 001 | B01 / F0.2 的 scalar/tree 子集 | 完成，55 tests passed | [独立 scalar/tree 参考](001-scalar-tree-reference.md) |
-| 002 | 用户要求提前退役旧生产代码 | 完成，namespace/build/docs 检查通过 | [从干净实现起点构建 v1](002-retire-legacy-production.md) |
-| 003 | B01 / F0.2 的列转换与分类子集 | 完成；验收见记录 | [训练转换与分类参考](003-data-classification-reference.md) |
-| 004 | B01 / F0.2 的 A4–A6 数学探针 | 完成；总计122 tests passed | [ranking/quantile/vector](004-ranking-quantile-vector-reference.md) |
-| 005 | B01 / F0.2 的 A7–A10 数学探针 | 完成；总计183 tests passed | [正目标与 AFT](005-positive-aft-reference.md) |
-| 006 | B01 / F0.2 的 A11/A12/D4 探针 | 完成；总计208 tests passed | [Normal/Formula](006-normal-formula-reference.md) |
-| 007 | B01 / F0.2 的 identity/A13/D5 探针 | 完成；总计229 tests passed | [identity/runs](007-identity-runs-reference.md) |
-| 008 | B01 / F0.2 的 D1/D3/D4 精确探针 | 完成；总计255 tests passed | [作者修改参考](008-author-mutation-reference.md) |
-| 009 | B01 / F0.2 的 mixed/vector完整grow | 完成；总计279 tests passed | [混合特征与向量树](009-mixed-vector-growth-reference.md) |
-| 010 | B01 / F0.2 有限组合与出口审计 | 完成；总计288 tests passed | [组合参考与阶段出口](010-reference-integration-exit.md) |
-| 011 | B02 / F0.3 产物完整性判卷子集 | 完成；总计336 tests passed | [完整性判卷](011-artifact-integrity-judge.md) |
-| 012 | B02 / F0.3 A5数据与日期窗口 | 完成；总计360 tests passed | [Bike数据冻结](012-bike-data-freeze.md) |
-| 013 | B02 / F0.3 A1/A11数据五split | 完成；总计380 tests passed | [Housing五split](013-housing-five-splits.md) |
+| 001 | B01/F0.2 scalar/tree subset | Complete; 55 tests | [Scalar/tree references](001-scalar-tree-reference.md) |
+| 002 | User-requested early production retirement | Complete; namespace/build/docs checked | [Clean v1 starting point](002-retire-legacy-production.md) |
+| 003 | B01/F0.2 transforms/classification | Complete; see record | [Transforms/classification](003-data-classification-reference.md) |
+| 004 | B01/F0.2 A4–A6 probes | Complete; 122 total tests | [Ranking/quantile/vector](004-ranking-quantile-vector-reference.md) |
+| 005 | B01/F0.2 A7–A10 probes | Complete; 183 total tests | [Positive targets/AFT](005-positive-aft-reference.md) |
+| 006 | B01/F0.2 A11/A12/D4 probes | Complete; 208 total tests | [Normal/Formula](006-normal-formula-reference.md) |
+| 007 | B01/F0.2 identity/A13/D5 | Complete; 229 total tests | [Identity/runs](007-identity-runs-reference.md) |
+| 008 | B01/F0.2 exact D1/D3/D4 | Complete; 255 total tests | [Author-task references](008-author-mutation-reference.md) |
+| 009 | B01/F0.2 full mixed/vector growth | Complete; 279 total tests | [Mixed/vector trees](009-mixed-vector-growth-reference.md) |
+| 010 | B01/F0.2 finite compositions and exit | Complete; 288 total tests | [Compositions and exit](010-reference-integration-exit.md) |
+| 011 | B02/F0.3 integrity subset | Complete; 336 total tests | [Integrity judge](011-artifact-integrity-judge.md) |
+| 012 | B02/F0.3 A5 data/date windows | Complete; 360 total tests | [Bike freeze](012-bike-data-freeze.md) |
+| 013 | B02/F0.3 A1/A11 five splits | Complete; 380 total tests | [Housing splits](013-housing-five-splits.md) |
+| 014 | B02/F0.3 A2 official test/stratification | Complete; 396 total tests | [Adult freeze](014-adult-data-freeze.md) |
+| 015 | Cross-cutting English prose | Complete; no phase advancement | [English repository](015-english-repository.md) |
 
-接下来完成 B02/F0.3 的冻结评测。F1 公共 foundation 实现从 B03 开始，
-按 B04–B10 接通可组合组件与全部算法；不把 reference 代码称为产品实现。
-具体后续 sprint 在开始时按依赖选定有限范围，不能跳过现有 F 阶段出口。
+Next complete B02/F0.3 frozen evaluation. Public F1 implementation begins at B03 and connects
+components/all algorithms through B04–B10. References are not product implementation. Select
+bounded future sprints by dependency without bypassing phase exits. The user reaffirmed evaluation first.
 
-## 执行规则
+## Execution rules
 
-1. 每个 sprint 开始先写目的、映射到 F/B/A/C/E 的范围、独立失败样例、交付和验收。
-2. 每个独立验证的切片提交；记录命令、结果、未验证范围与 commit，不只报告文件数量。
-3. **每个 sprint 收尾、每累计三个实现提交、进入新 F 阶段，或出现架构/正确性反例时反思。**
-   反思写在当前 sprint 中，回答下面的问题；一次反思可覆盖同时触发的条件。
-4. 如果需要改变架构或执行顺序，先记证据与原因并同步设计；不悄悄放宽验收、丢弃失败、
-   删除用例或转向多 GPU/功能目录。常规小修不要求重开总体规划。
-5. `learnings/` 保留跨 sprint 的耐久结论并链接本目录；执行明细以本目录为准。
+1. Start each sprint with purpose, F/B/A/C/E mapping, an independent failing example, deliverables and acceptance.
+2. Commit every independently verified slice; record commands/results/unverified scope/commit, not just file counts.
+3. **Reflect at every sprint closure, every three implementation commits, phase transitions,
+   and architectural/correctness counterexamples.** Record it in the current sprint; one reflection can satisfy multiple triggers.
+4. Record evidence/reasons and update design before changing architecture/order. Never silently
+   relax gates, discard failures, remove cases or switch to multi-GPU/feature catalog work.
+   Routine small fixes do not require replanning the whole project.
+5. `learnings/` stores durable cross-sprint conclusions linking here; execution details live here.
+6. All repository prose must be English, per the user's instruction.
 
-## Reflection 检查
+## Reflection checklist
 
-- 当前代码减少了哪种正确算法修改的困难？若只是准备工作，具体为哪个组件提供依据？
-- 是否沿 construction design 的依赖推进？是否偷渡旧 API 限制、专用 trainer 或性能优化？
-- 数学/状态是否有独立证据？哪些结果只是内部模拟，不能支持性能、质量、采用声明？
-- 结构不同的用例能否复用边界？是否开始只为当前一个例子设计？
-- 全部 required 范围还缺什么？下一步最小可验证交付是什么？
+- Which difficulty in making a correct algorithm change did this reduce? If preparation only, which component does it justify?
+- Does execution follow construction dependencies? Did old API restrictions, specialized trainers or premature optimization slip in?
+- Is there independent math/state evidence? Which internal simulations cannot support performance, quality or adoption claims?
+- Can structurally different cases reuse the boundary, or is it being designed around one example?
+- What required scope remains? What is the next smallest verifiable deliverable?
 
-记录格式为“观察 → 证据 → 决定 → 下一步”，不用无证据的“方向正确”结束反思。
+Use observation → evidence → decision → next step, not an unsupported conclusion that the direction is right.
 
-## 全局完成状态
+## Overall completion
 
-F0.1 规格与构建设计、F0.2 独立参考已交付；F0.3、F1–F5 均未完成。
-Sprint 001 已交付独立 numeric scalar/tree 参考；Sprint 002 已按用户要求退役旧生产代码。
-Sprint 003 已补充列转换与分类；Sprint 004 已补充 ranking/quantile/vector 最小参考。
-Sprint 005 已补充正目标/count、policy join 与 event/right-censored AFT 参考。
-Sprint 006 已补充Normal/Formula；Sprint 007已补充identity/run隔离与模型选择。
-Sprint008已补D1/D3/D4；Sprint009已补mixed/vector完整grow；Sprint010已补有限组合与状态链路。出口及后续归属见
-[F0.2验收映射](f0-2-acceptance-ledger.md)。
-Sprint011已实现完整性judge；F0.3真实数据/hash、基线实测、预算/保留题、runner与质量judge仍未完成。
-Sprint012已冻结A5原始数据、calendar适配与五个日期窗口；其余数据与全部质量结果仍待完成。
-Sprint013已补A1/A11 Housing数据hash与五split，许可待核实；其他required数据继续推进。
-E0–E6 没有因为创建本目录而通过；E7 独立作者采用尚无新证据。每项 A 的任务卡已定义，
-其 v1 production 实现和真实 eval 仍须逐项完成。
+F0.1 specifications/construction and F0.2 references are delivered. F0.3 and F1–F5 remain incomplete.
+Sprint 001 delivered scalar/tree; 002 retired production; 003 transforms/classification; 004 ranking/
+quantile/vector; 005 positive/count/policy joins/event-right-censored AFT; 006 Normal/Formula;
+007 identity/isolation/selection; 008 D1/D3/D4; 009 full mixed/vector growth; 010 finite model/state
+compositions. See [F0.2 exit mapping](f0-2-acceptance-ledger.md).
+
+Sprint 011 adds integrity judging. Sprint 012 freezes A5 data/calendar/five date windows.
+Sprint 013 adds Housing inputs/five splits for A1/A11, with license unresolved. Sprint 014 adds A2
+Adult data and official-test-preserving splits. Other required data, capabilities, budgets,
+held-out tasks, runner and quality judge remain incomplete; all real quality results are pending.
+No E0–E6 gate passed through creating these files. E7 has no new independent-adoption evidence.
+Every application's production and real evaluation still require individual completion.
