@@ -4,6 +4,8 @@
 状态：**F0.1 任务卡与 foundation 构建设计已交付；下一步 F0.2；新 v1 实现与 eval 尚未执行**。这里的 v1 是本次产品/架构目标，
 不是已有 PyPI 包版本或旧 P0–P7 工作已经完成 v1 的声明。
 代码审阅基线：`3ac1552`，分支：`codex/gpu-python-foundation-design`。
+执行入口：[v1-sprints/](../v1-sprints/README.md)；当前从 Sprint 001 开始 F0.2。
+每个 sprint 在该目录记录计划、结果与 reflection，阶段完成状态按实际证据更新。
 
 本计划取代旧 GPU foundation 清单中的后续投资顺序，以及
 [ScoringBench 优先计划](impact-adoption-value-next.md)。旧实验及其失败结论仍有效。

@@ -34,6 +34,9 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [v1 sprint execution](2026-09-05-v1-sprint-execution.md) — sprint plans/results
+  and reflection now live in `v1-sprints/`; starts B01/F0.2 scalar/tree references.
+
 - [Foundation construction design](2026-09-05-foundation-construction-design.md) —
   concrete module/data/operation/state/device contracts and B01–B14 build slices;
   distinguishes the engineering design from task cards and independent oracles.
