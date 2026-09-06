@@ -67,7 +67,7 @@ Current execution map: [Sprint 038 goal/progress review and plan](v1-sprints/038
 Installed public D2/D3 development wheels pass in Sprint 040 without core edits.
 Sprint 041 adds installed ordered Normal/Formula updates through public transactions.
 Sprint 042 resolves external result interoperability through the structural
-RecipeResult contract and installed mixed M=1/8/32 checks. Next: D1 and remaining
+RecipeResult contract and installed mixed M=1/8/32 checks. Sprint 043 adds an installed D1 expectile objective. Next: remaining
 D5 author probes, plus current OpenBoost real-data integration. These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared

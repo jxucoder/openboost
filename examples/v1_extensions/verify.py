@@ -24,7 +24,7 @@ def main(output):
     report = {
         "schema": "openboost-v1-development-extensions-v1",
         "passed": False,
-        "claim": "repository-authored D2/D3/D4 and D5 scheduling development checks only",
+        "claim": "repository-authored D1/D2/D3/D4 and D5 scheduling development checks only",
         "commit": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip(),
@@ -64,6 +64,7 @@ def main(output):
                 SOURCE / "cohort_splits",
                 SOURCE / "penalized_leaves",
                 SOURCE / "ordered_updates",
+                SOURCE / "expectile",
             ):
                 run(["uv", "build", "--wheel", "--offline", "--out-dir", str(wheels)], project)
             paths = sorted(wheels.glob("*.whl"))
@@ -88,6 +89,7 @@ def main(output):
                 "core_inference.py",
                 "ordered_checks.py",
                 "scheduler_checks.py",
+                "expectile_checks.py",
             ):
                 shutil.copyfile(SOURCE / name, work / name)
             run([python, "-I", str(work / "checks.py"), str(output)], work)
@@ -102,6 +104,16 @@ def main(output):
             )
             run([python, "-I", str(work / "ordered_checks.py"), str(output)], work)
             run([python, "-I", str(work / "scheduler_checks.py"), str(output)], work)
+            run(
+                [
+                    sys.executable,
+                    "-m",
+                    "examples.v1_extensions.expectile_oracle",
+                    str(output / "expectile-expected.json"),
+                ],
+                ROOT,
+            )
+            run([python, "-I", str(work / "expectile_checks.py"), str(output)], work)
             report["versions"] = json.loads(
                 run(
                     [
@@ -109,7 +121,7 @@ def main(output):
                         "-I",
                         "-c",
                         "import json,importlib.metadata as m; print(json.dumps({n:m.version(n) for n in "
-                        "['openboost','numpy','ob-cohort-splits','ob-penalized-leaves','ob-ordered-updates']}))",
+                        "['openboost','numpy','ob-cohort-splits','ob-penalized-leaves','ob-ordered-updates','ob-expectile']}))",
                     ],
                     work,
                 )
@@ -124,6 +136,7 @@ def main(output):
                     "ob-cohort-splits",
                     "ob-penalized-leaves",
                     "ob-ordered-updates",
+                    "ob-expectile",
                 ],
                 work,
             )
@@ -140,7 +153,7 @@ def main(output):
         raise
     finally:
         (output / "manifest.json").write_text(json.dumps(report, indent=2) + "\n")
-    print("Installed D2/D3/D4 checks and plugin-free inference passed.")
+    print("Installed D1/D2/D3/D4 and scheduling checks and plugin-free inference passed.")
 
 
 if __name__ == "__main__":

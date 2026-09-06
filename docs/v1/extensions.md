@@ -1,7 +1,8 @@
 # Public development extensions
 
-The repository's `examples/v1_extensions/` contains three separately installable CPU
-packages using only public OpenBoost interfaces. `ob-cohort-splits` supplies
+The repository's `examples/v1_extensions/` contains four separately installable CPU
+packages using only public OpenBoost interfaces. `ob-expectile` implements
+weighted expectile geometry, initialization and a two-round Newton recipe. `ob-cohort-splits` supplies
 independent cohort information and custom split feasibility. `ob-penalized-leaves`
 replaces leaf solving with its own weighted pinball/quadratic optimizer.
 `ob-ordered-updates` provides ordered Normal/Formula parameter updates through
@@ -11,7 +12,7 @@ by run_many through the [shared structural result contract](results.md).
 
 These reuse histogram/routing, recipe state and model artifacts. Three-round
 checks compare independent mathematical oracles and demonstrate that changed
-leaves affect subsequent updates. A separate wheel verifier installs both
+leaves affect subsequent updates. A separate wheel verifier installs all four
 packages outside the source checkout, removes them after training and verifies
 fresh-process core inference on their saved models.
 

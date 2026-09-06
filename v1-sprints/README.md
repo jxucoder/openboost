@@ -13,13 +13,13 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
 Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 794 passes;
+shared training preparation. The latest full regression records 799 passes;
 this includes references/evaluation infrastructure and is not a phase gate.
 Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
 Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
 Ordered updates pass in [Sprint 041](041-ordered-updates.md). Shared result
-interoperability passes in [Sprint 042](042-result-contract.md). Next: D1 and
-remaining D5 author probes, plus current real-data integration.
+interoperability passes in [Sprint 042](042-result-contract.md). D1 expectile passes in [Sprint 043](043-expectile-extension.md). Next: remaining
+D5 author probes and current real-data integration.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.
 

@@ -1,7 +1,9 @@
 # Current v1 development extension wheels
 
-Three repository-authored packages exercise the installed public CPU foundation:
+Four repository-authored packages exercise the installed public CPU foundation:
 
+- `ob-expectile`: D1 composes weighted expectile geometry and initialization with
+  public Newton trees, transactions and stopping. See [semantics](expectile/README.md).
 - `ob-cohort-splits`: D2 adds cohort information independent of training weights
   and rejects candidates unless each child has at least one unit per cohort.
   Cohorts are not input features. Existing histograms, growth and scoring are reused.
@@ -22,10 +24,10 @@ require no core edits. The historical `examples/extensions/` packages remain sep
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python examples/v1_extensions/verify.py /tmp/openboost-extension-check
 ```
 
-The verifier builds four wheels offline, creates a fresh environment, installs
+The verifier builds five wheels offline, creates a fresh environment, installs
 the wheels and NumPy 2.3.5, and executes copied checks from outside the repository
 using Python `-I`. Installed module paths must be under site-packages. It then
-uninstalls all three extensions and starts another interpreter to load eight saved
+uninstalls all four extensions and starts another interpreter to load nine saved
 models and verify exact predictions with none of the extensions importable.
 The report records source/wheel hashes, revision/dirty state, environment,
 commands, three-round outputs and failures. Offline dependencies must already be
@@ -62,7 +64,7 @@ round-trip after plugin removal.
 
 Source development tests in `tests/v1/test_public_extensions.py` are distinct
 from the installed-wheel checks. These results are partial E2/E6 evidence;
-D1, complete D5 author evaluation, formal E5, CUDA, real-data quality/cost
+Complete D5 author evaluation, formal E5, CUDA, real-data quality/cost
 and external adoption remain open. Structural result integration now permits
 ordered recipes in run_many; installed M=1/8/32 checks exercise mixed recipes,
 independent stopping, failure isolation and reorder/regroup/retry equivalence.

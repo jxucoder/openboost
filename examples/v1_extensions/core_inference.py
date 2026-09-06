@@ -1,4 +1,4 @@
-"""Fresh-process inference after both extension distributions are uninstalled."""
+"""Fresh-process inference after all extension distributions are uninstalled."""
 
 import importlib.util
 import json
@@ -10,7 +10,7 @@ import numpy as np
 from openboost import MixedData, NumericData
 from openboost.artifacts import Model
 
-for name in ("ob_cohort_splits", "ob_penalized_leaves", "ob_ordered_updates"):
+for name in ("ob_cohort_splits", "ob_penalized_leaves", "ob_ordered_updates", "ob_expectile"):
     assert importlib.util.find_spec(name) is None
 root = Path(sys.argv[1])
 record = json.loads((root / "checks.json").read_text())
@@ -23,4 +23,9 @@ ordered = json.loads((root / "ordered-checks.json").read_text())
 numeric = NumericData(ordered["values"], np.arange(6), ("feature",))
 for name, expected in ordered["predictions"].items():
     np.testing.assert_array_equal(Model.load(root / f"{name}.json").predict(numeric), expected)
-print("Eight models preserve exact predictions without extension imports.")
+expectile = json.loads((root / "expectile-checks.json").read_text())
+numeric = NumericData(expectile["values"], np.arange(6), ("feature",))
+np.testing.assert_array_equal(
+    Model.load(root / "expectile-model.json").predict(numeric), expectile["raw"]
+)
+print("Nine models preserve exact predictions without extension imports.")
