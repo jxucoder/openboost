@@ -118,3 +118,4 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [Validation-only baseline worker](2026-09-06-v1-baseline-worker.md): explicit inputs, saved offsets and the remaining search integration boundary.
 - [Validation selection and test release](2026-09-06-v1-validation-selection.md): independent scores, complete trials, pinned receipts and access-sequence limitations.
 - [Native baseline early stopping](2026-09-06-v1-early-stopping.md): weighted validation, selected iteration persistence and new-process counterexamples.
+- [Query-aware ranking worker](2026-09-06-v1-ranking-worker.md): explicit group weights, partition checks and named metric selection.

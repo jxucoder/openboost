@@ -340,3 +340,26 @@ OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 build/v1-env/bin/python -m benchmarks.v
 The second command runs the synthetic 16-trial selection/release smoke with
 stopping enabled, using a fresh output directory. Its patience of three is a
 small-fixture check; the preregistered real-search patience remains 50.
+
+## Query-aware ranking worker
+
+A4 now requires contiguous `query_train` and `query_validation` IDs; partitions
+must have disjoint query IDs of the same type. Supply one `query_weight_train`
+per contiguous training group and, with stopping, one `query_weight_validation`
+per validation group. Defaults are unit query weights. Generic row weights,
+fragmented query blocks and invalid relevance labels fail before training.
+
+The adapters use XGBoost rank:ndcg, LightGBM lambdarank and CatBoost PairLogit.
+XGBoost receives per-group weights; LightGBM and CatBoost receive the explicit
+native equivalents. Native NDCG@10 histories drive stopping, and prediction
+replay preserves the selected model. Independent final scoring uses the fixed
+v1 exponential-gain/unit-query NDCG convention; native weighting/gain conventions
+are not asserted numerically identical. They remain visible in recorded histories.
+
+[Ranking evidence](evidence/ranking-cpu.json) covers three CPU fit/stopping/reload
+checks. Reproduce with the pinned interpreter and two numerical threads:
+`build/v1-env/bin/python -m benchmarks.v1.ranking_smoke`.
+The initial smoke assertion selected the last metric in CatBoost's history,
+which is PairLogit rather than NDCG; its source/error record is retained. The
+corrected check locates NDCG by name. Real MSLR data/agreement and CUDA execution
+of this worker remain unverified; these probes do not pass real A4 quality.

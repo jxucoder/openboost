@@ -1,0 +1,6 @@
+{
+  "status": "error",
+  "scope": "synthetic adapter smoke",
+  "reason": "AssertionError comparing selected_rounds with argmax of the last native validation metric; last metric is not necessarily NDCG",
+  "source_sha256": "29b5ec36691ef33cdea59d641a20e72a889b55d2f9a49b58e8f1e82eeac56bd6"
+}

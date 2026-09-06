@@ -130,3 +130,17 @@ Reflection: native default prediction is not universally best-iteration predicti
 Preserve limits explicitly for XGBoost/NGBoost and retain each LightGBM fit's limit.
 Record native stopping metrics separately from independent method selection.
 CPU evidence does not establish CUDA stopping or complete F0.3 acceptance.
+
+### Remaining adapter work
+
+Implement A4 query-aware workers first: contiguous groups, disjoint query IDs,
+explicit per-query weights, native ranking objectives/stopping and saved scores.
+Reject row weights and fragmented groups before entering a comparator. Then add
+parametric/composed A9/A12 controls and auxiliary metrics against hand-worked
+oracles. Source/license and held-out requirements remain separate exit conditions.
+
+Ranking adapter result: all three CPU rankers passed weighted query-aware fitting,
+named-NDCG stopping and reload. Five group/weight/overlap counterexamples passed.
+The original smoke's metric-order assumption failed on CatBoost and is retained;
+selecting a metric by position is unsafe when a library adds a second history.
+Real ranking data/agreement remains unresolved; A4 quality is not passed.

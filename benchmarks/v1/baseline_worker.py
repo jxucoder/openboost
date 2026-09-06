@@ -17,8 +17,8 @@ import numpy as np
 
 def fit(job, arrays):
     task, library = job["application"], job["library"]
-    if task not in {f"A{i}" for i in range(1, 13)} or task == "A4":
-        raise ValueError("unsupported worker task; ranking needs query-aware adapter")
+    if task not in {f"A{i}" for i in range(1, 13)}:
+        raise ValueError("unsupported worker task")
     if library not in ["xgboost", "lightgbm", "catboost", "ngboost"]:
         raise ValueError("unknown baseline library")
     allowed_job = {
@@ -42,6 +42,10 @@ def fit(job, arrays):
         allowed_arrays.update({"y_validation", "weight_validation"})
         if task == "A10":
             allowed_arrays.add("event_validation")
+    if task == "A4":
+        allowed_arrays.update({"query_train", "query_validation", "query_weight_train"})
+        if patience is not None:
+            allowed_arrays.add("query_weight_validation")
     if task == "A7":
         allowed_arrays.update({"exposure_train", "exposure_validation"})
     if task == "A10":
@@ -67,6 +71,14 @@ def fit(job, arrays):
         event = arrays["event_train"]
         if event.shape != y.shape or not np.isin(event, [0, 1]).all() or np.any(y <= 0):
             raise ValueError("invalid survival targets")
+    ranking = None
+    if task == "A4":
+        # This file is also invoked directly by process_runner.
+        if __package__:
+            from benchmarks.v1.ranking import validate
+        else:
+            from ranking import validate
+        ranking = validate(arrays, patience)
     w = arrays.get("weight_train", np.ones(len(y)))
     if w.shape != (len(y),) or np.any(w < 0) or not np.isfinite(w).all() or w.sum() <= 0:
         raise ValueError("invalid sample weights")
@@ -126,6 +138,7 @@ def fit(job, arrays):
             "A1": "reg:squarederror",
             "A2": "binary:logistic",
             "A3": "multi:softprob",
+            "A4": "rank:ndcg",
             "A5": "reg:quantileerror",
             "A6": "reg:squarederror",
             "A7": "count:poisson",
@@ -151,8 +164,13 @@ def fit(job, arrays):
             params["quantile_alpha"] = [0.1, 0.5, 0.9]
         if task == "A9":
             params["tweedie_variance_power"] = 1.5
-        d = xgb.DMatrix(x, label=None if task == "A10" else y, weight=w)
+        d = xgb.DMatrix(x, label=None if task == "A10" else y, weight=None if task == "A4" else w)
         validation = xgb.DMatrix(v)
+        if task == "A4":
+            params["eval_metric"] = "ndcg@10"
+            d.set_group(ranking[0][1])
+            d.set_weight(ranking[0][2])
+            validation.set_group(ranking[1][1])
         if task == "A7":
             d.set_base_margin(base + np.log(exposure))
             validation.set_base_margin(base + np.log(validation_exposure))
@@ -170,7 +188,7 @@ def fit(job, arrays):
                 )
             else:
                 validation.set_label(vy)
-            validation.set_weight(vw)
+            validation.set_weight(ranking[1][2] if task == "A4" else vw)
         model = xgb.train(
             params,
             d,
@@ -202,6 +220,7 @@ def fit(job, arrays):
             "A1": "regression",
             "A2": "binary",
             "A3": "multiclass",
+            "A4": "lambdarank",
             "A5": "quantile",
             "A6": "regression",
             "A7": "poisson",
@@ -222,6 +241,8 @@ def fit(job, arrays):
             params["num_class"] = job["classes"]
         if task == "A9":
             params["tweedie_variance_power"] = 1.5
+        if task == "A4":
+            params.update(metric="ndcg", eval_at=[10])
         targets = y.T if task == "A6" else [y] * 3 if task == "A5" else [y]
         model = []
         predictions = []
@@ -231,7 +252,8 @@ def fit(job, arrays):
             d = lgb.Dataset(
                 x,
                 label=target,
-                weight=w,
+                weight=np.repeat(ranking[0][2], ranking[0][1]) if task == "A4" else w,
+                group=ranking[0][1] if task == "A4" else None,
                 init_score=base + np.log(exposure) if task == "A7" else None,
             )
             history = {}
@@ -243,7 +265,8 @@ def fit(job, arrays):
                     lgb.Dataset(
                         v,
                         label=vt,
-                        weight=vw,
+                        weight=np.repeat(ranking[1][2], ranking[1][1]) if task == "A4" else vw,
+                        group=ranking[1][1] if task == "A4" else None,
                         reference=d,
                         init_score=base + np.log(validation_exposure) if task == "A7" else None,
                     )
@@ -279,6 +302,7 @@ def fit(job, arrays):
             "A1": "RMSE",
             "A2": "Logloss",
             "A3": "MultiClass",
+            "A4": "PairLogit",
             "A5": "MultiQuantile:alpha=0.1,0.5,0.9",
             "A6": "MultiRMSE",
             "A7": "Poisson",
@@ -287,12 +311,23 @@ def fit(job, arrays):
             "A11": "RMSEWithUncertainty",
             "A12": "RMSE",
         }
-        klass = cb.CatBoostClassifier if task in ["A2", "A3"] else cb.CatBoostRegressor
+        klass = (
+            cb.CatBoostClassifier
+            if task in ["A2", "A3"]
+            else cb.CatBoostRanker
+            if task == "A4"
+            else cb.CatBoostRegressor
+        )
         target = (
             np.column_stack([y, np.where(arrays["event_train"], y, -1)]) if task == "A10" else y
         )
         data = cb.Pool(
-            x, label=target, weight=w, baseline=base + np.log(exposure) if task == "A7" else None
+            x,
+            label=target,
+            weight=None if task == "A4" else w,
+            group_id=arrays["query_train"] if task == "A4" else None,
+            group_weight=np.repeat(ranking[0][2], ranking[0][1]) if task == "A4" else None,
+            baseline=base + np.log(exposure) if task == "A7" else None,
         )
         valid_pool = None
         if patience is not None:
@@ -304,7 +339,9 @@ def fit(job, arrays):
             valid_pool = cb.Pool(
                 v,
                 label=vt,
-                weight=vw,
+                weight=None if task == "A4" else vw,
+                group_id=arrays["query_validation"] if task == "A4" else None,
+                group_weight=np.repeat(ranking[1][2], ranking[1][1]) if task == "A4" else None,
                 baseline=base + np.log(validation_exposure) if task == "A7" else None,
             )
         model = klass(
@@ -312,6 +349,7 @@ def fit(job, arrays):
             iterations=rounds,
             learning_rate=lr,
             loss_function=losses[task],
+            eval_metric="NDCG:top=10" if task == "A4" else None,
             random_seed=seed,
             thread_count=job["threads"],
             task_type="GPU" if job["device"] == "cuda" else "CPU",
@@ -335,7 +373,11 @@ def fit(job, arrays):
             prediction = model.predict(v, prediction_type="RMSEWithUncertainty")
             prediction[:, 1] = np.sqrt(prediction[:, 1])
         else:
-            prediction = model.predict(v, prediction_type="RawFormulaVal")
+            prediction = (
+                model.predict(v)
+                if task == "A4"
+                else model.predict(v, prediction_type="RawFormulaVal")
+            )
             if task in ["A7", "A9"]:
                 prediction = np.exp(
                     prediction + (base + np.log(validation_exposure) if task == "A7" else 0)
@@ -416,7 +458,11 @@ def predict_saved(saved, x, exposure=None):
             result = model.predict(x, prediction_type="RMSEWithUncertainty")
             result[:, 1] = np.sqrt(result[:, 1])
         else:
-            result = model.predict(x, prediction_type="RawFormulaVal")
+            result = (
+                model.predict(x)
+                if task == "A4"
+                else model.predict(x, prediction_type="RawFormulaVal")
+            )
             if task in ["A7", "A9"]:
                 result = np.exp(result + (offset if task == "A7" else 0))
     elif library == "ngboost":
