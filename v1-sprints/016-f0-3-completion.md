@@ -213,3 +213,24 @@ Twenty four-round real validation fits passed in fresh CPU processes, with A6
 saved scale matching the independent freeze. All 481 tests, Ruff and strict MkDocs
 pass. Scope is A1/A6/A11/A12 plumbing; remaining applications and full searches
 are still open. Separate files do not establish OS-enforced test isolation.
+
+### Classification and quantile binding
+
+1. Add Adult A2, Covertype A3 and Bike A5 using their frozen reader, source hashes
+   and encoders. Preserve physical/source row IDs and train-only category vocabularies.
+2. Validate Bike's expanding chronological prefix rather than requiring every
+   fold to include future rows; reject gaps, overlap and dates crossing boundaries.
+3. Exercise all five new real folds in bounded CPU workers and retain failures,
+   probability/quantile schemas and raw provenance. Keep earlier bindings covered.
+
+First counterexamples: future rows must not enter an early Bike origin; unseen
+Adult validation categories must not expand the training vocabulary.
+
+Result: all 35 real-data validation fits passed (seven application paths by five
+folds), including prior bindings. All 484 tests, Ruff and strict MkDocs passed.
+Raw evidence is `benchmarks/v1/evidence/real-classification-quantile-binding-cpu.json`.
+
+Reflection: source row identities and positional preprocessing indices serve
+different purposes and must not be conflated. Chronological evaluation also
+requires deliberately unused future data; universal full-coverage validation
+would silently change the task. No required application was dropped.

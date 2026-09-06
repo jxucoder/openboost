@@ -1,4 +1,4 @@
-"""Bind frozen Housing, Parkinsons and Concrete folds to numeric worker packets.
+"""Bind supported frozen real-data folds to numeric worker packets.
 
 Run as an evaluation-side preparer. Separate files are not an OS access boundary.
 """
@@ -10,10 +10,18 @@ from pathlib import Path
 
 import numpy as np
 
-from benchmarks.v1 import housing, real_data
+from benchmarks.v1 import adult, bike, housing, real_data
 from benchmarks.v1.preprocessing import fit_encoder, fit_target_scale, transform
 
-NAMES = {"A1": "housing", "A11": "housing", "A6": "parkinsons", "A12": "concrete"}
+NAMES = {
+    "A1": "housing",
+    "A2": "adult",
+    "A3": "covertype",
+    "A5": "bike",
+    "A11": "housing",
+    "A6": "parkinsons",
+    "A12": "concrete",
+}
 PARTS = ("train", "validation", "test")
 
 
@@ -28,14 +36,29 @@ def bind(application, data, parts, frozen):
         if rows.ndim != 1 or rows.dtype.kind not in "iu" or not len(rows):
             raise ValueError("nonempty integer row indices required")
     joined = np.concatenate(list(parts.values()))
-    if not np.array_equal(np.sort(joined), np.arange(len(x))):
+    if application == "A5":
+        if not np.array_equal(joined, np.arange(len(joined))) or len(joined) > len(x):
+            raise ValueError("rolling partitions must be an ordered source prefix")
+        dates = data["dates"]
+        if dates.shape != (len(x),) or np.any(dates[1:] < dates[:-1]):
+            raise ValueError("chronological dates required")
+        if any(
+            dates[parts[a][-1]] >= dates[parts[b][0]]
+            for a, b in zip(PARTS, PARTS[1:], strict=False)
+        ):
+            raise ValueError("dates cross rolling boundaries")
+    elif not np.array_equal(np.sort(joined), np.arange(len(x))):
         raise ValueError("partitions must cover each source row exactly once")
+    ids = data.get("row_ids", np.arange(len(x)))
+    if ids.shape != (len(x),) or ids.dtype.kind not in "iuUS" or len(np.unique(ids)) != len(ids):
+        raise ValueError("unique source row identifiers required")
+    categories = data.get("categories", {})
     train = parts["train"]
     if "group" in data:
         groups = [set(data["group"][parts[p]].tolist()) for p in PARTS]
         if any(groups[i] & groups[j] for i in range(3) for j in range(i)):
             raise ValueError("group crosses partitions")
-    if fit_encoder(x[train]) != frozen["encoder"]:
+    if fit_encoder(x[train], {k: v[train] for k, v in categories.items()}) != frozen["encoder"]:
         raise ValueError("training encoder differs from freeze")
     metadata = {}
     if application == "A6":
@@ -44,7 +67,7 @@ def bind(application, data, parts, frozen):
             raise ValueError("training target scale differs from freeze")
     encoded = {}
     for part, rows in parts.items():
-        result = transform(frozen["encoder"], x[rows])
+        result = transform(frozen["encoder"], x[rows], {k: v[rows] for k, v in categories.items()})
         expected = frozen["partitions"][part]
         if (
             real_data.array_hash(rows) != expected["rows_sha256"]
@@ -65,19 +88,19 @@ def bind(application, data, parts, frozen):
         y_train=y[train],
         x_validation=encoded["validation"],
         y_validation=y[parts["validation"]],
-        validation_row_ids=parts["validation"],
+        validation_row_ids=ids[parts["validation"]],
     )
     packets = {
         "worker-input": worker,
-        "train-rows": {"row_ids": train},
-        "validation": {"row_ids": parts["validation"], "y": y[parts["validation"]]},
-        "test-features": {"row_ids": parts["test"], "x": encoded["test"]},
-        "test-truth": {"row_ids": parts["test"], "y": y[parts["test"]]},
+        "train-rows": {"row_ids": ids[train]},
+        "validation": {"row_ids": ids[parts["validation"]], "y": y[parts["validation"]]},
+        "test-features": {"row_ids": ids[parts["test"]], "x": encoded["test"]},
+        "test-truth": {"row_ids": ids[parts["test"]], "y": y[parts["test"]]},
     }
     if application == "A12":
         for part in ("validation", "test"):
             packets[part + "-structure"] = dict(
-                row_ids=parts[part],
+                row_ids=ids[parts[part]],
                 age=age[parts[part]],
                 train_min=np.asarray(metadata["age_train_range"][0]),
                 train_max=np.asarray(metadata["age_train_range"][1]),
@@ -91,6 +114,8 @@ def export(
     *,
     root=Path("build/v1-data"),
     housing_path=Path("build/foundation_data/cal_housing.tgz"),
+    adult_path=Path("/tmp/openboost-v1-adult.zip"),
+    bike_path=Path("/tmp/openboost-v1-bike.zip"),
 ):
     if application not in NAMES:
         raise ValueError("unsupported application")
@@ -108,7 +133,39 @@ def export(
             raise ValueError("frozen source implementation changed")
     source_path = source_dir / (name + ".json")
     source = json.loads(source_path.read_text())
-    if name == "housing":
+    if name == "adult":
+        first, last = adult.load_archive(adult_path)
+        for member, rows in [("adult.data", first), ("adult.test", last)]:
+            if (
+                adult.digest(adult.canonical(rows))
+                != source["source_records"][member]["data_sha256"]
+            ):
+                raise ValueError("Adult records differ from freeze")
+        raw = np.asarray(first["x"] + last["x"], dtype=object)
+        numeric = [i for i, c in enumerate(adult.FEATURES) if c in adult.NUMERIC]
+        data = dict(
+            x=raw[:, numeric].astype(float),
+            y=np.asarray(first["y"] + last["y"]),
+            row_ids=np.asarray(first["row_ids"] + last["row_ids"]),
+            categories={
+                c: raw[:, i] for i, c in enumerate(adult.FEATURES) if c not in adult.NUMERIC
+            },
+        )
+        splits = [
+            (
+                *adult.stratified_split(first["y"], seed),
+                np.arange(len(first["y"]), len(data["y"]), dtype="<i8"),
+            )
+            for seed in range(5)
+        ]
+    elif name == "bike":
+        raw = bike.load_archive(bike_path)
+        for field, dtype in [("x", "<f8"), ("y", "<f8"), ("row_ids", "<i8")]:
+            if bike.array_hash(getattr(raw, field), dtype) != source[field + "_sha256"]:
+                raise ValueError("Bike source arrays differ from freeze")
+        data = dict(x=raw.x, y=raw.y, row_ids=raw.row_ids, dates=raw.dates)
+        splits = [tuple(fold[p] for p in PARTS) for fold in bike.rolling_splits(raw.dates)]
+    elif name == "housing":
         x, y, _ = housing.load_archive(housing_path)
         data = dict(x=x, y=y)
         splits = [housing.split_indices(len(y), s) for s in range(5)]
@@ -119,14 +176,21 @@ def export(
         for field, expected in source["arrays"].items():
             if real_data.array_hash(data[field]) != expected["sha256"]:
                 raise ValueError("source arrays differ from freeze")
-        splits = [real_data.group_splits(data["group"], s) for s in range(5)]
+        splits = [
+            real_data.stratified_splits(data["y"], s)
+            if name == "covertype"
+            else real_data.group_splits(data["group"], s)
+            for s in range(5)
+        ]
     records = []
     # Validate every fold before writing any worker input.
-    prepared = [
-        bind(application, data, dict(zip(PARTS, split, strict=True)), prep["datasets"][name][s])
-        for s, split in enumerate(splits)
-    ]
-    for seed, (packets, metadata) in enumerate(prepared):
+    for seed, split in enumerate(splits):
+        bind(application, data, dict(zip(PARTS, split, strict=True)), prep["datasets"][name][seed])
+    # Keep only one encoded fold in memory (Covertype is substantially larger).
+    for seed, split in enumerate(splits):
+        packets, metadata = bind(
+            application, data, dict(zip(PARTS, split, strict=True)), prep["datasets"][name][seed]
+        )
         folder = directory / str(seed)
         folder.mkdir()
         artifacts = {}

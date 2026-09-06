@@ -45,7 +45,7 @@ def run(directory):
         data={},
         cells=[],
     )
-    for app in ["A1", "A6", "A11", "A12"]:
+    for app in ["A1", "A2", "A3", "A5", "A6", "A11", "A12"]:
         packet = root / app
         manifest = export(app, packet)
         result["data"][app] = manifest
@@ -57,6 +57,7 @@ def run(directory):
                 device="cpu",
                 threads=2,
                 seed=seed,
+                **({"classes": 7} if app == "A3" else {}),
                 early_stopping_rounds=3,
                 config=dict(
                     rounds=4,
@@ -86,10 +87,22 @@ def run(directory):
                         packet / fold["artifacts"]["validation"]["path"], allow_pickle=False
                     ) as truth,
                 ):
-                    expected_shape = (len(truth["y"]), 2) if app == "A11" else truth["y"].shape
+                    expected_shape = (
+                        (len(truth["y"]), {"A11": 2, "A3": 7, "A5": 3}[app])
+                        if app in ["A11", "A3", "A5"]
+                        else truth["y"].shape
+                    )
                     assert predictions["prediction"].shape == expected_shape
                     assert np.isfinite(predictions["prediction"]).all()
                     np.testing.assert_array_equal(predictions["row_ids"], truth["row_ids"])
+                    if app in ["A2", "A3"]:
+                        assert np.all(
+                            (predictions["prediction"] >= 0) & (predictions["prediction"] <= 1)
+                        )
+                    if app == "A3":
+                        np.testing.assert_allclose(
+                            predictions["prediction"].sum(axis=1), 1, atol=1e-6
+                        )
                 training = json.loads((output / "training.json").read_text())
                 if app == "A6":
                     assert training["target_scale"] == fold["metadata"]["target_scale"]

@@ -460,8 +460,8 @@ for standardized-average RMSE.
 
 ## Frozen real-data worker packets
 
-`worker_data.py` exports all five Housing (A1/A11), Parkinsons (A6), and Concrete
-(A12 ordinary GBDT) folds. It checks source arrays, reader hashes, recomputed
+`worker_data.py` exports all five Housing (A1/A11), Adult (A2), Covertype (A3),
+Bike (A5), Parkinsons (A6), and Concrete (A12 ordinary GBDT) folds. It checks source arrays, reader hashes, recomputed
 training encoders, exact partition hashes, group disjointness and A6 target scale
 against the existing freezes. Other applications are explicitly unsupported by
 this exporter and remain required work.
@@ -483,3 +483,16 @@ normalization and the frozen scale is retained for independent checking.
 The smoke uses four rounds and patience three, checks row identity and finite
 output shapes, and verifies the saved A6 scale. The worker checks reload before
 emitting artifacts. It does not read test truth, select a model, or certify E3.
+
+Adult packets retain official source/physical-line IDs; its official test set
+is unchanged across the five stratified training splits. Categorical vocabularies
+are fitted on training rows and checked against the freeze. Covertype retains
+all seven classes and source row positions. Bike preserves `instant` source IDs,
+expanding chronological windows and date-disjoint boundaries. Later observations
+are excluded from each earlier origin; they are not forced into that fold's test
+set. Preprocessing hashes bind positional source indices, while prediction/truth
+packets carry the original row IDs where provided.
+
+The exporter validates all folds before writing packets, then materializes one
+fold at a time to limit memory use on Covertype. It still emits dense controls;
+this is not a memory or throughput claim for the future foundation.

@@ -58,3 +58,48 @@ def test_concrete_age_feature_and_support_stay_aligned():
     np.testing.assert_array_equal(packets["test-structure"]["row_ids"], parts["test"])
     np.testing.assert_array_equal(data["x"], original["x"])
     assert packets["worker-input"]["x_train"].shape[1] == 5
+
+
+def test_categories_and_source_ids_survive_packet_binding():
+    data, parts, _ = fixture()
+    data.pop("group")
+    data["y"] = np.arange(9) % 2
+    data["row_ids"] = np.array([f"adult.data:{i + 1}" for i in range(9)])
+    data["categories"] = {"kind": np.array(["a"] * 3 + ["unseen"] * 6)}
+    frozen = prepare("adult", data, [parts], data["categories"])[0]
+    packets, _ = bind("A2", data, parts, frozen)
+    assert frozen["encoder"]["categories"] == {"kind": ["a"]}
+    np.testing.assert_array_equal(packets["worker-input"]["x_validation"][:, -1], 1)
+    np.testing.assert_array_equal(packets["validation"]["row_ids"], data["row_ids"][3:6])
+    data["row_ids"][1] = data["row_ids"][0]
+    with pytest.raises(ValueError, match="row identifiers"):
+        bind("A2", data, parts, frozen)
+
+
+def test_rolling_fold_excludes_future_and_keeps_source_ids():
+    data, _, _ = fixture()
+    data.pop("group")
+    data["y"] = np.arange(9)
+    data["dates"] = np.array([f"2020-01-{i + 1:02}" for i in range(9)])
+    data["row_ids"] = np.arange(101, 110)
+    parts = dict(train=np.arange(3), validation=np.arange(3, 5), test=np.arange(5, 7))
+    frozen = prepare("bike", data, [parts])[0]
+    packets, _ = bind("A5", data, parts, frozen)
+    np.testing.assert_array_equal(packets["test-features"]["row_ids"], [106, 107])
+    parts["test"] = np.arange(5, 8)
+    with pytest.raises(ValueError, match="freeze"):
+        bind("A5", data, parts, frozen)
+
+
+def test_rolling_gap_and_same_day_boundary_are_rejected():
+    data, parts, _ = fixture()
+    data.pop("group")
+    data["y"] = np.arange(9)
+    data["dates"] = np.array([f"2020-01-{i + 1:02}" for i in range(9)])
+    frozen = prepare("bike", data, [parts])[0]
+    data["dates"][3] = data["dates"][2]
+    with pytest.raises(ValueError, match="dates cross"):
+        bind("A5", data, parts, frozen)
+    parts["test"] = np.arange(7, 9)
+    with pytest.raises(ValueError, match="prefix"):
+        bind("A5", data, parts, frozen)
