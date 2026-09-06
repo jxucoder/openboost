@@ -457,3 +457,29 @@ metrics use standardized targets and zero standardized initialization. Saved
 bundles and training receipts retain `target_scale`; exported predictions and
 replay are in original units. Final A6 scoring must supply the same training std
 for standardized-average RMSE.
+
+## Frozen real-data worker packets
+
+`worker_data.py` exports all five Housing (A1/A11), Parkinsons (A6), and Concrete
+(A12 ordinary GBDT) folds. It checks source arrays, reader hashes, recomputed
+training encoders, exact partition hashes, group disjointness and A6 target scale
+against the existing freezes. Other applications are explicitly unsupported by
+this exporter and remain required work.
+
+```bash
+build/v1-env/bin/python -m benchmarks.v1.worker_data A6 build/a6-packets
+build/v1-env/bin/python -m benchmarks.v1.worker_data_smoke build/real-worker-smoke
+```
+
+Use fresh output directories. Each fold contains a validation worker packet with
+explicit early-stopping labels, separate train-row IDs, validation truth, test
+features and test truth. The preparer is evaluation-side trusted code; these files
+share a directory, so this is not OS-enforced test isolation. The execution runner
+must control mounts/access before formal candidate trials. A12 appends age/28 to
+ordinary GBDT features and emits separate support artifacts; this packet is not a
+FormulaBoost learner input. A6 targets remain in original units; the worker owns
+normalization and the frozen scale is retained for independent checking.
+
+The smoke uses four rounds and patience three, checks row identity and finite
+output shapes, and verifies the saved A6 scale. The worker checks reload before
+emitting artifacts. It does not read test truth, select a model, or certify E3.

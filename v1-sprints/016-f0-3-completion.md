@@ -194,3 +194,22 @@ Reflection: task-space normalization is part of comparator fairness, not cosmeti
 preprocessing. The constant-target counterexample found a real native-library
 contract difference. Held-out custody now exists, but does not remove the need
 for restricted candidate execution and frozen cohort accounting.
+
+### Real-data worker binding
+
+1. Bind Housing A1/A11, Parkinsons A6 and Concrete A12 to existing verified
+   sources and all five frozen preprocessing partitions. Reject changed rows,
+   encoders, targets and subject/recipe overlap before export.
+2. Export validation worker inputs separately from test features and test truth;
+   preserve original target units and keep A12 age explicit in baseline features.
+3. Run real-data CPU plumbing checks and record hashes/reload results. These
+   checks do not replace the 16-trial search, quality matrix or OS isolation.
+
+First counterexample: a valid-looking reordered partition or modified training
+encoder must fail even if array shapes remain identical.
+
+Binding result: all 20 exported fold packets reproduced their frozen preprocessing.
+Twenty four-round real validation fits passed in fresh CPU processes, with A6
+saved scale matching the independent freeze. All 481 tests, Ruff and strict MkDocs
+pass. Scope is A1/A6/A11/A12 plumbing; remaining applications and full searches
+are still open. Separate files do not establish OS-enforced test isolation.

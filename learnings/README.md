@@ -127,3 +127,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [Housing hosted license](2026-09-06-v1-source-license-review.md): matched archive and dated attribution evidence.
 
 - [Held-out seal](2026-09-06-v1-heldout-seal.md): separate evaluator context, opaque archive custody and pending execution gates.
+
+- [Real worker binding](2026-09-06-v1-real-worker-binding.md): frozen folds, target units and separate evaluation packets.
