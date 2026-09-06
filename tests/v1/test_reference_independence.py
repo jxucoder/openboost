@@ -30,6 +30,13 @@ from tests.v1.reference.vector import fit_vector_stump
 assert pairwise([0, 0], [1, 0], [0, 0]).gradient[0] == -.5
 assert weighted_quantile([0, 2, 10], .5, [1, 3, 1]) == 2
 assert fit_vector_stump([[0], [1]], [[0], [0]], [[-1], [1]]).predict([[0]])[0, 0] == -.5
+from tests.v1.reference.positive import poisson, gamma, tweedie
+from tests.v1.reference.survival import aft, normal_tail
+assert poisson([0], [1], [1])[1][0] == 0
+assert gamma([0], [1])[1][0] == 0
+assert tweedie([0], [0])[1][0] == 1
+assert aft([0], [1], [1])[2][0] == 1
+assert normal_tail(40)[2] > .999
 from tests.v1.reference.tree import boost_squared
 for policy in ("depthwise", "best_first", "symmetric"):
     result = boost_squared([[0], [0], [1], [1]], [-2, -2, 2, 2], policy=policy)

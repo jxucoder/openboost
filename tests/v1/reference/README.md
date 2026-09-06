@@ -2,7 +2,8 @@
 
 These are small, deliberately slow NumPy oracles for [Sprint 001](../../../v1-sprints/001-scalar-tree-reference.md)
 [Sprint 003](../../../v1-sprints/003-data-classification-reference.md),
-and [Sprint 004](../../../v1-sprints/004-ranking-quantile-vector-reference.md),
+[Sprint 004](../../../v1-sprints/004-ranking-quantile-vector-reference.md),
+and [Sprint 005](../../../v1-sprints/005-positive-aft-reference.md),
 not a production OpenBoost implementation or a performance baseline.
 
 `scalar.py` implements weighted half-square loss, unweighted derivatives, explicit
@@ -59,6 +60,18 @@ a correct leaf solver can coexist with no profitable pseudo split.
 gradients and diagonal projected curvatures select topology while leaves always
 use full original output statistics. It is a stump probe, not full vector growth.
 Target scaling uses train-only unweighted population mean/std and constant flags.
+
+`positive.py` defines Poisson exposure offsets, Gamma log-mean and fixed-power
+Tweedie geometry with explicit support checks. Returned derivatives are unweighted.
+Poisson's all-zero base needs an explicit minimum rate; its prediction requires
+exposure and distinguishes rate/count. A tiny policy join separates positive-paid
+count/mean from raw ClaimNb and reports inconsistent or excluded records.
+
+`survival.py` accepts exact events and right-censored log-normal intervals only.
+It separates event density from survival probability, keeps a stable log-tail and
+inverse Mills curvature, and exposes median/mean/survival/quantile mathematics.
+The far-tail continued fraction is checked against independent quadrature. These
+are numerical fixtures, not clinical evaluation or persistence implementation.
 
 Remaining F0.2 work includes row alignment/identity, complete categorical/vector grow,
 other typed targets/objective families and transaction/run
