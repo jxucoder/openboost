@@ -555,3 +555,29 @@ checks exact validation replay in a new process. It reads no test truth during
 training or scoring, performs no configuration search and makes no quality or
 performance claim. Exported packet separation is not an OS access boundary.
 Formal test-label isolation, all application bindings and E3 remain open.
+
+### A6 multi-output integration
+
+The current worker also accepts A6 finite matrix targets and `mode=shared` or
+`mode=independent`. It computes the same **unweighted training-population** mean
+and standard deviation as the frozen evaluator/comparator protocol, even when
+training weights are supplied. This is intentionally different from the general
+public `TargetScale.fit`, which uses weights. The worker constructs a public
+TargetScale from the frozen convention and uses it for both training and validation.
+Sample weights still apply to loss/derivatives. Constant target scales use one.
+
+Best-model selection and patience use the row-weighted mean of the sum of
+standardized half squared errors across outputs. For a fixed output width this
+has the same ordering as their mean; the recorded score retains the sum convention.
+The saved A6 bundle includes `target_scale` (mean/std/constant), and restored
+predictions apply the inverse transform once, returning original target units.
+Training metadata records the convention and scale. This does not implement
+cross-configuration A13 selection or the full A6 quality protocol.
+
+```sh
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.openboost_worker_smoke /tmp/openboost-multi-worker-045 --applications A6
+```
+
+The smoke verifies all five grouped Parkinsons folds and exact scale equality
+with the freeze. Default smoke applications are now A1/A6/A11; explicit application
+selection permits bounded reruns. Four-round results are integration evidence only.

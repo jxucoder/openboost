@@ -8,28 +8,41 @@ import numpy as np
 
 from openboost import NumericData
 from openboost.artifacts import Model
+from openboost.multioutput import MultiOutputModel, TargetScale
 from openboost.objectives import Normal
 
-OUTPUTS = {"A1": "mean", "A11": "normal_mean_scale"}
+OUTPUTS = {"A1": "mean", "A11": "normal_mean_scale", "A6": "multioutput_original_units"}
 
 
 def predict_saved(saved, x):
     if (
         not isinstance(saved, dict)
-        or set(saved) != {"format", "application", "output", "model"}
+        or set(saved)
+        != (
+            {"format", "application", "output", "model"}
+            | ({"target_scale"} if saved.get("application") == "A6" else set())
+        )
         or saved["format"] != "openboost-evaluation-v1"
         or saved["application"] not in OUTPUTS
         or saved["output"] != OUTPUTS[saved["application"]]
     ):
         raise ValueError("unsupported evaluation bundle")
     model = Model.from_record(saved["model"])
-    width = 1 if saved["application"] == "A1" else 2
+    scale = None
+    if saved["application"] == "A6":
+        record = saved["target_scale"]
+        if not isinstance(record, dict) or set(record) != {"mean", "std", "constant"}:
+            raise ValueError("invalid evaluation target scale")
+        scale = TargetScale(record["mean"], record["std"], record["constant"])
+    width = len(scale.mean) if scale is not None else 1 if saved["application"] == "A1" else 2
     if model.base.shape != (width,) or model.classes is not None:
         raise ValueError("model differs from declared output semantics")
     x = np.asarray(x)
     if x.ndim != 2 or not np.isfinite(x).all():
         raise ValueError("finite encoded prediction matrix required")
     data = NumericData(x, np.arange(len(x)), model.feature_names)
+    if scale is not None:
+        return MultiOutputModel(model, scale).predict(data)
     raw = model.predict(data)
     return raw[:, 0] if width == 1 else Normal.parameters(raw)
 

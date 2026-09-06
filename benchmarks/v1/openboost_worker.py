@@ -1,4 +1,4 @@
-"""Current CPU A1/A11 trials on frozen encoded train/validation packets.
+"""Current CPU A1/A6/A11 trials on frozen encoded train/validation packets.
 
 Explicit validation targets are required even with fixed budgets. The caller
 controls process threads and resource limits. Test arrays are always rejected.
@@ -12,12 +12,15 @@ from pathlib import Path
 import numpy as np
 
 from openboost import NumericData, Problem, RunContext
-from openboost.recipes import normal, squared
+from openboost.multioutput import TargetScale
+from openboost.recipes import multi_squared, normal, squared
 
 if __package__:
     from benchmarks.v1.openboost_predict import OUTPUTS, predict_saved
+    from benchmarks.v1.preprocessing import fit_target_scale
 else:
     from openboost_predict import OUTPUTS, predict_saved
+    from preprocessing import fit_target_scale
 
 
 def fit(job, arrays):
@@ -43,32 +46,49 @@ def fit(job, arrays):
     allowed = {"rounds", "learning_rate", "max_depth", "reg_lambda", "bins"}
     if job["application"] == "A11":
         allowed |= {"mode", "damping", "minimum_scale"}
+    if job["application"] == "A6":
+        allowed |= {"mode"}
     if set(cfg) - allowed or not {"rounds", "learning_rate"} <= set(cfg):
         raise ValueError("unsupported current recipe config")
     if type(cfg["rounds"]) is not int or cfg["rounds"] <= 0:
         raise ValueError("positive round budget required")
     problems = []
     width = 1 if job["application"] == "A1" else 2
+    multi = job["application"] == "A6"
+    target_scale = None
+    scale = None
     names = None
     for part in ("train", "validation"):
         x, y = np.asarray(arrays["x_" + part]), np.asarray(arrays["y_" + part])
         if (
             x.ndim != 2
-            or y.shape != (len(x),)
+            or (
+                y.ndim != 2 or not y.shape[1] or len(y) != len(x) if multi else y.shape != (len(x),)
+            )
             or not len(x)
             or not np.isfinite(x).all()
             or not np.isfinite(y).all()
         ):
-            raise ValueError("finite encoded scalar training/validation data required")
+            raise ValueError("finite encoded inputs and aligned task targets required")
+        if multi and part == "train":
+            width = y.shape[1]
+            target_scale = fit_target_scale(y)
+            scale = TargetScale(target_scale["mean"], target_scale["std"], target_scale["constant"])
         names = tuple(f"x{i}" for i in range(x.shape[1])) if names is None else names
         ids = np.arange(len(x)) if part == "train" else arrays["validation_row_ids"]
         data = NumericData(x, ids, names)
         problems.append(
             Problem(
-                data, y[:, None], data.row_ids, weight=arrays.get("weight_" + part), raw_width=width
+                data,
+                y if multi else y[:, None],
+                data.row_ids,
+                weight=arrays.get("weight_" + part),
+                raw_width=width,
             )
         )
-    recipe = squared if width == 1 else normal
+    if multi:
+        problems = [scale.transform(p) for p in problems]
+    recipe = multi_squared if multi else (squared if width == 1 else normal)
     result = recipe(
         *problems,
         context=RunContext("evaluation", job["seed"]),
@@ -83,6 +103,8 @@ def fit(job, arrays):
         output=OUTPUTS[job["application"]],
         model=model.record(),
     )
+    if multi:
+        saved["target_scale"] = target_scale
     prediction = predict_saved(saved, arrays["x_validation"])
     training = dict(
         selection=selection,
@@ -92,6 +114,12 @@ def fit(job, arrays):
         best_validation_score=result.state.best_score,
         output=saved["output"],
     )
+    if multi:
+        training.update(
+            target_scale=target_scale,
+            scale_convention="unweighted_train_population",
+            selection_metric="row_mean_sum_standardized_half_squared_error",
+        )
     return prediction, saved, training
 
 

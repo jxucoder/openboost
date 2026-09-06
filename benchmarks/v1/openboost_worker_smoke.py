@@ -1,4 +1,4 @@
-"""Bounded current A1/A11 worker integration on all five frozen housing folds."""
+"""Bounded current A1/A6/A11 worker integration on all five frozen folds."""
 
 import argparse
 import hashlib
@@ -16,17 +16,30 @@ from benchmarks.v1.process_runner import execute
 from benchmarks.v1.worker_data import export
 
 
-def run(directory):
+def run(directory, applications=("A1", "A6", "A11")):
+    if (
+        not applications
+        or len(set(applications)) != len(applications)
+        or set(applications) - {"A1", "A6", "A11"}
+    ):
+        raise ValueError("unique supported applications required")
     root = Path(directory).resolve()
     root.mkdir(parents=True, exist_ok=True)
     if any(root.iterdir()):
         raise ValueError("fresh output directory required")
     repo = Path(__file__).resolve().parents[2]
     report = dict(
-        scope="Current A1/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+        scope="Current A1/A6/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
         revision=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
         dirty=bool(subprocess.check_output(["git", "status", "--porcelain"])),
-        argv=[sys.executable, "-m", "benchmarks.v1.openboost_worker_smoke", str(root)],
+        argv=[
+            sys.executable,
+            "-m",
+            "benchmarks.v1.openboost_worker_smoke",
+            str(root),
+            "--applications",
+            *applications,
+        ],
         python=platform.python_version(),
         os=platform.platform(),
         machine=platform.machine(),
@@ -48,11 +61,12 @@ def run(directory):
         "openboost_predict.py",
         "openboost_worker_smoke.py",
         "worker_data.py",
+        "preprocessing.py",
         "process_runner.py",
     ):
         p = Path(__file__).with_name(name)
         report["sources"][str(p.relative_to(repo))] = hashlib.sha256(p.read_bytes()).hexdigest()
-    for app in ("A1", "A11"):
+    for app in applications:
         packet = root / app
         manifest = export(app, packet)
         report["data"][app] = manifest
@@ -116,6 +130,8 @@ def run(directory):
                         np.testing.assert_array_equal(actual["row_ids"], restored["row_ids"])
                         np.testing.assert_array_equal(actual["prediction"], restored["prediction"])
                         expected_width = () if app == "A1" else (2,)
+                        if app == "A6":
+                            expected_width = (len(fold["metadata"]["target_scale"]["mean"]),)
                         assert actual["prediction"].shape == (
                             len(actual["row_ids"]),
                             *expected_width,
@@ -126,6 +142,10 @@ def run(directory):
                         record["prediction_shape"] = list(actual["prediction"].shape)
                     record["fresh_process_exact"] = True
                     record["training"] = json.loads((output / "training.json").read_text())
+                    if app == "A6":
+                        assert (
+                            record["training"]["target_scale"] == fold["metadata"]["target_scale"]
+                        )
                     record["replay_sha256"] = hashlib.sha256(
                         (output / "replay.npz").read_bytes()
                     ).hexdigest()
@@ -139,8 +159,11 @@ def run(directory):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
+    parser.add_argument(
+        "--applications", nargs="+", choices=("A1", "A6", "A11"), default=["A1", "A6", "A11"]
+    )
     args = parser.parse_args()
-    result = run(args.directory)
+    result = run(args.directory, args.applications)
     passed = sum(c["status"] == "pass" for c in result["cells"])
     print(f"{passed}/{len(result['cells'])} current real-data worker cells passed")
     if passed != len(result["cells"]):
