@@ -1,13 +1,17 @@
 # OpenBoost v1: Programmable boosting foundation design, execution and acceptance
 
 Date: 2026-09-05. Version: **the real v1 planning baseline**, explicitly designated by the user.
-Status: **F0.1/F0.2 delivered; F0.3 open; B03 initial CPU construction under approved overlap; formal evaluation not yet executed**.
+Status as of Sprint 038: **F0.1/F0.2 delivered; F0.3 open; broad CPU construction delivered, formal F1 exit and author/quality/cost evaluation incomplete**.
 v1 denotes this product/architecture goal, not the existing PyPI version or a claim that P0–P7 completed v1.
 Code-review baseline: 3ac1552; branch: codex/gpu-python-foundation-design.
 Execution: [v1-sprints](../v1-sprints/README.md); Sprint 010 completed the
 [F0.2 exit audit](../v1-sprints/f0-2-acceptance-ledger.md). Each sprint records plan/results/reflection;
 phase status follows evidence. At the user's request, Sprint 002 retired old production early.
-Reproduce it at `50acfc6`. The package has initial B03 CPU records/state artifacts; amended phase dependencies/gates below apply.
+Reproduce it at `50acfc6`. The package now has shared CPU components, twelve
+recipes and explicit training-preparation reuse. See the
+[current goal/progress review and execution plan](../v1-sprints/038-goal-progress-and-plan.md)
+for delivered boundaries and remaining work. Amended phase dependencies and
+acceptance gates below still apply; implemented recipe count is not a phase exit.
 
 This plan supersedes future investment order in the old GPU checklist and the
 [ScoringBench-first plan](impact-adoption-value-next.md). Old experiments and failures remain valid.

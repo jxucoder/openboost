@@ -11,6 +11,17 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
+Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
+Public CPU components now cover twelve recipes, multi-output target scaling and
+shared training preparation. The latest full regression records 735 passes;
+this includes references/evaluation infrastructure and is not a phase gate.
+Next: independent stopping, installed public extension trials and current
+OpenBoost real-data integration. CUDA, formal author comparisons, real application
+acceptance and independent adoption remain open.
+
+The chronological entries below record status at each sprint's revision. Their
+historical "next" statements are superseded by the current review.
+
 | Sprint | Plan mapping | Status | Deliverable and record |
 |---|---|---|---|
 | 001 | B01/F0.2 scalar/tree subset | Complete; 55 tests | [Scalar/tree references](001-scalar-tree-reference.md) |
@@ -29,9 +40,9 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 | 014 | B02/F0.3 A2 official test/stratification | Complete; 396 total tests | [Adult freeze](014-adult-data-freeze.md) |
 | 015 | Cross-cutting English prose | Complete; no phase advancement | [English repository](015-english-repository.md) |
 
-Next complete B02/F0.3 frozen evaluation. Public F1 implementation begins at B03 and connects
-components/all algorithms through B04–B10. References are not product implementation. Select
-bounded future sprints by dependency without bypassing phase exits. The user reaffirmed evaluation first.
+At Sprint 015, B02/F0.3 frozen evaluation was next and public F1 construction had
+not started. The subsequently approved overlap and CPU construction are recorded
+below. References are not product implementation; phase exits remain evidence-based.
 
 ## Execution rules
 
@@ -63,12 +74,15 @@ quantile/vector; 005 positive/count/policy joins/event-right-censored AFT; 006 N
 007 identity/isolation/selection; 008 D1/D3/D4; 009 full mixed/vector growth; 010 finite model/state
 compositions. See [F0.2 exit mapping](f0-2-acceptance-ledger.md).
 
-Sprint 011 adds integrity judging. Sprint 012 freezes A5 data/calendar/five date windows.
-Sprint 013 adds Housing inputs/five splits for A1/A11, with license unresolved. Sprint 014 adds A2
-Adult data and official-test-preserving splits. Other required data, capabilities, budgets,
-held-out tasks, runner and quality judge remain incomplete; all real quality results are pending.
-No E0–E6 gate passed through creating these files. E7 has no new independent-adoption evidence.
-Every application's production and real evaluation still require individual completion.
+Sprint 011 adds integrity judging. Sprint 012 freezes A5 data/calendar/five date
+windows. Sprint 013 adds Housing inputs/five splits for A1/A11; its initially
+unresolved license later received a source declaration, with provenance limits
+recorded in the [review](../benchmarks/v1/datasets/housing-license-review.json).
+Sprint 014 adds A2 Adult data and official-test-preserving splits. Further data,
+baseline/budget, worker, selection and sealed held-out preparation exist; see the
+Sprint 017 ledger and Sprint 038 for remaining integration obligations. All real
+quality gates remain open. Creating these files did not pass E0–E6; E7 has no new
+independent-adoption evidence. Every application requires individual acceptance.
 
 Current sequencing review: [Sprint 017 audit](017-f0-sequencing-audit.md).
 It distinguishes existing F0.3 prerequisites from later evaluation results and

@@ -63,10 +63,12 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-Current post-B10 execution map: [Sprint 035 CPU coverage audit](v1-sprints/035-cpu-coverage-audit.md).
-A6 CPU multi-output regression now has independent/shared recipes and target
-scaling (Sprint 036). Shared preparation and M=1/8/32 equivalence are implemented (Sprint 037).
-Next: validation-driven independent stop state and stop-isolation verification. Do not infer F1/B11 readiness from implemented objective count.
+Current execution map: [Sprint 038 goal/progress review and plan](v1-sprints/038-goal-progress-and-plan.md).
+Next: validation-driven independent stop state, then installed public extension
+trials and current OpenBoost real-data integration. A6 CPU workflows and shared
+preparation/M=1/8/32 fixed-budget equivalence are implemented (Sprints 036–037).
+Do not infer F1/B11 readiness from implemented objective count. The
+[Sprint 035 audit](v1-sprints/035-cpu-coverage-audit.md) remains historical evidence.
 
 1. Explicit algorithm tasks, fair baselines, and independent correctness oracles.
 2. A minimal CPU foundation tested by structurally different use cases.
@@ -90,31 +92,26 @@ The repository audit in
 ## Architecture
 
 The user requested retirement of all old production code during Sprint 002.
-`src/openboost/` now contains initial B03 numeric data/problem records, CPU run
-transactions, mapped tree/constant ensemble artifacts and B04 numeric/statistics/
-split/routing/leaf operations, plus depthwise/best-first/symmetric mixed-feature growers and validated tree
-inference artifacts. B07 adds MixedData, typed category dictionaries and equality
-splits; Binning/Tree replace the numeric-only type names and tree format. The first complete scalar squared-error CPU recipe supports
-fixed/backtracking steps. Normal ordinary/Fisher joint mean/log-scale updates use
-the same state and learners. Initial B06 adds saturation Formula with explicit
-structure/full GGN directions and sequential heterogeneous run records. CUDA
-execution does not exist yet. Initial B08 adds ClassSchema, binary logistic
-geometry/recipes and schema-aware probability/label persistence. B08 now also
-provides multiclass diagonal bounds, joint vector leaves and separate split/leaf
-statistics with mapped outputs; full A6 workflows remain unverified. Initial B09 adds query-local pairwise/lambda
-geometry and fixed-step ranking with validation NDCG; routed quantile/penalized leaves now
-share all three growers. Real A4/A5 evaluation remains open. B10 starts with Poisson counts,
-explicit exposure and rate/count transforms; A7 real evaluation and the other
-positive-target/AFT recipes remain open. Gamma mean regression now supports
-positive targets and original-weight semantics; real A8 evaluation remains open.
-Tweedie now supports nonnegative means with fixed power and explicit weights;
-frequency-severity composition now provides matched aggregate problems and
-a persisted two-model inference artifact. Real A9 evaluation remains open.
-AFT now supports explicit event/right-censored bounds, fixed log-normal scale
-and a scale-aware inference artifact; real A10 evaluation remains open. The user approved B03–B06 construction overlapping
-unfinished F0.3; see Sprint 018 and the active plan amendment. The last full old implementation is Git revision
-`50acfc6`; historical tests/examples require that revision. There is no compatibility
-shim, legacy backend, trainer, or model facade in the current package.
+`src/openboost/` now implements public CPU data/problem records, immutable run
+transactions, named statistics and composable split/routing/leaf operations.
+Depthwise, best-first and symmetric growers share these operations across numeric,
+missing and categorical features, scalar/vector leaves and routed residual solvers.
+
+Twelve CPU recipes cover squared, binary, multiclass, ranking, quantile, Poisson,
+Gamma, fixed-power Tweedie, fixed-scale event/right-censored log-normal AFT,
+Normal, saturation Formula and multi-output squared. Normal ordinary/Fisher and
+Formula full-GGN updates currently commit jointly. Frequency-severity composition,
+class metadata, AFT scale and multi-output inverse scaling have persisted inference
+artifacts. PreparedData explicitly reuses fitted training binning/codes across
+independent heterogeneous runs. This is fixed-budget sequential execution;
+validation-driven independent stopping and CUDA execution are not implemented.
+All A1–A13 real evaluations and formal author/quality/cost gates remain open.
+
+The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018
+and the active plan amendment. Later CPU slices do not establish a formal phase
+exit. The last full old implementation is Git revision `50acfc6`; historical
+tests/examples require that revision. There is no compatibility shim or legacy
+backend in the current package.
 
 Build the new public data/targets, stats/ops, tree, objectives, runtime, recipes
 and artifacts according to the construction design. `tests/v1/reference/` is an
