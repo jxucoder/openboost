@@ -1,0 +1,89 @@
+{
+  "concrete": {
+    "applications": [
+      "A12"
+    ],
+    "bytes": 34444,
+    "file": "concrete.zip",
+    "license": "CC-BY-4.0",
+    "license_source": "https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength",
+    "members": {
+      "Concrete_Data.xls": "710076c66b9ca3f8050e7942f3dcbdbe04013534daeb0077ffd3079a52d8e0c4",
+      "Concrete_Readme.txt": "5cd3cdb31d3cfd68287daa6b22ed0541d6932113e83ee0980ced63641af3441d"
+    },
+    "sha256": "dad85d14de8aee4e07479daa774e6b569a313715b71a3b92c95a07cf91c2c9a7",
+    "url": "https://archive.ics.uci.edu/static/public/165/concrete+compressive+strength.zip"
+  },
+  "covertype": {
+    "applications": [
+      "A3",
+      "A13"
+    ],
+    "bytes": 11251206,
+    "file": "covertype.zip",
+    "license": "CC-BY-4.0",
+    "license_source": "https://archive.ics.uci.edu/dataset/31/covertype",
+    "members": {
+      "covtype.data.gz": "614360d0257557dd1792834a85a1cdebfadc3c4f30b011d56afee7ffb5b15771",
+      "covtype.info": "15f192a8cbebbf26af940301727d1795b8ca92a80dc1cc6b3bdad2af9546bc35",
+      "old_covtype.info": "c7d7457a5dba6ae09e00c593977f81bd1154f4774ab1b68a62fef390da629ba8"
+    },
+    "sha256": "89a975c2457cd48e824238ae43c5a3cb762e42c4b4078d9b44a4514055105f6d",
+    "url": "https://archive.ics.uci.edu/static/public/31/covertype.zip"
+  },
+  "freq": {
+    "applications": [
+      "A7",
+      "A8",
+      "A9"
+    ],
+    "bytes": 36288567,
+    "file": "freq.arff",
+    "license": "CC0",
+    "license_source": "https://www.openml.org/api/v1/json/data/41214",
+    "metadata_sha256": "dffa9cf15df1a0b38b981b33525e60d10a34f696a27d83c17cc10c5cb2b1a297",
+    "openml_version": "1",
+    "sha256": "a45363e056e2ea56408b38eeb9d4d04d7f6c6982eb7a14ed5e807c7c71807cdd",
+    "url": "https://openml.org/data/v1/download/20649148/freMTPL2freq.arff"
+  },
+  "parkinsons": {
+    "applications": [
+      "A6"
+    ],
+    "bytes": 292221,
+    "file": "parkinsons.zip",
+    "license": "CC-BY-4.0",
+    "license_source": "https://archive.ics.uci.edu/dataset/189/parkinsons+telemonitoring",
+    "members": {
+      "parkinsons_updrs.data": "f2c7d5025dec4e92e7feae367a5f7ccf58789a10ac6b54bdf15976c599f9dd39",
+      "parkinsons_updrs.names": "744dc2835eab5c0fc744c638e5e6b05e656788f60f8aa2aba9d48e21c629f7c2"
+    },
+    "sha256": "2f82bb0ef96fa7d8d7edf4d97b89173e07c2cca7723440a64bc38918a83345df",
+    "url": "https://archive.ics.uci.edu/static/public/189/parkinsons+telemonitoring.zip"
+  },
+  "sev": {
+    "applications": [
+      "A8",
+      "A9"
+    ],
+    "bytes": 376555,
+    "file": "sev.arff",
+    "license": "CC0",
+    "license_source": "https://www.openml.org/api/v1/json/data/41215",
+    "metadata_sha256": "9ecd020483b14f115c62622ab61f261d6ab38e862fc5cf0ee616aaa9f74cce46",
+    "openml_version": "1",
+    "sha256": "047632016b87e132247124f449a95d6d0e9f8ba05f2fe0947ef76ab8aaa10e0a",
+    "url": "https://openml.org/data/v1/download/20649149/freMTPL2sev.arff"
+  },
+  "veteran": {
+    "applications": [
+      "A10"
+    ],
+    "bytes": 5260,
+    "file": "veteran.arff",
+    "license": "unresolved",
+    "license_source": "http://lib.stat.cmu.edu/datasets/veteran",
+    "sha256": "71dbc9e235f3cc2ed10b3a254e39f985c092346d1c845736ed21b13fbe263456",
+    "url": "https://raw.githubusercontent.com/sebp/scikit-survival/v0.25.0/sksurv/datasets/data/veteran.arff"
+  }
+}

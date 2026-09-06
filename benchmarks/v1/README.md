@@ -155,3 +155,43 @@ combine official filename and physical line number. All records remain present.
 No fitted categorical encoding is included; subsequent encoding must learn only
 from each training partition. Shared predictor values are audited in the artifact
 but are not assumed to identify repeated people. The official test is unchanged.
+
+## Remaining real-data preparation
+
+`real_data.py` verifies the pinned [source catalog](datasets/sources.json) before
+parsing. With the isolated evaluation environment installed:
+
+```bash
+uv venv build/v1-env --python 3.12
+uv pip sync --python build/v1-env/bin/python --require-hashes benchmarks/v1/requirements-cpu.txt
+build/v1-env/bin/python -m benchmarks.v1.real_data concrete build/v1-data --verify benchmarks/v1/datasets/concrete.json
+```
+
+Download each catalog URL into its named file under `build/v1-data/`. Substitute
+`covertype`, `parkinsons`, `veteran`, or `insurance` in the replay command. Raw data
+is not committed. Hashes include little-endian dtype, shape, and row order.
+
+- [Covertype](datasets/covertype.json): all 581,012 rows, 54 original features,
+  seven labels, five stratified splits. The indicators remain separate columns.
+- [Parkinsons](datasets/parkinsons.json): 5,875 rows, 19 inputs, two UPDRS targets;
+  subject IDs determine partitions and cannot enter features.
+- [Concrete](datasets/concrete.json): 1,030 rows, seven material inputs; identical
+  recipes stay together. Age/28 is a separate structural input and MPa is the target.
+- [Veteran](datasets/veteran.json): 137 rows, six inputs; observed times and event
+  indicators stay separate. Source-declared categorical orders are fixed mappings,
+  not a vocabulary learned from held-out rows. IPCW support preparation remains open.
+- [Insurance](datasets/insurance.json): 678,013 policies. Claims retain shared
+  policy partitions. The audit records 195 orphan claims and 9,116 positive-count
+  policies without a payment; 668,897 policies remain for aggregate targets.
+  Categories stay separate string columns; train-fitted encoding is still pending.
+
+UCI [Covertype](https://archive.ics.uci.edu/dataset/31/covertype),
+[Parkinsons](https://archive.ics.uci.edu/dataset/189/parkinsons+telemonitoring), and
+[Concrete](https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength)
+pages declare CC BY 4.0. OpenML metadata for
+[frequency](https://www.openml.org/api/v1/json/data/41214) and
+[severity](https://www.openml.org/api/v1/json/data/41215) declares CC0; downloaded
+files also match their published MD5 checksums. Housing/Veteran license evidence
+is unresolved because the original StatLib endpoints returned HTTP 403.
+Microsoft's linked MSLR download/agreement could not be retrieved; A4 remains
+required and unresolved. No missing case is converted into a passing result.
