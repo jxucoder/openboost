@@ -103,4 +103,3 @@ def test_failed_preparation_does_not_contaminate_other_run():
     assert results[1].result.state.version == 2
     with pytest.raises(ValueError):
         RunSpec(RunContext("ambiguous", 1), p, p, squared, {"prepared": None}, prepared)
-

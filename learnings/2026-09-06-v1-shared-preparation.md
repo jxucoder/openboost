@@ -53,3 +53,6 @@ selection or phase-exit claim.
 ## Commits
 
 Committed with the shared-preparation slice; parent 752a2ab.
+
+Follow-up: removed a trailing blank line flagged by staged diff checking.
+No runtime behavior changed; Ruff and diff whitespace checks pass.
