@@ -64,8 +64,8 @@ themselves. Verify the actual call path and the tests that exercise it.
 ## Current Priority Order
 
 Current post-B10 execution map: [Sprint 035 CPU coverage audit](v1-sprints/035-cpu-coverage-audit.md).
-Next: A6 multi-output regression, then shared preparation and validation-driven
-stop isolation/M32. Do not infer F1/B11 readiness from implemented objective count.
+A6 CPU multi-output regression now has independent/shared recipes and target
+scaling (Sprint 036). Next: shared preparation and validation-driven stop isolation/M32. Do not infer F1/B11 readiness from implemented objective count.
 
 1. Explicit algorithm tasks, fair baselines, and independent correctness oracles.
 2. A minimal CPU foundation tested by structurally different use cases.

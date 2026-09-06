@@ -29,3 +29,4 @@ nav:
   - Tweedie nonnegative means: tweedie.md
   - Frequency and severity: frequency-severity.md
   - Censored log-normal AFT: aft.md
+  - Multi-output squared regression: multioutput.md

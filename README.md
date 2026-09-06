@@ -92,5 +92,8 @@ and persists two-model inference with explicit output units. Real A9 evaluation 
 persisted scale-aware survival outputs. Real A10 evaluation remains open.
 
 [Current CPU coverage audit](v1-sprints/035-cpu-coverage-audit.md) identifies
-A6 multi-output regression, shared preparation/stopping and external author
-workflows as remaining CPU prerequisites.
+shared preparation/stopping and external author workflows as remaining CPU
+prerequisites; Sprint 036 supplies the audited A6 recipe/scaling gap.
+
+[Multi-output squared regression](docs/v1/multioutput.md) supports independent/shared trees,
+projected splits and persisted training-only target scaling. Real A6 evaluation remains open.

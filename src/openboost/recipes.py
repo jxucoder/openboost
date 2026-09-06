@@ -57,7 +57,8 @@ class FitResult:
         | PoissonStep
         | GammaStep
         | TweedieStep
-        | AFTStep,
+        | AFTStep
+        | MultiSquaredStep,
         ...,
     ]
 
@@ -1018,6 +1019,136 @@ def aft(
                 state.train_raw,
                 loss_before,
                 objective.loss(train, state.train_raw),
+                coefficients,
+                accepted,
+                failures,
+            )
+        )
+    return FitResult(state, tuple(steps))
+
+
+@dataclass(frozen=True, eq=False)
+class MultiSquaredStep:
+    gradient: np.ndarray
+    raw_before: np.ndarray
+    raw_after: np.ndarray
+    mse_before: np.ndarray
+    mse_after: np.ndarray
+    coefficients: tuple[float, ...]
+    accepted: bool
+    failures: tuple[str | None, ...]
+
+
+def multi_squared(
+    train,
+    validation,
+    *,
+    context,
+    mode="shared",
+    projection=None,
+    rounds=2,
+    learning_rate=0.1,
+    bins=254,
+    max_depth=2,
+    max_leaves=None,
+    reg_lambda=1.0,
+    min_child_h=0.0,
+    split_penalty=0.0,
+    step="fixed",
+    max_trials=6,
+    grower=depthwise,
+):
+    """Independent or shared topology; all output updates commit atomically.
+
+    projection [K,S] is a caller-declared split sketch; full K-dimensional
+    statistics still solve leaves. It is supported only in shared mode.
+    """
+    from .data import _owned
+    from .objectives import MultiSquared
+
+    objective = MultiSquared
+    objective.validate(train)
+    objective.validate(validation)
+    if mode not in ("shared", "independent") or not callable(grower):
+        raise ValueError("shared/independent mode and callable grower required")
+    if projection is not None:
+        projection = _owned(projection, ndim=2)
+        if (
+            mode != "shared"
+            or projection.shape[0] != train.raw_width
+            or np.any(np.max(np.abs(projection), axis=0) == 0)
+        ):
+            raise ValueError("nonzero shared split projection columns must match output width")
+    rate, _ = _configuration(
+        rounds,
+        learning_rate,
+        max_depth,
+        max_leaves,
+        reg_lambda,
+        min_child_h,
+        split_penalty,
+        step,
+        max_trials,
+        None,
+    )
+    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    state = initialize(context, train, validation, objective.base(train), score=objective.loss)
+    mapping = np.eye(train.raw_width)
+    steps = []
+    for _ in range(rounds):
+        before = state.train_raw
+        gradient = objective.gradient(train, before)
+        curvature = np.ones_like(gradient)
+        options = dict(max_depth=max_depth, max_leaves=max_leaves)
+        if mode == "shared":
+            leaves = vector_newton(train, gradient, curvature)
+            with np.errstate(over="raise", invalid="raise"):
+                fields = (
+                    leaves
+                    if projection is None
+                    else vector_newton(train, gradient @ projection, curvature @ (projection**2))
+                )
+            tree = grower(
+                binned,
+                fields,
+                **options,
+                leaf_fields=leaves,
+                scoring=partial(vector_score, reg_lambda=reg_lambda, split_penalty=split_penalty),
+                legality=partial(vector_feasible, min_child_h=min_child_h),
+                leaf=partial(vector_leaf, reg_lambda=reg_lambda),
+            )
+            terms = (TreeTerm(tree, mapping),)
+        else:
+            terms = tuple(
+                TreeTerm(
+                    grower(
+                        binned,
+                        newton(train, gradient[:, k], curvature[:, k]),
+                        **options,
+                        scoring=partial(score, reg_lambda=reg_lambda, split_penalty=split_penalty),
+                        legality=partial(feasible, min_child_h=min_child_h),
+                        leaf=partial(newton_leaf, reg_lambda=reg_lambda),
+                    ),
+                    mapping[k : k + 1],
+                )
+                for k in range(train.raw_width)
+            )
+        state, coefficients, accepted, failures = _trials(
+            state,
+            terms,
+            objective.loss,
+            objective.loss(train, before),
+            rate,
+            step,
+            max_trials,
+        )
+        steps.append(
+            MultiSquaredStep(
+                gradient,
+                before,
+                state.train_raw,
+                objective.mse(train, before),
+                objective.mse(train, state.train_raw),
                 coefficients,
                 accepted,
                 failures,

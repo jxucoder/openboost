@@ -46,3 +46,6 @@ and persists two-model inference with explicit output units. Real A9 evaluation 
 
 [Log-normal AFT](aft.md) adds event/right-censored CPU training and
 persisted scale-aware survival outputs. Real A10 evaluation remains open.
+
+[Multi-output squared regression](multioutput.md) supports independent/shared trees,
+projected splits and persisted training-only target scaling. Real A6 evaluation remains open.

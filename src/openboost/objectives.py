@@ -538,3 +538,54 @@ class Tweedie:
 
     def loss(self, problem, raw):
         return self.geometry(problem, raw)[0]
+
+
+class MultiSquared:
+    """Sum of output half-squared errors, averaged with original row weights."""
+
+    @staticmethod
+    def validate(problem):
+        if (
+            not isinstance(problem, Problem)
+            or problem.target_kind != "numeric"
+            or problem.classes is not None
+            or problem.structure
+            or problem.target.shape[1] < 1
+            or problem.raw_width != problem.target.shape[1]
+        ):
+            raise ValueError("numeric multi-output targets and matching raw width required")
+
+    @classmethod
+    def base(cls, problem):
+        cls.validate(problem)
+        with np.errstate(over="raise", invalid="raise"):
+            return _owned(
+                np.sum(
+                    (problem.target - problem.offset)
+                    * (problem.weight / problem.weight.sum())[:, None],
+                    axis=0,
+                ),
+                ndim=1,
+            )
+
+    @classmethod
+    def gradient(cls, problem, raw):
+        cls.validate(problem)
+        with np.errstate(over="raise", invalid="raise"):
+            return _owned(problem.with_offset(raw) - problem.target, ndim=2)
+
+    @classmethod
+    def mse(cls, problem, raw):
+        error = cls.gradient(problem, raw)
+        with np.errstate(over="raise", invalid="raise"):
+            return _owned(
+                np.sum((problem.weight / problem.weight.sum())[:, None] * error**2, axis=0), ndim=1
+            )
+
+    @classmethod
+    def loss(cls, problem, raw):
+        with np.errstate(over="raise", invalid="raise"):
+            value = float(cls.mse(problem, raw).sum() / 2)
+        if not np.isfinite(value):
+            raise ValueError("nonfinite multi-output squared loss")
+        return value

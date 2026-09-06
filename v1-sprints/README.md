@@ -131,3 +131,7 @@ remain incomplete.
 applications/capabilities and orders remaining work. Public production subset:
 228 passing tests. Next A6 multi-output regression, then shared preparation and
 independent stopping/M32. F1/B11 prerequisites are not complete.
+
+[Sprint 036 / A6 multi-output](036-a6-multioutput.md) closes the independent/
+shared recipe and persisted target-scaling gap (730 tests). Next: shared
+preparation and independent validation-driven stopping/M32. Real A6 remains open.
