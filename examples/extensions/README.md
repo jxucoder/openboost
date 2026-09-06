@@ -1,3 +1,7 @@
+> **Historical implementation:** these extension packages use the retired API.
+> Reproduce at revision `50acfc6`; they are not current v1 author-package evidence.
+> See [CPU coverage audit](../../v1-sprints/035-cpu-coverage-audit.md).
+
 # Independent CPU/CUDA extension wheels
 
 Two small packages demonstrate three extension points without private imports,

@@ -90,3 +90,7 @@ and persists two-model inference with explicit output units. Real A9 evaluation 
 
 [Log-normal AFT](docs/v1/aft.md) adds event/right-censored CPU training and
 persisted scale-aware survival outputs. Real A10 evaluation remains open.
+
+[Current CPU coverage audit](v1-sprints/035-cpu-coverage-audit.md) identifies
+A6 multi-output regression, shared preparation/stopping and external author
+workflows as remaining CPU prerequisites.

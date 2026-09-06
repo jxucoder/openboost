@@ -126,3 +126,8 @@ real A9 joins/quality and joint selection remain open.
 targets and persisted fixed-scale survival inference (716 tests). Next audit
 CPU/B11 coverage; full A6, extension tasks, real application results and CUDA
 remain incomplete.
+
+[Sprint 035 / CPU coverage audit](035-cpu-coverage-audit.md) maps all required
+applications/capabilities and orders remaining work. Public production subset:
+228 passing tests. Next A6 multi-output regression, then shared preparation and
+independent stopping/M32. F1/B11 prerequisites are not complete.
