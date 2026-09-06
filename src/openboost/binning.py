@@ -136,3 +136,35 @@ class BinnedData:
         object.__setattr__(self, "codes", _array(codes, "<i4"))
         object.__setattr__(self, "missing", _array(missing, bool))
         object.__setattr__(self, "identity", _identity(self.data.identity, self.binning.identity))
+
+
+@dataclass(frozen=True, eq=False)
+class PreparedData:
+    """Train-only fitted binning/codes bound to immutable feature data and config."""
+
+    data: NumericData | MixedData
+    bins: int = 254
+    binned: BinnedData = field(init=False)
+    identity: str = field(init=False)
+
+    def __post_init__(self):
+        binned = Binning.fit(self.data, bins=self.bins).transform(self.data)
+        object.__setattr__(self, "binned", binned)
+        object.__setattr__(
+            self, "identity", _identity("prepared-cpu-v1", self.bins, binned.identity)
+        )
+
+
+def prepare_training(data, *, bins=254, prepared=None):
+    """Resolve fresh or explicitly shared preparation; never refit a supplied object."""
+    if prepared is None:
+        prepared = PreparedData(data, bins)
+    if (
+        not isinstance(prepared, PreparedData)
+        or not isinstance(data, (NumericData, MixedData))
+        or type(bins) is not int
+        or prepared.bins != bins
+        or prepared.data.identity != data.identity
+    ):
+        raise ValueError("prepared training data/config identity differs")
+    return prepared.binned

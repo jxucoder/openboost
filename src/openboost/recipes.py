@@ -8,7 +8,7 @@ from functools import partial
 import numpy as np
 
 from .artifacts import Model, TreeTerm
-from .binning import Binning
+from .binning import prepare_training
 from .objectives import (
     Binary,
     Formula,
@@ -71,6 +71,7 @@ def squared(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -101,7 +102,7 @@ def squared(
         max_trials,
         learner,
     )
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, Squared.base(train), score=Squared.loss)
     steps = []
     for _ in range(rounds):
@@ -226,6 +227,7 @@ def normal(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -261,7 +263,7 @@ def normal(
     # Validate mode/damping even for zero rounds.
     diagonal_direction([[0, 0]], [[1, 2]], mode=mode, damping=damping)
     base = Normal.base(train, minimum_scale=minimum_scale)
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Normal.loss)
     steps = []
     for _ in range(rounds):
@@ -314,6 +316,7 @@ def formula(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -341,7 +344,7 @@ def formula(
     )
     full_direction([[0, 0]], [[[1, 0], [0, 1]]], damping=damping)
     base = Formula.base(train)
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Formula.loss)
     steps = []
     for _ in range(rounds):
@@ -393,6 +396,7 @@ def binary(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -419,7 +423,7 @@ def binary(
         learner,
     )
     base = Binary.base(train, clip=clip)
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Binary.loss)
     steps = []
     for _ in range(rounds):
@@ -466,6 +470,7 @@ def multiclass(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -501,7 +506,7 @@ def multiclass(
             leaf=partial(vector_leaf, reg_lambda=reg_lambda),
         )
     base = Multiclass.base(train)
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Multiclass.loss)
     steps = []
     for _ in range(rounds):
@@ -550,6 +555,7 @@ def ranking(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -577,7 +583,7 @@ def ranking(
         1,
         learner,
     )
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, [0.0], score=objective.score)
     steps = []
     for _ in range(rounds):
@@ -622,6 +628,7 @@ def quantile(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -664,7 +671,7 @@ def quantile(
             np.arange(len(train.target))
         )
     )
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=objective.loss)
     steps = []
     for _ in range(rounds):
@@ -724,6 +731,7 @@ def poisson(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -752,7 +760,7 @@ def poisson(
         max_trials,
         learner,
     )
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     steps = []
     for _ in range(rounds):
@@ -805,6 +813,7 @@ def gamma(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -832,7 +841,7 @@ def gamma(
         max_trials,
         learner,
     )
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     steps = []
     for _ in range(rounds):
@@ -887,6 +896,7 @@ def tweedie(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -914,7 +924,7 @@ def tweedie(
         max_trials,
         learner,
     )
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     steps = []
     for _ in range(rounds):
@@ -968,6 +978,7 @@ def aft(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -995,7 +1006,7 @@ def aft(
         max_trials,
         learner,
     )
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     steps = []
     for _ in range(rounds):
@@ -1049,6 +1060,7 @@ def multi_squared(
     rounds=2,
     learning_rate=0.1,
     bins=254,
+    prepared=None,
     max_depth=2,
     max_leaves=None,
     reg_lambda=1.0,
@@ -1091,7 +1103,7 @@ def multi_squared(
         max_trials,
         None,
     )
-    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     mapping = np.eye(train.raw_width)
     steps = []

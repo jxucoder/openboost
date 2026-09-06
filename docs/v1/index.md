@@ -49,3 +49,6 @@ persisted scale-aware survival outputs. Real A10 evaluation remains open.
 
 [Multi-output squared regression](multioutput.md) supports independent/shared trees,
 projected splits and persisted training-only target scaling. Real A6 evaluation remains open.
+
+[Shared training preparation](preparation.md) reuses fitted CPU binning/codes
+across independent jobs, verified at M=1/8/32. Independent stopping remains next.

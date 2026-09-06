@@ -12,6 +12,7 @@ Fixed-power Tweedie supports nonnegative mean regression.
 Frequency/severity composition preserves two-model output roles and units.
 Fixed-scale AFT supports event/right censoring and persisted survival outputs.
 Multi-output squared recipes support independent/shared topology and target scaling.
+Explicit prepared training data can be shared across independent CPU runs.
 CUDA execution is not implemented yet.
 """
 

@@ -4,6 +4,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from types import MappingProxyType
 
+from .binning import PreparedData
 from .data import Problem
 from .recipes import FitResult
 from .runtime import RunContext
@@ -16,6 +17,7 @@ class RunSpec:
     validation: Problem
     recipe: Callable
     options: Mapping = field(default_factory=dict)
+    prepared: PreparedData | None = None
 
     def __post_init__(self):
         if (
@@ -24,10 +26,14 @@ class RunSpec:
             or not isinstance(self.validation, Problem)
             or not callable(self.recipe)
             or not isinstance(self.options, Mapping)
+            or (self.prepared is not None and not isinstance(self.prepared, PreparedData))
         ):
             raise ValueError("explicit context, problems, recipe and options required")
         options = dict(self.options)
-        if any(not isinstance(k, str) or k in {"context", "train", "validation"} for k in options):
+        if any(
+            not isinstance(k, str) or k in {"context", "train", "validation", "prepared"}
+            for k in options
+        ):
             raise ValueError("recipe options cannot replace run identity or problems")
         if any(type(v) not in (str, int, float, bool, type(None)) for v in options.values()):
             raise ValueError("run options currently require immutable scalar values")
@@ -58,7 +64,10 @@ def run_many(specs, *, execution="sequential"):
     outcomes = []
     for spec in specs:
         try:
-            result = spec.recipe(spec.train, spec.validation, context=spec.context, **spec.options)
+            preparation = {} if spec.prepared is None else {"prepared": spec.prepared}
+            result = spec.recipe(
+                spec.train, spec.validation, context=spec.context, **spec.options, **preparation
+            )
             if (
                 not isinstance(result, FitResult)
                 or result.state.context != spec.context

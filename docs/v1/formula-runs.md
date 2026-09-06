@@ -60,3 +60,6 @@ per-run round budgets, best snapshots and errors, not process isolation, fused
 training, a resource scheduler or early stopping callbacks. Arbitrary recipe code
 must respect the immutable input contract. M=1/2/8 comparisons verify deterministic
 same-ID independent and reordered execution; they establish no speed benefit.
+
+[Shared preparation](preparation.md) now supports explicit training-code reuse
+across independent runs.

@@ -97,3 +97,6 @@ prerequisites; Sprint 036 supplies the audited A6 recipe/scaling gap.
 
 [Multi-output squared regression](docs/v1/multioutput.md) supports independent/shared trees,
 projected splits and persisted training-only target scaling. Real A6 evaluation remains open.
+
+[Shared training preparation](docs/v1/preparation.md) reuses fitted CPU binning/codes
+across independent jobs, verified at M=1/8/32. Independent stopping remains next.
