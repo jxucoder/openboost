@@ -1,103 +1,87 @@
 # GPU Setup
 
 OpenBoost uses CUDA for histogram building and tree construction.
-NaturalBoost, FormulaBoost, and WeibullAFT share that tree path. Some
-objective math still runs on the host (FormulaBoost GGN today; LogNormal /
-digamma families). Trees are the expensive part at scale.
+NaturalBoost, FormulaBoost, and WeibullAFT share a tree-building path.
+FormulaBoost's finite-difference Jacobian and GGN solve run on CPU, as does
+WeibullAFT's expected-Fisher step. Normal and Poisson objectives have device
+kernels for eligible configurations.
 
 ## Verify detection
 
+Install with `uv add --prerelease=allow "openboost[cuda]"`. For a repository
+checkout use `uv sync --extra cuda --extra dev`.
+
 ```python
 import openboost as ob
-
-print(ob.get_backend())   # "cuda" or "cpu"
-print(ob.is_cuda())       # True if a GPU is active
+print(ob.get_backend())
+print(ob.is_cuda())
 ```
 
-Install the extra first: `pip install --pre "openboost[cuda]"`.
+Detection confirms backend availability, not that every operation runs on GPU.
+The native builder excludes missing values, categorical features, L1
+regularization, and row/column sampling in the shared trainer. Such inputs
+may select another tree path. Check the actual model and configuration before
+interpreting timing as a fully device-resident fit.
 
 ## Pin a backend
 
 ```python
-import openboost as ob
-
-ob.set_backend("cpu")    # debug / comparison
+ob.set_backend("cpu")
 ob.set_backend("cuda")
-
-# Or:
-# export OPENBOOST_BACKEND=cuda
+with ob.backend_context("cpu"):
+    print(ob.get_backend())
 ```
 
-`backend_context("cpu")` is a temporary switch that restores the previous
-backend on exit.
+Alternatively set `OPENBOOST_BACKEND=cpu` or `OPENBOOST_BACKEND=cuda`.
+The backend is process-global; do not run mixed-backend fits concurrently in
+one process. A context restores the previous backend on exit.
 
-## What the A100 numbers actually are
+## Measure the relevant workload
 
-NaturalBoost vs NGBoost, heteroscedastic Normal, 80 features, 500 trees,
-Modal A100. NGBoost has **no GPU implementation**, so this is GPU OpenBoost
-against CPU NGBoost, which is the comparison that exists in the world.
+GPU benefit depends on dataset shape, tree parameters, distribution, CUDA
+stack, transfers, and JIT warm-up. A universal crossover size or speedup is
+not established by backend detection.
 
-| n_train | OpenBoost (A100) | NGBoost (CPU) | speedup |
-|--------:|-----------------:|--------------:|--------:|
-| 45K | 3.01s | 1414s | 470× |
-| 90K | 2.21s | 2716s | **1229×** |
-| 450K | 5.40s | skipped (hours) | n/a |
-| 900K | 6.94s | skipped | n/a |
+1. Force the backend for each comparison.
+2. Record first-use compilation separately from repeated warm timings.
+3. Compare predictions and task metrics before runtime.
+4. Measure end-to-end fit and prediction, peak memory, and failures.
+5. Save raw results with source SHA, data/split, hardware, dependencies,
+   actual execution path, and exact commands.
 
-NLL is tied at every size that both ran. Full tables:
-[Benchmarks](../benchmarks.md).
+The ScoringBench integration under `benchmarks/scoringbench/` defines separate
+official-quality and scale-extension protocols for probabilistic models.
+Historical benchmark summaries do not replace reproducible raw artifacts.
 
-!!! tip "When GPU helps"
-    Histogram trees win at tens of thousands of rows and up. Below ~5K
-    samples, kernel launch overhead often matches CPU. Use `float32`
-    features. Missing values and categoricals fall back from the
-    GPU-native builder to the hybrid path (warning emitted).
+## Experimental multi-GPU
 
-On CPU, NaturalBoost and NGBoost are ~parity (0.8–1.3×). Do not quote the
-A100 ratio as a CPU claim.
+The `distributed` extra installs Ray for experimental multi-GPU work.
+Exact correctness and scaling evidence are still required before treating
+that path as a supported production capability. NaturalBoost, FormulaBoost,
+and WeibullAFT currently use one GPU. A single-GPU result does not validate
+distributed training.
 
-## FormulaBoost and WeibullAFT on GPU
+## Requirements and troubleshooting
 
-Both use GPU trees. FormulaBoost's GGN (finite-difference Jacobian +
-`K×K` solve) currently runs on the host; at 200K rows full GGN still beat
-an XGBoost custom objective (17s vs 20s on A100). WeibullAFT's expected
-Fisher step is cheap (`2×2` per row).
+- An NVIDIA GPU supported by the installed CUDA and Numba stack.
+- A CUDA 12 runtime compatible with `cupy-cuda12x` from the CUDA extra.
+- `numba-cuda>=0.23` and `cupy-cuda12x>=13` as specified by the package.
 
-## Multi-GPU
+If CUDA is not detected, inspect `nvidia-smi` and run:
 
-```python
-import openboost as ob
-
-model = ob.GradientBoosting(n_trees=100, n_gpus=4)
-model.fit(X, y)
-
-model = ob.GradientBoosting(n_trees=100, devices=[0, 2])
-model.fit(X, y)
+```bash
+uv run python -c "from numba import cuda; print(cuda.is_available())"
 ```
 
-Requires `pip install --pre "openboost[distributed]"` (Ray).
-NaturalBoost / FormulaBoost / WeibullAFT currently train on one GPU.
+If training is slow, use float32 features, account for compilation and data
+transfers, and inspect which objective/tree path actually executes. Report
+CPU and GPU resources separately when comparing different libraries.
 
-## Requirements
-
-- NVIDIA GPU, CUDA Compute Capability 3.5+
-- CUDA Toolkit 11 or 12
-- `numba-cuda>=0.23`
-
-## Troubleshooting
-
-**Training seems slow on GPU.** Features should be `float32`. Tiny datasets
-do not amortize kernel launch. Confirm `ob.is_cuda()` is True.
-
-**CUDA not detected.**
-
-1. `nvidia-smi`
-2. `python -c "from numba import cuda; print(list(cuda.gpus))"`
-3. Reinstall `openboost[cuda]` against the CUDA version on the machine
-
-**Trained on GPU, loading on CPU.** Saved models are backend-agnostic.
+Saved models store host tree state and support CPU inference. Verify a
+prediction round trip for the model and feature types used in your workload:
 
 ```python
 model.save("model.joblib")
-loaded = ob.NaturalBoostNormal.load("model.joblib")  # CPU or GPU
+with ob.backend_context("cpu"):
+    loaded = ob.NaturalBoostNormal.load("model.joblib")
 ```

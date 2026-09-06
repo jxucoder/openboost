@@ -254,16 +254,14 @@ lo, hi = model.predict_interval(X_test, alpha=0.1)
 samples = model.sample(X_test, n_samples=1000)
 ```
 
-On the UCI datasets measured so far, NLL is tied or better vs NGBoost, and on
-an A100 NaturalBoost fits in seconds at sizes where CPU-only NGBoost needs
-most of an hour. See [Benchmarks](../benchmarks.md) for the caveats.
+Compare predictive quality and end-to-end cost on your workload using the
+[benchmark evidence requirements](../benchmarks.md).
 
 ### 2. A formula with off-diagonal GGN
 
-XGBoost custom objectives cannot represent the off-diagonal of `JᵀJ`.
-That term is what recovers coupled parameters (`b(z)` on the sales curve:
-corr 0.877 vs 0.599). Black-box XGBoost also cannot extrapolate in the
-structural input `x`. FormulaBoost is ~21x better there.
+FormulaBoost fits a user-specified formula with covariate-dependent parameters.
+Its full GGN option retains cross-parameter terms. Test whether this helps
+parameter recovery and extrapolation for the particular formula and data.
 
 ```python
 def sales(theta, x):
@@ -289,9 +287,8 @@ params = model.predict_params(Z)           # {scale, shape}
 s = model.predict_survival(Z, t=12.0)
 ```
 
-On a varying-shape DGP, shape correlation is 0.997; XGBoost has no
-per-row `k` to correlate. Censored NLL is better (0.761 vs 0.830);
-C-index is close (0.680 vs 0.672).
+Evaluate shape recovery, censored NLL and ranking separately on a process
+with known parameters before applying the model to domain data.
 
 ### 4. A native Python custom loss (point-estimate)
 

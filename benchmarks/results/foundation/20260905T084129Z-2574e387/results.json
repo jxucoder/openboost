@@ -1,0 +1,1333 @@
+{
+  "environment": {
+    "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.35",
+    "python": "3.12.1 (main, Jan  8 2024, 04:46:10) [Clang 17.0.6 ]",
+    "cpu": "x86_64",
+    "visible_cpu_count": 18,
+    "requested_cpu": 2,
+    "requested_memory_mib": 8192,
+    "host_ram_bytes": 404784177152,
+    "threads": {
+      "OMP_NUM_THREADS": "2",
+      "NUMBA_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2"
+    },
+    "packages": {
+      "scipy": "1.16.3",
+      "numba-cuda": "0.27.0",
+      "pluggy": "1.6.0",
+      "cuda-bindings": "13.1.1",
+      "fastrlock": "0.8.3",
+      "cuda-core": "0.6.0",
+      "pip": "23.3.2",
+      "coverage": "7.13.1",
+      "cupy-cuda12x": "13.6.0",
+      "numba": "0.63.1",
+      "joblib": "1.5.3",
+      "openboost": "1.0.0rc1",
+      "llvmlite": "0.46.0",
+      "cuda-pathfinder": "1.4.0",
+      "pytest-cov": "7.0.0",
+      "numpy": "2.3.5",
+      "pytest": "9.0.2",
+      "iniconfig": "2.3.0",
+      "packaging": "25.0",
+      "setuptools": "69.0.3",
+      "pytest-xdist": "3.8.0",
+      "execnet": "2.1.2",
+      "Pygments": "2.19.2",
+      "hyperframe": "6.1.0",
+      "aiohappyeyeballs": "2.6.1",
+      "idna": "3.10",
+      "yarl": "1.20.0",
+      "aiohttp": "3.12.7",
+      "typing_extensions": "4.13.2",
+      "protobuf": "6.31.1",
+      "attrs": "25.3.0",
+      "aiosignal": "1.3.2",
+      "cbor2": "5.7.0",
+      "certifi": "2025.4.26",
+      "hpack": "4.1.0",
+      "propcache": "0.3.1",
+      "frozenlist": "1.6.0",
+      "multidict": "6.4.4",
+      "h2": "4.2.0",
+      "grpclib": "0.4.8"
+    },
+    "cpu_model": "unknown",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "cuda_runtime": 12090,
+    "cuda_driver": 13000,
+    "nvidia_smi": "Tesla T4, 580.95.05, 15360 MiB"
+  },
+  "source_sha": "99621ae9e640be9c1144a015a39de43d3bf50ae9",
+  "wheel_sha256": "40a5ec42661eba6f72bf340147f29d0fd2ffed37877e77b6981d78cd1d0f888b",
+  "argv": [
+    "/usr/local/bin/python",
+    "-m",
+    "pytest",
+    "-c",
+    "pytest.ini",
+    "test_smoke.py",
+    "test_correctness.py",
+    "test_boundaries.py",
+    "test_baseline.py",
+    "--junitxml=junit.xml",
+    "--maxfail=1"
+  ],
+  "timed_out": false,
+  "returncode": 0,
+  "stdout": "..............                                                           [100%]\n=============================== warnings summary ===============================\ntest_smoke.py: 12 warnings\ntest_correctness.py: 3 warnings\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\ntest_smoke.py::test_normal_gpu_fit\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 4 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 8 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 2 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_correctness.py::test_weighted_newton\n  /usr/local/lib/python3.12/site-packages/numba/cpython/hashing.py:477: UserWarning: FNV hashing is not implemented in Numba. See PEP 456 https://www.python.org/dev/peps/pep-0456/ for rationale over not using FNV. Numba will continue to work, but hashes for built in types will be computed using siphash24. This will permit e.g. dictionaries to continue to behave as expected, however anything relying on the value of the hash opposed to hash as a derived property is likely to not work as expected.\n    warnings.warn(msg)\n\ntest_correctness.py::test_weighted_newton\n  /usr/local/lib/python3.12/site-packages/openboost/_trainer.py:136: RuntimeWarning: CUDA objective fallback to CPU: objective capability; tree execution may still use CUDA\n    return fit(model, *args, **kwargs)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n14 passed, 22 warnings in 104.58s (0:01:44)\n",
+  "stderr": "",
+  "junit": "<?xml version=\"1.0\" encoding=\"utf-8\"?><testsuites name=\"pytest tests\"><testsuite name=\"pytest\" errors=\"0\" failures=\"0\" skipped=\"0\" tests=\"14\" time=\"104.580\" timestamp=\"2026-09-05T08:41:36.987890+00:00\" hostname=\"modal\"><testcase classname=\"test_smoke\" name=\"test_device_interop\" time=\"2.233\" /><testcase classname=\"test_smoke\" name=\"test_normal_gpu_fit\" time=\"3.154\" /><testcase classname=\"test_correctness\" name=\"test_weighted_newton\" time=\"2.753\" /><testcase classname=\"test_correctness\" name=\"test_weighted_distribution[normal]\" time=\"0.111\" /><testcase classname=\"test_correctness\" name=\"test_weighted_distribution[poisson]\" time=\"0.127\" /><testcase classname=\"test_boundaries\" name=\"test_visible_fallback[custom]\" time=\"0.057\" /><testcase classname=\"test_boundaries\" name=\"test_visible_fallback[exposure]\" time=\"0.047\" /><testcase classname=\"test_boundaries\" name=\"test_visible_fallback[generic]\" time=\"0.499\" /><testcase classname=\"test_boundaries\" name=\"test_device_error_rolls_back\" time=\"0.019\" /><testcase classname=\"test_boundaries\" name=\"test_device_sampling_preflight[subsample]\" time=\"0.001\" /><testcase classname=\"test_boundaries\" name=\"test_device_sampling_preflight[colsample_bytree]\" time=\"0.001\" /><testcase classname=\"test_boundaries\" name=\"test_eval_callback_persistence[normal]\" time=\"0.106\" /><testcase classname=\"test_boundaries\" name=\"test_eval_callback_persistence[poisson]\" time=\"0.080\" /><testcase classname=\"test_baseline\" name=\"test_baseline_matrix\" time=\"95.229\" /></testsuite></testsuites>",
+  "checks": {
+    "installed_files_verified": 37,
+    "installed_module": "/usr/local/lib/python3.12/site-packages/openboost/__init__.py",
+    "interop": true,
+    "dataset_sha256": "a6ebf89ed613d8f792084b55e7f6a3ce93360add808cd1729aa8e2842cce18ec",
+    "nll": 1.3506839275360107,
+    "native_tree_calls": 4,
+    "device_objective_calls": 2,
+    "weighted_newton": {
+      "cpu_hist_hess": [
+        7.0,
+        10.0
+      ],
+      "gpu_hist_hess": [
+        7.0,
+        10.0
+      ],
+      "expected_leaves": [
+        2.625,
+        -1.8181818723678589
+      ],
+      "cpu_raw": [
+        0.26250001788139343,
+        0.26250001788139343,
+        0.26250001788139343,
+        0.26250001788139343,
+        -0.1818181872367859,
+        -0.1818181872367859,
+        -0.1818181872367859,
+        -0.1818181872367859
+      ],
+      "gpu_raw": [
+        0.26250001788139343,
+        0.26250001788139343,
+        0.26250001788139343,
+        0.26250001788139343,
+        -0.1818181872367859,
+        -0.1818181872367859,
+        -0.1818181872367859,
+        -0.1818181872367859
+      ]
+    },
+    "weighted_normal": {
+      "nll": {
+        "cpu": 2.241002082824707,
+        "cuda": 2.241002082824707
+      },
+      "raw_max_abs_error": 0.0
+    },
+    "weighted_poisson": {
+      "nll": {
+        "cpu": 2.1998133659362793,
+        "cuda": 2.1998133659362793
+      },
+      "raw_max_abs_error": 0.0
+    },
+    "fallback_custom": [
+      "CUDA objective fallback to CPU: objective capability; tree execution may still use CUDA"
+    ],
+    "fallback_exposure": [
+      "CUDA objective fallback to CPU: exposure offsets; tree execution may still use CUDA"
+    ],
+    "fallback_generic": [
+      "CUDA native tree fallback to generic tree path (constraints or feature metadata)"
+    ],
+    "device_error_propagated": true,
+    "preflight_subsample": true,
+    "preflight_colsample_bytree": true,
+    "boundaries_normal": {
+      "callback_rounds": 3,
+      "raw_host_calls_with_callback": 3,
+      "bidirectional_persistence": true,
+      "eval_final_nll": 2.228015422821045
+    },
+    "boundaries_poisson": {
+      "callback_rounds": 3,
+      "raw_host_calls_with_callback": 3,
+      "bidirectional_persistence": true,
+      "eval_final_nll": 2.1877317428588867
+    },
+    "baseline_cells": [
+      {
+        "backend": "cpu",
+        "seed": 0,
+        "mode": "resident",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 4.397831454999999,
+            "predict_params_s": 0.6745909410000017,
+            "metrics": {
+              "nll": 1.0944737639506685,
+              "crps": 0.39859095006807804,
+              "coverage90": 0.967781007751938
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "adfe69fcfd5eec3f8e575322aaa12382f95624c7697b28e91302fd5709c86bd6"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 2.4014690210000005,
+            "predict_params_s": 0.6882345490000006,
+            "metrics": {
+              "nll": 1.0944737639506685,
+              "crps": 0.39859095006807804,
+              "coverage90": 0.967781007751938
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "adfe69fcfd5eec3f8e575322aaa12382f95624c7697b28e91302fd5709c86bd6",
+            "repeat_prediction_max_abs_error": 0.0
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cuda",
+        "seed": 0,
+        "mode": "resident",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 3.2421392509999976,
+            "predict_params_s": 0.19642429199999967,
+            "metrics": {
+              "nll": 1.0944737563673146,
+              "crps": 0.39859095157938995,
+              "coverage90": 0.967781007751938
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "f30ad0f19907a419c4106ddb23b3ed388782751464b971fb3ae4e231ef84368c"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 0.14386336900000174,
+            "predict_params_s": 0.0673137920000002,
+            "metrics": {
+              "nll": 1.0944737689342998,
+              "crps": 0.39859095595416205,
+              "coverage90": 0.967781007751938
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "a0feedfd12a1e785bd4b8fe1a82bf04da2a069ece3b8c37d812db27ce3af2963",
+            "repeat_prediction_max_abs_error": 4.76837158203125e-07
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cpu",
+        "seed": 0,
+        "mode": "eval",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 5.106432963000003,
+            "predict_params_s": 0.6825809110000023,
+            "metrics": {
+              "nll": 1.0944737639506685,
+              "crps": 0.39859095006807804,
+              "coverage90": 0.967781007751938
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5186489820480347,
+                  1.485117793083191,
+                  1.4573966264724731,
+                  1.434107780456543,
+                  1.4131090641021729,
+                  1.3933724164962769,
+                  1.3750824928283691,
+                  1.3586803674697876,
+                  1.3432518243789673,
+                  1.3281663656234741,
+                  1.3132743835449219,
+                  1.2991605997085571,
+                  1.284942388534546,
+                  1.2711622714996338,
+                  1.2577455043792725,
+                  1.2455414533615112,
+                  1.2329634428024292,
+                  1.2209056615829468,
+                  1.2085977792739868,
+                  1.1973193883895874,
+                  1.186450481414795,
+                  1.1741472482681274,
+                  1.164169430732727,
+                  1.1534911394119263,
+                  1.1431702375411987,
+                  1.1332436800003052,
+                  1.121882438659668,
+                  1.1124082803726196,
+                  1.1032801866531372,
+                  1.0944879055023193
+                ]
+              }
+            },
+            "prediction_sha256": "adfe69fcfd5eec3f8e575322aaa12382f95624c7697b28e91302fd5709c86bd6"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 3.026923318999998,
+            "predict_params_s": 0.6765377500000014,
+            "metrics": {
+              "nll": 1.0944737639506685,
+              "crps": 0.39859095006807804,
+              "coverage90": 0.967781007751938
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5186489820480347,
+                  1.485117793083191,
+                  1.4573966264724731,
+                  1.434107780456543,
+                  1.4131090641021729,
+                  1.3933724164962769,
+                  1.3750824928283691,
+                  1.3586803674697876,
+                  1.3432518243789673,
+                  1.3281663656234741,
+                  1.3132743835449219,
+                  1.2991605997085571,
+                  1.284942388534546,
+                  1.2711622714996338,
+                  1.2577455043792725,
+                  1.2455414533615112,
+                  1.2329634428024292,
+                  1.2209056615829468,
+                  1.2085977792739868,
+                  1.1973193883895874,
+                  1.186450481414795,
+                  1.1741472482681274,
+                  1.164169430732727,
+                  1.1534911394119263,
+                  1.1431702375411987,
+                  1.1332436800003052,
+                  1.121882438659668,
+                  1.1124082803726196,
+                  1.1032801866531372,
+                  1.0944879055023193
+                ]
+              }
+            },
+            "prediction_sha256": "adfe69fcfd5eec3f8e575322aaa12382f95624c7697b28e91302fd5709c86bd6",
+            "repeat_prediction_max_abs_error": 0.0
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cuda",
+        "seed": 0,
+        "mode": "eval",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 2.450299663999999,
+            "predict_params_s": 0.01670187599999906,
+            "metrics": {
+              "nll": 1.0944737574085481,
+              "crps": 0.39859095178535353,
+              "coverage90": 0.967781007751938
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 60
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5186489820480347,
+                  1.4851176738739014,
+                  1.4573966264724731,
+                  1.434107780456543,
+                  1.4131090641021729,
+                  1.3933724164962769,
+                  1.3750823736190796,
+                  1.3586803674697876,
+                  1.3432518243789673,
+                  1.3281663656234741,
+                  1.3132743835449219,
+                  1.2991605997085571,
+                  1.284942388534546,
+                  1.2711621522903442,
+                  1.2577455043792725,
+                  1.2455414533615112,
+                  1.2329634428024292,
+                  1.2209056615829468,
+                  1.2085977792739868,
+                  1.1973193883895874,
+                  1.186450481414795,
+                  1.1741472482681274,
+                  1.164169430732727,
+                  1.1534911394119263,
+                  1.1431702375411987,
+                  1.1332437992095947,
+                  1.121882438659668,
+                  1.1124082803726196,
+                  1.1032801866531372,
+                  1.0944879055023193
+                ]
+              }
+            },
+            "prediction_sha256": "4ab822ab4020fe3163e0664f5c51b755060bffa203f544e45148aa66544d4aeb"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 0.22371609900000067,
+            "predict_params_s": 0.01638825799999921,
+            "metrics": {
+              "nll": 1.0944737612758777,
+              "crps": 0.3985909545795274,
+              "coverage90": 0.967781007751938
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 60
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5186489820480347,
+                  1.4851176738739014,
+                  1.4573966264724731,
+                  1.434107780456543,
+                  1.4131090641021729,
+                  1.3933724164962769,
+                  1.3750823736190796,
+                  1.3586803674697876,
+                  1.3432518243789673,
+                  1.3281663656234741,
+                  1.3132743835449219,
+                  1.2991604804992676,
+                  1.284942388534546,
+                  1.2711621522903442,
+                  1.2577455043792725,
+                  1.2455414533615112,
+                  1.2329634428024292,
+                  1.2209056615829468,
+                  1.2085977792739868,
+                  1.1973193883895874,
+                  1.186450481414795,
+                  1.1741472482681274,
+                  1.164169430732727,
+                  1.1534911394119263,
+                  1.1431702375411987,
+                  1.1332437992095947,
+                  1.121882438659668,
+                  1.1124082803726196,
+                  1.1032801866531372,
+                  1.0944879055023193
+                ]
+              }
+            },
+            "prediction_sha256": "794edadbc23c07f1590fc520e02046cda972173bd5c4fca1e3ca8566ca5dadb5",
+            "repeat_prediction_max_abs_error": 4.76837158203125e-07
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cpu",
+        "seed": 1,
+        "mode": "resident",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 4.533779657000004,
+            "predict_params_s": 0.6762787880000047,
+            "metrics": {
+              "nll": 1.1134345852429903,
+              "crps": 0.4100669436072279,
+              "coverage90": 0.9639050387596899
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "8791daee5c391356bc699790953da8b68b5e0fc32324f6905ce6a7ff4fb39ebe"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 2.4129718869999977,
+            "predict_params_s": 0.6843157980000001,
+            "metrics": {
+              "nll": 1.1134345852429903,
+              "crps": 0.4100669436072279,
+              "coverage90": 0.9639050387596899
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "8791daee5c391356bc699790953da8b68b5e0fc32324f6905ce6a7ff4fb39ebe",
+            "repeat_prediction_max_abs_error": 0.0
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cuda",
+        "seed": 1,
+        "mode": "resident",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 2.407129374,
+            "predict_params_s": 0.16393877899999865,
+            "metrics": {
+              "nll": 1.113434598491401,
+              "crps": 0.4100669511518961,
+              "coverage90": 0.9639050387596899
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "9111616954b6fb780447600cf7aec943b45d3e575b16cf188d1e03fc0e81ae1b"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 0.16078772999999558,
+            "predict_params_s": 0.06733073400000222,
+            "metrics": {
+              "nll": 1.1134345862813968,
+              "crps": 0.4100669440537582,
+              "coverage90": 0.9639050387596899
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "26d571b4fae82b7b516354f105c2e48465aabc290c649e17b1450ff0274c8319",
+            "repeat_prediction_max_abs_error": 4.76837158203125e-07
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cpu",
+        "seed": 1,
+        "mode": "eval",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 5.032100342,
+            "predict_params_s": 0.6659178060000102,
+            "metrics": {
+              "nll": 1.1134345852429903,
+              "crps": 0.4100669436072279,
+              "coverage90": 0.9639050387596899
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5334731340408325,
+                  1.4967509508132935,
+                  1.4675382375717163,
+                  1.4424952268600464,
+                  1.420682668685913,
+                  1.400489091873169,
+                  1.3827072381973267,
+                  1.3656353950500488,
+                  1.3492900133132935,
+                  1.3348757028579712,
+                  1.3207321166992188,
+                  1.306437373161316,
+                  1.2925642728805542,
+                  1.279238224029541,
+                  1.2673367261886597,
+                  1.2544152736663818,
+                  1.2425525188446045,
+                  1.2305916547775269,
+                  1.2196043729782104,
+                  1.208702564239502,
+                  1.1979057788848877,
+                  1.1872673034667969,
+                  1.1751006841659546,
+                  1.1648060083389282,
+                  1.1546728610992432,
+                  1.144798755645752,
+                  1.13528311252594,
+                  1.126444935798645,
+                  1.117047667503357,
+                  1.1084883213043213
+                ]
+              }
+            },
+            "prediction_sha256": "8791daee5c391356bc699790953da8b68b5e0fc32324f6905ce6a7ff4fb39ebe"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 3.0121408979999984,
+            "predict_params_s": 0.6714607630000131,
+            "metrics": {
+              "nll": 1.1134345852429903,
+              "crps": 0.4100669436072279,
+              "coverage90": 0.9639050387596899
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5334731340408325,
+                  1.4967509508132935,
+                  1.4675382375717163,
+                  1.4424952268600464,
+                  1.420682668685913,
+                  1.400489091873169,
+                  1.3827072381973267,
+                  1.3656353950500488,
+                  1.3492900133132935,
+                  1.3348757028579712,
+                  1.3207321166992188,
+                  1.306437373161316,
+                  1.2925642728805542,
+                  1.279238224029541,
+                  1.2673367261886597,
+                  1.2544152736663818,
+                  1.2425525188446045,
+                  1.2305916547775269,
+                  1.2196043729782104,
+                  1.208702564239502,
+                  1.1979057788848877,
+                  1.1872673034667969,
+                  1.1751006841659546,
+                  1.1648060083389282,
+                  1.1546728610992432,
+                  1.144798755645752,
+                  1.13528311252594,
+                  1.126444935798645,
+                  1.117047667503357,
+                  1.1084883213043213
+                ]
+              }
+            },
+            "prediction_sha256": "8791daee5c391356bc699790953da8b68b5e0fc32324f6905ce6a7ff4fb39ebe",
+            "repeat_prediction_max_abs_error": 0.0
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cuda",
+        "seed": 1,
+        "mode": "eval",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 2.386929182000003,
+            "predict_params_s": 0.01657929299999239,
+            "metrics": {
+              "nll": 1.1134345775848313,
+              "crps": 0.41006693913527403,
+              "coverage90": 0.9639050387596899
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 60
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5334731340408325,
+                  1.4967509508132935,
+                  1.4675382375717163,
+                  1.4424952268600464,
+                  1.420682668685913,
+                  1.400489091873169,
+                  1.3827072381973267,
+                  1.3656353950500488,
+                  1.3492900133132935,
+                  1.3348757028579712,
+                  1.3207321166992188,
+                  1.306437373161316,
+                  1.2925642728805542,
+                  1.279238224029541,
+                  1.2673367261886597,
+                  1.2544152736663818,
+                  1.2425525188446045,
+                  1.2305917739868164,
+                  1.2196043729782104,
+                  1.208702564239502,
+                  1.1979057788848877,
+                  1.1872673034667969,
+                  1.1751006841659546,
+                  1.1648060083389282,
+                  1.1546728610992432,
+                  1.144798755645752,
+                  1.13528311252594,
+                  1.126444935798645,
+                  1.117047667503357,
+                  1.1084883213043213
+                ]
+              }
+            },
+            "prediction_sha256": "f0446a567cc7ce8929da5b47732e69a48ba8fd76640e21a1c83b260e6094f652"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 0.23034155599999906,
+            "predict_params_s": 0.016565403999990735,
+            "metrics": {
+              "nll": 1.1134345986050809,
+              "crps": 0.41006695480534144,
+              "coverage90": 0.9639050387596899
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 60
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5334731340408325,
+                  1.4967509508132935,
+                  1.4675382375717163,
+                  1.4424952268600464,
+                  1.4206825494766235,
+                  1.400489091873169,
+                  1.3827072381973267,
+                  1.3656353950500488,
+                  1.3492900133132935,
+                  1.3348757028579712,
+                  1.3207321166992188,
+                  1.306437373161316,
+                  1.2925642728805542,
+                  1.279238224029541,
+                  1.2673367261886597,
+                  1.2544152736663818,
+                  1.242552638053894,
+                  1.2305917739868164,
+                  1.2196043729782104,
+                  1.208702564239502,
+                  1.1979057788848877,
+                  1.1872674226760864,
+                  1.1751006841659546,
+                  1.1648061275482178,
+                  1.1546728610992432,
+                  1.144798755645752,
+                  1.13528311252594,
+                  1.126444935798645,
+                  1.117047667503357,
+                  1.1084883213043213
+                ]
+              }
+            },
+            "prediction_sha256": "45b3c964270056fd4530962345d490834970cdb3fffb7002c7f743235f090923",
+            "repeat_prediction_max_abs_error": 4.76837158203125e-07
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cpu",
+        "seed": 2,
+        "mode": "resident",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 4.4131726219999905,
+            "predict_params_s": 0.6596325430000007,
+            "metrics": {
+              "nll": 1.096392042765614,
+              "crps": 0.40381986829061783,
+              "coverage90": 0.9643895348837209
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "b237111674ec268f7b73130c0003c7ba2e5e6afb6038ac0800786482386874bb"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 2.385363081999998,
+            "predict_params_s": 0.6809927400000078,
+            "metrics": {
+              "nll": 1.096392042765614,
+              "crps": 0.40381986829061783,
+              "coverage90": 0.9643895348837209
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "b237111674ec268f7b73130c0003c7ba2e5e6afb6038ac0800786482386874bb",
+            "repeat_prediction_max_abs_error": 0.0
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cuda",
+        "seed": 2,
+        "mode": "resident",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 2.4124752700000016,
+            "predict_params_s": 0.1630236369999949,
+            "metrics": {
+              "nll": 1.0963920238037668,
+              "crps": 0.4038198588211825,
+              "coverage90": 0.9643895348837209
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "29253dd5874532fcafc8c8c2bc392181213ae0ea9cbeef4d6297378ac1f3113c"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 0.14519270999998923,
+            "predict_params_s": 0.06746661900000106,
+            "metrics": {
+              "nll": 1.096392045323513,
+              "crps": 0.40381986836337114,
+              "coverage90": 0.9643895348837209
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {},
+            "prediction_sha256": "3f816168712d3b935609d80392fe074faac068c4372a1ac25d2267594581301c",
+            "repeat_prediction_max_abs_error": 4.76837158203125e-07
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cpu",
+        "seed": 2,
+        "mode": "eval",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 5.201210966000005,
+            "predict_params_s": 0.8796572620000092,
+            "metrics": {
+              "nll": 1.096392042765614,
+              "crps": 0.40381986829061783,
+              "coverage90": 0.9643895348837209
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5312166213989258,
+                  1.495821237564087,
+                  1.4672023057937622,
+                  1.4427677392959595,
+                  1.4215803146362305,
+                  1.4020870923995972,
+                  1.3846408128738403,
+                  1.3677259683609009,
+                  1.3514151573181152,
+                  1.3365565538406372,
+                  1.3223012685775757,
+                  1.3079921007156372,
+                  1.2950739860534668,
+                  1.2821121215820312,
+                  1.269788146018982,
+                  1.2575006484985352,
+                  1.245883822441101,
+                  1.2341245412826538,
+                  1.2225844860076904,
+                  1.2116706371307373,
+                  1.2013055086135864,
+                  1.1904112100601196,
+                  1.1799663305282593,
+                  1.170041561126709,
+                  1.1602288484573364,
+                  1.1504559516906738,
+                  1.140580177307129,
+                  1.1319608688354492,
+                  1.122938871383667,
+                  1.1140406131744385
+                ]
+              }
+            },
+            "prediction_sha256": "b237111674ec268f7b73130c0003c7ba2e5e6afb6038ac0800786482386874bb"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 3.2026938079999923,
+            "predict_params_s": 0.6871226760000013,
+            "metrics": {
+              "nll": 1.096392042765614,
+              "crps": 0.40381986829061783,
+              "coverage90": 0.9643895348837209
+            },
+            "fit_path": {
+              "native_tree_calls": 0,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 0
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5312166213989258,
+                  1.495821237564087,
+                  1.4672023057937622,
+                  1.4427677392959595,
+                  1.4215803146362305,
+                  1.4020870923995972,
+                  1.3846408128738403,
+                  1.3677259683609009,
+                  1.3514151573181152,
+                  1.3365565538406372,
+                  1.3223012685775757,
+                  1.3079921007156372,
+                  1.2950739860534668,
+                  1.2821121215820312,
+                  1.269788146018982,
+                  1.2575006484985352,
+                  1.245883822441101,
+                  1.2341245412826538,
+                  1.2225844860076904,
+                  1.2116706371307373,
+                  1.2013055086135864,
+                  1.1904112100601196,
+                  1.1799663305282593,
+                  1.170041561126709,
+                  1.1602288484573364,
+                  1.1504559516906738,
+                  1.140580177307129,
+                  1.1319608688354492,
+                  1.122938871383667,
+                  1.1140406131744385
+                ]
+              }
+            },
+            "prediction_sha256": "b237111674ec268f7b73130c0003c7ba2e5e6afb6038ac0800786482386874bb",
+            "repeat_prediction_max_abs_error": 0.0
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      },
+      {
+        "backend": "cuda",
+        "seed": 2,
+        "mode": "eval",
+        "config": {
+          "n_trees": 30,
+          "max_depth": 3,
+          "learning_rate": 0.05,
+          "n_bins": 64,
+          "min_child_weight": 1.0,
+          "reg_lambda": 1.0,
+          "subsample": 1.0,
+          "colsample_bytree": 1.0
+        },
+        "split_sizes": [
+          12384,
+          4128,
+          4128
+        ],
+        "records": [
+          {
+            "phase": "first_fit",
+            "fit_s": 2.509326623000007,
+            "predict_params_s": 0.016671253000012598,
+            "metrics": {
+              "nll": 1.096392041715409,
+              "crps": 0.403819866890205,
+              "coverage90": 0.9643895348837209
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 60
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5312166213989258,
+                  1.495821237564087,
+                  1.4672023057937622,
+                  1.4427677392959595,
+                  1.4215803146362305,
+                  1.4020870923995972,
+                  1.3846409320831299,
+                  1.3677259683609009,
+                  1.3514151573181152,
+                  1.3365565538406372,
+                  1.3223012685775757,
+                  1.3079921007156372,
+                  1.2950739860534668,
+                  1.2821121215820312,
+                  1.269788146018982,
+                  1.2575006484985352,
+                  1.245883822441101,
+                  1.2341246604919434,
+                  1.2225844860076904,
+                  1.2116706371307373,
+                  1.201305627822876,
+                  1.1904112100601196,
+                  1.1799663305282593,
+                  1.170041561126709,
+                  1.1602288484573364,
+                  1.1504559516906738,
+                  1.140580177307129,
+                  1.1319608688354492,
+                  1.1229389905929565,
+                  1.1140406131744385
+                ]
+              }
+            },
+            "prediction_sha256": "9af00eccc01727765f72dde3b81530643aa5427a31ade9b25451d0dcdf00f7cc"
+          },
+          {
+            "phase": "repeat_fit",
+            "fit_s": 0.23239498899999944,
+            "predict_params_s": 0.01806297500000653,
+            "metrics": {
+              "nll": 1.0963920449466849,
+              "crps": 0.4038198678278385,
+              "coverage90": 0.9643895348837209
+            },
+            "fit_path": {
+              "native_tree_calls": 60,
+              "objective_calls": 30,
+              "trainer_device_to_host_calls": 60
+            },
+            "fallback_warnings": [],
+            "eval_history": {
+              "eval_0": {
+                "nll": [
+                  1.5312166213989258,
+                  1.495821237564087,
+                  1.4672023057937622,
+                  1.4427677392959595,
+                  1.4215803146362305,
+                  1.4020870923995972,
+                  1.3846409320831299,
+                  1.3677259683609009,
+                  1.3514151573181152,
+                  1.3365565538406372,
+                  1.3223012685775757,
+                  1.3079921007156372,
+                  1.2950739860534668,
+                  1.2821121215820312,
+                  1.269788146018982,
+                  1.2575006484985352,
+                  1.245883822441101,
+                  1.2341246604919434,
+                  1.2225844860076904,
+                  1.2116706371307373,
+                  1.2013055086135864,
+                  1.1904112100601196,
+                  1.1799663305282593,
+                  1.170041561126709,
+                  1.1602288484573364,
+                  1.1504559516906738,
+                  1.140580177307129,
+                  1.1319608688354492,
+                  1.122938871383667,
+                  1.1140406131744385
+                ]
+              }
+            },
+            "prediction_sha256": "a5e059e04cdc02fa03b1f05dde2cd3b5264ca34bf3ca4f27fd6d86ae372fa712",
+            "repeat_prediction_max_abs_error": 4.76837158203125e-07
+          }
+        ],
+        "timing_scope": "First/repeat fit within fresh Python process, fresh NUMBA_CACHE_DIR; includes binning, gradients, transfers and JIT; excludes imports/data loading/startup. Prediction includes test binning. Path instrumentation included.",
+        "transfer_scope": "Counts only trainer._to_host device arguments during fit; excludes compact tree conversion and backend internal copies; not a total transfer count.",
+        "worker_stderr": ""
+      }
+    ]
+  },
+  "remote_function_wall_s": 108.876481186,
+  "timing_scope": "suite execution including environment checks/JIT; excludes image/startup, not billed duration; baseline cell timings have separate scopes"
+}

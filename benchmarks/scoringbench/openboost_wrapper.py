@@ -1,0 +1,166 @@
+"""ScoringBench wrapper for OpenBoost NaturalBoost.
+
+This module intentionally lives in OpenBoost's repository while the integration
+is being validated.  It is also shaped as an upstream-ready ScoringBench wrapper:
+copy it to ``scoringbench/wrappers/openboost_wrapper.py`` and update the upstream
+registry when submitting benchmark results.
+"""
+
+from __future__ import annotations
+
+from contextlib import nullcontext
+
+import numpy as np
+
+try:
+    from scoringbench.wrappers.base import DistributionPrediction, ProbabilisticWrapper
+    from scoringbench.wrappers.quantile_based import quantiles_to_distribution
+except ImportError as exc:  # pragma: no cover - depends on the external checkout
+    raise ImportError(
+        "OpenBoostWrapper requires a ScoringBench checkout on PYTHONPATH. "
+        "See benchmarks/scoringbench/README.md."
+    ) from exc
+
+
+class OpenBoostWrapper(ProbabilisticWrapper):
+    """OpenBoost NaturalBoost with a Gaussian predictive distribution.
+
+    Parameters mirror ScoringBench's NGBoost Gaussian entry by default: 500
+    boosting rounds, learning rate 0.01, depth-3 trees and 99 quantile levels.
+    The backend is explicit so CPU and CUDA results cannot be accidentally
+    conflated on a leaderboard.
+
+    Parameters
+    ----------
+    backend:
+        ``"cpu"``, ``"cuda"`` or ``"auto"``.  ``"auto"`` uses OpenBoost's
+        normal backend detection; reproducible benchmark runs should use an
+        explicit backend.
+    n_trees:
+        Number of NaturalBoost rounds.
+    learning_rate:
+        Boosting shrinkage.
+    max_depth:
+        Maximum depth of each parameter tree.
+    n_bins:
+        Histogram bins. OpenBoost reserves bin 255 for missing values, so 254
+        is the largest non-warning value.
+    n_quantiles:
+        Number of probability levels used to convert the analytic Normal
+        distribution into ScoringBench's common PMF representation.
+    model_params:
+        Additional keyword arguments forwarded to ``NaturalBoostNormal``.
+    """
+
+    _VALID_BACKENDS = {"auto", "cpu", "cuda"}
+
+    def __init__(
+        self,
+        *,
+        backend: str = "cpu",
+        n_trees: int = 500,
+        learning_rate: float = 0.01,
+        max_depth: int = 3,
+        n_bins: int = 254,
+        n_quantiles: int = 99,
+        model_params: dict | None = None,
+    ) -> None:
+        backend = backend.lower()
+        if backend not in self._VALID_BACKENDS:
+            raise ValueError(
+                f"backend must be one of {sorted(self._VALID_BACKENDS)}, got {backend!r}"
+            )
+        if n_quantiles < 2:
+            raise ValueError("n_quantiles must be at least 2")
+
+        self.backend = backend
+        self.n_trees = n_trees
+        self.learning_rate = learning_rate
+        self.max_depth = max_depth
+        self.n_bins = n_bins
+        self.n_quantiles = n_quantiles
+        self.model_params = dict(model_params or {})
+
+        self._alphas = np.linspace(
+            1 / (n_quantiles + 1),
+            n_quantiles / (n_quantiles + 1),
+            n_quantiles,
+            dtype=np.float64,
+        )
+        self._model = None
+        self._resolved_backend: str | None = None
+        self._y_range = (0.0, 1.0)
+
+    @staticmethod
+    def _sanitize_X(X) -> np.ndarray:
+        X = np.asarray(X, dtype=np.float32)
+        if X.ndim != 2:
+            raise ValueError(f"X must be 2-dimensional, got shape {X.shape}")
+        return np.nan_to_num(X, nan=0.0, posinf=1e7, neginf=-1e7)
+
+    def _backend_context(self):
+        import openboost as ob
+
+        if self._resolved_backend is None:
+            return nullcontext()
+        return ob.backend_context(self._resolved_backend)
+
+    def _require_fitted(self) -> None:
+        if self._model is None:
+            raise RuntimeError("Model not fitted. Call fit() first.")
+
+    def fit(self, X, y) -> OpenBoostWrapper:
+        import openboost as ob
+
+        X = self._sanitize_X(X)
+        y = np.asarray(y, dtype=np.float32).reshape(-1)
+        valid = np.isfinite(y)
+        X, y = X[valid], y[valid]
+        if len(y) == 0:
+            raise ValueError("No valid finite training samples")
+
+        lo, hi = float(y.min()), float(y.max())
+        if lo == hi:
+            pad = max(abs(lo) * 1e-6, 1e-7)
+            lo, hi = lo - pad, hi + pad
+        self._y_range = (lo, hi)
+
+        self._resolved_backend = ob.get_backend() if self.backend == "auto" else self.backend
+        params = {
+            "n_trees": self.n_trees,
+            "learning_rate": self.learning_rate,
+            "max_depth": self.max_depth,
+            "n_bins": self.n_bins,
+            **self.model_params,
+        }
+        self._model = ob.NaturalBoostNormal(**params)
+        with self._backend_context():
+            self._model.fit(X, y)
+        return self
+
+    def predict(self, X) -> np.ndarray:
+        self._require_fitted()
+        X = self._sanitize_X(X)
+        with self._backend_context():
+            pred = self._model.predict(X)
+        return np.asarray(pred, dtype=np.float64).reshape(-1)
+
+    def predict_distribution(self, X) -> DistributionPrediction:
+        self._require_fitted()
+        X = self._sanitize_X(X)
+        with self._backend_context():
+            output = self._model.predict_distribution(X)
+            mean = np.asarray(output.mean(), dtype=np.float64).reshape(-1)
+            quantiles = np.column_stack(
+                [
+                    np.asarray(output.quantile(float(alpha)), dtype=np.float64)
+                    for alpha in self._alphas
+                ]
+            )
+
+        return quantiles_to_distribution(
+            quantiles,
+            self._alphas,
+            mean=mean,
+            y_range=self._y_range,
+        )

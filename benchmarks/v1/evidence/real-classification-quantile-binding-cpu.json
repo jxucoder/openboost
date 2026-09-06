@@ -1,0 +1,2759 @@
+{
+  "scope": "Real-data validation worker plumbing only; four rounds, no test scores or search selection, no quality or performance claim",
+  "source_sha": "8427941bee61255fba4ce9c1ea7ca5f9d4e1443f",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+    "-m",
+    "benchmarks.v1.worker_data_smoke",
+    "build/v1-worker-classification-quantile-001"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "packages": {
+    "autograd": "1.9.1",
+    "threadpoolctl": "3.6.0",
+    "pandas": "3.0.5",
+    "cloudpickle": "3.1.2",
+    "kiwisolver": "1.5.1",
+    "packaging": "26.3",
+    "joblib": "1.6.0",
+    "lifelines": "0.30.0",
+    "contourpy": "1.3.3",
+    "ngboost": "0.5.11",
+    "autograd-gamma": "0.5.0",
+    "numpy": "2.3.5",
+    "matplotlib": "3.11.1",
+    "formulaic": "1.2.2",
+    "sympy": "1.14.0",
+    "xlrd": "2.0.2",
+    "narwhals": "2.25.0",
+    "plotly": "7.0.0",
+    "wrapt": "2.4.0",
+    "python-dateutil": "2.9.0.post0",
+    "mpmath": "1.3.0",
+    "scipy": "1.16.3",
+    "fonttools": "4.64.0",
+    "cycler": "0.12.1",
+    "pyparsing": "3.3.2",
+    "lightgbm": "4.7.0",
+    "graphviz": "0.21",
+    "tqdm": "4.70.0",
+    "interface_meta": "2.0.1",
+    "typing_extensions": "4.16.0",
+    "pillow": "12.3.0",
+    "catboost": "1.2.10",
+    "six": "1.17.0",
+    "scikit-learn": "1.8.0",
+    "xgboost": "3.4.1"
+  },
+  "device": "cpu",
+  "gpu": null,
+  "memory_cap": null,
+  "threads": 2,
+  "source_hashes": {
+    "worker_data.py": "46aa82eb2c4ed409244e9c6b3b9101866c2bb475e9edccf2bc22ede6496c29d1",
+    "worker_data_smoke.py": "1b956f34aeb02dcb5d52c8af6054b95e1160390b1466fad96610aeccf4c3a0bb",
+    "baseline_worker.py": "23a77399fe0d8f22ca8562801e43ea50e6ca492501c2feae278937e8c44b69b0",
+    "process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "data": {
+    "A1": {
+      "application": "A1",
+      "dataset": "housing",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "ee9fb6d9cbbc8ee3088413ffefb7467c221df5606372269f81b5225087007928"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "610e546bd63e5b7ad2c1be26db958fd00536b6d9e4026f102e29ebfcf003cece"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "e4f404f717fa4b6c6fbea5819f4fa572336d4b96fd351c824a27373d78eba473"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "cacb45b11d4ceeb3997895e9bee1398a2bf8a8711fabffdc1dedd96d19e66f10"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "07180ad525f246a21d67918781b061f53b76249f9775e8aa010ad39eaa1b2631"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "9b73a363988ddc95d2b7030ca1b387d22e9e7f44bc30f694058f251f718f4a7e"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "0c5fe3cf4b800fee9346ffc9214815d6f93064b3a0482fc15b78e231d3888102"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "492984cc05178c60813ddcb62e798c4c9aaa075273537b2d5bc7ed5f2cbf438d"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "4130a6ee488ec32a4555f3f9f55bbbc5dac85ee4f55b1d2a6d6d0c0bcb35e82f"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "f0d1d8c9180e58156138c18fbfa7e9b10fbba3aac5fcf26054f0c6e84d0fbd37"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "bdc4220a156117b1656b4867ef417c1988eb89fa8cf6d8f19a41b17214845305"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "4d267b0afe6968592ea8010a34aa7571922c900d6a2baa264d3ecac8f44021db"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "4ab22696f06c57eb49ec3f94788aa5a59e8417c3eaaf1f994b3210a3b34ed327"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "66749ebd46b211b0d8d8f4b9efb458a5ffcd5a3620ed6b0766f5d0e312b8e20a"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "1442212a3dd1bad69b848fef0a9d4746688e614edfe4f99cb84add5c3630a1b1"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "3fc154610f4ff93c172802d57afa274c299940c638dacd4869082c8bc5bc3c51"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "a80fd6416a556871e3f57ea5924f6b5f26adca2a55e9f6991495777600b4a2f5"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "98fdf48b758b632e87581c66517e9c9b89e09e46f4fbeca3eb7ccbba3e443e67"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "d52e364a351d6424c29c95d226d3962c9727e9b61acfbd5ec9861bddd3444ed3"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "d02417bd952ef72b6da1865cfac5f7667ef329897eaac3bc817b3dd291ab4369"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "a3cd76073e4a14f666ed41182287b86009dbde10ec7cc0637926aa30d3b46783"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "b798bb52c90d3c9866582b355d3df6cfd690e97fa32cfe5b69cd19d8f9bb6a41"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "677e837444eb3338e6a23a93f2ab693bb5afd1b96c3ea08023af41c4befb29ce"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "bbf8716a861ff6d59ce784d7b0e948c43484f8f2226c9f0f601a1ed01195d613"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "f769ecfe75a7cf24ce3ad9ae86132365333baf65c7372de2c8f03960636a790d"
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "source_freeze_sha256": "93a5e050bdf4c3ae0c526fb0a75bd806df404c8ab558e3019bcc0bdcd28448ae",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "46aa82eb2c4ed409244e9c6b3b9101866c2bb475e9edccf2bc22ede6496c29d1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    },
+    "A2": {
+      "application": "A2",
+      "dataset": "adult",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "e04e33fd11559a52e9f899fa332d7291d55569b2e824de8d6ce2858338817092"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "9f45ed87577102e8486a09f1c19bb4067fea4ae8d9aca43283c1cb67707ae832"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "f8e859a818998f2c994b98dedbb0171be1eb0b4c6f54dc6fe305b94d448a53bd"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "2e72125409d9cf1fe27e45dd2b614afb7f9dd02ef17597eb5c6172d00cf8f7cc"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "cb1193a91a859878036a72cc2c1712aa0b5fe24d730519a0f484d6ae166f6278"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "54db181f0f5ab5c7fa90595a308f7584d079c066cc9d1ef4e7118631e27be888"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "bee5ad1786121477fd4d262197bc66eee98cefad9eb9662b2f385da02958ce98"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "c57b4786ab885b7da2fd5dc2725adba94c25836501757fce55e8811f45ac489e"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "181f31e71c136cd6335c4077ea29a39dfa47abd3eefed55f4b05db70289cc070"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "6d758560150d299bf28b5b9c0093b742918c17bd6b0f8318af88534249263ee2"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "00bdb2099f2313e3b7655d3ba41f3f5509665e36e6f269e7c74d6ecc89f688b7"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "c5bda1ce25eb633c6d73572b5b8ce5a48b14e0c837fdf6ef2010ad64e2f2cbab"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "035f87ddc1ffda1c5ddd877456ccb79f25c579486f558335467212b1a9c118f8"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "e11c4eb51ff1d7a1fa54924e8cc30d5e562fc775380a2045be8e43317ea42a02"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "f8341f7a2900ac706f37f2eca92745d0a0d771b33fcdfbe61496d2e6ebf52b3d"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "4cd3073289bd5c96fb0ab8a1c6c28f3d952e54f2743d7ae5c4de6e5c18e195cf"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "9c069a597d24983564df74034251a9422b470b22ab856632afc7ad1bb085d4ce"
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "source_freeze_sha256": "6f4eb8e49ee7879149de5ace3c26ea9c6a79d9f9a59c6c18bfb99bccd5747c72",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "46aa82eb2c4ed409244e9c6b3b9101866c2bb475e9edccf2bc22ede6496c29d1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    },
+    "A3": {
+      "application": "A3",
+      "dataset": "covertype",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "9bc25256b6a57efa51f13e714c6b47496239858ac851e97c3d74ebe47db71f1a"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "be5d90d83aa4daede0678e41425ff4ba5c45dbf074938113af0ad17b421a2f6c"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "36dda823586db6a9ddf91fd0d9e2520339d2673c05376469b685b6477f9a766d"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "0b1dff90f6c0f819af4212b7c8f70f4ad81fc601c82d7cfa654cca1a6818f314"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "939fae1e6bb73bd032846d1d746ca878d9d04e632fa44fa167186f62274ce168"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "d64c60a6f43d571eeddc9a9bcbda756b80fe4941f86322908f32e7f4717fad39"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "4a76893b287be4ae6d426237a31964d3ced678a3146b130774e5375925eb23d1"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "28c6c8c65d8a2bea7ae4143cad6779663210cc9f96fb80c7964916df0f1be0d7"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "58cb3d94f756b63b04a367e966f35cc96f89575a7648a8ddfdc8a8557e91e0d8"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "8bca09f723c78f2d5b76b502a9b9c13c32d128d500468eb569ec3e1206ef8d06"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "5714e839b4f64cb5c9aba8bb348126f0f472adffba9370ca4c2c478e8f922766"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "dc1172c948a9a36e8655ae0cd8abfe06a20e36edb95a2dcf848a0fbca56e05b6"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "0008f26455bff9cf865f311e8e12827f4f7ee3a6e130ae8e7cbddf52bff08e22"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "55d1bfe08be7912d5bf6abc393debce5e3256b966fd028b9c58ff25ae105425d"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "93fbfff4e8b6f0d0af1e2545a2880912000bc10b13edf7ca04558405239c5efa"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "3925324d0008087680b73df1ce383154ccb06c15b3781c6d614e461b58caa1a4"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "b9bd2397c5589902abd54b030e034a6d15391d08e3ba7b8417b730d255ebb287"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "8dc679559db25ab5b539ea1b497b17f648b873d53918a55908c6510df3ec9728"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "f30c6b3b8b37878446033c7876190aff6bd7338ee53471965776c3f121ab4062"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "a9cc4943bbe5511863e1f44c50e0a6fa842f255acc4ad641553ac63f9efb177b"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "2887c6bba88c012857b33c316dd0f60bf53218d0d966ab1a1a7e1ea1a7fd54df"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "375c27849c96df36923c5d0725e339d1158147330b7b90f88d9f060c6e7152a0"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "ec378b293641f6c2994840ebeb39545d4b13cafff26e4fe3652ac514a01d83a3"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "c8e80caf8655a4cb2cb2f6a259fba3db8f87279c0992514107465f59b5babd69"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "7113772cb35562a039be77a3874cc6f807886f16f51603c2318547170c2f1153"
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "source_freeze_sha256": "a4c9a1614b7e0d4d74d99194f498a0a387f9d547992981b8c3219ca79cd1f675",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "46aa82eb2c4ed409244e9c6b3b9101866c2bb475e9edccf2bc22ede6496c29d1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    },
+    "A5": {
+      "application": "A5",
+      "dataset": "bike",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "edf7c8ba8770d511ebfb30d14868ec7f1c8d5588a1be3ac6145fff9b2debe0aa"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "08c923c33d68f5e2796061a2046670d69ffdfee22a08ecf9c9ce8a67fb1392ee"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "697eb5c26efda90a7bfa4f60e00349154b74ab7cef98897002622d09a0c2ad20"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "6e0ec20f81973cf3f33156d9e2e443c2b14578f7eef0f45cf26f2d4caa27ac97"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "4cab26296e9bf7400f6a4b4e49c02593c9f58bf2132737a6f313ff7601c77d1b"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "4359b667f6259bc5a220ac984e9b1076eefbeebc090bf2c9b5c4e7961a8a3a4c"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "51d99cecf31580385da6465bce242e9c06e022e39dcb72710e420535e8b03a88"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "43d2e9f4a28927502bbeacaabf02aa7daa5da39a219470538d9c19fb8d616271"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "cc7c62b45e9f6ca11b4cb9941c3b2a27ffb213348c72cdc113a818e9e2a91950"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "d137f253a5a19cb11520e03774ea12850b896d6aa051e846490876e38d1e74dc"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "8c9c632cf19063343dabd5de487ca4877718deb584b5ac0bb366255127c814bd"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "7a4cda7d5b570da10f4e75d14a259a8e0357a7b06192f13bbbe037d033999869"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "4cab26296e9bf7400f6a4b4e49c02593c9f58bf2132737a6f313ff7601c77d1b"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "7f1e11bce4cc1afeb9708c6e7a9d11166adaeb23292ce60f9d3279e5db515f92"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "7ac77ff0b16720cc6029c8415326311d46351c1eff653ca4a9e8059d3891644b"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "5a23a5c8e394cefe92c5085a9555766cba06bf8239c8d0dbd461463b492904d2"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "9aee6b24ca413c5f932d79e496c3f457a83f0d1ed972e958918007210eb3f765"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "d137f253a5a19cb11520e03774ea12850b896d6aa051e846490876e38d1e74dc"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "ec7e484babfc292708baee9e0295fd8e08f250ac404fd25999a257837b073b25"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "0612b31c43d862cf5b84c0121361e89548900107937760a8a4d8f05f87215ba9"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "f9f683a96223e022fa52352e7e03dab8fb75172e387ff91370c7abcb1f02c1f6"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "5e9da365f4631bca2f9c6e81f7303761b81677873e0b13c2d6280480a0a43a27"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "7ac77ff0b16720cc6029c8415326311d46351c1eff653ca4a9e8059d3891644b"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "bff6160e06fc9d031d999617b457471cd736ec42115c411540e797a1bb0a3379"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "0f2c1343f58417dd48447fa542c6464ea74d2b431bb408cce4e1178150b23b8b"
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "source_freeze_sha256": "3a77d0f7d8e903061eb647bf26f2f0de5f05caed7d301ca929039fb4deddb7c0",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "46aa82eb2c4ed409244e9c6b3b9101866c2bb475e9edccf2bc22ede6496c29d1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    },
+    "A6": {
+      "application": "A6",
+      "dataset": "parkinsons",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "0750282946e2e2e5636117db6564652c504b1958ff363c20474816dd3a849f53"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "cbd0f8b308a4b6bcf1994ccc52fc416753db2c7d0544cdc981755061963cbc48"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "018f27e04c960f316c425def9a9dc425ec9033c8d06f208acba646a0e23145ea"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "45e6fdeb7bdc716d4972005915c979eb699c1c830856a50d2212a05fa3611848"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "92cf249be956646637158b98bfe1808716c93e21333a3baccac4ce065e8d9991"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                21.832476455405597,
+                29.161076799541192
+              ],
+              "std": [
+                8.446609478513288,
+                10.891162854284502
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "5eca1356971580b2aa677ccbc3f8abe69b64c7478cd67f7fd25da1e029f7db25"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "9805269dd0594f6e654f4bc64df8694a02a34ffde8474468e4865df7bce4d1d8"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "4947fd9a0515b4646b9638256cf7bb57adf899762c8212a9c58402b0a3dade7f"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "827a1797ca4d64ec7722f4dbb76d2e874a575366eb12ca4e5c07aef15134066a"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "eb6829963b9cdeb2c70583ef5b38d883a4978c9b185e175f81b3302a405d636f"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                21.02220744409841,
+                28.889462439852874
+              ],
+              "std": [
+                8.707706178768547,
+                11.553396813667037
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "79189bbfde0c2e13fa27728ce8a6ead553065da83ad6d94fadaae6163d453296"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "d58b5d592d0c38ab1c7258046dc84598a57f1d447aca23cc750d99835b76f31a"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "c84b2ba1d2884415b029e050876a16d454f1c50d93f1d5804155ecd426d198e8"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "7a81dc178bd308c3799916ba5265742bcd9ca96383ab13f7d4d4ea415dee1a5b"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "c6a3198bfcde399f9add245ef86bae57d7a69457c46dddb48346c98e79efc979"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                22.402470691547656,
+                31.08271761800212
+              ],
+              "std": [
+                7.461557603692726,
+                9.80291946506434
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "cab04f13105a6e4c630bde542ab425099f4422c7b3dbb7f22e9f75aaac8c5406"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "545a95c32e526be45407754189eb4261559fc1e9fdd3b54bf0c19015da69636d"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "df4b66ebc77833c5df46e730f361f14e7f1728ec05883d22fb3208438f398c46"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "6a9d99374e40349110d4b525dcb6c97bee5cddc849de65b1d00da6b9a35de557"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "f696ba5fed863349a0bc216cfeb903a13e9d54ac44b57135c372dcc8759cb08a"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                21.36469700842268,
+                28.64957766482703
+              ],
+              "std": [
+                8.097653633950642,
+                10.41318564767784
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "b0ae47990cc48c72afc47dfcf2273c3cedc5d606289d0751ee2afa3edc465b67"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "4e0f851b54a87b26273eee75ac8d9c20243ea95324ef0329983ca127e9ae2905"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "b32c3fd08cec7781deb95a7d01057e2d8d2d8b0cd63c8c1368b4f5104a8ed95c"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "1d9081dee48c899212497db8d80630f81dd7d934bea31d00cc5781b92666ba0c"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "150f918c1496d3d6fc8062614ce7b592ee00d68a590464f52c50aefb6833b9cc"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                21.608206573705065,
+                28.812343511667468
+              ],
+              "std": [
+                7.37511081258478,
+                9.516732486364944
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        }
+      ],
+      "source_freeze_sha256": "334cbda3dbd18849914a0069b6203035280cf5a716838b098a93856c4a2140f3",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "46aa82eb2c4ed409244e9c6b3b9101866c2bb475e9edccf2bc22ede6496c29d1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    },
+    "A11": {
+      "application": "A11",
+      "dataset": "housing",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "ee9fb6d9cbbc8ee3088413ffefb7467c221df5606372269f81b5225087007928"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "610e546bd63e5b7ad2c1be26db958fd00536b6d9e4026f102e29ebfcf003cece"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "e4f404f717fa4b6c6fbea5819f4fa572336d4b96fd351c824a27373d78eba473"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "cacb45b11d4ceeb3997895e9bee1398a2bf8a8711fabffdc1dedd96d19e66f10"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "07180ad525f246a21d67918781b061f53b76249f9775e8aa010ad39eaa1b2631"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "9b73a363988ddc95d2b7030ca1b387d22e9e7f44bc30f694058f251f718f4a7e"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "0c5fe3cf4b800fee9346ffc9214815d6f93064b3a0482fc15b78e231d3888102"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "492984cc05178c60813ddcb62e798c4c9aaa075273537b2d5bc7ed5f2cbf438d"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "4130a6ee488ec32a4555f3f9f55bbbc5dac85ee4f55b1d2a6d6d0c0bcb35e82f"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "f0d1d8c9180e58156138c18fbfa7e9b10fbba3aac5fcf26054f0c6e84d0fbd37"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "bdc4220a156117b1656b4867ef417c1988eb89fa8cf6d8f19a41b17214845305"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "4d267b0afe6968592ea8010a34aa7571922c900d6a2baa264d3ecac8f44021db"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "4ab22696f06c57eb49ec3f94788aa5a59e8417c3eaaf1f994b3210a3b34ed327"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "66749ebd46b211b0d8d8f4b9efb458a5ffcd5a3620ed6b0766f5d0e312b8e20a"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "1442212a3dd1bad69b848fef0a9d4746688e614edfe4f99cb84add5c3630a1b1"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "3fc154610f4ff93c172802d57afa274c299940c638dacd4869082c8bc5bc3c51"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "a80fd6416a556871e3f57ea5924f6b5f26adca2a55e9f6991495777600b4a2f5"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "98fdf48b758b632e87581c66517e9c9b89e09e46f4fbeca3eb7ccbba3e443e67"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "d52e364a351d6424c29c95d226d3962c9727e9b61acfbd5ec9861bddd3444ed3"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "d02417bd952ef72b6da1865cfac5f7667ef329897eaac3bc817b3dd291ab4369"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "a3cd76073e4a14f666ed41182287b86009dbde10ec7cc0637926aa30d3b46783"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "b798bb52c90d3c9866582b355d3df6cfd690e97fa32cfe5b69cd19d8f9bb6a41"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "677e837444eb3338e6a23a93f2ab693bb5afd1b96c3ea08023af41c4befb29ce"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "bbf8716a861ff6d59ce784d7b0e948c43484f8f2226c9f0f601a1ed01195d613"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "f769ecfe75a7cf24ce3ad9ae86132365333baf65c7372de2c8f03960636a790d"
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "source_freeze_sha256": "93a5e050bdf4c3ae0c526fb0a75bd806df404c8ab558e3019bcc0bdcd28448ae",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "46aa82eb2c4ed409244e9c6b3b9101866c2bb475e9edccf2bc22ede6496c29d1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    },
+    "A12": {
+      "application": "A12",
+      "dataset": "concrete",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "1409cb024293499551527b6bbf635c9d01e97de7731ec170d4e5950b13aea531"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "810fd9c5067134e4de2fe9ab61092908713a2bcb3fc99f9aa86d6835649bf878"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "616c8feb197f7cce51a5c21fa3badb29532f4453d8fb1a212c5e71caa403a969"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "2cf36ce99d30c832c86a07a1cf250d8a992f2c2a6d1cdd3089d220eb42c88534"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "cc6daae2aa8d170f17aa018439cfbbc5e606a9ece3c455a455bf8c1a985e6a3f"
+            },
+            "validation-structure": {
+              "path": "0/validation-structure.npz",
+              "sha256": "59ebd7cd5785f96c4f808dcde1ef3709a81b346b6937073bc09f7cb157962a07"
+            },
+            "test-structure": {
+              "path": "0/test-structure.npz",
+              "sha256": "05fe7a98b2dc54e8824293afdf17137715ae6d3616919978de9f729a18ebf0d4"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "d17dd325727de736821bf3435ad5051ae36c00b7d4f7efcf99dcb16dacfbc7b4"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "2bfd635778f518a16be87778cc72601cd927d9e34be5e6eda638480ac7947cc9"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "8f79da547abcce2ff7c262cf4f25b54f2ca2fd0af13c3f02b4074af02007ce7c"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "a4612a16d835cd2d712f37484d5ff3db4f0e2a0c22bde74b581d6dc8bf54df64"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "19478323cc0ec2d8bf8378c375c29afae01d1dacae29a40a70666f071e49960a"
+            },
+            "validation-structure": {
+              "path": "1/validation-structure.npz",
+              "sha256": "b8e961ee37afa13f939ac261834c328667f1aaf44c8f88db85d8d4b813d96880"
+            },
+            "test-structure": {
+              "path": "1/test-structure.npz",
+              "sha256": "1ad63654994b3fdc6aad9e318410b8df8bf5bcd39c04a28db640b4059e7f454b"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "074688f4eb2b2a68e812f8af1768364d0dc2ca08a9962f930076c9d1e8e5d9ef"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "edf5a2d705375a06bdc9ef06e647ea150dc099c2ff44139e7b0675d3a7e0d1a0"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "bb1b0fe4e32d296a92a0d8971aa2ae88d16f766e39868e475c93c7ce50d83aec"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "ca23ff9eea4c59b9acfc2fd36fa9b3404b908fae1a566a9f1d06673b84215478"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "17ad5fce88828052c181bdaf81a8022bc0201fdb7952015bf9df16953cf693ab"
+            },
+            "validation-structure": {
+              "path": "2/validation-structure.npz",
+              "sha256": "a9c070ca3d998086e4a02acc40d0953430edb43934db4f649aca2a756bcf6360"
+            },
+            "test-structure": {
+              "path": "2/test-structure.npz",
+              "sha256": "c25925aa72084a9b3d9d62285ca793a49bf820333c2f4993734caa4a3fc33302"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "1722d246878ffead019d3d9b94e7343325c9f162c1a565ddd95664d6dd37f959"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "bf38782ee6b21b3748ab91c048be51663bc2517dd4734cee8b9d5932b6a49a7f"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "9b102f96fe81c4177da8c2ab0d0bf17107f80576544dc6337bfe1af978974871"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "9c07a03bd91275e86df11fea4f2c835261a305b626a76a3b10a4621c979ed877"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "3cdf2601b954023779c32ab58401241c201cc0bfb4a3951f99ced2c0dd3609cf"
+            },
+            "validation-structure": {
+              "path": "3/validation-structure.npz",
+              "sha256": "7e5be679ee51be580728d0b93086ba61de01c61badb36f8a74f08636dc1e95bf"
+            },
+            "test-structure": {
+              "path": "3/test-structure.npz",
+              "sha256": "ada5a1c15447085d3f249c39a17b8df6dd04b2bc507d97dec03cef434c3d5dde"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "c82bdfd8634be906a9717cfe1d17175519311ad4b262c4b5ef9a30ef4b04abce"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "5d8f14f0b1648ea0d8322d6a1114cf1745367f6ba0f17f3268fd68620dc7e370"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "a8a6d3bd7f7844e4829cca0761b8085d3d352b3ef1cba89663cf22577a43d8a2"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "6b266d810547087863bcd3e9c03ab123b549e461f8a4f02cc19ddafea08cab0d"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "d2423a1c9cafa045ea935f6fc952e037402f8c21cb660ab2e0a8ac412d67150f"
+            },
+            "validation-structure": {
+              "path": "4/validation-structure.npz",
+              "sha256": "525e5e63ecc36671289b3a60d4b3efecf69f6cdfc203db5dc8b34cc8de26717b"
+            },
+            "test-structure": {
+              "path": "4/test-structure.npz",
+              "sha256": "e6a7b82c20849d16220050d3112a342e460a81f12e248216a0b112280c0a6804"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        }
+      ],
+      "source_freeze_sha256": "094049cfe8a9137b02a2599e6be823d669f191d31828989a9dae46797ef6e439",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "46aa82eb2c4ed409244e9c6b3b9101866c2bb475e9edccf2bc22ede6496c29d1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    }
+  },
+  "cells": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A1/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.4916220839950256,
+      "artifacts": {
+        "model.bin": "5ecb3b570df366e2f756030ba64456314c72a366c6a3b2b1eabc2dea91c392a4",
+        "training.json": "3e29092b73a92c2315407cd4fc9ac67e7f6a32994b3c11e908694e71071461e0",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "5e3f564622e1e1a04f6beb989eb2445990225260115d0a0348898cd9d490dd7e"
+      },
+      "application": "A1",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  1.1040290366770373,
+                  1.0606887101824045,
+                  1.0218986555332432,
+                  0.9879878092935267
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A1/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1039274590002606,
+      "artifacts": {
+        "model.bin": "4f1c4b05a02d75be1459ec315e3cb4e87ce69289da854967e17faf0a6acd76d9",
+        "training.json": "716f5d21daf8b657d16f8938b3e15d165a75b94ca178d61cd51af475be688c66",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "bcb8a0912f960370e31674938e6e4fe96805ed9b9217162c910549c89a7fc0cf"
+      },
+      "application": "A1",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  1.12648011579946,
+                  1.082676299088048,
+                  1.0438404198892604,
+                  1.0100368469056356
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A1/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1680871669959743,
+      "artifacts": {
+        "model.bin": "d6beb9beafae3e50a318ab6b03d4203a7a39cc50872d8e59093fc39af70c88ff",
+        "training.json": "1dce227f2df0b32b3de1f54ac36ed55615084f217f104b0076343494951d0ae2",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "98334943d25e80cf0f26f6abae07f1ed51927664f01ecf0dcff9adad04fe392c"
+      },
+      "application": "A1",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  1.1225223244307807,
+                  1.0803266948728714,
+                  1.0439130513244994,
+                  1.0109379748479417
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A1/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1016408750001574,
+      "artifacts": {
+        "model.bin": "c418c70a9ae639004bde3a6469ff262d7ce8fe3e2db8a286f0679473ac05975b",
+        "training.json": "8def85925bec9f9ac860022202007f4c8cda761e54c8a3f67644cb92822a5655",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "1a04b2817da59b47cfad89fa171a9bb15a405370b5b27d4f2fa1965babe299d5"
+      },
+      "application": "A1",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  1.094678299070021,
+                  1.0522510401996432,
+                  1.0156013308134624,
+                  0.9829172497917497
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A1/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1110243750008522,
+      "artifacts": {
+        "model.bin": "68871514ec0c9d814f17e9eea99d364c21c2f80b0b3245801bc58f55690efc5e",
+        "training.json": "9d3a6ccd3732f117ecce3e3223271650d96e3981abb7be512fc502740e04048d",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "072d7f0efc9f4ef07d9927df274abc922937bccc3cb6f4120c139c5a9f314b39"
+      },
+      "application": "A1",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  1.1138331229959961,
+                  1.0724223160201456,
+                  1.036958391075404,
+                  1.004141627720936
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A2/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.181594875000883,
+      "artifacts": {
+        "model.bin": "e8d083497ca2af67c8ee759876e97d8d43f69c50ec0ae2da6c331b13f0443ffa",
+        "training.json": "6f4c30e7256e498d5b44cdd70c9e71890987847ca0b0ca7f3b7b4e6ed9556cf3",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "e0507279bf27dd06b27531e0f09b1e45ad8fcb6f5ab246a136fb45cf3365480e"
+      },
+      "application": "A2",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "logloss": [
+                  0.5221071289135859,
+                  0.49859251594206677,
+                  0.4795220796388908,
+                  0.46362837412592345
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A2/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1256351250049192,
+      "artifacts": {
+        "model.bin": "353513c013c3e07bfeee7a2eb79e4d63d911723736a81e3ad4c29ea1f3e31443",
+        "training.json": "2070eb2c933f30530bd05c4517faf93bc495329d6c2995796e4cd5ca86d38a02",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "2c3954053a20c3ae74d37b89a0cfc76d2179e5a2398fb6c9ad73b33566f92f53"
+      },
+      "application": "A2",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "logloss": [
+                  0.5209074714903859,
+                  0.4970019895891687,
+                  0.4770348203721252,
+                  0.46038955419628774
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A2/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1675308749981923,
+      "artifacts": {
+        "model.bin": "8fc8d7caf918ae34db0e7a36150079d84952fcbe0280b9fcfc6003c1d02d57a7",
+        "training.json": "ea97f53fba76d1f7789a42d2c5577c04de1e13e93e0145783ef1b70ac38f8777",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "3846c60cd86713862a70a681ac00fc455e5d1369e819d88dd5f829bb904629a7"
+      },
+      "application": "A2",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "logloss": [
+                  0.5217617329009279,
+                  0.498522290455184,
+                  0.47935847874228055,
+                  0.46345883603288557
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A2/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.2270602920034435,
+      "artifacts": {
+        "model.bin": "e78744df8d21a419237f19727779c49998f089dbe1610119c835770f9fc7e86e",
+        "training.json": "b538b859632d0cffce1394ecd53562adac9fee92f9c70a4627b571eae9210b0d",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "02f8817c5255ea72f9649c9cb5a008285ab61e5931e5b32d0f90c6db47f373f4"
+      },
+      "application": "A2",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "logloss": [
+                  0.5216469355081974,
+                  0.49872054897034823,
+                  0.47956748367838464,
+                  0.46370066280703964
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A2/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1204172500001732,
+      "artifacts": {
+        "model.bin": "3d5c8bde562421853b3cf3ab80a2e7a6044f61da216a8a06f5ed4c20b1bdc80a",
+        "training.json": "a3b825105ee3771f5c82a4fb81478bdd27e2b7019c0c0ca093dc02179462c3c7",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "35d05321eae9eb79e7d0b9f0ff129d52174c5707c7c76199f127faf69aa93a84"
+      },
+      "application": "A2",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "logloss": [
+                  0.5224058231450108,
+                  0.49907051572487793,
+                  0.4801754436765822,
+                  0.46413744713338345
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A3/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 3.1047087500046473,
+      "artifacts": {
+        "model.bin": "ab5c7bd4b5e8f2af6a87e97fbdccffb06c0cd12c0ca0b3daef90099e3767f702",
+        "training.json": "a1fc905cfa3096fe2acd35802ccd6059d34888a577bf8bc03ac5300d838518d6",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "e8e6927fb7998658c7f1b1c06ff98835f205ca493906c06c47cfdeac6b7d87b4"
+      },
+      "application": "A3",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "mlogloss": [
+                  1.124222720187514,
+                  1.070145548950732,
+                  1.029331798483212,
+                  0.9955857982733826
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A3/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 2.403268958994886,
+      "artifacts": {
+        "model.bin": "326e91ae551175c150b73bd62e1f1bea38c5892d6bcd6817332bca8b89efed0d",
+        "training.json": "9cc9a218ea61fffd4059b8d1c887b28f1ecd914674d80e70f82139e0509283bf",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "57b26e73e32f82754800390ebea25fae840d2101daec3a32f2132633279023a1"
+      },
+      "application": "A3",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "mlogloss": [
+                  1.1234193812481326,
+                  1.069727341932113,
+                  1.0289680811642217,
+                  0.9949726677886164
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A3/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 2.361048499995377,
+      "artifacts": {
+        "model.bin": "4b2548b3f0399b9e3ce250a8a3fc834a0c8306cd923b84f0b86c40d030191a46",
+        "training.json": "812a0caf31b9eaef5882b06fdf85d2946b0b498edaa4eb810c04b0f3bc407fd5",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "ed793c120d1ac576d93f885685b9945cf60ac06bb5426b58b77097ff0c5aea92"
+      },
+      "application": "A3",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "mlogloss": [
+                  1.1237275599966574,
+                  1.0703036842154392,
+                  1.0295653049742626,
+                  0.9956566651730412
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A3/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 2.380878500000108,
+      "artifacts": {
+        "model.bin": "3cb2a8301a09e266d395fde1757cf05cff87dce9f6d5d11560245937eef058cd",
+        "training.json": "209cc6b9f3932f9ee43e356e9fdf97ecf4e445d35d38f2af7bfc781e42d3352d",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "e2a9646b1a03eee79c0530862757278a404869f80c840b935ddf32d62a9007ae"
+      },
+      "application": "A3",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "mlogloss": [
+                  1.123715749175899,
+                  1.0707980802807204,
+                  1.0296679925483145,
+                  0.9960818527324505
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A3/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 2.4569587919977494,
+      "artifacts": {
+        "model.bin": "137b6f1478cd4331fe9ed19850bcc3bbe6fbc81be3576c87a4cd05fa57104882",
+        "training.json": "8eb03f3bf82777997f03fc772c11f62e920bd97cc70901cec8c51f21674c004b",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "7442e9aa7455e4ca59e9b1986508de3c135c70901d6eeb869092adc55d9262d9"
+      },
+      "application": "A3",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "mlogloss": [
+                  1.123177087842896,
+                  1.0697146281226835,
+                  1.0289672416167297,
+                  0.995178032257311
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A5/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.221702707989607,
+      "artifacts": {
+        "model.bin": "90cf7b077420ccdfdd9d5d171d0e55352eb8b9b8dddebc6807db445102f55ea5",
+        "training.json": "0872b81d9713f28a86f4ca450719576d9fefc7c6263047fa8878acf4c6c0035b",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "acf11fe38269a49c26bfc642163e2cf1e5d6a0d74823523629b54ffe3c7fd054"
+      },
+      "application": "A5",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "quantile": [
+                  31.974066788165487,
+                  31.695319542592955,
+                  31.440629697612533,
+                  31.22046048942174
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A5/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1606928749970393,
+      "artifacts": {
+        "model.bin": "3f26df8d5379b3a98704625ead30748f641787571f537c865060925e01e5bd87",
+        "training.json": "5758c170687640dfaee7d7093d9d9c72157b949dc0029c60b2632a9a0b5e5558",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "b98ea09c6dbba99bd8b779d4bdd0d8fd9c82b434ec3c7d51b01bf02a855c3314"
+      },
+      "application": "A5",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "quantile": [
+                  47.94118795875437,
+                  47.46856293167724,
+                  46.99976749679156,
+                  46.5951649898938
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A5/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.0546206669969251,
+      "artifacts": {
+        "model.bin": "bf2aad6d8d946d2ae3e560fda5c165a360f1afd60c5d9a4db82cf7f051f81085",
+        "training.json": "cecac736c064d03678f7cf777c14ed6a280e2239066324355c2d30364899b86e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "23d3e75a100e495281ec34161d53e3d5460c5e5b99c6c8f68a5d03fc3f065149"
+      },
+      "application": "A5",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "quantile": [
+                  59.85553780503784,
+                  59.29329994915284,
+                  58.777271456594576,
+                  58.249420014191244
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A5/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1602462909941096,
+      "artifacts": {
+        "model.bin": "4e07c5f486065e266f7984b1c69be6945670cee0d2005cdb0d23b0731b13a1d1",
+        "training.json": "8b38e3be724b0f66ae341d22cb971efa3937240f7c6019841db8ca44b3669804",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "0c47c820cb593fee0e5ed15b5c5e659630189a1e143354bd84308fb1d0ce7c6c"
+      },
+      "application": "A5",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "quantile": [
+                  61.88663157586241,
+                  61.21408743291521,
+                  60.582124632486305,
+                  60.0059411948079
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A5/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1132504169945605,
+      "artifacts": {
+        "model.bin": "0b7a6dedc9d099a33bd9f2779322a039b92dc1de6c43788a48fca81e83bfde5f",
+        "training.json": "403eb4e340fed5a46fd3832acfcdb1edd9f471c757c2526a70c6fd0f8d4691f7",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "22ee32d07565de75da905e69a81cbe01af372a3a7550346f5a5c0f939fc551a5"
+      },
+      "application": "A5",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "quantile": [
+                  63.63224392312634,
+                  62.937176538455546,
+                  62.287664116873266,
+                  61.699043841916314
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A6/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.109724375011865,
+      "artifacts": {
+        "model.bin": "da89a5766b327896a01105dc042db502b750c50988b83966cff5e691de4d4e07",
+        "training.json": "6788d336be85fb02678adbb24b58498951d6d9942750dfaf825adf248de97944",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "27c9235cf62fc2ba3ddf30241c590e3f5520b767e905c009a382aa7b19a4d856"
+      },
+      "application": "A6",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 3,
+        "stopping": [
+          {
+            "selected_rounds": 3,
+            "history": {
+              "validation": {
+                "rmse": [
+                  1.0152097818097066,
+                  1.0090900204206783,
+                  1.006988270744545,
+                  1.0101328869699957
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": {
+          "mean": [
+            21.832476455405597,
+            29.161076799541192
+          ],
+          "std": [
+            8.446609478513288,
+            10.891162854284502
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        }
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A6/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1138160829868866,
+      "artifacts": {
+        "model.bin": "5bc1b61b2e0e257ae48987528d53028020abe3e93b657a95b46bcfbca3608841",
+        "training.json": "1aa3b5436227d077e75aa4447aebbecf32099780dd1d20b812b209519578b5b9",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "753c256e35fa2117e0e66b0a59e2c642fe06269a887d1320acb40101464a6e61"
+      },
+      "application": "A6",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  0.9064281668733252,
+                  0.8914249917534706,
+                  0.8808437264937701,
+                  0.8737753750518703
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": {
+          "mean": [
+            21.02220744409841,
+            28.889462439852874
+          ],
+          "std": [
+            8.707706178768547,
+            11.553396813667037
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        }
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A6/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1678780000074767,
+      "artifacts": {
+        "model.bin": "1c46fe98dd8410b051b6c700d94c469f59122f563dc8bd96e5cd6d1da8b63ce4",
+        "training.json": "2fb6802d3a392be052c9df7cb4366dabea48e99e2810593ce8bc5fe5964f9509",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "24dfcd1ded2e27dbb0fb791bce1b41bc39aafced7fe16c10fcc974a2a3597b6b"
+      },
+      "application": "A6",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  1.2712642722409764,
+                  1.2355390257974619,
+                  1.2084964496812456,
+                  1.1808598831164345
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": {
+          "mean": [
+            22.402470691547656,
+            31.08271761800212
+          ],
+          "std": [
+            7.461557603692726,
+            9.80291946506434
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        }
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A6/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1556122500041965,
+      "artifacts": {
+        "model.bin": "16a2344f460d3f8209da7190e25b88ca3244b9501c003ac320d1f3495eace0cf",
+        "training.json": "cdedbd0c3aee5d907dc8183f8d4d2c024c2798b2dac700dd965d595bd83ee256",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "39037007c526321da71f584e6a6256ae6d5d8230eed16b08849d44d6855bccc7"
+      },
+      "application": "A6",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 2,
+        "stopping": [
+          {
+            "selected_rounds": 2,
+            "history": {
+              "validation": {
+                "rmse": [
+                  0.8482051365361111,
+                  0.8478712494939465,
+                  0.8498507877363486,
+                  0.8534675082907229
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": {
+          "mean": [
+            21.36469700842268,
+            28.64957766482703
+          ],
+          "std": [
+            8.097653633950642,
+            10.41318564767784
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        }
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A6/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1179427499882877,
+      "artifacts": {
+        "model.bin": "babda4c8797469e36486b8c7de90fcc523b4b5996a1de8c40898dac42a658568",
+        "training.json": "d43f28849e87ddc9f5a5cae0f15f66456251c35928bc9da1375be2716c4249c6",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "1e818da9f56f12e88b87b2873cf6eb4e66dfc1c651d9c761357288a6d896761a"
+      },
+      "application": "A6",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  1.3698645536405305,
+                  1.3439158521723147,
+                  1.3229687919719846,
+                  1.300697571329999
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": {
+          "mean": [
+            21.608206573705065,
+            28.812343511667468
+          ],
+          "std": [
+            7.37511081258478,
+            9.516732486364944
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        }
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A11/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.5771984579914715,
+      "artifacts": {
+        "model.bin": "01e4ce1ff1e8f4ffae1b7b9a73c467092f645697596a64afe91cb4745f44ad7d",
+        "training.json": "5828526feff7915a44761f6a214c2e44e85c2e1341e13a0b196e020507ba95a3",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "38c336c83d00b67d3d32fa234c99f1b2b3b6d7f17d60848a1a4bf37ab8265290"
+      },
+      "application": "A11",
+      "fold": 0,
+      "library": "catboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": null,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "learn": {
+                "RMSEWithUncertainty": [
+                  1.5222230477926284,
+                  1.480984884040511,
+                  1.4448661314897857,
+                  1.4192193388805154
+                ]
+              },
+              "validation": {
+                "RMSEWithUncertainty": [
+                  1.5153939906237581,
+                  1.4730535147673454,
+                  1.4368484205236978,
+                  1.4103263868666862
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A11/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.5213453750038752,
+      "artifacts": {
+        "model.bin": "9d01a3710a6386975c0cbe1d1b46b4a155af6b1dc162a47ce70e5856508cb4c5",
+        "training.json": "adeb392e9d71a5884063ddc9b2c9054bbf859900c3a423bb86dad2d7ede0e87c",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "7b6dfac20f0e618c22a0b10b82076c8d7b24bd85145802cbafae51aa22f9add0"
+      },
+      "application": "A11",
+      "fold": 1,
+      "library": "catboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": null,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "learn": {
+                "RMSEWithUncertainty": [
+                  1.5049282105546857,
+                  1.463238032836992,
+                  1.4314289942641896,
+                  1.398575327192213
+                ]
+              },
+              "validation": {
+                "RMSEWithUncertainty": [
+                  1.5327034390677288,
+                  1.4874700681826045,
+                  1.453744239948275,
+                  1.4199022988363361
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A11/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.51448529199115,
+      "artifacts": {
+        "model.bin": "f929a61d700a709434b855069db9ab478dca4093eb058b007fbbaed8c88d8d9b",
+        "training.json": "38c1ea43b51b5d620038e7afc2243412e802cd706f6075330764c9fe82d76621",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "0e3cd067a7312b318f96f2f487ee799747f09f0f763b1a2ab9c7e37d7e7f093c"
+      },
+      "application": "A11",
+      "fold": 2,
+      "library": "catboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": null,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "learn": {
+                "RMSEWithUncertainty": [
+                  1.5217132116875307,
+                  1.4897635505530253,
+                  1.4517624866431436,
+                  1.4195040146834654
+                ]
+              },
+              "validation": {
+                "RMSEWithUncertainty": [
+                  1.5388203405622187,
+                  1.5057508976405607,
+                  1.467325684201917,
+                  1.4351657947544998
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A11/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.5179470840084832,
+      "artifacts": {
+        "model.bin": "a21c029d1053702998ab19b43b1cb5ed4925d33d6a056d435a785f24587e3984",
+        "training.json": "1ab99c8f2084b3dcdc3533da59f7a4c829804afa363754636f9296b985c9f65a",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "eeb9ea8f14964e33fb6b2ae1e075f97a0297a518bf04a1f488e64b69a6a8aeb5"
+      },
+      "application": "A11",
+      "fold": 3,
+      "library": "catboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": null,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "learn": {
+                "RMSEWithUncertainty": [
+                  1.5192109500257958,
+                  1.477542273093424,
+                  1.442107020019317,
+                  1.4086702171512198
+                ]
+              },
+              "validation": {
+                "RMSEWithUncertainty": [
+                  1.5074776988095129,
+                  1.4667578450478718,
+                  1.4309549264552512,
+                  1.3976966352452378
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A11/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.5170913750043837,
+      "artifacts": {
+        "model.bin": "57d49f66c1cb996ccd77b0018235c51d9daa20ab97275f87c368524cc8655bec",
+        "training.json": "73853c9d18517f3a9ba21f8bd3cc00f753f64bff8229ac93f94314d6f02a5444",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "d54e202f5cdcf077cb4f0e8e7b271d98c3cb664a2d32df0d1f6d3e988f934512"
+      },
+      "application": "A11",
+      "fold": 4,
+      "library": "catboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": null,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "learn": {
+                "RMSEWithUncertainty": [
+                  1.5230454263784095,
+                  1.4898330592814988,
+                  1.4545513374681012,
+                  1.4206380657402569
+                ]
+              },
+              "validation": {
+                "RMSEWithUncertainty": [
+                  1.5265866383619924,
+                  1.4950096984945573,
+                  1.4605720090766612,
+                  1.427506882477277
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A12/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1111349999991944,
+      "artifacts": {
+        "model.bin": "c30ab91ca8d27684f9badecaecdba0427926fa281320f0b9b0259dcb55b77a50",
+        "training.json": "8acf5a5cd21a0d056c868e26de99f3e02c0adf5abd526826c429a1c4eac82260",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "6ca4bf3a15a9d2f7e67e48363d7f4d6e61408e3ef76e248aaaccec72b9e5d2f4"
+      },
+      "application": "A12",
+      "fold": 0,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  14.893546275317354,
+                  14.310820386115674,
+                  13.683061806840724,
+                  13.249780511152489
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A12/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.162068375007948,
+      "artifacts": {
+        "model.bin": "0ffe3fff84dc29edb30d256a4fd4390b5c5bc9097f1cf20d100ed4c7e2315227",
+        "training.json": "00c9d4688d917c7a1b95b4324b5c053735108bc593a009c2bb901275bd14053e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "f710c2b4fd4b6f1a9478ba5384b9946b1efd74ba239699a20ffd4389347de500"
+      },
+      "application": "A12",
+      "fold": 1,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  15.711770268699254,
+                  15.051416652146338,
+                  14.554739095401072,
+                  14.05666347254798
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A12/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1183424579940038,
+      "artifacts": {
+        "model.bin": "46c7f63b5b68ce44393a6cb52486bbd950e5efff17759d5ce9cd0243c976856d",
+        "training.json": "01dce934ac3b346d7dcf15c1ebf8fca900c397196e248871d5f57fb73ce99bf2",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "1e504a639102f5a58cccc22d8b524a25f9cde5dd52fc2f32cc05843912db5de0"
+      },
+      "application": "A12",
+      "fold": 2,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  15.19329904042284,
+                  14.609148043942902,
+                  14.059621503399761,
+                  13.46748393578638
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A12/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1720688749919645,
+      "artifacts": {
+        "model.bin": "32db553a88e9766df223c7a4d8420d156af1ce0d88315361d401107c267f1a31",
+        "training.json": "b956a07dc106e29abb2c3930616de06e85781344cfce0f719965adc710743242",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "57951079cbdda8d5fc37d7219dff502a9b6d35ae759ae4be3e76f6fcced645d2"
+      },
+      "application": "A12",
+      "fold": 3,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  15.652135794564133,
+                  15.083851955094127,
+                  14.477455842030803,
+                  13.985865542481408
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/baseline_worker.py",
+        "/Users/jiaruixu/work_space/openboost/build/v1-worker-classification-quantile-001/A12/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1067812499968568,
+      "artifacts": {
+        "model.bin": "b817e15aa74169a94dbd17cf5078f50875bc4f2fd1432030f2ee655dcd1c7467",
+        "training.json": "bdbdc8b3661dac2a67da7e74a7e2adf5b94e0c6b80b920a3c4167f69cf685ff8",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "6b05f7435a5ecf641ceb64c90d999e3ec9e37ef1c9ee2d678c9a47706de3c5ac"
+      },
+      "application": "A12",
+      "fold": 4,
+      "library": "xgboost",
+      "training": {
+        "early_stopping_rounds": 3,
+        "prediction_rounds": 4,
+        "stopping": [
+          {
+            "selected_rounds": 4,
+            "history": {
+              "validation": {
+                "rmse": [
+                  15.101568342453419,
+                  14.48434154845502,
+                  13.894099076194196,
+                  13.341288656055848
+                ]
+              }
+            }
+          }
+        ],
+        "target_scale": null
+      }
+    }
+  ]
+}

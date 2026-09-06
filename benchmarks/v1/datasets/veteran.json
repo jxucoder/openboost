@@ -1,0 +1,182 @@
+{
+  "adapter_sha256": "e796be3be35202fe688235b40798ba98793605adcdcd6194f2729fb869eac0b9",
+  "arrays": {
+    "event": {
+      "sha256": "194136b1df29ef7e5927512b8dd19350efc036e4ffd4e09bc16fd094edbe7e5b",
+      "shape": [
+        137
+      ]
+    },
+    "x": {
+      "sha256": "2935c5886f9e37d09e6e3318d7498aa62276c6fb6d25eb3ce4a4d9b506cd600c",
+      "shape": [
+        137,
+        6
+      ]
+    },
+    "y": {
+      "sha256": "ebc1cbea52cbb01424914ae1b13edd4879b687d5f60cfdacf5d086ce10b8a876",
+      "shape": [
+        137
+      ]
+    }
+  },
+  "audit": {},
+  "dataset": "veteran",
+  "folds": [
+    {
+      "seed": 0,
+      "test": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "9905a68f8dcb54b50a343f8913af0d58ea7a7999d1422424563cd3c7cf43f803",
+        "rows": 28
+      },
+      "train": {
+        "class_counts": [
+          5,
+          76
+        ],
+        "row_indices_sha256": "3a8bb1585d215737f3d19cae6fe790e45c1068a49c2b9d67de6e905e7f9bfa4a",
+        "rows": 81
+      },
+      "validation": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "d84dc68b68c6071a49f6e56fc5962992d5e5d38d6285d79584ec6b7a44484ad3",
+        "rows": 28
+      }
+    },
+    {
+      "seed": 1,
+      "test": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "a305149e7ee6c85597981f081ed2da89b069b1f56ec1dfb98751d5ce444e6e20",
+        "rows": 28
+      },
+      "train": {
+        "class_counts": [
+          5,
+          76
+        ],
+        "row_indices_sha256": "2ce4ebc86c88045a36172f996c26273fd82e3bbf6fef3c3899257aa8b2937b16",
+        "rows": 81
+      },
+      "validation": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "0a334004fa6c46a8cb5dfc51cfb6341963d6ea97bd59f35959d56330c8312d87",
+        "rows": 28
+      }
+    },
+    {
+      "seed": 2,
+      "test": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "3d4eb51589400eea6b3359f5ee18c200051f3db514473ac79b0a154ef24314e3",
+        "rows": 28
+      },
+      "train": {
+        "class_counts": [
+          5,
+          76
+        ],
+        "row_indices_sha256": "7db5da51081e6dd31e3bb08b54c214d1f651fba160933be6f95e06fe86f37282",
+        "rows": 81
+      },
+      "validation": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "ee357462e546286ee5616544f19db8a692c54acae379c8984ad18040611b1269",
+        "rows": 28
+      }
+    },
+    {
+      "seed": 3,
+      "test": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "cde02cbd2f6646dc1712ffb23abfefd5282d760f3ca005be9c2c6ff6b198ce06",
+        "rows": 28
+      },
+      "train": {
+        "class_counts": [
+          5,
+          76
+        ],
+        "row_indices_sha256": "2bb29a69da2aefedd9dbf56dbd36d8ec97d9312613bf1e3d3dd140707364c7c2",
+        "rows": 81
+      },
+      "validation": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "0bc82f8622516165da1c74db2126feaa378a532e6dec471d5c85921e4a329e78",
+        "rows": 28
+      }
+    },
+    {
+      "seed": 4,
+      "test": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "3aac1d583c9de92f271644556e45c8c56eadb9f5485f28f5ab29603660b1d86a",
+        "rows": 28
+      },
+      "train": {
+        "class_counts": [
+          5,
+          76
+        ],
+        "row_indices_sha256": "63e9a8044c7f89ab8e505bfe93e76005e1d5a165fd4c9b53b2d345d1a80580f1",
+        "rows": 81
+      },
+      "validation": {
+        "class_counts": [
+          2,
+          26
+        ],
+        "row_indices_sha256": "f4cf21f5a46a7c8e17db4e1138319320f28920e17392e8511439f320b427dc09",
+        "rows": 28
+      }
+    }
+  ],
+  "hash_format": "SHA256(JSON [little-endian dtype,shape] compact + newline + contiguous C-order bytes)",
+  "provenance": {
+    "argv": [
+      "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+      "-m",
+      "benchmarks.v1.real_data",
+      "veteran",
+      "build/v1-data"
+    ],
+    "dirty": true,
+    "git_sha": "dc744016687fde2c3347cc4e83c9c9f9e0a0aee8",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "python": "3.12.12"
+  },
+  "schema": "openboost-real-data-v1",
+  "sources_sha256": "fb95ff2763ca4dcee54e46e9d201c1508d3a2ed3a80e366b1058dfed1d3d26e6",
+  "split_rule": "event; sorted unique groups/classes; PCG64(seed); floor 60/80 percent boundaries; sorted source rows",
+  "status": "data preparation only; no model quality claim"
+}

@@ -72,24 +72,14 @@ censored NLL.
 | `predict_survival(X, t)` | `S(t \| z)` for a scalar or per-row `t` |
 | `nll(X, y, event=)` | mean censored negative log-likelihood |
 
-## vs XGBoost `survival:aft`
+## Evaluation
 
-Synthetic DGP where **both** `λ(z)` and `k(z)` vary, ~35% right-censoring,
-200K rows, 300 rounds:
+Compare censored NLL, ranking, interval coverage and shape recovery separately.
+A synthetic process with covariate-dependent scale and shape tests whether
+both parameter surfaces can be recovered; it does not establish domain value.
 
-| | C-index | NLL | 80% coverage | shape corr | fit |
-|---|--:|--:|--:|--:|--:|
-| OpenBoost `WeibullAFT` | **0.680** | **0.761** | 0.803 | **0.997** | 5.4s |
-| XGBoost `survival:aft` (`extreme`) | 0.672 | 0.830 | 0.852 | n/a (global `k=1.34`) | 11.7s |
-| global constant | 0.500 | 0.896 | 0.810 | n/a | n/a |
-
-C-index is close, since ranking mostly follows the scale. The NLL gap and the
-shape correlation are the capability: OpenBoost recovers `k(z)`, XGBoost
-cannot represent it. Coverage of the 80% interval is nearer the nominal
-0.80 (XGBoost over-covers).
-
-Reproduce: `uv run modal run benchmarks/bench_survival.py`. Notes:
-[Benchmarks](../benchmarks.md).
+Run `uv run modal run benchmarks/bench_survival.py` and retain the raw results.
+See [benchmark evidence requirements](../benchmarks.md).
 
 ## Tips
 

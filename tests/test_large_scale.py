@@ -317,6 +317,30 @@ class TestGOSSConfig:
 # Integration Tests with GradientBoosting
 # =============================================================================
 
+class TestUnsupportedHighLevelBatching:
+    """High-level models must not silently ignore ``batch_size``."""
+
+    @pytest.mark.parametrize(
+        "model,y",
+        [
+            (ob.GradientBoosting(n_trees=1, batch_size=16), np.arange(64)),
+            (
+                ob.MultiClassGradientBoosting(
+                    n_classes=2,
+                    n_trees=1,
+                    batch_size=16,
+                ),
+                np.arange(64) % 2,
+            ),
+        ],
+    )
+    def test_batch_size_fails_fast(self, model, y):
+        X = np.arange(128, dtype=np.float32).reshape(64, 2)
+
+        with pytest.raises(NotImplementedError, match="batch_size"):
+            model.fit(X, y)
+
+
 class TestGOSSIntegration:
     """Integration tests for GOSS with GradientBoosting."""
     

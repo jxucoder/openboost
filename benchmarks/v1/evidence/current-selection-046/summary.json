@@ -1,0 +1,373 @@
+{
+  "scope": "Synthetic A6/A13 selection integration only; not real quality, cost or OS isolation",
+  "revision": "e83e7b528cf87c3e062b14177e2545d50ae9e2af",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "-m",
+    "benchmarks.v1.current_selection_smoke",
+    "/private/tmp/openboost-selection-046"
+  ],
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "aa73cc40df7c79203505f91e3b86292dffbb3b9348467be60d8587e3bfd8c6ad",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/current_selection_smoke.py": "67e3651f1c42c78e7d4fb162736bf4155c9259102fcace405fc24c011234bd23",
+    "benchmarks/v1/openboost_worker.py": "a467fc8024eebad0fa9e1412e20e9c374f72cb96b35b08890434a669a44b4085",
+    "benchmarks/v1/openboost_predict.py": "844af41520e2f6de1e0c7f7d50bea13777867b860de83f385e529780661903c9",
+    "benchmarks/v1/selection.py": "22aca8f1234b5e13ea71f387fd3acca3b58c501f35264762491dc8220ce64f2e",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/quality.py": "6736b97666f73a0c1831fd5c9472a4fd66cc675d2b66884a684cdad92354e827",
+    "benchmarks/v1/quality_report.py": "ab2bf28a5b6f871fb13fe91b4d9d396d547531b184b85c5c4816f5c74c327a7b",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "environment": {
+    "python": "3.12.12",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "threads": 1,
+    "cpu_count": 16,
+    "gpu": null,
+    "memory_cap": null,
+    "packages": {
+      "openboost": "1.0.0rc1",
+      "numpy": "2.3.5"
+    }
+  },
+  "protocol_sha256": "7409a9484e69dd3605008245a7afe80a60135f3fb7b917df803b72e8059bd094",
+  "passed": true,
+  "trials": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-0.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.18943250000302214,
+      "artifacts": {
+        "model.bin": "c183bcdcaa26bcb54564904a90f0f0e4fe27ba55a048bbd6765552c791e96ccc",
+        "training.json": "27edd78a37f37aaae4689e3d217b640dc47b0de158b88276d69f0c4829fabd9c",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "0d48297c6dc68ff839cc0bf9daa1f2b6b07c35d88310478373d57b88836ce76e"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-1.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.2466095419949852,
+      "artifacts": {
+        "model.bin": "991dd2c8ce573699c87d93dc8ab10ba87079bafc48293200e34c3a592a9da96f",
+        "training.json": "bd71970f2ed2f63198376412c5ba5b2ac8b42b1d924bd194d6165c43ed9fa2fc",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "6aa94d82e2ebd81c2987e8d19097d1bf538d6c11a386745394c049007af43414"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-2.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.34371020800608676,
+      "artifacts": {
+        "model.bin": "95fe4e465adead4d4b4cd27063d803820cfb351eed2fc26e07eda120af704267",
+        "training.json": "59b3ca7f5c5a144192498ae32dc0ac64b693f14fa762f475c69e0bdf015c666a",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "9a7399c215bdc8b53dd84dca481a934ec37d9ff4c2208080f662fa98d7d46c55"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-3.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.4640418749913806,
+      "artifacts": {
+        "model.bin": "376fea27ad06665a57b0814406341151bc510c814963a1aad516328d3e16abea",
+        "training.json": "1050e95ead4482a23010ce3004f06991ac5dde5ac232ed939c2b863f475cc1ff",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "dce5afafea701d16d5d6028355dd0dc0d3525f25a7efd9cd49378d6967df4eb3"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-4.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.18671891700068954,
+      "artifacts": {
+        "model.bin": "77f8826c52769c5fbed67a95e0ec5106b8de90abef018e1c2177538268e3af4d",
+        "training.json": "d8f051889b1b68518e825937cff19242e0a24ca4a17038286ccef753a67fd339",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "0e5b1d72e070f0bf09d8b506e6a791a900e06045094f13730fa964e95981c860"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-5.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.24036341600003652,
+      "artifacts": {
+        "model.bin": "8c75d5c101dca71985bf2a8a6ab8e28efdf04d12c741828b249b55c1f9c029b6",
+        "training.json": "7970cd42c8af1c6c643b2aabd94fea310b09600f529787c58911e12d759e6fec",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "1c6de7db35fafd31179c06dd01a7624f3df2e8b18db02f6a895ce7a2efca2e57"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-6.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.3485678330034716,
+      "artifacts": {
+        "model.bin": "8117fb27f9787110a39fc63644e5d25ed4192caa0f1f203505596046e4ac0756",
+        "training.json": "7192a11d4e71fbccba6cd6cc65d7d3daa5fb8acb5b63942c8847ffa544f3bb94",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "7dbed58c84d6f3b217364a60144925c8c1e3c9a2cb966bae8af69616ba749ef2"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-7.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.5652502919983817,
+      "artifacts": {
+        "model.bin": "a785681c8058f9d3fe1f36062580e98343f9cd4d42263e8c90366e0e205470dd",
+        "training.json": "026acdc310bc272e343936d8ab91bc0c4065727556aa563f5f7f9ba7619f01db",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "b92b6c179e8841c1fe9f14c4be9a17e9ec2614f1fb95f6a7f94ede9f93f68fdf"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-8.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.189344667000114,
+      "artifacts": {
+        "model.bin": "86e92ad30a93021cd662f196f2fb9bfae66b7bf8c10f1875fee796fb617e92dd",
+        "training.json": "3cb01852d95d64b4a64bb8bac8f73779a9544571b95547cb5275b8e06443bc01",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "5353337dadadcb3735d9702aad54e246e805570e841aad1a474b532ab99e1912"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-9.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.24095179200230632,
+      "artifacts": {
+        "model.bin": "144837267fe6f77cacc0ccacaa12b87095388300d7e166a3f60fb309074e7baf",
+        "training.json": "5056d916abf4a3b3a084568ab62c28397e02cf57783852f3094ec30a9ce065bc",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "d1377727a4cc51b7d278a4e2de52166e8fd411cd10e7e701d3f9bbfaa685a169"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-10.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.3485011669981759,
+      "artifacts": {
+        "model.bin": "7ec55ed1e5e25b5b5808aa0f36d8f54cbfbec76666ea739f7999221192c2829f",
+        "training.json": "61128b6d3f20845f00ead4d27dccfdfd336b73267cd2e9caf4fc87763eba2dce",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "a6ad44fb295eb90ecb9a1a485437833a7abf874e14cbd64b4426e62ce9a565ba"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-11.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.40403341699857265,
+      "artifacts": {
+        "model.bin": "d55e37e73dbfe60a0802b67749974f68a13fb9182bc9784ad89d98369351a135",
+        "training.json": "1d2d39d45c1e39255654f1881ef067fd94c0036f74356ffe50fa71eb8402adb7",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "aad582ac78650a3875b1248a60eebf80419f133f0f24488297fbc20f911b3a74"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-12.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.1899553749972256,
+      "artifacts": {
+        "model.bin": "cf757d5eba93ab8dfbeada6aa220f75c365a0174a6b51015dee0bf5245a58e59",
+        "training.json": "c9996f5b9eba2a68ff41c1d64b7cbe0dbb66e87bb831f273e1db22a4f4a18da5",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "9fc653a5dfddf376905feecb1065b56cad1e7db5af912604196f5f7eb08c8398"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-13.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.24297970900079235,
+      "artifacts": {
+        "model.bin": "745ce8414f74020f78a2f0583d44abd16944b36324f3864f94e72fe5a09c5670",
+        "training.json": "ab084eca35b01d7b7e73468eb133d3a1ca02e9253450cf226c62e8bbf23165df",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "600e5a681c7bce7b047ff68952614c0759acd1accb03db1d72d6752527915276"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-14.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.35101504198974,
+      "artifacts": {
+        "model.bin": "fd9f8ba40952897066dbe8729b55d1ef8cd0a87e1451cce3f7c579298dc194d0",
+        "training.json": "5b256f0e82652846d71544640ba1f115aad6c4275799cbc26b07f853e8fedbd5",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "9c331ac5dc4710fe14bf273fd15447a89b374819c98a3c9999ef7ba2aed6485e"
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-selection-046/job-15.json"
+      ],
+      "timeout_s": 60,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.4539316250011325,
+      "artifacts": {
+        "model.bin": "ae7ac62b0c51cd7c13596703c9654245cd4d7e7d0522eacd8d30b1cd57517ce1",
+        "training.json": "885f3313546ff3fb8a2fe015c80c29e223f8a29635bff235f903f39359a059c2",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "e0e4f009555742e828529b6e0eada543fcce53c7d09ba89d0d1c61f67814ff37"
+      }
+    }
+  ],
+  "selected": "openboost:15",
+  "receipt_sha256": "f29134548b45d36f708b9ca3a3695121d1e57c811bbb252dc3f6f7a15950dfa2",
+  "inference_command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+    "/private/tmp/openboost-selection-046/trial-15/model.bin",
+    "/private/tmp/openboost-selection-046/released-features.npz",
+    "/private/tmp/openboost-selection-046/selected-predictions.npz"
+  ],
+  "selected_predictions": {
+    "path": "selected-predictions.npz",
+    "sha256": "7d0d8b01149168afc295e1aab0df6bad445b237f9f0fa0bcaa6a1933f7df9f06"
+  }
+}

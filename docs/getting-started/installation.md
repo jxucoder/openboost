@@ -51,12 +51,13 @@ troubleshooting.
 |-------|-----------------|---------|
 | `cuda` | numba-cuda + CuPy for GPU trees | `pip install --pre "openboost[cuda]"` |
 | `sklearn` | scikit-learn wrappers | `pip install --pre "openboost[sklearn]"` |
-| `jax` | autodiff for custom distributions / formulas | `pip install --pre "openboost[jax]"` |
-| `distributed` | Ray for multi-GPU | `pip install --pre "openboost[distributed]"` |
-| `all` | Everything | `pip install --pre "openboost[all]"` |
+| `jax` | autodiff for custom distribution NLLs | `pip install --pre "openboost[jax]"` |
+| `distributed` | Ray for experimental multi-GPU work | `pip install --pre "openboost[distributed]"` |
+| `all` | Combined optional dependencies | `pip install --pre "openboost[all]"` |
 
-Finite-difference Jacobians work without JAX. Install `jax` when you want
-autodiff on a custom NLL.
+FormulaBoost currently uses finite-difference Jacobians on CPU. Installing
+JAX does not switch its formula path to GPU autodiff.
+
 
 ## Requirements
 
@@ -67,8 +68,8 @@ autodiff on a custom NLL.
 
 ### For GPU
 
-- NVIDIA GPU, CUDA Compute Capability 3.5+
-- CUDA Toolkit 11 or 12
+- NVIDIA GPU supported by the installed CUDA/Numba stack
+- CUDA 12 runtime compatible with the `cupy-cuda12x` extra
 - `numba-cuda>=0.23`, `cupy-cuda12x>=13`
 
 ## Verify

@@ -1,0 +1,341 @@
+{
+  "adapter_sha256": "e796be3be35202fe688235b40798ba98793605adcdcd6194f2729fb869eac0b9",
+  "arrays": {
+    "aggregate_eligible": {
+      "sha256": "522e211bef61304fb4175f9f52d85546870f73532da84897c971527c375a9917",
+      "shape": [
+        678013
+      ]
+    },
+    "category_Area": {
+      "sha256": "b0304f031ba4e84bd288717b5e637239e47f88d03ed5aa2f05e3d69a82745229",
+      "shape": [
+        678013
+      ]
+    },
+    "category_Region": {
+      "sha256": "5bd782b43c686ac68e5824b8e85aaf01389dedc1fcf6403c20fda3be3a97b250",
+      "shape": [
+        678013
+      ]
+    },
+    "category_VehBrand": {
+      "sha256": "01c11b0194e1d1a0fc4359b3e1a2b6454f0821ea4fe9310036a5bd697457762b",
+      "shape": [
+        678013
+      ]
+    },
+    "category_VehGas": {
+      "sha256": "326b9e691971f267b52de05a321fbe7ccf9a5356e83567fc08a4a7f7569881dc",
+      "shape": [
+        678013
+      ]
+    },
+    "exposure": {
+      "sha256": "b1c935604e602a450dd528b8fcded8e9f37b9184c25e4f1e5833e835a69a5fc5",
+      "shape": [
+        678013
+      ]
+    },
+    "group": {
+      "sha256": "f818c5ba5bc53b8eefff155af91ede45f8290fe34442b363a02a38a869404cc6",
+      "shape": [
+        678013
+      ]
+    },
+    "paid_count": {
+      "sha256": "9580d2cafbdc7cadc8f732a6171fdebbdae7e795302d779a01b5c219117990da",
+      "shape": [
+        678013
+      ]
+    },
+    "paid_total": {
+      "sha256": "d71f05b5941536c842dadf8f5b760bf3cfc57d888c62b7e68be403f502254c62",
+      "shape": [
+        678013
+      ]
+    },
+    "severity_policy_row": {
+      "sha256": "778900c96483c347a1ef9a635849df77deae8d1b427b39eec1faed2feedf522a",
+      "shape": [
+        26444
+      ]
+    },
+    "severity_y": {
+      "sha256": "163f4b9f981c47845d89f2d27d0f207e962543c4ab6366ea9a2192c20f9ccc22",
+      "shape": [
+        26444
+      ]
+    },
+    "x": {
+      "sha256": "8337cf2f88ad2ef768099226bee01f4e8210d59b10172e4abb6886e3e42e37a4",
+      "shape": [
+        678013,
+        5
+      ]
+    },
+    "y": {
+      "sha256": "6d1e18400b84b43ca67b1c9102373469dafa75705d04e2fc1a571497fa8daefc",
+      "shape": [
+        678013
+      ]
+    }
+  },
+  "audit": {
+    "aggregate_retained": 668897,
+    "frequency_rows": 678013,
+    "nonpositive_claims": 0,
+    "orphan_claims": 195,
+    "positive_count_without_payment": 9116,
+    "retained_claims": 26444,
+    "severity_rows": 26639,
+    "zero_count_with_payment": 0
+  },
+  "dataset": "insurance",
+  "folds": [
+    {
+      "seed": 0,
+      "test": {
+        "aggregate": {
+          "groups": 133779,
+          "row_indices_sha256": "128a3727bfb686fafef7f82462916fad44125132a72b1fac21887956a4b3802b",
+          "rows": 133779
+        },
+        "groups": 135603,
+        "row_indices_sha256": "3e60c7256276b0860e475d1b07852140cb05ffbdb5262e5c4aa050f704ad5bdd",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "07501ed2deb4b1e7307e1015f3ff7e84363651c76dbe1ba4e30bd079cd937341",
+          "rows": 5256
+        }
+      },
+      "train": {
+        "aggregate": {
+          "groups": 401236,
+          "row_indices_sha256": "d314a6580f801d3191515586356fb35e559f30fc200ef8c5615ca68e81566d12",
+          "rows": 401236
+        },
+        "groups": 406807,
+        "row_indices_sha256": "bf7990d8bd8d68cabe4cf5931159c66dfd8eaa63396c2e37c73e83fc6f0e6cd7",
+        "rows": 406807,
+        "severity": {
+          "row_indices_sha256": "9118f2dbe5c0bb8d88b03634e2cf5d3eae57a5915d2ab1bf81a5395676f6f1b8",
+          "rows": 15935
+        }
+      },
+      "validation": {
+        "aggregate": {
+          "groups": 133882,
+          "row_indices_sha256": "56e430b57b3c5d08768454d894115e68ca8e115c35a280100a648580a6353bff",
+          "rows": 133882
+        },
+        "groups": 135603,
+        "row_indices_sha256": "ac6a3e4b1e92fb3e75c5adcb2aae9f71653df1be8213a3f84bbe98a2616af877",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "62482a63c57bd11bca6e8e01485f9b830209d4ac78a9b22e77254a2df0e64af6",
+          "rows": 5253
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "test": {
+        "aggregate": {
+          "groups": 133811,
+          "row_indices_sha256": "a395a86f47b5049f67ac4165876da31b389367dcdfb84a7f0d8f3e07201cf9f3",
+          "rows": 133811
+        },
+        "groups": 135603,
+        "row_indices_sha256": "9b5c8458e857c2ced672f5effa9aadeb8f42c16f758941cc9f6c309ed0556a28",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "969270874cebb3a205988eed0772b0e5f7805d06fd6ad6164b22ab49c0a14456",
+          "rows": 5248
+        }
+      },
+      "train": {
+        "aggregate": {
+          "groups": 401302,
+          "row_indices_sha256": "281da9f7a82f341316e2297908176c17bf565f041b5b8108449d65271984dc9f",
+          "rows": 401302
+        },
+        "groups": 406807,
+        "row_indices_sha256": "82bad335443d20390dd4256c08a70e016e079cb37254e8629d0a95e755644e34",
+        "rows": 406807,
+        "severity": {
+          "row_indices_sha256": "3250e82e59c4e93c93f69f0ce20cf6e83689111dad1cdecf6d9ad649e6ae8d0a",
+          "rows": 15755
+        }
+      },
+      "validation": {
+        "aggregate": {
+          "groups": 133784,
+          "row_indices_sha256": "9d22d5c55c1c210718a6da1f606a9319a969bf03dcbde4220135f6e44f967a0e",
+          "rows": 133784
+        },
+        "groups": 135603,
+        "row_indices_sha256": "84ae39ecf6cf04a9358530130b1a9caa31b10943ed0c0d53ad5807d3b0b7909f",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "ae9f70a6169d44defdf5d7f28c3c19340d49bd443dd2da0b4b8802f6ca23beb3",
+          "rows": 5441
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "test": {
+        "aggregate": {
+          "groups": 133791,
+          "row_indices_sha256": "12134f7ed34cfd009ba37165c7b25f28f65defa83bc07f5da9bf987e8158b321",
+          "rows": 133791
+        },
+        "groups": 135603,
+        "row_indices_sha256": "79d915ca2444a4cfe954280474808ef5d973e12d1186b88cfc81e3f5286c9256",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "b6e1eca5fb3ebf0572369fc7d5b9a64afe9012ab2f7ba5a7f2aa31e8fea56e4f",
+          "rows": 5191
+        }
+      },
+      "train": {
+        "aggregate": {
+          "groups": 401321,
+          "row_indices_sha256": "3bff1333ecf667b2c01c08d59a0f227c45291de123fa13f9950085b34bbb7860",
+          "rows": 401321
+        },
+        "groups": 406807,
+        "row_indices_sha256": "e9929e4fa19045a0133622a2bd43b447d4564f3e901a41b31b51f5c6c0b61440",
+        "rows": 406807,
+        "severity": {
+          "row_indices_sha256": "0d8ac3e488f3dbb8657634630c77786505bd6f7e11d6298937b1ce00577b35bb",
+          "rows": 16097
+        }
+      },
+      "validation": {
+        "aggregate": {
+          "groups": 133785,
+          "row_indices_sha256": "a78107ffd6355323895451bd5a9797ee8771524f679741111cc5594bff7c9496",
+          "rows": 133785
+        },
+        "groups": 135603,
+        "row_indices_sha256": "94cc652d15c5c11a82e80c01e4a30dd79f2348a248aa84098c055e9d14ac24cf",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "ea0522ce2d4431dc692e156e647e8509982e8cb17e97dc02ee655dc26f4c9936",
+          "rows": 5156
+        }
+      }
+    },
+    {
+      "seed": 3,
+      "test": {
+        "aggregate": {
+          "groups": 133759,
+          "row_indices_sha256": "27fafd626d30a6b2812dee3e7e9a6075af65b6ce9b5a95dcab1adbf50472cf01",
+          "rows": 133759
+        },
+        "groups": 135603,
+        "row_indices_sha256": "bb553cc10b085f14e4e7b17be8e5c7797ce899958987e6d0d0865f253dcdd072",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "97269d3a077d4726dcf2d53f7c75155a579a24078b30f58c17aeccbadddc2008",
+          "rows": 5367
+        }
+      },
+      "train": {
+        "aggregate": {
+          "groups": 401371,
+          "row_indices_sha256": "e612f30be7e6d9db10733f8d06c5d59ec3555f813368f4d91cd5cab4c02c5776",
+          "rows": 401371
+        },
+        "groups": 406807,
+        "row_indices_sha256": "ba9985a4768280d973c45a39d98fc70f07ec6985f4744b6110a3a6032ea18f0a",
+        "rows": 406807,
+        "severity": {
+          "row_indices_sha256": "d27e8927fbc5926b612afb2980d36efaa0bec55bbfce56e97e2e26ac3cc6d840",
+          "rows": 15830
+        }
+      },
+      "validation": {
+        "aggregate": {
+          "groups": 133767,
+          "row_indices_sha256": "34017d0952b1f12c74eed52e34affef24a71b87bba46d392effe33933849780d",
+          "rows": 133767
+        },
+        "groups": 135603,
+        "row_indices_sha256": "72bdcc7b0592fdb2156f014e05c1d5dfb400b6081cd9705f3b6f2fe83c2b4346",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "739d0f8ac25f5100a317cea86c0738189c8514159de41a40185cea23b28f09c3",
+          "rows": 5247
+        }
+      }
+    },
+    {
+      "seed": 4,
+      "test": {
+        "aggregate": {
+          "groups": 133649,
+          "row_indices_sha256": "ff8adf8a5f040a35e789a6d9bd8c46d2bf713a23aa38935965978e61b6605824",
+          "rows": 133649
+        },
+        "groups": 135603,
+        "row_indices_sha256": "5df2e3d0874b2cab3f129c9c0a5e968ef13f016f8fe69b735f048b4e20f277f9",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "b15870b627ebe251031c9b68bc094058a38eb0735ef4fc8906b99741aa0593fc",
+          "rows": 5257
+        }
+      },
+      "train": {
+        "aggregate": {
+          "groups": 401365,
+          "row_indices_sha256": "07832a65618f98851fabe9bbe14e55945ec5b89f2d9518ed5c0df3e9d1273308",
+          "rows": 401365
+        },
+        "groups": 406807,
+        "row_indices_sha256": "6c6f7545ddbb71076749e595f5a743fcb93d5655045a7b421729c473ada54a49",
+        "rows": 406807,
+        "severity": {
+          "row_indices_sha256": "0862322836ab6bcb7db84c38f87befa714bf1d6783feaea1fd9f7b2c4ddba4c6",
+          "rows": 15866
+        }
+      },
+      "validation": {
+        "aggregate": {
+          "groups": 133883,
+          "row_indices_sha256": "a61adc34a3bd21324dff3f45cb22b66ec891b77075555526211aa0dbc40118be",
+          "rows": 133883
+        },
+        "groups": 135603,
+        "row_indices_sha256": "87b1f6ba3ec37c798e2c0463acc712007bfb4094c647b1a7d639ba22a8528bd3",
+        "rows": 135603,
+        "severity": {
+          "row_indices_sha256": "994c21c23b85e6ed6d8294f7e99fbce9ddf84d6c0b366e3e2b8a17868cd93e26",
+          "rows": 5321
+        }
+      }
+    }
+  ],
+  "hash_format": "SHA256(JSON [little-endian dtype,shape] compact + newline + contiguous C-order bytes)",
+  "provenance": {
+    "argv": [
+      "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+      "-m",
+      "benchmarks.v1.real_data",
+      "insurance",
+      "build/v1-data"
+    ],
+    "dirty": true,
+    "git_sha": "dc744016687fde2c3347cc4e83c9c9f9e0a0aee8",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "python": "3.12.12"
+  },
+  "schema": "openboost-real-data-v1",
+  "sources_sha256": "fb95ff2763ca4dcee54e46e9d201c1508d3a2ed3a80e366b1058dfed1d3d26e6",
+  "split_rule": "group; sorted unique groups/classes; PCG64(seed); floor 60/80 percent boundaries; sorted source rows",
+  "status": "data preparation only; no model quality claim"
+}

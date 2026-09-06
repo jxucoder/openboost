@@ -226,23 +226,17 @@ def main():
 """
     print(best_practices)
     
-    # --- Scaling Guide ---
-    print("\n8. Expected GPU speedups by dataset size...")
+    # --- Benchmark Evidence ---
+    print("\n8. How to measure GPU value...")
     
     scaling_info = """
-   | Dataset Size | Features | Trees | Expected Speedup |
-   |--------------|----------|-------|------------------|
-   | 5K samples   | 10       | 100   | ~1-2x            |
-   | 10K samples  | 20       | 100   | ~2-5x            |
-   | 50K samples  | 20       | 100   | ~3-7x            |
-   | 100K samples | 50       | 200   | ~5-10x           |
-   | 500K samples | 100      | 500   | ~10-20x          |
-   
-   Factors affecting speedup:
-   - More features = better GPU utilization
-   - More bins = better GPU utilization  
-   - GAM shows best speedups (parallel feature updates)
-   - First run includes JIT compilation overhead
+   GPU speedup is workload- and hardware-dependent. For a publishable result:
+   - Force CPU and CUDA backends explicitly
+   - Verify prediction and task-metric parity first
+   - State whether JIT warm-up is excluded
+   - Run repeated fit and predict timings
+   - Record peak memory, hardware, CUDA/driver, seeds, and failures
+   - Store raw results with the exact OpenBoost commit
 """
     print(scaling_info)
     
@@ -250,8 +244,7 @@ def main():
     print("\n9. Multi-GPU training...")
     
     print("""
-   For datasets that don't fit on a single GPU or to speed up training further,
-   OpenBoost supports multi-GPU training via Ray:
+   OpenBoost includes an experimental multi-GPU path via Ray:
    
    # Install Ray
    pip install ray[default]
@@ -273,7 +266,10 @@ def main():
    Multi-GPU training uses data parallelism:
    - Each GPU processes a subset of samples
    - Histograms are aggregated across GPUs
-   - Near-linear scaling with number of GPUs
+   - sample_weight is not supported
+
+   Do not infer scaling from this example. The repository still needs a
+   checked-in two-/four-GPU parity and repeated-timing artifact.
 """)
     
     # --- Summary ---

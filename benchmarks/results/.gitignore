@@ -2,3 +2,11 @@
 # .gitignore), but the NGBoost comparison is committed: it backs the
 # numbers cited in docs/user-guide/naturalboost/overview.md.
 !ngboost_comparison_*.json
+
+# Foundation evidence: admit only the reviewed result formats.
+foundation/*/*
+!foundation/*/manifest.json
+!foundation/*/results.json
+!foundation/*/junit.xml
+!foundation/*/README.md
+!foundation/*/transfer_summary.json

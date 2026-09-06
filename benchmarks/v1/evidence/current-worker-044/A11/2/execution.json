@@ -1,0 +1,19 @@
+{
+  "artifacts": {
+    "model.bin": "bce1bc8e32b5af811a8c43970760cf8de68a66f22cfbb1098c44374edd952c83",
+    "predictions.npz": "b609132b89f0ae68a1fcfadc53b8e21fc96556c7adc25d80b2e80ce538f08266",
+    "training.json": "39ba07e21df03ec6773badf21d24f9615c3d01f0486598d8b829f1fc96faa60b",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+    "/private/tmp/openboost-current-worker-044/A11/2/job.json"
+  ],
+  "exit_code": 0,
+  "reason": "",
+  "status": "pass",
+  "threads": 1,
+  "timeout_s": 90,
+  "wall_s": 2.845407916000113
+}

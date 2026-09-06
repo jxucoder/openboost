@@ -1,62 +1,16 @@
-name: GPU Verification
+name: v1 GPU Verification Pending
 
 on:
   workflow_dispatch:
-  schedule:
-    # Nightly at 09:17 UTC — CUDA paths have no other CI coverage
-    - cron: "17 9 * * *"
 
 permissions:
   contents: read
 
-concurrency:
-  group: openboost-modal-gpu-verification
-  cancel-in-progress: false
-
 jobs:
-  modal-credentials:
-    name: Check Modal credentials
+  unavailable:
     runs-on: ubuntu-latest
-    outputs:
-      available: ${{ steps.check.outputs.available }}
-
     steps:
-      - name: Check whether Modal is configured
-        id: check
-        env:
-          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
-          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
-        shell: bash
+      - name: Explain current v1 boundary
         run: |
-          if [[ -n "$MODAL_TOKEN_ID" && -n "$MODAL_TOKEN_SECRET" ]]; then
-            echo "available=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "available=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Skipping Modal GPU verification because repository secrets are not configured."
-          fi
-
-  modal-gpu-tests:
-    needs: modal-credentials
-    if: needs.modal-credentials.outputs.available == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v4
-
-      - name: Install locked dependencies
-        run: uv sync --locked --extra bench
-
-      - name: Run CUDA verification on Modal
-        env:
-          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
-          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
-        run: uv run modal run tests/modal_gpu_tests.py::ci
+          echo "No v1 CUDA implementation exists. Restore real-device verification at F3; reference tests are not GPU validation."
+          exit 1

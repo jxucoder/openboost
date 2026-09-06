@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "suite": "leaves",
+  "test_files": [
+    "test_smoke.py",
+    "test_histograms.py",
+    "test_splits.py",
+    "test_leaves.py"
+  ],
+  "source_sha": "4da7f4bdef0d981a141a326ed00d9baa684056d8",
+  "source_dirty": false,
+  "wheel": "openboost-1.0.0rc1-py3-none-any.whl",
+  "wheel_sha256": "0b6eeb2b8e047f8763ad3d4999adda50527af66c7bd9cf94dcce8c3103d43d4c",
+  "uv_lock_sha256": "076f55ce347cae1071c902021b0e7b1b7ab4eec7eab4d95ad2a8f177d8cc9ca1",
+  "files": {
+    "test_smoke.py": "1e1eddf1f7e6ca4f4a744f426268e23da806241d0a32be9a83c720e12d28ea8d",
+    "conftest.py": "74551355ebf2a700cf28ebcf41e9826540f23309b1d0eb41e13a624e9924703f",
+    "pytest.ini": "3497504c3be101997137e28318681bdf533d7eb0f6d7b31e7206656b6308422d",
+    "requirements.txt": "9b2c6b9fe476b5c728deacf558d726437fc16e64998376e78f3676c41cbf0d4a",
+    "test_histograms.py": "bd0bdf6747b26d2050f5bba01d36536c14afb7f9a73e933a0bdad8e8bb6c51c7",
+    "histogram_oracle.py": "051ef6709a5274845f73d731c093dd9a432e73ac0a65343c7bb2fbad1eb21340",
+    "test_splits.py": "8fa1f4403412a5bb7d2fc4602ca4470c0047f5f587fb517860411ca1326397b6",
+    "split_oracle.py": "fc95859d6c9306af81d77ea31c799ea6cbd29bfec38f478012dddc873e7b7635",
+    "test_leaves.py": "c6b1a4827d5c3b381802f412438ddbea48e6eac996c0c511d2e9673230ba2d60",
+    "leaf_oracle.py": "8dc8c6132c3061691c95f1cbe424cbd5be9ba11273f2e37432b6c20855e83018"
+  },
+  "base_image": "nvidia/cuda@sha256:14c54fad24b376ab78a70e1ef6595a2b7c8cdbf187e4f9b76de99a926fb62460",
+  "python": "3.12",
+  "uv_version": "0.12.1",
+  "command": [
+    "uv",
+    "run",
+    "--no-sync",
+    "modal",
+    "run",
+    "benchmarks/foundation/modal_app.py::foundation_leaves"
+  ],
+  "gpu": "T4",
+  "timeout_s": 300,
+  "retries": 0,
+  "dataset": {
+    "generator": "numpy.default_rng",
+    "seed": 31,
+    "shape": [
+      256,
+      4
+    ],
+    "split": "smoke uses training data; no held-out quality claim"
+  },
+  "run_id": "20260905T152639Z-62d96727",
+  "modal_image_id": "im-ZOjWO7K4mxeAllXddOGxbG"
+}

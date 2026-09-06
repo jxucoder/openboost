@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "suite": "baseline",
+  "test_files": [
+    "test_smoke.py",
+    "test_correctness.py",
+    "test_boundaries.py",
+    "test_baseline.py"
+  ],
+  "source_sha": "99621ae9e640be9c1144a015a39de43d3bf50ae9",
+  "source_dirty": false,
+  "wheel": "openboost-1.0.0rc1-py3-none-any.whl",
+  "wheel_sha256": "40a5ec42661eba6f72bf340147f29d0fd2ffed37877e77b6981d78cd1d0f888b",
+  "uv_lock_sha256": "076f55ce347cae1071c902021b0e7b1b7ab4eec7eab4d95ad2a8f177d8cc9ca1",
+  "files": {
+    "test_smoke.py": "1e1eddf1f7e6ca4f4a744f426268e23da806241d0a32be9a83c720e12d28ea8d",
+    "conftest.py": "74551355ebf2a700cf28ebcf41e9826540f23309b1d0eb41e13a624e9924703f",
+    "pytest.ini": "3497504c3be101997137e28318681bdf533d7eb0f6d7b31e7206656b6308422d",
+    "requirements.txt": "9b2c6b9fe476b5c728deacf558d726437fc16e64998376e78f3676c41cbf0d4a",
+    "test_correctness.py": "1a04571e4f3f22a05e2e4f5799967cbd1cfe21333a4e31a9f600be316fd19dcc",
+    "test_boundaries.py": "86de8e6aa2e5da128205847d2afee3adb17e6a6ce027a34a9f53cfcddce278ad",
+    "dataset.py": "cee302d02c1f82e54c19693fdbff8a7671955f816cccb6fc5902860414109e2a",
+    "baseline_worker.py": "3abb07c372d2fae3ffc8973ff1b1220d207302b9f04282514762eb907e363e88",
+    "housing.json": "d511bf1b61c6e515598a91cc468b9c860dcde60f9e1e7a3e2570e9d8e8c3bc5b",
+    "test_baseline.py": "d51c3a3b164bcb2296d7fdd8f5eb4f98a6f65ab1f9f18d7b6e1e8f77452b769a",
+    "cal_housing.tgz": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681"
+  },
+  "base_image": "nvidia/cuda@sha256:14c54fad24b376ab78a70e1ef6595a2b7c8cdbf187e4f9b76de99a926fb62460",
+  "python": "3.12",
+  "uv_version": "0.12.1",
+  "command": [
+    "uv",
+    "run",
+    "--no-sync",
+    "modal",
+    "run",
+    "benchmarks/foundation/modal_app.py::foundation_baseline"
+  ],
+  "gpu": "T4",
+  "timeout_s": 1800,
+  "retries": 0,
+  "dataset": {
+    "name": "California Housing",
+    "source_url": "https://ndownloader.figshare.com/files/5976036",
+    "archive_sha256": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681",
+    "member": "CaliforniaHousing/cal_housing.data",
+    "features": [
+      "MedInc",
+      "HouseAge",
+      "AveRooms",
+      "AveBedrms",
+      "Population",
+      "AveOccup",
+      "Latitude",
+      "Longitude"
+    ],
+    "shape": [
+      20640,
+      8
+    ],
+    "target_unit": "100,000 USD",
+    "arrays_sha256": "34fc72e53a6329a89a9ae792e92f37853cea98adfbc6feea28cc08dc06f68ca1",
+    "dtype": "little-endian float32",
+    "split": "numpy.default_rng(seed), permutation, 60/20/20",
+    "split_sha256": {
+      "0": [
+        "7d07544c6c3fddd72d0cfc8d0aa0c19cf00250f1890420bdb10bd80efb0c9c04",
+        "5f6d9931d5a5239c7933da9bb62df2c631e79017658f185742db94f139be358a",
+        "877744733fe0213e716ca084333f39385c30654169f117f772c53a6af8bcff37"
+      ],
+      "1": [
+        "99578d3ef329ef275fd41e3834df7dab763525f9374db203b6f748b783eed05a",
+        "a161a60cd85d1ec54cbfd590f6befdb58b1a9a695c635bfbb562b4064d265caf",
+        "039c4fc07f6596a3cfdf73cb55820de4baa13f93251ede4c215796f283d46256"
+      ],
+      "2": [
+        "51ab6cbe0019b5bea9f9da8a81b3fafa874d8c992062f65ee8d1b09a3b7898a1",
+        "14509d20c7d87948ac6ea9060c476995583dd130af0ff928a9c24709e5ecf9d4",
+        "ff6426d360c75b637dd866cd73d9fd1b9fcf310a886dc05fbac0f80dcf256ec8"
+      ]
+    }
+  },
+  "baseline_protocol": {
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "modes": [
+      "resident",
+      "eval"
+    ],
+    "backends": [
+      "cpu",
+      "cuda"
+    ],
+    "repeats_per_cell": 2,
+    "nll_abs_tolerance": "0.01 * max(1, abs(cpu_nll))",
+    "crps_max_ratio": 1.01,
+    "coverage90_abs_tolerance": 0.01
+  },
+  "run_id": "20260905T084129Z-2574e387",
+  "modal_image_id": "im-mL8DX2TBByzKpTYX2yK17J"
+}

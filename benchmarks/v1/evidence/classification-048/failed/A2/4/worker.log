@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py", line 158, in <module>
+    main()
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py", line 150, in main
+    prediction, saved, training = fit(job, arrays)
+                                  ^^^^^^^^^^^^^^^^
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py", line 91, in fit
+    data = NumericData(x, ids, names)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 7, in __init__
+  File "/Users/jiaruixu/work_space/openboost/src/openboost/data.py", line 56, in __post_init__
+    raise ValueError("aligned unique integer row IDs required")
+ValueError: aligned unique integer row IDs required

@@ -47,6 +47,7 @@ predictions = model.predict(X_test)
 | `n_bins` | int | 254 | Number of histogram bins |
 | `growth` | str | `'levelwise'` | Tree growth strategy: `'levelwise'`, `'leafwise'`, or `'symmetric'` |
 | `max_leaves` | int/None | None | Max leaves per tree for `'leafwise'` growth (defaults to `2**max_depth`) |
+| `batch_size` | int/None | None | Reserved; non-None values raise `NotImplementedError` |
 | `random_state` | int/None | None | Seed for reproducible training |
 
 ## Loss Functions
@@ -94,6 +95,11 @@ Per-sample `sample_weight` is currently supported only by the single-device CPU
 training path. CUDA, distributed, and multi-GPU training raise
 `NotImplementedError` when weights are supplied, so weighted observations are
 never silently treated as unweighted.
+
+High-level mini-batch and out-of-core fitting are not implemented. The
+`batch_size` parameter fails fast when set; low-level memmap and mini-batch
+histogram helpers are experimental building blocks rather than a `model.fit`
+path.
 
 ## Feature Importance
 

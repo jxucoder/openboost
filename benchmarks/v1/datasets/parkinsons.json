@@ -1,0 +1,138 @@
+{
+  "adapter_sha256": "e796be3be35202fe688235b40798ba98793605adcdcd6194f2729fb869eac0b9",
+  "arrays": {
+    "group": {
+      "sha256": "d0c3c55f78241205b9cba598923cb43e5a01031837f40685ffda399b3980a031",
+      "shape": [
+        5875
+      ]
+    },
+    "x": {
+      "sha256": "0d9b3900bc56b8b12136503c089450b23bb67ffcbe9350796e2568c23ba95a41",
+      "shape": [
+        5875,
+        19
+      ]
+    },
+    "y": {
+      "sha256": "abcaaca89a9053529b577508c42b1af43fd1628165830b1d9b9a593f2118dad9",
+      "shape": [
+        5875,
+        2
+      ]
+    }
+  },
+  "audit": {},
+  "dataset": "parkinsons",
+  "folds": [
+    {
+      "seed": 0,
+      "test": {
+        "groups": 9,
+        "row_indices_sha256": "b99b7c84c95e6db1f0b462c154111a8252785a233c9c9615b56ec4231e3bbb67",
+        "rows": 1237
+      },
+      "train": {
+        "groups": 25,
+        "row_indices_sha256": "f8f340be8f4eb61abe09b79689041bcaa8069d92b924a1974e18d09140b328e1",
+        "rows": 3487
+      },
+      "validation": {
+        "groups": 8,
+        "row_indices_sha256": "9377a73f618136ce76de5fd937ad0d7e885dacd734fc06aec5d4cfd7f7f8536d",
+        "rows": 1151
+      }
+    },
+    {
+      "seed": 1,
+      "test": {
+        "groups": 9,
+        "row_indices_sha256": "949cc5d10b819a5174e64c8efe37f89048e847e9a73aee6585b3d5b5c04ba8aa",
+        "rows": 1245
+      },
+      "train": {
+        "groups": 25,
+        "row_indices_sha256": "a5a8643e0af55a26b04925d290a29e0786a9ff1eebc84cda7e28f89a908baae5",
+        "rows": 3533
+      },
+      "validation": {
+        "groups": 8,
+        "row_indices_sha256": "eb49b63a9f64ad33d5e1a34fe351398e92f36f35773abd4ee101b3fdb0edf21e",
+        "rows": 1097
+      }
+    },
+    {
+      "seed": 2,
+      "test": {
+        "groups": 9,
+        "row_indices_sha256": "3db944282b4b6b7df5245011eebd13b9aac5f9b591944e1b1a79adf9269aea3f",
+        "rows": 1169
+      },
+      "train": {
+        "groups": 25,
+        "row_indices_sha256": "892c1c2e4c2b8658922a94e47363905d80081c29a613c3fb517d04bd1e068f3e",
+        "rows": 3644
+      },
+      "validation": {
+        "groups": 8,
+        "row_indices_sha256": "da9b919d7a1dabd76a89b33344abc4d0de1789ee767fe0bd040d6c9b9c108b34",
+        "rows": 1062
+      }
+    },
+    {
+      "seed": 3,
+      "test": {
+        "groups": 9,
+        "row_indices_sha256": "6b555b15a2e57570deaae50d2cb69c567d8c9a7cf7ffcc3365f0dc1decd18921",
+        "rows": 1303
+      },
+      "train": {
+        "groups": 25,
+        "row_indices_sha256": "88480de262540486e48b7b98f7a4a774f6288f9a717f58823b4c3f26441d40a7",
+        "rows": 3443
+      },
+      "validation": {
+        "groups": 8,
+        "row_indices_sha256": "afe0d9a05310c816002c4fbd95d57f2e498f9001bcc7df5e729f7b9893957c90",
+        "rows": 1129
+      }
+    },
+    {
+      "seed": 4,
+      "test": {
+        "groups": 9,
+        "row_indices_sha256": "b0ce786cd912f62f8f75d51dc76713026454631758201f1048f15f6b54979750",
+        "rows": 1252
+      },
+      "train": {
+        "groups": 25,
+        "row_indices_sha256": "de06fceb1103f39f825f190178ed12e7e03a7daf1b913436b9ab6401774409fa",
+        "rows": 3514
+      },
+      "validation": {
+        "groups": 8,
+        "row_indices_sha256": "5d5d6bebcc50a5ca721f40abcb24aca75033b53f38df91760bc390f7919886d5",
+        "rows": 1109
+      }
+    }
+  ],
+  "hash_format": "SHA256(JSON [little-endian dtype,shape] compact + newline + contiguous C-order bytes)",
+  "provenance": {
+    "argv": [
+      "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+      "-m",
+      "benchmarks.v1.real_data",
+      "parkinsons",
+      "build/v1-data"
+    ],
+    "dirty": true,
+    "git_sha": "dc744016687fde2c3347cc4e83c9c9f9e0a0aee8",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "python": "3.12.12"
+  },
+  "schema": "openboost-real-data-v1",
+  "sources_sha256": "fb95ff2763ca4dcee54e46e9d201c1508d3a2ed3a80e366b1058dfed1d3d26e6",
+  "split_rule": "group; sorted unique groups/classes; PCG64(seed); floor 60/80 percent boundaries; sorted source rows",
+  "status": "data preparation only; no model quality claim"
+}

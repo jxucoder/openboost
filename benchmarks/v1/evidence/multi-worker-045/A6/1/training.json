@@ -1,0 +1,33 @@
+{
+  "selection": "best_validation",
+  "stop": {
+    "rounds": 4,
+    "patience": 3,
+    "min_delta": 0.0,
+    "reference_score": 0.8580941834471312,
+    "last_score": 0.8921598747373427,
+    "completed_rounds": 4,
+    "stale_rounds": 3,
+    "reason": "patience"
+  },
+  "accepted_commits": 4,
+  "selected_model_identity": "dd8151781709409be307bfbf17c1cd006c4d358b281e5ea80c49d0be970b78a5",
+  "best_validation_score": 0.8580941834471312,
+  "output": "multioutput_original_units",
+  "target_scale": {
+    "mean": [
+      21.02220744409841,
+      28.889462439852874
+    ],
+    "std": [
+      8.707706178768547,
+      11.553396813667037
+    ],
+    "constant": [
+      false,
+      false
+    ]
+  },
+  "scale_convention": "unweighted_train_population",
+  "selection_metric": "row_mean_sum_standardized_half_squared_error"
+}

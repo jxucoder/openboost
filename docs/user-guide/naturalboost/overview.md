@@ -91,22 +91,12 @@ prob_exceed = np.mean(samples > threshold, axis=0)  # P(Y > 10)
 q90 = np.percentile(samples, 90, axis=0)
 ```
 
-## vs NGBoost
+## Comparison with NGBoost
 
-On GPU (Modal A100, 90K rows, heteroscedastic Normal) NaturalBoost fits in
-2.21s against NGBoost's 2716s, with NLL tied (2.108 vs 2.102). NGBoost has no
-GPU implementation. This is one configuration from an early benchmark run, not
-a settled result.
-
-On the NGBoost-paper UCI suite (20 paired splits, same budget) OpenBoost is
-tied-or-better on every dataset that completed; significant NLL wins on
-kin8nm, protein, and california; no significant loss.
-
-On CPU the two libraries are ~parity (0.8–1.3×). The speed claim is the
-GPU tree path, not a faster CPU NGBoost clone.
-
-Full tables, caveats, and reproduce commands:
-[Benchmarks](../../benchmarks.md).
+Compare held-out NLL, CRPS and calibration at matched training budgets, then
+measure end-to-end fit/prediction on explicitly recorded hardware. A GPU/CPU
+comparison must state the different resources and include transfer/compilation
+costs. See [available evidence and reproduction](../../benchmarks.md).
 
 ## Best Practices
 
@@ -129,3 +119,23 @@ model = ob.NaturalBoostNormal(
 - [Weibull AFT](../survival.md): censored survival
 - [Custom distributions](custom-distributions.md)
 - [Benchmarks](../../benchmarks.md)
+
+### Execution and reproducibility boundary
+
+`NaturalBoost` and `DistributionalGBDT` accept `random_state` for CPU row and
+column sampling. Repeating a fit with the same integer seed uses the same
+sampling stream without changing NumPy's global RNG. `FormulaBoost` and
+`WeibullAFT` share this trainer behavior. With `random_state=None`, each fit
+creates its own unseeded generator. Legacy trainers have separate RNG paths.
+
+The unified CUDA trainer currently requires `subsample=1` and
+`colsample_bytree=1`; other sampling ratios fail before binning or updates.
+Only exact built-in Normal and Poisson distributions use device objective
+kernels. Custom distributions, subclasses and exposure offsets use host
+objective math with a visible warning. A native-tree fallback also warns;
+these mixed execution paths must be distinguished in benchmark provenance.
+Kernel compilation or execution errors propagate as failed fits.
+
+Sample weights multiply both gradient and Hessian. Weighted fits disable the
+unit-Hessian bandwidth hint, including uniform weights. Initialization still
+uses the existing unweighted `distribution.init_params(y)` estimate.

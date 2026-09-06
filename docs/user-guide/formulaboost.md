@@ -95,27 +95,14 @@ model.fit(
 
 ## What to evaluate
 
-On the sales-curve benchmark (200K rows, train `x ∈ [0.25, 2.5]`, extrap
-`x ∈ [3, 5]`):
+Measure held-out error, extrapolation error and parameter recovery separately.
+Compare full, diagonal and plain preconditioning against a global formula fit
+and a tree baseline. A synthetic formula can test the mechanism but does not
+establish real-world extrapolation performance.
 
-| | test RMSE | extrap RMSE | corr `b(z)` |
-|---|--:|--:|--:|
-| FormulaBoost `full` | 0.139 | **0.183** | **0.877** |
-| FormulaBoost `diag` | 0.130 | 0.181 | 0.730 |
-| black-box GBDT | 0.127 | 3.872 | n/a |
-| XGBoost custom (diag Hess) | 0.129 | 0.203 | 0.599 |
-| global `(a, b)` | 1.641 | 4.396 | n/a |
-
-Honest reading:
-
-- **Extrapolation** is the product claim (~21× vs black-box). The formula
-  constrains the shape in `x`; a GBDT that splits on `x` does not.
-- **Parameter recovery** of `b(z)` is what `full` GGN buys. If you only
-  care about in-sample RMSE, `diag` is enough.
-- `plain` is not a baseline you should ship (extrap RMSE ~3.9).
-
-Reproduce: `uv run modal run benchmarks/bench_formula.py`. Full notes:
-[Benchmarks](../benchmarks.md).
+Run `uv run modal run benchmarks/bench_formula.py` and retain the raw results.
+See [benchmark evidence requirements](../benchmarks.md); historical timing and
+quality tables await committed provenance.
 
 ## Tips
 

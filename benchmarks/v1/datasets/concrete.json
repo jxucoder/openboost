@@ -1,0 +1,208 @@
+{
+  "adapter_sha256": "e796be3be35202fe688235b40798ba98793605adcdcd6194f2729fb869eac0b9",
+  "arrays": {
+    "group": {
+      "sha256": "29e032393b1cdfbf440f396ffc48039988b7f477d3b84fc45a10cb9ba072a193",
+      "shape": [
+        1030
+      ]
+    },
+    "structure": {
+      "sha256": "f560f09f23a1d627c5d512a3ba830f0568d7985ddd2a18f4b703b0e38af42f66",
+      "shape": [
+        1030
+      ]
+    },
+    "x": {
+      "sha256": "9586114252b2366e65c3b3b761de7079dffa574f3a784b9d11aa0f0f40d1d8f8",
+      "shape": [
+        1030,
+        7
+      ]
+    },
+    "y": {
+      "sha256": "93f0801667b9aae6d030a31952725bf08d01aaad24236c15464730de2b7dd6e3",
+      "shape": [
+        1030
+      ]
+    }
+  },
+  "audit": {},
+  "dataset": "concrete",
+  "folds": [
+    {
+      "seed": 0,
+      "test": {
+        "age_days_min_max": [
+          1.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "58e094e84ddc124a2db9858629267bd98f420a163ff27c018e85456f45f530ba",
+        "rows": 197
+      },
+      "test_age_outside_train_support": 0,
+      "train": {
+        "age_days_min_max": [
+          1.0,
+          365.0
+        ],
+        "groups": 256,
+        "row_indices_sha256": "a6c16f3c3e16a937d0612e6a30440c317d0b772f7c3e8a1a213621d5a76a816e",
+        "rows": 646
+      },
+      "validation": {
+        "age_days_min_max": [
+          3.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "2c3beeb63a0de7ec9882ac33c62b4d17b485ea74b1d56f5f80cd225c462b2f9c",
+        "rows": 187
+      }
+    },
+    {
+      "seed": 1,
+      "test": {
+        "age_days_min_max": [
+          3.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "21bea9fe4568b8d9770c12e0aaef86c8d9d4ef04406d156a510f7ae63d3a0fdc",
+        "rows": 196
+      },
+      "test_age_outside_train_support": 0,
+      "train": {
+        "age_days_min_max": [
+          1.0,
+          365.0
+        ],
+        "groups": 256,
+        "row_indices_sha256": "3a9105e6cf0929caa6ba80a67cb2d32eddd3503c2a3d79ab8f12466c8abc452c",
+        "rows": 633
+      },
+      "validation": {
+        "age_days_min_max": [
+          3.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "c488547459f14352a654f97d9e7c1f38714f18ece389a7436e6fa0b7198300bd",
+        "rows": 201
+      }
+    },
+    {
+      "seed": 2,
+      "test": {
+        "age_days_min_max": [
+          3.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "f063d20496f7f3f511f576a55932a4b5bb847036acf29cb5c9e34e5fd678e702",
+        "rows": 227
+      },
+      "test_age_outside_train_support": 0,
+      "train": {
+        "age_days_min_max": [
+          1.0,
+          365.0
+        ],
+        "groups": 256,
+        "row_indices_sha256": "76ab743dd73b53b174e0e3ae3644caf932f38812de470fa47605b4d7eff1dd75",
+        "rows": 588
+      },
+      "validation": {
+        "age_days_min_max": [
+          3.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "d66d2418044c1002a88c2e7355030c72bd2139a06f0043e7a7284b93808d3b9f",
+        "rows": 215
+      }
+    },
+    {
+      "seed": 3,
+      "test": {
+        "age_days_min_max": [
+          3.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "3663281bc4e54a83c8e22184515bf7ed5b06dcb085994170168593bb267b37eb",
+        "rows": 200
+      },
+      "test_age_outside_train_support": 0,
+      "train": {
+        "age_days_min_max": [
+          1.0,
+          365.0
+        ],
+        "groups": 256,
+        "row_indices_sha256": "ee2b2b66aec3006780a1e3685347b43b1f236406440ab8e8af26b9e6633c944c",
+        "rows": 613
+      },
+      "validation": {
+        "age_days_min_max": [
+          3.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "355f77bcf1ca8aa3bd575eadc57b7ac84899a4a4544d90106fe2b379913b8ddd",
+        "rows": 217
+      }
+    },
+    {
+      "seed": 4,
+      "test": {
+        "age_days_min_max": [
+          3.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "e0383c21377c7a33b333edb099944d8c0f2bf001386313961e4299dd72800417",
+        "rows": 185
+      },
+      "test_age_outside_train_support": 0,
+      "train": {
+        "age_days_min_max": [
+          1.0,
+          365.0
+        ],
+        "groups": 256,
+        "row_indices_sha256": "bc2b7a62c398b676f8994a50be35247d51146d7e0f69d0ca8e5b6b5d75962afd",
+        "rows": 634
+      },
+      "validation": {
+        "age_days_min_max": [
+          3.0,
+          365.0
+        ],
+        "groups": 86,
+        "row_indices_sha256": "3f50728184da9977b7dae16802936c52c4e85ca34ec9b816d617707f21447aac",
+        "rows": 211
+      }
+    }
+  ],
+  "hash_format": "SHA256(JSON [little-endian dtype,shape] compact + newline + contiguous C-order bytes)",
+  "provenance": {
+    "argv": [
+      "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+      "-m",
+      "benchmarks.v1.real_data",
+      "concrete",
+      "build/v1-data"
+    ],
+    "dirty": true,
+    "git_sha": "dc744016687fde2c3347cc4e83c9c9f9e0a0aee8",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "python": "3.12.12"
+  },
+  "schema": "openboost-real-data-v1",
+  "sources_sha256": "fb95ff2763ca4dcee54e46e9d201c1508d3a2ed3a80e366b1058dfed1d3d26e6",
+  "split_rule": "group; sorted unique groups/classes; PCG64(seed); floor 60/80 percent boundaries; sorted source rows",
+  "status": "data preparation only; no model quality claim"
+}

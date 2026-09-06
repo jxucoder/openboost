@@ -1,0 +1,87 @@
+{
+  "scope": "synthetic CPU worker contract checks only",
+  "cells": [
+    {
+      "task": "A7",
+      "method": "glm",
+      "status": "pass",
+      "prediction": [
+        1.0769230769230769,
+        2.1538461538461537,
+        3.230769230769231
+      ],
+      "expected": [
+        1.0769230769230769,
+        2.1538461538461537,
+        3.230769230769231
+      ]
+    },
+    {
+      "task": "A8",
+      "method": "glm",
+      "status": "pass",
+      "prediction": [
+        27.14285714285714,
+        27.14285714285714,
+        27.14285714285714
+      ],
+      "expected": [
+        27.142857142857142,
+        27.142857142857142,
+        27.142857142857142
+      ]
+    },
+    {
+      "task": "A9",
+      "method": "glm",
+      "status": "pass",
+      "prediction": [
+        14.615384615384615,
+        14.615384615384615,
+        14.615384615384615
+      ],
+      "expected": [
+        14.615384615384615,
+        14.615384615384615,
+        14.615384615384615
+      ]
+    },
+    {
+      "task": "A9",
+      "method": "paid_composition",
+      "status": "pass",
+      "prediction": [
+        14.615384615384613,
+        14.615384615384613,
+        14.615384615384613
+      ],
+      "expected": [
+        14.615384615384615,
+        14.615384615384615,
+        14.615384615384615
+      ]
+    },
+    {
+      "task": "A12",
+      "method": "formula_global",
+      "status": "pass",
+      "prediction": [
+        0.39192529380358254,
+        1.5102440886257713,
+        2.632630715241054
+      ],
+      "expected": [
+        0.39192529380358254,
+        1.5102440886257713,
+        2.632630715241054
+      ]
+    }
+  ],
+  "source_sha": "1f29c1c864b9d5eecdbf67f416447aad937ded4c",
+  "dirty": true,
+  "source_hashes": {
+    "parametric.py": "dabd55ae9e0fb9cb2a0b877277255d96555277ced1bf6f62d89e5ce2eb5b1ebb",
+    "parametric_worker.py": "28cdc0acacf4c44ed1f388e2917a11535c0a0dca44b56c50a5df1d3bb4303fc4",
+    "parametric_worker_smoke.py": "b0cb47f15a284ad9a7a0e5001d0c8e1c8141ce0d6e39faf602d72a80c0ac7332"
+  }
+}

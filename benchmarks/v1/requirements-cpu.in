@@ -1,0 +1,8 @@
+numpy==2.3.5
+scipy==1.16.3
+scikit-learn==1.8.0
+xgboost==3.4.1
+lightgbm==4.7.0
+catboost==1.2.10
+ngboost==0.5.11
+xlrd==2.0.2

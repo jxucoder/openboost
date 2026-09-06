@@ -1,0 +1,138 @@
+{
+  "environment": {
+    "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.35",
+    "python": "3.12.1 (main, Jan  8 2024, 04:46:10) [Clang 17.0.6 ]",
+    "cpu": "x86_64",
+    "visible_cpu_count": 18,
+    "requested_cpu": 2,
+    "requested_memory_mib": 8192,
+    "host_ram_bytes": 266818007040,
+    "threads": {
+      "OMP_NUM_THREADS": "2",
+      "NUMBA_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2"
+    },
+    "packages": {
+      "cuda-core": "0.6.0",
+      "pluggy": "1.6.0",
+      "numpy": "2.3.5",
+      "execnet": "2.1.2",
+      "scipy": "1.16.3",
+      "packaging": "25.0",
+      "cuda-pathfinder": "1.4.0",
+      "pytest": "9.0.2",
+      "pip": "23.3.2",
+      "joblib": "1.5.3",
+      "openboost": "1.0.0rc1",
+      "cuda-bindings": "13.1.1",
+      "numba-cuda": "0.27.0",
+      "numba": "0.63.1",
+      "coverage": "7.13.1",
+      "cupy-cuda12x": "13.6.0",
+      "setuptools": "69.0.3",
+      "llvmlite": "0.46.0",
+      "pytest-cov": "7.0.0",
+      "Pygments": "2.19.2",
+      "pytest-xdist": "3.8.0",
+      "fastrlock": "0.8.3",
+      "iniconfig": "2.3.0",
+      "aiohttp": "3.12.7",
+      "hpack": "4.1.0",
+      "protobuf": "6.31.1",
+      "aiosignal": "1.3.2",
+      "h2": "4.2.0",
+      "grpclib": "0.4.8",
+      "hyperframe": "6.1.0",
+      "aiohappyeyeballs": "2.6.1",
+      "frozenlist": "1.6.0",
+      "cbor2": "5.7.0",
+      "idna": "3.10",
+      "propcache": "0.3.1",
+      "certifi": "2025.4.26",
+      "yarl": "1.20.0",
+      "typing_extensions": "4.13.2",
+      "multidict": "6.4.4",
+      "attrs": "25.3.0"
+    },
+    "cpu_model": "unknown",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "cuda_runtime": 12090,
+    "cuda_driver": 13000,
+    "nvidia_smi": "Tesla T4, 580.95.05, 15360 MiB"
+  },
+  "source_sha": "cf61611a5fc9c4d701de65aa97dae082fbc89003",
+  "wheel_sha256": "19b63c3c0ea7da16bbf34334c04ca15217bab70ce6cf9fd646e87c2aad3d13a4",
+  "argv": [
+    "/usr/local/bin/python",
+    "-m",
+    "pytest",
+    "-c",
+    "pytest.ini",
+    "test_smoke.py",
+    "test_histograms.py",
+    "--junitxml=junit.xml"
+  ],
+  "timed_out": false,
+  "returncode": 0,
+  "stdout": "...                                                                      [100%]\n=============================== warnings summary ===============================\ntest_smoke.py: 12 warnings\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\ntest_smoke.py::test_normal_gpu_fit\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 4 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 8 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_smoke.py::test_normal_gpu_fit\n  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 2 will likely result in GPU under-utilization due to low occupancy.\n    warn(errors.NumbaPerformanceWarning(msg))\n\ntest_histograms.py::test_batch_histogram_device_oracle\n  /usr/local/lib/python3.12/site-packages/numba/cpython/hashing.py:477: UserWarning: FNV hashing is not implemented in Numba. See PEP 456 https://www.python.org/dev/peps/pep-0456/ for rationale over not using FNV. Numba will continue to work, but hashes for built in types will be computed using siphash24. This will permit e.g. dictionaries to continue to behave as expected, however anything relying on the value of the hash opposed to hash as a derived property is likely to not work as expected.\n    warnings.warn(msg)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n3 passed, 18 warnings in 19.47s\n",
+  "stderr": "",
+  "junit": "<?xml version=\"1.0\" encoding=\"utf-8\"?><testsuites name=\"pytest tests\"><testsuite name=\"pytest\" errors=\"0\" failures=\"0\" skipped=\"0\" tests=\"3\" time=\"19.468\" timestamp=\"2026-09-05T15:09:48.859772+00:00\" hostname=\"modal\"><testcase classname=\"test_smoke\" name=\"test_device_interop\" time=\"2.506\" /><testcase classname=\"test_smoke\" name=\"test_normal_gpu_fit\" time=\"3.171\" /><testcase classname=\"test_histograms\" name=\"test_batch_histogram_device_oracle\" time=\"13.638\" /></testsuite></testsuites>",
+  "checks": {
+    "installed_files_verified": 42,
+    "installed_module": "/usr/local/lib/python3.12/site-packages/openboost/__init__.py",
+    "interop": true,
+    "dataset_sha256": "a6ebf89ed613d8f792084b55e7f6a3ce93360add808cd1729aa8e2842cce18ec",
+    "nll": 1.3506839275360107,
+    "native_tree_calls": 4,
+    "device_objective_calls": 2,
+    "batch_histograms": {
+      "device_arrays": true,
+      "cases": [
+        {
+          "input_sha256": "eb00262be585e171ab37b32c1ea39a71c45d86b95a243c3760918664e2b968ff",
+          "seed": null,
+          "samples": 6,
+          "features": 2,
+          "slots": 4,
+          "max_abs_errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bytes": 16404
+        },
+        {
+          "input_sha256": "9b3d6fc9090a17c8e05ab26c7cba643004e7b80e99f2ee57f6c6f721c7244365",
+          "seed": 103,
+          "samples": 4097,
+          "features": 3,
+          "slots": 7,
+          "max_abs_errors": [
+            9.834766387939453e-07,
+            1.2516975402832031e-06,
+            0.0
+          ],
+          "bytes": 43043
+        },
+        {
+          "input_sha256": "75c8fd04ad916aec3e3d5cb76a452b116b3d4d0912a0a485e9fb8e3d240e210c",
+          "seed": null,
+          "samples": 0,
+          "features": 2,
+          "slots": 3,
+          "max_abs_errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bytes": 12303
+        }
+      ],
+      "legacy_download_wrappers_blocked": true,
+      "scope": "named host wrappers only; scalar validation synchronization allowed; no profiler trace"
+    }
+  },
+  "remote_function_wall_s": 23.490344378,
+  "timing_scope": "suite execution including environment checks/JIT; excludes image/startup, not billed duration; baseline cell timings have separate scopes"
+}

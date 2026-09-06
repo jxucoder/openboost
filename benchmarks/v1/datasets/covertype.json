@@ -1,0 +1,251 @@
+{
+  "adapter_sha256": "e796be3be35202fe688235b40798ba98793605adcdcd6194f2729fb869eac0b9",
+  "arrays": {
+    "x": {
+      "sha256": "e5a03c7f75ddaa430e03455b41409f23b79841395153f1f34ef50231a0635ef3",
+      "shape": [
+        581012,
+        54
+      ]
+    },
+    "y": {
+      "sha256": "44b06118bfb241f18b573ff940ccd3768365517036e4d82ab6c8208bf715ee4d",
+      "shape": [
+        581012
+      ]
+    }
+  },
+  "audit": {},
+  "dataset": "covertype",
+  "folds": [
+    {
+      "seed": 0,
+      "test": {
+        "class_counts": [
+          42368,
+          56661,
+          7151,
+          550,
+          1899,
+          3474,
+          4102
+        ],
+        "row_indices_sha256": "f750de655b125228a081560fa27c88fd393da0926d22b5afcbac4314d1e737aa",
+        "rows": 116205
+      },
+      "train": {
+        "class_counts": [
+          127104,
+          169980,
+          21452,
+          1648,
+          5695,
+          10420,
+          12306
+        ],
+        "row_indices_sha256": "1d112fb94bd2c53bd669f1bf442aa9f5d56e1ec92d1e8b991b651e0a8cc6b169",
+        "rows": 348605
+      },
+      "validation": {
+        "class_counts": [
+          42368,
+          56660,
+          7151,
+          549,
+          1899,
+          3473,
+          4102
+        ],
+        "row_indices_sha256": "e8fcb0bdd16ef52181f0f5f492bcbcebdab517bc3e9205aa6654319769f921bf",
+        "rows": 116202
+      }
+    },
+    {
+      "seed": 1,
+      "test": {
+        "class_counts": [
+          42368,
+          56661,
+          7151,
+          550,
+          1899,
+          3474,
+          4102
+        ],
+        "row_indices_sha256": "a04ff05c9574f7210e8608dc90a19934f8fcabe77d425d1a74e81f3fc57eb759",
+        "rows": 116205
+      },
+      "train": {
+        "class_counts": [
+          127104,
+          169980,
+          21452,
+          1648,
+          5695,
+          10420,
+          12306
+        ],
+        "row_indices_sha256": "631a78a1ae71a71a138d898e81d4d18d3c445147faa0c9668ed2c3a4bd4f1190",
+        "rows": 348605
+      },
+      "validation": {
+        "class_counts": [
+          42368,
+          56660,
+          7151,
+          549,
+          1899,
+          3473,
+          4102
+        ],
+        "row_indices_sha256": "4dd256c294064f6162b89d3207fb09d7ae588971addfca7363c40477eae266ac",
+        "rows": 116202
+      }
+    },
+    {
+      "seed": 2,
+      "test": {
+        "class_counts": [
+          42368,
+          56661,
+          7151,
+          550,
+          1899,
+          3474,
+          4102
+        ],
+        "row_indices_sha256": "1c1c6c1eb94737843529cf1a51853bbfb8436e91433042dfb10354f0b710e04a",
+        "rows": 116205
+      },
+      "train": {
+        "class_counts": [
+          127104,
+          169980,
+          21452,
+          1648,
+          5695,
+          10420,
+          12306
+        ],
+        "row_indices_sha256": "b6e1a87c13974d9c911195c9dc096045d03b9e8b6cf11c3fc46d6e6772e17990",
+        "rows": 348605
+      },
+      "validation": {
+        "class_counts": [
+          42368,
+          56660,
+          7151,
+          549,
+          1899,
+          3473,
+          4102
+        ],
+        "row_indices_sha256": "61625c39c1c7810b759014538333935d0813505baddc5e21ada535b0b12db954",
+        "rows": 116202
+      }
+    },
+    {
+      "seed": 3,
+      "test": {
+        "class_counts": [
+          42368,
+          56661,
+          7151,
+          550,
+          1899,
+          3474,
+          4102
+        ],
+        "row_indices_sha256": "bf9d5e3e6616afa68419a58b548666d78095b277559689206648fa88f84bed7f",
+        "rows": 116205
+      },
+      "train": {
+        "class_counts": [
+          127104,
+          169980,
+          21452,
+          1648,
+          5695,
+          10420,
+          12306
+        ],
+        "row_indices_sha256": "096f81f9986fec6a252174c5eb1d01d4f97ccc3f6cbc1d0d034404efe48c3a1d",
+        "rows": 348605
+      },
+      "validation": {
+        "class_counts": [
+          42368,
+          56660,
+          7151,
+          549,
+          1899,
+          3473,
+          4102
+        ],
+        "row_indices_sha256": "a031130a460870d066f813afec32b5c4e82a5a7d7e4e71e7e2486130ac152afe",
+        "rows": 116202
+      }
+    },
+    {
+      "seed": 4,
+      "test": {
+        "class_counts": [
+          42368,
+          56661,
+          7151,
+          550,
+          1899,
+          3474,
+          4102
+        ],
+        "row_indices_sha256": "6ac7beb70dfd54b9a84f16ba42591402fbdf608a6999255d63efe45ecc75443c",
+        "rows": 116205
+      },
+      "train": {
+        "class_counts": [
+          127104,
+          169980,
+          21452,
+          1648,
+          5695,
+          10420,
+          12306
+        ],
+        "row_indices_sha256": "906fc81fc385f9dc6de461ee07f75dce258648a5338f07a121eb7fe0d7a38b9c",
+        "rows": 348605
+      },
+      "validation": {
+        "class_counts": [
+          42368,
+          56660,
+          7151,
+          549,
+          1899,
+          3473,
+          4102
+        ],
+        "row_indices_sha256": "29816021c8e3e1232037c0f81051f2eae92c7c81b4262316bc96d8c0348f7493",
+        "rows": 116202
+      }
+    }
+  ],
+  "hash_format": "SHA256(JSON [little-endian dtype,shape] compact + newline + contiguous C-order bytes)",
+  "provenance": {
+    "argv": [
+      "/Users/jiaruixu/work_space/openboost/build/v1-env/bin/python",
+      "-m",
+      "benchmarks.v1.real_data",
+      "covertype",
+      "build/v1-data"
+    ],
+    "dirty": true,
+    "git_sha": "dc744016687fde2c3347cc4e83c9c9f9e0a0aee8",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "python": "3.12.12"
+  },
+  "schema": "openboost-real-data-v1",
+  "sources_sha256": "fb95ff2763ca4dcee54e46e9d201c1508d3a2ed3a80e366b1058dfed1d3d26e6",
+  "split_rule": "stratified; sorted unique groups/classes; PCG64(seed); floor 60/80 percent boundaries; sorted source rows",
+  "status": "data preparation only; no model quality claim"
+}

@@ -1,0 +1,686 @@
+{
+  "scope": "Current A1/A6/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+  "revision": "374ab87cbc5083322b08a5f23ab74cf79507e7f3",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "-m",
+    "benchmarks.v1.openboost_worker_smoke",
+    "/private/tmp/openboost-multi-worker-045-final",
+    "--applications",
+    "A6"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "machine": "x86_64",
+  "cpu_count": 16,
+  "device": "cpu",
+  "gpu": null,
+  "threads": 1,
+  "memory_cap": null,
+  "packages": {
+    "numpy": "2.3.5",
+    "openboost": "1.0.0rc1"
+  },
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "aa73cc40df7c79203505f91e3b86292dffbb3b9348467be60d8587e3bfd8c6ad",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/openboost_worker.py": "a467fc8024eebad0fa9e1412e20e9c374f72cb96b35b08890434a669a44b4085",
+    "benchmarks/v1/openboost_predict.py": "844af41520e2f6de1e0c7f7d50bea13777867b860de83f385e529780661903c9",
+    "benchmarks/v1/openboost_worker_smoke.py": "1591fefe496a08008c248a1003676aa25dc7eb7d36a428a58af77cad8477da9a",
+    "benchmarks/v1/worker_data.py": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "data": {
+    "A6": {
+      "application": "A6",
+      "dataset": "parkinsons",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "0750282946e2e2e5636117db6564652c504b1958ff363c20474816dd3a849f53"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "cbd0f8b308a4b6bcf1994ccc52fc416753db2c7d0544cdc981755061963cbc48"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "018f27e04c960f316c425def9a9dc425ec9033c8d06f208acba646a0e23145ea"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "45e6fdeb7bdc716d4972005915c979eb699c1c830856a50d2212a05fa3611848"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "92cf249be956646637158b98bfe1808716c93e21333a3baccac4ce065e8d9991"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                21.832476455405597,
+                29.161076799541192
+              ],
+              "std": [
+                8.446609478513288,
+                10.891162854284502
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "5eca1356971580b2aa677ccbc3f8abe69b64c7478cd67f7fd25da1e029f7db25"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "9805269dd0594f6e654f4bc64df8694a02a34ffde8474468e4865df7bce4d1d8"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "4947fd9a0515b4646b9638256cf7bb57adf899762c8212a9c58402b0a3dade7f"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "827a1797ca4d64ec7722f4dbb76d2e874a575366eb12ca4e5c07aef15134066a"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "eb6829963b9cdeb2c70583ef5b38d883a4978c9b185e175f81b3302a405d636f"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                21.02220744409841,
+                28.889462439852874
+              ],
+              "std": [
+                8.707706178768547,
+                11.553396813667037
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "79189bbfde0c2e13fa27728ce8a6ead553065da83ad6d94fadaae6163d453296"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "d58b5d592d0c38ab1c7258046dc84598a57f1d447aca23cc750d99835b76f31a"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "c84b2ba1d2884415b029e050876a16d454f1c50d93f1d5804155ecd426d198e8"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "7a81dc178bd308c3799916ba5265742bcd9ca96383ab13f7d4d4ea415dee1a5b"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "c6a3198bfcde399f9add245ef86bae57d7a69457c46dddb48346c98e79efc979"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                22.402470691547656,
+                31.08271761800212
+              ],
+              "std": [
+                7.461557603692726,
+                9.80291946506434
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "cab04f13105a6e4c630bde542ab425099f4422c7b3dbb7f22e9f75aaac8c5406"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "545a95c32e526be45407754189eb4261559fc1e9fdd3b54bf0c19015da69636d"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "df4b66ebc77833c5df46e730f361f14e7f1728ec05883d22fb3208438f398c46"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "6a9d99374e40349110d4b525dcb6c97bee5cddc849de65b1d00da6b9a35de557"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "f696ba5fed863349a0bc216cfeb903a13e9d54ac44b57135c372dcc8759cb08a"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                21.36469700842268,
+                28.64957766482703
+              ],
+              "std": [
+                8.097653633950642,
+                10.41318564767784
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "b0ae47990cc48c72afc47dfcf2273c3cedc5d606289d0751ee2afa3edc465b67"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "4e0f851b54a87b26273eee75ac8d9c20243ea95324ef0329983ca127e9ae2905"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "b32c3fd08cec7781deb95a7d01057e2d8d2d8b0cd63c8c1368b4f5104a8ed95c"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "1d9081dee48c899212497db8d80630f81dd7d934bea31d00cc5781b92666ba0c"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "150f918c1496d3d6fc8062614ce7b592ee00d68a590464f52c50aefb6833b9cc"
+            }
+          },
+          "metadata": {
+            "target_scale": {
+              "mean": [
+                21.608206573705065,
+                28.812343511667468
+              ],
+              "std": [
+                7.37511081258478,
+                9.516732486364944
+              ],
+              "constant": [
+                false,
+                false
+              ]
+            }
+          }
+        }
+      ],
+      "source_freeze_sha256": "334cbda3dbd18849914a0069b6203035280cf5a716838b098a93856c4a2140f3",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    }
+  },
+  "cells": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.9231058750010561,
+      "artifacts": {
+        "model.bin": "025f3f6fcd2b9e78e3c3511a855471bc4c773feb0e3ca5461799badaa3d1da12",
+        "training.json": "a7b457719d1818dd97b2c2f8208b3923c9575fd8afa22c0b2fa0f9cd3d976667",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "a11e3dce279378670b2cb626f44c872a75f722c15387425a2153df70d53ab5ce"
+      },
+      "application": "A6",
+      "fold": 0,
+      "job": {
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-multi-worker-045-final/A6/0/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/0/fit/model.bin",
+        "/private/tmp/openboost-multi-worker-045-final/A6/0/fit/features.npz",
+        "/private/tmp/openboost-multi-worker-045-final/A6/0/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        1151,
+        2
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 1.0140254110026818,
+          "last_score": 1.0203684285829633,
+          "completed_rounds": 4,
+          "stale_rounds": 1,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "15d2bb99b467704780a70bdacccb031c65b634e6ac6080b0db8b04a6406afe3f",
+        "best_validation_score": 1.0140254110026818,
+        "output": "multioutput_original_units",
+        "target_scale": {
+          "mean": [
+            21.832476455405597,
+            29.161076799541192
+          ],
+          "std": [
+            8.446609478513288,
+            10.891162854284502
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        },
+        "scale_convention": "unweighted_train_population",
+        "selection_metric": "row_mean_sum_standardized_half_squared_error"
+      },
+      "replay_sha256": "a11e3dce279378670b2cb626f44c872a75f722c15387425a2153df70d53ab5ce"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.913862916000653,
+      "artifacts": {
+        "model.bin": "97ab141747fef1f1794d4a832fc130e03070ad13b00309170b766cfc534a8a06",
+        "training.json": "539c657a4479ccccea143a5727721ca85c61a2cde18cee0cee49eac8ce92f57c",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "bd2b24fc742b886f71ad6fe82676e1e8d8baba63a5b21410aebab450063b6d45"
+      },
+      "application": "A6",
+      "fold": 1,
+      "job": {
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-multi-worker-045-final/A6/1/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/1/fit/model.bin",
+        "/private/tmp/openboost-multi-worker-045-final/A6/1/fit/features.npz",
+        "/private/tmp/openboost-multi-worker-045-final/A6/1/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        1097,
+        2
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.8580941834471312,
+          "last_score": 0.8921598747373427,
+          "completed_rounds": 4,
+          "stale_rounds": 3,
+          "reason": "patience"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "dd8151781709409be307bfbf17c1cd006c4d358b281e5ea80c49d0be970b78a5",
+        "best_validation_score": 0.8580941834471312,
+        "output": "multioutput_original_units",
+        "target_scale": {
+          "mean": [
+            21.02220744409841,
+            28.889462439852874
+          ],
+          "std": [
+            8.707706178768547,
+            11.553396813667037
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        },
+        "scale_convention": "unweighted_train_population",
+        "selection_metric": "row_mean_sum_standardized_half_squared_error"
+      },
+      "replay_sha256": "bd2b24fc742b886f71ad6fe82676e1e8d8baba63a5b21410aebab450063b6d45"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 2.0311060410022037,
+      "artifacts": {
+        "model.bin": "e4cd1bdce695b2ff56d99408b02176f39b2be6e74e848e68bf5f21bbd5d2539d",
+        "training.json": "5d7920c7094fde7c69674c003a4f231bb58e3a7249818ab6e08c6acf1a37612a",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "34baef0cb200fa5767c59c967247f74efa75b79ed8ca62e768b7c9e41d437b6a"
+      },
+      "application": "A6",
+      "fold": 2,
+      "job": {
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-multi-worker-045-final/A6/2/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/2/fit/model.bin",
+        "/private/tmp/openboost-multi-worker-045-final/A6/2/fit/features.npz",
+        "/private/tmp/openboost-multi-worker-045-final/A6/2/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        1062,
+        2
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 1.394441268074094,
+          "last_score": 1.394441268074094,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "71b0d48c094e3fbaf6ba29a610f00f28884491bf358b6681b9527e0d2a2f4472",
+        "best_validation_score": 1.394441268074094,
+        "output": "multioutput_original_units",
+        "target_scale": {
+          "mean": [
+            22.402470691547656,
+            31.08271761800212
+          ],
+          "std": [
+            7.461557603692726,
+            9.80291946506434
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        },
+        "scale_convention": "unweighted_train_population",
+        "selection_metric": "row_mean_sum_standardized_half_squared_error"
+      },
+      "replay_sha256": "34baef0cb200fa5767c59c967247f74efa75b79ed8ca62e768b7c9e41d437b6a"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.4804589999985183,
+      "artifacts": {
+        "model.bin": "a512829556d1f79e6929ce52c4775026ae7f1eedecc38549c93c7dd9222c1d81",
+        "training.json": "39a854f84cdc8058a92256244585573a867a404f223e7e794d03f182ea2cdb17",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "5e790851d06a4df9e9159dea50c0a844332276d1899025bd2390cfbc7a9e53e0"
+      },
+      "application": "A6",
+      "fold": 3,
+      "job": {
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-multi-worker-045-final/A6/3/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/3/fit/model.bin",
+        "/private/tmp/openboost-multi-worker-045-final/A6/3/fit/features.npz",
+        "/private/tmp/openboost-multi-worker-045-final/A6/3/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        1129,
+        2
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.693465932244095,
+          "last_score": 0.7226623309509903,
+          "completed_rounds": 3,
+          "stale_rounds": 3,
+          "reason": "patience"
+        },
+        "accepted_commits": 3,
+        "selected_model_identity": "9d21a60f7601a2d0b1588f6ccbc9edb76cc91fecf5ddddd4c91ffb5b2f5e3255",
+        "best_validation_score": 0.693465932244095,
+        "output": "multioutput_original_units",
+        "target_scale": {
+          "mean": [
+            21.36469700842268,
+            28.64957766482703
+          ],
+          "std": [
+            8.097653633950642,
+            10.41318564767784
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        },
+        "scale_convention": "unweighted_train_population",
+        "selection_metric": "row_mean_sum_standardized_half_squared_error"
+      },
+      "replay_sha256": "5e790851d06a4df9e9159dea50c0a844332276d1899025bd2390cfbc7a9e53e0"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.9809298749896698,
+      "artifacts": {
+        "model.bin": "1322a9e38866dd9df86971798d9ae14d0dd5edb50feb7445999062acff5ee51d",
+        "training.json": "1751814014576b20ebc054323277dd5bf7507b1f37034501bf494b3d09c384fa",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "690d01a14687e851078ebbc99063c23469091691b704ed7027f03393f0bdaeff"
+      },
+      "application": "A6",
+      "fold": 4,
+      "job": {
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-multi-worker-045-final/A6/4/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-multi-worker-045-final/A6/4/fit/model.bin",
+        "/private/tmp/openboost-multi-worker-045-final/A6/4/fit/features.npz",
+        "/private/tmp/openboost-multi-worker-045-final/A6/4/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        1109,
+        2
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 1.6656270352836269,
+          "last_score": 1.6656270352836269,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "34a80e1291113ded1ab48b3944f698908b0a717f69b631e66c0e5b2147aed920",
+        "best_validation_score": 1.6656270352836269,
+        "output": "multioutput_original_units",
+        "target_scale": {
+          "mean": [
+            21.608206573705065,
+            28.812343511667468
+          ],
+          "std": [
+            7.37511081258478,
+            9.516732486364944
+          ],
+          "constant": [
+            false,
+            false
+          ]
+        },
+        "scale_convention": "unweighted_train_population",
+        "selection_metric": "row_mean_sum_standardized_half_squared_error"
+      },
+      "replay_sha256": "690d01a14687e851078ebbc99063c23469091691b704ed7027f03393f0bdaeff"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+"""Allowlisted comparator preflight; uploads no production source or datasets."""
+
+import hashlib
+import importlib.util
+import json
+import subprocess
+from pathlib import Path
+
+import modal
+
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = Path(__file__).with_name("capability_smoke.py")
+LOCK = Path(__file__).with_name("requirements-cuda.txt")
+SOURCE_SHA = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+DIRTY = bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT))
+HASH = hashlib.sha256(SOURCE.read_bytes()).hexdigest()
+LOCK_HASH = hashlib.sha256(LOCK.read_bytes()).hexdigest()
+app = modal.App("openboost-v1-comparator-preflight")
+image = (
+    modal.Image.from_registry(
+        "nvidia/cuda@sha256:14c54fad24b376ab78a70e1ef6595a2b7c8cdbf187e4f9b76de99a926fb62460",
+        add_python="3.12",
+    )
+    .uv_pip_install(requirements=[str(LOCK)], extra_options="--require-hashes", uv_version="0.12.1")
+    .add_local_file(SOURCE, "/opt/capability_smoke.py", copy=True)
+    .env({"OMP_NUM_THREADS": "2", "OPENBLAS_NUM_THREADS": "2"})
+)
+
+
+# The standard wheel lacks CUDA: rebuild the same hash-locked release explicitly.
+image = (
+    image.apt_install("build-essential", "libboost-dev")
+    .env({"CC": "gcc", "CXX": "g++", "CMAKE_BUILD_PARALLEL_LEVEL": "2"})
+    .uv_pip_install(
+        requirements=[str(LOCK)],
+        extra_options="--require-hashes --reinstall-package lightgbm --no-binary lightgbm --config-settings=cmake.define.USE_CUDA=ON --config-settings=cmake.define.CMAKE_CUDA_ARCHITECTURES=75",
+        uv_version="0.12.1",
+    )
+)
+
+
+@app.function(
+    image=image,
+    gpu="T4",
+    cpu=2,
+    memory=8192,
+    timeout=900,
+    retries=0,
+    max_containers=1,
+    serialized=True,
+    include_source=False,
+)
+def preflight():
+    import subprocess
+
+    import cupy as cp
+
+    spec = importlib.util.spec_from_file_location("smoke", "/opt/capability_smoke.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    # CPU-before-CUDA ordering on the same Linux installation.
+    cpu = module.run("cpu")
+    gpu = module.run("cuda")
+    return {
+        "cpu": cpu,
+        "cuda": gpu,
+        "gpu_inventory": subprocess.check_output(
+            ["nvidia-smi", "--query-gpu=name,driver_version,memory.total", "--format=csv,noheader"],
+            text=True,
+        ),
+        "cuda_runtime": cp.cuda.runtime.runtimeGetVersion(),
+        "cuda_driver": cp.cuda.runtime.driverGetVersion(),
+    }
+
+
+@app.local_entrypoint()
+def main():
+    result = preflight.remote()
+    result.update(
+        source_sha=SOURCE_SHA,
+        dirty=DIRTY,
+        source_file_sha256=HASH,
+        lock_sha256=LOCK_HASH,
+        scope="comparator capability preflight only",
+    )
+    path = ROOT / "benchmarks/v1/evidence/modal-capabilities-cuda-build.json"
+    path.write_text(json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n")
+    for device in ["cpu", "cuda"]:
+        print(
+            device, [(c["library"], c["application"], c["status"]) for c in result[device]["cells"]]
+        )
+    if any(c["status"] == "error" for d in ["cpu", "cuda"] for c in result[d]["cells"]):
+        raise RuntimeError("preflight contains failed cells; inspect saved results")

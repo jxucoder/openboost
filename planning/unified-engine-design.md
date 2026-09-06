@@ -1,6 +1,8 @@
 # Unified GPU Boosting Engine — Design
 
-Status: Phase A+B implemented; A100 speed gate passed (1229x vs NGBoost at 90K) · 2026-08-17
+Status: Historical design from 2026-08-17. Implementation integrated in P0.
+Historical performance statements below are unverified notes, not current
+passed gates; see `docs/benchmarks.md` and the foundation execution plan.
 Evidence: `development/paramboost/spike_ggn.py` (GGN spike), CustomDistribution/loop
 survey, NaturalBoost GPU-boundary survey.
 

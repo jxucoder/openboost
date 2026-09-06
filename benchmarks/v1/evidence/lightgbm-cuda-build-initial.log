@@ -1,0 +1,191 @@
+✓ Initialized. View run at 
+[private run URL omitted]
+Building image im-PQuOpAG7kBNgVTmPGD2a60
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 607.59ms
+
+Built image im-PQuOpAG7kBNgVTmPGD2a60 in 2.31s
+
+
+Building image im-qoqWKUS1zT6DOpVv94ai6g
+
+=> Step 0: FROM base
+
+=> Step 1: ENV OMP_NUM_THREADS=2
+
+=> Step 2: ENV OPENBLAS_NUM_THREADS=2
+Saving image...
+Image saved, took 648.10ms
+
+Built image im-qoqWKUS1zT6DOpVv94ai6g in 2.46s
+
+
+Building image im-0Os9lQcHFaxlUYhxjQUFMJ
+
+=> Step 0: FROM base
+
+=> Step 1: RUN apt-get update
+Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+Get:2 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  InRelease [1578 B]
+Get:3 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Get:5 https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64  Packages [2920 kB]
+Get:6 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
+Get:10 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
+Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [92.7 kB]
+Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1620 kB]
+Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [4623 kB]
+Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [8004 kB]
+Get:15 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.6 kB]
+Get:16 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [82.8 kB]
+Get:17 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [4287 kB]
+Get:18 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1316 kB]
+Get:19 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [84.1 kB]
+Get:20 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [7706 kB]
+Fetched 51.1 MB in 2s (20.6 MB/s)
+Reading package lists...
+
+=> Step 2: RUN apt-get install -y build-essential libboost-dev
+Reading package lists...
+Building dependency tree...
+Reading state information...
+build-essential is already the newest version (12.9ubuntu3).
+build-essential set to manually installed.
+Suggested packages:
+  libboost-doc libboost1.74-doc libboost-atomic1.74-dev
+  libboost-chrono1.74-dev libboost-container1.74-dev libboost-context1.74-dev
+  libboost-contract1.74-dev libboost-coroutine1.74-dev
+  libboost-date-time1.74-dev libboost-exception1.74-dev libboost-fiber1.74-dev
+  libboost-filesystem1.74-dev libboost-graph1.74-dev
+  libboost-graph-parallel1.74-dev libboost-iostreams1.74-dev
+  libboost-locale1.74-dev libboost-log1.74-dev libboost-math1.74-dev
+  libboost-mpi1.74-dev libboost-mpi-python1.74-dev libboost-numpy1.74-dev
+  libboost-program-options1.74-dev libboost-python1.74-dev
+  libboost-random1.74-dev libboost-regex1.74-dev
+  libboost-serialization1.74-dev libboost-stacktrace1.74-dev
+  libboost-system1.74-dev libboost-test1.74-dev libboost-thread1.74-dev
+  libboost-timer1.74-dev libboost-type-erasure1.74-dev libboost-wave1.74-dev
+  libboost1.74-tools-dev libmpfrc++-dev libntl-dev libboost-nowide1.74-dev
+The following NEW packages will be installed:
+  libboost-dev libboost1.74-dev
+0 upgraded, 2 newly installed, 0 to remove and 121 not upgraded.
+Need to get 9612 kB of archives.
+After this operation, 142 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 libboost1.74-dev amd64 1.74.0-14ubuntu3 [9609 kB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 libboost-dev amd64 1.74.0.3ubuntu7 [3490 B]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 9612 kB in 0s (25.4 MB/s)
+Selecting previously unselected package libboost1.74-dev:amd64.
+(Reading database ... 
+[1A(Reading database ... 5%
+[1A(Reading database ... 10%
+[1A(Reading database ... 15%
+[1A(Reading database ... 20%
+[1A(Reading database ... 25%
+[1A(Reading database ... 30%
+[1A(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 14806 files and directories currently installed.)
+Preparing to unpack .../libboost1.74-dev_1.74.0-14ubuntu3_amd64.deb ...
+Unpacking libboost1.74-dev:amd64 (1.74.0-14ubuntu3) ...
+Selecting previously unselected package libboost-dev:amd64.
+Preparing to unpack .../libboost-dev_1.74.0.3ubuntu7_amd64.deb ...
+Unpacking libboost-dev:amd64 (1.74.0.3ubuntu7) ...
+Setting up libboost1.74-dev:amd64 (1.74.0-14ubuntu3) ...
+Setting up libboost-dev:amd64 (1.74.0.3ubuntu7) ...
+Saving image...
+Image saved, took 1.94s
+
+Built image im-0Os9lQcHFaxlUYhxjQUFMJ in 18.10s
+
+
+Building image im-mTgFsahJL7lvSUo0Y5xIHZ
+
+=> Step 0: FROM base
+
+=> Step 1: COPY --from=ghcr.io/astral-sh/uv:0.12.1 /uv /.uv/uv
+Getting image source signatures
+Copying blob sha256:7445d66de2378275b55f712aedb693474de22c09b1a32c55e3d3bd46d2f4f4c9
+Copying blob sha256:788dd9aef29e3de18dc5b0e9d3d01eb448d8963d57ce5a0dd33149e2714272d5
+Copying config sha256:17c878e0974e1e0c450b21fa0fd3ad4bfeda10e1d7c599337f85f837d9113555
+Writing manifest to image destination
+Unpacking OCI image
+   • unpacking rootfs ...     
+   • ... done                 
+   • unpacked image rootfs: /tmp/task-data/ta-01M1VMFSXZ0KY68YN2Z357940B/registry-unpackeojx7N
+
+=> Step 2: COPY /.0_requirements-cuda.txt /.uv/0/requirements-cuda.txt
+
+=> Step 3: RUN /.uv/uv pip install --python $(command -v python) --compile-bytecode --require-hashes --reinstall-package lightgbm --no-binary lightgbm --config-settings=cmake.define.USE_CUDA=ON --config-settings=cmake.define.CMAKE_CUDA_ARCHITECTURES=75 --requirements /.uv/0/requirements-cuda.txt
+Using Python 3.12.1 environment at: /usr/local
+Resolved 49 packages in 283ms
+   Building lightgbm==4.7.0
+  × Failed to build `lightgbm==4.7.0`
+  ├─▶ The build backend returned an error
+  ╰─▶ Call to `scikit_build_core.build.build_wheel` failed (exit status: 1)
+
+      [stdout]
+      *** scikit-build-core 1.0.3 using CMake 4.4.3 (wheel)
+      *** Configuring CMake...
+      loading initial cache file /tmp/tmpn_hdfx7q/build/CMakeInit.txt
+      -- Configuring incomplete, errors occurred!
+
+      [stderr]
+      2026-09-06 15:13:28,183 - scikit_build_core - INFO - RUN:
+      /tmp/.tmpHAo02L/builds-v0/.tmpD69tzr/lib/python3.12/site-packages/cmake/data/bin/cmake
+      -E capabilities
+      2026-09-06 15:13:28,203 - scikit_build_core - INFO - CMake version:
+      4.4.3
+      2026-09-06 15:13:28,203 - scikit_build_core - INFO - Implementation:
+      cpython linux on x86_64
+      2026-09-06 15:13:28,206 - scikit_build_core - INFO - Build directory:
+      /tmp/tmpn_hdfx7q/build
+      2026-09-06 15:13:28,225 - scikit_build_core - INFO - RUN:
+      /tmp/.tmpHAo02L/builds-v0/.tmpD69tzr/bin/ninja --version
+      2026-09-06 15:13:28,228 - scikit_build_core - INFO - Ninja version:
+      1.13.2
+      2026-09-06 15:13:28,229 - scikit_build_core - INFO - RUN:
+      /tmp/.tmpHAo02L/builds-v0/.tmpD69tzr/lib/python3.12/site-packages/cmake/data/bin/cmake
+      -S. -B/tmp/tmpn_hdfx7q/build -DCMAKE_BUILD_TYPE:STRING=Release
+      -C/tmp/tmpn_hdfx7q/build/CMakeInit.txt
+      -DCMAKE_INSTALL_PREFIX=/tmp/tmpn_hdfx7q/wheel/platlib
+      -DCMAKE_MAKE_PROGRAM=/tmp/.tmpHAo02L/builds-v0/.tmpD69tzr/bin/ninja
+      -D__BUILD_FOR_PYTHON=ON -DCMAKE_CUDA_ARCHITECTURES=75 -DUSE_CUDA=ON
+      CMake Error at
+      /tmp/.tmpHAo02L/builds-v0/.tmpD69tzr/lib/python3.12/site-packages/cmake/data/share/cmake-4.4/Modules/CMakeDetermineCCompiler.cmake:48
+      (message):
+        Could not find the compiler specified in the environment variable CC:
+
+        clang.
+      Call Stack (most recent call first):
+        CMakeLists.txt:41 (project)
+
+
+      CMake Error: CMAKE_C_COMPILER not set, after EnableLanguage
+      CMake Error: CMAKE_CXX_COMPILER not set, after EnableLanguage
+
+      *** CMake configuration failed
+
+
+hint: Build failures usually indicate a problem with the package or the build environmentTerminating task due to error: failed to run builder command "/.uv/uv pip install --python $(command -v python) --compile-bytecode --require-hashes --reinstall-package lightgbm --no-binary lightgbm --config-settings=cmake.define.USE_CUDA=ON --config-settings=cmake.define.CMAKE_CUDA_ARCHITECTURES=75 --requirements /.uv/0/requirements-cuda.txt": container exit status: 1
+Runner failed with exit code: -1
+Stopping app - uncaught exception raised locally: RemoteError('Image build for im-mTgFsahJL7lvSUo0Y5xIHZ failed. See build logs for more details.').
+[modal-client] 2026-09-06T08:13:29-0700 Loop attempt for _run_app.<locals>.heartbeat failed
+Traceback (most recent call last):
+  File "/Users/jiaruixu/work_space/openboost/.venv/lib/python3.12/site-packages/modal/_utils/async_utils.py", line 508, in loop_coro
+    await asyncio.wait_for(async_f(), timeout=timeout)
+  File "/Users/jiaruixu/.local/share/uv/python/cpython-3.12.12-macos-x86_64-none/lib/python3.12/asyncio/tasks.py", line 520, in wait_for
+    return await fut
+           ^^^^^^^^^
+  File "/Users/jiaruixu/work_space/openboost/.venv/lib/python3.12/site-packages/modal/runner.py", line 56, in _heartbeat
+    await client.stub.AppHeartbeat(request, retry=Retry(attempt_timeout=HEARTBEAT_TIMEOUT))
+modal.exception.ConflictError: App state is APP_STATE_STOPPED
+╭─ Error ──────────────────────────────────────────────────────────────────────╮
+│ Image build for im-mTgFsahJL7lvSUo0Y5xIHZ failed. See build logs for more    │
+│ details.                                                                     │
+╰──────────────────────────────────────────────────────────────────────────────╯

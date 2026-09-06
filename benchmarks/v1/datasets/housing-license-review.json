@@ -1,0 +1,99 @@
+{
+  "schema": "openboost-source-license-review-v1",
+  "review_date": "2026-09-06",
+  "source_url": "https://api.figshare.com/v2/articles/3829992",
+  "retrieved_response_sha256": "98ce5e5d2e5ba16a0406e60602e7e48608e7ad1cc4dc45ae8327f24879dde7c2",
+  "omitted_fields": [
+    "url_private_api",
+    "url_private_html"
+  ],
+  "metadata": {
+    "files": [
+      {
+        "id": 5976036,
+        "name": "cal_housing.tgz",
+        "size": 441963,
+        "is_link_only": false,
+        "download_url": "https://ndownloader.figshare.com/files/5976036",
+        "supplied_md5": "130d0eececf165046ec4dc621d121d80",
+        "computed_md5": "130d0eececf165046ec4dc621d121d80",
+        "mimetype": "application/x-gzip"
+      }
+    ],
+    "folder_structure": {},
+    "authors": [
+      {
+        "id": 3118605,
+        "full_name": "Nelson Liu",
+        "first_name": "Nelson",
+        "last_name": "Liu",
+        "is_active": true,
+        "url_name": "_",
+        "orcid_id": ""
+      }
+    ],
+    "custom_fields": [],
+    "figshare_url": "https://figshare.com/articles/dataset/cal_housing_tgz/3829992",
+    "download_disabled": false,
+    "description": "Part of the California housing dataset used in scikit-learn.",
+    "funding": null,
+    "funding_list": [],
+    "version": 2,
+    "status": "public",
+    "size": 441963,
+    "created_date": "2016-09-15T19:33:05Z",
+    "modified_date": "2016-09-15T19:33:08Z",
+    "is_public": true,
+    "is_confidential": false,
+    "is_metadata_record": false,
+    "confidential_reason": "",
+    "metadata_reason": "",
+    "license": {
+      "value": 1,
+      "name": "CC BY 4.0",
+      "url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "tags": [
+      "california",
+      "housing",
+      "scikit-learn"
+    ],
+    "keywords": [
+      "california",
+      "housing",
+      "scikit-learn"
+    ],
+    "categories": [],
+    "references": [],
+    "has_linked_file": false,
+    "citation": "Liu, Nelson (2016). scikit-learn california housing dataset cal_housing.tgz. figshare. Dataset. https://doi.org/10.6084/m9.figshare.3829992.v2",
+    "related_materials": [],
+    "is_embargoed": false,
+    "embargo_date": null,
+    "embargo_type": "file",
+    "embargo_title": "",
+    "embargo_reason": "",
+    "embargo_options": [],
+    "id": 3829992,
+    "title": "scikit-learn california housing dataset cal_housing.tgz",
+    "doi": "10.6084/m9.figshare.3829992.v2",
+    "handle": "",
+    "url": "https://api.figshare.com/v2/articles/3829992",
+    "published_date": "2016-09-15T19:33:04Z",
+    "thumb": "",
+    "defined_type": 3,
+    "defined_type_name": "dataset",
+    "group_id": null,
+    "url_public_api": "https://api.figshare.com/v2/articles/3829992",
+    "url_public_html": "https://figshare.com/articles/dataset/cal_housing_tgz/3829992",
+    "timeline": {
+      "posted": "2016-09-15T19:33:04",
+      "firstOnline": "2016-09-15"
+    },
+    "resource_title": null,
+    "resource_doi": null
+  },
+  "archive_sha256": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681",
+  "archive_md5_verified": true,
+  "conclusion": "The exact hosted archive has a CC BY 4.0 declaration. This supplements the original freeze without changing bytes, folds, or preprocessing. The declaration is by the Figshare uploader; original StatLib rights provenance was not separately verified."
+}

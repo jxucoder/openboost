@@ -1,38 +1,21 @@
-name: Deploy Documentation
+name: Build v1 Documentation
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'docs/**'
-      - 'src/**'
-      - 'mkdocs.yml'
+    branches: [main]
+    paths: ['docs/v1/**', 'mkdocs.yml']
+  pull_request:
+    paths: ['docs/v1/**', 'mkdocs.yml']
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
-
-      - name: Install dependencies
-        run: |
-          uv sync
-          uv pip install mkdocs-material "mkdocstrings[python]" mkdocs-gen-files mkdocs-literate-nav mkdocs-section-index
-
-      - name: Build and deploy
-        run: uv run mkdocs gh-deploy --force
+      - uses: astral-sh/setup-uv@v4
+      - run: uv sync --locked
+      - run: uv run --no-sync mkdocs build --strict

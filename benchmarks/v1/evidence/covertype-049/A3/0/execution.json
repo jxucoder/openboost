@@ -1,0 +1,16 @@
+{
+  "artifacts": {
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+    "/private/tmp/openboost-covertype-049/A3/0/job.json"
+  ],
+  "exit_code": -9,
+  "reason": "wall budget exceeded; process group killed",
+  "status": "timeout",
+  "threads": 1,
+  "timeout_s": 90,
+  "wall_s": 90.12871720900876
+}

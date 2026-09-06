@@ -1,0 +1,138 @@
+{
+  "schema": "openboost-v1-development-extensions-v1",
+  "passed": true,
+  "claim": "repository-authored D2/D3 installation and correctness only",
+  "commit": "2f6c77aa451dcacda8df627c84c06db14d187ace",
+  "dirty": true,
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "python": "3.12.12",
+  "machine": "x86_64",
+  "cpu_count": 16,
+  "device": "cpu",
+  "threads": 1,
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--wheel",
+        "--offline",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/wheels"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost"
+    },
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--wheel",
+        "--offline",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/wheels"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost/examples/v1_extensions/cohort_splits"
+    },
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--wheel",
+        "--offline",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/wheels"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost/examples/v1_extensions/penalized_leaves"
+    },
+    {
+      "argv": [
+        "uv",
+        "venv",
+        "--python",
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/env"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0"
+    },
+    {
+      "argv": [
+        "uv",
+        "pip",
+        "install",
+        "--offline",
+        "--python",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/env/bin/python",
+        "numpy==2.3.5",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/wheels/ob_cohort_splits-0.1.0-py3-none-any.whl",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/wheels/ob_penalized_leaves-0.1.0-py3-none-any.whl",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/wheels/openboost-1.0.0.dev0-py3-none-any.whl"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/env/bin/python",
+        "-I",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/checks.py",
+        "/private/tmp/openboost-v1-extension-evidence-040-routed"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/env/bin/python",
+        "-I",
+        "-c",
+        "import json,importlib.metadata as m; print(json.dumps({n:m.version(n) for n in ['openboost','numpy','ob-cohort-splits','ob-penalized-leaves']}))"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0"
+    },
+    {
+      "argv": [
+        "uv",
+        "pip",
+        "uninstall",
+        "--python",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/env/bin/python",
+        "ob-cohort-splits",
+        "ob-penalized-leaves"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/env/bin/python",
+        "-I",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0/core_inference.py",
+        "/private/tmp/openboost-v1-extension-evidence-040-routed"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-orkplye0"
+    }
+  ],
+  "sources": {
+    "examples/v1_extensions/checks.py": "47556dd3e9b5681d1bddb0ae8e086748fe273ddf39e25ab35b5e6a27d34e985b",
+    "examples/v1_extensions/cohort_splits/pyproject.toml": "d29f65c7783437a6220ec2dcfc6c4497792e804226c2b8f55d33f25560267245",
+    "examples/v1_extensions/cohort_splits/src/ob_cohort_splits/__init__.py": "013730f77db77255d3be58ce16fe4883e55e4dcea80ac757a681fa5444e82178",
+    "examples/v1_extensions/core_inference.py": "e613307c01c51aba028cf1a26c1f06b61079c826a4a53f24fa57f8eaca083d6a",
+    "examples/v1_extensions/penalized_leaves/pyproject.toml": "e00f1e32176ca2f5295e233c2421c39f729babfea0d283228896b53fd914e4fe",
+    "examples/v1_extensions/penalized_leaves/src/ob_penalized_leaves/__init__.py": "54208a6c52fe2acacc539f25428f31e28303a286c50dd5892b403c08e1fa0be2",
+    "examples/v1_extensions/verify.py": "7caf43d678373dc2df5253b3305cd0cfaa6f6af2c0539e5383b4bbd55fedb350"
+  },
+  "wheels": {
+    "ob_cohort_splits-0.1.0-py3-none-any.whl": "2e9ebb56cd551f6ebeb150e866c5107f508d62069c45841ffdf0e51c6305141b",
+    "ob_penalized_leaves-0.1.0-py3-none-any.whl": "e7723fc496bcaf908b52f6ed11483833bbdb1f51da7c5e02eead10d27ed90236",
+    "openboost-1.0.0.dev0-py3-none-any.whl": "efc7705eb2cde914e4f1445cb087904bee02552df369b270728d7f80f4f7ec01"
+  },
+  "versions": {
+    "openboost": "1.0.0.dev0",
+    "numpy": "2.3.5",
+    "ob-cohort-splits": "0.1.0",
+    "ob-penalized-leaves": "0.1.0"
+  },
+  "plugin_free_inference": true,
+  "artifacts": {
+    "checks.json": "184006082086b9b5593ea7a7e18c9fdbd34ecae7beb52fa72ac64b883ffd045c",
+    "d2.json": "facc6da0ae50d74322f4552cf70a11c749f480a7dfb7d102579cec825e88e657",
+    "d3.json": "f701c628ebbf191056b72bb2a1d3b92d33385189423fa53bc609b33107f803f2"
+  }
+}

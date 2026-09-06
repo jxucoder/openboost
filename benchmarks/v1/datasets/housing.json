@@ -1,0 +1,82 @@
+{
+  "applications": [
+    "A1",
+    "A11"
+  ],
+  "archive_sha256": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681",
+  "array_hash_format": "SHA256(X C-order <f4 bytes + y C-order <f4 bytes); legacy-compatible",
+  "arrays_sha256": "34fc72e53a6329a89a9ae792e92f37853cea98adfbc6feea28cc08dc06f68ca1",
+  "dtype": "little-endian float32",
+  "features": [
+    "MedInc",
+    "HouseAge",
+    "AveRooms",
+    "AveBedrms",
+    "Population",
+    "AveOccup",
+    "Latitude",
+    "Longitude"
+  ],
+  "license_status": "unresolved: archive has no license file; original source page unavailable during verification",
+  "member": "CaliforniaHousing/cal_housing.data",
+  "member_sha256": "a2b44dcc7e1c9091b43c4f458b25cbd1f7e8068d08edd26bc4703108d3fa6214",
+  "name": "California Housing",
+  "provenance": {
+    "adapter_sha256": "719881915c8843051648b6911114e662d0c64c5ad860167b7ec701f999c7b28e",
+    "argv": [
+      "python",
+      "-m",
+      "benchmarks.v1.housing",
+      "build/foundation_data/cal_housing.tgz"
+    ],
+    "dirty": true,
+    "git_sha": "dd2e9ada328623a24306506712d53d97cf4fd18d",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "python": "3.12.12"
+  },
+  "row_ids": "zero-based source row positions; never model features",
+  "schema": "openboost-housing-data-v1",
+  "shape": [
+    20640,
+    8
+  ],
+  "source_documentation": "https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset",
+  "source_url": "https://ndownloader.figshare.com/files/5976036",
+  "split": "numpy.default_rng(seed), permutation, 60/20/20; integer floor endpoints",
+  "split_hash_format": "SHA256(C-order <i8 source row positions); legacy-compatible",
+  "split_sha256": {
+    "0": [
+      "7d07544c6c3fddd72d0cfc8d0aa0c19cf00250f1890420bdb10bd80efb0c9c04",
+      "5f6d9931d5a5239c7933da9bb62df2c631e79017658f185742db94f139be358a",
+      "877744733fe0213e716ca084333f39385c30654169f117f772c53a6af8bcff37"
+    ],
+    "1": [
+      "99578d3ef329ef275fd41e3834df7dab763525f9374db203b6f748b783eed05a",
+      "a161a60cd85d1ec54cbfd590f6befdb58b1a9a695c635bfbb562b4064d265caf",
+      "039c4fc07f6596a3cfdf73cb55820de4baa13f93251ede4c215796f283d46256"
+    ],
+    "2": [
+      "51ab6cbe0019b5bea9f9da8a81b3fafa874d8c992062f65ee8d1b09a3b7898a1",
+      "14509d20c7d87948ac6ea9060c476995583dd130af0ff928a9c24709e5ecf9d4",
+      "ff6426d360c75b637dd866cd73d9fd1b9fcf310a886dc05fbac0f80dcf256ec8"
+    ],
+    "3": [
+      "a2f75415580ae9600343940d6c6b32ea8e451415d97f89efcf537e8c22d750a8",
+      "7ecb811bf4c16a9bdcd1ed25cef3934eb9361535f66b288f5ef4ce7caafda77b",
+      "4cae03efb75432ca2462a66c36750e50dc0450c55ec2a02a80792f7bdb3bfb65"
+    ],
+    "4": [
+      "a26e87ed629f3fec95ee785070fbb83a3618ec8f58736113bb591c68a03255cb",
+      "16db53ae3d4c9a39c173e6a8c830726de6e2e82c151045a4b53120d30c9395de",
+      "5298d710ea75628e9aa121b7fda7dd2a3bd4fcbfa3686a33158a455e8ad5f694"
+    ]
+  },
+  "split_sizes": [
+    12384,
+    4128,
+    4128
+  ],
+  "status": "data hashes and splits prepared; license, budgets and model quality not verified",
+  "target_unit": "100,000 USD"
+}

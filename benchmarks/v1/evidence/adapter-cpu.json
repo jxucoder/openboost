@@ -1,0 +1,73 @@
+{
+  "cells": [
+    {
+      "case": "xgboost categories/missing/nonunit weights",
+      "status": "pass",
+      "weight_prediction_difference": 0.4406875669956207
+    },
+    {
+      "case": "lightgbm categories/missing/nonunit weights",
+      "status": "pass",
+      "weight_prediction_difference": 0.4948951148038977
+    },
+    {
+      "case": "catboost categories/missing/nonunit weights",
+      "status": "pass",
+      "weight_prediction_difference": 0.4829316335004897
+    },
+    {
+      "case": "saved Poisson rate model plus explicit exposure",
+      "status": "pass"
+    },
+    {
+      "case": "XGBoost supplied base_margin after reload",
+      "double_exposure_max_error": 1.430511474609375e-06,
+      "status": "pass"
+    }
+  ],
+  "dirty": true,
+  "environment": {
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "packages": {
+      "autograd": "1.9.1",
+      "autograd-gamma": "0.5.0",
+      "catboost": "1.2.10",
+      "cloudpickle": "3.1.2",
+      "contourpy": "1.3.3",
+      "cycler": "0.12.1",
+      "fonttools": "4.64.0",
+      "formulaic": "1.2.2",
+      "graphviz": "0.21",
+      "interface_meta": "2.0.1",
+      "joblib": "1.6.0",
+      "kiwisolver": "1.5.1",
+      "lifelines": "0.30.0",
+      "lightgbm": "4.7.0",
+      "matplotlib": "3.11.1",
+      "mpmath": "1.3.0",
+      "narwhals": "2.25.0",
+      "ngboost": "0.5.11",
+      "numpy": "2.3.5",
+      "packaging": "26.3",
+      "pandas": "3.0.5",
+      "pillow": "12.3.0",
+      "plotly": "7.0.0",
+      "pyparsing": "3.3.2",
+      "python-dateutil": "2.9.0.post0",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.16.3",
+      "six": "1.17.0",
+      "sympy": "1.14.0",
+      "threadpoolctl": "3.6.0",
+      "tqdm": "4.70.0",
+      "typing_extensions": "4.16.0",
+      "wrapt": "2.4.0",
+      "xgboost": "3.4.1",
+      "xlrd": "2.0.2"
+    },
+    "python": "3.12.12"
+  },
+  "scope": "CPU adapter probes only; full real-task pipeline pending",
+  "source_file_sha256": "c0807aaa6c117b8e262a0481837915decb9467615d041b207d80024433452955",
+  "source_sha": "6f144d270648e03b7bad2d66db7334bfaacbc04c"
+}

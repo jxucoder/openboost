@@ -1,0 +1,182 @@
+{
+  "application": "A5",
+  "archive_sha256": "b70182d0d0508e9abbb79306ce5c0cec34869000f8220175ac83d11dbe845401",
+  "array_hash_format": "SHA256(canonical JSON dtype/shape + newline + C-order little-endian bytes)",
+  "citation": "Fanaee-T, H. (2013). Bike Sharing. UCI. DOI:10.24432/C5W894",
+  "days": 731,
+  "features": [
+    "season",
+    "yr",
+    "mnth",
+    "hr",
+    "holiday",
+    "weekday",
+    "workingday"
+  ],
+  "folds": [
+    {
+      "origin": 0,
+      "splits": {
+        "test": {
+          "days": 73,
+          "first_date": "2012-03-14",
+          "last_date": "2012-05-25",
+          "row_ids_sha256": "01641b69ddeb5d6fb61a7835d0b98e6f299a4f5072e6b9f033082a25fda34fc2",
+          "rows": 1750
+        },
+        "train": {
+          "days": 365,
+          "first_date": "2011-01-01",
+          "last_date": "2011-12-31",
+          "row_ids_sha256": "b3b37fee310037fd2e67a4794afb86b4c3b7636f16f970313b2567f259889723",
+          "rows": 8645
+        },
+        "validation": {
+          "days": 73,
+          "first_date": "2012-01-01",
+          "last_date": "2012-03-13",
+          "row_ids_sha256": "94477640fbb26645d43e3fdfacecb82473e2cb68e9861286cad29e35add22ea5",
+          "rows": 1744
+        }
+      },
+      "training_percent": 50
+    },
+    {
+      "origin": 1,
+      "splits": {
+        "test": {
+          "days": 73,
+          "first_date": "2012-04-20",
+          "last_date": "2012-07-01",
+          "row_ids_sha256": "af78aebec39e7d94d01a1825c342216038443251deebaa8c807062193ac9f393",
+          "rows": 1752
+        },
+        "train": {
+          "days": 402,
+          "first_date": "2011-01-01",
+          "last_date": "2012-02-06",
+          "row_ids_sha256": "71bb5c378ee0c5a56da258ab573346ab0bdb66ef2ce203dcfba5e0480a649cec",
+          "rows": 9529
+        },
+        "validation": {
+          "days": 73,
+          "first_date": "2012-02-07",
+          "last_date": "2012-04-19",
+          "row_ids_sha256": "aad05607be6ca10328f34b2bfda58c160d88110411deae6f5eb9de20e84d9d58",
+          "rows": 1746
+        }
+      },
+      "training_percent": 55
+    },
+    {
+      "origin": 2,
+      "splits": {
+        "test": {
+          "days": 73,
+          "first_date": "2012-05-26",
+          "last_date": "2012-08-06",
+          "row_ids_sha256": "b64290b18822aecd5f200e5b09ef29a77ba375e45caa5d6ed53d5cd00c526405",
+          "rows": 1752
+        },
+        "train": {
+          "days": 438,
+          "first_date": "2011-01-01",
+          "last_date": "2012-03-13",
+          "row_ids_sha256": "c35939a6bc4f413d1b11cfa81e31cc93453af119d8e2ccf5bffd67fb5e1b1503",
+          "rows": 10389
+        },
+        "validation": {
+          "days": 73,
+          "first_date": "2012-03-14",
+          "last_date": "2012-05-25",
+          "row_ids_sha256": "01641b69ddeb5d6fb61a7835d0b98e6f299a4f5072e6b9f033082a25fda34fc2",
+          "rows": 1750
+        }
+      },
+      "training_percent": 60
+    },
+    {
+      "origin": 3,
+      "splits": {
+        "test": {
+          "days": 73,
+          "first_date": "2012-07-02",
+          "last_date": "2012-09-12",
+          "row_ids_sha256": "e6f1cd45938811e7433802de270acb6bfa094152fed88dd2f400f3b722254a61",
+          "rows": 1752
+        },
+        "train": {
+          "days": 475,
+          "first_date": "2011-01-01",
+          "last_date": "2012-04-19",
+          "row_ids_sha256": "ed7861418fa1f6ec2032743f24775c0c45f6516aac481dd7dbdd8d261c6e99de",
+          "rows": 11275
+        },
+        "validation": {
+          "days": 73,
+          "first_date": "2012-04-20",
+          "last_date": "2012-07-01",
+          "row_ids_sha256": "af78aebec39e7d94d01a1825c342216038443251deebaa8c807062193ac9f393",
+          "rows": 1752
+        }
+      },
+      "training_percent": 65
+    },
+    {
+      "origin": 4,
+      "splits": {
+        "test": {
+          "days": 73,
+          "first_date": "2012-08-07",
+          "last_date": "2012-10-18",
+          "row_ids_sha256": "fc8608846bb4fe4d5f064d1e4ac2d2873c5262f930fbad25856ec2af91302f9a",
+          "rows": 1752
+        },
+        "train": {
+          "days": 511,
+          "first_date": "2011-01-01",
+          "last_date": "2012-05-25",
+          "row_ids_sha256": "57f39fed5e2691be9dcdb3c01496b700feff15396f6af814dd86b9f306215fa0",
+          "rows": 12139
+        },
+        "validation": {
+          "days": 73,
+          "first_date": "2012-05-26",
+          "last_date": "2012-08-06",
+          "row_ids_sha256": "b64290b18822aecd5f200e5b09ef29a77ba375e45caa5d6ed53d5cd00c526405",
+          "rows": 1752
+        }
+      },
+      "training_percent": 70
+    }
+  ],
+  "license": "CC-BY-4.0",
+  "license_source": "https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset",
+  "member": "hour.csv",
+  "member_sha256": "e03de4ee4ef4dc376ac6e04bf829673c6269e8eba5c60fa121640fa2f829504f",
+  "provenance": {
+    "adapter_sha256": "e8fe271c02d7ccc21765b08b9237b9d80418d8960fd49da3cad7157f7ca95441",
+    "argv": [
+      "python",
+      "-m",
+      "benchmarks.v1.bike",
+      "/tmp/openboost-v1-bike.zip"
+    ],
+    "dirty": true,
+    "git_sha": "e2f2c6bc8149740208242ed3e899d072398917ce",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "python": "3.12.12"
+  },
+  "row_ids_sha256": "0207a9c39b3e957b17ca0459006bc38a40baa6d3faec588dc470903ed17d22f9",
+  "rows": 17379,
+  "schema": "openboost-bike-data-v1",
+  "source_url": "https://archive.ics.uci.edu/static/public/275/bike%2Bsharing%2Bdataset.zip",
+  "split_rule": "sorted unique dates; floor(D*p/100) endpoints; expanding train, next 10% validation, next 10% test",
+  "status": "data prepared only; no quality or budget gate evaluated",
+  "target": "cnt",
+  "target_unit": "hourly rental count",
+  "weight": "unit",
+  "x_sha256": "d0e1ba087d4ed7e2a3e1f59c95e072b9efa389e1699d670b2e2c5dc16f94276b",
+  "y_sha256": "bdad86e5f4f2323cf66c409915ace4308eef0424a7b010cec7017162ecd08a5b"
+}

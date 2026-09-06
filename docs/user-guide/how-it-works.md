@@ -51,23 +51,19 @@ the same job with histogram trees and a GPU path, and also fits
 varying-coefficient formulas and a censored Weibull whose shape depends
 on covariates, neither of which NGBoost can write down.
 
-On the overlap (Normal NLL on UCI) quality is tied-or-better and GPU
-training is much faster: [Benchmarks](../benchmarks.md).
+Quality and performance comparisons require workload-specific evidence:
+[Benchmarks](../benchmarks.md).
 
 ## Why the metric matters
 
-Raw gradients of a multi-parameter likelihood are often badly scaled.
-On the sales-curve formula, `precond="plain"` diverges (extrapolation RMSE
-~3.9). Diagonal GGN is usable. Full GGN recovers the hard coefficient
-(`b(z)` corr 0.877 vs 0.730 diag vs 0.599 for an XGBoost custom objective,
-which cannot represent off-diagonals).
+Raw gradients of a multi-parameter likelihood can have different scales.
+FormulaBoost offers plain, diagonal and full GGN preconditioning; compare
+convergence and parameter recovery on the intended formula. Full GGN retains
+cross-parameter terms but does not guarantee better held-out error.
 
-Same story for Weibull AFT: the observed Hessian's scale term explodes
-when `λ` is wrong. The **expected** Fisher does not, and is what
-`WeibullAFT` uses.
-
-`precond="full"` is the default for FormulaBoost. Do not turn it off
-unless you are debugging.
+WeibullAFT uses an expected-Fisher step rather than the observed Hessian.
+These implementation choices require task-level evaluation; see the
+[benchmark protocol](../benchmarks.md).
 
 ## Shared training API
 
@@ -89,7 +85,7 @@ params = model.predict_params(X)   # dict of per-row parameter arrays
 
 GPU: histogram trees run on CUDA when `openboost[cuda]` is installed.
 NaturalBoost Normal/Poisson have device gradient kernels. FormulaBoost GGN
-is currently host-side (still faster than XGBoost-diag at 200K on A100).
+is currently host-side.
 
 ## Choosing a model
 
