@@ -10,10 +10,10 @@ import numpy as np
 import pytest
 
 from openboost import NumericData, Problem
-from openboost.binning import NumericBinning
+from openboost.binning import Binning
 from openboost.ops import feasible, newton_leaf, score
 from openboost.stats import newton
-from openboost.tree import NumericTree, depthwise
+from openboost.tree import Tree, depthwise
 from tests.v1.reference.tree import fit_tree
 
 
@@ -25,7 +25,7 @@ def fixture():
     )
     p = Problem(x, np.zeros((8, 1)), x.row_ids, weight=[1, 0, 2, 1, 3, 1, 1, 2])
     g, h = np.array([-8, -3, -2, -1, 1, 3, 5, 8.0]), np.ones(8)
-    b = NumericBinning.fit(x, bins=8).transform(x)
+    b = Binning.fit(x, bins=8).transform(x)
     return p, b, g, h
 
 
@@ -108,16 +108,16 @@ def test_tree_roundtrip_in_fresh_process(tmp_path):
     tree = depthwise(b, newton(p, g, h))
     path = tmp_path / "tree.json"
     tree.save(path)
-    restored = NumericTree.load(path)
+    restored = Tree.load(path)
     assert restored.identity == tree.identity
     data = NumericData([[-100, 0], [100, 2], [np.nan, np.nan]], [1, 2, 3], ("a", "b"))
     np.testing.assert_array_equal(restored.predict(data), tree.predict(data))
     code = """import json, sys
 import numpy as np
 from openboost import NumericData
-from openboost.tree import NumericTree
+from openboost.tree import Tree
 x = NumericData([[-100, 0], [100, 2], [np.nan, np.nan]], [1, 2, 3], ("a", "b"))
-print(json.dumps(NumericTree.load(sys.argv[1]).predict(x).tolist()))
+print(json.dumps(Tree.load(sys.argv[1]).predict(x).tolist()))
 """
     output = subprocess.check_output(
         [sys.executable, "-c", code, str(path)], env=os.environ, text=True
@@ -177,7 +177,7 @@ def test_corrupt_artifacts_rejected(tmp_path, corruption):
     path = tmp_path / "bad.json"
     path.write_text(json.dumps(record))
     with pytest.raises(ValueError):
-        NumericTree.load(path)
+        Tree.load(path)
 
 
 @pytest.mark.parametrize(
@@ -213,7 +213,7 @@ def test_score_once_and_empty_child_guard():
     problem = Problem(constant, [[0], [0]], constant.row_ids)
     with pytest.raises(ValueError, match="empty child"):
         depthwise(
-            NumericBinning.fit(constant).transform(constant),
+            Binning.fit(constant).transform(constant),
             newton(problem, [-1, 1], [1, 1]),
             legality=lambda _: True,
             scoring=lambda _: 1,
@@ -225,7 +225,7 @@ def test_duplicate_fields_and_root_only_artifact(tmp_path):
     tree = depthwise(b, newton(p, g, h), max_depth=0)
     path = tmp_path / "tree.json"
     tree.save(path)
-    assert NumericTree.load(path).identity == tree.identity
+    assert Tree.load(path).identity == tree.identity
     path.write_text(path.read_text().replace('"format":', '"format": "duplicate", "format":'))
     with pytest.raises(ValueError, match="duplicate"):
-        NumericTree.load(path)
+        Tree.load(path)

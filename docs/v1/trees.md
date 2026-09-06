@@ -1,4 +1,4 @@
-# Numeric tree growth policies
+# Tree growth policies
 
 The CPU growers assemble public histogram, candidate, choice, routing and scalar
 leaf operations. Each accepts replacement scoring, legality and leaf functions.
@@ -22,20 +22,20 @@ import tempfile
 from pathlib import Path
 import numpy as np
 from openboost import NumericData, Problem
-from openboost.binning import NumericBinning
+from openboost.binning import Binning
 from openboost.stats import newton
-from openboost.tree import depthwise, NumericTree
+from openboost.tree import depthwise, Tree
 
 x = NumericData([[0], [1], [2], [3], [np.nan]], [10, 11, 12, 13, 14], ("x",))
 p = Problem(x, np.zeros((5, 1)), x.row_ids)
-b = NumericBinning.fit(x, bins=4).transform(x)
+b = Binning.fit(x, bins=4).transform(x)
 fields = newton(p, [-4, -2, 1, 3, 2], np.ones(5))
 tree = depthwise(b, fields, max_depth=2, max_leaves=3)
 assert tree.predict(x).shape == (5, 1)
 with tempfile.TemporaryDirectory() as directory:
     path = Path(directory) / "tree.json"
     tree.save(path)
-    restored = NumericTree.load(path)
+    restored = Tree.load(path)
     np.testing.assert_array_equal(restored.predict(x), tree.predict(x))
 ```
 
@@ -46,17 +46,18 @@ For custom Newton regularization, configure both scoring and leaf solving with
 the same regularizer. A custom legality callback must preserve nonempty children;
 the grower rejects an admitted empty child. Callbacks should be deterministic.
 
-`NumericTree` owns immutable int32 feature/threshold/child arrays, boolean missing
+`Tree` owns immutable int32 feature/threshold/child arrays, boolean missing
 routes and float64 values. Leaf children, feature and threshold use -1; prediction
 uses explicit indices. Construction/load rejects cycles, shared or unreachable
 nodes, invalid indices, schema mismatches and nonfinite leaves. Artifacts contain
-numeric cuts and ordered feature names, including missing-only split thresholds.
-They support unseen numeric values and missing values with the saved transformer.
+numeric cuts, typed category dictionaries and ordered feature names. Numeric
+conditions use <=, categorical conditions use equality. The saved transformer
+defines condition kinds and routes unknown tokens as missing.
 
 `predict` returns raw scalar learner output `[N, 1]`. It applies no base, coefficient
 or observation offset. Mapped tree terms integrate with the transaction model and the
 [squared](squared.md) and [Normal](normal.md) recipes. Artifacts
-are for inference, not training resumption. Categories, vector/linear leaves,
+are for inference, not training resumption. Vector/linear leaves,
 CUDA and performance claims remain outside this slice.
 
 
@@ -79,4 +80,4 @@ for grow in (best_first, symmetric):
 
 This arithmetic example reuses train/validation data; real evaluation needs the
 prescribed distinct partitions. These growth policies do not establish LightGBM
-or CatBoost feature/quality parity. Categorical support remains the next B07 slice.
+or CatBoost feature/quality parity. [Categorical support](categorical.md) uses the same three policies.

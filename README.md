@@ -13,10 +13,13 @@ Initial public CPU components now provide owned numeric inputs, explicit problem
 run identity, immutable proposal/accept/reject state and mapped tree/constant ensemble
 artifacts. See [B03 usage and boundaries](docs/v1/cpu-state.md).
 
+[Categorical input and equality splits](docs/v1/categorical.md) support typed
+train-only dictionaries and explicit missing/unseen routing.
+
 Public [numeric operations](docs/v1/numeric-ops.md) now add quantile binning,
 weighted row fields, histograms, split callbacks, routing and scalar leaves.
 Public [depthwise, best-first and symmetric growers](docs/v1/trees.md) compose
-these operations and persist validated numeric trees. The first complete [squared-error recipe](docs/v1/squared.md)
+these operations and persist validated numeric/categorical trees. The first complete [squared-error recipe](docs/v1/squared.md)
 and [Normal recipe](docs/v1/normal.md) support weights, offsets and
 fixed/backtracking steps on CPU. Normal exposes ordinary/Fisher directions and
 joint mean/log-scale updates. [Formula and sequential runs](docs/v1/formula-runs.md)

@@ -1,4 +1,4 @@
-"""Composable CPU scalar tree growth with validated numeric inference state."""
+"""Composable CPU scalar tree growth with validated mixed-feature inference state."""
 
 import heapq
 import json
@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from . import ops
-from .binning import NumericBinning, _array
+from .binning import Binning, _array
 from .data import _identity, _owned
 
 
@@ -20,14 +20,14 @@ def _indices(value):
 
 
 @dataclass(frozen=True, eq=False)
-class NumericTree:
+class Tree:
     """Owned explicit topology; leaf feature/threshold/children use -1 sentinels.
 
     Predictions are scalar learner outputs [N, 1], without a base or offset.
     Training row membership is deliberately absent from inference artifacts.
     """
 
-    binning: NumericBinning
+    binning: Binning
     feature: np.ndarray
     threshold: np.ndarray
     missing_left: np.ndarray
@@ -36,8 +36,8 @@ class NumericTree:
     value: np.ndarray
 
     def __post_init__(self):
-        if not isinstance(self.binning, NumericBinning):
-            raise ValueError("numeric transformer required")
+        if not isinstance(self.binning, Binning):
+            raise ValueError("feature transformer required")
         for name in ("feature", "threshold", "left", "right"):
             object.__setattr__(self, name, _indices(getattr(self, name)))
         values = _owned(self.value, ndim=1)
@@ -65,7 +65,16 @@ class NumericTree:
                 if (t, left, right) != (-1, -1, -1) or self.missing_left[i]:
                     raise ValueError("invalid leaf topology")
             else:
-                if f >= len(self.binning.cuts) or t < 0 or t > len(self.binning.cuts[f]):
+                if (
+                    f >= len(self.binning.cuts)
+                    or t < 0
+                    or t
+                    >= (
+                        self.binning.bin_counts[f]
+                        if self.binning.categories[f] is None
+                        else len(self.binning.categories[f])
+                    )
+                ):
                     raise ValueError("split exceeds transformer schema")
                 pending.extend((right, left))
         if len(seen) != n:
@@ -88,16 +97,19 @@ class NumericTree:
                 mask = np.where(
                     binned.missing[f, rows],
                     self.missing_left[i],
-                    binned.codes[f, rows] <= self.threshold[i],
+                    binned.codes[f, rows] == self.threshold[i]
+                    if self.binning.categories[f] is not None
+                    else binned.codes[f, rows] <= self.threshold[i],
                 )
                 pending.extend(((self.left[i], rows[mask]), (self.right[i], rows[~mask])))
         return result
 
     def record(self):
         return dict(
-            format="openboost-numeric-tree-v1",
+            format="openboost-tree-v2",
             feature_names=list(self.binning.feature_names),
             cuts=[c.tolist() for c in self.binning.cuts],
+            categories=[None if c is None else list(c) for c in self.binning.categories],
             **{
                 name: getattr(self, name).tolist()
                 for name in ("feature", "threshold", "missing_left", "left", "right", "value")
@@ -126,16 +138,18 @@ class NumericTree:
         vectors = ("feature", "threshold", "missing_left", "left", "right", "value")
         if (
             not isinstance(record, dict)
-            or set(record) != {"format", "feature_names", "cuts", *vectors}
-            or record["format"] != "openboost-numeric-tree-v1"
+            or set(record) != {"format", "feature_names", "cuts", "categories", *vectors}
+            or record["format"] != "openboost-tree-v2"
             or any(
-                not isinstance(record[name], list) for name in ("feature_names", "cuts", *vectors)
+                not isinstance(record[name], list)
+                for name in ("feature_names", "cuts", "categories", *vectors)
             )
             or any(not isinstance(c, list) for c in record["cuts"])
+            or any(c is not None and not isinstance(c, list) for c in record["categories"])
         ):
             raise ValueError("unsupported or corrupt tree artifact schema")
         return cls(
-            NumericBinning(record["feature_names"], record["cuts"]),
+            Binning(record["feature_names"], record["cuts"], record["categories"]),
             **{name: record[name] for name in vectors},
         )
 
@@ -198,7 +212,7 @@ class _Growth:
         return left, right
 
     def finish(self):
-        return NumericTree(self.data.binning, *zip(*self.nodes, strict=True))
+        return Tree(self.data.binning, *zip(*self.nodes, strict=True))
 
 
 def depthwise(

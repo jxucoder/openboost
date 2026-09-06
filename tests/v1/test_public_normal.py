@@ -20,7 +20,7 @@ import pytest
 
 from openboost import RunContext
 from openboost.artifacts import Model
-from openboost.binning import NumericBinning
+from openboost.binning import Binning
 from openboost.objectives import Normal, Squared, diagonal_direction
 from openboost.recipes import normal
 from openboost.stats import least_squares
@@ -44,7 +44,7 @@ def test_geometry_base_and_three_rounds_match_reference(mode):
     base = normal_base(p.target[:, 0], minimum_scale=1e-6, weight=p.weight)
     np.testing.assert_allclose(result.state.model.base, base)
     raw = np.broadcast_to(base, (6, 2)).copy()
-    b = NumericBinning.fit(p.data, bins=6).transform(p.data)
+    b = Binning.fit(p.data, bins=6).transform(p.data)
     bins = np.where(b.missing.T, np.nan, b.codes.T)
     for actual in result.steps:
         loss, gradient, metric = reference_normal(raw, p.target[:, 0], weight=p.weight)
@@ -196,7 +196,7 @@ def test_nonfinite_trials_continue_to_finite_trials_and_schema_errors_raise():
         from dataclasses import replace
 
         tree = depthwise(b, fields)
-        return replace(tree, binning=NumericBinning(("wrong",), tree.binning.cuts))
+        return replace(tree, binning=Binning(("wrong",), tree.binning.cuts))
 
     with pytest.raises(ValueError, match="schema"):
         normal(p, p, context=RunContext("schema", 1), rounds=1, learner=wrong_schema)

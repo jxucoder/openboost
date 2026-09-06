@@ -89,5 +89,6 @@ adds joint Normal ordinary/Fisher updates.
 [Sprint 023 / B06](023-b06-formula-runs.md) adds saturation Formula/full GGN and
 sequential heterogeneous execution probes.
 [Sprint 024 / B07 growth](024-b07-growth-policies.md) adds best-first and symmetric
-numeric policies. Categorical support is next; CUDA and full quality/performance
-evaluation remain incomplete.
+numeric policies. [Sprint 025 / B07 categories](025-b07-categorical.md) adds mixed
+input, category equality and typed dictionary persistence. B08 classification and
+vector leaves are next; CUDA and full quality/performance evaluation remain incomplete.

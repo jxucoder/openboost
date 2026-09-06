@@ -87,8 +87,9 @@ The repository audit in
 The user requested retirement of all old production code during Sprint 002.
 `src/openboost/` now contains initial B03 numeric data/problem records, CPU run
 transactions, mapped tree/constant ensemble artifacts and B04 numeric/statistics/
-split/routing/leaf operations, plus depthwise/best-first/symmetric numeric growers and validated tree
-inference artifacts. The first complete scalar squared-error CPU recipe supports
+split/routing/leaf operations, plus depthwise/best-first/symmetric mixed-feature growers and validated tree
+inference artifacts. B07 adds MixedData, typed category dictionaries and equality
+splits; Binning/Tree replace the numeric-only type names and tree format. The first complete scalar squared-error CPU recipe supports
 fixed/backtracking steps. Normal ordinary/Fisher joint mean/log-scale updates use
 the same state and learners. Initial B06 adds saturation Formula with explicit
 structure/full GGN directions and sequential heterogeneous run records. CUDA

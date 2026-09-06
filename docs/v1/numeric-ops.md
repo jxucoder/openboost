@@ -8,13 +8,13 @@ The [depthwise grower](trees.md) composes these operations into numeric trees.
 import numpy as np
 from functools import partial
 from openboost import NumericData, Problem
-from openboost.binning import NumericBinning
+from openboost.binning import Binning
 from openboost.stats import newton
 from openboost.ops import histogram, candidates, choose, feasible, partition, newton_leaf
 
 x = NumericData(np.arange(6)[:, None], np.arange(100, 106), ("x",))
 p = Problem(x, np.zeros((6, 1)), x.row_ids)
-b = NumericBinning.fit(x, bins=6).transform(x)
+b = Binning.fit(x, bins=6).transform(x)
 fields = newton(p, [-6, 1, 1, 1, 1, 2], np.ones(6))
 fields = fields.add_independent("a", [1, 0, 1, 0, 1, 0])
 fields = fields.add_independent("b", [0, 1, 0, 1, 0, 1])

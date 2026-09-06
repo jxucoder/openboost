@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from openboost import NumericData, Problem
-from openboost.binning import NumericBinning
+from openboost.binning import Binning
 from openboost.stats import newton
 from openboost.tree import best_first, depthwise, symmetric
 from tests.v1.reference.tree import fit_tree
@@ -19,7 +19,7 @@ def test_policy_matches_independent_reference(grow, depth, leaves):
     x = NumericData(values, np.arange(20), ("a", "b", "c"))
     p = Problem(x, np.zeros((20, 1)), x.row_ids, weight=rng.integers(0, 4, 20))
     g, h = rng.normal(size=20), rng.uniform(0.5, 2, 20)
-    b = NumericBinning.fit(x, bins=4).transform(x)
+    b = Binning.fit(x, bins=4).transform(x)
     tree = grow(b, newton(p, g, h), max_depth=depth, max_leaves=leaves)
     bins = np.where(b.missing.T, np.nan, b.codes.T)
     ref = fit_tree(
@@ -43,7 +43,7 @@ def test_policy_matches_independent_reference(grow, depth, leaves):
 def test_symmetric_uses_common_gain_not_individual_winners():
     x = NumericData([[0, 0], [0, 1], [1, 0], [1, 1]], [1, 2, 3, 4], ("a", "b"))
     p = Problem(x, [[0]] * 4, x.row_ids)
-    b = NumericBinning.fit(x, bins=2).transform(x)
+    b = Binning.fit(x, bins=2).transform(x)
     fields = newton(p, [-4, -4, 1, 3], [1] * 4)
     seen = set()
 
@@ -71,7 +71,7 @@ def test_callbacks_leaf_values_and_scores_are_used_once(grow):
     rng = np.random.default_rng(23)
     x = NumericData(rng.normal(size=(24, 2)), np.arange(24), ("a", "b"))
     p = Problem(x, np.zeros((24, 1)), x.row_ids)
-    b = NumericBinning.fit(x, bins=6).transform(x)
+    b = Binning.fit(x, bins=6).transform(x)
     fields = newton(p, rng.normal(size=24), np.ones(24))
     seen, leaf_calls = set(), []
 
@@ -115,7 +115,7 @@ def test_recipe_substitution_and_persistence(grow, tmp_path):
         bins=5,
         learner=partial(grow, max_depth=3, max_leaves=5),
     )
-    b = NumericBinning.fit(x, bins=5).transform(x)
+    b = Binning.fit(x, bins=5).transform(x)
     expected = boost_squared(
         b.codes.T,
         p.target[:, 0],
@@ -140,7 +140,7 @@ def test_recipe_substitution_and_persistence(grow, tmp_path):
 def test_invalid_callbacks_and_capacity_rejected(grow):
     x = NumericData([[0], [1]], [1, 2], ("a",))
     p = Problem(x, [[0], [0]], x.row_ids)
-    b = NumericBinning.fit(x, bins=2).transform(x)
+    b = Binning.fit(x, bins=2).transform(x)
     fields = newton(p, [-1, 1], [1, 1])
     for kwargs in (
         {"max_depth": -1},

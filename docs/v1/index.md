@@ -11,7 +11,8 @@ operations and support numeric inference/persistence. The first complete
 [Normal boosting](normal.md) uses the same state and scalar learners for joint
 mean/log-scale updates. [Formula and sequential runs](formula-runs.md) add
 full-metric structured updates and independent heterogeneous execution. CUDA
-execution is not implemented yet.
+execution is not implemented yet. [Categorical support](categorical.md) now uses
+explicit dictionaries and equality conditions in all three growth policies.
 All R1–R9/C1–C7/A1–A13 remain required. Evaluation preparation continues alongside
 the user-approved B03–B06 construction overlap. No complete quality, speed or
 agent/adoption result is claimed for the new production foundation.

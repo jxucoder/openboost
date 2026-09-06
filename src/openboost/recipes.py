@@ -8,7 +8,7 @@ from functools import partial
 import numpy as np
 
 from .artifacts import Model, TreeTerm
-from .binning import NumericBinning
+from .binning import Binning
 from .objectives import Formula, Normal, Squared, diagonal_direction, full_direction
 from .ops import _nonnegative, feasible, newton_leaf, score
 from .runtime import AcceptedState, initialize, preview, propose_terms, resolve
@@ -71,7 +71,7 @@ def squared(
         max_trials,
         learner,
     )
-    binned = NumericBinning.fit(train.data, bins=bins).transform(train.data)
+    binned = Binning.fit(train.data, bins=bins).transform(train.data)
     state = initialize(context, train, validation, Squared.base(train), score=Squared.loss)
     steps = []
     for _ in range(rounds):
@@ -230,7 +230,7 @@ def normal(
     # Validate mode/damping even for zero rounds.
     diagonal_direction([[0, 0]], [[1, 2]], mode=mode, damping=damping)
     base = Normal.base(train, minimum_scale=minimum_scale)
-    binned = NumericBinning.fit(train.data, bins=bins).transform(train.data)
+    binned = Binning.fit(train.data, bins=bins).transform(train.data)
     state = initialize(context, train, validation, base, score=Normal.loss)
     steps = []
     for _ in range(rounds):
@@ -310,7 +310,7 @@ def formula(
     )
     full_direction([[0, 0]], [[[1, 0], [0, 1]]], damping=damping)
     base = Formula.base(train)
-    binned = NumericBinning.fit(train.data, bins=bins).transform(train.data)
+    binned = Binning.fit(train.data, bins=bins).transform(train.data)
     state = initialize(context, train, validation, base, score=Formula.loss)
     steps = []
     for _ in range(rounds):

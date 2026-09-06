@@ -69,6 +69,73 @@ class NumericData:
         object.__setattr__(self, "feature_names", names)
         object.__setattr__(self, "identity", _identity("numeric-cpu-v1", x, ids, names))
 
+    @property
+    def feature_kinds(self):
+        return ("numeric",) * len(self.feature_names)
+
+
+def category_token(value):
+    """Homogeneous string/integer tokens; None and NaN represent missingness."""
+    if value is None or isinstance(value, (float, np.floating)) and np.isnan(value):
+        return None
+    if isinstance(value, str):
+        return str(value)
+    if isinstance(value, (int, np.integer)) and not isinstance(value, (bool, np.bool_)):
+        return int(value)
+    raise ValueError("category tokens must be strings or integers, with None/NaN missing")
+
+
+@dataclass(frozen=True, eq=False, init=False)
+class MixedData:
+    _values: tuple
+    row_ids: np.ndarray
+    feature_names: tuple[str, ...]
+    feature_kinds: tuple[str, ...]
+    device: str
+    identity: str
+
+    def __init__(self, values, row_ids, feature_names, feature_kinds, device="cpu"):
+        raw = np.asarray(values, dtype=object)
+        kinds = tuple(feature_kinds)
+        if (
+            raw.ndim != 2
+            or not raw.size
+            or len(kinds) != raw.shape[1]
+            or any(k not in ("numeric", "categorical") for k in kinds)
+        ):
+            raise ValueError("aligned numeric/categorical feature kinds required")
+        schema = NumericData(np.zeros(raw.shape), row_ids, feature_names, device)
+        columns = []
+        for f, kind in enumerate(kinds):
+            if kind == "categorical":
+                column = tuple(category_token(v) for v in raw[:, f])
+                if len({type(v) for v in column if v is not None}) > 1:
+                    raise ValueError("mixed category token types are unsupported")
+            else:
+                numeric = np.asarray(raw[:, f], dtype=float)
+                if np.isinf(numeric).any():
+                    raise ValueError("numeric infinity is unsupported")
+                column = tuple(None if np.isnan(v) else float(v) for v in numeric)
+            columns.append(column)
+        owned = tuple(zip(*columns, strict=True))
+        for name, value in (
+            ("_values", owned),
+            ("row_ids", schema.row_ids),
+            ("feature_names", schema.feature_names),
+            ("feature_kinds", kinds),
+            ("device", device),
+            (
+                "identity",
+                _identity("mixed-cpu-v1", owned, schema.row_ids, schema.feature_names, kinds),
+            ),
+        ):
+            object.__setattr__(self, name, value)
+
+    @property
+    def values(self):
+        """Detached object-array export; mutating it cannot change owned tuple state."""
+        return np.array(self._values, dtype=object)
+
 
 @dataclass(frozen=True, eq=False)
 class Problem:
@@ -79,7 +146,7 @@ class Problem:
     Objective-specific target support and additional roles arrive in later slices.
     """
 
-    data: NumericData
+    data: NumericData | MixedData
     target: np.ndarray
     row_ids: np.ndarray
     weight: np.ndarray | None = None
@@ -92,7 +159,7 @@ class Problem:
         ids = np.asarray(self.row_ids)
         if ids.dtype.kind not in "iu":
             raise ValueError("integer role row IDs required")
-        if not isinstance(self.data, NumericData) or not np.array_equal(
+        if not isinstance(self.data, (NumericData, MixedData)) or not np.array_equal(
             self.row_ids, self.data.row_ids
         ):
             raise ValueError("problem roles must match prepared row order")

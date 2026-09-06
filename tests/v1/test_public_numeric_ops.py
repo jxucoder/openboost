@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from openboost import NumericData, Problem
-from openboost.binning import NumericBinning
+from openboost.binning import Binning
 from openboost.ops import candidates, choose, feasible, histogram, newton_leaf, partition, score
 from openboost.stats import apply_weight, newton
 from tests.v1.reference.data import NumericBinning as ReferenceBinning
@@ -18,7 +18,7 @@ def setup(values, weight=None):
     x = np.asarray(values, dtype=float)
     data = NumericData(x, np.arange(len(x)) + 100, tuple(f"f{i}" for i in range(x.shape[1])))
     problem = Problem(data, np.zeros((len(x), 1)), data.row_ids, weight=weight)
-    binned = NumericBinning.fit(data, bins=4).transform(data)
+    binned = Binning.fit(data, bins=4).transform(data)
     return problem, binned
 
 
@@ -28,7 +28,7 @@ def setup(values, weight=None):
 )
 def test_binning_matches_order_statistic_reference(column, bins):
     data = NumericData(np.asarray(column)[:, None], np.arange(len(column)), ("x",))
-    fitted = NumericBinning.fit(data, bins=bins)
+    fitted = Binning.fit(data, bins=bins)
     ref = ReferenceBinning.fit(column, bins=bins)
     np.testing.assert_allclose(fitted.cuts[0], ref.cuts)
     target = NumericData([[-100], [0], [100], [np.nan]], [1, 2, 3, 4], ("x",))
@@ -99,7 +99,7 @@ def test_weight_once_independent_mass_and_foreign_identity():
 
 def test_constraint_changes_winner_through_public_callback():
     p, b = setup(np.arange(6)[:, None])
-    b = NumericBinning.fit(p.data, bins=6).transform(p.data)
+    b = Binning.fit(p.data, bins=6).transform(p.data)
     fields = newton(p, [-6, 1, 1, 1, 1, 2], np.ones(6))
     fields = fields.add_independent("a", [1, 0, 1, 0, 1, 0]).add_independent(
         "b", [0, 1, 0, 1, 0, 1]
@@ -159,7 +159,7 @@ def test_binning_identity_and_weight_role_cannot_be_reused_silently():
     fields = newton(p, [-2, -1, 1, 2], np.ones(4))
     options = candidates(histogram(b, fields))
     chosen = choose(options)
-    other = NumericBinning.fit(p.data, bins=2).transform(p.data)
+    other = Binning.fit(p.data, bins=2).transform(p.data)
     with pytest.raises(ValueError, match="different data"):
         partition(other, None, chosen)
     with pytest.raises(ValueError, match="independent"):
@@ -172,4 +172,4 @@ def test_overflowing_quantiles_cannot_silently_remove_cuts():
         np.errstate(over="ignore", invalid="ignore"),
         pytest.raises(ValueError, match="interpolated cuts"),
     ):
-        NumericBinning.fit(data, bins=2)
+        Binning.fit(data, bins=2)

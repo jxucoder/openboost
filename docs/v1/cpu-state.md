@@ -32,7 +32,8 @@ state arithmetic; real evaluation must use the prescribed separate partitions.
 
 `NumericData` owns float64 CPU features and unique integer row IDs. Feature names
 are ordered. NaN represents numeric missingness; infinity is rejected. No binning
-is fitted by this record; use NumericBinning separately. Categories are not supported. Owned array values cannot be made writable;
+is fitted by this record; use Binning separately. Use [MixedData](categorical.md)
+for explicit numeric/categorical columns. Owned array values cannot be made writable;
 callers must not alter array metadata. Identity includes feature content/order,
 row IDs and schema, and is computed once on construction.
 

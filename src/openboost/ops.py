@@ -49,8 +49,7 @@ def histogram(data, fields, rows=None):
         raise ValueError("apply objective training weights before aggregation")
     selected = _rows(rows, len(data.data.values))
     sums, counts = [], []
-    for feature, cuts in enumerate(data.binning.cuts):
-        bins = len(cuts) + 1
+    for feature, bins in enumerate(data.binning.bin_counts):
         codes = np.where(data.missing[feature, selected], bins, data.codes[feature, selected])
         sums.append(
             _owned(
@@ -88,6 +87,7 @@ class Candidate:
     right_count: int
     data_identity: str
     rows_identity: str
+    kind: str = "numeric"
 
     @property
     def key(self):
@@ -102,13 +102,21 @@ def candidates(hist):
         suffix = np.cumsum(sums[:-1][::-1], axis=0)[::-1]
         prefix_count = np.cumsum(counts[:-1])
         active = np.unique(hist.data.codes[feature, ~hist.data.missing[feature]])
+        categorical = hist.data.binning.categories[feature] is not None
         for threshold in active:
             for missing_left in (False, True):
-                left = prefix[threshold] + (sums[-1] if missing_left else 0)
-                right = (
-                    suffix[threshold + 1] if threshold + 1 < len(suffix) else np.zeros_like(left)
-                ) + (0 if missing_left else sums[-1])
-                nleft = int(prefix_count[threshold] + (counts[-1] if missing_left else 0))
+                regular_left = sums[threshold] if categorical else prefix[threshold]
+                regular_right = (
+                    sums[:threshold].sum(axis=0) + sums[threshold + 1 : -1].sum(axis=0)
+                    if categorical
+                    else suffix[threshold + 1]
+                    if threshold + 1 < len(suffix)
+                    else np.zeros_like(regular_left)
+                )
+                left = regular_left + (sums[-1] if missing_left else 0)
+                right = regular_right + (0 if missing_left else sums[-1])
+                count = counts[threshold] if categorical else prefix_count[threshold]
+                nleft = int(count + (counts[-1] if missing_left else 0))
                 result.append(
                     Candidate(
                         feature,
@@ -123,6 +131,7 @@ def candidates(hist):
                         len(hist.rows) - nleft,
                         hist.data.identity,
                         _identity(hist.rows),
+                        "categorical" if categorical else "numeric",
                     )
                 )
     return tuple(result)
@@ -205,9 +214,13 @@ def partition(data, rows, candidate):
     selected = _rows(rows, len(data.data.values))
     if candidate.data_identity != data.identity or candidate.rows_identity != _identity(selected):
         raise ValueError("candidate belongs to different data or routed rows")
+    if candidate.kind != data.binning.feature_kinds[candidate.feature]:
+        raise ValueError("candidate condition kind differs from transformer")
     mask = np.where(
         data.missing[candidate.feature, selected],
         candidate.missing_left,
-        data.codes[candidate.feature, selected] <= candidate.threshold,
+        data.codes[candidate.feature, selected] == candidate.threshold
+        if candidate.kind == "categorical"
+        else data.codes[candidate.feature, selected] <= candidate.threshold,
     )
     return _array(selected[mask], "<i8"), _array(selected[~mask], "<i8")

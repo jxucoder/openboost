@@ -6,8 +6,8 @@ from pathlib import Path
 
 import numpy as np
 
-from .data import NumericData, _identity, _owned
-from .tree import NumericTree
+from .data import MixedData, NumericData, _identity, _owned
+from .tree import Tree
 
 
 @dataclass(frozen=True, eq=False)
@@ -28,13 +28,13 @@ class ConstantTerm:
 
 @dataclass(frozen=True, eq=False)
 class TreeTerm:
-    learner: NumericTree
+    learner: Tree
     mapping: np.ndarray
     coefficient: float = 1.0
 
     def __post_init__(self):
-        if not isinstance(self.learner, NumericTree):
-            raise ValueError("numeric tree learner required")
+        if not isinstance(self.learner, Tree):
+            raise ValueError("tree learner required")
         mapping = _owned(self.mapping, ndim=2)
         if mapping.shape[0] != 1:
             raise ValueError("scalar learner requires a [1, K] output mapping")
@@ -88,7 +88,10 @@ class Model:
         object.__setattr__(self, "terms", terms)
 
     def predict(self, data, *, offset=None):
-        if not isinstance(data, NumericData) or data.feature_names != self.feature_names:
+        if (
+            not isinstance(data, (NumericData, MixedData))
+            or data.feature_names != self.feature_names
+        ):
             raise ValueError("inference feature schema differs from model")
         raw = np.broadcast_to(self.base, (len(data.values), len(self.base))).copy()
         with np.errstate(over="raise", invalid="raise"):
@@ -170,7 +173,7 @@ class Model:
             }:
                 terms.append(
                     TreeTerm(
-                        NumericTree.from_record(term["learner"]),
+                        Tree.from_record(term["learner"]),
                         term["mapping"],
                         term["coefficient"],
                     )

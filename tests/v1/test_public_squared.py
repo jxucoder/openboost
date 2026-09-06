@@ -3,7 +3,7 @@
 import numpy as np
 
 from openboost import NumericData, Problem, RunContext
-from openboost.binning import NumericBinning
+from openboost.binning import Binning
 from openboost.recipes import squared
 from tests.v1.reference.tree import boost_squared
 
@@ -12,7 +12,7 @@ def test_two_round_trace_matches_reference():
     data = NumericData([[0], [1], [2], [3], [4], [np.nan]], np.arange(6), ("x",))
     p = Problem(data, [[-4], [-2], [0], [1], [3], [5]], data.row_ids, weight=[1, 0, 2, 1, 3, 1])
     result = squared(p, p, context=RunContext("squared", 3), rounds=3, bins=6)
-    b = NumericBinning.fit(data, bins=6).transform(data)
+    b = Binning.fit(data, bins=6).transform(data)
     expected = boost_squared(
         np.where(b.missing.T, np.nan, b.codes.T), p.target[:, 0], weight=p.weight, rounds=3
     )
@@ -103,7 +103,7 @@ def test_mapped_tree_terms_atomic_and_fresh_process_persistence(tmp_path):
 
     x = NumericData([[0], [1], [np.nan]], [1, 2, 3], ("x",))
     scalar = Problem(x, [[0], [0], [0]], x.row_ids)
-    b = NumericBinning.fit(x, bins=2).transform(x)
+    b = Binning.fit(x, bins=2).transform(x)
     tree = depthwise(b, newton(scalar, [-2, 0, 2], [1, 1, 1]))
     p = Problem(x, [[1, 2], [3, 4], [5, 6]], x.row_ids)
 

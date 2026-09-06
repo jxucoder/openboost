@@ -23,7 +23,7 @@ import pytest
 
 from openboost import RunContext
 from openboost.artifacts import Model
-from openboost.binning import NumericBinning
+from openboost.binning import Binning
 from openboost.objectives import Formula, Normal, Squared, full_direction
 from openboost.recipes import formula, normal, squared
 from openboost.runs import RunSpec, run_many
@@ -49,7 +49,7 @@ def test_three_rounds_and_full_geometry_match_independent_reference():
     base = formula_base(p.target[:, 0], weight=p.weight)
     np.testing.assert_allclose(result.state.model.base, base)
     raw = np.broadcast_to(base, (6, 2)).copy()
-    b = NumericBinning.fit(p.data, bins=6).transform(p.data)
+    b = Binning.fit(p.data, bins=6).transform(p.data)
     bins = np.where(b.missing.T, np.nan, b.codes.T)
     objective = partial(ref_formula, x=p.structure["x"][:, 0])
     for actual in result.steps:
