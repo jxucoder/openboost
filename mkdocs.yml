@@ -27,3 +27,4 @@ nav:
   - Poisson counts and exposure: poisson.md
   - Gamma positive-target means: gamma.md
   - Tweedie nonnegative means: tweedie.md
+  - Frequency and severity: frequency-severity.md

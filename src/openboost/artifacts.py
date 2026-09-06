@@ -174,6 +174,11 @@ class Model:
             return result
 
         record = json.loads(Path(path).read_text(), object_pairs_hook=pairs)
+        return cls.from_record(record)
+
+    @classmethod
+    def from_record(cls, record):
+        """Validate a nested raw model without temporary files."""
         if (
             not isinstance(record, dict)
             or set(record) != {"format", "feature_names", "base", "terms", "classes"}

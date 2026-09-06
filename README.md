@@ -84,3 +84,6 @@ Real A8 quality and distributional calibration remain unverified.
 
 [Tweedie nonnegative means](docs/v1/tweedie.md) support fixed-power CPU fitting and
 explicit annualized-loss weight semantics. Real A9 evaluation remains open.
+
+[Frequency–severity composition](docs/v1/frequency-severity.md) binds matched paid-loss aggregates
+and persists two-model inference with explicit output units. Real A9 evaluation remains open.

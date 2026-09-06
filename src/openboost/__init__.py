@@ -9,6 +9,7 @@ Routed residual views support quantile and anchored penalized leaves.
 Poisson counts use explicit exposure and rate/count transforms.
 Gamma positive-target mean regression shares scalar Newton operations.
 Fixed-power Tweedie supports nonnegative mean regression.
+Frequency/severity composition preserves two-model output roles and units.
 CUDA execution is not implemented yet.
 """
 

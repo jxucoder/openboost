@@ -117,3 +117,7 @@ evaluation remains open.
 [Sprint 032 / B10 Tweedie](032-b10-tweedie.md) adds fixed-power nonnegative
 means (684 tests). Frequency-severity composition and AFT are next; real A9
 quality and complete application artifacts remain open.
+
+[Sprint 033 / B10 composition](033-b10-frequency-severity.md) adds matched
+paid-loss problems and persisted two-model inference (693 tests). AFT is next;
+real A9 joins/quality and joint selection remain open.
