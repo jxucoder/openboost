@@ -6,6 +6,8 @@ import json
 import pickle
 import platform
 import subprocess
+import sys
+import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -13,7 +15,7 @@ import numpy as np
 from benchmarks.v1.baseline_worker import fit, predict_saved
 
 
-def run():
+def run(patience=None):
     rng = np.random.default_rng(41)
     x = rng.normal(size=(96, 5))
     rows = []
@@ -69,6 +71,15 @@ def run():
                 classes=3,
                 config=dict(rounds=4, learning_rate=0.1, **config),
             )
+            if patience is not None:
+                job["early_stopping_rounds"] = patience
+                job["config"]["rounds"] = 24
+                arrays["y_validation"] = (
+                    -y[72:] if task in ["A1", "A12"] or library == "ngboost" else y[72:]
+                )
+                arrays["weight_validation"] = np.linspace(0.5, 2, 24)
+                if task == "A10":
+                    arrays["event_validation"] = np.arange(24) % 3 != 0
             prediction, saved = fit(job, arrays)
             reloaded = pickle.loads(pickle.dumps(saved))
             replay = predict_saved(reloaded, x[72:], arrays.get("exposure_validation"))
@@ -80,6 +91,27 @@ def run():
                 shape=list(prediction.shape),
                 reload_max_abs_error=float(np.max(np.abs(prediction - replay))),
             )
+            if patience is not None:
+                record["stopping"] = saved["stopping"]
+                for stop in saved["stopping"]:
+                    history = stop["history"]
+                    validation = history.get("validation", history.get("val"))
+                    values = next(iter(validation.values()))
+                    assert stop["selected_rounds"] == int(np.argmin(values)) + 1
+                    if task == "A1" or library == "ngboost":
+                        assert stop["selected_rounds"] < len(values) < 24
+            if patience is not None and (task == "A1" or library == "ngboost"):
+                with tempfile.TemporaryDirectory() as temp:
+                    folder = Path(temp)
+                    (folder / "model.pkl").write_bytes(pickle.dumps(saved))
+                    np.save(folder / "x.npy", x[72:])
+                    code = "import pickle,sys,numpy as np; from pathlib import Path; from benchmarks.v1.baseline_worker import predict_saved; p=Path(sys.argv[1]); m=pickle.loads((p/'model.pkl').read_bytes()); np.save(p/'prediction.npy',predict_saved(m,np.load(p/'x.npy')))"
+                    subprocess.run([sys.executable, "-c", code, temp], check=True, timeout=60)
+                    new_process = np.load(folder / "prediction.npy")
+                np.testing.assert_allclose(prediction, new_process, rtol=1e-7, atol=1e-8)
+                record["new_process_max_abs_error"] = float(
+                    np.max(np.abs(prediction - new_process))
+                )
             if task == "A7":
                 doubled = predict_saved(reloaded, x[72:], 2 * arrays["exposure_validation"])
                 np.testing.assert_allclose(doubled, 2 * replay, rtol=1e-6, atol=1e-7)

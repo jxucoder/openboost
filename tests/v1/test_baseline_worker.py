@@ -41,7 +41,7 @@ def test_invalid_array_rejected(field, value, reason):
         fit(job, arrays)
 
 
-def test_unsupported_early_stopping_is_explicit():
+def test_early_stopping_needs_explicit_validation():
     job, arrays = fixture()
     job["early_stopping_rounds"] = 50
     with pytest.raises(ValueError, match="early stopping"):
@@ -74,5 +74,29 @@ def test_unknown_job_option_is_not_ignored():
 def test_unlocked_test_data_cannot_enter_validation_worker():
     job, arrays = fixture()
     arrays["x_test"] = np.ones((2, 2))
+    with pytest.raises(ValueError, match="unsupported input"):
+        fit(job, arrays)
+
+
+@pytest.mark.parametrize("patience", [0, -1, True, 1.5])
+def test_invalid_early_stopping_patience(patience):
+    job, arrays = fixture()
+    job["early_stopping_rounds"] = patience
+    with pytest.raises(ValueError, match="patience"):
+        fit(job, arrays)
+
+
+def test_invalid_validation_weight_fails_before_training():
+    job, arrays = fixture()
+    job["early_stopping_rounds"] = 2
+    arrays["y_validation"] = np.ones(2)
+    arrays["weight_validation"] = np.array([0.0, 0.0])
+    with pytest.raises(ValueError, match="validation weights"):
+        fit(job, arrays)
+
+
+def test_validation_targets_rejected_when_not_requested():
+    job, arrays = fixture()
+    arrays["y_validation"] = np.ones(2)
     with pytest.raises(ValueError, match="unsupported input"):
         fit(job, arrays)

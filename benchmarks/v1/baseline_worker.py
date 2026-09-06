@@ -1,7 +1,8 @@
 """One numeric baseline trial producing validation predictions and a saved model.
 
 Input NPZ fields: x_train, y_train, x_validation, validation_row_ids; optional
-weight_train, exposure_train/exposure_validation, event_train. Preprocessing and
+weight_train, exposure_train/exposure_validation, event_train. Early stopping
+requires y_validation and accepts weight_validation/event_validation. Preprocessing and
 split identity are supplied by the frozen caller. No test arrays are read.
 """
 
@@ -34,6 +35,13 @@ def fit(job, arrays):
     if set(job) - allowed_job:
         raise ValueError("unsupported job fields")
     allowed_arrays = {"x_train", "y_train", "x_validation", "validation_row_ids", "weight_train"}
+    patience = job.get("early_stopping_rounds")
+    if patience is not None:
+        if type(patience) is not int or patience <= 0:
+            raise ValueError("positive integer early stopping patience required")
+        allowed_arrays.update({"y_validation", "weight_validation"})
+        if task == "A10":
+            allowed_arrays.add("event_validation")
     if task == "A7":
         allowed_arrays.update({"exposure_train", "exposure_validation"})
     if task == "A10":
@@ -68,9 +76,27 @@ def fit(job, arrays):
     lr = cfg.pop("learning_rate")
     if cfg.pop("seed_from_fold", True) is not True:
         raise ValueError("seed semantics differ")
-    # Round counts are fixed per trial. Early stopping is not silently approximated.
-    if job.get("early_stopping_rounds") is not None:
-        raise ValueError("early stopping not implemented in this worker")
+    vy = vw = None
+    if patience is not None:
+        if "y_validation" not in arrays:
+            raise ValueError("early stopping requires explicit validation targets")
+        vy = arrays["y_validation"]
+        vw = arrays.get("weight_validation", np.ones(len(v)))
+        if vy.shape != (len(v), *y.shape[1:]) or not np.isfinite(vy).all():
+            raise ValueError("invalid validation targets")
+        if vw.shape != (len(v),) or not np.isfinite(vw).all() or np.any(vw < 0) or vw.sum() <= 0:
+            raise ValueError("invalid validation weights")
+        if task == "A10":
+            ve = arrays.get("event_validation")
+            if (
+                ve is None
+                or ve.shape != vy.shape
+                or not np.isin(ve, [0, 1]).all()
+                or np.any(vy <= 0)
+            ):
+                raise ValueError("invalid validation survival targets")
+    stopping = []
+    prediction_rounds = None
     if type(rounds) is not int or rounds <= 0:
         raise ValueError("positive rounds required")
     exposure = validation_exposure = None
@@ -135,11 +161,34 @@ def fit(job, arrays):
             d.set_float_info("label_lower_bound", y)
             d.set_float_info("label_upper_bound", np.where(event, y, np.inf))
             params.update(aft_loss_distribution="normal", aft_loss_distribution_scale=1.0)
-        model = xgb.train(params, d, num_boost_round=rounds)
+        history = {}
+        if patience is not None:
+            if task == "A10":
+                validation.set_float_info("label_lower_bound", vy)
+                validation.set_float_info(
+                    "label_upper_bound", np.where(arrays["event_validation"], vy, np.inf)
+                )
+            else:
+                validation.set_label(vy)
+            validation.set_weight(vw)
+        model = xgb.train(
+            params,
+            d,
+            num_boost_round=rounds,
+            evals=[(validation, "validation")] if patience is not None else [],
+            early_stopping_rounds=patience,
+            evals_result=history,
+            verbose_eval=False,
+        )
+        if patience is not None:
+            prediction_rounds = model.best_iteration + 1
+            stopping.append(dict(selected_rounds=prediction_rounds, history=history))
         actual = json.loads(model.save_config())["learner"]["generic_param"]["device"]
         if job["device"] == "cuda" and not actual.startswith("cuda"):
             raise ValueError("silent CPU fallback")
-        prediction = model.predict(validation, output_margin=task == "A10")
+        prediction = model.predict(
+            validation, output_margin=task == "A10", iteration_range=(0, prediction_rounds or 0)
+        )
         if task == "A10":
             prediction = np.column_stack([prediction, np.ones(len(v))])
     elif library == "lightgbm":
@@ -185,7 +234,34 @@ def fit(job, arrays):
                 weight=w,
                 init_score=base + np.log(exposure) if task == "A7" else None,
             )
-            m = lgb.train(params, d, num_boost_round=rounds)
+            history = {}
+            valid = []
+            callbacks = []
+            if patience is not None:
+                vt = vy[:, k] if task == "A6" else vy
+                valid = [
+                    lgb.Dataset(
+                        v,
+                        label=vt,
+                        weight=vw,
+                        reference=d,
+                        init_score=base + np.log(validation_exposure) if task == "A7" else None,
+                    )
+                ]
+                callbacks = [
+                    lgb.early_stopping(patience, verbose=False),
+                    lgb.record_evaluation(history),
+                ]
+            m = lgb.train(
+                params,
+                d,
+                num_boost_round=rounds,
+                valid_sets=valid,
+                valid_names=["validation"] if valid else None,
+                callbacks=callbacks,
+            )
+            if patience is not None:
+                stopping.append(dict(selected_rounds=m.best_iteration, history=history))
             p = m.predict(v, raw_score=task == "A7")
             if task == "A7":
                 p = np.exp(p + base + np.log(validation_exposure))
@@ -218,6 +294,19 @@ def fit(job, arrays):
         data = cb.Pool(
             x, label=target, weight=w, baseline=base + np.log(exposure) if task == "A7" else None
         )
+        valid_pool = None
+        if patience is not None:
+            vt = (
+                np.column_stack([vy, np.where(arrays["event_validation"], vy, -1)])
+                if task == "A10"
+                else vy
+            )
+            valid_pool = cb.Pool(
+                v,
+                label=vt,
+                weight=vw,
+                baseline=base + np.log(validation_exposure) if task == "A7" else None,
+            )
         model = klass(
             **cfg,
             iterations=rounds,
@@ -228,7 +317,16 @@ def fit(job, arrays):
             task_type="GPU" if job["device"] == "cuda" else "CPU",
             verbose=False,
             allow_writing_files=False,
-        ).fit(data)
+        ).fit(
+            data,
+            eval_set=valid_pool,
+            early_stopping_rounds=patience,
+            use_best_model=patience is not None,
+        )
+        if patience is not None:
+            stopping.append(
+                dict(selected_rounds=model.tree_count_, history=model.get_evals_result())
+            )
         if task in ["A2", "A3"]:
             prediction = model.predict_proba(v)
             if task == "A2":
@@ -257,8 +355,19 @@ def fit(job, arrays):
             minibatch_frac=cfg["minibatch_frac"],
             random_state=seed,
             verbose=False,
-        ).fit(x, y, sample_weight=w)
-        dist = model.pred_dist(v)
+        ).fit(
+            x,
+            y,
+            sample_weight=w,
+            X_val=v if patience is not None else None,
+            Y_val=vy,
+            val_sample_weight=vw,
+            early_stopping_rounds=patience,
+        )
+        if patience is not None:
+            prediction_rounds = model.best_val_loss_itr + 1
+            stopping.append(dict(selected_rounds=prediction_rounds, history=model.evals_result))
+        dist = model.pred_dist(v, max_iter=prediction_rounds)
         prediction = np.column_stack([dist.loc, dist.scale])
     if not np.isfinite(prediction).all() or len(prediction) != len(v):
         raise ValueError("invalid output")
@@ -267,6 +376,8 @@ def fit(job, arrays):
         "application": task,
         "library": library,
         "rate_base": base,
+        "prediction_rounds": prediction_rounds,
+        "stopping": stopping,
         "job": job,
     }
 
@@ -286,7 +397,11 @@ def predict_saved(saved, x, exposure=None):
         data = xgb.DMatrix(x)
         if task == "A7":
             data.set_base_margin(offset)
-        result = model.predict(data, output_margin=task == "A10")
+        result = model.predict(
+            data,
+            output_margin=task == "A10",
+            iteration_range=(0, saved.get("prediction_rounds") or 0),
+        )
     elif library == "lightgbm":
         columns = [m.predict(x, raw_score=task == "A7") for m in model]
         result = np.column_stack(columns) if task in ["A5", "A6"] else columns[0]
@@ -305,7 +420,7 @@ def predict_saved(saved, x, exposure=None):
             if task in ["A7", "A9"]:
                 result = np.exp(result + (offset if task == "A7" else 0))
     elif library == "ngboost":
-        dist = model.pred_dist(x)
+        dist = model.pred_dist(x, max_iter=saved.get("prediction_rounds"))
         result = np.column_stack([dist.loc, dist.scale])
     else:
         raise ValueError("unknown saved baseline library")
@@ -329,6 +444,18 @@ def main():
     np.testing.assert_allclose(prediction, restored, rtol=1e-7, atol=1e-8)
     np.savez("predictions.npz", row_ids=arrays["validation_row_ids"], prediction=prediction)
     Path("model.bin").write_bytes(payload)
+    Path("training.json").write_text(
+        json.dumps(
+            {
+                "early_stopping_rounds": job.get("early_stopping_rounds"),
+                "prediction_rounds": model["prediction_rounds"],
+                "stopping": model["stopping"],
+            },
+            indent=2,
+            allow_nan=False,
+        )
+        + "\n"
+    )
 
 
 if __name__ == "__main__":

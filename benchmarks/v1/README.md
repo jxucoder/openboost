@@ -245,9 +245,10 @@ written. Use a fresh process through `process_runner.execute`.
 [Worker evidence](evidence/worker-cpu.json) verifies 30 synthetic CPU task/library
 fits and in-process reload, including external exposure doubling in all three
 count adapters. `worker_smoke.py` reproduces the checks with the locked interpreter.
-This is a fixed-round adapter: the search design's early stopping is explicitly
-rejected until implemented. Ranking, composed/structural controls, full validation
-selection, test unlocking and A13 execution remain required integration work.
+The original artifact covers fixed-round fitting. Native early stopping is now
+supported as described below. Ranking, composed/structural controls and A13
+execution remain required integration work; selection/test release has a separate
+audited layer but is not yet bound to the full real-task matrix.
 
 ## Validation selection and sealed test release
 
@@ -297,3 +298,45 @@ selected-model test inference in a new process. The generated packet includes ra
 inputs, predictions, models, records and receipt under ignored `build/` output.
 The committed [summary](evidence/selection-cpu.json) records source/environment
 hashes; it is synthetic harness evidence, not a real-data quality/performance result.
+
+
+## Native baseline early stopping
+
+Set `early_stopping_rounds` to a positive integer and supply `y_validation`;
+`weight_validation` defaults to unit weights. A10 additionally requires
+`event_validation`. Without stopping enabled, validation target/weight fields are
+rejected rather than silently used or ignored. Targets, weights and survival
+indicators are validated before fitting; the test array prohibition is unchanged.
+
+Native objective metrics determine stopping within each trial. Cross-method
+configuration selection still recomputes the frozen primary metrics independently.
+The native history preserves its metric names and weighted validation values:
+
+- XGBoost retains its fitted trees and stores `best_iteration + 1` as an explicit
+  prediction limit, including vector and quantile models.
+- LightGBM records each fitted model's best iteration; per-output/per-quantile
+  baseline fits stop independently and preserve their individual limits.
+- CatBoost uses the validation pool and `use_best_model`, truncating the saved
+  model to its selected tree count.
+- NGBoost receives explicit validation arrays and weights, avoiding an implicit
+  split. The saved bundle predicts with `best_val_loss_itr + 1`.
+
+Count validation includes exposure offsets in all three libraries. CLI workers
+write `training.json` with stopping histories and prediction limits alongside the
+model and predictions. Histories describe native selection, not independent
+quality acceptance. The selected limit is part of model replay semantics.
+
+[CPU stopping evidence](evidence/early-stopping-cpu.json) covers 30 synthetic
+supported task/library cells with nonunit validation weights, vector/quantile,
+exposure and survival cases. Every selected count matches its history's minimum.
+Overfitting counterexamples select round 1 and reproduce in fresh processes.
+No GPU stopping or real-data quality result is established. Reproduce with:
+
+```bash
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 build/v1-env/bin/python -m benchmarks.v1.early_stopping_smoke
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 build/v1-env/bin/python -m benchmarks.v1.selection_smoke build/v1-selection-early-stop-new --early-stopping-rounds 3
+```
+
+The second command runs the synthetic 16-trial selection/release smoke with
+stopping enabled, using a fresh output directory. Its patience of three is a
+small-fixture check; the preregistered real-search patience remains 50.

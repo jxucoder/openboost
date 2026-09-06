@@ -20,7 +20,7 @@ from benchmarks.v1.quality import metrics
 from benchmarks.v1.selection import audit, digest, release_test, seal
 
 
-def run(directory):
+def run(directory, patience=None):
     root = Path(directory).resolve()
     root.mkdir(parents=True, exist_ok=True)
     if any(root.iterdir()):
@@ -46,6 +46,11 @@ def run(directory):
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         }
 
+    if patience is not None:
+        with np.load(root / "worker-input.npz", allow_pickle=False) as d:
+            arrays = {k: d[k] for k in d.files}
+        np.savez(root / "worker-input.npz", **arrays, y_validation=y[64:80])
+
     versions = {d.metadata["Name"]: d.version for d in importlib.metadata.distributions()}
     sources = {
         p.name: hashlib.sha256(p.read_bytes()).hexdigest()
@@ -68,7 +73,7 @@ def run(directory):
             split=digest([64, 80, 96]),
             preprocessing=digest("identity numeric"),
             environment=digest(versions),
-            search_design=digest(configs),
+            search_design=digest({"configs": configs, "early_stopping_rounds": patience}),
         ),
         train_rows=entry(root / "train-rows.npz"),
         validation=entry(root / "validation.npz"),
@@ -90,6 +95,8 @@ def run(directory):
             config=config,
             input_npz=str(root / "worker-input.npz"),
         )
+        if patience is not None:
+            job["early_stopping_rounds"] = patience
         job_path = root / f"job-{i}.json"
         job_path.write_text(json.dumps(job))
         out = root / f"trial-{i}"
@@ -163,6 +170,7 @@ with np.load(sys.argv[4],allow_pickle=False) as d:
         threads=2,
         seed=73,
         trials=16,
+        early_stopping_rounds=patience,
         selected=receipt["selected"],
         protocol_sha256=pinned_protocol,
         receipt_sha256=receipt_hash,
@@ -175,5 +183,6 @@ with np.load(sys.argv[4],allow_pickle=False) as d:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
+    parser.add_argument("--early-stopping-rounds", type=int)
     args = parser.parse_args()
-    print(json.dumps(run(args.directory), indent=2))
+    print(json.dumps(run(args.directory, args.early_stopping_rounds), indent=2))

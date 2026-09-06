@@ -108,3 +108,25 @@ files. The API enforces sequence and consistency; restricted mounts/execution
 provenance still need integration. The full required real-data matrix, early
 stopping, auxiliary metrics and independent held-outs remain open. Do not turn
 this synthetic orchestration success into a formal E3 or F0.3 pass.
+
+### Next slice: baseline early stopping
+
+1. Require explicit validation targets/weights (and censoring for A10) when early
+   stopping is enabled; reject malformed or unused validation fields.
+2. Use pinned native stopping implementations and retain the selected tree count
+   in saved prediction state. Record each method's stopping metric and history;
+   independent cross-method selection continues to use prediction-space metrics.
+3. Exercise scalar, vector, quantile, offset and distribution paths in the locked
+   CPU environment, with a counterexample whose best iteration precedes the last.
+   Verify replay of the selected iteration, including a new-process check.
+
+Early-stopping result: the 30 supported CPU task/library cells passed weighted
+validation stopping and replay. Selected rounds agree with recorded native metric
+minima. Deliberate overfitting cases select round 1 and reproduce after loading in
+fresh processes across XGBoost, LightGBM, CatBoost and NGBoost. Patience-three smoke
+settings do not change the preregistered patience of 50.
+
+Reflection: native default prediction is not universally best-iteration prediction.
+Preserve limits explicitly for XGBoost/NGBoost and retain each LightGBM fit's limit.
+Record native stopping metrics separately from independent method selection.
+CPU evidence does not establish CUDA stopping or complete F0.3 acceptance.
