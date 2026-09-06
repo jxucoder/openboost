@@ -1,6 +1,8 @@
 # OpenBoost v1：foundation 工程构建设计
 
 日期：2026-09-05。设计基线：`be373e6`。**这是待实施设计，不是已有 API。**
+执行更新：用户在 Sprint 002 要求删除旧生产实现；当前已退役，历史源码固定在
+`50acfc6`。下面提到的旧模块是历史审阅对象；新 public 组件仍按本文构建。
 本文件回答“foundation 具体怎么建”，与 [主计划](agent-boosting-foundation-plan.md)、
 [任务卡](foundation-tasks.md)、[验收协议](openboost-v1-evaluation.md) 共同交付。
 任务卡决定要表达哪些算法；本文决定公共组件、数据流、实现位置和逐步构建方法；
@@ -328,8 +330,8 @@ B07–B10 内按各自 recipe 再拆提交，不能一个大提交埋掉失败�
   验证计算和失败样例。新公开层不能仅包装旧全局 backend、固定 G/H/节点布局和 trainer。
 - 现有 `experimental` 的插件优先级、scratch 脱离、prediction cache 一致性和 rollback
   测试保留为语义来源。新权重/gain 约定不同，重建手算期望，不能复制旧数值充当真值。
-- F1 分步开发期间可暂存旧文件便于比较，最终公共入口切换一次；不做兼容 shim、
-  双写或永远维护两套 trainer。历史基线用固定 revision/wheel，而非依赖当前旧 import。
+- 用户已要求提前清空旧生产层，F1 直接建立新公共入口，不做兼容 shim、双写或两套
+  trainer。历史基线用固定 revision/wheel，而非依赖当前旧 import。
 - 如果 B05/B06 不能复用同一统计/路由/状态部件，先修该边界；如果 B09 叶求解仍只能
   接 G/H，先修 row view；如果 GPU 必须每轮拉回全量 raw，先修驻留/所有权再谈 fusion。
 - 本设计现在可指导实现；独立参考、CPU/CUDA 代码、作者收益与全部实际质量尚未验证。

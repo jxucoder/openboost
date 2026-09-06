@@ -1,3 +1,6 @@
+> **Historical implementation:** this page describes the retired pre-rebuild API.
+> Reproduce at Git revision `50acfc6`; see the repository README and `v1-sprints/` for current v1 status.
+
 # OpenBoost Examples
 
 Runnable scripts. Distributional regression first; mean-regression GBDT after.

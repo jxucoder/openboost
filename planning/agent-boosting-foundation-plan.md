@@ -6,6 +6,8 @@
 代码审阅基线：`3ac1552`，分支：`codex/gpu-python-foundation-design`。
 执行入口：[v1-sprints/](../v1-sprints/README.md)；Sprint 001 已完成 F0.2 的 scalar/tree 子集。
 每个 sprint 在该目录记录计划、结果与 reflection，阶段完成状态按实际证据更新。
+用户在 Sprint 002 要求旧生产代码整体退役；清理已提前执行，旧实现用 `50acfc6`
+复现。当前包只有待构建的命名空间，F0.2/F0.3 与 F1 的依赖和验收仍按本计划。
 
 本计划取代旧 GPU foundation 清单中的后续投资顺序，以及
 [ScoringBench 优先计划](impact-adoption-value-next.md)。旧实验及其失败结论仍有效。

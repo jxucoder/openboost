@@ -78,3 +78,4 @@ UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync ruff check tests/
 - `9700845`：前置 foundation 构建设计。
 - `e76a2cd`：sprint 执行与反思机制。
 - 实现切片：`test: add independent scalar and tree references for v1`。
+- `50acfc6`：独立参考与55个测试的已验证提交。

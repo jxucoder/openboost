@@ -84,25 +84,16 @@ The repository audit in
 
 ## Architecture
 
-The following describes the existing implementation, not constraints on the
-clean redesign. In particular, per-channel trees, the bin layout and process-global
-backend are not requirements for the new architecture.
+The user requested retirement of all old production code during Sprint 002.
+`src/openboost/` now contains only the v1 namespace and typing marker, with no
+training/prediction APIs. The last full old implementation is Git revision
+`50acfc6`; historical tests/examples require that revision. There is no compatibility
+shim, legacy backend, trainer, or model facade in the current package.
 
-```text
-Models (`src/openboost/_models/`)
-    -> tree core (`src/openboost/_core/`)
-        -> CPU/CUDA backends (`src/openboost/_backends/`)
-    -> distributions (`src/openboost/_distributions.py`)
-    -> validation and persistence
-```
-
-- `BinnedArray` is feature-major: `(n_features, n_samples)`.
-- Bin 255 is reserved for missing values; use at most 254 regular bins.
-- The backend is process-global, not thread-local. Use `backend_context` for a
-  scoped switch and do not run mixed-backend fits concurrently in one process.
-- NaturalBoost fits one tree per distribution parameter per round.
-- CUDA eligibility is narrower than the public model surface. A fallback must
-  be visible, tested, and represented honestly in benchmark provenance.
+Build the new public data/targets, stats/ops, tree, objectives, runtime, recipes
+and artifacts according to the construction design. `tests/v1/reference/` is an
+independent mathematical oracle, not the new production backend. The old fixed-bin
+sentinel, per-channel trainer and global backend are not new architecture constraints.
 
 ## Correctness Rules
 
@@ -138,6 +129,8 @@ Models (`src/openboost/_models/`)
 
 Use `uv`; do not mutate the project environment with ad-hoc `pip` or Conda
 commands.
+Current default discovery runs only `tests/v1/`; retained historical tests are
+excluded, not counted as passing/skipped v1 coverage. See `tests/README.md`.
 
 ```bash
 # Install

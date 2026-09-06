@@ -411,19 +411,22 @@ partition→leaf solve。候选结构包含阈值/类别集合与missing route�
 
 ## 6. 审阅现有实现后的约束
 
-- [标准模型](../src/openboost/_models/_boosting.py) 的CPU训练会乘sample_weight，
+本节是退役前代码审计。Sprint 002 已按用户要求删除旧生产实现，源码链接固定到
+`50acfc6`；这些历史能力不代表当前 v1 namespace 已实现对应功能。
+
+- [标准模型](https://github.com/jxucoder/openboost/blob/50acfc6/src/openboost/_models/_boosting.py) 的CPU训练会乘sample_weight，
   当前standard CUDA入口拒绝非空weight；multiclass fit没有同一weight入口，按K分别建树。
   [多分类文档](../docs/user-guide/models/multiclass.md) 只代表旧API，不证明v1加权/mapping。
-- [FormulaObjective](../src/openboost/_objectives.py) 已在逐参数拟合前计算耦合GGN方向，
-  [模型](../src/openboost/_models/_formula.py) 接收独立model_input；
+- [FormulaObjective](https://github.com/jxucoder/openboost/blob/50acfc6/src/openboost/_objectives.py) 已在逐参数拟合前计算耦合GGN方向，
+  [模型](https://github.com/jxucoder/openboost/blob/50acfc6/src/openboost/_models/_formula.py) 接收独立model_input；
   [现有测试](../tests/test_formula.py) 主要是合成机制。v1不能把已有耦合方向说成新能力，
   也不能把full GGN说成自动解决参数识别。真实A12数据现在有明确任务。
-- [ConfigBatch](../src/openboost/_batch.py) 与 [batch测试](../tests/test_batch.py) 已有
+- [ConfigBatch](https://github.com/jxucoder/openboost/blob/50acfc6/src/openboost/_batch.py) 与 [batch测试](../tests/test_batch.py) 已有
   多轮逐config重算loss的语义；独立stop/error/RNG和兼容批处理需新证据。
-- [当前survival](../src/openboost/_models/_survival.py) 与
+- [当前survival](https://github.com/jxucoder/openboost/blob/50acfc6/src/openboost/_models/_survival.py) 与
   [测试](../tests/test_survival.py) 是Weibull的event/time入口；A10固定log-normal
   是独立新recipe，不能把旧类名当作新删失/噪声语义已通过。
-- [实验Booster](../src/openboost/experimental/_booster.py) 的CUDA入口仍限制eval/callback/
+- [实验Booster](https://github.com/jxucoder/openboost/blob/50acfc6/src/openboost/experimental/_booster.py) 的CUDA入口仍限制eval/callback/
   early stopping。新方案按用例逐项验收，不搬迁限制或要求兼容；旧数学失败样例保留。
 
 ## 7. 来源与F0.1完成边界

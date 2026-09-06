@@ -34,6 +34,9 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Retire legacy production](2026-09-05-retire-legacy-production.md) — user-directed
+  clean v1 package reset; historical code at `50acfc6`, current training API pending.
+
 - [v1 sprint execution](2026-09-05-v1-sprint-execution.md) — sprint plans/results
   and reflection now live in `v1-sprints/`; starts B01/F0.2 scalar/tree references.
 
