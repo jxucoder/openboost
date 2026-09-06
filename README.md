@@ -11,7 +11,7 @@ of making a correct, reproducible algorithm change.
 This checkout is **under construction**. The old production implementation has
 been retired; the package currently provides a namespace, not a training API.
 Independent data, tree, classification, ranking, quantile, vector-leaf, positive-target
-AFT, Normal and Formula references have 208 passing tests. They are
+AFT, Normal, Formula and isolated-run references have 229 passing tests. They are
 correctness preparation, not proof of a completed foundation or product parity.
 
 - [Execution and reflections](v1-sprints/README.md)

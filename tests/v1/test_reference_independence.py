@@ -41,6 +41,11 @@ from tests.v1.reference.coupled import normal, formula, directions
 _, g, fisher = normal([[0, 0]], [1])
 assert directions(g, fisher)[0, 0] == 1
 assert formula([[0, 0]], [1], [1])[0] > 0
+from tests.v1.reference.runs import RunSpec, derive_seed, run_many
+assert derive_seed(7, 'run-α', 2, 'tree', 'rows') == 6175955064790668999
+record = run_many([RunSpec('r', 0, 1, .1, 2, 2)], [[0], [1]], [[0], [1]],
+                  {'r': ([[-1], [1]], [[-1], [1]])})['r']
+assert record.status == 'completed' and record.best_round == 1
 from tests.v1.reference.tree import boost_squared
 for policy in ("depthwise", "best_first", "symmetric"):
     result = boost_squared([[0], [0], [1], [1]], [-2, -2, 2, 2], policy=policy)
