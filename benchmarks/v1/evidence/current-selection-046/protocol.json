@@ -1,0 +1,170 @@
+{
+  "schema": "openboost-selection-v1",
+  "application": "A6",
+  "fold": 0,
+  "identity": {
+    "code": "6e1784e61364ba42fe523333c7b124e10614db1aecf7e52022c8c540a7fef51e",
+    "data": "22dde66f732617ce9885e51907f5f29f7225c06a5e9f6504da3934a06391e429",
+    "split": "1bfbffa91b58a32471af26a3b6ab5fa2a6aab3ac62c62a5d89ce7461881c593b",
+    "preprocessing": "b6a297738edf72007704f8eb566b139a708e25711c15c7f5e70e044f56bc8060",
+    "environment": "fa36f7e7e505ee311727430ea46232f2ead74cab4b02c399ed4f8dae6dcdc6da",
+    "search_design": "7593ea4bf5ae8da6e656d178af29c394965f1cfdb962d110d69af7f7e4989513"
+  },
+  "train_rows": {
+    "path": "train-rows.npz",
+    "sha256": "7945b1c0e613af0433623b8b2649db06524d1743070c6676397be4b2188166be"
+  },
+  "train_targets": {
+    "path": "train-targets.npz",
+    "sha256": "b69dc444144a681044db6982d2901452bff0806f6f704267f1ecf5217b33dd4a"
+  },
+  "target_scale": {
+    "path": "scale.json",
+    "sha256": "ea7e385f0cc3ad0735275eeb04b0e0df9d547a52a1df0c8c38285a5afef3c68d"
+  },
+  "validation": {
+    "path": "validation.npz",
+    "sha256": "c548a1b0200e55021a938fa6dd9a7dfba87581ed8eef21b078b6d4abd9fffc00"
+  },
+  "test_features": {
+    "path": "test-features.npz",
+    "sha256": "0994f4214fddbf44c3f0d7a6b6313ce7c7e646fe79800d966b43f745c084b301"
+  },
+  "selection_weights": {
+    "rmse_0": 0.0572378933775511,
+    "rmse_1": 91.83206847545476,
+    "rmse_2": 1.0
+  },
+  "methods": {
+    "openboost": [
+      {
+        "rounds": 4,
+        "learning_rate": 0.05,
+        "max_depth": 1,
+        "mode": "shared",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.05,
+        "max_depth": 2,
+        "mode": "shared",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.05,
+        "max_depth": 3,
+        "mode": "shared",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.05,
+        "max_depth": 4,
+        "mode": "shared",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.1,
+        "max_depth": 1,
+        "mode": "shared",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.1,
+        "max_depth": 2,
+        "mode": "shared",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "mode": "shared",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "mode": "shared",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.05,
+        "max_depth": 1,
+        "mode": "independent",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.05,
+        "max_depth": 2,
+        "mode": "independent",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.05,
+        "max_depth": 3,
+        "mode": "independent",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.05,
+        "max_depth": 4,
+        "mode": "independent",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.1,
+        "max_depth": 1,
+        "mode": "independent",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.1,
+        "max_depth": 2,
+        "mode": "independent",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.1,
+        "max_depth": 3,
+        "mode": "independent",
+        "bins": 16,
+        "reg_lambda": 1.0
+      },
+      {
+        "rounds": 4,
+        "learning_rate": 0.1,
+        "max_depth": 4,
+        "mode": "independent",
+        "bins": 16,
+        "reg_lambda": 1.0
+      }
+    ]
+  }
+}

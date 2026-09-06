@@ -581,3 +581,29 @@ UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchma
 The smoke verifies all five grouped Parkinsons folds and exact scale equality
 with the freeze. Default smoke applications are now A1/A6/A11; explicit application
 selection permits bounded reruns. Four-round results are integration evidence only.
+
+### Scale-bound A6 selection and current search
+
+A6 selection protocols now require `train_targets` (hashed NPZ with row_ids/y)
+and `target_scale` (hashed JSON with mean/std/constant). The independent audit
+aligns targets exactly to training row IDs, recomputes the unweighted population
+scale and rejects differences. Every `rmse_k` selection weight must equal the
+inverse frozen standard deviation. The reported selection score is the mean
+of these standardized RMSEs, not division by the sum of inverse scales.
+Other applications retain their existing score definitions.
+
+Protocol digests must still be pinned by the trusted orchestrator. This checks
+internal consistency with supplied training data, not external dataset provenance
+or filesystem isolation. All 16 configurations per method must finish successfully;
+missing/failed/tampered trials cannot yield a receipt or selected test release.
+
+```sh
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.current_selection_smoke /tmp/openboost-selection-046
+```
+
+This synthetic A6/A13 integration runs 16 current configurations (shared and
+independent trees, two learning rates and four depths), audits validation scores,
+seals/re-audits the winner, and invokes fresh-process inference only after feature
+release. All trials and failures are retained. It scores no test labels and is
+not the frozen real-data quality grid, a speed benchmark or fused train-many.
+A6 final comparative quality reporting and the remaining real searches remain open.

@@ -155,3 +155,85 @@ def test_validation_overlap_fails_before_scoring(tmp_path):
     p["train_rows"] = entry(tmp_path / "train.npz")
     with pytest.raises(ValueError, match="overlap"):
         audit(p, records, tmp_path, digest(p))
+
+
+def multi_example(root):
+    p, records = example(root)
+    p["application"] = "A6"
+    p["selection_weights"] = {"rmse_0": 1.0, "rmse_1": 0.01}
+    np.savez(root / "valid.npz", row_ids=[2, 3], y=[[0.0, 0.0], [0.0, 0.0]])
+    p["validation"] = entry(root / "valid.npz")
+    for i, record in enumerate(records):
+        path = root / record["prediction"]["path"]
+        np.savez(path, row_ids=[2, 3], prediction=np.tile([1 + i, 100.0], (2, 1)))
+        record["prediction"] = entry(path)
+        record["protocol_sha256"] = digest(p)
+    return p, records
+
+
+def test_a6_requires_scale_binding(tmp_path):
+    p, records = multi_example(tmp_path)
+    with pytest.raises(ValueError):
+        audit(p, records, tmp_path, digest(p))
+
+
+def bound_multi_example(root):
+    import json
+
+    p, records = multi_example(root)
+    np.savez(root / "targets.npz", row_ids=[0, 1], y=[[-1.0, -100.0], [1.0, 100.0]])
+    (root / "scale.json").write_text(
+        json.dumps(dict(mean=[0.0, 0.0], std=[1.0, 100.0], constant=[False, False]))
+    )
+    p.update(train_targets=entry(root / "targets.npz"), target_scale=entry(root / "scale.json"))
+    for record in records:
+        record["protocol_sha256"] = digest(p)
+    return p, records
+
+
+def test_a6_mean_standardized_rmse_and_no_test_access(tmp_path):
+    p, records = bound_multi_example(tmp_path)
+    (tmp_path / "test.npz").unlink()
+    receipt = audit(p, records, tmp_path, digest(p))
+    assert receipt["selected"] == "first:00"
+    assert receipt["scores"]["first:00"]["selection"] == 1.0
+    assert receipt["scores"]["first:01"]["selection"] == 1.5
+
+
+@pytest.mark.parametrize("mutation", ["weights", "scale", "rows", "targets", "width"])
+def test_a6_forged_binding_rejected(tmp_path, mutation):
+    import json
+
+    p, records = bound_multi_example(tmp_path)
+    if mutation == "weights":
+        p["selection_weights"]["rmse_1"] = 1.0
+    elif mutation == "scale":
+        (tmp_path / "scale.json").write_text(
+            json.dumps(dict(mean=[0.0, 0.0], std=[1.0, 1.0], constant=[False, False]))
+        )
+        p["target_scale"] = entry(tmp_path / "scale.json")
+    else:
+        rows = [1, 0] if mutation == "rows" else [0, 1]
+        y = [[-1.0, -100.0], [1.0, 100.0]]
+        if mutation == "targets":
+            y[1][0] = 50.0
+        if mutation == "width":
+            y = [[-1.0], [1.0]]
+        np.savez(tmp_path / "targets.npz", row_ids=rows, y=y)
+        p["train_targets"] = entry(tmp_path / "targets.npz")
+    for record in records:
+        record["protocol_sha256"] = digest(p)
+    with pytest.raises(ValueError):
+        audit(p, records, tmp_path, digest(p))
+
+
+def test_a6_scale_changes_winner_as_declared(tmp_path):
+    p, records = bound_multi_example(tmp_path)
+    for record, values in zip(records[:2], ([0.0, 150.0], [2.0, 0.0]), strict=True):
+        path = tmp_path / record["prediction"]["path"]
+        np.savez(path, row_ids=[2, 3], prediction=np.tile(values, (2, 1)))
+        record["prediction"] = entry(path)
+    receipt = audit(p, records, tmp_path, digest(p))
+    assert receipt["selected"] == "first:00"
+    assert receipt["scores"]["first:00"]["selection"] == 0.75
+    assert receipt["scores"]["first:01"]["selection"] == 1.0

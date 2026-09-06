@@ -12,6 +12,7 @@ from pathlib import Path
 import numpy as np
 
 from benchmarks.v1.judge import read_json
+from benchmarks.v1.preprocessing import fit_target_scale
 from benchmarks.v1.quality import metrics
 from benchmarks.v1.quality_report import PRIMARY, load
 
@@ -70,7 +71,8 @@ def audit(protocol, records, directory, pinned_protocol_sha256):
         raise ValueError("changed protocol")
     _fields(
         protocol,
-        "schema application fold identity train_rows validation test_features selection_weights methods",
+        "schema application fold identity train_rows validation test_features selection_weights methods"
+        + (" train_targets target_scale" if protocol.get("application") == "A6" else ""),
     )
     if protocol["schema"] != "openboost-selection-v1":
         raise ValueError("unknown selection protocol")
@@ -115,6 +117,22 @@ def audit(protocol, records, directory, pinned_protocol_sha256):
         raise ValueError("all primary metrics required for selection")
     if any(type(w) not in (int, float) or not np.isfinite(w) or w <= 0 for w in weights.values()):
         raise ValueError("positive finite selection weights required")
+    if app == "A6":
+        targets = load(root, protocol["train_targets"])
+        _fields(targets, "row_ids y")
+        if not np.array_equal(_ids(targets), train_ids):
+            raise ValueError("training target row mismatch")
+        if targets["y"].shape != (len(train_ids), len(primary)):
+            raise ValueError("training target shape mismatch")
+        frozen_scale = read_json(_bytes(root, protocol["target_scale"]))
+        expected_scale = fit_target_scale(targets["y"])
+        if digest(frozen_scale) != digest(expected_scale):
+            raise ValueError("target scale differs from training population")
+        expected_weights = {
+            key: 1.0 / std for key, std in zip(primary, expected_scale["std"], strict=True)
+        }
+        if weights != expected_weights:
+            raise ValueError("selection weights differ from training scale")
     methods = protocol["methods"]
     if not isinstance(methods, dict) or not methods:
         raise ValueError("missing methods")
@@ -163,8 +181,9 @@ def audit(protocol, records, directory, pinned_protocol_sha256):
             row_ids=ids,
             **{k: v for k, v in truth.items() if k not in ["row_ids", "y"]},
         )
-        # A6 scaling coefficients must be frozen from training, never tuned here.
-        value = sum(weights[k] * measured[k] for k in primary) / sum(weights.values())
+        # A6 is a mean of standardized errors, not normalized inverse-scale weights.
+        denominator = len(primary) if app == "A6" else sum(weights.values())
+        value = sum(weights[k] * measured[k] for k in primary) / denominator
         if not np.isfinite(value):
             raise ValueError("invalid selection score")
         scores[trial] = {"metrics": measured, "selection": value}
