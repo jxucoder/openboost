@@ -121,3 +121,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [Query-aware ranking worker](2026-09-06-v1-ranking-worker.md): explicit group weights, partition checks and named metric selection.
 - [Parametric and paid-loss workers](2026-09-06-v1-parametric-workers.md): explicit target units, positive-payment reconstruction and global-formula controls.
 - [Auxiliary quality metrics](2026-09-06-v1-auxiliary-metrics.md): calibration/class diagnostics, supported IPCW scoring and descriptive paired intervals.
+
+- [A6 target scaling](2026-09-06-v1-target-scaling.md): train-only normalization and saved original-unit predictions.

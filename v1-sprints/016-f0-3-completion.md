@@ -166,3 +166,15 @@ Reflection after these three implementation slices: component-level adapters and
 judges now cover more task semantics, but a complete pinned real-data execution
 matrix, outer coupled controls, A13 scheduling, native-build/agent provenance and
 held-out independence still require work. Green synthetic checks cannot close F0.3.
+
+### A6 target-space correction
+
+Plan: standardize all comparator A6 targets from training rows only, preserve the
+constant-column rule and zero standardized base, invert predictions after fit and
+reload, then exercise mismatched target scales and fresh-process replay. Native
+stopping metrics operate in standardized target space; final metrics use original
+units and the frozen training scale. This corrects a task-contract gap before
+real-data trials.
+
+Result: 30 fixed and 30 stopping CPU cells pass, including fresh-process A6
+replay across three comparators. All 474 tests, Ruff and strict MkDocs pass.

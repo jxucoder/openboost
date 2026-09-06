@@ -100,3 +100,14 @@ def test_validation_targets_rejected_when_not_requested():
     arrays["y_validation"] = np.ones(2)
     with pytest.raises(ValueError, match="unsupported input"):
         fit(job, arrays)
+
+
+@pytest.mark.parametrize("target", [np.ones(3), np.empty((3, 0))])
+def test_a6_requires_output_columns_before_importing_trainer(target):
+    job, arrays = fixture()
+    job["application"] = "A6"
+    arrays.pop("exposure_train")
+    arrays.pop("exposure_validation")
+    arrays["y_train"] = target
+    with pytest.raises(ValueError, match="matrix targets"):
+        fit(job, arrays)

@@ -107,6 +107,19 @@ def fit(job, arrays):
                 or np.any(vy <= 0)
             ):
                 raise ValueError("invalid validation survival targets")
+    target_scale = None
+    if task == "A6":
+        if y.ndim != 2 or not y.shape[1]:
+            raise ValueError("nonempty matrix targets required for A6")
+        if __package__:
+            from benchmarks.v1.preprocessing import fit_target_scale
+        else:
+            from preprocessing import fit_target_scale
+        target_scale = fit_target_scale(y)
+        mean, std = np.asarray(target_scale["mean"]), np.asarray(target_scale["std"])
+        y = (y - mean) / std
+        if vy is not None:
+            vy = (vy - mean) / std
     stopping = []
     prediction_rounds = None
     if type(rounds) is not int or rounds <= 0:
@@ -160,6 +173,7 @@ def fit(job, arrays):
             params["num_class"] = job["classes"]
         if task == "A6":
             params["multi_strategy"] = "multi_output_tree"
+            params["base_score"] = 0.0
         if task == "A5":
             params["quantile_alpha"] = [0.1, 0.5, 0.9]
         if task == "A9":
@@ -243,6 +257,8 @@ def fit(job, arrays):
             params["tweedie_variance_power"] = 1.5
         if task == "A4":
             params.update(metric="ndcg", eval_at=[10])
+        if task == "A6":
+            params["boost_from_average"] = False
         targets = y.T if task == "A6" else [y] * 3 if task == "A5" else [y]
         model = []
         predictions = []
@@ -355,6 +371,7 @@ def fit(job, arrays):
             task_type="GPU" if job["device"] == "cuda" else "CPU",
             verbose=False,
             allow_writing_files=False,
+            **({"boost_from_average": False, "allow_const_label": True} if task == "A6" else {}),
         ).fit(
             data,
             eval_set=valid_pool,
@@ -411,6 +428,8 @@ def fit(job, arrays):
             stopping.append(dict(selected_rounds=prediction_rounds, history=model.evals_result))
         dist = model.pred_dist(v, max_iter=prediction_rounds)
         prediction = np.column_stack([dist.loc, dist.scale])
+    if target_scale is not None:
+        prediction = prediction * std + mean
     if not np.isfinite(prediction).all() or len(prediction) != len(v):
         raise ValueError("invalid output")
     return prediction, {
@@ -418,6 +437,7 @@ def fit(job, arrays):
         "application": task,
         "library": library,
         "rate_base": base,
+        "target_scale": target_scale,
         "prediction_rounds": prediction_rounds,
         "stopping": stopping,
         "job": job,
@@ -472,6 +492,9 @@ def predict_saved(saved, x, exposure=None):
         raise ValueError("unknown saved baseline library")
     if task == "A10":
         result = np.column_stack([result, np.ones(len(x))])
+    if task == "A6":
+        scale = saved["target_scale"]
+        result = result * np.asarray(scale["std"]) + np.asarray(scale["mean"])
     return result
 
 
@@ -496,6 +519,7 @@ def main():
                 "early_stopping_rounds": job.get("early_stopping_rounds"),
                 "prediction_rounds": model["prediction_rounds"],
                 "stopping": model["stopping"],
+                "target_scale": model["target_scale"],
             },
             indent=2,
             allow_nan=False,

@@ -42,7 +42,7 @@ def run(patience=None):
             elif task == "A3":
                 y = np.arange(96) % 3
             elif task == "A6":
-                y = np.column_stack([y, x[:, 1]])
+                y = np.column_stack([100 + 20 * y, -300 + 0.01 * x[:, 1], np.full(96, 7.0)])
             elif task in ["A7", "A8", "A9", "A10"]:
                 y = np.exp(y)
                 if task == "A7":
@@ -91,6 +91,14 @@ def run(patience=None):
                 shape=list(prediction.shape),
                 reload_max_abs_error=float(np.max(np.abs(prediction - replay))),
             )
+            if task == "A6":
+                scale = saved["target_scale"]
+                np.testing.assert_allclose(scale["mean"], y[:72].mean(axis=0))
+                np.testing.assert_allclose(scale["std"][:2], y[:72].std(axis=0)[:2])
+                assert scale["std"][2] == 1 and scale["constant"] == [False, False, True]
+                np.testing.assert_allclose(prediction[:, 2], 7.0)
+                np.testing.assert_allclose(arrays["y_train"], y[:72])
+                record["target_scale"] = scale
             if patience is not None:
                 record["stopping"] = saved["stopping"]
                 for stop in saved["stopping"]:
@@ -100,7 +108,7 @@ def run(patience=None):
                     assert stop["selected_rounds"] == int(np.argmin(values)) + 1
                     if task == "A1" or library == "ngboost":
                         assert stop["selected_rounds"] < len(values) < 24
-            if patience is not None and (task == "A1" or library == "ngboost"):
+            if patience is not None and (task in ["A1", "A6"] or library == "ngboost"):
                 with tempfile.TemporaryDirectory() as temp:
                     folder = Path(temp)
                     (folder / "model.pkl").write_bytes(pickle.dumps(saved))

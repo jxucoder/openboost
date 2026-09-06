@@ -445,3 +445,10 @@ auxiliaries are missing, but `E3_pass` remains false. Training provenance and fu
 expected coverage must still be bound independently. Bootstrap intervals enumerate
 all 5^5 empirical resamples and are descriptive; overlapping folds are not IID
 replications and do not support a population-superiority claim.
+
+A6 workers accept original-unit matrix targets and fit training-only per-column
+mean/std normalization (unweighted, constant-column std one). Native stopping
+metrics use standardized targets and zero standardized initialization. Saved
+bundles and training receipts retain `target_scale`; exported predictions and
+replay are in original units. Final A6 scoring must supply the same training std
+for standardized-average RMSE.
