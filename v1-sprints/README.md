@@ -69,3 +69,7 @@ Adult data and official-test-preserving splits. Other required data, capabilitie
 held-out tasks, runner and quality judge remain incomplete; all real quality results are pending.
 No E0–E6 gate passed through creating these files. E7 has no new independent-adoption evidence.
 Every application's production and real evaluation still require individual completion.
+
+Current sequencing review: [Sprint 017 audit](017-f0-sequencing-audit.md).
+It distinguishes existing F0.3 prerequisites from later evaluation results and
+proposes a bounded CPU-construction overlap. The phase gate has not been changed.

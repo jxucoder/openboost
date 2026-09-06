@@ -259,3 +259,10 @@ Result: all 20 new real-data CPU validation fits passed across A7/A8/A9/A10
 and five folds. All 488 v1 tests, Ruff and strict MkDocs passed. Raw evidence:
 `benchmarks/v1/evidence/real-positive-survival-binding-cpu.json`. No quality gate
 or source-license gate was promoted by these plumbing checks.
+
+## Sequencing audit
+
+[Sprint 017](017-f0-sequencing-audit.md) audits remaining F0.3 obligations against
+later evaluation results. F0.3 remains incomplete under the current gate. A bounded
+B03–B06 overlap is proposed, not adopted; all v1 scope and thresholds are retained.
+The audit also identifies missing A6 score/scale binding and global gate aggregation.

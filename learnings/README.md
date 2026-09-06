@@ -133,3 +133,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [Classification and quantile binding](2026-09-06-v1-classification-quantile-binding.md): source IDs, train-only categories and chronological prefixes.
 
 - [Counts and survival binding](2026-09-06-v1-positive-survival-binding.md): policy populations, exposure contracts and frozen censoring support.
+
+- [F0 sequencing audit](2026-09-06-v1-sequencing-audit.md): literal prerequisites, later evaluation gates and an explicit overlap proposal.
