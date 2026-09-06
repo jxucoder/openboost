@@ -430,3 +430,44 @@ class Poisson:
 
     def loss(self, problem, raw):
         return self.geometry(problem, raw)[0]
+
+
+class Gamma:
+    """Positive mean regression: loss y/exp(f)+f, with fixed unit dispersion."""
+
+    @staticmethod
+    def validate(problem):
+        Squared.validate(problem)
+        if np.any(problem.target <= 0):
+            raise ValueError("Gamma targets must be strictly positive")
+
+    @classmethod
+    def base(cls, problem):
+        cls.validate(problem)
+        positive = problem.weight > 0
+        with np.errstate(over="raise", invalid="raise", divide="raise"):
+            weights = problem.weight[positive]
+            weights = weights / weights.max()
+            terms = (
+                np.log(weights) + np.log(problem.target[positive, 0]) - problem.offset[positive, 0]
+            )
+            maximum = np.max(terms)
+            value = maximum + np.log(np.exp(terms - maximum).sum()) - np.log(weights.sum())
+        return _owned([value], ndim=1)
+
+    @classmethod
+    def geometry(cls, problem, raw):
+        cls.validate(problem)
+        with np.errstate(over="raise", invalid="raise"):
+            values = problem.with_offset(raw)[:, 0]
+            ratio = np.exp(np.log(problem.target[:, 0]) - values)
+            if np.any(ratio <= 0):
+                raise ValueError("Gamma target/mean ratio underflows float64")
+            loss = float(np.dot(problem.weight / problem.weight.sum(), ratio + values))
+        if not np.isfinite(loss):
+            raise ValueError("nonfinite Gamma objective")
+        return loss, _owned(1 - ratio, ndim=1), _owned(ratio, ndim=1)
+
+    @classmethod
+    def loss(cls, problem, raw):
+        return cls.geometry(problem, raw)[0]

@@ -25,3 +25,4 @@ nav:
   - Query-local ranking: ranking.md
   - Quantile and penalized leaves: quantile.md
   - Poisson counts and exposure: poisson.md
+  - Gamma positive-target means: gamma.md

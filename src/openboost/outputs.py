@@ -39,3 +39,15 @@ def poisson_mean(raw, exposure):
     if np.any(rate <= 0) or np.any(count <= 0):
         raise ValueError("Poisson means must remain positive in float64")
     return {"rate": _owned(rate, ndim=1), "count_mean": _owned(count, ndim=1)}
+
+
+def positive_mean(raw):
+    """Scalar log-mean transform; no dispersion or distributional calibration."""
+    values = _owned(raw, ndim=2)
+    if values.shape[1] != 1:
+        raise ValueError("one scalar log-mean column required")
+    with np.errstate(over="raise", invalid="raise"):
+        mean = np.exp(values[:, 0])
+    if np.any(mean <= 0):
+        raise ValueError("positive mean underflows float64")
+    return _owned(mean, ndim=1)

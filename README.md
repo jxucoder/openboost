@@ -78,3 +78,6 @@ weights and compose all three CPU growth policies. Real A5 evaluation remains op
 
 [Poisson counts and exposure](docs/v1/poisson.md) add a CPU count recipe with explicit
 rate/count outputs. Real A7 evaluation remains open.
+
+[Gamma positive-target means](docs/v1/gamma.md) add weighted CPU mean regression.
+Real A8 quality and distributional calibration remain unverified.
