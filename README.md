@@ -87,3 +87,6 @@ explicit annualized-loss weight semantics. Real A9 evaluation remains open.
 
 [Frequency–severity composition](docs/v1/frequency-severity.md) binds matched paid-loss aggregates
 and persists two-model inference with explicit output units. Real A9 evaluation remains open.
+
+[Log-normal AFT](docs/v1/aft.md) adds event/right-censored CPU training and
+persisted scale-aware survival outputs. Real A10 evaluation remains open.

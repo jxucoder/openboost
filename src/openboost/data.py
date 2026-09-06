@@ -187,7 +187,7 @@ class Problem:
 
     Targets are [N, T]; offsets are [N, raw_width]. Weight remains [N] and is not applied
     here. The caller supplies one explicit row order for all aligned role arrays.
-    Objective-specific target support and additional roles arrive in later slices.
+    The explicit event_right target kind validates censoring bounds, including upper +infinity.
     """
 
     data: NumericData | MixedData
@@ -198,6 +198,7 @@ class Problem:
     raw_width: int | None = None
     structure: Mapping | None = None
     classes: ClassSchema | None = None
+    target_kind: str = "numeric"
     identity: str = field(init=False)
 
     def __post_init__(self):
@@ -208,7 +209,17 @@ class Problem:
             self.row_ids, self.data.row_ids
         ):
             raise ValueError("problem roles must match prepared row order")
-        y = _owned(self.target, ndim=2)
+        if self.target_kind not in ("numeric", "event_right"):
+            raise ValueError("unsupported target kind")
+        y = _owned(self.target, ndim=2, finite=self.target_kind == "numeric")
+        if self.target_kind == "event_right" and (
+            y.shape[1] != 2
+            or not np.isfinite(y[:, 0]).all()
+            or np.any(y[:, 0] <= 0)
+            or np.any(~((y[:, 1] == y[:, 0]) | np.isposinf(y[:, 1])))
+            or self.classes is not None
+        ):
+            raise ValueError("positive event/right-censored lower/upper bounds required")
         if len(y) != len(self.data.values):
             raise ValueError("target rows differ from data")
         if self.classes is not None:
@@ -218,7 +229,8 @@ class Problem:
         w = _owned(np.ones(len(y)) if self.weight is None else self.weight, ndim=1)
         if w.shape != (len(y),) or np.any(w < 0) or not np.isfinite(w.sum()) or w.sum() <= 0:
             raise ValueError("nonnegative aligned weights with positive finite mass required")
-        width = y.shape[1] if self.raw_width is None else self.raw_width
+        default_width = 1 if self.target_kind == "event_right" else y.shape[1]
+        width = default_width if self.raw_width is None else self.raw_width
         if type(width) is not int or width < 1:
             raise ValueError("positive integer raw_width required")
         offset = _owned(np.zeros((len(y), width)) if self.offset is None else self.offset, ndim=2)
@@ -241,6 +253,7 @@ class Problem:
             "identity",
             _identity(
                 "problem-cpu-v1",
+                self.target_kind,
                 self.data.identity,
                 y,
                 w,

@@ -56,7 +56,8 @@ class FitResult:
         | QuantileStep
         | PoissonStep
         | GammaStep
-        | TweedieStep,
+        | TweedieStep
+        | AFTStep,
         ...,
     ]
 
@@ -930,6 +931,87 @@ def tweedie(
         )
         steps.append(
             TweedieStep(
+                gradient,
+                curvature,
+                before,
+                state.train_raw,
+                loss_before,
+                objective.loss(train, state.train_raw),
+                coefficients,
+                accepted,
+                failures,
+            )
+        )
+    return FitResult(state, tuple(steps))
+
+
+@dataclass(frozen=True, eq=False)
+class AFTStep:
+    gradient: np.ndarray
+    curvature: np.ndarray
+    raw_before: np.ndarray
+    raw_after: np.ndarray
+    loss_before: float
+    loss_after: float
+    coefficients: tuple[float, ...]
+    accepted: bool
+    failures: tuple[str | None, ...]
+
+
+def aft(
+    train,
+    validation,
+    *,
+    context,
+    sigma=1.0,
+    rounds=2,
+    learning_rate=0.1,
+    bins=254,
+    max_depth=2,
+    max_leaves=None,
+    reg_lambda=1.0,
+    min_child_h=0.0,
+    split_penalty=0.0,
+    step="fixed",
+    max_trials=6,
+    learner=None,
+):
+    """Fixed-scale log-normal AFT with event/right-censored likelihood."""
+    from .survival import LogNormalAFT
+
+    objective = LogNormalAFT(sigma)
+    objective.validate(train)
+    objective.validate(validation)
+    rate, learner = _configuration(
+        rounds,
+        learning_rate,
+        max_depth,
+        max_leaves,
+        reg_lambda,
+        min_child_h,
+        split_penalty,
+        step,
+        max_trials,
+        learner,
+    )
+    binned = Binning.fit(train.data, bins=bins).transform(train.data)
+    state = initialize(context, train, validation, objective.base(train), score=objective.loss)
+    steps = []
+    for _ in range(rounds):
+        before = state.train_raw
+        loss_before, gradient, curvature = objective.geometry(train, before)
+        tree = learner(binned, newton(train, gradient, curvature))
+        state, coefficients, accepted, failures = _trials(
+            state,
+            (TreeTerm(tree, [[1]]),),
+            objective.loss,
+            loss_before,
+            rate,
+            step,
+            max_trials,
+        )
+        steps.append(
+            AFTStep(
                 gradient,
                 curvature,
                 before,

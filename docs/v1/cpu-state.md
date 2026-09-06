@@ -42,8 +42,9 @@ weights `[N]`. `raw_width` defaults to T; set it explicitly when parameters diff
 from observations, such as scalar Normal targets with two raw parameters.
 One explicit row-ID vector declares the order of all role arrays; binding rejects
 a mismatch instead of sorting. The caller is responsible for aligning each role
-before binding. Targets are finite numeric values; specialized target types,
-queries and further objective support arrive in later slices. [ClassSchema](binary.md)
+before binding. Ordinary targets are finite numeric values. [AFT](aft.md) declares
+target_kind="event_right" for validated [lower,upper] bounds, retaining only
+valid upper +infinity and defaulting raw_width to one. [ClassSchema](binary.md)
 binds typed training-label order to encoded classification targets. Named `structure`
 arrays are separately owned `[N, S]` roles in the declared row order; they affect
 problem identity but are never automatically appended to features. Recipes must

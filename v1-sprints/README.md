@@ -121,3 +121,8 @@ quality and complete application artifacts remain open.
 [Sprint 033 / B10 composition](033-b10-frequency-severity.md) adds matched
 paid-loss problems and persisted two-model inference (693 tests). AFT is next;
 real A9 joins/quality and joint selection remain open.
+
+[Sprint 034 / B10 AFT](034-b10-aft.md) adds explicit event/right-censored
+targets and persisted fixed-scale survival inference (716 tests). Next audit
+CPU/B11 coverage; full A6, extension tasks, real application results and CUDA
+remain incomplete.
