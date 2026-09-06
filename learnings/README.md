@@ -125,3 +125,5 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 - [A6 target scaling](2026-09-06-v1-target-scaling.md): train-only normalization and saved original-unit predictions.
 
 - [Housing hosted license](2026-09-06-v1-source-license-review.md): matched archive and dated attribution evidence.
+
+- [Held-out seal](2026-09-06-v1-heldout-seal.md): separate evaluator context, opaque archive custody and pending execution gates.

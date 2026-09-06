@@ -183,3 +183,14 @@ Source review: the exact Housing archive matches Figshare version 2's MD5 and
 CC BY 4.0 declaration. A dated overlay preserves the original freeze and records
 uploader attribution. MSLR agreement retrieval still returned HTTP 401; Veteran
 original-source license remains unresolved.
+
+Held-out preparation: user authorized a separate evaluation agent, which sealed
+H1/H2 cards/verifiers and reported passing internal/adversarial validation. Only
+hashes and status reached the foundation designer. The opaque package is retained
+in ignored local storage and its hash is in the public held-out manifest. This
+is separate-context authorship, not OS isolation or a completed E5 cohort.
+
+Reflection: task-space normalization is part of comparator fairness, not cosmetic
+preprocessing. The constant-target counterexample found a real native-library
+contract difference. Held-out custody now exists, but does not remove the need
+for restricted candidate execution and frozen cohort accounting.

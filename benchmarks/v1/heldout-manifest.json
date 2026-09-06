@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "sealed_local_package_internal_validation_passed",
+  "storage_path": "build/v1-heldout",
+  "package_path": "build/v1-heldout/package.tar",
+  "package_sha256": "ef720026a7665e441c3abc928d06079ab7154f9a8c3c0939b470688977d52494",
+  "files_sha256": {
+    "H1.md": "5e84fc18e0efcfd2e7676178d9c4ec36cb57f1da3562b13e0b5c6ed711572a37",
+    "H2.md": "f62b4eadedb92d13d908a7becffc969178a7f12c4797aa2ade78eca8b9746bea",
+    "candidate-validation.json": "73c12a4350c62d08fc51299018181e1a642ba88f50bce930aaafe85681ff9cee",
+    "diagnostic.py": "8382cd0bee84e4430d1f2fc416a3634cd649631c16e708011b6be98cbbcd7126",
+    "protocol.json": "4bc5f9de0ea9069670ae5b919b15ff87be46145007ba3066803aa36918b33730",
+    "validation.json": "774b1c53db06cc26bf06599d20984c2ed56b2a15c7d62246c6c437eaf216ad0c",
+    "verifier.py": "5e71afabeba152c9605bfa6ba9faa892ed2d34896aad5d0965eb6dd1aff8bac6"
+  },
+  "validation_status": {
+    "internal_math_state_self_test": "passed",
+    "diagnostic_candidate_entry_point": "passed",
+    "adversarial_output_rejection": "passed",
+    "invalid_parameter_rejection": "passed",
+    "real_library_integration": "pending",
+    "fresh_process_persistence": "pending",
+    "comparator_and_cohort_freeze": "pending",
+    "E5_execution": "not_run",
+    "F0_3_overall": "not_closed"
+  },
+  "independence_limitations": "Separate evaluator agent context, same underlying agent system and shared host/filesystem; no human/cohort independence or OS access isolation. Parent has not been sent contents. Source context includes public development tasks.",
+  "storage_status": "Opaque archive copied and hash-verified in ignored build/v1-heldout. Local workspace custody only, not a backup or access boundary; preserve privately before build cleanup. Read-only mode protects against accidental writes only."
+}
