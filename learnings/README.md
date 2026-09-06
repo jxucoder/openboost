@@ -34,6 +34,9 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [A5 Bike data freeze](2026-09-06-v1-bike-data.md) — verified archive, calendar-only
+  inputs and five complete-date rolling windows; no model quality result yet.
+
 - [v1 artifact integrity](2026-09-06-v1-artifact-integrity.md) — missing cells,
   stale cache identities and false pass claims fail; quality gates remain unevaluated.
 

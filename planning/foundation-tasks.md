@@ -141,6 +141,8 @@ R1–R9 各 recipe 的全部 required 行都要闭合。E7 外部采用单列，
   `casual`、`registered` 与实测 weather/temperature/humidity/windspeed；`dteday`
   用于切分、不进模型。按完整日期定义五个 rolling origins：训练前50/55/60/65/70%，
   紧接10%日期 validation、再10% test；F0.3 固定实际日期边界和 hash。
+  Sprint012已冻结[原始文件/数组/五窗口hash](../benchmarks/v1/datasets/bike.json)，
+  端点为floor(D*p/100)；仅数据准备，训练预算、基线与质量验收仍未完成。
 - **叶契约：** weighted quantile 取最小满足累计正权重 `>=q*sum(w)` 的 residual；
   零权重先过滤，ties 采用该左端约定。raw 加 eta*leaf 后再算下一轮 residual。
   初始化为训练y的同约定weighted quantile，不能使用全数据quantile。

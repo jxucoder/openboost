@@ -15,6 +15,8 @@ quantile, vector-leaf, positive-target, AFT, Normal, Formula, isolated-run, auth
 Those checks are preparation for implementation, not evidence that v1 is complete.
 F0.3 now includes an artifact integrity judge with 48 additional adversarial checks.
 Real data/protocol freezing, execution and independent quality evaluation remain pending.
+A5 Bike Sharing raw data and five rolling date splits are frozen, with 24 adapter
+checks. Other datasets, training budgets and all real quality results remain pending.
 
 The repository's `v1-sprints/` directory contains execution plans, verification
 results and reflections. `planning/foundation-construction-design.md` defines

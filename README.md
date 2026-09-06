@@ -15,6 +15,8 @@ AFT, Normal, Formula, isolated-run, author-task and finite integration reference
 correctness preparation, not proof of a completed foundation or product parity.
 An [artifact integrity judge](benchmarks/v1/README.md) has 48 additional adversarial
 checks; real evaluation manifests, execution and quality gates are still pending.
+A5 [Bike Sharing data and rolling splits](benchmarks/v1/datasets/bike.json) are now
+frozen, with 24 adapter checks. No real model quality result is claimed yet.
 
 - [Execution and reflections](v1-sprints/README.md)
 - [Construction design](planning/foundation-construction-design.md)

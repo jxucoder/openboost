@@ -73,3 +73,38 @@ Next F0.3 slices must acquire and hash real datasets, implement their split/targ
 adapters, smoke-test pinned baselines, freeze resources/configurations and held-out
 verifiers, add the execution runner and independent metric/gate evaluation. Full
 benchmark runs remain prohibited until actual hashes and budgets are frozen.
+
+## A5 real data preparation
+
+[Sprint 012](../../v1-sprints/012-bike-data-freeze.md) freezes the UCI Bike Sharing
+hourly archive and five full-date rolling splits in [datasets/bike.json](datasets/bike.json).
+Source: Hadi Fanaee-T (2013), [UCI Bike Sharing](https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset),
+DOI 10.24432/C5W894, CC BY 4.0. The download has **17,379** hourly rows, versus
+17,389 on the UCI page checked on 2026-09-06; archive and CSV hashes identify the
+actual data used. Raw data is downloaded locally and is not vendored in Git.
+
+```bash
+curl --fail --location 'https://archive.ics.uci.edu/static/public/275/bike%2Bsharing%2Bdataset.zip' -o /tmp/openboost-v1-bike.zip
+uv run --no-sync python -m benchmarks.v1.bike /tmp/openboost-v1-bike.zip --verify benchmarks/v1/datasets/bike.json
+```
+
+`load_archive` verifies both pinned archive and `hour.csv` hashes before parsing.
+`parse_hour` exposes X (float64 calendar columns), y (hourly total count), original
+integer row IDs, and ISO dates. No fitted preprocessing is performed. Calendar
+values and chronological unique timestamps are checked. All records are retained;
+missing hours are not synthesized. IDs/dates support alignment and splitting only.
+Observed weather, temperature, humidity, wind and casual/registered counts never
+enter X. Numeric/calendar encoding is explicit; later adapters may choose categorical
+representations without learning from validation/test.
+
+For D=731 dates, each origin uses floor(D*p/100), floor(D*(p+10)/100),
+floor(D*(p+20)/100) endpoints for p=50,55,60,65,70. Each date stays whole.
+Origins overlap; they are not independent trials. The unused final 10% of dates
+is intentionally outside the predeclared windows, not an extra selection set.
+The freeze contains per-part row counts, date boundaries and row-ID hashes, plus
+feature/target array hashes and adapter source hash. `--verify` refuses altered
+source or data/splits; replay provenance (revision/environment/argv) may differ.
+
+This **data preparation record is not an integrity-v0 run manifest**. It honestly
+records a dirty checkout and identifies the adapter bytes separately. It does not
+freeze training budgets/configurations, run any quantile model, or pass E3/A5.
