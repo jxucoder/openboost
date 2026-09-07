@@ -5,6 +5,10 @@ Review baseline: merged [PR #24](https://github.com/jxucoder/openboost/pull/24),
 Status: retrospective complete; next CPU work ordered; GPU overlap proposed,
 not enacted. All R1–R9/C1–C7/A1–A13 and E0–E7 thresholds remain unchanged.
 
+Subsequent [landscape feedback review](063-landscape-feedback.md) adds a concrete
+external stopping-result probe to N1 and sharpens N3 comparator/task choices.
+It does not replace the required application matrix or adopt the GPU amendment.
+
 ## 1. Verdict and product definition
 
 **Continue investing in the foundation, but change what the next increments prove.**
@@ -209,6 +213,12 @@ differ and same-ID streams match. Record source/wheel hashes and errors. No new
 scheduler or core edit unless a failing probe demonstrates a defect. This closes
 specific development evidence, not the full E5 experiment.
 
+The [landscape addendum](063-landscape-feedback.md) found that result validation
+still requires the concrete patience/budget StopState. Add an external terminal
+record with a true policy-specific reason to this development slice. Preserve
+unfinished-result rejection and existing stopping semantics; fix only the
+demonstrated contract boundary. This probe is not a ScoreStop implementation.
+
 ### N2: Make practical execution an explicit design test
 
 Before large searches, run a preregistered diagnostic on frozen Housing fold zero,
@@ -265,6 +275,12 @@ Run a verifier that the candidate cannot edit. Before dispatch, verify that the
 available execution service can measure the declared token/time budgets and isolate
 attempts; otherwise report the measurement gap rather than inventing agent costs.
 This is an evaluation plan, not authorization for additional agents or outreach.
+
+Use the [landscape addendum](063-landscape-feedback.md) when choosing the opponent:
+GBNet for differentiable composition, current NGBoost authoring/learner tools for
+distribution tasks, and Py-Boost for editable GPU execution. Coupled matrix leaves
+and learned learner mappings are development options, not three new mandatory
+paper implementations or replacements for the existing D/H evaluation scope.
 
 An author unfamiliar with the implementation is preferable to another self-authored
 package. Execution must use an authorized independent runner/agent or participant.

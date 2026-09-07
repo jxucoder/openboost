@@ -22,6 +22,9 @@ exploratory author-accounting preparation (N3), and a required-coverage ledger
 plus one real A6/A13 selection/release (N4). The proposed bounded CUDA overlap
 is not adopted; current phase ordering remains in force. All required cases remain.
 
+The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
+stopping-result restriction and refines authoring comparators and development probes.
+
 [Sprint 062](062-cpu-exit-and-gpu-entry.md) retains the preceding CPU/GPU audit.
 [Sprint 038](038-goal-progress-and-plan.md) and Sprints 039–061 record the earlier
 construction, installed extensions and application evidence. The new

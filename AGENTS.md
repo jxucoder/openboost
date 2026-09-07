@@ -73,7 +73,9 @@ Current real validation/replay covers A1–A3/A5–A12; A4 has synthetic adapter
 These bounded runs do not establish full quality, authoring cost or adoption.
 A13 real search/release, A9 joint selection, source gaps and formal gates remain open.
 
-Next: N1 installed D5 distinct run-ID RNG and stale-preparation probes. Then N2
+Next: N1 installed D5 distinct run-ID RNG, stale-preparation and external stopping
+result probes; see the [landscape feedback addendum](v1-sprints/063-landscape-feedback.md)
+for the concrete StopState restriction and comparator updates. Then N2
 practical runtime/state checks and N3 exploratory author-accounting preparation;
 N4 closes the coverage ledger and one real A6/A13 search/release before extending
 remaining schemas. The Sprint 063 diagnostic confirms quadratic tree replay and
