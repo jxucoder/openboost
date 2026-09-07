@@ -80,20 +80,17 @@ completion. This supersedes the earlier unadopted-overlap proposal. Audit releva
 065/068 ownership on the actual device path. Experimental CUDA storage, named
 fields and routed histograms pass 33 real T4 tests at `ad2f4e6`; see the
 [078-A evidence](benchmarks/v1/evidence/cuda-aggregation-078/README.md).
-Both 085 device runs are consumed; later hardware checks require a new concrete
-run freeze and allowance. The user continued after reflection into
-[087 local split construction](v1-sprints/087-cuda-split-operations.md).
-078-B candidate/feasibility/route/leaf operations retain D2 independent information;
-implementation and 55 real-device cases exist, but hardware validation is pending.
-The [run-3 package](v1-sprints/078-splits-run3.json) freezes those cases plus all
-33 previous cases and one T4 invocation. The user's continuation after the concrete
-approval request authorizes that single run, capped at 900 seconds with no retries.
-Audit its evidence and record allowance consumption before any further device work.
-The earlier automatic approval block occurred before process creation. The user
-has now explicitly approved uploading the frozen 39-file source/test/metadata
-package to Modal for this one run. No earlier remote invocation consumed it.
+The separately approved [087 split slice](v1-sprints/087-cuda-split-operations.md)
+passes 88 real T4 tests at `9ce790e`: 55 candidate/feasibility/route/leaf checks
+plus all 33 previous cases. D2's independent cohort minima change the winning
+split through public device operations; named/reordered information also passes.
+See the [078-B evidence](benchmarks/v1/evidence/cuda-splits-078/README.md).
+The original two runs and the additional single run are consumed. Stop at the
+planned retrospective; further hardware checks need a new concrete freeze and
+allowance. Next construction is 078-C resident two-round training with explicit
+accepted/proposal ownership and saved CPU inference. Retain the 065/068 contracts.
 CUDA training and accepted/proposal integration remain unimplemented.
-Aggregation checks do not pass transaction or boosting conformance. Formal
+Primitive checks do not pass transaction or boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
 
@@ -106,7 +103,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1185 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1195 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
@@ -156,7 +153,7 @@ artifacts. PreparedData explicitly reuses fitted training binning/codes across
 independent heterogeneous runs. All recipes support independent validation patience
 through public StopState, separate from model acceptance and best-model selection.
 Training execution is sequential CPU; experimental CUDA storage and aggregation
-are verified at `ad2f4e6`. Public split operations await hardware validation;
+plus public split/feasibility/route/leaf operations are verified at `9ce790e`.
 CUDA training is not implemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 

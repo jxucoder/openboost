@@ -95,11 +95,12 @@ Histogram execution exports two flags per field and no bulk arrays. Flag export
 and scratch release synchronize explicitly and are included in storage counters.
 These diagnostics are not an end-to-end fit-cost measurement.
 
-## Candidate, feasibility, route and leaf operations: awaiting hardware validation
+## Experimental candidate, feasibility, route and leaf operations
 
 Sprint 087 adds Python CUDA kernels and public operations for scalar numeric
-splits. These additions have not run on a GPU. The earlier 33 passing tests verify
-the implementation at `ad2f4e6`, not this new slice. The frozen comparison uses an
+splits. All 88 real T4 tests pass at clean `9ce790e`, including 55 new split cases
+and the earlier 33 storage/aggregation cases. See the committed evidence at
+`benchmarks/v1/evidence/cuda-splits-078/README.md`. The frozen comparison uses an
 independent float64 original-row oracle and checks every candidate's sums, counts,
 gain and feasibility, then winner, routed rows and leaves. Float32 tolerances are
 rtol=1e-4/atol=1e-5; counts, row order and exact-tie winners must match exactly.
@@ -135,7 +136,8 @@ if split is not None:
 ```
 
 This sketch belongs inside the live context above, using fields that include the
-named cohorts. It is a development contract pending real-device acceptance.
+named cohorts. This public composition passes renamed/reordered cohort checks on
+the installed T4 package; it does not establish independent author productivity.
 `scores(batch, buffer)` and `mask(batch, buffer)` also bind explicitly supplied
 resident float32/bool vectors. These bindings validate shape, finite scores and
 exact batch identity. Custom masks replace ordinary feasibility; callers compose

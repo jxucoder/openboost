@@ -1,5 +1,6 @@
 """Local freeze/allowance/integrity checks; never run or simulate CUDA kernels."""
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -23,6 +24,13 @@ def protocol():
     return json.loads((REPO / PROTOCOL).read_text())
 
 
+def sources_for(config):
+    if config["authorization"] == "consumed":
+        # A completed freeze describes its recorded execution, not later README/code.
+        return json.loads((REPO / config["output"] / "manifest.json").read_text())["sources"]
+    return snapshot_hashes(REPO, snapshot_paths(REPO, PROTOCOL, config))
+
+
 def test_exact_frozen_sources_and_new_run_bounds():
     config = protocol()
     assert config["authorization"] in ("pending", "approved", "consumed")
@@ -37,7 +45,7 @@ def test_exact_frozen_sources_and_new_run_bounds():
     )
     assert config["limits"] == dict(rows=8192, features=32, bins=32, pool_bytes=16 * 1024**2)
     assert config["float32"] == dict(rtol=1e-4, atol=1e-5)
-    sources = snapshot_hashes(REPO, snapshot_paths(REPO, PROTOCOL, config))
+    sources = sources_for(config)
     assert len(sources) == 39
     check_frozen_sources(PROTOCOL, config, sources)
     sources["src/openboost/device.py"] = "changed"
@@ -45,23 +53,30 @@ def test_exact_frozen_sources_and_new_run_bounds():
         check_frozen_sources(PROTOCOL, config, sources)
 
 
-def test_collection_matches_all_frozen_cases_and_keeps_prior_regressions():
+def test_frozen_cases_match_collection_or_completed_evidence_and_keep_regressions():
     config = protocol()
-    collected = subprocess.check_output(
-        [
-            sys.executable,
-            "-m",
-            "pytest",
-            *config["test_files"],
-            "--collect-only",
-            "-o",
-            "addopts=",
-            "-q",
-        ],
-        cwd=REPO,
-        text=True,
-    )
-    nodes = [line for line in collected.splitlines() if line.startswith("tests/")]
+    if config["authorization"] == "consumed":
+        root = ET.parse(REPO / config["output"] / "junit.xml").getroot()
+        nodes = [
+            case.attrib["classname"].replace(".", "/") + ".py::" + case.attrib["name"]
+            for case in root.iter("testcase")
+        ]
+    else:
+        collected = subprocess.check_output(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                *config["test_files"],
+                "--collect-only",
+                "-o",
+                "addopts=",
+                "-q",
+            ],
+            cwd=REPO,
+            text=True,
+        )
+        nodes = [line for line in collected.splitlines() if line.startswith("tests/")]
     assert len(nodes) == len(set(nodes)) == 88
     assert nodes == config["expected_cases"]
     prior = json.loads((REPO / "v1-sprints/078-aggregation-run2.json").read_text())
@@ -94,7 +109,7 @@ def test_single_output_is_required_and_cannot_be_reused(tmp_path):
 )
 def test_judge_requires_installed_sources_snapshots_versions_and_exit(broken):
     config = protocol()
-    sources = snapshot_hashes(REPO, snapshot_paths(REPO, PROTOCOL, config))
+    sources = sources_for(config)
     result = dict(
         exit_code=0,
         installed_sources={k: v for k, v in sources.items() if k.startswith("src/openboost/")},
@@ -108,3 +123,20 @@ def test_judge_requires_installed_sources_snapshots_versions_and_exit(broken):
     if broken is not None:
         result.pop(broken)
     assert judge_run(result, ET.tostring(root), config, sources)["passed"] == (broken is None)
+
+
+def test_completed_run_artifacts_and_original_protocol_are_intact():
+    config = protocol()
+    assert config["authorization"] == "consumed"
+    output = REPO / config["output"]
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["protocol"] == dict(config, authorization="approved")
+    assert manifest["status"] == "pass" and manifest["dirty"] is False
+    assert manifest["revision"] == "9ce790ef766b8572cad22b96f127d858b4a2e766"
+    for name, digest in manifest["artifacts"].items():
+        assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
+    observed = judge_run(
+        manifest["result"], (output / "junit.xml").read_text(), config, manifest["sources"]
+    )
+    assert observed == json.loads((output / "verdict.json").read_text())
+    assert observed["passed"]

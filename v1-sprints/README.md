@@ -26,25 +26,21 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1185 passing tests (one Linux-only skip).
-Bounded real evaluation and installed extensions exist. Thirty-three real T4
-storage/aggregation tests pass; GPU training, independent author benefit, full quality/search and
+CPU implementation has twelve recipes and 1195 passing tests (one Linux-only skip).
+Bounded real evaluation and installed extensions exist. Eighty-eight real T4
+storage/aggregation/split tests pass; GPU training, independent author benefit, full quality/search and
 adoption remain unverified. The
 [064–084 roadmap](roadmap-after-063.md) retains those obligations; 085 changes their
 near-term priority and the bounded device entry rule. Reflect after each 085 slice
 and every three implementation commits. No independent author attempt has run.
-Both approved device runs are consumed. Reflection led to local 078-B construction;
-further hardware work requires a concrete new freeze and allowance.
-See [078 evidence and reflection](078-cuda-scalar-path.md).
-The user continued into [087 local split construction](087-cuda-split-operations.md):
-the exhaustive oracle and public scores/masks/routes/leaves are implemented.
-Fifty-five new real-device cases await hardware validation. The
-[88-case run-3 package](078-splits-run3.json) is frozen and locally checked;
-it includes all 33 previous device cases. The user approved this single additional
-T4 run by continuing after the concrete approval request. Dispatch and audit it
-once, then record the retrospective and allowance consumption.
-The earlier automatic approval block preceded any upload/run. The user has now
-explicitly approved the frozen 39-file upload to Modal; dispatch and audit remain.
+The two original device runs and the separately approved run 3 are consumed.
+[087 split composition](087-cuda-split-operations.md) passes its 55 new cases plus
+all 33 previous regressions at clean `9ce790e`; see the
+[raw evidence and reflection](../benchmarks/v1/evidence/cuda-splits-078/README.md).
+D2 changes the selected split through public resident scores and feasibility masks.
+Stop at this retrospective before 078-C's accepted/proposal ownership design,
+resident two-round scalar training and saved CPU inference. Further hardware work
+requires a new concrete freeze and allowance.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

@@ -29,7 +29,8 @@ batch mask. The operations do not imply arbitrary custom-kernel registration.
 ## Verification
 
 Independent original-row references and public CPU agreement precede implementation.
-GPU validation remains not_run until a concrete package and new allowance exist.
+Before the approved run, GPU validation remained not_run until a concrete package
+and new allowance existed. The completed real-device result is recorded below.
 
 The frozen reference suite passes 31 cases, covering ten fixtures and minima
 0/1/2 plus hand-checked D2 and tie winners. CPU routing preserves unsorted row
@@ -58,7 +59,7 @@ whitespace checks pass. The limits and zero-retry policy remain fixed.
 
 ## Failed Attempts
 
-The candidate API is absent at the starting revision; no remote experiment is run.
+The candidate API was absent at the starting revision; its first local probe failed.
 
 At `043861a`, automatic approval review rejected creation of the Modal launcher
 process because source/test/metadata transfer to Modal needed explicit user
@@ -74,6 +75,42 @@ the block without changing the payload scope, cases, limits or launcher route.
 All 17 local manifest/judge checks and whitespace checks pass with this recorded
 approval; the 38 prefrozen hashes still match and the case matrix remains 88.
 
+## Real-device result and reflection
+
+All 88 frozen T4 cases pass at clean `9ce790e`, with no retry or skipped/missing
+case. The [evidence](../benchmarks/v1/evidence/cuda-splits-078/README.md) retains
+raw JUnit/logs and the complete source, installed-module, version and artifact
+manifest. Re-judging and checking every snapshot hash against its Git revision
+passes: 39 files, 23 production modules, 17 versions and three artifact hashes.
+
+D2's independent cohort minima change the winner on CUDA through public mask
+composition; names/order/minima vary without private dispatch. Every candidate's
+sums/counts/gain/masks, routed rows and Newton leaves meet the frozen oracle.
+The one approved invocation is consumed. No additional hardware is authorized.
+
+The loaded runtime remains 12090 and driver API 13000 on T4 driver 580.95.05,
+distinct from the CUDA 12.6.3 image tag. Pytest takes 8.26 seconds; the worker takes
+9.75 seconds. These are validation durations, with 98 occupancy warnings retained.
+Small split fixtures peak at 19968 bytes in the sampled private pool; neither
+that measurement nor compact decision transfers establishes training cost/speed.
+
+Updating the README after acceptance exposed a local harness-test assumption:
+it compared a consumed freeze to the current README and failed. Completed-run
+tests now audit the retained source/case evidence; active freezes still compare
+the live tree and actual collection. No frozen hashes, cases or launcher guards
+were relaxed. Stored artifact integrity has a regression check. All 18 local
+manifest/judge checks and full CPU regression (1195 passed, one Linux-only skip)
+pass after this change. Production modules are unchanged from the T4 snapshot.
+Production/changed-support lint, whitespace checks, documentation build and offline
+wheel/sdist build pass at closure. No extra CUDA run was used for these checks.
+
+The product boundary has advanced from aggregation to a composable split decision.
+Resident raw updates, trees, training transactions and saved CPU inference are
+the next falsifiable result. Keep 065 isolation and 068 retention/ownership in
+that construction contract. Primitive rollback does not imply accepted-state
+immutability, and known D2 development work is not independent author evidence.
+Pause for the planned retrospective before 078-C construction.
+
 ## Risks and Follow-ups
 
 Distinguish padded slots from actual candidates; preserve original row order and
@@ -82,12 +119,15 @@ routes are exact; the original E1 tolerances and mathematical failures remain.
 No CPU search expansion, author-cost claim or training implementation is included.
 The new run request is one T4 invocation, 900-second function/600-second tests,
 16-MiB private pools, two requested CPU cores/8192-MiB host capacity, zero retries.
-Actual hardware behavior remains unknown. Preserve the distinction between
-runtime versions, driver support, image labels and package metadata.
+The declared primitive behavior is verified; training and end-to-end device
+behavior remain open. Preserve the distinction between runtime versions, driver
+support, image labels and package metadata.
 
 ## Commits
 
 `0ba39a3` freezes the oracle before implementation; `0bcb52f` adds the operations
 and pending real-device cases. `161c02e` freezes the shared executor guards and
-run-3 package. `043861a` records the compute approval. The external-transfer block
-is recorded separately. Nothing is pushed.
+run-3 package. `043861a` records compute approval, `a29749b` the initial transfer
+block and `9ce790e` the explicit upload approval and executed source revision.
+Commit the verified raw evidence, archival checks and retrospective together.
+Nothing is pushed.

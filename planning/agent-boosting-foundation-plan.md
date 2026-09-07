@@ -20,8 +20,10 @@ It supersedes the earlier unadopted-overlap proposal. Formal acceptance remains
 unchanged. Historical checkboxes require current evidence reconciliation.
 The [086 execution plan](../v1-sprints/086-next-execution-plan.md) specifies the
 fields/histogram slice, its frozen fixtures, device allowance and path to resident
-training. Storage/aggregation are now verified at `ad2f4e6`; both bounded runs are
-consumed and the retrospective checkpoint is reached. CUDA boosting remains open.
+training. [087 split composition](../v1-sprints/087-cuda-split-operations.md) now
+passes 88 real T4 primitive checks at `9ce790e`, including D2's public feasibility
+change. All three approved invocations are consumed; the retrospective checkpoint
+precedes 078-C ownership and resident training. CUDA boosting remains open.
 
 This plan supersedes future investment order in the old GPU checklist and the
 [ScoringBench-first plan](impact-adoption-value-next.md). Old experiments and failures remain valid.
@@ -439,9 +441,10 @@ Starting instructions for the next execution model:
 > Preserve all R/C/A/E requirements, E5 cohorts, required CUDA recipes and P7/E4.
 > Record results and reflect at each bounded slice. No phase exit follows from
 > objective counts, green tests or a single scalar GPU fixture.
-> Sprint 086's 078-A now passes real T4 checks. Both device runs are consumed;
-> stop for the planned retrospective. Next local construction is 078-B's public
-> candidate/feasibility/route/leaf operations. Further device runs need a new bound.
+> Sprint 087's 078-A/B primitives pass 88 real T4 checks, including D2's public
+> candidate/feasibility/route/leaf composition. All three invocations are consumed;
+> stop for the planned retrospective before 078-C ownership and resident training.
+> Further hardware checks require a new concrete freeze and allowance.
 
 
 ### Approved foundation-priority amendment: 2026-09-07

@@ -1,8 +1,8 @@
 # Sprint 078: Resident scalar CUDA composition
 
-Status: 078-A storage/fields/routed histograms verified on T4 at `ad2f4e6`;
-candidates, leaf operations and training remain open. Both approved runs are
-consumed; planned retrospective reached. Mapping: B12 / F3.1 / R1 / C1–C5 / E1.
+Status: 078-A/B primitives verified on T4 at `9ce790e` with 88 passing tests;
+resident training and transactions remain open. All three approved invocations
+are consumed; planned retrospective reached. Mapping: B12 / F3.1 / R1 / C1–C5 / E1.
 Entry: bounded feasibility is approved by [085](085-foundation-focus-amendment.md)
 alongside 069, subject to relevant 065/068 ownership checks. Formal device gates
 still retain their full recipe, quality and authoring requirements.
@@ -153,3 +153,25 @@ No independent author attempt or accounting result was added. Wider CPU searches
 stay paused. Formal application quality, author benefit, P7/E4 and adoption remain
 open. The next remote verification needs a concrete reviewed workload and a new
 bounded allowance; this successful allocation is not a reusable compute credit.
+
+### Run-3 public split result and retrospective
+
+The separately approved [087](087-cuda-split-operations.md) completes 078-B:
+55 new split cases and all 33 earlier regressions pass at clean `9ce790e` on T4.
+The [raw evidence](../benchmarks/v1/evidence/cuda-splits-078/README.md) verifies
+39 snapshot files, 23 installed production modules, 17 pinned dependencies and
+the exact 88-cell JUnit matrix. The approved extra invocation is consumed; no
+retry occurred. CPU recipes and formal phase status are unchanged.
+
+Independent candidate sums/counts/gains/masks, exact tie selection, original-row
+routes and scalar leaves agree. D2's best split changes through public independent
+cohort minima, including renamed/reordered fields and changed minima. No host
+candidate callback or bulk array round trip implements this constraint.
+
+This verifies the primitive boundary, not resident boosting. Next freeze the
+078-C accepted/proposal ownership contract and independent two-round fixture;
+keep device raw updates, rejection/retry isolation, best/stopping separation and
+CPU-readable saved inference in scope. Current opaque handles and operation
+allocation cleanup do not pass the 065/068 transaction/retention requirements.
+Keep author accounting, full application quality, P7/E4 and adoption gaps visible.
+Stop for the planned retrospective before constructing the next slice.

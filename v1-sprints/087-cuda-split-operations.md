@@ -1,9 +1,9 @@
 # Sprint 087: Public CUDA candidate and feasibility composition
 
-Status: compute and frozen source upload approved; one dispatch and evidence audit next.
-Baseline `4251a36`. Implements 086's 078-B; it is not a new phase or GPU allowance.
-Both 085 device runs are consumed. The user's continuation after the concrete
-run-3 approval request authorizes one additional bounded invocation below.
+Status: 078-B complete with 88 real T4 cases passing at `9ce790e`; retrospective reached.
+Baseline `4251a36`. Implements 086's 078-B; it does not establish a formal phase exit.
+Both 085 runs and the separately approved invocation below are consumed.
+078-C resident training and accepted/proposal integration remain open.
 
 ## Retrospective decision
 
@@ -195,3 +195,61 @@ The user subsequently replied "Approved" to the explicit request to upload the
 frozen 39-file source/test/metadata package to Modal for the already approved
 single T4 run. This resolves the transfer block. Record approval and verify the
 unchanged package before using the original launcher; no workaround is needed.
+
+## Run-3 result and acceptance
+
+[Raw evidence](../benchmarks/v1/evidence/cuda-splits-078/README.md) records one
+installed-wheel T4 invocation at clean `9ce790e`, with all 88 expected cases
+passing: 55 split checks plus all 33 prior regressions. Local re-judging,
+all 39 source files against the Git commit, all 23 installed modules, the uploaded
+snapshot, 17 pinned versions and three artifact hashes agree. No case was missing,
+skipped, retried or changed after results. The additional allowance is consumed.
+
+D2 at minimum=1 selects threshold 1 with gain 20/3 instead of unconstrained
+threshold 0 with gain 12. Renamed/reordered information and minima 0/1/2 pass the
+same public path. Candidate intermediates, exact ties, actual child rows and leaf
+values agree with the original-row oracle. Failures and lifetimes are exercised
+on the device; there is no CPU feasibility callback or bulk candidate download.
+
+T4 driver 580.95.05, runtime 12090 and driver API 13000 are distinct from the
+12.6.3 image tag. The worker took 9.75 seconds and pytest 8.26 seconds, including
+lazy compilation; these are test durations, not boosting speed. All 98 occupancy
+warnings remain in the raw log. The largest of 30 small split-context pool samples
+is 19968 bytes; the private-pool cap remains 16 MiB and excludes driver/JIT memory.
+
+At the logged six-row D2 checkpoint, 24 decision-export bytes cover two choices
+and their child sizes; 252 validation bytes and diagnostic exports are separate.
+Its 89 explicit synchronizations include tests' diagnostics. Compact transfers
+establish resident operations but do not establish low latency or full fit cost.
+
+## Closure reflection and next work
+
+1. The public device boundary now preserves named statistics, independent
+   information and a changed split decision through actual CUDA execution.
+2. CPU work is explicit preparation and compact control metadata; gradients,
+   iterative raw updates, tree construction/inference and transactions are not
+   implemented by this slice. Current recipes still train on CPU.
+3. D2 required no private task switch. Generic external custom-kernel registration
+   remains absent; composability of these operations is the verified scope.
+4. 065 run isolation and 068 retained-state ownership remain requirements for
+   078-C. Operation cleanup and borrowed-handle validation are not substitutes for
+   atomic accepted/proposal state, best-model selection or stopping semantics.
+5. No independent author attempt/accounting result was added. Required R/C/A/E
+   application, authoring, quality, P7/E4 and adoption gates remain open.
+
+Stop at the planned user retrospective. Next local construction should freeze
+078-C's owned accepted/proposal/raw/tree records and independent two-round scalar
+and D2 expectations before implementation. Acceptance must include raw updates,
+rejection and same-step retry, selected/best/stopping separation, bounded retained
+storage, and plugin-free inference from a saved artifact in a fresh CPU process.
+Only a new concrete workload and allowance can authorize its hardware checks.
+
+Local closure: full CPU regression passes 1195 tests with one Linux-only skip;
+18 manifest/judge checks pass, including stored raw-artifact integrity. After
+completion, source/case freeze tests audit the recorded run instead of requiring
+future README/code to remain identical. The original 38 prefrozen hashes and all
+dispatch guards are unchanged. Updating README acceptance first exposed the old
+test's incorrect use of the live tree for a consumed run; archived verification
+now fixes that without weakening the before-dispatch check.
+Production and changed-support lint, whitespace checks, documentation and offline
+wheel/sdist builds pass. No production code changed after the successful T4 run.
