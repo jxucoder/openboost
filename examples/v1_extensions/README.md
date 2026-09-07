@@ -18,6 +18,13 @@ These are exploratory development examples, not independent authors, timed agent
 comparisons, held-out tasks or adoption evidence. All use public imports and
 require no core edits. The historical `examples/extensions/` packages remain separate.
 
+[custom_stopping.py](custom_stopping.py) is a separate public-loop development
+example. It stops half-step squared-error boosting when measured training loss
+crosses its declared threshold, returning its own frozen stopping/result records.
+Source checks independently verify the recurrence and preserve the real reason
+through run_many. Installed custom-policy checks follow in Sprint 065; this example
+is not another independent author or a statistical stopping-method reproduction.
+
 ## Reproduce
 
 ```sh

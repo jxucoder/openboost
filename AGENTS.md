@@ -63,8 +63,9 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-Current execution card: [Sprint 064 programmable stopping completion](v1-sprints/064-programmable-stopping-and-isolation.md)
-(planned, not implemented). The [064–084 sprint roadmap](v1-sprints/roadmap-after-063.md)
+Current execution card: [Sprint 065 installed run isolation](v1-sprints/065-installed-run-isolation.md).
+Sprint 064 structural stopping is complete (943 CPU tests); installed custom-policy
+conformance is next. The [064–084 sprint roadmap](v1-sprints/roadmap-after-063.md)
 defines bounded deliverables, dependencies and acceptance. [Sprint 063 retrospective and next plan](v1-sprints/063-retrospective-and-next-plan.md)
 provides the rationale and later milestones, reviewing merged PR #24 at `47108db`.
 [Sprint 062](v1-sprints/062-cpu-exit-and-gpu-entry.md)
@@ -76,8 +77,8 @@ Current real validation/replay covers A1–A3/A5–A12; A4 has synthetic adapter
 These bounded runs do not establish full quality, authoring cost or adoption.
 A13 real search/release, A9 joint selection, source gaps and formal gates remain open.
 
-Next: Sprint 064 separates structural stopping completion from the default patience
-policy; Sprint 065 verifies installed D5 distinct run-ID RNG, stale preparation
+Sprint 064 separates structural stopping completion from the default patience
+policy. Next: Sprint 065 verifies installed D5 distinct run-ID RNG, stale preparation
 and external stopping results. See the [landscape feedback addendum](v1-sprints/063-landscape-feedback.md)
 for the concrete StopState restriction and comparator updates. Sprints 066–068
 separate practical profiling, incremental runtime and diagnostic retention.

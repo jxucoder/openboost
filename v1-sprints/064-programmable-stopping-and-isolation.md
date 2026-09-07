@@ -1,6 +1,7 @@
 # Sprint 064: Programmable stopping completion
 
-Baseline: `df23796`. Status: planned; implementation has not started.
+Planning baseline: `df23796`. Implementation parent: `8c9f3de`.
+Status: complete; source conformance verified, installed checks follow in 065.
 Mapping: N1 / F1 / B11 / C4 / E1–E2 development conformance.
 Entry: current CPU result and stopping contracts. Ready to implement.
 
@@ -88,6 +89,23 @@ uv run --no-sync ruff check src/openboost tests/v1/test_public_results.py
 
 ## Results
 
-Not run. No implementation, new test pass or gate completion is claimed.
-The earlier planning verification remains in the
-[original learning](../learnings/2026-09-06-v1-sprint064-plan.md).
+The first structural-record test failed with the original concrete StopState
+restriction. Public StoppingStatus now separates completion metadata from the
+default patience policy. Validation preserves external objects and rejects missing
+fields, malformed counts/reasons, unfinished records and premature budget claims.
+
+The external public tree/transaction loop stops on measured training loss: the
+independent two-leaf recurrence gives 0.125 then 0.03125, crossing 0.05 at round
+two of five. Changing the threshold changes completion. Reversed validation
+targets preserve the initial best model, proving selection remains independent.
+
+Verification: 77 focused result/stopping/ordered checks, 943 full CPU tests,
+production/changed-support Ruff, strict MkDocs and offline sdist/wheel build pass.
+Exact commands and the observed first failure are in the
+[implementation learning](../learnings/2026-09-06-v1-structural-stopping.md).
+
+Reflection: a three-field public completion boundary resolves the demonstrated
+interoperability restriction without introducing a universal policy framework.
+This verifies metadata and one simple policy's mathematics, not arbitrary policy
+correctness, ScoreStop, independent author cost or installed conformance. Next 065
+tests the same contract outside the source tree with mixed scheduling and failures.

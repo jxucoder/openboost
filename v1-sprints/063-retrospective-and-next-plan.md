@@ -10,8 +10,8 @@ external stopping-result probe to N1 and sharpens N3 comparator/task choices.
 It does not replace the required application matrix or adopt the GPU amendment.
 The [064–084 sprint roadmap](roadmap-after-063.md) decomposes this review into
 bounded cards with dependencies and acceptance. [Sprint 064](064-programmable-stopping-and-isolation.md)
-is the current stopping-contract card; its earlier installed-isolation slice is
-now [Sprint 065](065-installed-run-isolation.md). All implementation is still planned.
+has completed structural stopping; its installed-isolation follow-up is
+now the current [Sprint 065](065-installed-run-isolation.md) card.
 
 ## 1. Verdict and product definition
 

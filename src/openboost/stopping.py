@@ -3,6 +3,25 @@
 from dataclasses import dataclass, replace
 from math import isfinite
 from numbers import Real
+from typing import Protocol, runtime_checkable
+
+
+@runtime_checkable
+class StoppingStatus(Protocol):
+    """Public completion metadata, independent of an author's stopping policy.
+
+    None denotes an active policy; completed results require a nonempty reason.
+    Read-only properties describe the contract, not runtime mutation isolation.
+    """
+
+    @property
+    def rounds(self) -> int: ...
+
+    @property
+    def completed_rounds(self) -> int: ...
+
+    @property
+    def reason(self) -> str | None: ...
 
 
 def _finite(value):

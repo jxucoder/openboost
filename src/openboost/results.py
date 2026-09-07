@@ -3,7 +3,7 @@
 from typing import Protocol, runtime_checkable
 
 from .runtime import AcceptedState
-from .stopping import StopState
+from .stopping import StoppingStatus
 
 
 @runtime_checkable
@@ -21,7 +21,7 @@ class RecipeResult(Protocol):
     def steps(self) -> tuple[object, ...]: ...
 
     @property
-    def stop(self) -> StopState: ...
+    def stop(self) -> StoppingStatus: ...
 
 
 def validate_result(result, *, context, train, validation):
@@ -29,12 +29,21 @@ def validate_result(result, *, context, train, validation):
     if not isinstance(result, RecipeResult):
         raise ValueError("recipe result requires state, steps and stop")
     state, steps, stop = result.state, result.steps, result.stop
-    if not isinstance(state, AcceptedState) or not isinstance(stop, StopState):
-        raise ValueError("recipe result requires AcceptedState and StopState")
-    if not isinstance(steps, tuple) or len(steps) != stop.completed_rounds:
+    if not isinstance(state, AcceptedState):
+        raise ValueError("recipe result requires AcceptedState")
+    if not isinstance(stop, StoppingStatus):
+        raise ValueError("recipe stop requires rounds, completed_rounds and reason")
+    rounds, completed, reason = stop.rounds, stop.completed_rounds, stop.reason
+    if type(rounds) is not int or rounds < 0:
+        raise ValueError("recipe stop requires a nonnegative integer round budget")
+    if type(completed) is not int or not 0 <= completed <= rounds:
+        raise ValueError("recipe stop requires an integer completed count within its budget")
+    if not isinstance(reason, str) or not reason:
+        raise ValueError("recipe stop requires a nonempty terminal reason")
+    if reason == "budget" and completed != rounds:
+        raise ValueError("budget termination requires all rounds completed")
+    if not isinstance(steps, tuple) or len(steps) != completed:
         raise ValueError("recipe steps must be a tuple with one entry per completed outer round")
-    if stop.reason is None:
-        raise ValueError("recipe returned unfinished stopping state")
     if (
         state.context != context
         or state.train.identity != train.identity

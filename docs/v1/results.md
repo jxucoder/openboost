@@ -6,7 +6,10 @@ The scheduler accepts any object exposing:
 - `state`: an AcceptedState belonging to the requested context and train/validation problems.
 - `steps`: a tuple with one entry per completed outer round. Each entry's contents
   belong to the recipe; an ordered recipe may store a tuple of parameter substeps.
-- `stop`: a completed StopState, with reason `budget` or `patience`.
+- `stop`: a structural `openboost.stopping.StoppingStatus`, exposing integer
+  `rounds`, integer `completed_rounds` and a nonempty terminal `reason` string.
+  The default StopState implements this contract with `budget`/`patience` reasons;
+  external policies can retain their own reason and diagnostic fields.
 
 Authors need not inherit a base class or convert their result into the built-in
 FitResult. The scheduler retains the original object and its diagnostic payloads.
@@ -14,6 +17,12 @@ FitResult. The scheduler retains the original object and its diagnostic payloads
 checks for callers outside run_many. A declared protocol alone is insufficient:
 runtime validation checks field types, matching identities, completion and trace
 length. Invalid results become retained per-run errors; other jobs continue.
+
+Counts must be Python integers (not booleans), with nonnegative budget and
+0 <= completed_rounds <= rounds. The reserved reason `budget` requires every
+budgeted round to be completed. None/empty reasons are unfinished/invalid results.
+Other nonempty strings are allowed without interpreting policy-specific statistics.
+The scheduler preserves the stopping object; it does not convert it into StopState.
 
 Accepted-state version counts model commits, not outer rounds. Two parameter
 commits can correspond to one trace entry and one patience observation. An
