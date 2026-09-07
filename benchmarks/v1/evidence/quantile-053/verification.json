@@ -1,0 +1,55 @@
+{
+  "source_and_artifact_hashes_match": true,
+  "cells": [
+    {
+      "fold": 0,
+      "selected_pinball": [
+        13.546091674311958,
+        49.33270323967868,
+        27.697259426605566
+      ],
+      "crossing_rows": 0,
+      "source_row_ids_exact": true
+    },
+    {
+      "fold": 1,
+      "selected_pinball": [
+        19.25242323024047,
+        69.40235744558998,
+        44.309605246277215
+      ],
+      "crossing_rows": 0,
+      "source_row_ids_exact": true
+    },
+    {
+      "fold": 2,
+      "selected_pinball": [
+        23.400020057142907,
+        84.79244140000041,
+        55.860330405714116
+      ],
+      "crossing_rows": 0,
+      "source_row_ids_exact": true
+    },
+    {
+      "fold": 3,
+      "selected_pinball": [
+        24.62153466894974,
+        87.68998167808311,
+        56.266167283104984
+      ],
+      "crossing_rows": 0,
+      "source_row_ids_exact": true
+    },
+    {
+      "fold": 4,
+      "selected_pinball": [
+        25.972506940639363,
+        90.8005927226028,
+        55.614111426940546
+      ],
+      "crossing_rows": 0,
+      "source_row_ids_exact": true
+    }
+  ]
+}

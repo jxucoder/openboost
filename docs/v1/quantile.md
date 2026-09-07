@@ -48,3 +48,10 @@ Inference stores the solved scalar leaf values in the existing tree format,
 without residuals, training rows or a training objective. These tests establish
 CPU mechanics and D3 solver correctness, not real A5 quality, quantile coverage,
 noncrossing guarantees, agent-author effort, CUDA or performance results.
+
+The current evaluation worker composes three independent recipes at the frozen
+A5 levels 0.1, 0.5 and 0.9. Its evaluation bundle retains that level order, three
+scalar models and per-level stopping/selection diagnostics. Predictions remain
+raw; crossing rows are reported without sorting. All five calendar-only Bike
+rolling origins pass bounded validation and fresh inference in Sprint 053.
+This does not establish calibrated intervals or real-data quality acceptance.

@@ -11,8 +11,11 @@ from openboost.artifacts import Model
 from openboost.multioutput import MultiOutputModel, TargetScale
 from openboost.objectives import Normal
 
+QUANTILES = (0.1, 0.5, 0.9)
+
 OUTPUTS = {
     "A1": "mean",
+    "A5": "quantiles",
     "A2": "positive_class_probability",
     "A3": "class_probabilities",
     "A11": "normal_mean_scale",
@@ -21,6 +24,33 @@ OUTPUTS = {
 
 
 def predict_saved(saved, x):
+    if isinstance(saved, dict) and saved.get("application") == "A5":
+        if (
+            set(saved) != {"format", "application", "output", "quantiles", "models"}
+            or saved["format"] != "openboost-evaluation-v1"
+            or saved["output"] != OUTPUTS["A5"]
+            or saved["quantiles"] != list(QUANTILES)
+            or not isinstance(saved["models"], list)
+            or len(saved["models"]) != len(QUANTILES)
+        ):
+            raise ValueError("invalid frozen quantile bundle")
+        models = [Model.from_record(r) for r in saved["models"]]
+        if any(
+            m.base.shape != (1,)
+            or m.classes is not None
+            or m.feature_names != models[0].feature_names
+            for m in models
+        ):
+            raise ValueError("quantile model schema differs")
+        # Preserve raw level order, including crossings; no post-hoc sorting.
+        return np.column_stack(
+            [
+                predict_saved(
+                    dict(format=saved["format"], application="A1", output="mean", model=r), x
+                )
+                for r in saved["models"]
+            ]
+        )
     if (
         not isinstance(saved, dict)
         or set(saved)

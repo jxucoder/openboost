@@ -114,7 +114,7 @@ def test_unsupported_or_contaminated_inputs_fail(bad):
     elif bad == "threads":
         job["threads"] = 2
     else:
-        job["application"] = "A5"
+        job["application"] = "A4"
     with pytest.raises(ValueError):
         fit(job, arrays)
 
@@ -285,3 +285,78 @@ def test_classification_invalid_contracts_fail(bad):
         job["config"]["mode"] = "natural"
     with pytest.raises(ValueError):
         fit(job, arrays)
+
+
+@pytest.mark.parametrize("patience", [None, 1])
+def test_quantile_weighted_direct_and_fresh_replay(patience, tmp_path):
+    from openboost.recipes import quantile
+
+    job, arrays = fixture("A5")
+    job["early_stopping_rounds"] = patience
+    prediction, saved, training = fit(job, arrays)
+    assert saved["quantiles"] == [0.1, 0.5, 0.9]
+    assert prediction.shape == (4, 3)
+    problems = []
+    for part in ("train", "validation"):
+        data = NumericData(arrays["x_" + part], np.arange(len(arrays["x_" + part])), ("x0",))
+        problems.append(
+            Problem(
+                data, arrays["y_" + part][:, None], data.row_ids, weight=arrays["weight_" + part]
+            )
+        )
+    for i, q in enumerate(saved["quantiles"]):
+        direct = quantile(
+            *problems, context=RunContext("evaluation", 7), q=q, patience=patience, **job["config"]
+        )
+        model = direct.state.model if patience is None else direct.state.best_model
+        np.testing.assert_array_equal(prediction[:, i], model.predict(problems[1].data)[:, 0])
+        assert (
+            training["quantile_runs"][i]["stop"]["completed_rounds"] == direct.stop.completed_rounds
+        )
+        residual = arrays["y_validation"] - prediction[:, i]
+        score = np.average(
+            np.maximum(q * residual, (q - 1) * residual), weights=arrays["weight_validation"]
+        )
+        assert training["quantile_runs"][i]["selected_validation_pinball"] == pytest.approx(score)
+    path = tmp_path / "model.bin"
+    path.write_text(json.dumps(saved))
+    packet = tmp_path / "features.npz"
+    np.savez(packet, x=arrays["x_validation"], row_ids=arrays["validation_row_ids"])
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [sys.executable, str(script), str(path), str(packet), str(tmp_path / "replay.npz")],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as replay:
+        np.testing.assert_array_equal(replay["prediction"], prediction)
+        np.testing.assert_array_equal(replay["row_ids"], arrays["validation_row_ids"])
+
+
+@pytest.mark.parametrize("bad", ["order", "count", "width", "features"])
+def test_quantile_saved_schema_rejected(bad):
+    job, arrays = fixture("A5")
+    _, saved, _ = fit(job, arrays)
+    if bad == "order":
+        saved["quantiles"].reverse()
+    elif bad == "count":
+        saved["models"].pop()
+    elif bad == "width":
+        saved["models"][0]["base"] = [0, 0]
+    else:
+        saved["models"][0]["feature_names"] = ["foreign"]
+    with pytest.raises(ValueError):
+        predict_saved(saved, arrays["x_validation"])
+
+
+def test_quantile_crossings_are_not_sorted():
+    from openboost.artifacts import Model
+
+    saved = dict(
+        format="openboost-evaluation-v1",
+        application="A5",
+        output="quantiles",
+        quantiles=[0.1, 0.5, 0.9],
+        models=[Model(("x0",), [v]).record() for v in [3, 2, 1]],
+    )
+    np.testing.assert_array_equal(predict_saved(saved, [[0], [1]]), [[3, 2, 1], [3, 2, 1]])

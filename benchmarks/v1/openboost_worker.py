@@ -1,4 +1,4 @@
-"""Current CPU A1/A2/A3/A6/A11 trials on frozen encoded train/validation packets.
+"""Current CPU A1/A2/A3/A5/A6/A11 trials on frozen encoded train/validation packets.
 
 Explicit validation targets are required even with fixed budgets. The caller
 controls process threads and resource limits. Test arrays are always rejected.
@@ -13,13 +13,13 @@ import numpy as np
 
 from openboost import ClassSchema, NumericData, Problem, RunContext
 from openboost.multioutput import TargetScale
-from openboost.recipes import binary, multi_squared, multiclass, normal, squared
+from openboost.recipes import binary, multi_squared, multiclass, normal, quantile, squared
 
 if __package__:
-    from benchmarks.v1.openboost_predict import OUTPUTS, predict_saved
+    from benchmarks.v1.openboost_predict import OUTPUTS, QUANTILES, predict_saved
     from benchmarks.v1.preprocessing import fit_target_scale
 else:
-    from openboost_predict import OUTPUTS, predict_saved
+    from openboost_predict import OUTPUTS, QUANTILES, predict_saved
     from preprocessing import fit_target_scale
 
 
@@ -71,7 +71,7 @@ def fit(job, arrays):
             raise ValueError("explicit canonical classification count required")
         classes = ClassSchema(tuple(range(count)))
     problems = []
-    width = 1 if job["application"] == "A1" else 2
+    width = 1 if job["application"] in {"A1", "A5"} else 2
     if classification:
         width = 1 if job["application"] == "A2" else count
     multi = job["application"] == "A6"
@@ -110,6 +110,8 @@ def fit(job, arrays):
         )
     if multi:
         problems = [scale.transform(p) for p in problems]
+    if job["application"] == "A5":
+        return fit_quantiles(job, cfg, problems, arrays["x_validation"])
     recipe = {"A1": squared, "A2": binary, "A3": multiclass, "A6": multi_squared, "A11": normal}[
         job["application"]
     ]
@@ -146,6 +148,53 @@ def fit(job, arrays):
             scale_convention="unweighted_train_population",
             selection_metric="row_mean_sum_standardized_half_squared_error",
         )
+    return prediction, saved, training
+
+
+def fit_quantiles(job, cfg, problems, x_validation):
+    """Independent frozen levels with separate validation stopping and selection."""
+    from openboost.objectives import Quantile
+
+    models, runs = [], []
+    selection = "final" if job.get("early_stopping_rounds") is None else "best_validation"
+    for q in QUANTILES:
+        result = quantile(
+            *problems,
+            context=RunContext("evaluation", job["seed"]),
+            q=q,
+            patience=job.get("early_stopping_rounds"),
+            **cfg,
+        )
+        model = result.state.model if selection == "final" else result.state.best_model
+        models.append(model.record())
+        runs.append(
+            dict(
+                q=q,
+                stop={**asdict(result.stop), "reason": result.stop.reason},
+                accepted_commits=result.state.version,
+                selected_model_identity=model.identity,
+                best_validation_score=result.state.best_score,
+                selected_validation_pinball=Quantile(q).loss(
+                    problems[1], model.predict(problems[1].data)
+                ),
+            )
+        )
+    saved = dict(
+        format="openboost-evaluation-v1",
+        application="A5",
+        output=OUTPUTS["A5"],
+        quantiles=list(QUANTILES),
+        models=models,
+    )
+    prediction = predict_saved(saved, x_validation)
+    training = dict(
+        selection=selection,
+        output=OUTPUTS["A5"],
+        quantiles=list(QUANTILES),
+        quantile_runs=runs,
+        selection_metric="independent_weighted_pinball",
+        crossing_rows=int(np.any(np.diff(prediction, axis=1) < 0, axis=1).sum()),
+    )
     return prediction, saved, training
 
 

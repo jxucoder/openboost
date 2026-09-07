@@ -87,8 +87,9 @@ completes that change: fold zero passes in 87.4 seconds with exact fresh replay;
 the other folds were pending at that revision. Sprint 052 reuses selected
 histogram statistics with exact conformance checks;
 all five full Covertype folds pass within the unchanged cap and replay exactly.
-Next resume remaining real-data adapters, starting with A5 temporal quantiles,
-then remaining application rows/searches and D5 checks.
+Sprint 053 connects A5 independent quantiles to all five frozen Bike origins
+with exact fresh replay and independently recomputed pinball scores. Next: A7
+count/exposure integration, remaining application adapters/searches and D5 checks.
 These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared

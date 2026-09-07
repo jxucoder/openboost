@@ -1,0 +1,64 @@
+{
+  "selection": "best_validation",
+  "output": "quantiles",
+  "quantiles": [
+    0.1,
+    0.5,
+    0.9
+  ],
+  "quantile_runs": [
+    {
+      "q": 0.1,
+      "stop": {
+        "rounds": 4,
+        "patience": 3,
+        "min_delta": 0.0,
+        "reference_score": 25.97250694063927,
+        "last_score": 25.97250694063927,
+        "completed_rounds": 4,
+        "stale_rounds": 0,
+        "reason": "budget"
+      },
+      "accepted_commits": 4,
+      "selected_model_identity": "46f4db4fd7879c01dcc786ba3665706e054205f9727047b88eba659a8ef3cad2",
+      "best_validation_score": 25.97250694063927,
+      "selected_validation_pinball": 25.97250694063927
+    },
+    {
+      "q": 0.5,
+      "stop": {
+        "rounds": 4,
+        "patience": 3,
+        "min_delta": 0.0,
+        "reference_score": 90.80059272260272,
+        "last_score": 90.80059272260272,
+        "completed_rounds": 4,
+        "stale_rounds": 0,
+        "reason": "budget"
+      },
+      "accepted_commits": 4,
+      "selected_model_identity": "e8043b16ec964f260382c0b64c873f971b06f34db709f8595276e301657cbced",
+      "best_validation_score": 90.80059272260272,
+      "selected_validation_pinball": 90.80059272260272
+    },
+    {
+      "q": 0.9,
+      "stop": {
+        "rounds": 4,
+        "patience": 3,
+        "min_delta": 0.0,
+        "reference_score": 55.61411142694065,
+        "last_score": 55.61411142694065,
+        "completed_rounds": 4,
+        "stale_rounds": 0,
+        "reason": "budget"
+      },
+      "accepted_commits": 4,
+      "selected_model_identity": "b3a8202c86529a5f12ae430b91a81da31d340474ec0a4dd0850896c1f22edba9",
+      "best_validation_score": 55.61411142694065,
+      "selected_validation_pinball": 55.61411142694065
+    }
+  ],
+  "selection_metric": "independent_weighted_pinball",
+  "crossing_rows": 0
+}
