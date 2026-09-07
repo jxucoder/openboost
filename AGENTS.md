@@ -63,8 +63,9 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-Current execution card: [Sprint 064 programmable stopping and isolation](v1-sprints/064-programmable-stopping-and-isolation.md)
-(planned, not implemented). [Sprint 063 retrospective and next plan](v1-sprints/063-retrospective-and-next-plan.md)
+Current execution card: [Sprint 064 programmable stopping completion](v1-sprints/064-programmable-stopping-and-isolation.md)
+(planned, not implemented). The [064–084 sprint roadmap](v1-sprints/roadmap-after-063.md)
+defines bounded deliverables, dependencies and acceptance. [Sprint 063 retrospective and next plan](v1-sprints/063-retrospective-and-next-plan.md)
 provides the rationale and later milestones, reviewing merged PR #24 at `47108db`.
 [Sprint 062](v1-sprints/062-cpu-exit-and-gpu-entry.md)
 retains the preceding CPU/GPU gate audit; earlier sprint status is historical.
@@ -75,13 +76,17 @@ Current real validation/replay covers A1–A3/A5–A12; A4 has synthetic adapter
 These bounded runs do not establish full quality, authoring cost or adoption.
 A13 real search/release, A9 joint selection, source gaps and formal gates remain open.
 
-Next: Sprint 064 slice 1 separates structural stopping completion from the default
-patience policy; slice 2 verifies installed D5 distinct run-ID RNG, stale-preparation
+Next: Sprint 064 separates structural stopping completion from the default patience
+policy; Sprint 065 verifies installed D5 distinct run-ID RNG, stale preparation
 and external stopping results. See the [landscape feedback addendum](v1-sprints/063-landscape-feedback.md)
-for the concrete StopState restriction and comparator updates. Then N2
-practical runtime/state checks and N3 exploratory author-accounting preparation;
-N4 closes the coverage ledger and one real A6/A13 search/release before extending
-remaining schemas. The Sprint 063 diagnostic confirms quadratic tree replay and
+for the concrete StopState restriction and comparator updates. Sprints 066–068
+separate practical profiling, incremental runtime and diagnostic retention.
+069 prepares exploratory author measurement; 070 closes coverage/judging gaps;
+071 proves real A6/A13 selection before 072–076 cover every remaining application.
+077 formal authoring and 078–082 CUDA/cost follow their explicit prerequisites;
+083 audits engineering acceptance, and 084 records independent adoption separately.
+Sprint numbers do not force independent work to wait for all lower numbers.
+The Sprint 063 diagnostic confirms quadratic tree replay and
 linear retained trace-array growth on its tiny fixed-step paths; it is not timing
 or peak-memory evidence. Measure the practical regime before the full search matrix.
 

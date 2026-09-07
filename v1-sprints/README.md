@@ -12,17 +12,22 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 ## Current execution position
 
 Current execution card: [Sprint 064](064-programmable-stopping-and-isolation.md),
-planned and ready for implementation. [Sprint 063](063-retrospective-and-next-plan.md)
+planned and ready for implementation. The [064–084 sprint roadmap](roadmap-after-063.md)
+links each bounded card, dependency, acceptance check and reflection point.
+[Sprint 063](063-retrospective-and-next-plan.md)
 provides the retrospective and remaining plan following merged
 [PR #24](https://github.com/jxucoder/openboost/pull/24).
 The merge passed 923 local CPU tests and all five CI checks. Broad public CPU
 components and application validation exist; formal phase exits, selected real
 quality/cost, CUDA and independent adoption remain open.
 
-Next: installed D5 probes (N1), practical state/trace execution checks (N2),
-exploratory author-accounting preparation (N3), and a required-coverage ledger
-plus one real A6/A13 selection/release (N4). The proposed bounded CUDA overlap
-is not adopted; current phase ordering remains in force. All required cases remain.
+Next: 064 stopping, 065 installed D5 isolation, 066 practical profile, 067 incremental
+runtime and 068 trace retention. Cards 069–077 cover exploratory/formal authoring,
+judging and every required application's selected quality; 078–082 cover CUDA and
+cost after their entry gates. 083 audits engineering v1 and 084 separately tests
+external adoption. These are scope cards, not calendar estimates or new phase exits.
+The proposed bounded CUDA overlap is not adopted; current phase ordering remains
+in force. All required cases remain.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

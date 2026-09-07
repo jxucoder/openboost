@@ -10,7 +10,9 @@ phase status follows evidence. At the user's request, Sprint 002 retired old pro
 Reproduce it at `50acfc6`. The package now has shared CPU components, twelve
 recipes and explicit training-preparation reuse. See the
 [current retrospective and execution plan](../v1-sprints/063-retrospective-and-next-plan.md)
-for delivered boundaries and remaining work. Amended phase dependencies and
+for delivered boundaries and remaining work, and the
+[064–084 sprint roadmap](../v1-sprints/roadmap-after-063.md) for bounded execution cards.
+Amended phase dependencies and
 acceptance gates below still apply; implemented recipe count is not a phase exit.
 Sprint 063 proposes a bounded GPU feasibility overlap; it is not adopted. The
 existing phase dependencies remain in force. Historical checkboxes below require
@@ -424,11 +426,13 @@ links and git diff --check, not nonexistent runtime changes. No push, release, m
 
 Starting instructions for the next execution model:
 
-> Read AGENTS.md and Sprint 064 for the next implementation card; Sprint 063 retains
-> the rationale and later plan. Use this plan, construction design and evaluation
-> for scope and semantics. Start N1: structural stopping completion, then installed
-> D5 run-ID RNG, stale preparation and external-policy probes. Continue N2 practical runtime
-> diagnostics, N3 exploratory author-accounting preparation and N4 current coverage/
-> real A6/A13 selection. Preserve existing failures, frozen thresholds and all cases.
+> Read AGENTS.md, the 064–084 sprint roadmap and Sprint 064 for the next implementation
+> card; Sprint 063 retains the rationale. Use this plan, construction design and
+> evaluation for scope and semantics. Start 064 stopping, then 065 installed D5
+> isolation. Follow 066 profile → 067 incremental runtime → 068 trace retention.
+> Preparation for 069 author measurement and 070 coverage/judging can proceed
+> independently; 071 proves the real selection pipeline before the remaining
+> application cards. Later author/CUDA/delivery cards follow their stated entry
+> gates, not numerical order alone. Preserve failures, thresholds and every case.
 > CUDA feasibility overlap remains a proposal until an explicit amendment is recorded.
 > No phase exit follows from implemented objective counts or green local tests.

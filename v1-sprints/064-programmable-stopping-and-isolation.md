@@ -1,24 +1,23 @@
-# Sprint 064: Programmable stopping and installed run isolation
+# Sprint 064: Programmable stopping completion
 
-Baseline: `e15704d`. Status: planned; implementation has not started.
-This is the execution card for Sprint 063 N1. The [retrospective](063-retrospective-and-next-plan.md)
-and [landscape addendum](063-landscape-feedback.md) explain the evidence and remaining
-N2–N5 work. All R1–R9/C1–C7/A1–A13 and E0–E7 requirements remain unchanged.
+Baseline: `df23796`. Status: planned; implementation has not started.
+Mapping: N1 / F1 / B11 / C4 / E1–E2 development conformance.
+Entry: current CPU result and stopping contracts. Ready to implement.
+
+This card now contains the first slice of the earlier Sprint 064 plan. Installed
+isolation moves to [Sprint 065](065-installed-run-isolation.md); no completed work
+or evidence is moved. See the [sprint roadmap](roadmap-after-063.md) for dependencies,
+shared acceptance and all subsequent cards. The [retrospective](063-retrospective-and-next-plan.md)
+and [landscape addendum](063-landscape-feedback.md) retain the rationale.
 
 ## Outcome and scope
 
-An installed external recipe can finish using its own stopping policy and report
-its true reason through run_many. Independent runs preserve their own RNG streams,
-preparation identity, stopping, results and failures under reorder/regroup/retry.
-This sprint establishes development conformance, not formal E5 or statistical
-validity of a new stopping method.
+An external public recipe can finish using its own stopping policy and preserve
+its true reason and diagnostics through run_many. This is development conformance,
+not formal E5 or statistical validation of a new stopping method. The default
+patience policy remains available. No full ScoreStop implementation is required.
 
-Deliver two cohesive implementation commits, each with focused checks and a
-learning update. Record actual results here as execution proceeds. No full
-ScoreStop implementation, objective expansion, GPU work, source-data retrieval,
-formal agent cohort or external publication belongs to this sprint.
-
-## Slice 1: Separate completion metadata from the default stopping policy
+## Implementation: Separate completion metadata from the default stopping policy
 
 ### First failing test
 
@@ -77,92 +76,18 @@ uv run --no-sync pytest tests/v1/test_public_results.py tests/v1/test_public_sto
 uv run --no-sync ruff check src/openboost tests/v1/test_public_results.py
 ```
 
-## Slice 2: Installed stopping, RNG and preparation conformance
+## Exit and reflection
 
-Extend examples/v1_extensions/scheduler_checks.py and its existing verify.py
-workflow. Reuse current public wheels, mixed K=1/2 fixtures and M=1/8/32 schedules.
-This slice adds checks; edit the core only if a new failing case demonstrates a
-separate defect, with its own narrow verification and commit.
+- Pass the focused result, stopping and ordered checks, relevant CPU regression,
+  production/changed-support lint, strict documentation and package build.
+- Record the independently checked external loop, negative outcomes, source revision,
+  exact commands and capability boundary in this card and a learning entry.
+- Inspect the staged diff and commit the verified contract change locally.
+- Reflect on whether completion metadata is sufficient without policy-specific
+  dependencies. Next execute Sprint 065 against the resulting installed wheel.
 
-### Required cases
+## Results
 
-| Case | Expected result |
-|---|---|
-| Same seed, distinct stable run IDs | Sampled keyed streams differ; do not infer different predictions from a deterministic recipe |
-| Same run ID under retry/reorder/regroup | RNG draws, accepted state, stop state and predictions match independent execution exactly |
-| Changed feature values, unchanged source row IDs | Old PreparedData is rejected even when shapes/names match |
-| Changed source row IDs, unchanged feature values | Old PreparedData is rejected |
-| Fresh preparation for either changed dataset | Shared-prepared execution matches fresh independent direct execution |
-| Changed target/weights with identical features and row identity | Valid preparation reuse continues to work; do not reject safe sharing |
-| External stopping policy mixed with built-in and ordered recipes | True reason/count/payload survives; other runs retain their independent outcomes |
-| Failed preparation or malformed stopping status | Explicit retained failure; neighboring valid runs and same-ID retry are unaffected |
-
-Compute independent direct results before forbidding Binning.fit during shared
-execution. Restore any instrumentation after the check. Use newly constructed
-owned data for mutation cases, not illegal in-place mutation of read-only input.
-Retain existing different-patience, invalid-result and plugin-free inference checks.
-
-### Installed acceptance and evidence
-
-Run copied checks from outside the repository with Python -I and imports from
-site-packages. Build/install the wheel and extension packages in the existing
-isolated uv workflow, then remove training plugins and verify saved inference.
-
-```sh
-UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python examples/v1_extensions/verify.py /tmp/openboost-v1-sprint064
-```
-
-Use a fresh output directory. If cached dependencies are unavailable, report the
-installation failure separately from semantic failures. Evidence belongs under
-benchmarks/v1/evidence/scheduling-064/ after verification; record source/wheel hashes,
-revision/dirty state, environment, exact commands and all expected error outcomes.
-Expected fault-injection failures must be labeled as such, never hidden or treated
-as successful training. Do not count this internal verifier as an independent author.
-
-## Sprint exit and reflection
-
-- Both slices pass focused checks and installed verification.
-- Run the relevant CPU regression once after the final implementation, production/
-  changed-support lint, strict docs and package build. Repeat only after a new change
-  or unresolved failure justifies it. Inspect staged diffs before each commit.
-- Verify raw artifact/source hashes and document capability boundaries.
-- Record what failed, whether the public boundary changed, and whether any workaround
-  or private import remained. N1 completion does not declare full E2/E5/E6.
-- Update current navigation with the actual result and next slice. Commit locally;
-  future push/PR/merge needs an explicit request for that action.
-
-## Following milestones and decision points
-
-| Order | Deliverable | Acceptance / decision |
-|---|---|---|
-| N2a | Bounded practical CPU profile using Sprint 063's eight Housing cases and separate rejection fixtures | Freeze subset hashes; 120 s/case, two threads, enforced 8-GiB cap; retain resource failures; distinguish profiled and uninstrumented measurements |
-| N2b | Incremental candidate/accepted raw state and explicit summary/full diagnostics, justified by N2a | Linear tree replay in new terms on the counting fixture; summary array storage bounded by run state; exact CPU semantics and full/summary equivalence |
-| N3 preparation | One control and one deep-change exploratory author task with appropriate incumbent paths | Verifier and accounting/isolation work before attempts; preserve original D/H scope; additional independent execution requires authorization |
-| N4 first closure | Current coverage ledger and one complete real A6/A13 selected-model workflow | Frozen searches, validation-only selection, sealed test release, per-target/standardized quality and complete cost/failure records |
-| N5 | Formal E5, all application E3 and installed E6; authorized external E7 trials | Existing thresholds and every required case; separate cohorts after semantic changes |
-
-N2 should split diagnosis, state changes and diagnostic-retention changes into
-independently verified commits as needed. Do not combine an execution redesign,
-new algorithm and large benchmark in one change. Coupled matrix leaves and learned
-learner mappings remain N3 development options; implementing all cited papers is
-not a new prerequisite.
-
-### Proposed GPU decision after N1 and relevant N2 checks
-
-Recommended: permit bounded B12 feasibility alongside unfinished author/quality
-work. First resident squared-error training, immediately followed by K=2 Normal
-and actual backtracking; then a nondefault component, remaining required CUDA
-subsets and compatible M=1/8/32 execution. Full costs, CPU/CUDA intermediate parity,
-missingness, failure/state isolation and CPU-readable inference are required.
-
-This sequencing amendment remains proposed. This plan does not approve or start
-it. Until explicitly adopted in the active plan, follow existing formal F2→F3
-ordering while continuing independent CPU/evaluation work. No E0–E7 threshold or
-A1–A13 obligation changes under either route.
-
-## Planning verification
-
-Read current stopping/result/scheduler contracts, preparation tests, installed-wheel
-verifier, public stopping docs and Sprint 063's evidence. No implementation, model
-fit, new test pass or phase completion is claimed by this planning slice.
-Documentation/link checks are recorded in the [planning learning](../learnings/2026-09-06-v1-sprint064-plan.md).
+Not run. No implementation, new test pass or gate completion is claimed.
+The earlier planning verification remains in the
+[original learning](../learnings/2026-09-06-v1-sprint064-plan.md).
