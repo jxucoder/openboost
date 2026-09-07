@@ -1,5 +1,6 @@
 """Experimental public CUDA fields, histograms and split operations; no training."""
 
+from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import wraps
 from time import perf_counter
@@ -16,6 +17,7 @@ class DeviceData:
     data_identity: str
     prepared_identity: str
     problem_identity: str
+    binning_identity: str
     n_rows: int
     feature_names: tuple[str, ...]
     bin_counts: tuple[int, ...]
@@ -134,6 +136,35 @@ def _atomic(method):
     return call
 
 
+@contextmanager
+def _workspace(ops):
+    """Release new scratch, retaining only explicitly returned records/buffers.
+
+    Nested composition can allocate freely on the owned stream. Callers must not
+    retain newly created callback scratch outside this scope. Existing inputs are
+    untouched. On failure even designated outputs are discarded.
+    """
+    context = ops.execution
+    context._check()
+    before, records = set(context._buffers), set(ops._records)
+    retained = set()
+    try:
+        yield retained
+    except BaseException:
+        retained.clear()
+        raise
+    finally:
+        handles = {r for r in retained if isinstance(r, DeviceBuffer)}
+        for record in retained - handles:
+            handles.update(ops._records[record][0])
+        context.synchronize()
+        for handle in set(context._buffers) - before - handles:
+            del context._buffers[handle]
+            context._counts["live_bytes"] -= handle.nbytes
+        for record in set(ops._records) - records - retained:
+            del ops._records[record]
+
+
 def _schema(names, roles, width):
     names, roles = tuple(names), tuple(roles)
     if (
@@ -198,8 +229,9 @@ class DeviceOperations:
         self.execution._check()
         if not isinstance(record, kind) or record not in self._records:
             raise ValueError("foreign, forged or released device record")
-        if not isinstance(record, DeviceData):
-            self._get(record.data, DeviceData)
+        data = getattr(record, "data", None)
+        if data is not None:
+            self._get(data, DeviceData)
         for handle in self._records[record][0]:
             self.execution._array(handle)
         return record
@@ -274,6 +306,7 @@ class DeviceOperations:
             problem.data.identity,
             binned.identity,
             problem.identity,
+            binned.binning.identity,
             len(weight),
             binned.data.feature_names,
             binned.binning.bin_counts,
@@ -346,6 +379,10 @@ class DeviceOperations:
         self._get(data, DeviceData)
         context = self.execution
         owned = ()
+        if positions is None:
+            positions = context._empty((data.n_rows,), np.int32)
+            self._launch("row_positions", data.n_rows, context._array(positions))
+            return self._record(DeviceRows(data, positions), (positions,), (positions,))
         if isinstance(positions, DeviceBuffer):
             array = context._array(positions)
             if array.ndim != 1 or array.dtype != np.dtype("int32"):
@@ -360,11 +397,7 @@ class DeviceOperations:
         else:
             if hasattr(positions, "__cuda_array_interface__"):
                 raise ValueError("context-owned row buffer required")
-            selected = (
-                np.arange(data.n_rows, dtype=np.int32)
-                if positions is None
-                else np.asarray(positions)
-            )
+            selected = np.asarray(positions)
             if (
                 selected.ndim != 1
                 or (selected.size and selected.dtype.kind not in "iu")
@@ -537,6 +570,21 @@ class DeviceOperations:
             context._array(batch.active),
             h,
             minimum,
+            context._array(output),
+        )
+        return self._record(DeviceMask(batch, output), (output,), (output,))
+
+    @_atomic
+    def nonempty(self, candidates):
+        """Structural two-child mask, independent of an objective's curvature rules."""
+        batch = self._batch(candidates)
+        context = self.execution
+        output = context._empty((batch.size,), bool)
+        self._launch(
+            "candidate_nonempty",
+            batch.size,
+            context._array(batch.counts),
+            context._array(batch.active),
             context._array(output),
         )
         return self._record(DeviceMask(batch, output), (output,), (output,))

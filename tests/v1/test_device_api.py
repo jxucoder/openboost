@@ -13,7 +13,9 @@ def test_device_module_import_does_not_require_cuda_packages():
         [
             sys.executable,
             "-c",
-            "import sys; sys.modules['cupy']=None; sys.modules['numba']=None; from openboost.device import DeviceOperations",
+            "import sys; sys.modules['cupy']=None; sys.modules['numba']=None; "
+            "from openboost.device import DeviceOperations; "
+            "from openboost import device_objectives, device_tree",
         ],
         check=True,
     )

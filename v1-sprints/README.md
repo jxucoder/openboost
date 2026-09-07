@@ -26,7 +26,7 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1195 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1232 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. Eighty-eight real T4
 storage/aggregation/split tests pass; GPU training, independent author benefit, full quality/search and
 adoption remain unverified. The

@@ -97,3 +97,19 @@ All 37 CPU oracle cases pass before device implementation: two rounds across
 three fixtures, three depths and four cohort-minimum settings, plus a hand-checked
 D2 split change and validation conflict. These verify the frozen expected behavior;
 they do not execute resident CUDA training.
+
+## Local objective/tree construction
+
+`3561738` commits the design and independent reference first. Resident scalar
+base, gradients, named fields and loss now compose with public depthwise tree
+growth, prediction, independent copy and CPU artifact export. DeviceTree owns
+packed values and topology; training data/fields/callback workspace may be released
+without invalidating the tree. Root positions are generated on device. Fitted
+binning identity is checked across distinct training/validation preparation.
+
+Supplied scoring, legality and leaf operations remain effective. A separate
+nonempty-child mask preserves tree structure even when supplied scores prefer an
+empty-child candidate. Temporary callback allocations are scoped and discarded;
+preexisting caller buffers remain owned by their caller. Forty-two real-device
+cases collect locally; no CUDA execution or new upload has occurred. Accepted/
+proposal integration and the scalar recipe remain the next construction slice.

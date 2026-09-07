@@ -2,7 +2,7 @@
 
 import math
 
-from numba import cuda, float32
+from numba import cuda, float32, float64
 
 
 @cuda.jit
@@ -210,3 +210,78 @@ def scalar_leaf(total, g, h, regularization, output):
             if total[h] >= 0 and denominator > 0 and math.isfinite(denominator)
             else float32(math.nan)
         )
+
+
+@cuda.jit
+def candidate_nonempty(counts, active, output):
+    i = cuda.grid(1)
+    if i < output.size:
+        output[i] = active[i] and counts[i, 0] > 0 and counts[i, 1] > 0
+
+
+@cuda.jit
+def row_positions(output):
+    i = cuda.grid(1)
+    if i < output.size:
+        output[i] = i
+
+
+@cuda.jit
+def squared_base(target, offset, weight, output):
+    if cuda.grid(1) == 0:
+        total, mass = float64(0), float64(0)
+        for r in range(weight.size):
+            total += float64(weight[r]) * (float64(target[r, 0]) - float64(offset[r, 0]))
+            mass += float64(weight[r])
+        output[0] = total / mass
+
+
+@cuda.jit
+def scalar_broadcast(value, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        output[r, 0] = value[0]
+
+
+@cuda.jit
+def squared_gradient(target, offset, raw, output):
+    r = cuda.grid(1)
+    if r < output.size:
+        output[r] = float32(raw[r, 0] + offset[r, 0]) - target[r, 0]
+
+
+@cuda.jit
+def squared_fields(target, offset, raw, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        output[r, 0] = float32(raw[r, 0] + offset[r, 0]) - target[r, 0]
+        output[r, 1] = float32(1)
+
+
+@cuda.jit
+def squared_loss(target, offset, weight, raw, output):
+    if cuda.grid(1) == 0:
+        total, mass = float64(0), float64(0)
+        for r in range(weight.size):
+            residual = float64(raw[r, 0]) + float64(offset[r, 0]) - float64(target[r, 0])
+            total += float64(weight[r]) * residual * residual / 2
+            mass += float64(weight[r])
+        output[0] = total / mass
+
+
+@cuda.jit
+def pack_leaf(value, index, output):
+    if cuda.grid(1) == 0:
+        output[index] = value[0]
+
+
+@cuda.jit
+def scalar_tree_predict(codes, missing, topology, values, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        i = 0
+        while topology[i, 0] != -1:
+            f, t = topology[i, 0], topology[i, 1]
+            left = topology[i, 2] != 0 if missing[f, r] else codes[f, r] <= t
+            i = topology[i, 3] if left else topology[i, 4]
+        output[r, 0] = values[i]

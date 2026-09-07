@@ -160,5 +160,40 @@ Diagnostic exports made by tests are separate from measured operation transfers.
 Allocation/validation cleanup preserves inputs but is not a boosting transaction.
 Initial choice and stable routing use ordered kernels; no speed claim is made.
 
-Trees, device gradients, custom-kernel registration, transactions and GPU training
-remain unimplemented. Current recipes and NumericData remain CPU-only.
+## Resident squared geometry and trees: validation pending
+
+Sprint 088 adds local construction in `openboost.device_objectives` and
+`openboost.device_tree`. These new paths have **not run on CUDA hardware** yet;
+the 88-case result above applies to its recorded revision. Current recipes and
+NumericData remain CPU-only; transactions and resident training are still pending.
+
+`device_objectives.prepare(ops, data, problem)` explicitly uploads scalar targets
+and offsets after checking the prepared problem identity. `base`, `broadcast`,
+`gradient`, `fields` and `loss` operate on resident raw values. Base and loss use
+ordered float64 reductions; raw, gradients and fields use float32. `fields` applies
+weights exactly once. Unsupported target schemas and nonfinite/overflowing results
+fail. `loss` exports one float64 scalar, counted in `metric_export_bytes`.
+
+`device_tree.depthwise(ops, data, fields, binning=..., max_depth=...)` composes the
+public histogram, candidate, score, mask, routing and leaf operations. Supplied
+`scoring(ops, batch)`, `legality(ops, batch)` and `leaf(ops, histogram)` callbacks
+replace those policies and own their parameters. Callbacks may compose named
+cohort minima on device. Structural nonempty-child masking always applies;
+`ops.nonempty(batch)` exposes that condition independently of curvature policy.
+No maximum-leaf budget, categorical growth or custom-kernel registry is added.
+
+New callback workspace is temporary and released within growth. Preexisting
+buffers are borrowed; returned leaf values are copied into private tree storage.
+The opaque DeviceTree retains immutable host topology and fitted binning, and owns
+packed device topology/values independently of training records. Root positions
+are generated on device, without a repeated host row-index upload. Growth uploads
+only the final int32 topology; it does not download leaves or bulk training arrays.
+
+`device_tree.predict(ops, tree, data)` returns owned float32 `[N, 1]` predictions,
+excluding base and observation offsets. It checks exact fitted-binning identity,
+including for validation data with different row identities. `copy` makes an
+independent tree snapshot; release trees through `ops.release`. `export` explicitly
+downloads node values into the existing validated CPU Tree artifact, which can be
+saved and loaded without CUDA packages. Forty-two pending real-device checks cover
+geometry, splits/leaves, predictions, supplied operations, failure cleanup and
+fresh-process CPU inference. Collection alone does not validate these behaviors.
