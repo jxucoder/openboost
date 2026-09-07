@@ -53,3 +53,20 @@ Preparation commit precedes remote execution; no push.
 Preparation validation: 1120 CPU tests passed, one Linux-only skip; 28 focused
 checks, lint and docs pass. All three new CLI replays exactly reproduce the
 committed 255-bin synthetic predictions. Remote execution is pending.
+
+## Real result and reflection
+
+At clean `02f3d41`, all three real comparator probes pass with exact fresh replay.
+Fit worker seconds are 4.6675 XGBoost, 3.8562 LightGBM and 1.8361 CatBoost. Recorded
+round counts are 59, 71/76 and 56; selected rounds are 9, 21/26 and 6. All target
+scales match the verified original fold. All 34 source hashes, 30 outer artifacts
+and fifteen inner worker hashes verify. See
+[raw evidence](../benchmarks/v1/evidence/a6-comparators-070/README.md).
+
+This resolves three real comparator resource probes, not the other 237 jobs or
+full selection. Their short fit times relative to the earlier OpenBoost observation
+are a practical CPU runtime warning, not a precise matched-quality speed ratio.
+Record it in the next retrospective; internal scoring improvements do not prove
+competitive cost. Next qualify deeper/1000-round resource cases before expanding
+expensive searches, while retaining the coverage and author-accounting obligations.
+No retry, test-label upload or full search occurred.

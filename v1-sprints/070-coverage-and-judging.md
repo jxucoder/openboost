@@ -517,3 +517,19 @@ failure, no retries. This preflight is three 300-round-budget jobs with patience
 Preparation validation: 1120 CPU tests passed, one Linux-only skip; 28 focused
 checks, lint and docs pass. All three new CLI replays exactly reproduce the
 committed 255-bin synthetic predictions. Remote execution is pending.
+
+### Real comparator result and reflection
+
+At clean `02f3d41`, all three [real probes](../benchmarks/v1/evidence/a6-comparators-070/README.md)
+pass with exact fresh replay and matching training-only target scales. Worker fit
+seconds: XGBoost 4.6675, LightGBM 3.8562, CatBoost 1.8361. All 34 source hashes,
+30 outer artifact hashes and fifteen inner worker artifact hashes verify. No
+failure or retry occurred; full search and selected-test release remain open.
+
+The contrast with the earlier 757-second OpenBoost shared fit is a material CPU
+runtime warning, though different hosts and algorithm/selection semantics prevent
+a precise matched-quality speed claim. The internal 23.6% improvement cannot stand
+in for practical comparative cost. Carry this into the next retrospective. Next
+qualify deeper/1000-round resource cases before expanding the expensive matrix;
+keep every failure and frozen budget. The other 237 comparator jobs and the
+broader R/C/A/E ledger and author accounting remain required.

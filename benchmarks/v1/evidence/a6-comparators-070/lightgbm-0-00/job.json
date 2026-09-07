@@ -1,0 +1,1 @@
+{"application": "A6", "library": "lightgbm", "device": "cpu", "threads": 1, "seed": 0, "early_stopping_rounds": 50, "config": {"lambda_l2": 0.0, "learning_rate": 0.03, "num_leaves": 15, "rounds": 300, "seed_from_fold": true, "bins": 255}, "input_npz": "/input/worker-input.npz"}

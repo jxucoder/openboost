@@ -68,3 +68,11 @@ fits and exact fresh replay. Use the [updated source-pinned plan](070-a6-cpu-sea
 for subsequent preparation; the original planning record is historical. Next
 qualify comparator full-budget Linux execution/resource limits and selection
 bindings, retaining every required trial and failure. No full-search gate passes.
+
+The [first real comparator probes](../benchmarks/v1/evidence/a6-comparators-070/README.md)
+now pass at `02f3d41`, with exact fresh replay. Three 300-round-budget jobs are
+verified, not the other 237 comparator jobs or full selection. Their seconds-long
+execution highlights a practical CPU runtime concern relative to the earlier
+OpenBoost observation; it is not a matched-quality speed ratio. Next qualify
+deeper/1000-round resource cases before full-matrix expansion, and retain the
+complete coverage/author-accounting obligations.

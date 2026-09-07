@@ -1,0 +1,37 @@
+{
+  "address_limit_bytes": 8589934592,
+  "artifacts": {
+    "model.bin": "4d19ea73c54fce5fd78114ca226bc17557d4a66ed166713c618018872100d2f1",
+    "predictions.npz": "ecf81aeeb0856d56eb25bac9106f01cf37f84d12326af324a9c8620ebd907565",
+    "resources.json": "d80913cc8b0dc91e1d1a6e01f4b7543b3c5029ed5e02971a32792eb12aae8969",
+    "training.json": "2bb71705e7b7c2e9eabce485565831e0d5898f81421daa98ab0144d94ffa07a8",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/usr/local/bin/python",
+    "-c",
+    "import json,resource,runpy,sys,importlib.metadata\nfrom pathlib import Path\nsys.argv=sys.argv[1:]\nsys.path.insert(0,str(Path(sys.argv[0]).parent))\ntry:\n    runpy.run_path(sys.argv[0],run_name='__main__')\nfinally:\n    Path('resources.json').write_text(json.dumps(dict(packages={d.metadata['Name']:d.version for d in importlib.metadata.distributions()}, peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024, package_file=getattr(sys.modules.get('openboost'),'__file__',None))))\n",
+    "/snapshot/benchmarks/v1/baseline_worker.py",
+    "/tmp/a6-probe-1u8nvsxn/job.json"
+  ],
+  "environment_policy": "minimal_explicit",
+  "exit_code": 0,
+  "launch_command": [
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+    "8589934592",
+    "1",
+    "/usr/local/bin/python",
+    "-c",
+    "import json,resource,runpy,sys,importlib.metadata\nfrom pathlib import Path\nsys.argv=sys.argv[1:]\nsys.path.insert(0,str(Path(sys.argv[0]).parent))\ntry:\n    runpy.run_path(sys.argv[0],run_name='__main__')\nfinally:\n    Path('resources.json').write_text(json.dumps(dict(packages={d.metadata['Name']:d.version for d in importlib.metadata.distributions()}, peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024, package_file=getattr(sys.modules.get('openboost'),'__file__',None))))\n",
+    "/snapshot/benchmarks/v1/baseline_worker.py",
+    "/tmp/a6-probe-1u8nvsxn/job.json"
+  ],
+  "reason": "",
+  "status": "pass",
+  "threads": 1,
+  "timeout_s": 1800,
+  "wall_s": 1.836083715000001,
+  "worker_identity": "uid_gid_65534_no_new_privs"
+}
