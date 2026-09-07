@@ -13,7 +13,7 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
 Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 844 passes;
+shared training preparation. The latest full regression records 923 passes;
 this includes references/evaluation infrastructure and is not a phase gate.
 Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
 Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
@@ -29,8 +29,28 @@ quality reporting while retaining every per-target gate. Next: remaining
 application adapters, real search integration and D5 checks.
 [Sprint 048](048-classification-workers.md) adds A2/A3 probability adapters and
 five-fold Adult integration. [Sprint 049](049-covertype-worker.md) records all
-five full Covertype folds timing out at 90 seconds. A3 validation remains
-incomplete; next profile this CPU path before further adapter expansion.
+five full Covertype folds timing out at 90 seconds. [Sprint 050](050-covertype-profile.md) profiles the full input:
+histogram aggregation and repeated candidate row hashing dominate the sampled
+window. [Sprint 051](051-candidate-row-hash.md) hoists the invariant digest;
+fold zero completes within 90 seconds with exact fresh replay.
+[Sprint 052](052-histogram-gather.md) reuses selected histogram statistics;
+all five full folds pass within the unchanged cap with exact fresh replay.
+[Sprint 053](053-quantile-worker.md) adds current A5 independent quantiles on
+all five Bike origins. [Sprint 054](054-count-worker.md) adds A7 explicit
+count/exposure integration on all five frequency folds.
+[Sprint 055](055-severity-worker.md) adds A8 severity on all five grouped claim
+folds. [Sprint 056](056-aggregate-worker.md) adds direct A9 aggregate integration
+on all five folds. [Sprint 057](057-paid-event-binding.md) verifies matched paid
+event input packets. [Sprint 058](058-composition-worker.md) trains and replays
+all five compositions with independent component selection.
+[Sprint 059](059-survival-worker.md) adds A10 fixed-scale survival on all five folds
+and records the CPU-to-GPU checkpoint. [Sprint 060](060-structured-worker.md)
+adds A12 structured Formula. [Sprint 061](061-ranking-worker.md) adds the A4
+query-aware adapter; real MSLR binding remains open.
+[Sprint 062](062-cpu-exit-and-gpu-entry.md) reviews CPU exit and GPU entry.
+Next: installed D5 run-ID RNG and stale-preparation probes, then source/workflow
+and gate reconciliation. Real searches and joint A9 selection remain open.
+F3 has not started; the review preserves current phase ordering.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.
 

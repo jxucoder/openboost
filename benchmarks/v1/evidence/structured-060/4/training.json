@@ -1,0 +1,20 @@
+{
+  "selection": "best_validation",
+  "stop": {
+    "rounds": 4,
+    "patience": 3,
+    "min_delta": 0.0,
+    "reference_score": 127.67160192185678,
+    "last_score": 127.67160192185678,
+    "completed_rounds": 4,
+    "stale_rounds": 0,
+    "reason": "budget"
+  },
+  "accepted_commits": 4,
+  "selected_model_identity": "5ff9c74bdb0e6db51ec400f1c99d7a84210e8907038e9746e7189edfea0513ba",
+  "best_validation_score": 127.67160192185678,
+  "output": "saturation_age28_mean",
+  "selection_metric": "weighted_half_squared_error",
+  "structure_units": "age_days_divided_by_28",
+  "selected_validation_half_squared_error": 127.67160192185676
+}

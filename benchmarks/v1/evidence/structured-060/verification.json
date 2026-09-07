@@ -1,0 +1,42 @@
+{
+  "source_and_output_hashes_match": true,
+  "xlrd": "2.0.2",
+  "cli": "UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --offline --no-sync --with xlrd python -m benchmarks.v1.openboost_worker_smoke /tmp/openboost-structured-060-retry --applications A12",
+  "initial_attempt": {
+    "output": "/tmp/openboost-structured-060",
+    "error": "ModuleNotFoundError: No module named 'xlrd'",
+    "phase": "source export; no fits ran"
+  },
+  "cells": [
+    {
+      "fold": 0,
+      "independent_half_squared_error": 86.35143120334617,
+      "age_separation_exact": true,
+      "source_ids_exact": true
+    },
+    {
+      "fold": 1,
+      "independent_half_squared_error": 107.65127949306486,
+      "age_separation_exact": true,
+      "source_ids_exact": true
+    },
+    {
+      "fold": 2,
+      "independent_half_squared_error": 98.35053291841649,
+      "age_separation_exact": true,
+      "source_ids_exact": true
+    },
+    {
+      "fold": 3,
+      "independent_half_squared_error": 98.50360535028572,
+      "age_separation_exact": true,
+      "source_ids_exact": true
+    },
+    {
+      "fold": 4,
+      "independent_half_squared_error": 127.67160192185676,
+      "age_separation_exact": true,
+      "source_ids_exact": true
+    }
+  ]
+}

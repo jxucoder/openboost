@@ -1,0 +1,47 @@
+{
+  "source_and_artifact_hashes_match": true,
+  "rtol": 1e-12,
+  "atol": 1e-14,
+  "cells": [
+    {
+      "fold": 0,
+      "selected_gamma_objective": 8.744420199119489,
+      "reported_objective": 8.744420199119517,
+      "absolute_difference": 2.842170943040401e-14,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    },
+    {
+      "fold": 1,
+      "selected_gamma_objective": 8.761126882630656,
+      "reported_objective": 8.761126882630645,
+      "absolute_difference": 1.0658141036401503e-14,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    },
+    {
+      "fold": 2,
+      "selected_gamma_objective": 8.694319429072493,
+      "reported_objective": 8.694319429072479,
+      "absolute_difference": 1.4210854715202004e-14,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    },
+    {
+      "fold": 3,
+      "selected_gamma_objective": 8.536422353456352,
+      "reported_objective": 8.536422353456345,
+      "absolute_difference": 7.105427357601002e-15,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    },
+    {
+      "fold": 4,
+      "selected_gamma_objective": 8.5369817515511,
+      "reported_objective": 8.53698175155106,
+      "absolute_difference": 3.907985046680551e-14,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    }
+  ]
+}

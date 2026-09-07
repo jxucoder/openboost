@@ -1,0 +1,36 @@
+{
+  "selection": "best_component_validation",
+  "joint_selection": false,
+  "components": {
+    "frequency": {
+      "stop": {
+        "rounds": 4,
+        "patience": 3,
+        "min_delta": 0.0,
+        "reference_score": 0.16359409804271152,
+        "last_score": 0.16359409804271152,
+        "completed_rounds": 4,
+        "stale_rounds": 0,
+        "reason": "budget"
+      },
+      "selected_identity": "eabcb8c2e91852747b0e18011f563434b292dd14a5dac19ff6c8b460757b08cd",
+      "best_score": 0.16359409804271152,
+      "accepted_commits": 4
+    },
+    "severity": {
+      "stop": {
+        "rounds": 4,
+        "patience": 3,
+        "min_delta": 0.0,
+        "reference_score": 8.536981751551068,
+        "last_score": 8.537179094305912,
+        "completed_rounds": 4,
+        "stale_rounds": 2,
+        "reason": "budget"
+      },
+      "selected_identity": "fd102c9f3971e5184365af24aab61b2234ce638cca6d0e70637a5652014b369c",
+      "best_score": 8.536981751551068,
+      "accepted_commits": 4
+    }
+  }
+}

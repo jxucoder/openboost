@@ -9,30 +9,77 @@ import numpy as np
 from openboost import NumericData
 from openboost.artifacts import Model
 from openboost.multioutput import MultiOutputModel, TargetScale
-from openboost.objectives import Normal
+from openboost.objectives import Formula, Normal
+from openboost.outputs import poisson_mean, positive_mean
+
+QUANTILES = (0.1, 0.5, 0.9)
 
 OUTPUTS = {
     "A1": "mean",
+    "A4": "ranking_score",
+    "A5": "quantiles",
     "A2": "positive_class_probability",
     "A3": "class_probabilities",
     "A11": "normal_mean_scale",
     "A6": "multioutput_original_units",
+    "A7": "period_count_mean",
+    "A8": "positive_claim_mean",
+    "A9": "annualized_paid_mean",
+    "A10": "lognormal_location_scale",
+    "A12": "saturation_age28_mean",
 }
 
 
-def predict_saved(saved, x):
+def predict_saved(saved, x, *, exposure=None, age=None):
+    if age is not None and (not isinstance(saved, dict) or saved.get("application") != "A12"):
+        raise ValueError("age structure only supported for A12")
+    if exposure is not None and (not isinstance(saved, dict) or saved.get("application") != "A7"):
+        raise ValueError("exposure is supported only for count inference")
+    if isinstance(saved, dict) and saved.get("application") == "A5":
+        if (
+            set(saved) != {"format", "application", "output", "quantiles", "models"}
+            or saved["format"] != "openboost-evaluation-v1"
+            or saved["output"] != OUTPUTS["A5"]
+            or saved["quantiles"] != list(QUANTILES)
+            or not isinstance(saved["models"], list)
+            or len(saved["models"]) != len(QUANTILES)
+        ):
+            raise ValueError("invalid frozen quantile bundle")
+        models = [Model.from_record(r) for r in saved["models"]]
+        if any(
+            m.base.shape != (1,)
+            or m.classes is not None
+            or m.feature_names != models[0].feature_names
+            for m in models
+        ):
+            raise ValueError("quantile model schema differs")
+        # Preserve raw level order, including crossings; no post-hoc sorting.
+        return np.column_stack(
+            [
+                predict_saved(
+                    dict(format=saved["format"], application="A1", output="mean", model=r), x
+                )
+                for r in saved["models"]
+            ]
+        )
     if (
         not isinstance(saved, dict)
         or set(saved)
         != (
             {"format", "application", "output", "model"}
             | ({"target_scale"} if saved.get("application") == "A6" else set())
+            | ({"power"} if saved.get("application") == "A9" else set())
+            | ({"sigma"} if saved.get("application") == "A10" else set())
         )
         or saved["format"] != "openboost-evaluation-v1"
         or saved["application"] not in OUTPUTS
         or saved["output"] != OUTPUTS[saved["application"]]
     ):
         raise ValueError("unsupported evaluation bundle")
+    if saved["application"] == "A9" and saved["power"] != 1.5:
+        raise ValueError("frozen aggregate power differs")
+    if saved["application"] == "A10" and saved["sigma"] != 1.0:
+        raise ValueError("frozen AFT scale differs")
     model = Model.from_record(saved["model"])
     scale = None
     if saved["application"] == "A6":
@@ -40,7 +87,13 @@ def predict_saved(saved, x):
         if not isinstance(record, dict) or set(record) != {"mean", "std", "constant"}:
             raise ValueError("invalid evaluation target scale")
         scale = TargetScale(record["mean"], record["std"], record["constant"])
-    width = len(scale.mean) if scale is not None else 1 if saved["application"] == "A1" else 2
+    width = (
+        len(scale.mean)
+        if scale is not None
+        else 1
+        if saved["application"] in {"A1", "A4", "A7", "A8", "A9", "A10"}
+        else 2
+    )
     classification = saved["application"] in {"A2", "A3"}
     if classification:
         if model.classes is None:
@@ -65,6 +118,21 @@ def predict_saved(saved, x):
     if scale is not None:
         return MultiOutputModel(model, scale).predict(data)
     raw = model.predict(data)
+    if saved["application"] == "A12":
+        if age is None:
+            raise ValueError("age/28 structure required for inference")
+        age = np.asarray(age)
+        if age.shape != (len(raw),):
+            raise ValueError("aligned age vector required")
+        return Formula.predict(raw, age[:, None])[:, 0]
+    if saved["application"] == "A10":
+        return np.column_stack([raw[:, 0], np.full(len(raw), saved["sigma"])])
+    if saved["application"] == "A7":
+        if exposure is None:
+            raise ValueError("prediction exposure required")
+        return poisson_mean(raw, exposure)["count_mean"]
+    if saved["application"] in {"A8", "A9"}:
+        return positive_mean(raw)
     return raw[:, 0] if width == 1 else Normal.parameters(raw)
 
 
@@ -74,14 +142,20 @@ def main():
     parser.add_argument("features", type=Path)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
+    saved = json.loads(args.model.read_text())
     with np.load(args.features, allow_pickle=False) as arrays:
-        if set(arrays.files) != {"x", "row_ids"}:
-            raise ValueError("prediction packet must contain only features and row IDs")
+        if set(arrays.files) != (
+            {"x", "row_ids"}
+            | ({"exposure"} if saved.get("application") == "A7" else set())
+            | ({"age"} if saved.get("application") == "A12" else set())
+        ):
+            raise ValueError("prediction packet differs from declared feature/exposure schema")
         x, ids = arrays["x"], arrays["row_ids"]
+        exposure = arrays.get("exposure")
+        age = arrays.get("age")
     if ids.ndim != 1 or len(ids) != len(x) or len(np.unique(ids)) != len(ids):
         raise ValueError("unique aligned prediction row IDs required")
-    saved = json.loads(args.model.read_text())
-    prediction = predict_saved(saved, x)
+    prediction = predict_saved(saved, x, exposure=exposure, age=age)
     np.savez(args.output, row_ids=ids, prediction=prediction)
 
 

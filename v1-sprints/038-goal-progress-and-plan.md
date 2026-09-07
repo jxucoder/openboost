@@ -13,7 +13,28 @@ adds scale-bound selection and a synthetic current search. [Sprint 047](047-mult
 adds standardized A6 quality reporting. [Sprint 048](048-classification-workers.md)
 adds classification adapters and Adult validation. [Sprint 049](049-covertype-worker.md)
 records five Covertype worker timeouts: profile this full-data CPU path next,
-before additional adapters. Remaining M2 and M3–M6 are open.
+before additional adapters. [Sprint 050](050-covertype-profile.md) identifies
+histogram aggregation and repeated candidate row hashing; next remove invariant
+rehashing with exact conformance checks. [Sprint 051](051-candidate-row-hash.md)
+implements that change and completes fold zero within the cap; histogram cost
+and the remaining full folds are addressed in [Sprint 052](052-histogram-gather.md).
+All five bounded replays pass after histogram gather reuse.
+[Sprint 053](053-quantile-worker.md) adds current A5 independent quantile
+integration on all five Bike origins. [Sprint 054](054-count-worker.md) adds
+A7 count/exposure integration on all five frequency folds.
+[Sprint 055](055-severity-worker.md) adds A8 grouped claim severity.
+[Sprint 056](056-aggregate-worker.md) adds direct A9 annualized aggregate means.
+[Sprint 057](057-paid-event-binding.md) binds matched paid-event inputs.
+[Sprint 058](058-composition-worker.md) trains/replays all five compositions.
+[Sprint 059](059-survival-worker.md) adds fixed-scale A10 survival and the CPU-to-GPU
+checkpoint. [Sprint 060](060-structured-worker.md) adds A12 structured Formula.
+[Sprint 061](061-ranking-worker.md) verifies the current A4 adapter synthetically;
+real MSLR binding remains open. [Sprint 062](062-cpu-exit-and-gpu-entry.md)
+records the CPU exit/GPU entry review. Next: installed D5 run-ID RNG and stale
+preparation probes, then source/workflow and gate reconciliation. Remaining
+searches, B11, joint A9 selection and formal E5 stay open. F3 has not started;
+the review defines its initial vertical path without changing phase ordering.
+Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), all

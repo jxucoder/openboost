@@ -1,4 +1,4 @@
-"""Current CPU A1/A2/A3/A6/A11 trials on frozen encoded train/validation packets.
+"""Current CPU A1/A2/A3/A4/A5/A6/A7/A8/A9/A10/A11/A12 trials on frozen encoded train/validation packets.
 
 Explicit validation targets are required even with fixed budgets. The caller
 controls process threads and resource limits. Test arrays are always rejected.
@@ -13,14 +13,29 @@ import numpy as np
 
 from openboost import ClassSchema, NumericData, Problem, RunContext
 from openboost.multioutput import TargetScale
-from openboost.recipes import binary, multi_squared, multiclass, normal, squared
+from openboost.recipes import (
+    aft,
+    binary,
+    formula,
+    gamma,
+    multi_squared,
+    multiclass,
+    normal,
+    poisson,
+    quantile,
+    ranking,
+    squared,
+    tweedie,
+)
 
 if __package__:
-    from benchmarks.v1.openboost_predict import OUTPUTS, predict_saved
+    from benchmarks.v1.openboost_predict import OUTPUTS, QUANTILES, predict_saved
     from benchmarks.v1.preprocessing import fit_target_scale
+    from benchmarks.v1.ranking import validate as validate_ranking
 else:
-    from openboost_predict import OUTPUTS, predict_saved
+    from openboost_predict import OUTPUTS, QUANTILES, predict_saved
     from preprocessing import fit_target_scale
+    from ranking import validate as validate_ranking
 
 
 def fit(job, arrays):
@@ -42,8 +57,30 @@ def fit(job, arrays):
     if type(job["seed"]) is not int or job["seed"] < 0:
         raise ValueError("nonnegative integer seed required")
     needed = {"x_train", "y_train", "x_validation", "y_validation", "validation_row_ids"}
-    if not needed <= set(arrays) or set(arrays) - needed - {"weight_train", "weight_validation"}:
+    if job["application"] == "A7":
+        needed |= {"exposure_train", "exposure_validation"}
+    if job["application"] == "A9":
+        needed |= {"weight_train", "weight_validation"}
+    if job["application"] == "A10":
+        needed |= {"event_train", "event_validation"}
+    if job["application"] == "A12":
+        needed |= {"age_train", "age_validation"}
+    ranking_groups = None
+    optional = {"weight_train", "weight_validation"}
+    if job["application"] == "A4":
+        needed |= {"query_train", "query_validation", "train_row_ids"}
+        optional = {"query_weight_train", "query_weight_validation"}
+    if not needed <= set(arrays) or set(arrays) - needed - optional:
         raise ValueError("explicit train/validation arrays only; no test arrays")
+    if job["application"] == "A4":
+        ranking_groups = validate_ranking(arrays, 1)
+        if any(
+            np.asarray(arrays[k]).dtype.kind not in "iu"
+            for k in ("train_row_ids", "validation_row_ids")
+        ):
+            raise ValueError("ranking requires integer source row IDs for stable ties")
+        if np.intersect1d(arrays["train_row_ids"], arrays["validation_row_ids"]).size:
+            raise ValueError("ranking source rows overlap")
     external_ids = np.asarray(arrays["validation_row_ids"])
     if (
         external_ids.ndim != 1
@@ -56,6 +93,8 @@ def fit(job, arrays):
     if cfg.pop("seed_from_fold", True) is not True:
         raise ValueError("seed semantics differ")
     allowed = {"rounds", "learning_rate", "max_depth", "reg_lambda", "bins"}
+    if job["application"] == "A4":
+        allowed |= {"lambdas"}
     if job["application"] == "A11":
         allowed |= {"mode", "damping", "minimum_scale"}
     if job["application"] == "A6":
@@ -71,7 +110,7 @@ def fit(job, arrays):
             raise ValueError("explicit canonical classification count required")
         classes = ClassSchema(tuple(range(count)))
     problems = []
-    width = 1 if job["application"] == "A1" else 2
+    width = 1 if job["application"] in {"A1", "A4", "A5", "A7", "A8", "A9", "A10"} else 2
     if classification:
         width = 1 if job["application"] == "A2" else count
     multi = job["application"] == "A6"
@@ -95,24 +134,79 @@ def fit(job, arrays):
             target_scale = fit_target_scale(y)
             scale = TargetScale(target_scale["mean"], target_scale["std"], target_scale["constant"])
         names = tuple(f"x{i}" for i in range(x.shape[1])) if names is None else names
-        # Packet IDs remain in emitted artifacts; public data uses local integer rows.
-        ids = np.arange(len(x))
+        # Ranking preserves source IDs for ties; other tasks use local integer rows.
+        ids = (
+            arrays["train_row_ids" if part == "train" else "validation_row_ids"]
+            if ranking_groups is not None
+            else np.arange(len(x))
+        )
         data = NumericData(x, ids, names)
+        if job["application"] == "A9":
+            weight = np.asarray(arrays["weight_" + part])
+            if weight.shape != (len(x),) or not np.isfinite(weight).all() or np.any(weight <= 0):
+                raise ValueError("positive aligned aggregate exposure weights required")
+        structure = None
+        if ranking_groups is not None:
+            _, sizes, weights = ranking_groups[0 if part == "train" else 1]
+            structure = {
+                "query": np.repeat(np.arange(len(sizes)), sizes)[:, None],
+                "query_weight": np.repeat(weights, sizes)[:, None],
+            }
+        if job["application"] == "A7":
+            exposure = np.asarray(arrays["exposure_" + part])
+            if (
+                exposure.shape != (len(x),)
+                or not np.isfinite(exposure).all()
+                or np.any(exposure <= 0)
+            ):
+                raise ValueError("aligned positive finite exposure required")
+            structure = {"exposure": exposure[:, None]}
+        if job["application"] == "A12":
+            age = np.asarray(arrays["age_" + part])
+            if age.shape != y.shape or not np.isfinite(age).all() or np.any(age <= 0):
+                raise ValueError("aligned positive age/28 structure required")
+            structure = {"x": age[:, None]}
+        target = y if multi else y[:, None]
+        target_kind = "numeric"
+        if job["application"] == "A10":
+            event = np.asarray(arrays["event_" + part])
+            if event.shape != y.shape or not np.isin(event, [0, 1]).all() or np.any(y <= 0):
+                raise ValueError("positive times and aligned binary events required")
+            target = np.column_stack([y, np.where(event, y, np.inf)])
+            target_kind = "event_right"
         problems.append(
             Problem(
                 data,
-                y if multi else y[:, None],
+                target,
                 data.row_ids,
+                target_kind=target_kind,
                 weight=arrays.get("weight_" + part),
                 raw_width=width,
                 classes=classes,
+                structure=structure,
             )
         )
     if multi:
         problems = [scale.transform(p) for p in problems]
-    recipe = {"A1": squared, "A2": binary, "A3": multiclass, "A6": multi_squared, "A11": normal}[
-        job["application"]
-    ]
+    if job["application"] == "A5":
+        return fit_quantiles(job, cfg, problems, arrays["x_validation"])
+    recipe = {
+        "A1": squared,
+        "A2": binary,
+        "A3": multiclass,
+        "A4": ranking,
+        "A6": multi_squared,
+        "A7": poisson,
+        "A8": gamma,
+        "A9": tweedie,
+        "A10": aft,
+        "A11": normal,
+        "A12": formula,
+    }[job["application"]]
+    if job["application"] == "A9":
+        cfg["power"] = 1.5
+    if job["application"] == "A10":
+        cfg["sigma"] = 1.0
     result = recipe(
         *problems,
         context=RunContext("evaluation", job["seed"]),
@@ -127,9 +221,18 @@ def fit(job, arrays):
         output=OUTPUTS[job["application"]],
         model=model.record(),
     )
+    if job["application"] == "A9":
+        saved["power"] = 1.5
+    if job["application"] == "A10":
+        saved["sigma"] = 1.0
     if multi:
         saved["target_scale"] = target_scale
-    prediction = predict_saved(saved, arrays["x_validation"])
+    prediction = predict_saved(
+        saved,
+        arrays["x_validation"],
+        exposure=arrays.get("exposure_validation"),
+        age=arrays.get("age_validation"),
+    )
     training = dict(
         selection=selection,
         stop={**asdict(result.stop), "reason": result.stop.reason},
@@ -138,6 +241,66 @@ def fit(job, arrays):
         best_validation_score=result.state.best_score,
         output=saved["output"],
     )
+    if job["application"] == "A7":
+        from openboost.objectives import Poisson
+
+        training.update(
+            selection_metric="weighted_poisson_nll",
+            exposure_role="likelihood_once",
+            target_units="period_count",
+            raw_units="log_rate",
+            selected_validation_nll=Poisson().loss(problems[1], model.predict(problems[1].data)),
+        )
+    if job["application"] == "A8":
+        from openboost.objectives import Gamma
+
+        training.update(
+            selection_metric="weighted_gamma_objective",
+            target_units="positive_claim_amount",
+            raw_units="log_mean",
+            selected_validation_gamma_objective=Gamma().loss(
+                problems[1], model.predict(problems[1].data)
+            ),
+        )
+    if job["application"] == "A9":
+        from openboost.objectives import Tweedie
+
+        training.update(
+            selection_metric="weighted_tweedie_objective",
+            power=1.5,
+            target_units="annualized_paid_total",
+            weight_role="exposure_once",
+            selected_validation_tweedie_objective=Tweedie(1.5).loss(
+                problems[1], model.predict(problems[1].data)
+            ),
+        )
+    if job["application"] == "A10":
+        from openboost.survival import LogNormalAFT
+
+        training.update(
+            selection_metric="weighted_censored_nll",
+            sigma=1.0,
+            selected_validation_censored_nll=LogNormalAFT(1.0).loss(
+                problems[1], model.predict(problems[1].data)
+            ),
+        )
+    if job["application"] == "A12":
+        training.update(
+            selection_metric="weighted_half_squared_error",
+            structure_units="age_days_divided_by_28",
+            selected_validation_half_squared_error=float(
+                np.average(
+                    (prediction - arrays["y_validation"]) ** 2 / 2,
+                    weights=arrays.get("weight_validation"),
+                )
+            ),
+        )
+    if job["application"] == "A4":
+        training.update(
+            selection_metric="one_minus_query_weighted_ndcg_at_10",
+            lambdas=cfg.get("lambdas", False),
+            tie_break="integer_source_row_id",
+        )
     if classification:
         training.update(class_order=list(classes.values), selection_metric="logloss")
     if multi:
@@ -146,6 +309,53 @@ def fit(job, arrays):
             scale_convention="unweighted_train_population",
             selection_metric="row_mean_sum_standardized_half_squared_error",
         )
+    return prediction, saved, training
+
+
+def fit_quantiles(job, cfg, problems, x_validation):
+    """Independent frozen levels with separate validation stopping and selection."""
+    from openboost.objectives import Quantile
+
+    models, runs = [], []
+    selection = "final" if job.get("early_stopping_rounds") is None else "best_validation"
+    for q in QUANTILES:
+        result = quantile(
+            *problems,
+            context=RunContext("evaluation", job["seed"]),
+            q=q,
+            patience=job.get("early_stopping_rounds"),
+            **cfg,
+        )
+        model = result.state.model if selection == "final" else result.state.best_model
+        models.append(model.record())
+        runs.append(
+            dict(
+                q=q,
+                stop={**asdict(result.stop), "reason": result.stop.reason},
+                accepted_commits=result.state.version,
+                selected_model_identity=model.identity,
+                best_validation_score=result.state.best_score,
+                selected_validation_pinball=Quantile(q).loss(
+                    problems[1], model.predict(problems[1].data)
+                ),
+            )
+        )
+    saved = dict(
+        format="openboost-evaluation-v1",
+        application="A5",
+        output=OUTPUTS["A5"],
+        quantiles=list(QUANTILES),
+        models=models,
+    )
+    prediction = predict_saved(saved, x_validation)
+    training = dict(
+        selection=selection,
+        output=OUTPUTS["A5"],
+        quantiles=list(QUANTILES),
+        quantile_runs=runs,
+        selection_metric="independent_weighted_pinball",
+        crossing_rows=int(np.any(np.diff(prediction, axis=1) < 0, axis=1).sum()),
+    )
     return prediction, saved, training
 
 

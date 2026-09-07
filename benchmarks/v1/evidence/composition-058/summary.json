@@ -1,0 +1,455 @@
+{
+  "scope": "Component-selected composition validation only; no joint selection or quality gate",
+  "revision": "e603f1f205a2fe9bc67f49614ea6054ff7f0f28e",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "-m",
+    "benchmarks.v1.composition_smoke",
+    "/private/tmp/openboost-paid-events-057/manifest.json",
+    "/private/tmp/openboost-composition-058"
+  ],
+  "binding_sha256": "884034f4c7f3fe6fd2449a5b0865919209f9db2f8c532a10fa27892933622957",
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "packages": {
+    "numpy": "2.3.5",
+    "openboost": "1.0.0rc1"
+  },
+  "cpu_count": 16,
+  "threads": 1,
+  "memory_cap": null,
+  "gpu": null,
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/composition_smoke.py": "d143ddef4129ff6c43f0a6390cb10fa12796560ef2046afcf24a434863c2e956",
+    "benchmarks/v1/composition_worker.py": "5f3fb7add2639ad846aa4b1176ee97500c2363b8407190982f2527bddb3b9394",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab",
+    "benchmarks/v1/paid_event_data.py": "e8c807f7f7f484e8f9132836a994e05c1238851f1cb6a42890ca3cd1fc4ecaa8"
+  },
+  "cells": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "fit",
+        "/private/tmp/openboost-composition-058/job-0.json",
+        "/private/tmp/openboost-paid-events-057/fold-0.npz"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 21.591106708001462,
+      "artifacts": {
+        "model.bin": "63f6eff621ed4a7d2f38dce3c8b6987dd3eaf4dc15fa4ee6c1773a2b8a6a2145",
+        "training.json": "20c228c45315f009c1c35c3c262115760e9a493f1afc76c8878bac9d3c8c645f",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "835a62ba6c2a2cdc2000bf2cf559d29bef39bea350b42d9ff8cfdab38586ad35"
+      },
+      "fold": 0,
+      "job": {
+        "seed": 0,
+        "patience": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "bins": 32,
+          "max_depth": 2,
+          "reg_lambda": 1
+        }
+      },
+      "input_sha256": "0c992d9e5c7c77191f4253c3d762f938ce8ec8020010aabb052d6a2ba460584d",
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "predict",
+        "/private/tmp/openboost-composition-058/0/model.bin",
+        "/private/tmp/openboost-composition-058/0/features.npz",
+        "/private/tmp/openboost-composition-058/0/replay.npz"
+      ],
+      "fresh_process_exact": true,
+      "products_and_units": true,
+      "replay_sha256": "835a62ba6c2a2cdc2000bf2cf559d29bef39bea350b42d9ff8cfdab38586ad35",
+      "training": {
+        "selection": "best_component_validation",
+        "joint_selection": false,
+        "components": {
+          "frequency": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 0.161932312583084,
+              "last_score": 0.161932312583084,
+              "completed_rounds": 4,
+              "stale_rounds": 0,
+              "reason": "budget"
+            },
+            "selected_identity": "3b978da03454e52e76d4dbf4dfcf6148caef80ad71e7ea50703a6bad67c527e4",
+            "best_score": 0.161932312583084,
+            "accepted_commits": 4
+          },
+          "severity": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 8.744420199119519,
+              "last_score": 8.746309046366509,
+              "completed_rounds": 3,
+              "stale_rounds": 3,
+              "reason": "patience"
+            },
+            "selected_identity": "91ae6143c416d7ff084f17cf25df033676b65634253a16f76fced31cb4b8c19e",
+            "best_score": 8.744420199119519,
+            "accepted_commits": 3
+          }
+        }
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "fit",
+        "/private/tmp/openboost-composition-058/job-1.json",
+        "/private/tmp/openboost-paid-events-057/fold-1.npz"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 21.712876083009178,
+      "artifacts": {
+        "model.bin": "73255261b008df571f1736c19e62e090e8269fd9fb9d43ce918277cf9e40a7a6",
+        "training.json": "d9572bdd52f9b7bcf10fffb4a5a6b57b43d46719a7eb03d0e949b24404dd1f5e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "a5edd95bcbefa011482b0feb45d68352213d0388d92890919270b6beec5ecfc5"
+      },
+      "fold": 1,
+      "job": {
+        "seed": 1,
+        "patience": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "bins": 32,
+          "max_depth": 2,
+          "reg_lambda": 1
+        }
+      },
+      "input_sha256": "fe912bb90a41e2ad9722949399d6fb8056120e254bb09e900f0629ddb89ffd24",
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "predict",
+        "/private/tmp/openboost-composition-058/1/model.bin",
+        "/private/tmp/openboost-composition-058/1/features.npz",
+        "/private/tmp/openboost-composition-058/1/replay.npz"
+      ],
+      "fresh_process_exact": true,
+      "products_and_units": true,
+      "replay_sha256": "a5edd95bcbefa011482b0feb45d68352213d0388d92890919270b6beec5ecfc5",
+      "training": {
+        "selection": "best_component_validation",
+        "joint_selection": false,
+        "components": {
+          "frequency": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 0.16708248979218976,
+              "last_score": 0.16708248979218976,
+              "completed_rounds": 4,
+              "stale_rounds": 0,
+              "reason": "budget"
+            },
+            "selected_identity": "505a8b6d160e046b85f9dc73f5946a77e66624b9fc45344af3cbcfd538425c5f",
+            "best_score": 0.16708248979218976,
+            "accepted_commits": 4
+          },
+          "severity": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 8.760665735441318,
+              "last_score": 8.760665735441318,
+              "completed_rounds": 4,
+              "stale_rounds": 0,
+              "reason": "budget"
+            },
+            "selected_identity": "1a598b37bacbc0bb9e78d24df86099cd26b5b878c0475fb196095480b48fe6f6",
+            "best_score": 8.760665735441318,
+            "accepted_commits": 4
+          }
+        }
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "fit",
+        "/private/tmp/openboost-composition-058/job-2.json",
+        "/private/tmp/openboost-paid-events-057/fold-2.npz"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 21.789402875001542,
+      "artifacts": {
+        "model.bin": "66ac7b6b4d7f1cf519ed377f90ea8b7a7badbe46a1e22a51ed6a7ad6f67cb607",
+        "training.json": "3f3d5d6044d998873889d8994b1d879d154596ec97c6bc39c1749eece4571c9e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "983c68b4459498144b13c5ee475baf69d9302e5c1d1ace751310fc3bf859449f"
+      },
+      "fold": 2,
+      "job": {
+        "seed": 2,
+        "patience": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "bins": 32,
+          "max_depth": 2,
+          "reg_lambda": 1
+        }
+      },
+      "input_sha256": "e2be0ee857dbe10cc36d12721e5f213df28750c1e861a66ea03961e98bcc27ad",
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "predict",
+        "/private/tmp/openboost-composition-058/2/model.bin",
+        "/private/tmp/openboost-composition-058/2/features.npz",
+        "/private/tmp/openboost-composition-058/2/replay.npz"
+      ],
+      "fresh_process_exact": true,
+      "products_and_units": true,
+      "replay_sha256": "983c68b4459498144b13c5ee475baf69d9302e5c1d1ace751310fc3bf859449f",
+      "training": {
+        "selection": "best_component_validation",
+        "joint_selection": false,
+        "components": {
+          "frequency": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 0.15976309667810976,
+              "last_score": 0.15976309667810976,
+              "completed_rounds": 4,
+              "stale_rounds": 0,
+              "reason": "budget"
+            },
+            "selected_identity": "c75d7dc101485ed0b0c4986c49e746c7feeb7339af749958bfa9d33f9a338e48",
+            "best_score": 0.15976309667810976,
+            "accepted_commits": 4
+          },
+          "severity": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 8.694319429072479,
+              "last_score": 8.695301150208177,
+              "completed_rounds": 4,
+              "stale_rounds": 1,
+              "reason": "budget"
+            },
+            "selected_identity": "7770310e79bd747c6874115f614f2b68c74a176b1f5980dc94fdfdd8b63558f5",
+            "best_score": 8.694319429072479,
+            "accepted_commits": 4
+          }
+        }
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "fit",
+        "/private/tmp/openboost-composition-058/job-3.json",
+        "/private/tmp/openboost-paid-events-057/fold-3.npz"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 20.75576858400018,
+      "artifacts": {
+        "model.bin": "3795fb25037999c53a84b4c105e6d2c250b1b4897489814644ec8ac5b3535793",
+        "training.json": "7276bdfbe941412ab29436cdfc4efd8e9e77613e131853b522445f19e70b0e10",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "6cb12b2c5da6e018c9374362db629b3f64c17637f771c933648a611e4583414c"
+      },
+      "fold": 3,
+      "job": {
+        "seed": 3,
+        "patience": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "bins": 32,
+          "max_depth": 2,
+          "reg_lambda": 1
+        }
+      },
+      "input_sha256": "5b26471702b32cc0a25394aefb0dba421b3a1e7e32ddedfe3d7e9bb981a790c4",
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "predict",
+        "/private/tmp/openboost-composition-058/3/model.bin",
+        "/private/tmp/openboost-composition-058/3/features.npz",
+        "/private/tmp/openboost-composition-058/3/replay.npz"
+      ],
+      "fresh_process_exact": true,
+      "products_and_units": true,
+      "replay_sha256": "6cb12b2c5da6e018c9374362db629b3f64c17637f771c933648a611e4583414c",
+      "training": {
+        "selection": "best_component_validation",
+        "joint_selection": false,
+        "components": {
+          "frequency": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 0.1622191375121619,
+              "last_score": 0.1622191375121619,
+              "completed_rounds": 4,
+              "stale_rounds": 0,
+              "reason": "budget"
+            },
+            "selected_identity": "6119aeda08f0e0078fa3995bba20a5999b182e07e7eb534cce569c25079c3534",
+            "best_score": 0.1622191375121619,
+            "accepted_commits": 4
+          },
+          "severity": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 8.536422353456352,
+              "last_score": 8.536422353456352,
+              "completed_rounds": 4,
+              "stale_rounds": 0,
+              "reason": "budget"
+            },
+            "selected_identity": "81b946a1677668c0053aa7ecb5d65b2c6cc650e8715bfb91f38cdff976a99b7f",
+            "best_score": 8.536422353456352,
+            "accepted_commits": 4
+          }
+        }
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "fit",
+        "/private/tmp/openboost-composition-058/job-4.json",
+        "/private/tmp/openboost-paid-events-057/fold-4.npz"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 20.733523500006413,
+      "artifacts": {
+        "model.bin": "2ca494f621066987b274f75f7d8064599af583fb36aceb4880518e126742bfbd",
+        "training.json": "693ee6b7f2ffbe7540ee11e9b4bf407ebff053d0506bda83fd00019615d7938b",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "01f70ebaf869bca6c9f3a3bd99d8cd05d77e614306f67061b31860fb9aec6c4e"
+      },
+      "fold": 4,
+      "job": {
+        "seed": 4,
+        "patience": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "bins": 32,
+          "max_depth": 2,
+          "reg_lambda": 1
+        }
+      },
+      "input_sha256": "7658f4a676385f6a4dec341a9cb8f9649c2954876c641a0504f455917a1d3519",
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/composition_worker.py",
+        "predict",
+        "/private/tmp/openboost-composition-058/4/model.bin",
+        "/private/tmp/openboost-composition-058/4/features.npz",
+        "/private/tmp/openboost-composition-058/4/replay.npz"
+      ],
+      "fresh_process_exact": true,
+      "products_and_units": true,
+      "replay_sha256": "01f70ebaf869bca6c9f3a3bd99d8cd05d77e614306f67061b31860fb9aec6c4e",
+      "training": {
+        "selection": "best_component_validation",
+        "joint_selection": false,
+        "components": {
+          "frequency": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 0.16359409804271152,
+              "last_score": 0.16359409804271152,
+              "completed_rounds": 4,
+              "stale_rounds": 0,
+              "reason": "budget"
+            },
+            "selected_identity": "eabcb8c2e91852747b0e18011f563434b292dd14a5dac19ff6c8b460757b08cd",
+            "best_score": 0.16359409804271152,
+            "accepted_commits": 4
+          },
+          "severity": {
+            "stop": {
+              "rounds": 4,
+              "patience": 3,
+              "min_delta": 0.0,
+              "reference_score": 8.536981751551068,
+              "last_score": 8.537179094305912,
+              "completed_rounds": 4,
+              "stale_rounds": 2,
+              "reason": "budget"
+            },
+            "selected_identity": "fd102c9f3971e5184365af24aab61b2234ce638cca6d0e70637a5652014b369c",
+            "best_score": 8.536981751551068,
+            "accepted_commits": 4
+          }
+        }
+      }
+    }
+  ]
+}

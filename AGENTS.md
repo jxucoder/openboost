@@ -80,6 +80,29 @@ A2/A3 probability adapters and five-fold Adult integration; full Covertype runs
 and remaining adapters/searches/D5 are open. Sprint 049 records all five full
 Covertype folds timing out at the 90-second fit cap. Next profile the current
 CPU path on that same input before expanding adapters; A3 validation is incomplete.
+Sprint 050 identifies histogram aggregation and repeated candidate row hashing
+in a bounded full-input profile. Next hoist invariant candidate row hashing with
+exact identity/candidate checks, then rerun the bounded workload. Sprint 051
+completes that change: fold zero passes in 87.4 seconds with exact fresh replay;
+the other folds were pending at that revision. Sprint 052 reuses selected
+histogram statistics with exact conformance checks;
+all five full Covertype folds pass within the unchanged cap and replay exactly.
+Sprint 053 connects A5 independent quantiles to all five frozen Bike origins
+with exact fresh replay and independently recomputed pinball scores. Sprint 054
+adds A7 explicit count/exposure binding on all five frozen frequency folds with
+exact replay. Sprint 055 adds A8 claim severity on all five frozen grouped folds.
+Sprint 056 adds direct A9 annualized Tweedie on all five aggregate folds, with
+verified exposure weights and period conversion. Sprint 057 binds matched paid
+events to all five frozen A9 input folds. Sprint 058 trains and replays the public
+composition on all five packets with independent component selection. Sprint 059
+adds A10 fixed-scale survival on all five frozen folds. Sprint 060 adds A12
+structured Formula with age separated from tree features on all five folds.
+Sprint 061 adds the current A4 query-aware adapter with synthetic direct/fresh
+parity; MSLR source/binding remains open. [Sprint 062](v1-sprints/062-cpu-exit-and-gpu-entry.md)
+reviews CPU exit and GPU entry. Next: installed D5 probes for distinct run-ID RNG
+streams and stale preparation rejection, then source/workflow and gate reconciliation.
+Real searches, joint A9 selection and formal E5 remain open. F3 has not started;
+the review defines its first vertical path without changing phase ordering.
 These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared

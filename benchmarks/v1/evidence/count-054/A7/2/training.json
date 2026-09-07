@@ -1,0 +1,22 @@
+{
+  "selection": "best_validation",
+  "stop": {
+    "rounds": 4,
+    "patience": 3,
+    "min_delta": 0.0,
+    "reference_score": 0.20879400813868187,
+    "last_score": 0.20879400813868187,
+    "completed_rounds": 4,
+    "stale_rounds": 0,
+    "reason": "budget"
+  },
+  "accepted_commits": 4,
+  "selected_model_identity": "5da07a6716b5bda1f49d3c196043e9f11497a317e5fba1ba3f60e3c1e28a9d68",
+  "best_validation_score": 0.20879400813868187,
+  "output": "period_count_mean",
+  "selection_metric": "weighted_poisson_nll",
+  "exposure_role": "likelihood_once",
+  "target_units": "period_count",
+  "raw_units": "log_rate",
+  "selected_validation_nll": 0.20879400813868187
+}

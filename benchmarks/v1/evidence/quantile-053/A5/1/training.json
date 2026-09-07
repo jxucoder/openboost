@@ -1,0 +1,64 @@
+{
+  "selection": "best_validation",
+  "output": "quantiles",
+  "quantiles": [
+    0.1,
+    0.5,
+    0.9
+  ],
+  "quantile_runs": [
+    {
+      "q": 0.1,
+      "stop": {
+        "rounds": 4,
+        "patience": 3,
+        "min_delta": 0.0,
+        "reference_score": 19.252423230240563,
+        "last_score": 19.252423230240563,
+        "completed_rounds": 4,
+        "stale_rounds": 0,
+        "reason": "budget"
+      },
+      "accepted_commits": 4,
+      "selected_model_identity": "438a2e9f1855854ac58010b77d003a6fcbf48730becd53b45bb428646afd6eeb",
+      "best_validation_score": 19.252423230240563,
+      "selected_validation_pinball": 19.252423230240563
+    },
+    {
+      "q": 0.5,
+      "stop": {
+        "rounds": 4,
+        "patience": 3,
+        "min_delta": 0.0,
+        "reference_score": 69.40235744558989,
+        "last_score": 69.40235744558989,
+        "completed_rounds": 4,
+        "stale_rounds": 0,
+        "reason": "budget"
+      },
+      "accepted_commits": 4,
+      "selected_model_identity": "65d201db16872ecc640cf697eb6cfb4230a2b2750b88d163c2756df2fcd27717",
+      "best_validation_score": 69.40235744558989,
+      "selected_validation_pinball": 69.40235744558989
+    },
+    {
+      "q": 0.9,
+      "stop": {
+        "rounds": 4,
+        "patience": 3,
+        "min_delta": 0.0,
+        "reference_score": 44.30960524627721,
+        "last_score": 44.30960524627721,
+        "completed_rounds": 4,
+        "stale_rounds": 0,
+        "reason": "budget"
+      },
+      "accepted_commits": 4,
+      "selected_model_identity": "e2f2d8b2e1da816678af49061c77a272ab8c727a34a60318635b34fb1e55f8f1",
+      "best_validation_score": 44.30960524627721,
+      "selected_validation_pinball": 44.30960524627721
+    }
+  ],
+  "selection_metric": "independent_weighted_pinball",
+  "crossing_rows": 0
+}

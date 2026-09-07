@@ -66,3 +66,9 @@ same-ID independent and reordered execution; they establish no speed benefit.
 
 [Shared preparation](preparation.md) now supports explicit training-code reuse
 across independent runs.
+
+The current A12 worker uses a dedicated concrete packet: age/28 is structure,
+and encoded composition features alone feed the parameter trees. Ordinary GBDT
+packets retain age as a predictor. Five frozen Formula folds pass exact fresh
+inference in Sprint 060; real extrapolation and quality/search acceptance remain
+open. Inference requires new positive age values in the same normalized units.

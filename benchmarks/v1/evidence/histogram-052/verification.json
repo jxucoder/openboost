@@ -1,0 +1,9 @@
+{
+  "all_source_and_artifact_hashes_match": true,
+  "fold_zero_model_bytes_equal_sprint_051": true,
+  "fold_zero_prediction_arrays_equal_sprint_051": true,
+  "all_fresh_replays_exact": true,
+  "cpu": "Apple M4 Max",
+  "physical_ram_bytes": 51539607552,
+  "metadata_note": "CPU and RAM read with sysctl; Python reports x86_64 as recorded in summary; peak memory not measured"
+}

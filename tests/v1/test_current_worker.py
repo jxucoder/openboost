@@ -13,7 +13,7 @@ from benchmarks.v1.openboost_worker import fit
 
 from openboost import NumericData, Problem, RunContext
 from openboost.objectives import Normal
-from openboost.recipes import normal, squared
+from openboost.recipes import gamma, normal, squared, tweedie
 
 
 def test_current_worker_is_available():
@@ -42,11 +42,17 @@ def fixture(app="A1"):
     return job, arrays
 
 
-@pytest.mark.parametrize("app", ["A1", "A11"])
+@pytest.mark.parametrize("app", ["A1", "A11", "A8", "A9"])
 @pytest.mark.parametrize("patience", [None, 1])
 def test_direct_recipe_parity_and_fresh_prediction(app, patience, tmp_path):
     job, arrays = fixture(app)
     job["early_stopping_rounds"] = patience
+    if app in {"A8", "A9"}:
+        for part in ("train", "validation"):
+            arrays["y_" + part] = np.exp(arrays["y_" + part])
+    if app == "A9":
+        arrays["weight_train"] += 0.1
+        arrays["y_train"][0] = 0
     prediction, saved, training = fit(job, arrays)
     problems = []
     for part in ("train", "validation"):
@@ -58,15 +64,30 @@ def test_direct_recipe_parity_and_fresh_prediction(app, patience, tmp_path):
                 y[:, None],
                 data.row_ids,
                 weight=arrays["weight_" + part],
-                raw_width=1 if app == "A1" else 2,
+                raw_width=1 if app in {"A1", "A8", "A9"} else 2,
             )
         )
-    direct = (squared if app == "A1" else normal)(
+    direct = {"A1": squared, "A11": normal, "A8": gamma, "A9": tweedie}[app](
         *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
     )
     model = direct.state.model if patience is None else direct.state.best_model
     raw = model.predict(problems[1].data)
-    expected = raw[:, 0] if app == "A1" else Normal.parameters(raw)
+    expected = raw[:, 0] if app in {"A1", "A8", "A9"} else Normal.parameters(raw)
+    if app in {"A8", "A9"}:
+        expected = np.exp(raw[:, 0])
+        loss = np.average(
+            arrays["y_validation"] / expected + np.log(expected),
+            weights=arrays["weight_validation"],
+        )
+        if app == "A8":
+            assert training["selected_validation_gamma_objective"] == pytest.approx(loss)
+        else:
+            loss = np.average(
+                2 * arrays["y_validation"] / np.sqrt(expected) + 2 * np.sqrt(expected),
+                weights=arrays["weight_validation"],
+            )
+            assert training["selected_validation_tweedie_objective"] == pytest.approx(loss)
+            assert saved["power"] == 1.5
     np.testing.assert_array_equal(prediction, expected)
     assert training["selected_model_identity"] == model.identity
     assert training["stop"]["completed_rounds"] == direct.stop.completed_rounds
@@ -114,7 +135,7 @@ def test_unsupported_or_contaminated_inputs_fail(bad):
     elif bad == "threads":
         job["threads"] = 2
     else:
-        job["application"] = "A5"
+        job["application"] = "unsupported"
     with pytest.raises(ValueError):
         fit(job, arrays)
 
@@ -285,3 +306,463 @@ def test_classification_invalid_contracts_fail(bad):
         job["config"]["mode"] = "natural"
     with pytest.raises(ValueError):
         fit(job, arrays)
+
+
+@pytest.mark.parametrize("patience", [None, 1])
+def test_quantile_weighted_direct_and_fresh_replay(patience, tmp_path):
+    from openboost.recipes import quantile
+
+    job, arrays = fixture("A5")
+    job["early_stopping_rounds"] = patience
+    prediction, saved, training = fit(job, arrays)
+    assert saved["quantiles"] == [0.1, 0.5, 0.9]
+    assert prediction.shape == (4, 3)
+    problems = []
+    for part in ("train", "validation"):
+        data = NumericData(arrays["x_" + part], np.arange(len(arrays["x_" + part])), ("x0",))
+        problems.append(
+            Problem(
+                data, arrays["y_" + part][:, None], data.row_ids, weight=arrays["weight_" + part]
+            )
+        )
+    for i, q in enumerate(saved["quantiles"]):
+        direct = quantile(
+            *problems, context=RunContext("evaluation", 7), q=q, patience=patience, **job["config"]
+        )
+        model = direct.state.model if patience is None else direct.state.best_model
+        np.testing.assert_array_equal(prediction[:, i], model.predict(problems[1].data)[:, 0])
+        assert (
+            training["quantile_runs"][i]["stop"]["completed_rounds"] == direct.stop.completed_rounds
+        )
+        residual = arrays["y_validation"] - prediction[:, i]
+        score = np.average(
+            np.maximum(q * residual, (q - 1) * residual), weights=arrays["weight_validation"]
+        )
+        assert training["quantile_runs"][i]["selected_validation_pinball"] == pytest.approx(score)
+    path = tmp_path / "model.bin"
+    path.write_text(json.dumps(saved))
+    packet = tmp_path / "features.npz"
+    np.savez(packet, x=arrays["x_validation"], row_ids=arrays["validation_row_ids"])
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [sys.executable, str(script), str(path), str(packet), str(tmp_path / "replay.npz")],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as replay:
+        np.testing.assert_array_equal(replay["prediction"], prediction)
+        np.testing.assert_array_equal(replay["row_ids"], arrays["validation_row_ids"])
+
+
+@pytest.mark.parametrize("bad", ["order", "count", "width", "features"])
+def test_quantile_saved_schema_rejected(bad):
+    job, arrays = fixture("A5")
+    _, saved, _ = fit(job, arrays)
+    if bad == "order":
+        saved["quantiles"].reverse()
+    elif bad == "count":
+        saved["models"].pop()
+    elif bad == "width":
+        saved["models"][0]["base"] = [0, 0]
+    else:
+        saved["models"][0]["feature_names"] = ["foreign"]
+    with pytest.raises(ValueError):
+        predict_saved(saved, arrays["x_validation"])
+
+
+def test_quantile_crossings_are_not_sorted():
+    from openboost.artifacts import Model
+
+    saved = dict(
+        format="openboost-evaluation-v1",
+        application="A5",
+        output="quantiles",
+        quantiles=[0.1, 0.5, 0.9],
+        models=[Model(("x0",), [v]).record() for v in [3, 2, 1]],
+    )
+    np.testing.assert_array_equal(predict_saved(saved, [[0], [1]]), [[3, 2, 1], [3, 2, 1]])
+
+
+@pytest.mark.parametrize("patience", [None, 1])
+def test_count_exposure_direct_and_fresh(patience, tmp_path):
+    import math
+
+    from openboost.outputs import poisson_mean
+    from openboost.recipes import poisson
+
+    job, arrays = fixture("A7")
+    job["early_stopping_rounds"] = patience
+    problems = []
+    for part in ("train", "validation"):
+        x = arrays["x_" + part]
+        arrays["y_" + part] = np.arange(len(x)) % 3
+        arrays["exposure_" + part] = np.linspace(0.1, 2, len(x))
+        data = NumericData(x, np.arange(len(x)), ("x0",))
+        problems.append(
+            Problem(
+                data,
+                arrays["y_" + part][:, None],
+                data.row_ids,
+                weight=arrays["weight_" + part],
+                structure={"exposure": arrays["exposure_" + part][:, None]},
+            )
+        )
+    direct = poisson(
+        *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
+    )
+    prediction, saved, training = fit(job, arrays)
+    model = direct.state.model if patience is None else direct.state.best_model
+    np.testing.assert_array_equal(
+        prediction,
+        poisson_mean(model.predict(problems[1].data), arrays["exposure_validation"])["count_mean"],
+    )
+    assert training["selected_model_identity"] == model.identity
+    y = arrays["y_validation"]
+    nll = np.average(
+        prediction - y * np.log(prediction) + [math.lgamma(v + 1) for v in y],
+        weights=arrays["weight_validation"],
+    )
+    assert training["selected_validation_nll"] == pytest.approx(nll)
+    np.testing.assert_allclose(
+        predict_saved(saved, arrays["x_validation"], exposure=arrays["exposure_validation"] * 2),
+        prediction * 2,
+    )
+    path = tmp_path / "model.bin"
+    path.write_text(json.dumps(saved))
+    packet = tmp_path / "features.npz"
+    np.savez(
+        packet,
+        x=arrays["x_validation"],
+        row_ids=arrays["validation_row_ids"],
+        exposure=arrays["exposure_validation"],
+    )
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [sys.executable, str(script), str(path), str(packet), str(tmp_path / "replay.npz")],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as replay:
+        np.testing.assert_array_equal(replay["prediction"], prediction)
+        np.testing.assert_array_equal(replay["row_ids"], arrays["validation_row_ids"])
+    for exposure in [None, np.zeros(4), np.ones((4, 1)), np.full(4, np.nan)]:
+        with pytest.raises(ValueError):
+            predict_saved(saved, arrays["x_validation"], exposure=exposure)
+
+
+@pytest.mark.parametrize("bad", ["missing", "zero", "shape", "fractional", "offset", "foreign"])
+def test_count_worker_rejects_invalid_exposure_contract(bad):
+    job, arrays = fixture("A7")
+    for part in ["train", "validation"]:
+        arrays["y_" + part] = np.zeros(len(arrays["y_" + part]))
+        arrays["exposure_" + part] = np.ones(len(arrays["y_" + part]))
+    if bad == "missing":
+        arrays.pop("exposure_train")
+    elif bad == "zero":
+        arrays["exposure_validation"][0] = 0
+    elif bad == "shape":
+        arrays["exposure_train"] = arrays["exposure_train"][:, None]
+    elif bad == "fractional":
+        arrays["y_train"][0] = 0.5
+    elif bad == "offset":
+        arrays["offset_train"] = np.zeros(8)
+    else:
+        job["application"] = "A1"
+    with pytest.raises(ValueError):
+        fit(job, arrays)
+
+
+@pytest.mark.parametrize("bad", ["zero", "negative", "exposure", "offset"])
+def test_severity_invalid_contracts(bad):
+    job, arrays = fixture("A8")
+    for part in ("train", "validation"):
+        arrays["y_" + part] = np.exp(arrays["y_" + part])
+    if bad == "zero":
+        arrays["y_train"][0] = 0
+    elif bad == "negative":
+        arrays["y_validation"][0] = -1
+    else:
+        arrays[bad + "_train"] = np.ones(8)
+    with pytest.raises(ValueError):
+        fit(job, arrays)
+
+
+@pytest.mark.parametrize(
+    "bad", ["missing", "zero", "negative_target", "exposure", "offset", "power"]
+)
+def test_aggregate_contract_rejects_invalid_inputs(bad):
+    job, arrays = fixture("A9")
+    arrays["y_train"] = np.abs(arrays["y_train"])
+    arrays["y_validation"] = np.abs(arrays["y_validation"])
+    arrays["weight_train"] += 0.1
+    if bad == "missing":
+        arrays.pop("weight_train")
+    elif bad == "zero":
+        arrays["weight_validation"][0] = 0
+    elif bad == "negative_target":
+        arrays["y_train"][0] = -1
+    elif bad == "power":
+        job["config"]["power"] = 1.9
+    else:
+        arrays[bad + "_train"] = np.ones(8)
+    with pytest.raises(ValueError):
+        fit(job, arrays)
+
+
+def test_aggregate_bundle_power_is_validated():
+    job, arrays = fixture("A9")
+    for part in ("train", "validation"):
+        arrays["y_" + part] = np.abs(arrays["y_" + part])
+        arrays["weight_" + part] += 0.1
+    _, saved, _ = fit(job, arrays)
+    saved["power"] = 1.9
+    with pytest.raises(ValueError):
+        predict_saved(saved, arrays["x_validation"])
+
+
+@pytest.mark.parametrize("patience", [None, 1])
+def test_aft_direct_and_fresh(patience, tmp_path):
+    import math
+
+    from openboost.recipes import aft
+
+    job, arrays = fixture("A10")
+    job["early_stopping_rounds"] = patience
+    problems = []
+    for part in ("train", "validation"):
+        x = arrays["x_" + part]
+        y = arrays["y_" + part] = np.exp(arrays["y_" + part])
+        event = arrays["event_" + part] = np.arange(len(x)) % 2
+        d = NumericData(x, np.arange(len(x)), ("x0",))
+        problems.append(
+            Problem(
+                d,
+                np.column_stack([y, np.where(event, y, np.inf)]),
+                d.row_ids,
+                target_kind="event_right",
+                weight=arrays["weight_" + part],
+            )
+        )
+    direct = aft(
+        *problems, context=RunContext("evaluation", 7), sigma=1, patience=patience, **job["config"]
+    )
+    prediction, saved, training = fit(job, arrays)
+    model = direct.state.model if patience is None else direct.state.best_model
+    np.testing.assert_array_equal(prediction[:, 0], model.predict(problems[1].data)[:, 0])
+    np.testing.assert_array_equal(prediction[:, 1], np.ones(4))
+    z = np.log(arrays["y_validation"]) - prediction[:, 0]
+    losses = [
+        math.log(t) + v * v / 2 + math.log(2 * math.pi) / 2
+        if e
+        else -math.log(math.erfc(v / math.sqrt(2)) / 2)
+        for t, v, e in zip(arrays["y_validation"], z, arrays["event_validation"], strict=True)
+    ]
+    assert training["selected_validation_censored_nll"] == pytest.approx(
+        np.average(losses, weights=arrays["weight_validation"])
+    )
+    path = tmp_path / "model.bin"
+    path.write_text(json.dumps(saved))
+    np.savez(
+        tmp_path / "features.npz", x=arrays["x_validation"], row_ids=arrays["validation_row_ids"]
+    )
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [
+            sys.executable,
+            str(script),
+            str(path),
+            str(tmp_path / "features.npz"),
+            str(tmp_path / "replay.npz"),
+        ],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as replay:
+        np.testing.assert_array_equal(prediction, replay["prediction"])
+    saved["sigma"] = 2
+    with pytest.raises(ValueError):
+        predict_saved(saved, arrays["x_validation"])
+
+
+@pytest.mark.parametrize("bad", ["missing", "fractional", "range", "time", "offset", "scale"])
+def test_survival_invalid_contract(bad):
+    job, arrays = fixture("A10")
+    for part in ("train", "validation"):
+        arrays["y_" + part] = np.exp(arrays["y_" + part])
+        arrays["event_" + part] = np.ones(len(arrays["y_" + part]))
+    if bad == "missing":
+        arrays.pop("event_train")
+    elif bad == "fractional":
+        arrays["event_validation"][0] = 0.5
+    elif bad == "range":
+        arrays["event_train"][0] = 2
+    elif bad == "time":
+        arrays["y_validation"][0] = 0
+    elif bad == "offset":
+        arrays["offset_train"] = np.ones(8)
+    else:
+        job["config"]["sigma"] = 2
+    with pytest.raises(ValueError):
+        fit(job, arrays)
+
+
+@pytest.mark.parametrize("patience", [None, 1])
+def test_formula_direct_structure_and_fresh(patience, tmp_path):
+    from openboost.recipes import formula
+
+    job, arrays = fixture("A12")
+    job["early_stopping_rounds"] = patience
+    problems = []
+    for part in ("train", "validation"):
+        x = arrays["x_" + part]
+        arrays["age_" + part] = np.linspace(0.1, 3, len(x))
+        arrays["y_" + part] = 10 * -np.expm1(-arrays["age_" + part])
+        d = NumericData(x, np.arange(len(x)), ("x0",))
+        problems.append(
+            Problem(
+                d,
+                arrays["y_" + part][:, None],
+                d.row_ids,
+                raw_width=2,
+                weight=arrays["weight_" + part],
+                structure={"x": arrays["age_" + part][:, None]},
+            )
+        )
+    direct = formula(
+        *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
+    )
+    prediction, saved, training = fit(job, arrays)
+    model = direct.state.model if patience is None else direct.state.best_model
+    a, b = np.logaddexp(0, model.predict(problems[1].data)).T
+    np.testing.assert_allclose(prediction, a * -np.expm1(-b * arrays["age_validation"]), rtol=1e-14)
+    assert training["selected_model_identity"] == model.identity
+    assert training["selected_validation_half_squared_error"] == pytest.approx(
+        np.average(
+            (prediction - arrays["y_validation"]) ** 2 / 2, weights=arrays["weight_validation"]
+        )
+    )
+    path = tmp_path / "model.bin"
+    path.write_text(json.dumps(saved))
+    np.savez(
+        tmp_path / "features.npz",
+        x=arrays["x_validation"],
+        row_ids=arrays["validation_row_ids"],
+        age=arrays["age_validation"],
+    )
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [
+            sys.executable,
+            str(script),
+            str(path),
+            str(tmp_path / "features.npz"),
+            str(tmp_path / "replay.npz"),
+        ],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as r:
+        np.testing.assert_array_equal(prediction, r["prediction"])
+    for age in [None, np.zeros(4), np.ones((4, 1))]:
+        with pytest.raises(ValueError):
+            predict_saved(saved, arrays["x_validation"], age=age)
+
+
+def ranking_fixture():
+    job, arrays = fixture("A4")
+    arrays.pop("weight_train")
+    arrays.pop("weight_validation")
+    arrays.update(
+        train_row_ids=np.array([7, 6, 5, 4, 3, 2, 1, 0]),
+        validation_row_ids=np.array([11, 10, 9, 8]),
+        query_train=np.repeat(["a", "b"], 4),
+        query_validation=np.repeat(["c", "d"], 2),
+        query_weight_train=np.array([2.0, 0.5]),
+        query_weight_validation=np.array([0.25, 3.0]),
+        y_train=np.array([0, 4, 1, 2, 2, 1, 3, 0]),
+        y_validation=np.array([0, 3, 2, 0]),
+    )
+    return job, arrays
+
+
+@pytest.mark.parametrize("lambdas", [False, True])
+@pytest.mark.parametrize("patience", [None, 1])
+def test_ranking_direct_and_fresh(lambdas, patience, tmp_path):
+    from openboost.recipes import ranking
+
+    job, a = ranking_fixture()
+    job["config"]["lambdas"] = lambdas
+    job["early_stopping_rounds"] = patience
+    prediction, saved, training = fit(job, a)
+    problems = []
+    for part, size in [("train", 4), ("validation", 2)]:
+        ids = a["train_row_ids" if part == "train" else "validation_row_ids"]
+        d = NumericData(a["x_" + part], ids, ("x0",))
+        problems.append(
+            Problem(
+                d,
+                a["y_" + part][:, None],
+                ids,
+                structure={
+                    "query": np.repeat([0, 1], size)[:, None],
+                    "query_weight": np.repeat(a["query_weight_" + part], size)[:, None],
+                },
+            )
+        )
+    direct = ranking(
+        *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
+    )
+    model = direct.state.model if patience is None else direct.state.best_model
+    np.testing.assert_array_equal(prediction, model.predict(problems[1].data)[:, 0])
+    assert training["selected_model_identity"] == model.identity
+    assert training["best_validation_score"] == direct.state.best_score
+    path = tmp_path / "model.bin"
+    path.write_text(json.dumps(saved))
+    np.savez(tmp_path / "features.npz", x=a["x_validation"], row_ids=a["validation_row_ids"])
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [
+            sys.executable,
+            str(script),
+            str(path),
+            str(tmp_path / "features.npz"),
+            str(tmp_path / "replay.npz"),
+        ],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as r:
+        np.testing.assert_array_equal(prediction, r["prediction"])
+        np.testing.assert_array_equal(a["validation_row_ids"], r["row_ids"])
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        "fragment",
+        "query_overlap",
+        "row_weight",
+        "row_overlap",
+        "string_rows",
+        "relevance",
+        "query_weight",
+    ],
+)
+def test_ranking_invalid_contract(bad):
+    job, a = ranking_fixture()
+    if bad == "fragment":
+        a["query_train"] = np.array(["a", "b"] * 4)
+    elif bad == "query_overlap":
+        a["query_validation"][0:2] = "a"
+    elif bad == "row_weight":
+        a["weight_train"] = np.ones(8)
+    elif bad == "row_overlap":
+        a["validation_row_ids"][0] = 0
+    elif bad == "string_rows":
+        a["train_row_ids"] = a["train_row_ids"].astype(str)
+    elif bad == "relevance":
+        a["y_validation"][0] = 5
+    else:
+        a["query_weight_train"] = np.ones(8)
+    with pytest.raises(ValueError):
+        fit(job, a)

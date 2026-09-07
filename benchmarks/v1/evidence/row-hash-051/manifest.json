@@ -1,0 +1,78 @@
+{
+  "command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+    "/tmp/openboost-covertype-049/A3/0/job.json"
+  ],
+  "timeout_s": 90,
+  "threads": 1,
+  "status": "pass",
+  "exit_code": 0,
+  "reason": "",
+  "wall_s": 87.40377258400258,
+  "artifacts": {
+    "model.bin": "25040b9d5ecf3f849b16fa16228f25409fe1c449d2ffd920f7d002283c3e242e",
+    "training.json": "242f60f328e07841b844f3eb3e1dea83e925c230ae97a73ccceed0ba61ac5815",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "predictions.npz": "de0a146a40a54c7d3a4bd6b8a7bfba821f18bb52542fa6559dd9fbfce0f18256"
+  },
+  "job": {
+    "application": "A3",
+    "library": "openboost",
+    "device": "cpu",
+    "threads": 1,
+    "seed": 0,
+    "early_stopping_rounds": 3,
+    "config": {
+      "rounds": 4,
+      "learning_rate": 0.1,
+      "max_depth": 2,
+      "reg_lambda": 1,
+      "bins": 32
+    },
+    "input_npz": "/private/tmp/openboost-covertype-049/A3/0/worker-input.npz",
+    "classes": 7
+  },
+  "input_sha256": "9bc25256b6a57efa51f13e714c6b47496239858ac851e97c3d74ebe47db71f1a",
+  "revision": "d1dede67a1b8f3e55cc3cbcbc2edd02d90e078fd",
+  "dirty": true,
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "0464ecf56b27d61d1becaa78a841b4a300dc53a7000ebca433afa9390d01c898",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/openboost_worker.py": "d53f4796353430002ca2231de1852c139492fd7de1c7e4936374da1befebd33d",
+    "benchmarks/v1/openboost_predict.py": "b0c21aca3046eb3ad40f52f4c845dc159872d10261a0afca2d1cd01357354d04",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "fresh_process_exact": true,
+  "prediction_shape": [
+    116202,
+    7
+  ],
+  "replay_command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+    "/tmp/openboost-row-hash-051/model.bin",
+    "/tmp/openboost-row-hash-051/features.npz",
+    "/tmp/openboost-row-hash-051/replay.npz"
+  ],
+  "replay_sha256": "de0a146a40a54c7d3a4bd6b8a7bfba821f18bb52542fa6559dd9fbfce0f18256"
+}

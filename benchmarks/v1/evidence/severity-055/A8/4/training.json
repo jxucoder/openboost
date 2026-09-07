@@ -1,0 +1,21 @@
+{
+  "selection": "best_validation",
+  "stop": {
+    "rounds": 4,
+    "patience": 3,
+    "min_delta": 0.0,
+    "reference_score": 8.53698175155106,
+    "last_score": 8.537179094305902,
+    "completed_rounds": 4,
+    "stale_rounds": 2,
+    "reason": "budget"
+  },
+  "accepted_commits": 4,
+  "selected_model_identity": "fa6ec9b84c3c47568710f5962e08842a112928b0cbaa256d461dd4208635eabc",
+  "best_validation_score": 8.53698175155106,
+  "output": "positive_claim_mean",
+  "selection_metric": "weighted_gamma_objective",
+  "target_units": "positive_claim_amount",
+  "raw_units": "log_mean",
+  "selected_validation_gamma_objective": 8.53698175155106
+}
