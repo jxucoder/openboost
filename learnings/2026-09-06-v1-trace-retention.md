@@ -55,3 +55,12 @@ array bytes separately from guest RSS. Add a focused summary-worker assertion an
 extend the synthetic count audit with an explicit retention option. No runtime
 change in this measurement slice. Eleven focused profile tests and lint run before
 commit; installed extension execution is recorded separately.
+
+### Clean installed and count evidence
+
+Installed verification at `2f5aca2` passes the earlier author/scheduler checks,
+ten plugin-free inference models and explicit full/summary mixed M=1/8/32 cases.
+At `ae8c7af`, full and summary count audits preserve exact replay and 2*K*T tree
+work; summary step arrays are zero for all eight counting cases. Source/artifact
+hashes verified. See [retention-068](../benchmarks/v1/evidence/retention-068/README.md).
+This is logical-retention evidence, not yet an RSS result.
