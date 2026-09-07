@@ -106,3 +106,21 @@ Thirty-three real-CUDA cases collect but have not executed. See the
 [learning record](../learnings/2026-09-07-v1-device-aggregation.md) and public
 [execution docs](../docs/v1/execution.md). Run 2 remains available pending the
 committed installed-wheel harness and expected-case freeze.
+
+### Run-2 dispatch freeze
+
+[078-aggregation-run2.json](078-aggregation-run2.json) fixes the 33 expected tests,
+dependency versions, bounds and unchanged E1 tolerances. The harness uploads only
+listed package/test/oracle/config files, installs the wheel, checks exact installed
+sources/versions and judges every expected JUnit case. Eight local judge/manifest
+checks pass; the dirty-tree guard rejects before output or dispatch. Tests include
+the existing twelve storage checks and 21 aggregation/identity/failure cases.
+
+Reflection after three construction/preparation commits: named field semantics
+and lifetimes are explicit, with no bulk CPU histogram work; actual CUDA behavior
+is still unverified for this implementation. D2 candidate selection and training
+remain open. Run this clean revision once on T4 (900 seconds, zero retries), then
+retain pass/fail/error/timeout artifacts and stop for a retrospective. This is the
+last run in 085's allowance; neither a failure nor an incomplete test matrix
+authorizes a retry. The [learning record](../learnings/2026-09-07-v1-device-aggregation.md)
+retains local verification and public-boundary limits.

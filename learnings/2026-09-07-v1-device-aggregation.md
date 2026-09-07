@@ -64,3 +64,22 @@ collect locally, including twelve storage regressions; collection is not device
 validation. CPU tests neither emulate nor skip their way through the new kernels.
 The fixture commit is `6ae51dd`. Next freeze/validate the run-2 harness and execute
 once from clean source; only actual device results can validate these operations.
+
+## Run-2 freeze and pre-dispatch reflection
+
+The installed-wheel harness pins 33 expected cases, all runtime/build packages,
+T4/900-second function/600-second tests/zero retries and 16-MiB private pools.
+Its separate JUnit judge rejects missing, duplicated, skipped, errored or failed
+cases. Installed production hashes and dependency versions must also match.
+Eight focused judge/manifest checks pass; the dirty-source guard fails before
+creating output or dispatching. Harness lint and whitespace checks pass.
+This is preparation, not a second device invocation or an independent author run.
+
+Reflection after the fixture, implementation and harness slices: the public device
+API now expresses the existing named-statistics contract without a private trainer.
+D2 can append independent named columns; no candidate feasibility, custom-kernel
+registration or accepted-state API exists yet. The kernels deliberately prioritize
+simple auditable reductions, so there is no speed expectation. Reference diagnostic
+exports are separate from the operation's compact flag exports. No scope or E1
+tolerance changed. Execute the frozen run once, preserve its outcome and stop for
+the user retrospective; there is no remaining uncounted retry.
