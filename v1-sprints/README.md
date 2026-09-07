@@ -11,13 +11,14 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-Current execution card: [Sprint 068](068-trace-retention.md), explicit summary/full retention.
-[Sprint 067](067-incremental-runtime.md) completes incremental proposal evaluation
-and encoding reuse: 957 CPU tests, installed isolation, eight practical fits and
-two profiles pass. Six same-container baseline/candidate pairs have exact predictions
-and model files. Full trace retention is unchanged; tree construction is now the
-largest profiled cost. [Sprint 066](066-practical-cpu-profile.md)'s baseline timing
-gaps remain explicit. Formal quality/cost/author/CUDA/adoption gates remain open.
+Current execution: [069 authoring preparation](069-authoring-pilot.md) and
+[070 coverage/judging](070-coverage-and-judging.md), before full real searches.
+[Sprint 068](068-trace-retention.md) completes opt-in summary retention with
+1000 CPU tests, installed parity, sixteen paired fits and two profiles. Every
+full/summary pair has exact models/predictions; measured RSS savings are scoped
+single observations. Full remains default. [Sprint 067](067-incremental-runtime.md)
+completed incremental prediction/encoding; both measured runtime blockers are
+resolved. Formal quality/cost/author/CUDA/adoption gates remain open.
 [Sprint 065](065-installed-run-isolation.md) passes installed custom completion,
 independent RNG/preparation/failure checks and ten plugin-free inference models.
 [Sprint 064](064-programmable-stopping-and-isolation.md) completed structural stopping
@@ -30,7 +31,7 @@ The merge passed 923 local CPU tests and all five CI checks. Broad public CPU
 components and application validation exist; formal phase exits, selected real
 quality/cost, CUDA and independent adoption remain open.
 
-Next: 068 trace retention. Cards 069–077 cover exploratory/formal authoring,
+Next: 069 preparation and 070 judging/resource readiness. Cards 069–077 cover exploratory/formal authoring,
 judging and every required application's selected quality; 078–082 cover CUDA and
 cost after their entry gates. 083 audits engineering v1 and 084 separately tests
 external adoption. These are scope cards, not calendar estimates or new phase exits.

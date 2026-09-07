@@ -1,6 +1,6 @@
 # Sprint 068: Bounded diagnostic retention
 
-Status: implementation in progress; source equivalence passes, installed/practical evidence pending. Mapping: N2b / C4–C5 / E1 and practical resource evidence.
+Status: complete; full/summary equivalence, installed checks and paired memory evidence pass. Mapping: N2b / C4–C5 / E1 and practical resource evidence.
 Depends on: [067](067-incremental-runtime.md).
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
@@ -36,7 +36,7 @@ search preflight, or record the next measured blocker. Do not claim formal E4.
 
 ## Results
 
-Not run. This card proposes a retention boundary, not a measured memory reduction.
+Initial status: no retention boundary or measurement existed. Implementation and evidence follow below.
 
 ### Construction plan and first counterexample
 
@@ -67,3 +67,42 @@ array bytes, guest peak RSS and timing. Summary still records every completed
 round. One ordered pair per case supports scoped observations, not a statistical
 speed or memory guarantee. Same-container pairing avoids Sprint 067's architecture
 confound. No old baseline wheel or unmeasured search budget expansion is involved.
+
+### Closure and reflection
+
+Implementation `2f5aca2` adds explicit opt-in summary retention to all twelve
+built-ins and the author-owned ordered example; full stays default. Final CPU
+regression passes **1000 tests**. Installed M=1/8/32 mixed full/summary/reordered
+checks and ten fresh inference models pass. Full and summary preserve final/best
+state identity, stopping, rejected trials and outer-round counts.
+
+At clean `ae8c7af`, all sixteen paired fits and both summary profiles pass. Every
+pair has exact raw predictions and byte-identical model JSON. Summary retains
+all round records and zero per-round array bytes. At 8192/128, guest peak RSS
+changes from 103.320 to 88.500 MiB squared and 156.887 to 93.441 MiB Normal.
+Some small cases have slightly higher summary RSS, retained in the report.
+Single ordered observations are not a general memory or speed guarantee.
+
+[Raw evidence](../benchmarks/v1/evidence/retention-068/README.md) includes source/
+wheel hashes, actual loaded code, settings, resource probes, full logs, predictions,
+profiles and comparisons. All hashes, independent metrics and paired exactness
+were verified. Ruff, docs and offline package build pass; raw pstats text keeps
+its original trailing blank line. No tolerance or validation behavior changed.
+
+Reflection: the measured trace-retention blocker is resolved without weakening
+the public result contract. External authors choose their own summary; no universal
+payload rewriting or state-history inspection was introduced. Both diagnostic
+runtime problems now have practical evidence. Do not expand another optimization
+because tree growth is the remaining hotspot; return to authoring and real-use-case
+value. Prepare 069's accounting/isolation packet and 070's complete coverage/judging
+checks. Independent attempts remain subject to 069's authorization requirements.
+
+The CPU is ready for an exact full-search *preflight after 070's isolation/resource
+checks*, not declared ready for all searches. Real workers must explicitly select
+summary retention; their current default remains full. Preserve the frozen
+16-configuration and 300/1000-round search budgets, and stop blind expansion if
+that actual preflight fails. No E3/E4/E5, F2, CUDA or adoption exit is inferred.
+
+Pause at this retrospective checkpoint after implementation, measurement harness,
+installed/count evidence and practical closure. Next execution: 069 preparation
+and 070 judging/resource readiness, before 071 selected real-data evaluation.

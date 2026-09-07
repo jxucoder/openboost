@@ -63,16 +63,20 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-Current execution card: [Sprint 068 bounded retention](v1-sprints/068-trace-retention.md).
-Sprint 067 implements incremental proposal evaluation and identity-bound encoding
-reuse, with 957 CPU tests, installed extension/isolation checks, eight bounded fits
-and two profiles passing. Six same-container old/new pairs produce exact models
-and predictions; full evidence is in incremental-067. Tree prediction is below
-0.3% of the new instrumented fits; tree construction now dominates. Full trace
-retention remains unchanged and is next. Sprint 066's interrupted baseline and
-cross-host architecture differences remain recorded; no broad speed/phase claim.
-The worker verifies an 8-GiB address ceiling and two-thread BLAS; host cgroup caps
-remain unobservable. Keep address space, guest RSS and infrastructure failures distinct.
+Current execution: [Sprint 069 authoring preparation](v1-sprints/069-authoring-pilot.md)
+and [Sprint 070 coverage/judging](v1-sprints/070-coverage-and-judging.md).
+Sprint 068 completes explicit full/summary retention: 1000 CPU tests, installed
+M=1/8/32 parity, sixteen paired fits and two profiles pass. All eight full/summary
+pairs have exact predictions/models; 128-round guest RSS falls by about 14.8 MiB
+squared and 63.4 MiB Normal in single paired observations. Full remains default;
+real search workers must explicitly select summary. No full-search gate is passed.
+Sprint 067's incremental transaction/encoding change remains exact and installed-
+verified. Return to authoring and real-use-case evaluation after these bounded
+runtime fixes. Do not start another optimization without measured necessity.
+069 does not authorize new agents; prepare accounting/isolation before independent
+attempts. 070 must verify exact search resource/test-label isolation before 071.
+The diagnostic worker verifies an 8-GiB address ceiling and two-thread BLAS; host
+cgroup caps remain unobservable. Keep address space and guest RSS distinct.
 Sprint 064 structural stopping passes 943 CPU tests; Sprint 065 installed custom-policy,
 RNG/preparation/failure checks and ten plugin-free inference models pass without core edits. The [064–084 sprint roadmap](v1-sprints/roadmap-after-063.md)
 defines bounded deliverables, dependencies and acceptance. [Sprint 063 retrospective and next plan](v1-sprints/063-retrospective-and-next-plan.md)

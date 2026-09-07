@@ -426,7 +426,7 @@ links and git diff --check, not nonexistent runtime changes. No push, release, m
 
 Starting instructions for the next execution model:
 
-> Read AGENTS.md, the 064–084 sprint roadmap and Sprint 068 for the next execution
+> Read AGENTS.md, the 064–084 sprint roadmap and Sprints 069/070 for the next execution
 > card; Sprint 063 retains the rationale. Use this plan, construction design and
 > evaluation for scope and semantics. Sprints 064–065 stopping/installed isolation are complete.
 > Follow 066 profile → 067 incremental runtime → 068 trace retention.
@@ -435,8 +435,10 @@ Starting instructions for the next execution model:
 > Sprint 066 has six passing practical fits and a partial profile showing repeated
 > tree prediction/re-encoding dominates. Preemption leaves the long-round sweep
 > incomplete. Sprint 067 now passes exact incremental evaluation, installed isolation,
-> eight fits/two profiles and six same-container old/new pairs. Proceed with 068
-> summary/full retention; preserve state/stop semantics and rerun matched diagnostics.
+> eight fits/two profiles and six same-container old/new pairs. Sprint 068 now
+> passes explicit retention, installed parity and sixteen exact full/summary fits
+> with two profiles. Prepare 069 accounting/isolation and 070 judging/resources;
+> select summary explicitly in full-search workers before 071's exact preflight.
 > Retain baseline gaps, cross-host confounds and separate address/RSS scope.
 > Preparation for 069 author measurement and 070 coverage/judging can proceed
 > independently; 071 proves the real selection pipeline before the remaining

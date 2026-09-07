@@ -64,3 +64,31 @@ At `ae8c7af`, full and summary count audits preserve exact replay and 2*K*T tree
 work; summary step arrays are zero for all eight counting cases. Source/artifact
 hashes verified. See [retention-068](../benchmarks/v1/evidence/retention-068/README.md).
 This is logical-retention evidence, not yet an RSS result.
+
+### Paired measurement outcome
+
+All eight full/summary pairs pass with exact predictions and byte-identical model
+JSON. Summary retains every round record and zero per-round array bytes. At
+8192 rows/128 rounds, guest peak RSS is 103.320 → 88.500 MiB for squared and
+156.887 → 93.441 MiB for Normal. Full trace arrays are 16.0625/64.125 MiB.
+Some small squared cases have slightly higher summary RSS; preserve these observations
+instead of claiming uniform savings. Single ordered pairs are not repeated memory
+or timing estimates. Final CPU regression now passes 1000 tests, including the
+additional summary-worker test. There is no training-semantic or tolerance change.
+
+Decision: the identified trace-retention blocker is resolved. Do not declare the
+full-search workload qualified from this smaller diagnostic. Sprint 070 must audit
+and enforce the exact full-search environment and record a bounded preflight before
+071 expansion. Existing real workers still need explicit summary selection rather
+than silently inheriting it: full remains the public default. Sprint 069 preparation
+can proceed; independent attempts require the authorization and isolation in its card.
+
+### Closure verification
+
+Both final summary profiles pass, preserving all 128 records, zero step-array bytes
+and 256/512 tree calls. All sixteen fit metrics and both profile metrics were
+recomputed independently; wheel/source/loaded-module/artifact hashes and exact
+paired models verified. Evidence is committed under retention-068/practical.
+Ruff, docs and package checks pass; raw profile text retains its hash-preserving
+trailing blank line. Close 068 and return to 069/070 readiness work rather than
+adding unplanned CPU optimization. No remaining blocker within this bounded sprint.
