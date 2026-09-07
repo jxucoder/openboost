@@ -24,8 +24,8 @@ integration on all five Bike origins. [Sprint 054](054-count-worker.md) adds
 A7 count/exposure integration on all five frequency folds.
 [Sprint 055](055-severity-worker.md) adds A8 grouped claim severity.
 [Sprint 056](056-aggregate-worker.md) adds direct A9 annualized aggregate means.
-Next: matched positive-payment frequency-severity integration, remaining
-adapters/searches and D5 checks.
+[Sprint 057](057-paid-event-binding.md) binds matched paid-event inputs. Next:
+train/replay the public composition, then remaining adapters/searches and D5 checks.
 Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),

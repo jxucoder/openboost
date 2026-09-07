@@ -1,0 +1,113 @@
+{
+  "scope": "Matched paid-event binding only; no composition fit or test scores",
+  "revision": "a041f1b1f3ad37c8dc78b6cfc3a63bb79ee7af19",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "-m",
+    "benchmarks.v1.paid_event_data",
+    "/private/tmp/openboost-aggregate-056/summary.json",
+    "/private/tmp/openboost-paid-events-057"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "numpy": "2.3.5",
+  "previous_summary_sha256": "44c953a83f5f3119f46407bb0cabf21bddbf45f5d5bb017a74200de8d1586646",
+  "source_manifest_sha256": "ff95579dd1b95595e87027f38afd512cd986b3182f08f50a7a2139ffb63f291f",
+  "sources": {
+    "benchmarks/v1/paid_event_data.py": "e8c807f7f7f484e8f9132836a994e05c1238851f1cb6a42890ca3cd1fc4ecaa8",
+    "benchmarks/v1/real_data.py": "e796be3be35202fe688235b40798ba98793605adcdcd6194f2729fb869eac0b9"
+  },
+  "source_audit": {
+    "frequency_rows": 678013,
+    "severity_rows": 26639,
+    "nonpositive_claims": 0,
+    "orphan_claims": 195,
+    "retained_claims": 26444,
+    "positive_count_without_payment": 9116,
+    "zero_count_with_payment": 0,
+    "aggregate_retained": 668897
+  },
+  "cells": [
+    {
+      "fold": 0,
+      "status": "pass",
+      "path": "fold-0.npz",
+      "sha256": "0c992d9e5c7c77191f4253c3d762f938ce8ec8020010aabb052d6a2ba460584d",
+      "input_sha256": "1e3cd8d7e7bd157745bff7db14534bd1fbcecff3abef8f4341fa1f58a9583f0f",
+      "train_ids_sha256": "89ca61cb3b97a660065989fc29d4083af85a8b78081ff71dba6f316710421bbb",
+      "rows": {
+        "train": 401236,
+        "validation": 133882
+      },
+      "paid_events": {
+        "train": 15935,
+        "validation": 5253
+      }
+    },
+    {
+      "fold": 1,
+      "status": "pass",
+      "path": "fold-1.npz",
+      "sha256": "fe912bb90a41e2ad9722949399d6fb8056120e254bb09e900f0629ddb89ffd24",
+      "input_sha256": "e8c4d49a1008615af63446d04a049fadb9eb2c65243942defc4765272d1e8dac",
+      "train_ids_sha256": "34d0dd6b71e9c4c95461c3eb03fd32da250352b89fc9c113f9c44ff6b9f2f8b9",
+      "rows": {
+        "train": 401302,
+        "validation": 133784
+      },
+      "paid_events": {
+        "train": 15755,
+        "validation": 5441
+      }
+    },
+    {
+      "fold": 2,
+      "status": "pass",
+      "path": "fold-2.npz",
+      "sha256": "e2be0ee857dbe10cc36d12721e5f213df28750c1e861a66ea03961e98bcc27ad",
+      "input_sha256": "c2a2c40926e231d1e596f7e4c662219d923e6f926a96df27b4717abd7445f420",
+      "train_ids_sha256": "605ce72c18c2ab8b1b00045782ae01f5a7f22bdb38d4ac24074715e39628a3ab",
+      "rows": {
+        "train": 401321,
+        "validation": 133785
+      },
+      "paid_events": {
+        "train": 16097,
+        "validation": 5156
+      }
+    },
+    {
+      "fold": 3,
+      "status": "pass",
+      "path": "fold-3.npz",
+      "sha256": "5b26471702b32cc0a25394aefb0dba421b3a1e7e32ddedfe3d7e9bb981a790c4",
+      "input_sha256": "7b3cd2b815775626af17f54545b2bbbc1c0bffd23882005f76a8e67e066cfbf2",
+      "train_ids_sha256": "ccc9af5cc82c64fe0ed87d85e8ce2192fc4c685a7c49695a053ec23ff1b49ead",
+      "rows": {
+        "train": 401371,
+        "validation": 133767
+      },
+      "paid_events": {
+        "train": 15830,
+        "validation": 5247
+      }
+    },
+    {
+      "fold": 4,
+      "status": "pass",
+      "path": "fold-4.npz",
+      "sha256": "7658f4a676385f6a4dec341a9cb8f9649c2954876c641a0504f455917a1d3519",
+      "input_sha256": "668e0a57c88afc0ab5b6cf73cd578f7b84c6327670cf4a312f450ca65a558781",
+      "train_ids_sha256": "d11bbf0515574a7e4b7d42ef82e433a7e279f587bf353b8e06fc50db5de1861b",
+      "rows": {
+        "train": 401365,
+        "validation": 133883
+      },
+      "paid_events": {
+        "train": 15866,
+        "validation": 5321
+      }
+    }
+  ]
+}

@@ -13,7 +13,7 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
 Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 881 passes;
+shared training preparation. The latest full regression records 892 passes;
 this includes references/evaluation infrastructure and is not a phase gate.
 Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
 Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
@@ -40,8 +40,9 @@ all five Bike origins. [Sprint 054](054-count-worker.md) adds A7 explicit
 count/exposure integration on all five frequency folds.
 [Sprint 055](055-severity-worker.md) adds A8 severity on all five grouped claim
 folds. [Sprint 056](056-aggregate-worker.md) adds direct A9 aggregate integration
-on all five folds. Next: matched positive-payment composition, remaining
-adapters/searches and D5 checks.
+on all five folds. [Sprint 057](057-paid-event-binding.md) verifies matched paid
+event input packets. Next: composition training/replay, remaining adapters/searches
+and D5 checks.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.
 
