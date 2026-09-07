@@ -3,6 +3,7 @@
 import math
 
 from numba import cuda, float32, float64
+from numba.cuda import libdevice
 
 
 @cuda.jit
@@ -124,12 +125,12 @@ def scalar_scores(values, counts, active, parent, g, h, regularization, penalty,
                 gain = float32(math.nan)
             else:
                 gl, gr = values[c, 0, g], values[c, 1, g]
-                gain = (
-                    float32(0.5) * gl * (gl / dl)
-                    + float32(0.5) * gr * (gr / dr)
-                    - float32(0.5) * parent[g] * (parent[g] / dp)
-                    - penalty
-                )
+                # Round products independently: contracting only one child into
+                # the addition can break exact ties when children are swapped.
+                left_score = libdevice.fmul_rn(float32(0.5) * gl, gl / dl)
+                right_score = libdevice.fmul_rn(float32(0.5) * gr, gr / dr)
+                parent_score = libdevice.fmul_rn(float32(0.5) * parent[g], parent[g] / dp)
+                gain = (left_score + right_score) - parent_score - penalty
         output[c] = gain
 
 

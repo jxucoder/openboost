@@ -97,7 +97,8 @@ The user continued after the planned retrospective. Active local work is
 [089 score symmetry](v1-sprints/089-cuda-score-symmetry.md), with direct device
 score/code-generation diagnostics and all original cases retained. CPU arithmetic
 shows a compatible rounding mechanism; the actual GPU instruction sequence was
-not captured. The archived result contains no production fix. Further hardware
+not captured. Scalar score products now round independently; the correction and
+ten new diagnostic cases remain unverified on hardware. Further hardware
 checks require a new concrete source freeze and upload/compute allowance.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
@@ -112,7 +113,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1264 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1265 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

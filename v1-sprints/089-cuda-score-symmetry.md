@@ -21,7 +21,7 @@ cause, not a measured instruction trace. No CPU simulator can accept the CUDA fi
 ## Construction sequence
 
 1. Add real-device direct score checks: swapped child summaries, reordered named
-   gradient/curvature fields, finite regularization/penalty and strictly unequal
+   gradient/curvature columns, finite regularization/penalty and strictly unequal
    adjacent-ULP choices. Capture the actual weighted root gradients, histograms,
    candidate summaries and score bits before assertions. A test-only copy of the
    exact run-4 scoring kernel provides a comparison on identical resident inputs;
@@ -74,3 +74,21 @@ exact source segment matches its run-4 hash. Twenty-one focused CPU source,
 arithmetic and import/configuration checks pass; changed-file Ruff passes.
 Collection is not real-device verification. Production arithmetic is unchanged
 in this first diagnostic slice.
+
+## Source correction and reflection
+
+`13fdd83` commits the diagnostics before the kernel change. The production scalar
+scorer now uses explicit `fmul_rn` for its left, right and parent products. Their
+factorization, parameters and validity checks are unchanged. Choice still uses
+strict `>`; there is no change to public operations, candidate ordering or tolerance.
+
+Full CPU regression passes 1265 cases with one Linux-only skip and 212 GPU cases
+deselected. Production/changed-support Ruff and documentation build pass. CPU API
+imports still work with CUDA packages blocked. These checks protect CPU semantics
+and import boundaries; they do not prove the new kernel compiles or passes on T4.
+
+Reflection: a local numerical correction stays inside the shared foundation
+operation. Direct historical/current score diagnostics will test the cause without
+replacing the independent original-row oracle. The next deliverable is a frozen
+49-file, 212-case package with pending compute/upload authorization. No broader
+CUDA capability or quality claim follows from this source change.

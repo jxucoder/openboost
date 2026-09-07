@@ -27,6 +27,8 @@ add structured full-metric updates and independent heterogeneous jobs. Experimen
 resident scalar CUDA training has run on T4: 188 of 202 checks pass, while 14
 weighted/missing parity failures block acceptance. See the
 [recorded result](benchmarks/v1/evidence/cuda-resident-078/README.md).
+The [score-symmetry correction](v1-sprints/089-cuda-score-symmetry.md) is pending
+hardware validation.
 [Binary classification](docs/v1/binary.md) now
 persists typed class order and exposes probability/label inference.
 [Multiclass and vector leaves](docs/v1/multiclass.md) add joint softmax updates

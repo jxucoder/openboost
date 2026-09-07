@@ -203,6 +203,14 @@ leaf/prediction assertions are not verified. The failures expose a tie-ordering
 gap; a compatible arithmetic hypothesis remains unconfirmed without direct device
 gain/code-generation diagnostics. Exact topology and float32 tolerances are unchanged.
 
+Sprint 089 changes scalar score products to explicit nearest-even multiplication
+through libdevice, preserving symmetry when left/right child summaries are swapped.
+This correction is pending hardware validation. Ten additional device checks cover
+the original weighted root, swapped summaries and adjacent-ULP ordering. They also
+capture the archived and corrected kernels on identical inputs and their PTX.
+The public score/mask/choice boundaries and strict lexicographic tie rule remain
+unchanged; no epsilon tie band is applied.
+
 ## Resident transactions and recipe: failed scalar gate
 
 `openboost.device_runtime.DeviceRun(ops, train, validation, run_id=..., seed=...)`

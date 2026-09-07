@@ -36,6 +36,22 @@ upload is authorized by this continuation.
 
 Run 4 failed acceptance; do not reclassify its 14 failures or widen tolerances.
 
+## Source correction and reflection
+
+`13fdd83` records diagnostics before production changes. The existing CUDA scalar
+scorer now independently rounds its left, right and parent products using
+`fmul_rn`; no public signature, scoring factorization, validity check or tie policy
+changes. This prevents asymmetric contraction at the score-sum boundary by the
+documented operation contract; real-device acceptance remains pending.
+
+`OPENBOOST_BACKEND=cpu UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync
+pytest tests/ -m 'not gpu and not benchmark' --tb=short -n 0 -q` passes 1265 cases
+with one Linux-only skip and 212 GPU cases deselected. Production/changed-test Ruff
+and documentation build pass. The failed run-4 artifacts and its exact original
+case/source records are unchanged. No CPU test is counted as a kernel compilation
+or GPU parity result. Freeze the complete package next, preserving both hardware
+and private-upload authorization guards.
+
 ## Risks and Follow-ups
 
 Real-device compilation, exact scores, selected splits, leaves, predictions and
