@@ -151,6 +151,10 @@ def newton_leaf(total, names, *, reg_lambda=1.0):
     """Scalar Newton leaf from already-weighted sums, with half-square scoring."""
     g, h = total[names.index("gradient")], total[names.index("curvature")]
     denominator = _nonnegative(h) + _nonnegative(reg_lambda)
+    return _newton_value(g, denominator)
+
+
+def _newton_value(g, denominator):
     if denominator <= 0 or not np.isfinite(denominator) or not np.isfinite(g):
         raise ValueError("positive finite Newton denominator and finite gradient required")
     value = -float(g) / denominator
@@ -264,13 +268,21 @@ def vector_leaf(total, names, *, reg_lambda=1.0):
 
 
 def vector_score(candidate, *, reg_lambda=1.0, split_penalty=0.0):
-    g, _h = _vector_indices(candidate.names)
+    g, h = _vector_indices(candidate.names)
+    regularizer = _nonnegative(reg_lambda)
 
     def node(total):
         with np.errstate(over="raise", invalid="raise"):
-            return -0.5 * np.dot(
-                total[g], vector_leaf(total, candidate.names, reg_lambda=reg_lambda)
+            # Scratch values never escape scoring; persisted leaves remain owned.
+            values = np.fromiter(
+                (
+                    _newton_value(total[i], _nonnegative(total[j]) + regularizer)
+                    for i, j in zip(g, h, strict=True)
+                ),
+                dtype=np.float64,
+                count=len(g),
             )
+            return -0.5 * np.dot(total[g], values)
 
     gain = (
         node(candidate.left)

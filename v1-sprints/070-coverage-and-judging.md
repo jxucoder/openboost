@@ -369,3 +369,21 @@ default parameters/temporary leaf work, preserving public checks and custom
 callbacks, with exact conformance before another measurement. Parent-score reuse
 requires explicit candidate-set ownership. Full-fit paired cost evidence remains
 necessary before wider search expansion.
+
+### Scratch vector scoring slice
+
+Plan: reproduce immutable-leaf construction inside scoring, remove only temporary
+artifact ownership, compare exact arithmetic/selection/model bytes, then run the
+same approved 60-second diagnostic. The initial test fails when vector_leaf is
+blocked during scoring.
+
+Vector scoring now validates its shared regularizer once per candidate and builds
+a local float64 scratch vector. A shared private scalar helper preserves the
+original denominator/gradient/value checks and division; np.dot and gain ordering
+are unchanged. Public vector_leaf still creates immutable artifacts. Custom
+callbacks, feasibility and parent-score recomputation are unchanged.
+
+Forty-two focused tests pass, including exact scores, ties/near ties, invalid
+curvature/NaNs/overflow and model bytes across all growers. Full regression: 1077
+passed, one Linux-only skip; lint passes. The next diagnostic must show the changed
+call path in installed execution; a profile does not prove full-fit speedup.
