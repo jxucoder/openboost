@@ -46,9 +46,11 @@ all five compositions with independent component selection.
 [Sprint 059](059-survival-worker.md) adds A10 fixed-scale survival on all five folds
 and records the CPU-to-GPU checkpoint. [Sprint 060](060-structured-worker.md)
 adds A12 structured Formula. [Sprint 061](061-ranking-worker.md) adds the A4
-query-aware adapter; real MSLR binding remains open. Next: CPU phase-gap review
-and explicit GPU transition decision;
-joint A9 selection remains open.
+query-aware adapter; real MSLR binding remains open.
+[Sprint 062](062-cpu-exit-and-gpu-entry.md) reviews CPU exit and GPU entry.
+Next: installed D5 run-ID RNG and stale-preparation probes, then source/workflow
+and gate reconciliation. Real searches and joint A9 selection remain open.
+F3 has not started; the review preserves current phase ordering.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.
 

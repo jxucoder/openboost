@@ -29,8 +29,11 @@ A7 count/exposure integration on all five frequency folds.
 [Sprint 059](059-survival-worker.md) adds fixed-scale A10 survival and the CPU-to-GPU
 checkpoint. [Sprint 060](060-structured-worker.md) adds A12 structured Formula.
 [Sprint 061](061-ranking-worker.md) verifies the current A4 adapter synthetically;
-real MSLR binding remains open. Next: CPU phase-gap review and explicit GPU
-transition decision; remaining searches/D5, B11 and joint A9 selection stay open.
+real MSLR binding remains open. [Sprint 062](062-cpu-exit-and-gpu-entry.md)
+records the CPU exit/GPU entry review. Next: installed D5 run-ID RNG and stale
+preparation probes, then source/workflow and gate reconciliation. Remaining
+searches, B11, joint A9 selection and formal E5 stay open. F3 has not started;
+the review defines its initial vertical path without changing phase ordering.
 Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),

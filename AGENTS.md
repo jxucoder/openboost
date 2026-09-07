@@ -98,9 +98,11 @@ composition on all five packets with independent component selection. Sprint 059
 adds A10 fixed-scale survival on all five frozen folds. Sprint 060 adds A12
 structured Formula with age separated from tree features on all five folds.
 Sprint 061 adds the current A4 query-aware adapter with synthetic direct/fresh
-parity; MSLR source/binding remains open. Next: CPU phase-gap review covering
-A4 data, real searches/D5 and B11 checks, then an explicit GPU transition decision.
-Joint A9 selection remains open.
+parity; MSLR source/binding remains open. [Sprint 062](v1-sprints/062-cpu-exit-and-gpu-entry.md)
+reviews CPU exit and GPU entry. Next: installed D5 probes for distinct run-ID RNG
+streams and stale preparation rejection, then source/workflow and gate reconciliation.
+Real searches, joint A9 selection and formal E5 remain open. F3 has not started;
+the review defines its first vertical path without changing phase ordering.
 These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
