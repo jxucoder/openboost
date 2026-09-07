@@ -26,15 +26,16 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1135 passing tests (one Linux-only skip).
-Bounded real evaluation and installed extensions exist. Twelve real T4 storage
-tests pass; GPU training, independent author benefit, full quality/search and
+CPU implementation has twelve recipes and 1146 passing tests (one Linux-only skip).
+Bounded real evaluation and installed extensions exist. Thirty-three real T4
+storage/aggregation tests pass; GPU training, independent author benefit, full quality/search and
 adoption remain unverified. The
 [064–084 roadmap](roadmap-after-063.md) retains those obligations; 085 changes their
 near-term priority and the bounded device entry rule. Reflect after each 085 slice
 and every three implementation commits. No independent author attempt has run.
-One of two device runs is consumed; one capped 900-second run remains for the
-declared next aggregation checks. See [078 evidence](078-cuda-scalar-path.md).
+Both approved device runs are consumed. The planned retrospective is due before
+further hardware work; the next construction slice is 078-B candidate operations.
+See [078 evidence and reflection](078-cuda-scalar-path.md).
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

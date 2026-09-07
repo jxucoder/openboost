@@ -83,3 +83,33 @@ simple auditable reductions, so there is no speed expectation. Reference diagnos
 exports are separate from the operation's compact flag exports. No scope or E1
 tolerance changed. Execute the frozen run once, preserve its outcome and stop for
 the user retrospective; there is no remaining uncounted retry.
+
+## Real-device result and reflection
+
+At clean `ad2f4e6`, all 33 declared cases pass on the actual T4. Exact case-set
+judging, 35 source hashes, 23 installed production module hashes, 17 package
+versions and three raw-artifact hashes verify. Evidence is retained in
+[cuda-aggregation-078](../benchmarks/v1/evidence/cuda-aggregation-078/README.md).
+The largest-shape full-row context has a sampled private-pool peak of 1665024
+bytes; this excludes driver/context/JIT allocations. Runtime/driver APIs are
+12090/13000, separately from the CUDA 12.6.3 image tag. Low-occupancy warnings are
+retained and no timing/quality claim follows. No failed test or retry occurred.
+
+The first substantive device components preserve original-row, once-weighted and
+independent-information contracts. Public immutable handles still lack an external
+kernel/component registration interface: additive statistics do not demonstrate
+arbitrary algorithm programmability or D2 candidate feasibility. The next design
+must test those public batch operations against the actual D2 consumer before
+building a trainer. Accepted/proposal ownership remains separate unfinished work.
+
+Both allowed GPU runs are consumed. Stop for the planned retrospective. No author
+accounting/attempt or full quality/cost gate was added. Preserve the paused CPU
+search policy. Follow-up construction/verification requires the next reviewed
+operation boundary; further remote runs require a new concrete allowance.
+
+Final evidence validation: all copied artifact hashes and the exact JUnit verdict
+reconstruct successfully; production source is unchanged since the GPU run.
+MkDocs, production/changed-support lint, whitespace and 162 local Markdown target
+checks pass (anchor fragments not checked). The full CPU result remains 1146/one
+Linux-only skip, with eight additional harness checks separately passing. No
+runtime retest was needed for the final evidence/documentation-only commit.

@@ -1,7 +1,8 @@
 # Sprint 078: Resident scalar CUDA composition
 
-Status: experimental storage verified on T4; resident fields, operations and
-training remain open. Mapping: B12 / F3.1 / R1 / C1–C5 / E1.
+Status: 078-A storage/fields/routed histograms verified on T4 at `ad2f4e6`;
+candidates, leaf operations and training remain open. Both approved runs are
+consumed; planned retrospective reached. Mapping: B12 / F3.1 / R1 / C1–C5 / E1.
 Entry: bounded feasibility is approved by [085](085-foundation-focus-amendment.md)
 alongside 069, subject to relevant 065/068 ownership checks. Formal device gates
 still retain their full recipe, quality and authoring requirements.
@@ -124,3 +125,31 @@ retain pass/fail/error/timeout artifacts and stop for a retrospective. This is t
 last run in 085's allowance; neither a failure nor an incomplete test matrix
 authorizes a retry. The [learning record](../learnings/2026-09-07-v1-device-aggregation.md)
 retains local verification and public-boundary limits.
+
+### Run-2 result and retrospective checkpoint
+
+[Committed evidence](../benchmarks/v1/evidence/cuda-aggregation-078/README.md): all
+33 expected cases pass at clean `ad2f4e6`. All 35 snapshot hashes, 23 installed
+production modules, 17 pinned versions and three result-artifact hashes verify.
+The real T4 reports driver 580.95.05, runtime API 12090 and driver API 13000.
+The full 8192x32 aggregation context records a 1665024-byte private-pool peak,
+not whole-device memory. Each four-field histogram exports only 32 validation
+bytes during the operation; reference exports are separate. There are 31 retained
+low-occupancy warnings, not evidence of end-to-end speed. No retry occurred.
+
+078-A passes its frozen acceptance. Both 085 device runs are now consumed. Stop
+here for the planned user retrospective; no third run is authorized. Next local
+construction is 078-B's candidate batches, feasibility, routes and leaves, starting
+with exhaustive scalar/D2 fixtures and an explicit public component contract.
+
+What changed: the foundation now performs useful named reductions on actual CUDA
+with original-row/weight semantics. What did not change: it cannot train on GPU,
+select a D2-constrained split, or accept arbitrary external kernels. Opaque handles
+protect storage but do not by themselves solve public device programmability.
+That interface and later accepted-state ownership must be consumer-tested before
+claiming an agent can build a full custom GPU boosting algorithm.
+
+No independent author attempt or accounting result was added. Wider CPU searches
+stay paused. Formal application quality, author benefit, P7/E4 and adoption remain
+open. The next remote verification needs a concrete reviewed workload and a new
+bounded allowance; this successful allocation is not a reusable compute credit.

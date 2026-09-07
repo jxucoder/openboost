@@ -77,11 +77,14 @@ designer work as independent author evidence or inspect sealed H1/H2 contents.
 
 The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
 completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant
-065/068 ownership on the actual device path. Experimental context-owned CUDA
-storage now passes twelve real T4 tests at `77aa105`; CUDA training remains
-unimplemented. One of two 085 device runs is consumed; one 900-second run remains.
-Next implement named device fields and routed histograms, preserving D2 independent
-information. Storage checks do not pass transaction or boosting conformance. Formal
+065/068 ownership on the actual device path. Experimental CUDA storage, named
+fields and routed histograms pass 33 real T4 tests at `ad2f4e6`; see the
+[078-A evidence](benchmarks/v1/evidence/cuda-aggregation-078/README.md).
+Both 085 device runs are consumed. Stop for the planned retrospective; later
+hardware checks require a new concrete run freeze and allowance. Next construction
+is 078-B candidate/feasibility/route/leaf operations, retaining D2 independent
+information. CUDA training and accepted/proposal integration remain unimplemented.
+Aggregation checks do not pass transaction or boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
 
@@ -94,7 +97,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1135 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1146 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
@@ -143,7 +146,8 @@ class metadata, AFT scale and multi-output inverse scaling have persisted infere
 artifacts. PreparedData explicitly reuses fitted training binning/codes across
 independent heterogeneous runs. All recipes support independent validation patience
 through public StopState, separate from model acceptance and best-model selection.
-Training execution is sequential CPU; experimental CUDA storage is verified, but CUDA training is not implemented.
+Training execution is sequential CPU; experimental CUDA storage and aggregation
+are verified, but CUDA training is not implemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 
 The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018

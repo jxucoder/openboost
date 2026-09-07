@@ -1,0 +1,140 @@
+{
+  "passed": true,
+  "reason": null,
+  "cases": [
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows3]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows4]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f3_bounded_large_histograms[1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f3_bounded_large_histograms[3]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_d2_public_append_with_renamed_information",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_bad_rows_rejected_host_and_device[positions0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_bad_rows_rejected_host_and_device[positions1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_bad_rows_rejected_host_and_device[positions2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_resident_rows_borrowed_lifetime_and_empty_view",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_foreign_forged_stale_identity_and_closed_records",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_nonfinite_fields_rejected_without_leak[nan]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_nonfinite_fields_rejected_without_leak[inf]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_nonfinite_fields_rejected_without_leak[-inf]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_field_schema_and_weight_roles",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_allocation_failure_rolls_back_partial_outputs",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_weight_overflow_rejected_and_sources_preserved",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_unequal_bins_have_feature_specific_missing_and_zero_padding",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_context_stream_is_preserved_during_device_operations",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_owned_upload_copy_export_and_lifetime",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_foreign_forged_and_released_handles",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_allocation_budget_and_context_recovery",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[float32]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[float64]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[int32]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[int64]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[uint8]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[bool]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_missing_values_and_zero_values_are_preserved",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_foreign_thread_and_current_stream_restored",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_device_input_and_unsupported_dtype_rejected",
+      "status": "pass"
+    }
+  ],
+  "installed_sources_match": true,
+  "versions_match": true
+}

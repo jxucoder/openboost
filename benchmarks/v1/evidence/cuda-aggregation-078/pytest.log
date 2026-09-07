@@ -1,0 +1,16 @@
+.....aggregation_metrics={"device_copy_bytes": 0, "export_bytes": 58192, "kernel_dispatch_seconds": 0.341631389999999, "kernel_launches": 7, "live_bytes": 1605632, "peak_live_bytes": 1663776, "peak_pool_bytes": 1665024, "synchronizations": 21, "upload_bytes": 1507328, "validation_export_bytes": 64}
+.aggregation_metrics={"device_copy_bytes": 0, "export_bytes": 36348, "kernel_dispatch_seconds": 0.002593455000000411, "kernel_launches": 7, "live_bytes": 1605632, "peak_live_bytes": 1641932, "peak_pool_bytes": 1643520, "synchronizations": 21, "upload_bytes": 1485484, "validation_export_bytes": 64}
+...............storage_metrics={"device_copy_bytes": 1048576, "export_bytes": 2097152, "live_bytes": 1048576, "peak_live_bytes": 2097152, "peak_pool_bytes": 2097152, "synchronizations": 4, "upload_bytes": 1048576}
+............
+=============================== warnings summary ===============================
+tests/v1/test_device_aggregation_cuda.py: 29 warnings
+  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_aggregation_cuda.py::test_f3_bounded_large_histograms[1]
+tests/v1/test_device_aggregation_cuda.py::test_f3_bounded_large_histograms[3]
+  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 33 will likely result in GPU under-utilization due to low occupancy.
+    warn(errors.NumbaPerformanceWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+33 passed, 31 warnings in 4.37s

@@ -6,6 +6,12 @@ into bounded deliverables within [069](069-authoring-pilot.md) and
 [078](078-cuda-scalar-path.md). It adds no device budget or phase exception.
 All R1–R9/C1–C7/A1–A13 and E0–E7 requirements remain unchanged.
 
+Execution update: 078-A passes 33 real T4 checks at `ad2f4e6`; see
+[the result and retrospective](078-cuda-scalar-path.md). Both approved device
+runs are consumed. Stop at this checkpoint; next local construction is 078-B.
+The budget/next-action language below records the original planning baseline,
+not another remaining allowance. GPU training and independent authoring remain open.
+
 ## Product outcome and present evidence
 
 The next product milestone is an installed public composition that trains at least

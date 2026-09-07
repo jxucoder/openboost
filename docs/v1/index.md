@@ -11,7 +11,7 @@ operations and support numeric inference/persistence. The first complete
 [Normal boosting](normal.md) uses the same state and scalar learners for joint
 mean/log-scale updates. [Formula and sequential runs](formula-runs.md) add
 full-metric structured updates and independent heterogeneous execution. CUDA
-execution is not implemented yet. [Categorical support](categorical.md) now uses
+training is not implemented yet. [Categorical support](categorical.md) now uses
 explicit dictionaries and equality conditions in all three growth policies.
 All R1–R9/C1–C7/A1–A13 remain required. Evaluation preparation continues alongside
 the user-approved B03–B06 construction overlap. No complete quality, speed or
@@ -59,6 +59,6 @@ from model acceptance and strict best-model selection across all CPU recipes.
 constraints and external penalized leaves, with core inference after plugin removal.
 
 
-[Experimental CUDA storage](execution.md) now provides explicit context-owned buffers,
-upload/copy/export and lifetime checks verified on a real T4. Training recipes
-remain CPU-only; device fields, trees and boosting are not implemented yet.
+[Experimental CUDA operations](execution.md) provide context-owned buffers, named
+fields, once-only weighting and routed histograms verified by 33 real T4 checks.
+Training recipes remain CPU-only; device candidates, trees and boosting are next.

@@ -24,7 +24,7 @@ and [Normal recipe](docs/v1/normal.md) support weights, offsets and
 fixed/backtracking steps on CPU. Normal exposes ordinary/Fisher directions and
 joint mean/log-scale updates. [Formula and sequential runs](docs/v1/formula-runs.md)
 add structured full-metric updates and independent heterogeneous jobs. CUDA
-execution is not implemented yet. [Binary classification](docs/v1/binary.md) now
+training is not implemented yet. [Binary classification](docs/v1/binary.md) now
 persists typed class order and exposes probability/label inference.
 [Multiclass and vector leaves](docs/v1/multiclass.md) add joint softmax updates
 and separate split/leaf statistics with arbitrary output mappings.
@@ -48,15 +48,15 @@ and formula models, and train-many each need their own implementation and eviden
 
 ```bash
 uv sync --extra test
-uv run pytest tests/ -n 0 -q
+uv run pytest tests/ -m "not gpu and not benchmark" -n 0 -q
 uv run ruff check src/openboost tests/v1 tests/conftest.py
 uv build
 ```
 
 Python 3.10+. Current tests cover CPU implementation, independent references and
-evaluation infrastructure. CUDA is a future
-required execution subset, not an implemented capability of this reset checkout.
-GPU and publishing workflows stay unavailable until their v1 gates are met.
+evaluation infrastructure. Experimental CUDA storage, named fields and histograms
+have real T4 evidence. CUDA training and the full required device gates remain
+open. Run GPU-marked tests only on real hardware; publishing remains separate.
 
 ## Historical implementation and evidence
 
@@ -105,6 +105,7 @@ across independent jobs, verified at M=1/8/32.
 recipe while keeping model acceptance and best-model selection independent.
 
 
-[Experimental CUDA storage](docs/v1/execution.md) now provides explicit context-owned buffers,
-upload/copy/export and lifetime checks verified on a real T4. Training recipes
-remain CPU-only; device fields, trees and boosting are not implemented yet.
+[Experimental CUDA operations](docs/v1/execution.md) provide context-owned buffers,
+named fields, once-only weighting and routed histograms, with
+[33 passing real T4 checks](benchmarks/v1/evidence/cuda-aggregation-078/README.md).
+Training recipes remain CPU-only; device candidates, trees and boosting are next.

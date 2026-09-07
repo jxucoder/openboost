@@ -31,8 +31,10 @@ field/operation records. There is no external-stream or raw-array adoption API y
 ## Experimental named fields and routed histograms
 
 `openboost.device.DeviceOperations(execution)` provides resident additive
-operations. This implementation is awaiting the declared real-device aggregation
-run; storage's earlier T4 result does not validate these kernels.
+operations. The installed implementation at `ad2f4e6` passes 33 real T4 tests,
+including 21 aggregation checks and twelve storage regressions. The committed
+record is `benchmarks/v1/evidence/cuda-aggregation-078/README.md`; this verifies
+the declared statistics/row operations, not GPU training or speed.
 
 ```python
 from openboost.device import DeviceOperations

@@ -19,8 +19,9 @@ alongside exploratory authoring; see [085](../v1-sprints/085-foundation-focus-am
 It supersedes the earlier unadopted-overlap proposal. Formal acceptance remains
 unchanged. Historical checkboxes require current evidence reconciliation.
 The [086 execution plan](../v1-sprints/086-next-execution-plan.md) specifies the
-next fields/histogram slice, its frozen fixtures, the remaining device allowance
-and the path to resident training. Storage is verified; CUDA boosting remains open.
+fields/histogram slice, its frozen fixtures, device allowance and path to resident
+training. Storage/aggregation are now verified at `ad2f4e6`; both bounded runs are
+consumed and the retrospective checkpoint is reached. CUDA boosting remains open.
 
 This plan supersedes future investment order in the old GPU checklist and the
 [ScoringBench-first plan](impact-adoption-value-next.md). Old experiments and failures remain valid.
@@ -438,8 +439,9 @@ Starting instructions for the next execution model:
 > Preserve all R/C/A/E requirements, E5 cohorts, required CUDA recipes and P7/E4.
 > Record results and reflect at each bounded slice. No phase exit follows from
 > objective counts, green tests or a single scalar GPU fixture.
-> Follow Sprint 086's 078-A fixtures next. One 900-second device run remains;
-> stop for a retrospective after that run. Further device runs need a new bound.
+> Sprint 086's 078-A now passes real T4 checks. Both device runs are consumed;
+> stop for the planned retrospective. Next local construction is 078-B's public
+> candidate/feasibility/route/leaf operations. Further device runs need a new bound.
 
 
 ### Approved foundation-priority amendment: 2026-09-07

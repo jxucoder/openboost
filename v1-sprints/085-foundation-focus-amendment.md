@@ -1,6 +1,6 @@
 # Sprint 085: Return to the programmable-foundation hypothesis
 
-Status: user-approved sequencing amendment, 2026-09-07; storage is verified,
+Status: user-approved sequencing amendment, 2026-09-07; storage/aggregation are verified,
 training and independent measurement remain pending. This card redirects 069
 and bounded 078 work;
 it does not create a new v1 scope or certify a phase exit.
@@ -130,6 +130,12 @@ and retrospective. This planning record itself dispatches no author or device ru
 ## Device budget update
 
 Run 1: clean `77aa105`, twelve T4 storage tests pass; see
-[078 evidence](../benchmarks/v1/evidence/cuda-storage-078/README.md). One run capped
-at 900 seconds remains. This allocation verified storage only, not two-round
-scalar training. Preregister the next fixture/operation boundary before using it.
+[078 evidence](../benchmarks/v1/evidence/cuda-storage-078/README.md). After that
+allocation one run remained; it verified storage only, not two-round training.
+
+Run 2: clean `ad2f4e6`, 33 T4 storage/aggregation tests pass; see
+[aggregation evidence](../benchmarks/v1/evidence/cuda-aggregation-078/README.md).
+No retry. **Both runs are consumed; zero remain.** 078-A passes and the planned
+retrospective is reached. Candidate selection, D2 feasibility, GPU training and
+independent author benefit remain open. Further hardware verification requires a
+new concrete workload/budget; 086 retains the subsequent construction sequence.
