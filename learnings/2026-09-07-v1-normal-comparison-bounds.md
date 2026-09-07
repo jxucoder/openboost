@@ -30,6 +30,15 @@ device conformance is claimed.
   and failed raw artifacts are unchanged.
 - Sprint 092 approval, explicit numerical policy, supported domain and public
   operation prerequisites recorded in the active sprint and repository guidance.
+- [All 383 historical cases](../v1-sprints/092-historical-case-mapping.json) map to
+  236 unchanged operation requirements, 96 mapped transactions, 31 recipes and
+  twenty installed-extension/inference requirements. Both historical failures
+  retain their status and explicit predicate-supersession flags; none of the
+  planned revised requirements is labelled implemented or passing.
+- The [study harness](../benchmarks/v1/normal_comparison_study.py) retains 106
+  numerical cases: twenty comparisons of captured GPU inputs, five analytic cases
+  and 81 actual proposals from the frozen CPU oracle across ordinary/Fisher/damped
+  and joint/ordered learners. No device trajectory is emulated.
 
 ## Verification
 
@@ -42,6 +51,10 @@ device conformance is claimed.
 - Ruff check and formatting cover only the new support files. Full regression
   results and the reproducible case mapping follow before 092-A closes.
 - CPU Python 3.12.12 on macOS; no CUDA run, emulator or host fallback.
+- `OPENBOOST_BACKEND=cpu UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync pytest tests/v1/test_normal_comparison_study.py tests/v1/test_normal_comparison_reference.py -n 0 -q --tb=short`: **27 passed**.
+- Full CPU regression after the cohort harness: **1505 passed, one Linux-only
+  skip**. Production/changed support lint passes. MkDocs builds with the existing
+  run-6 evidence link outside the documentation tree warning; no new warning.
 
 ## Failed Attempts
 
@@ -64,4 +77,5 @@ device conformance is claimed.
 
 ## Commits
 
-- This independently verified mathematics slice; concrete SHA linked at closure.
+- `8d0e92f` — independently verified interval mathematics and numerical contract.
+- Cohort/harness commit follows; the clean-source evidence is archived separately.

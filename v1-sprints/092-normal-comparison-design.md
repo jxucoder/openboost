@@ -2,7 +2,8 @@
 
 Status: local execution approved by the user after
 [091's measured retrospective](091-normal-acceptance-diagnostics.md).
-092-A's independent mathematics prototype is in progress; public implementation
+092-A's independent mathematics and complete historical mapping are implemented
+locally; reproducible evidence archival and reflection are next. Public implementation
 and consumer changes remain pending. No new hardware allowance is included. All seven
 device invocations are consumed. This is the next bounded correctness slice of
 079/B12/R6, not a new private trainer or a change to the required R/C/A scope.
@@ -116,7 +117,10 @@ run 7, their sources and both failures unchanged. Do not relabel them passing or
 count a diagnostic success as conformance.
 
 Before B, publish a case-by-case mapping from all 383 old cases to the new consumer
-contract. Retain the old suite as a historical regression cohort, with its status
+contract. The [092-A cohort specification](092-comparison-cohorts.md) and
+[383-case mapping](092-historical-case-mapping.json) now provide that preregistration;
+planned requirements are not collected or passing revised tests.
+Retain the old suite as a historical regression cohort, with its status
 reported separately. Add a distinct cohort for the new comparison API using the
 same original datasets/settings and independent expectations at stored inputs.
 Any semantic supersession of the two full-loss predicate cases must be explicit
