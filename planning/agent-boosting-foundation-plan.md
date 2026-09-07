@@ -426,14 +426,16 @@ links and git diff --check, not nonexistent runtime changes. No push, release, m
 
 Starting instructions for the next execution model:
 
-> Read AGENTS.md, the 064–084 sprint roadmap and Sprint 066 for the next execution
+> Read AGENTS.md, the 064–084 sprint roadmap and Sprint 067 for the next execution
 > card; Sprint 063 retains the rationale. Use this plan, construction design and
 > evaluation for scope and semantics. Sprints 064–065 stopping/installed isolation are complete.
 > Follow 066 profile → 067 incremental runtime → 068 trace retention.
 > Sprint 066's numerical-worker checks pass an actual 8-GiB address ceiling,
 > two-thread BLAS and guest peak-RSS response. Host cgroups remain unobservable.
-> Freeze diagnostic inputs and repeat preflight in the profiling image before fits;
-> preserve separate address/RSS scope and the original failed inspection record.
+> Sprint 066 has six passing practical fits and a partial profile showing repeated
+> tree prediction/re-encoding dominates. Preemption leaves the long-round sweep
+> incomplete. Proceed with 067 exact incremental evaluation and encoding reuse;
+> retain baseline gaps and separate address/RSS scope in the same-workload rerun.
 > Preparation for 069 author measurement and 070 coverage/judging can proceed
 > independently; 071 proves the real selection pipeline before the remaining
 > application cards. Later author/CUDA/delivery cards follow their stated entry

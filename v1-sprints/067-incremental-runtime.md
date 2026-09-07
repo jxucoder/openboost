@@ -1,6 +1,6 @@
 # Sprint 067: Incremental transaction execution
 
-Status: planned. Mapping: N2b / B05 / C4–C5 / E1.
+Status: ready after partial-profile diagnosis; implementation not started. Mapping: N2b / B05 / C4–C5 / E1.
 Depends on: [066](066-practical-cpu-profile.md) diagnosis justifying the change.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
@@ -41,4 +41,10 @@ card with the counterexample. Next: [068](068-trace-retention.md).
 
 ## Results
 
-Not run. The existing quadratic count is a baseline, not a completed fix.
+Not implemented. Sprint 066's partial 60-second Housing profile finds tree
+prediction at 75.3% of fit time, with nested re-encoding at 67.5%. Address accepted
+ensemble replay and repeated encoding together through the smallest justified
+state boundary. Preserve exact term-addition order; avoid summing a combined delta
+that changes floating-point results. The baseline sweep has six passing cases,
+one preempted case and one not_run case. Comparisons must retain those gaps;
+no complete long-round baseline or speed claim exists.

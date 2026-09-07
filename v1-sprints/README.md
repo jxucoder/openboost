@@ -11,11 +11,11 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-Current execution card: [Sprint 066](066-practical-cpu-profile.md).
-Its numerical-worker resource probe now passes exact 8-GiB address-ceiling,
-two-thread BLAS and guest peak-RSS checks. Cgroup inspection remains unavailable
-and its failed evidence is retained. No Housing profiling fit or runtime optimization
-has started; the next slice freezes and runs the diagnostic with explicit memory scope.
+Current execution card: [Sprint 067](067-incremental-runtime.md), ready for implementation.
+[Sprint 066](066-practical-cpu-profile.md) diagnoses repeated tree replay/encoding
+from six passing practical fits and a separate partial profile. The 128-round
+sweep is incomplete after infrastructure preemption; no missing result is a pass.
+951 CPU tests pass. No production runtime optimization has started.
 [Sprint 065](065-installed-run-isolation.md) passes installed custom completion,
 independent RNG/preparation/failure checks and ten plugin-free inference models.
 [Sprint 064](064-programmable-stopping-and-isolation.md) completed structural stopping
@@ -28,8 +28,7 @@ The merge passed 923 local CPU tests and all five CI checks. Broad public CPU
 components and application validation exist; formal phase exits, selected real
 quality/cost, CUDA and independent adoption remain open.
 
-Next: 066 practical profile, 067 incremental
-runtime and 068 trace retention. Cards 069–077 cover exploratory/formal authoring,
+Next: 067 incremental runtime and 068 trace retention. Cards 069–077 cover exploratory/formal authoring,
 judging and every required application's selected quality; 078–082 cover CUDA and
 cost after their entry gates. 083 audits engineering v1 and 084 separately tests
 external adoption. These are scope cards, not calendar estimates or new phase exits.

@@ -1,7 +1,7 @@
 # Sprint roadmap after the v1 retrospective
 
 Planning baseline: `df23796`, 2026-09-06. Current execution: 064–065 complete,
-066 numerical-worker resource checks pass; profiling preparation is current.
+066 bottleneck diagnosis complete with an incomplete timing sweep; 067 is ready.
 This decomposes Sprint 063 N1–N5 and its proposed GPU sequence into execution
 cards. It does not replace the [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), or
@@ -17,14 +17,14 @@ part of that hypothesis. Completing sprint cards is not a percentage of product 
 Each card has an entry dependency, a first falsifiable check, work boundaries,
 acceptance and a reflection question. Numbers identify cards, not calendar weeks
 or a requirement to finish every lower number before starting independent work.
-Sprints 064–065 are complete; Sprint 066 is the current execution assignment. Later cards are planned;
+Sprints 064–065 are complete; 066 has a scoped diagnosis and timing gaps. Sprint 067 is current; later cards are planned;
 pin their actual source revision, commands and workload before execution.
 
 | Sprint | Outcome | Entry dependency | Deciding evidence |
 |---|---|---|---|
 | [064](064-programmable-stopping-and-isolation.md) | Complete: public stopping completion | Current CPU contracts | Independent two-round policy, 77 focused / 943 CPU tests; installed checks follow in 065 |
 | [065](065-installed-run-isolation.md) | Complete: installed independent runs | 064 | M=1/8/32 RNG, preparation, custom stop, failure/retry and plugin-free inference |
-| [066](066-practical-cpu-profile.md) | In progress: practical CPU cost diagnosis | 065 | Worker address/thread/guest peak checks pass; host cgroups unavailable; eight Housing cases remain not_run |
+| [066](066-practical-cpu-profile.md) | Diagnosis complete; timing sweep incomplete | 065 | Six fits pass; preemption interrupts long-round sweep; partial profile identifies replay/encoding |
 | [067](067-incremental-runtime.md) | Incremental transaction execution | 066 diagnosis | New-term replay grows linearly; independent full replay and all state transitions agree |
 | [068](068-trace-retention.md) | Bounded diagnostic memory | 067 | Summary/full equivalence; bounded retained arrays; matched practical rerun |
 | [069](069-authoring-pilot.md) | Exploratory authoring measurement | Preparation can start now; attempts after 065 and accounting checks | Fair control/deep-change arms, measurable budgets and isolated verifiers |

@@ -63,11 +63,14 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-Current execution card: [Sprint 066 practical CPU profile](v1-sprints/066-practical-cpu-profile.md).
-The numerical-worker preflight verifies an 8-GiB address ceiling, two-thread BLAS
-and responsive guest peak-RSS accounting. Host cgroup caps remain unobservable;
-address space and RSS are reported separately. No profiling fits have run. Next
-freeze the eight cases and repeat preflight in the profiling image before fitting.
+Current execution card: [Sprint 067 incremental runtime](v1-sprints/067-incremental-runtime.md).
+Sprint 066's diagnosis is complete: six practical fits pass, while infrastructure
+preemption leaves the 128-round sweep incomplete. Its separate partial profile
+places 75.3% of fit time in tree prediction, including 67.5% in re-encoding.
+Next implement incremental new-term evaluation and identity-bound encoding reuse,
+preserving exact replay and transaction ownership. No production optimization yet.
+The worker verifies an 8-GiB address ceiling and two-thread BLAS; host cgroup caps
+remain unobservable. Keep address space, guest RSS and infrastructure failures distinct.
 Sprint 064 structural stopping passes 943 CPU tests; Sprint 065 installed custom-policy,
 RNG/preparation/failure checks and ten plugin-free inference models pass without core edits. The [064–084 sprint roadmap](v1-sprints/roadmap-after-063.md)
 defines bounded deliverables, dependencies and acceptance. [Sprint 063 retrospective and next plan](v1-sprints/063-retrospective-and-next-plan.md)
