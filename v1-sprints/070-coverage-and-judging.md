@@ -495,3 +495,11 @@ real execution. A clean-revision artifact follows the implementation commit.
 
 Validation: 1115 CPU tests passed, one Linux-only skip; changed-file lint and
 documentation build pass.
+
+Clean installed evidence at `63b4859` passes all six parameter/stopping/fresh-replay
+checks. Three source and thirteen artifact hashes verify; see the
+[raw record](../benchmarks/v1/evidence/bin-budget-070/README.md). The
+[updated A6 CPU freeze](070-a6-cpu-search-plan-bins.json) pins the translated worker;
+the earlier planning file stays historical. Explicit parameter translation is
+resolved for the synthetic installed boundary. Dispatch remains false until real
+full-budget resource/selection checks and broader coverage obligations are met.

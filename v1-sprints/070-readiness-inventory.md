@@ -62,3 +62,9 @@ full R/C/A/E ledger. Dispatch remains blocked: baseline_worker needs explicit
 bins=255 translation and installed verification, followed by frozen resource and
 selection checks. No new jobs ran. See the
 [learning record](../learnings/2026-09-07-v1-a6-complete-cpu-plan.md).
+
+The bin-translation gap is now resolved at `63b4859`, with six installed synthetic
+fits and exact fresh replay. Use the [updated source-pinned plan](070-a6-cpu-search-plan-bins.json)
+for subsequent preparation; the original planning record is historical. Next
+qualify comparator full-budget Linux execution/resource limits and selection
+bindings, retaining every required trial and failure. No full-search gate passes.

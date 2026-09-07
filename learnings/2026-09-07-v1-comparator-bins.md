@@ -53,3 +53,13 @@ Implementation follows `cd69c80`; evidence will be committed separately.
 
 Validation: 1115 CPU tests passed, one Linux-only skip; changed-file lint and
 documentation build pass.
+
+## Clean installed result
+
+At `63b4859`, all six installed checks pass, including actual native parameters
+and exact fresh-process replay. All three source and thirteen artifact hashes
+verify. [Raw evidence](../benchmarks/v1/evidence/bin-budget-070/README.md) retains
+input, six models, six replay arrays and stopping records. The refreshed
+[planning freeze](../v1-sprints/070-a6-cpu-search-plan-bins.json) pins the translated
+worker; the original freeze remains historical. Real full-budget Linux execution
+and resource/selection qualification remain open. No full search or upload ran.
