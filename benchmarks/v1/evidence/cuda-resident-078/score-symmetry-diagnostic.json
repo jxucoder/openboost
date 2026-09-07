@@ -1,0 +1,117 @@
+{
+  "status": "cpu_arithmetic_diagnostic_only",
+  "limitation": "The GPU run did not export these root candidate gains or PTX. These reconstructed arithmetic examples show a compatible mechanism, not the observed GPU instruction sequence.",
+  "source_run": "c4157559c5982e3df849ae59129c48dc8e60b454",
+  "base": -1.1111111111111112,
+  "float32_base": -1.1111111640930176,
+  "weighted_gradient": [
+    -0.0,
+    -0.11111116409301758,
+    -0.22222232818603516,
+    -0.11111116409301758,
+    -0.0,
+    2.6666665077209473,
+    -3.1111111640930176,
+    0.8888888359069824
+  ],
+  "candidates": [
+    {
+      "key": [
+        0,
+        0,
+        true
+      ],
+      "oracle_gain": 2.379372427983539,
+      "rows": [
+        [
+          0,
+          1,
+          6
+        ],
+        [
+          2,
+          3,
+          4,
+          5,
+          7
+        ]
+      ],
+      "reconstructed_float32_summaries": [
+        [
+          -3.222222328186035,
+          2.0
+        ],
+        [
+          3.222221851348877,
+          7.0
+        ]
+      ],
+      "child_score_values": {
+        "separate_products": 2.3793725967407227,
+        "left_product_fused": 2.3793723583221436,
+        "right_product_fused": 2.3793725967407227
+      },
+      "child_score_bits": {
+        "separate_products": "0x401847a4",
+        "left_product_fused": "0x401847a3",
+        "right_product_fused": "0x401847a4"
+      }
+    },
+    {
+      "key": [
+        0,
+        3,
+        false
+      ],
+      "oracle_gain": 2.379372427983539,
+      "rows": [
+        [
+          0,
+          2,
+          3,
+          4,
+          5,
+          7
+        ],
+        [
+          1,
+          6
+        ]
+      ],
+      "reconstructed_float32_summaries": [
+        [
+          3.222221851348877,
+          7.0
+        ],
+        [
+          -3.222222328186035,
+          2.0
+        ]
+      ],
+      "child_score_values": {
+        "separate_products": 2.3793725967407227,
+        "left_product_fused": 2.3793725967407227,
+        "right_product_fused": 2.3793723583221436
+      },
+      "child_score_bits": {
+        "separate_products": "0x401847a4",
+        "left_product_fused": "0x401847a4",
+        "right_product_fused": "0x401847a3"
+      }
+    }
+  ],
+  "provenance": {
+    "revision": "c4157559c5982e3df849ae59129c48dc8e60b454",
+    "dirty": true,
+    "python": "3.12.12",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "source_hashes": {
+      "benchmarks/v1/cuda_score_symmetry.py": "3fe4d0623c2b150f0dc40a287aeb847f1459db4d4d5b70ef8798f721980f7422",
+      "tests/v1/reference/device_rounds.py": "73861bf4a0f7071c3f739491823440eb2af0dfb60a912a54642890aa955f829d",
+      "tests/v1/reference/device_splits.py": "b081e720691a083bed7a29ae1079ab3698ffe24e0ef282008f67de4e75ec49a9",
+      "tests/v1/reference/device_histogram.py": "6504357268c63c2a35f32620a8c31aa126dd67f9a282ae76e95b4003d7ed4970"
+    },
+    "command": "UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.cuda_score_symmetry"
+  }
+}

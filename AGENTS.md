@@ -85,21 +85,21 @@ passes 88 real T4 tests at `9ce790e`: 55 candidate/feasibility/route/leaf checks
 plus all 33 previous cases. D2's independent cohort minima change the winning
 split through public device operations; named/reordered information also passes.
 See the [078-B evidence](benchmarks/v1/evidence/cuda-splits-078/README.md).
-The original two runs and the additional single run are consumed. The user
-continued after the retrospective; [088 resident scalar training](v1-sprints/088-resident-scalar-training.md)
-is the active local construction slice. Further hardware checks need a new concrete
-freeze and allowance. Build 078-C resident two-round training with explicit
-accepted/proposal ownership and saved CPU inference. Retain the 065/068 contracts.
-078-C scalar objectives, trees, accepted/proposal integration and a squared recipe
-are locally implemented with pending real-device verifiers; none has new GPU
-acceptance yet. The earlier 88 passing cases do not validate the new code.
-The [run-4 package](v1-sprints/078-resident-run4.json) freezes 202 cases and 47
-private source/test/metadata files. After automatic review rejected the initial
-"continue" interpretation, the user explicitly replied "approve" to the request
-for this private package's upload to Modal and one T4 run. Both protocol approvals
-are recorded for the unchanged package: 900-second function/600-second tests and
-zero retries. Use the original launcher and reflect on its result before expansion.
-Primitive checks do not pass transaction or boosting conformance. Formal
+[088 resident scalar training](v1-sprints/088-resident-scalar-training.md) now has
+real T4 evidence at clean `c415755`: 188 of 202 checks pass and 14 fail. All prior
+88 regressions pass; dedicated ownership, rollback and saved CPU inference checks
+pass. Weighted/missing split selection and two recipe prediction checks fail, so
+the scalar training gate is not accepted. See the
+[run-4 evidence and retrospective](benchmarks/v1/evidence/cuda-resident-078/README.md).
+The explicitly approved 47-file private upload and single bounded invocation are
+complete. All four hardware allowances are consumed; no retries are authorized.
+Stop at the planned retrospective before broader construction. The next bounded
+correction is score symmetry under swapped child summaries, with direct device
+score/code-generation diagnostics and all original cases retained. CPU arithmetic
+shows a compatible rounding mechanism; the actual GPU instruction sequence was
+not captured. No production fix is included in this result. Further hardware
+checks require a new concrete source freeze and upload/compute allowance.
+Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
 
@@ -112,7 +112,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1262 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1264 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
@@ -163,8 +163,8 @@ independent heterogeneous runs. All recipes support independent validation patie
 through public StopState, separate from model acceptance and best-model selection.
 Training execution is sequential CPU; experimental CUDA storage and aggregation
 plus public split/feasibility/route/leaf operations are verified at `9ce790e`.
-The separate experimental resident scalar recipe is locally constructed in 088,
-with real-device acceptance pending. Other required CUDA recipes remain unimplemented.
+The separate experimental resident scalar recipe executes on T4 but fails the
+088 weighted/missing parity gate. Other required CUDA recipes remain unimplemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 
 The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018

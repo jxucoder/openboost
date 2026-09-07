@@ -1,9 +1,10 @@
 # Sprint 088: Resident scalar rounds and owned transactions
 
-Status: explicit private-upload and compute approval received after the initial
-automatic-review block. Baseline `e1a9c20`. Implements 086's 078-C. The three prior
-invocations are consumed; one unchanged run-4 invocation is now authorized.
-No new agents, CPU search or phase exit.
+Status: run 4 completed at clean `c415755`; 188 passed and 14 failed. Scalar
+training acceptance fails on weighted/missing parity. All four invocations are
+consumed, with no retry. Baseline `e1a9c20`. Implements 086's 078-C. Stop at the
+planned result retrospective before broader construction. No new agents, CPU
+search or phase exit. Earlier pending/approval statements below are historical.
 
 ## Decision and public boundary
 
@@ -213,3 +214,72 @@ checks once on a T4, with a 15-minute function limit and no retries. Record both
 protocol approvals without changing the payload, cases, dependencies or bounds.
 This resolves the stated approval ambiguity; use the original launcher after
 verification and a clean local commit. No alternate execution route is needed.
+
+## Run-4 result and integrity
+
+After the explicit approval commit `c415755`, the original launcher uploaded the
+unchanged 47-file snapshot and invoked one T4 worker. It completed with 188 passed,
+14 failed, 219 warnings and no missing/duplicate/skipped/error cases. All previous
+88 cases pass. The [raw evidence](../benchmarks/v1/evidence/cuda-resident-078/README.md)
+records the environment, case groups, original failure output and exact provenance.
+All 47 source hashes match the dispatch revision; all 27 installed module hashes,
+17 dependency versions and three raw artifact hashes match. Recomputed judging
+equals the stored failing verdict. The live protocol marks the allowance consumed;
+the original manifest retains the approved protocol at dispatch.
+
+Archive verification adds one raw-result integrity check and one CPU arithmetic
+counterexample. All 35 focused manifest/judging/diagnostic checks pass. Full CPU
+regression passes 1264 cases with one Linux-only skip and 202 GPU cases deselected;
+production/changed-support Ruff and documentation build pass. Authored files pass
+whitespace checks; raw JUnit/log retain pytest's original trailing spaces to preserve
+their hashes. Production source is unchanged from the dispatched revision.
+
+The 14 failures are six objective/tree and six round-transaction cases at weighted
+depth 1/2 and minimum None/0/1, plus two depth-2 weighted recipe checks (fixed and
+backtracking). GPU selects `(0, 3, False)` while the original-row oracle selects
+`(0, 0, True)`. Final recipe raw predictions differ by up to 0.01388896, outside
+the frozen tolerance. The differing zero-weight training row has a positive-weight
+validation counterpart. Keep it and the failure; do not widen tolerances.
+
+Dedicated ownership/rollback, rejection/retry, independent snapshots, policy
+callbacks, D2/conflict rounds, binning/stream handling and 24-round retention with
+fresh CPU inference pass. Weighted cases failing at topology do not verify later
+leaf or prediction assertions. No passing subset closes the scalar gate.
+
+## Run-4 retrospective and bounded next plan
+
+Observation: public programmable components now execute actual resident rounds
+and saved inference on T4. A training fixture nevertheless breaks split parity
+despite the earlier primitive suite remaining green. Integration tests materially
+changed our understanding of correctness; primitive test counts were insufficient.
+
+Evidence: both root candidates have equal original-row gain and swapped child
+statistics. The separate CPU arithmetic diagnostic shows that independently
+rounded child products preserve equality, while fusing only one product with the
+sum can change ordering by one binary32 ULP. One grouping agrees with the observed
+GPU winner. Run 4 did not capture those device candidate buffers or generated code,
+so multiply/add contraction is a hypothesis, not a proven instruction trace.
+
+Decision: retain the public operations and ownership boundary, and prioritize
+score symmetry before new objectives, train-many, broader hardware work or a speed
+claim. No production kernel correction is part of this evidence slice. The run is
+consumed and cannot be retried. This is the planned pause for retrospective.
+
+The next bounded correction, after this reflection, has three reviewable slices:
+
+1. Freeze direct swapped-summary score checks and strictly unequal adjacent-ULP
+   controls. Retain every original case, exact tie policy and E1 tolerances.
+2. Implement independently rounded symmetric child-score arithmetic through the
+   existing scoring operation. Local mathematical/import/regression checks must
+   pass; they do not establish CUDA compilation or numerical acceptance.
+3. Freeze a new installed-package hardware check that captures candidate summaries,
+   score bits and relevant generated code, then runs the full original matrix and
+   new controls. Seek a concrete upload/compute allowance only after that package
+   is reviewable. Acceptance requires all cases passing, exact tie selection,
+   unchanged prediction/metric parity and verified source/artifact provenance.
+
+If direct evidence falsifies the rounding hypothesis, inspect histogram/candidate
+summaries before changing arithmetic again. Do not hide the result with a near-tie
+band or a different fixture. Preserve author isolation and the broader required
+R/C/A/E scope. This result is designer development evidence, not independent author
+benefit, real application quality or end-to-end device cost.

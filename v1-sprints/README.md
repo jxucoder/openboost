@@ -26,9 +26,10 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1262 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1264 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. Eighty-eight real T4
-storage/aggregation/split tests pass; new resident scalar training awaits GPU validation.
+storage/aggregation/split tests pass. Resident scalar run 4 completes with 188
+passing and 14 failing cases; weighted/missing parity blocks training acceptance.
 Independent author benefit, full quality/search and
 adoption remain unverified. The
 [064–084 roadmap](roadmap-after-063.md) retains those obligations; 085 changes their
@@ -39,14 +40,17 @@ The two original device runs and the separately approved run 3 are consumed.
 all 33 previous regressions at clean `9ce790e`; see the
 [raw evidence and reflection](../benchmarks/v1/evidence/cuda-splits-078/README.md).
 D2 changes the selected split through public resident scores and feasibility masks.
-The user continued after this retrospective. [088 resident scalar training](088-resident-scalar-training.md)
-is active local construction: accepted/proposal ownership, resident two-round
-scalar training and saved CPU inference. Further hardware work requires a new
-concrete freeze and allowance.
-The [088 run-4 package](078-resident-run4.json) now freezes 202 device cases and
-47 upload files. After the initial automatic-review block, the user explicitly
-approved this private package's upload to Modal and the single bounded T4 run. Local
-regression, judging, packaging and collection do not pass the hardware gate.
+The user continued after that retrospective. [088 resident scalar training](088-resident-scalar-training.md)
+connects public operations to accepted/proposal ownership, two-round training and
+saved CPU inference. Its explicitly approved [run-4 package](078-resident-run4.json)
+uploaded 47 files and ran all 202 cases once at clean `c415755`. Dedicated ownership
+and export checks pass; 14 weighted/missing cases fail. The
+[raw result and arithmetic investigation](../benchmarks/v1/evidence/cuda-resident-078/README.md)
+retain all failures and distinguish a rounding hypothesis from observed device data.
+All four hardware allowances are consumed. Stop at the run-4 retrospective before
+broader construction. Next is a bounded score-symmetry correction with direct
+candidate diagnostics and unchanged acceptance; no production fix or GPU retry
+has occurred. Further hardware work needs a new concrete freeze and allowance.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

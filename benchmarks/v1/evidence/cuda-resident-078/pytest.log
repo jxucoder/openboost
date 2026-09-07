@@ -1,0 +1,777 @@
+...F..F.....F..F.....F..F.................................F..F.............F..F.....F..F.....F..F.................split_metrics={"case": "d2", "minimum": 0, "upload_bytes": 174, "export_bytes": 1084, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 1858, "peak_live_bytes": 1866, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.01670198299999015, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "no_feasible", "minimum": 0, "upload_bytes": 174, "export_bytes": 644, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 914, "peak_live_bytes": 922, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.01703846699998479, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "missing_weighted", "minimum": 0, "upload_bytes": 256, "export_bytes": 1288, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 2516, "peak_live_bytes": 2524, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.016457852000012707, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "ties", "minimum": 0, "upload_bytes": 136, "export_bytes": 848, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 1452, "peak_live_bytes": 1460, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.016808680000011123, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "zero_gradient", "minimum": 0, "upload_bytes": 136, "export_bytes": 560, "device_copy_bytes": 0, "synchronizations": 39, "live_bytes": 764, "peak_live_bytes": 768, "peak_pool_bytes": 9728, "kernel_launches": 23, "kernel_dispatch_seconds": 0.007189313000012021, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "zero_curvature", "minimum": 0, "upload_bytes": 136, "export_bytes": 560, "device_copy_bytes": 0, "synchronizations": 39, "live_bytes": 764, "peak_live_bytes": 768, "peak_pool_bytes": 9728, "kernel_launches": 23, "kernel_dispatch_seconds": 0.007001204999998123, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "missing_only", "minimum": 0, "upload_bytes": 116, "export_bytes": 518, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 604, "peak_live_bytes": 612, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.019432595000004937, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "inactive", "minimum": 0, "upload_bytes": 136, "export_bytes": 1068, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 1924, "peak_live_bytes": 1932, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.016042586000008185, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "empty", "minimum": 0, "upload_bytes": 150, "export_bytes": 780, "device_copy_bytes": 0, "synchronizations": 38, "live_bytes": 1034, "peak_live_bytes": 1038, "peak_pool_bytes": 9216, "kernel_launches": 23, "kernel_dispatch_seconds": 0.0066707959999980915, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "one_bin", "minimum": 0, "upload_bytes": 116, "export_bytes": 230, "device_copy_bytes": 0, "synchronizations": 39, "live_bytes": 300, "peak_live_bytes": 304, "peak_pool_bytes": 9728, "kernel_launches": 23, "kernel_dispatch_seconds": 0.006668802000010743, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "d2", "minimum": 1, "upload_bytes": 174, "export_bytes": 1084, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 1858, "peak_live_bytes": 1866, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.01598522900000532, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "no_feasible", "minimum": 1, "upload_bytes": 174, "export_bytes": 492, "device_copy_bytes": 0, "synchronizations": 64, "live_bytes": 706, "peak_live_bytes": 714, "peak_pool_bytes": 14848, "kernel_launches": 39, "kernel_dispatch_seconds": 0.01088194400000475, "validation_export_bytes": 172, "decision_export_bytes": 16}
+.split_metrics={"case": "missing_weighted", "minimum": 1, "upload_bytes": 256, "export_bytes": 1288, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 2516, "peak_live_bytes": 2524, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.016141363999999214, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "ties", "minimum": 1, "upload_bytes": 136, "export_bytes": 848, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 1452, "peak_live_bytes": 1460, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.016169386999997926, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "zero_gradient", "minimum": 1, "upload_bytes": 136, "export_bytes": 560, "device_copy_bytes": 0, "synchronizations": 39, "live_bytes": 764, "peak_live_bytes": 768, "peak_pool_bytes": 9728, "kernel_launches": 23, "kernel_dispatch_seconds": 0.006621632000001654, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "zero_curvature", "minimum": 1, "upload_bytes": 136, "export_bytes": 560, "device_copy_bytes": 0, "synchronizations": 39, "live_bytes": 764, "peak_live_bytes": 768, "peak_pool_bytes": 9728, "kernel_launches": 23, "kernel_dispatch_seconds": 0.00664226399998924, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "missing_only", "minimum": 1, "upload_bytes": 116, "export_bytes": 518, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 604, "peak_live_bytes": 612, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.0160550649999891, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "inactive", "minimum": 1, "upload_bytes": 136, "export_bytes": 1068, "device_copy_bytes": 0, "synchronizations": 89, "live_bytes": 1924, "peak_live_bytes": 1932, "peak_pool_bytes": 19968, "kernel_launches": 55, "kernel_dispatch_seconds": 0.0157305539999939, "validation_export_bytes": 252, "decision_export_bytes": 24}
+.split_metrics={"case": "empty", "minimum": 1, "upload_bytes": 150, "export_bytes": 780, "device_copy_bytes": 0, "synchronizations": 38, "live_bytes": 1034, "peak_live_bytes": 1038, "peak_pool_bytes": 9216, "kernel_launches": 23, "kernel_dispatch_seconds": 0.006567208000003433, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "one_bin", "minimum": 1, "upload_bytes": 116, "export_bytes": 230, "device_copy_bytes": 0, "synchronizations": 39, "live_bytes": 300, "peak_live_bytes": 304, "peak_pool_bytes": 9728, "kernel_launches": 23, "kernel_dispatch_seconds": 0.006670302000006956, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "d2", "minimum": 2, "upload_bytes": 174, "export_bytes": 932, "device_copy_bytes": 0, "synchronizations": 64, "live_bytes": 1458, "peak_live_bytes": 1466, "peak_pool_bytes": 14848, "kernel_launches": 39, "kernel_dispatch_seconds": 0.011698015000007445, "validation_export_bytes": 172, "decision_export_bytes": 16}
+.split_metrics={"case": "no_feasible", "minimum": 2, "upload_bytes": 174, "export_bytes": 492, "device_copy_bytes": 0, "synchronizations": 64, "live_bytes": 706, "peak_live_bytes": 714, "peak_pool_bytes": 14848, "kernel_launches": 39, "kernel_dispatch_seconds": 0.011418216000009807, "validation_export_bytes": 172, "decision_export_bytes": 16}
+.split_metrics={"case": "missing_weighted", "minimum": 2, "upload_bytes": 256, "export_bytes": 1144, "device_copy_bytes": 0, "synchronizations": 64, "live_bytes": 1980, "peak_live_bytes": 1988, "peak_pool_bytes": 14848, "kernel_launches": 39, "kernel_dispatch_seconds": 0.011685404000012056, "validation_export_bytes": 172, "decision_export_bytes": 16}
+.split_metrics={"case": "ties", "minimum": 2, "upload_bytes": 136, "export_bytes": 704, "device_copy_bytes": 0, "synchronizations": 64, "live_bytes": 1108, "peak_live_bytes": 1116, "peak_pool_bytes": 14848, "kernel_launches": 39, "kernel_dispatch_seconds": 0.011456829000010771, "validation_export_bytes": 172, "decision_export_bytes": 16}
+.split_metrics={"case": "zero_gradient", "minimum": 2, "upload_bytes": 136, "export_bytes": 560, "device_copy_bytes": 0, "synchronizations": 39, "live_bytes": 764, "peak_live_bytes": 768, "peak_pool_bytes": 9728, "kernel_launches": 23, "kernel_dispatch_seconds": 0.006690475999995726, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "zero_curvature", "minimum": 2, "upload_bytes": 136, "export_bytes": 560, "device_copy_bytes": 0, "synchronizations": 39, "live_bytes": 764, "peak_live_bytes": 768, "peak_pool_bytes": 9728, "kernel_launches": 23, "kernel_dispatch_seconds": 0.007003822000008597, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "missing_only", "minimum": 2, "upload_bytes": 116, "export_bytes": 374, "device_copy_bytes": 0, "synchronizations": 64, "live_bytes": 452, "peak_live_bytes": 460, "peak_pool_bytes": 14848, "kernel_launches": 39, "kernel_dispatch_seconds": 0.01102529599999258, "validation_export_bytes": 172, "decision_export_bytes": 16}
+.split_metrics={"case": "inactive", "minimum": 2, "upload_bytes": 136, "export_bytes": 924, "device_copy_bytes": 0, "synchronizations": 64, "live_bytes": 1484, "peak_live_bytes": 1492, "peak_pool_bytes": 14848, "kernel_launches": 39, "kernel_dispatch_seconds": 0.011291575000004883, "validation_export_bytes": 172, "decision_export_bytes": 16}
+.split_metrics={"case": "empty", "minimum": 2, "upload_bytes": 150, "export_bytes": 780, "device_copy_bytes": 0, "synchronizations": 38, "live_bytes": 1034, "peak_live_bytes": 1038, "peak_pool_bytes": 9216, "kernel_launches": 23, "kernel_dispatch_seconds": 0.006453547000010218, "validation_export_bytes": 92, "decision_export_bytes": 8}
+.split_metrics={"case": "one_bin", "minimum": 2, "upload_bytes": 116, "export_bytes": 230, "device_copy_bytes": 0, "synchronizations": 39, "live_bytes": 300, "peak_live_bytes": 304, "peak_pool_bytes": 9728, "kernel_launches": 23, "kernel_dispatch_seconds": 0.0065355740000079265, "validation_export_bytes": 92, "decision_export_bytes": 8}
+...............................aggregation_metrics={"decision_export_bytes": 0, "device_copy_bytes": 0, "export_bytes": 58192, "kernel_dispatch_seconds": 0.36266510799999807, "kernel_launches": 7, "live_bytes": 1605632, "peak_live_bytes": 1663776, "peak_pool_bytes": 1665024, "synchronizations": 21, "upload_bytes": 1507328, "validation_export_bytes": 64}
+.aggregation_metrics={"decision_export_bytes": 0, "device_copy_bytes": 0, "export_bytes": 36348, "kernel_dispatch_seconds": 0.002645741000002033, "kernel_launches": 7, "live_bytes": 1605632, "peak_live_bytes": 1641932, "peak_pool_bytes": 1643520, "synchronizations": 21, "upload_bytes": 1485484, "validation_export_bytes": 64}
+...............storage_metrics={"device_copy_bytes": 1048576, "export_bytes": 2097152, "live_bytes": 1048576, "peak_live_bytes": 2097152, "peak_pool_bytes": 2097152, "synchronizations": 4, "upload_bytes": 1048576}
+............
+=================================== FAILURES ===================================
+_____ test_two_round_resident_transactions_against_oracle[None-1-weighted] _____
+
+case = 'weighted', depth = 1, minimum = None
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x2b3a976f7d70>
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_two_round_resident_transactions_against_oracle(case, depth, minimum, monkeypatch):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        with ExecutionContext() as context:
+            run, train, validation, info = start(context, case)
+            state = run.initialize()
+            close(raw(context, run, state), np.full((run.data.n_rows, 1), base))
+            stop = StopState.start(state.validation_score, rounds=2)
+            calls = []
+            original_predict = trees.predict
+    
+            def counted(ops, tree, data):
+                calls.append(data.problem_identity)
+                return original_predict(ops, tree, data)
+    
+            monkeypatch.setattr(trees, "predict", counted)
+            for i, ref in enumerate(expected):
+                original_raw = raw(context, run, state)
+                gradient = run.gradient(state)
+                close(context.export(gradient), ref["gradient"])
+                context.release(gradient)
+                tree = grow(run, state, info, depth=depth, minimum=minimum)
+>               assert [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology] == [
+                    n["key"] for n in ref["nodes"]
+                ]
+E               assert [(0, 3, False), None, None] == [(0, 0, True), None, None]
+E                 
+E                 At index 0 diff: (0, 3, False) != (0, 0, True)
+E                 Use -v to get more diff
+
+/snapshot/tests/v1/test_device_runtime_cuda.py:85: AssertionError
+_____ test_two_round_resident_transactions_against_oracle[None-2-weighted] _____
+
+case = 'weighted', depth = 2, minimum = None
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x2b3a97708980>
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_two_round_resident_transactions_against_oracle(case, depth, minimum, monkeypatch):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        with ExecutionContext() as context:
+            run, train, validation, info = start(context, case)
+            state = run.initialize()
+            close(raw(context, run, state), np.full((run.data.n_rows, 1), base))
+            stop = StopState.start(state.validation_score, rounds=2)
+            calls = []
+            original_predict = trees.predict
+    
+            def counted(ops, tree, data):
+                calls.append(data.problem_identity)
+                return original_predict(ops, tree, data)
+    
+            monkeypatch.setattr(trees, "predict", counted)
+            for i, ref in enumerate(expected):
+                original_raw = raw(context, run, state)
+                gradient = run.gradient(state)
+                close(context.export(gradient), ref["gradient"])
+                context.release(gradient)
+                tree = grow(run, state, info, depth=depth, minimum=minimum)
+>               assert [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology] == [
+                    n["key"] for n in ref["nodes"]
+                ]
+E               assert [(0, 3, False...ne, None, ...] == [(0, 0, True)...ne, None, ...]
+E                 
+E                 At index 0 diff: (0, 3, False) != (0, 0, True)
+E                 Use -v to get more diff
+
+/snapshot/tests/v1/test_device_runtime_cuda.py:85: AssertionError
+______ test_two_round_resident_transactions_against_oracle[0-1-weighted] _______
+
+case = 'weighted', depth = 1, minimum = 0
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x2b3a9fe3c0b0>
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_two_round_resident_transactions_against_oracle(case, depth, minimum, monkeypatch):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        with ExecutionContext() as context:
+            run, train, validation, info = start(context, case)
+            state = run.initialize()
+            close(raw(context, run, state), np.full((run.data.n_rows, 1), base))
+            stop = StopState.start(state.validation_score, rounds=2)
+            calls = []
+            original_predict = trees.predict
+    
+            def counted(ops, tree, data):
+                calls.append(data.problem_identity)
+                return original_predict(ops, tree, data)
+    
+            monkeypatch.setattr(trees, "predict", counted)
+            for i, ref in enumerate(expected):
+                original_raw = raw(context, run, state)
+                gradient = run.gradient(state)
+                close(context.export(gradient), ref["gradient"])
+                context.release(gradient)
+                tree = grow(run, state, info, depth=depth, minimum=minimum)
+>               assert [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology] == [
+                    n["key"] for n in ref["nodes"]
+                ]
+E               assert [(0, 3, False), None, None] == [(0, 0, True), None, None]
+E                 
+E                 At index 0 diff: (0, 3, False) != (0, 0, True)
+E                 Use -v to get more diff
+
+/snapshot/tests/v1/test_device_runtime_cuda.py:85: AssertionError
+______ test_two_round_resident_transactions_against_oracle[0-2-weighted] _______
+
+case = 'weighted', depth = 2, minimum = 0
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x2b3acbbf1130>
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_two_round_resident_transactions_against_oracle(case, depth, minimum, monkeypatch):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        with ExecutionContext() as context:
+            run, train, validation, info = start(context, case)
+            state = run.initialize()
+            close(raw(context, run, state), np.full((run.data.n_rows, 1), base))
+            stop = StopState.start(state.validation_score, rounds=2)
+            calls = []
+            original_predict = trees.predict
+    
+            def counted(ops, tree, data):
+                calls.append(data.problem_identity)
+                return original_predict(ops, tree, data)
+    
+            monkeypatch.setattr(trees, "predict", counted)
+            for i, ref in enumerate(expected):
+                original_raw = raw(context, run, state)
+                gradient = run.gradient(state)
+                close(context.export(gradient), ref["gradient"])
+                context.release(gradient)
+                tree = grow(run, state, info, depth=depth, minimum=minimum)
+>               assert [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology] == [
+                    n["key"] for n in ref["nodes"]
+                ]
+E               assert [(0, 3, False...ne, None, ...] == [(0, 0, True)...ne, None, ...]
+E                 
+E                 At index 0 diff: (0, 3, False) != (0, 0, True)
+E                 Use -v to get more diff
+
+/snapshot/tests/v1/test_device_runtime_cuda.py:85: AssertionError
+______ test_two_round_resident_transactions_against_oracle[1-1-weighted] _______
+
+case = 'weighted', depth = 1, minimum = 1
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x2b3a9fd97cb0>
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_two_round_resident_transactions_against_oracle(case, depth, minimum, monkeypatch):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        with ExecutionContext() as context:
+            run, train, validation, info = start(context, case)
+            state = run.initialize()
+            close(raw(context, run, state), np.full((run.data.n_rows, 1), base))
+            stop = StopState.start(state.validation_score, rounds=2)
+            calls = []
+            original_predict = trees.predict
+    
+            def counted(ops, tree, data):
+                calls.append(data.problem_identity)
+                return original_predict(ops, tree, data)
+    
+            monkeypatch.setattr(trees, "predict", counted)
+            for i, ref in enumerate(expected):
+                original_raw = raw(context, run, state)
+                gradient = run.gradient(state)
+                close(context.export(gradient), ref["gradient"])
+                context.release(gradient)
+                tree = grow(run, state, info, depth=depth, minimum=minimum)
+>               assert [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology] == [
+                    n["key"] for n in ref["nodes"]
+                ]
+E               assert [(0, 3, False), None, None] == [(0, 0, True), None, None]
+E                 
+E                 At index 0 diff: (0, 3, False) != (0, 0, True)
+E                 Use -v to get more diff
+
+/snapshot/tests/v1/test_device_runtime_cuda.py:85: AssertionError
+______ test_two_round_resident_transactions_against_oracle[1-2-weighted] _______
+
+case = 'weighted', depth = 2, minimum = 1
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x2b3acbca1700>
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_two_round_resident_transactions_against_oracle(case, depth, minimum, monkeypatch):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        with ExecutionContext() as context:
+            run, train, validation, info = start(context, case)
+            state = run.initialize()
+            close(raw(context, run, state), np.full((run.data.n_rows, 1), base))
+            stop = StopState.start(state.validation_score, rounds=2)
+            calls = []
+            original_predict = trees.predict
+    
+            def counted(ops, tree, data):
+                calls.append(data.problem_identity)
+                return original_predict(ops, tree, data)
+    
+            monkeypatch.setattr(trees, "predict", counted)
+            for i, ref in enumerate(expected):
+                original_raw = raw(context, run, state)
+                gradient = run.gradient(state)
+                close(context.export(gradient), ref["gradient"])
+                context.release(gradient)
+                tree = grow(run, state, info, depth=depth, minimum=minimum)
+>               assert [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology] == [
+                    n["key"] for n in ref["nodes"]
+                ]
+E               assert [(0, 3, False...e, None, None] == [(0, 0, True)...), None, None]
+E                 
+E                 At index 0 diff: (0, 3, False) != (0, 0, True)
+E                 Use -v to get more diff
+
+/snapshot/tests/v1/test_device_runtime_cuda.py:85: AssertionError
+________ test_recipe_composition_and_scalar_retention[2-fixed-weighted] ________
+
+case = 'weighted', policy = 'fixed', count = 2
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("policy", ["fixed", "backtracking"])
+    @pytest.mark.parametrize("count", [0, 2])
+    def test_recipe_composition_and_scalar_retention(case, policy, count):
+        train, validation, binned, _ = prepared_fixture(case)
+        base, expected = rounds(case, count=count)
+        with ExecutionContext() as context:
+            ops = DeviceOperations(context)
+            result = recipes.squared(
+                ops,
+                train,
+                validation,
+                run_id="088",
+                seed=7,
+                binning=binned.binning,
+                rounds=count,
+                learning_rate=0.5,
+                step=policy,
+            )
+            state, run = result.state, result.run
+            assert result.stop.completed_rounds == count and result.stop.reason == "budget"
+            assert len(result.steps) == count
+            assert len(run._states) == 1 and not run._proposals
+            assert all(step.accepted and step.coefficients == (0.5,) for step in result.steps)
+            if count:
+>               close(raw(context, run, state)[:, 0], expected[-1]["raw"])
+
+/snapshot/tests/v1/test_device_runtime_cuda.py:317: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual = array([-1.048611 , -1.0625   , -1.0434028, -1.0434028, -1.6800001,
+       -1.6800001,  0.25     , -1.6800001], dtype=float32)
+expected = array([-1.0625    , -1.0625    , -1.04340278, -1.04340278, -1.68      ,
+       -1.68      ,  0.25      , -1.68      ])
+
+    def close(actual, expected):
+>       np.testing.assert_allclose(actual, expected, rtol=1e-4, atol=1e-5)
+E       AssertionError: 
+E       Not equal to tolerance rtol=0.0001, atol=1e-05
+E       
+E       Mismatched elements: 1 / 8 (12.5%)
+E       Max absolute difference among violations: 0.01388896
+E       Max relative difference among violations: 0.01307196
+E        ACTUAL: array([-1.048611, -1.0625  , -1.043403, -1.043403, -1.68    , -1.68    ,
+E               0.25    , -1.68    ], dtype=float32)
+E        DESIRED: array([-1.0625  , -1.0625  , -1.043403, -1.043403, -1.68    , -1.68    ,
+E               0.25    , -1.68    ])
+
+/snapshot/tests/v1/test_device_tree_cuda.py:34: AssertionError
+____ test_recipe_composition_and_scalar_retention[2-backtracking-weighted] _____
+
+case = 'weighted', policy = 'backtracking', count = 2
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("policy", ["fixed", "backtracking"])
+    @pytest.mark.parametrize("count", [0, 2])
+    def test_recipe_composition_and_scalar_retention(case, policy, count):
+        train, validation, binned, _ = prepared_fixture(case)
+        base, expected = rounds(case, count=count)
+        with ExecutionContext() as context:
+            ops = DeviceOperations(context)
+            result = recipes.squared(
+                ops,
+                train,
+                validation,
+                run_id="088",
+                seed=7,
+                binning=binned.binning,
+                rounds=count,
+                learning_rate=0.5,
+                step=policy,
+            )
+            state, run = result.state, result.run
+            assert result.stop.completed_rounds == count and result.stop.reason == "budget"
+            assert len(result.steps) == count
+            assert len(run._states) == 1 and not run._proposals
+            assert all(step.accepted and step.coefficients == (0.5,) for step in result.steps)
+            if count:
+>               close(raw(context, run, state)[:, 0], expected[-1]["raw"])
+
+/snapshot/tests/v1/test_device_runtime_cuda.py:317: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual = array([-1.048611 , -1.0625   , -1.0434028, -1.0434028, -1.6800001,
+       -1.6800001,  0.25     , -1.6800001], dtype=float32)
+expected = array([-1.0625    , -1.0625    , -1.04340278, -1.04340278, -1.68      ,
+       -1.68      ,  0.25      , -1.68      ])
+
+    def close(actual, expected):
+>       np.testing.assert_allclose(actual, expected, rtol=1e-4, atol=1e-5)
+E       AssertionError: 
+E       Not equal to tolerance rtol=0.0001, atol=1e-05
+E       
+E       Mismatched elements: 1 / 8 (12.5%)
+E       Max absolute difference among violations: 0.01388896
+E       Max relative difference among violations: 0.01307196
+E        ACTUAL: array([-1.048611, -1.0625  , -1.043403, -1.043403, -1.68    , -1.68    ,
+E               0.25    , -1.68    ], dtype=float32)
+E        DESIRED: array([-1.0625  , -1.0625  , -1.043403, -1.043403, -1.68    , -1.68    ,
+E               0.25    , -1.68    ])
+
+/snapshot/tests/v1/test_device_tree_cuda.py:34: AssertionError
+_________ test_resident_objective_tree_and_inference[None-1-weighted] __________
+
+case = 'weighted', depth = 1, minimum = None
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_resident_objective_tree_and_inference(case, depth, minimum):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        ref = expected[0]
+        with ExecutionContext() as context:
+            ops, data, problem, validation, binned, info, train, validation_cpu = setup(context, case)
+            before = dict(context.metrics)
+            scalar = objective.base(ops, problem)
+            raw = objective.broadcast(ops, scalar, data.n_rows)
+            gradient = objective.gradient(ops, problem, raw)
+            fields = objective.fields(ops, problem, raw)
+            score = objective.loss(ops, problem, raw)
+            after = dict(context.metrics)
+            assert after["upload_bytes"] == before["upload_bytes"]
+            assert after["export_bytes"] - before["export_bytes"] == (
+                after["validation_export_bytes"] - before["validation_export_bytes"] + 8
+            )
+            close(context.export(scalar), [base])
+            close(context.export(gradient), ref["gradient"])
+            close(context.export(fields.values), ref["fields"][:, :2])
+            assert score == pytest.approx(
+                Squared.loss(train, np.full((data.n_rows, 1), base)), rel=1e-3, abs=1e-3
+            )
+            with pytest.raises(ValueError, match="already applied"):
+                ops.apply_weight(fields)
+            for column, name in ((1, "cohort:blue"), (0, "cohort:red")):
+                buffer = context.upload(np.asarray(info[:, column], np.float32))
+                augmented = ops.add_independent(fields, name, buffer, nonnegative=True)
+                ops.release(fields)
+                context.release(buffer)
+                fields = augmented
+            before = dict(context.metrics)
+            tree = trees.depthwise(
+                ops,
+                data,
+                fields,
+                binning=binned.binning,
+                max_depth=depth,
+                legality=cohort_minimum(minimum) if minimum is not None else None,
+            )
+            train_prediction = trees.predict(ops, tree, data)
+            validation_prediction = trees.predict(ops, tree, validation.data)
+            after = dict(context.metrics)
+            # Only explicit host topology travels to the device while growing a tree.
+            assert after["upload_bytes"] - before["upload_bytes"] == tree.n_nodes * 5 * 4
+            assert after["export_bytes"] - before["export_bytes"] == sum(
+                after[k] - before[k] for k in ("validation_export_bytes", "decision_export_bytes")
+            )
+            cpu_tree = trees.export(ops, tree)
+            actual = [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology]
+>           assert actual == [n["key"] for n in ref["nodes"]]
+E           assert [(0, 3, False), None, None] == [(0, 0, True), None, None]
+E             
+E             At index 0 diff: (0, 3, False) != (0, 0, True)
+E             Use -v to get more diff
+
+/snapshot/tests/v1/test_device_tree_cuda.py:99: AssertionError
+_________ test_resident_objective_tree_and_inference[None-2-weighted] __________
+
+case = 'weighted', depth = 2, minimum = None
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_resident_objective_tree_and_inference(case, depth, minimum):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        ref = expected[0]
+        with ExecutionContext() as context:
+            ops, data, problem, validation, binned, info, train, validation_cpu = setup(context, case)
+            before = dict(context.metrics)
+            scalar = objective.base(ops, problem)
+            raw = objective.broadcast(ops, scalar, data.n_rows)
+            gradient = objective.gradient(ops, problem, raw)
+            fields = objective.fields(ops, problem, raw)
+            score = objective.loss(ops, problem, raw)
+            after = dict(context.metrics)
+            assert after["upload_bytes"] == before["upload_bytes"]
+            assert after["export_bytes"] - before["export_bytes"] == (
+                after["validation_export_bytes"] - before["validation_export_bytes"] + 8
+            )
+            close(context.export(scalar), [base])
+            close(context.export(gradient), ref["gradient"])
+            close(context.export(fields.values), ref["fields"][:, :2])
+            assert score == pytest.approx(
+                Squared.loss(train, np.full((data.n_rows, 1), base)), rel=1e-3, abs=1e-3
+            )
+            with pytest.raises(ValueError, match="already applied"):
+                ops.apply_weight(fields)
+            for column, name in ((1, "cohort:blue"), (0, "cohort:red")):
+                buffer = context.upload(np.asarray(info[:, column], np.float32))
+                augmented = ops.add_independent(fields, name, buffer, nonnegative=True)
+                ops.release(fields)
+                context.release(buffer)
+                fields = augmented
+            before = dict(context.metrics)
+            tree = trees.depthwise(
+                ops,
+                data,
+                fields,
+                binning=binned.binning,
+                max_depth=depth,
+                legality=cohort_minimum(minimum) if minimum is not None else None,
+            )
+            train_prediction = trees.predict(ops, tree, data)
+            validation_prediction = trees.predict(ops, tree, validation.data)
+            after = dict(context.metrics)
+            # Only explicit host topology travels to the device while growing a tree.
+            assert after["upload_bytes"] - before["upload_bytes"] == tree.n_nodes * 5 * 4
+            assert after["export_bytes"] - before["export_bytes"] == sum(
+                after[k] - before[k] for k in ("validation_export_bytes", "decision_export_bytes")
+            )
+            cpu_tree = trees.export(ops, tree)
+            actual = [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology]
+>           assert actual == [n["key"] for n in ref["nodes"]]
+E           assert [(0, 3, False...ne, None, ...] == [(0, 0, True)...ne, None, ...]
+E             
+E             At index 0 diff: (0, 3, False) != (0, 0, True)
+E             Use -v to get more diff
+
+/snapshot/tests/v1/test_device_tree_cuda.py:99: AssertionError
+___________ test_resident_objective_tree_and_inference[0-1-weighted] ___________
+
+case = 'weighted', depth = 1, minimum = 0
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_resident_objective_tree_and_inference(case, depth, minimum):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        ref = expected[0]
+        with ExecutionContext() as context:
+            ops, data, problem, validation, binned, info, train, validation_cpu = setup(context, case)
+            before = dict(context.metrics)
+            scalar = objective.base(ops, problem)
+            raw = objective.broadcast(ops, scalar, data.n_rows)
+            gradient = objective.gradient(ops, problem, raw)
+            fields = objective.fields(ops, problem, raw)
+            score = objective.loss(ops, problem, raw)
+            after = dict(context.metrics)
+            assert after["upload_bytes"] == before["upload_bytes"]
+            assert after["export_bytes"] - before["export_bytes"] == (
+                after["validation_export_bytes"] - before["validation_export_bytes"] + 8
+            )
+            close(context.export(scalar), [base])
+            close(context.export(gradient), ref["gradient"])
+            close(context.export(fields.values), ref["fields"][:, :2])
+            assert score == pytest.approx(
+                Squared.loss(train, np.full((data.n_rows, 1), base)), rel=1e-3, abs=1e-3
+            )
+            with pytest.raises(ValueError, match="already applied"):
+                ops.apply_weight(fields)
+            for column, name in ((1, "cohort:blue"), (0, "cohort:red")):
+                buffer = context.upload(np.asarray(info[:, column], np.float32))
+                augmented = ops.add_independent(fields, name, buffer, nonnegative=True)
+                ops.release(fields)
+                context.release(buffer)
+                fields = augmented
+            before = dict(context.metrics)
+            tree = trees.depthwise(
+                ops,
+                data,
+                fields,
+                binning=binned.binning,
+                max_depth=depth,
+                legality=cohort_minimum(minimum) if minimum is not None else None,
+            )
+            train_prediction = trees.predict(ops, tree, data)
+            validation_prediction = trees.predict(ops, tree, validation.data)
+            after = dict(context.metrics)
+            # Only explicit host topology travels to the device while growing a tree.
+            assert after["upload_bytes"] - before["upload_bytes"] == tree.n_nodes * 5 * 4
+            assert after["export_bytes"] - before["export_bytes"] == sum(
+                after[k] - before[k] for k in ("validation_export_bytes", "decision_export_bytes")
+            )
+            cpu_tree = trees.export(ops, tree)
+            actual = [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology]
+>           assert actual == [n["key"] for n in ref["nodes"]]
+E           assert [(0, 3, False), None, None] == [(0, 0, True), None, None]
+E             
+E             At index 0 diff: (0, 3, False) != (0, 0, True)
+E             Use -v to get more diff
+
+/snapshot/tests/v1/test_device_tree_cuda.py:99: AssertionError
+___________ test_resident_objective_tree_and_inference[0-2-weighted] ___________
+
+case = 'weighted', depth = 2, minimum = 0
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_resident_objective_tree_and_inference(case, depth, minimum):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        ref = expected[0]
+        with ExecutionContext() as context:
+            ops, data, problem, validation, binned, info, train, validation_cpu = setup(context, case)
+            before = dict(context.metrics)
+            scalar = objective.base(ops, problem)
+            raw = objective.broadcast(ops, scalar, data.n_rows)
+            gradient = objective.gradient(ops, problem, raw)
+            fields = objective.fields(ops, problem, raw)
+            score = objective.loss(ops, problem, raw)
+            after = dict(context.metrics)
+            assert after["upload_bytes"] == before["upload_bytes"]
+            assert after["export_bytes"] - before["export_bytes"] == (
+                after["validation_export_bytes"] - before["validation_export_bytes"] + 8
+            )
+            close(context.export(scalar), [base])
+            close(context.export(gradient), ref["gradient"])
+            close(context.export(fields.values), ref["fields"][:, :2])
+            assert score == pytest.approx(
+                Squared.loss(train, np.full((data.n_rows, 1), base)), rel=1e-3, abs=1e-3
+            )
+            with pytest.raises(ValueError, match="already applied"):
+                ops.apply_weight(fields)
+            for column, name in ((1, "cohort:blue"), (0, "cohort:red")):
+                buffer = context.upload(np.asarray(info[:, column], np.float32))
+                augmented = ops.add_independent(fields, name, buffer, nonnegative=True)
+                ops.release(fields)
+                context.release(buffer)
+                fields = augmented
+            before = dict(context.metrics)
+            tree = trees.depthwise(
+                ops,
+                data,
+                fields,
+                binning=binned.binning,
+                max_depth=depth,
+                legality=cohort_minimum(minimum) if minimum is not None else None,
+            )
+            train_prediction = trees.predict(ops, tree, data)
+            validation_prediction = trees.predict(ops, tree, validation.data)
+            after = dict(context.metrics)
+            # Only explicit host topology travels to the device while growing a tree.
+            assert after["upload_bytes"] - before["upload_bytes"] == tree.n_nodes * 5 * 4
+            assert after["export_bytes"] - before["export_bytes"] == sum(
+                after[k] - before[k] for k in ("validation_export_bytes", "decision_export_bytes")
+            )
+            cpu_tree = trees.export(ops, tree)
+            actual = [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology]
+>           assert actual == [n["key"] for n in ref["nodes"]]
+E           assert [(0, 3, False...ne, None, ...] == [(0, 0, True)...ne, None, ...]
+E             
+E             At index 0 diff: (0, 3, False) != (0, 0, True)
+E             Use -v to get more diff
+
+/snapshot/tests/v1/test_device_tree_cuda.py:99: AssertionError
+___________ test_resident_objective_tree_and_inference[1-1-weighted] ___________
+
+case = 'weighted', depth = 1, minimum = 1
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_resident_objective_tree_and_inference(case, depth, minimum):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        ref = expected[0]
+        with ExecutionContext() as context:
+            ops, data, problem, validation, binned, info, train, validation_cpu = setup(context, case)
+            before = dict(context.metrics)
+            scalar = objective.base(ops, problem)
+            raw = objective.broadcast(ops, scalar, data.n_rows)
+            gradient = objective.gradient(ops, problem, raw)
+            fields = objective.fields(ops, problem, raw)
+            score = objective.loss(ops, problem, raw)
+            after = dict(context.metrics)
+            assert after["upload_bytes"] == before["upload_bytes"]
+            assert after["export_bytes"] - before["export_bytes"] == (
+                after["validation_export_bytes"] - before["validation_export_bytes"] + 8
+            )
+            close(context.export(scalar), [base])
+            close(context.export(gradient), ref["gradient"])
+            close(context.export(fields.values), ref["fields"][:, :2])
+            assert score == pytest.approx(
+                Squared.loss(train, np.full((data.n_rows, 1), base)), rel=1e-3, abs=1e-3
+            )
+            with pytest.raises(ValueError, match="already applied"):
+                ops.apply_weight(fields)
+            for column, name in ((1, "cohort:blue"), (0, "cohort:red")):
+                buffer = context.upload(np.asarray(info[:, column], np.float32))
+                augmented = ops.add_independent(fields, name, buffer, nonnegative=True)
+                ops.release(fields)
+                context.release(buffer)
+                fields = augmented
+            before = dict(context.metrics)
+            tree = trees.depthwise(
+                ops,
+                data,
+                fields,
+                binning=binned.binning,
+                max_depth=depth,
+                legality=cohort_minimum(minimum) if minimum is not None else None,
+            )
+            train_prediction = trees.predict(ops, tree, data)
+            validation_prediction = trees.predict(ops, tree, validation.data)
+            after = dict(context.metrics)
+            # Only explicit host topology travels to the device while growing a tree.
+            assert after["upload_bytes"] - before["upload_bytes"] == tree.n_nodes * 5 * 4
+            assert after["export_bytes"] - before["export_bytes"] == sum(
+                after[k] - before[k] for k in ("validation_export_bytes", "decision_export_bytes")
+            )
+            cpu_tree = trees.export(ops, tree)
+            actual = [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology]
+>           assert actual == [n["key"] for n in ref["nodes"]]
+E           assert [(0, 3, False), None, None] == [(0, 0, True), None, None]
+E             
+E             At index 0 diff: (0, 3, False) != (0, 0, True)
+E             Use -v to get more diff
+
+/snapshot/tests/v1/test_device_tree_cuda.py:99: AssertionError
+___________ test_resident_objective_tree_and_inference[1-2-weighted] ___________
+
+case = 'weighted', depth = 2, minimum = 1
+
+    @pytest.mark.parametrize("case", ["weighted", "d2", "conflict"])
+    @pytest.mark.parametrize("depth", [0, 1, 2])
+    @pytest.mark.parametrize("minimum", [None, 0, 1, 2])
+    def test_resident_objective_tree_and_inference(case, depth, minimum):
+        base, expected = rounds(case, depth=depth, minimum=minimum)
+        ref = expected[0]
+        with ExecutionContext() as context:
+            ops, data, problem, validation, binned, info, train, validation_cpu = setup(context, case)
+            before = dict(context.metrics)
+            scalar = objective.base(ops, problem)
+            raw = objective.broadcast(ops, scalar, data.n_rows)
+            gradient = objective.gradient(ops, problem, raw)
+            fields = objective.fields(ops, problem, raw)
+            score = objective.loss(ops, problem, raw)
+            after = dict(context.metrics)
+            assert after["upload_bytes"] == before["upload_bytes"]
+            assert after["export_bytes"] - before["export_bytes"] == (
+                after["validation_export_bytes"] - before["validation_export_bytes"] + 8
+            )
+            close(context.export(scalar), [base])
+            close(context.export(gradient), ref["gradient"])
+            close(context.export(fields.values), ref["fields"][:, :2])
+            assert score == pytest.approx(
+                Squared.loss(train, np.full((data.n_rows, 1), base)), rel=1e-3, abs=1e-3
+            )
+            with pytest.raises(ValueError, match="already applied"):
+                ops.apply_weight(fields)
+            for column, name in ((1, "cohort:blue"), (0, "cohort:red")):
+                buffer = context.upload(np.asarray(info[:, column], np.float32))
+                augmented = ops.add_independent(fields, name, buffer, nonnegative=True)
+                ops.release(fields)
+                context.release(buffer)
+                fields = augmented
+            before = dict(context.metrics)
+            tree = trees.depthwise(
+                ops,
+                data,
+                fields,
+                binning=binned.binning,
+                max_depth=depth,
+                legality=cohort_minimum(minimum) if minimum is not None else None,
+            )
+            train_prediction = trees.predict(ops, tree, data)
+            validation_prediction = trees.predict(ops, tree, validation.data)
+            after = dict(context.metrics)
+            # Only explicit host topology travels to the device while growing a tree.
+            assert after["upload_bytes"] - before["upload_bytes"] == tree.n_nodes * 5 * 4
+            assert after["export_bytes"] - before["export_bytes"] == sum(
+                after[k] - before[k] for k in ("validation_export_bytes", "decision_export_bytes")
+            )
+            cpu_tree = trees.export(ops, tree)
+            actual = [None if f == -1 else (f, t, m) for f, t, m, _, _ in tree.topology]
+>           assert actual == [n["key"] for n in ref["nodes"]]
+E           assert [(0, 3, False...e, None, None] == [(0, 0, True)...), None, None]
+E             
+E             At index 0 diff: (0, 3, False) != (0, 0, True)
+E             Use -v to get more diff
+
+/snapshot/tests/v1/test_device_tree_cuda.py:99: AssertionError
+=============================== warnings summary ===============================
+tests/v1/test_device_runtime_cuda.py: 96 warnings
+tests/v1/test_device_tree_cuda.py: 42 warnings
+tests/v1/test_device_splits_cuda.py: 55 warnings
+tests/v1/test_device_aggregation_cuda.py: 24 warnings
+  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_aggregation_cuda.py::test_f3_bounded_large_histograms[1]
+tests/v1/test_device_aggregation_cuda.py::test_f3_bounded_large_histograms[3]
+  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 33 will likely result in GPU under-utilization due to low occupancy.
+    warn(errors.NumbaPerformanceWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../../snapshot/tests/v1/test_device_runtime_cuda.py::test_two_round_resident_transactions_against_oracle[None-1-weighted]
+FAILED ../../snapshot/tests/v1/test_device_runtime_cuda.py::test_two_round_resident_transactions_against_oracle[None-2-weighted]
+FAILED ../../snapshot/tests/v1/test_device_runtime_cuda.py::test_two_round_resident_transactions_against_oracle[0-1-weighted]
+FAILED ../../snapshot/tests/v1/test_device_runtime_cuda.py::test_two_round_resident_transactions_against_oracle[0-2-weighted]
+FAILED ../../snapshot/tests/v1/test_device_runtime_cuda.py::test_two_round_resident_transactions_against_oracle[1-1-weighted]
+FAILED ../../snapshot/tests/v1/test_device_runtime_cuda.py::test_two_round_resident_transactions_against_oracle[1-2-weighted]
+FAILED ../../snapshot/tests/v1/test_device_runtime_cuda.py::test_recipe_composition_and_scalar_retention[2-fixed-weighted]
+FAILED ../../snapshot/tests/v1/test_device_runtime_cuda.py::test_recipe_composition_and_scalar_retention[2-backtracking-weighted]
+FAILED ../../snapshot/tests/v1/test_device_tree_cuda.py::test_resident_objective_tree_and_inference[None-1-weighted]
+FAILED ../../snapshot/tests/v1/test_device_tree_cuda.py::test_resident_objective_tree_and_inference[None-2-weighted]
+FAILED ../../snapshot/tests/v1/test_device_tree_cuda.py::test_resident_objective_tree_and_inference[0-1-weighted]
+FAILED ../../snapshot/tests/v1/test_device_tree_cuda.py::test_resident_objective_tree_and_inference[0-2-weighted]
+FAILED ../../snapshot/tests/v1/test_device_tree_cuda.py::test_resident_objective_tree_and_inference[1-1-weighted]
+FAILED ../../snapshot/tests/v1/test_device_tree_cuda.py::test_resident_objective_tree_and_inference[1-2-weighted]
+14 failed, 188 passed, 219 warnings in 17.56s

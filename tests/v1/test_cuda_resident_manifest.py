@@ -1,5 +1,6 @@
 """Local run-4 freeze and judging checks; synthetic JUnit is never device evidence."""
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -162,3 +163,36 @@ def test_judge_requires_every_case_and_installed_metadata(broken):
     elif broken is not None:
         result.pop(broken)
     assert judge_run(result, ET.tostring(root), config, sources)["passed"] == (broken is None)
+
+
+def test_consumed_run_preserves_failures_and_original_artifacts():
+    config = protocol()
+    assert config["authorization"] == "consumed"
+    output = REPO / config["output"]
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["protocol"] == dict(config, authorization="approved")
+    assert manifest["status"] == "fail" and manifest["dirty"] is False
+    assert manifest["revision"] == "c4157559c5982e3df849ae59129c48dc8e60b454"
+    for name, digest in manifest["artifacts"].items():
+        assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
+    observed = judge_run(
+        manifest["result"], (output / "junit.xml").read_text(), config, manifest["sources"]
+    )
+    assert observed == json.loads((output / "verdict.json").read_text())
+    assert observed["passed"] is False
+    assert sum(case["status"] == "pass" for case in observed["cases"]) == 188
+    failed = {case["case"] for case in observed["cases"] if case["status"] == "fail"}
+    expected = {
+        f"tests.v1.{module}::{test}[{minimum}-{depth}-weighted]"
+        for module, test in (
+            ("test_device_runtime_cuda", "test_two_round_resident_transactions_against_oracle"),
+            ("test_device_tree_cuda", "test_resident_objective_tree_and_inference"),
+        )
+        for minimum in ("None", "0", "1")
+        for depth in (1, 2)
+    }
+    expected.update(
+        f"tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[2-{policy}-weighted]"
+        for policy in ("fixed", "backtracking")
+    )
+    assert failed == expected

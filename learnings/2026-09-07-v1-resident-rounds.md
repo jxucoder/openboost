@@ -138,12 +138,64 @@ client is 1.3.0.post1. No package/environment changes are needed for dispatch.
 Explicit release, borrowed inputs, model sharing and failed allocations must not
 invalidate accepted state. A frozen dataclass alone does not provide this guarantee.
 Retained user snapshots have a real storage cost; default history must avoid O(T*N)
-raw arrays. Device training and formal R/C/A/E acceptance remain unverified.
+raw arrays. The subsequent run below provides partial device evidence; scalar
+training acceptance fails and formal R/C/A/E acceptance remains open.
+
+## Actual T4 result and numerical counterexample
+
+The explicitly approved invocation at clean `c415755` ran once: 188 passed,
+14 failed, no missing/duplicate/skipped/error cases. The
+[committed evidence](../benchmarks/v1/evidence/cuda-resident-078/README.md) preserves
+the failing verdict, full JUnit/log, source hashes and environment. All prior 88
+cases pass. Dedicated ownership/rollback, policy, D2/conflict, retention and fresh
+CPU inference checks pass. Weighted/missing split and recipe predictions fail,
+so this does not accept resident scalar training. All four hardware allowances
+are consumed; the live protocol blocks another dispatch and the original raw
+manifest remains unchanged.
+
+The original-row oracle ties `(0, 0, True)` with `(0, 3, False)`. The GPU selects
+the latter, and two recipe predictions differ beyond E1 tolerance. A separate CPU
+arithmetic diagnostic reconstructs swapped child summaries and demonstrates a
+one-ULP ordering difference when one child product is fused into the sum. This is
+a compatible mechanism, not measured GPU score buffers or an instruction trace.
+No CUDA simulation or hardware retry was used. Its source hashes and environment
+are recorded separately from the clean device run.
+
+This counterexample falsifies the assumption that the previous primitive exact-tie
+checks were sufficient for resident training's weighted gradients. Independently
+rounded child products are the next candidate correction, with direct device
+gain/code-generation diagnostics needed to establish cause and acceptance. Do not
+add a tie epsilon, widen tolerances, remove zero-weight rows or declare unchanged
+training loss sufficient. The differing row also has a positive-weight validation
+counterpart. Keep the public composition boundary while investigating the score
+arithmetic; no production fix is included in this evidence commit.
+
+## Result archive verification
+
+The new archive check recomputes judging, verifies every raw artifact hash and
+requires the exact 14 failed case identities plus 188 passes. The separate
+mathematical test reproduces swapped summaries, equality with separately rounded
+products and opposite one-ULP orderings from the two asymmetric fused groupings.
+All 35 focused manifest/judging/arithmetic checks pass. An additional audit matches
+all 47 snapshot hashes against Git `c415755`, all 27 installed production modules
+and all 17 dependency versions. Raw artifacts are unchanged.
+
+`OPENBOOST_BACKEND=cpu UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync
+pytest tests/ -m 'not gpu and not benchmark' --tb=short -n 0 -q` passes 1264 tests,
+with one Linux-only skip and 202 GPU cases deselected. Production and changed-support
+Ruff and `uv run --no-sync mkdocs build` pass. Authored files pass whitespace checks;
+the unmodified raw JUnit/log contain pytest trailing spaces and are excluded from
+that formatting check to preserve their audited hashes. The audit also matches
+all four diagnostic source hashes. A redundant audit command initially
+imported the shared judge from the thin resident launcher; importing it from
+`cuda_aggregation_preflight` corrected that command without changing production or
+evidence. No kernel or package source changes require another build in this slice.
 
 ## Commits
 
 `3561738` freezes the design/oracle; `e616451` commits the resident objective/tree
 construction; `807232e` commits runtime/recipe and reflection; `3a8ca34` freezes the
-validation package. `c65a969` records the initial approval interpretation; commit
-the review block and pending state separately. No push or remote retry without
-the explicit approval requested by automatic review.
+validation package. `c65a969` records the initial approval interpretation;
+`5d3fd28` records the review block; `c415755` records the explicit approval and is
+the actual device run revision. Commit the failed evidence and retrospective
+separately. No push or additional remote invocation is authorized by this result.

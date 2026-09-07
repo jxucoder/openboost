@@ -160,11 +160,13 @@ Diagnostic exports made by tests are separate from measured operation transfers.
 Allocation/validation cleanup preserves inputs but is not a boosting transaction.
 Initial choice and stable routing use ordered kernels; no speed claim is made.
 
-## Resident squared geometry and trees: validation pending
+## Resident squared geometry and trees: partial device evidence
 
-Sprint 088 adds local construction in `openboost.device_objectives` and
-`openboost.device_tree`. These new paths have **not run on CUDA hardware** yet;
-the 88-case result above applies to its recorded revision. The existing
+Sprint 088 adds `openboost.device_objectives` and `openboost.device_tree`.
+The real T4 run at clean `c415755` passes 188 of 202 checks, including all 88
+prior regressions, but fails 14 weighted/missing checks. **Resident scalar training
+acceptance fails.** See `benchmarks/v1/evidence/cuda-resident-078/README.md` for
+unchanged raw failures and the separate CPU arithmetic investigation. The existing
 `openboost.recipes` and NumericData remain CPU interfaces. Experimental resident
 training uses the separate explicit device interfaces below.
 
@@ -195,11 +197,13 @@ excluding base and observation offsets. It checks exact fitted-binning identity,
 including for validation data with different row identities. `copy` makes an
 independent tree snapshot; release trees through `ops.release`. `export` explicitly
 downloads node values into the existing validated CPU Tree artifact, which can be
-saved and loaded without CUDA packages. Forty-two pending real-device checks cover
-geometry, splits/leaves, predictions, supplied operations, failure cleanup and
-fresh-process CPU inference. Collection alone does not validate these behaviors.
+saved and loaded without CUDA packages. Of 42 objective/tree checks, 36 pass and
+six weighted/missing cases fail at the first selected split. Their subsequent
+leaf/prediction assertions are not verified. The failures expose a tie-ordering
+gap; a compatible arithmetic hypothesis remains unconfirmed without direct device
+gain/code-generation diagnostics. Exact topology and float32 tolerances are unchanged.
 
-## Resident transactions and recipe: validation pending
+## Resident transactions and recipe: failed scalar gate
 
 `openboost.device_runtime.DeviceRun(ops, train, validation, run_id=..., seed=...)`
 binds explicit CPU preparation and private resident problem/raw storage. Pass fitted
@@ -236,8 +240,10 @@ purpose semantics; the default deterministic recipe makes no sampling claim.
 The result contains its live run, final state, StopState and scalar step diagnostics.
 The recipe releases superseded raw states, proposals and callback workspace, leaving
 O(N) raw storage and O(T) tree storage. This is a separate experimental result,
-without implicit CPU run_many integration. Seventy-two pending runtime cases cover
-two rounds against the frozen oracle, ownership/rollback, policies, preparation,
-24-round retention and a saved model predicting in a CPU subprocess without CUDA.
-No new GPU run or transfer is authorized by local construction. Formal device
-recipes, train-many, quality, cost and author/adoption gates remain open.
+without implicit CPU run_many integration. Of 72 runtime cases, 64 pass and eight
+fail: six weighted/missing round comparisons fail at split selection and two
+depth-two recipe comparisons fail prediction parity. Dedicated ownership/rollback,
+policy, preparation, 24-round retention and fresh CPU-process inference checks pass.
+Those subsets do not pass the scalar gate or establish quality/performance claims.
+The one approved run is consumed; no retry is authorized. Formal device recipes,
+train-many, quality, cost and author/adoption gates remain open.
