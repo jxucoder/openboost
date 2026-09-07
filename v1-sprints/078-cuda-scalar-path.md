@@ -46,3 +46,11 @@ revise that boundary before adding kernels. No general GPU-speed claim yet.
 ## Results
 
 Not run. Current OpenBoost has no CUDA implementation.
+
+### Ownership audit
+
+The [actual CPU seam audit](078-device-boundary-audit.md) identifies forced NumPy
+storage, host candidate callbacks and CPU accepted-state caches. First implement
+explicit execution-owned buffers/upload/export, then named fields and histograms;
+keep accepted storage separate from extension workspace. No CUDA implementation
+or hardware test is claimed by this audit. See its concrete acceptance checks.

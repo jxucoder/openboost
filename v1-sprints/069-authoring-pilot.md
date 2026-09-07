@@ -64,3 +64,12 @@ prepare D1 expectile control and D2 cohort-feasibility deep change, with actual
 accounting/isolation before independent attempts. D2 subsequently exercises the
 bounded scalar CUDA boundary. Formal E5 and H1/H2 handling remain unchanged.
 This preparation need not wait for the full 070 CPU search matrix.
+
+### Author-view preparation
+
+The [D1/D2 packet inputs](069-author-packet/README.md) now separate author materials
+from known extension solutions. prepare_author_packet.py builds a wheel and copies
+only selected current docs and task cards from a clean revision. It records hashes,
+missing accounting/isolation/arm prerequisites and zero attempts. No evaluator
+solution or H task content is copied into the author view. This does not implement
+an independent runner or prove filesystem isolation; dispatch remains false.
