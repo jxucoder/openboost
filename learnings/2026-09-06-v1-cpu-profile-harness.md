@@ -38,3 +38,11 @@ resource checks; retain all raw results. No production optimization in this slic
 ## Commits
 
 - Profiling harness and preregistration; parent `5243020`.
+
+### Launch correction
+
+Modal rejects any explicit retry parameter on generator functions, including zero.
+Remove that parameter; generator execution has no retry policy. The failed launch
+ran no remote work and is retained as `launch-error.json`. Retry uses identical
+frozen input/protocol in a fresh directory. Ruff and the ten focused profile tests
+pass before the correction commit.

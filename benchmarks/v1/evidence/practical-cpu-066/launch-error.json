@@ -1,0 +1,138 @@
+{
+  "revision": "fad659b47fa6cf18358d7b1e6314db0447739583",
+  "dirty": false,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/practical_cpu_profile.py",
+    "run",
+    "/tmp/openboost-practical-cpu-066"
+  ],
+  "sources": {
+    "benchmarks/v1/practical_cpu_profile.py": "969f96b28ee5f3816832966ee062bff3d3a900e839e55346dcefcac3b97a4975",
+    "benchmarks/v1/cpu_profile_worker.py": "9ebeed49929dfee15e5db352513cb9fcff1d514eee06b473564adcae7984bc02",
+    "benchmarks/v1/resource_preflight.py": "97d344d966826fd97b819d9e3a41dcf5622f8b6e2cc04a60968c232c6d0b61d8",
+    "benchmarks/v1/profile_worker.py": "fd070e691537ca093530b81b495792f83b619aa14df073c94bed6656a12d3218",
+    "benchmarks/v1/housing.py": "719881915c8843051648b6911114e662d0c64c5ad860167b7ec701f999c7b28e",
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "dcd61888233544ee2a94ea5d6046277bcf918b01b3b333ae7945714b3cb30ef5",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581"
+  },
+  "protocol_sha256": "630b6c88fd2a974b9c6af8a5269f11650edc1efd94cf0134510684edf4f05610",
+  "wheel_sha256": "557591426602a8e94b25237b6432b1312b17c5ebe13a891b94f9cf3f06b2d956",
+  "modal_version": "1.3.0.post1",
+  "protocol": {
+    "schema": "practical-cpu-066",
+    "input_sha256": "cbba2b3dde7c088c041be2a260f228c4e1bfd1b71fb4edb462361f93819de06a",
+    "features": [
+      "MedInc",
+      "HouseAge",
+      "AveRooms",
+      "AveBedrms",
+      "Population",
+      "AveOccup",
+      "Latitude",
+      "Longitude"
+    ],
+    "archive_sha256": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681",
+    "member_sha256": "a2b44dcc7e1c9091b43c4f458b25cbd1f7e8068d08edd26bc4703108d3fa6214",
+    "source_freeze_sha256": "93a5e050bdf4c3ae0c526fb0a75bd806df404c8ab558e3019bcc0bdcd28448ae",
+    "training_prefix_sha256": "ab0cef4fb55112c7a71b35a3054475408bcbc462d79a8c39f215fb3c269f5e27",
+    "small_training_prefix_sha256": "f5d0f98bd34ec56b96156b0b0b66e2f7fa944104eae472a3f31d549f47b8d8af",
+    "validation_prefix_sha256": "288a5a9387ba9166fa521eaf86f5cf80c3657f76aeca160a211f56bff070ef8f",
+    "cases": [
+      {
+        "id": "squared-8192-4",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 4
+      },
+      {
+        "id": "normal-8192-4",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 4
+      },
+      {
+        "id": "squared-2048-32",
+        "recipe": "squared",
+        "train_rows": 2048,
+        "rounds": 32
+      },
+      {
+        "id": "normal-2048-32",
+        "recipe": "normal",
+        "train_rows": 2048,
+        "rounds": 32
+      },
+      {
+        "id": "squared-8192-32",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 32
+      },
+      {
+        "id": "normal-8192-32",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 32
+      },
+      {
+        "id": "squared-8192-128",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 128
+      },
+      {
+        "id": "normal-8192-128",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 128
+      }
+    ],
+    "seed": 0,
+    "round_options": {
+      "bins": 32,
+      "max_depth": 2,
+      "learning_rate": 0.1,
+      "reg_lambda": 1.0,
+      "patience": null,
+      "step": "fixed"
+    },
+    "budgets": {
+      "worker_seconds": 120,
+      "profile_soft_seconds": 60,
+      "worker_address_bytes": 8589934592,
+      "numerical_threads": 2,
+      "container_memory_mib": [
+        8192,
+        8192
+      ],
+      "function_seconds": 1500,
+      "retries": 0,
+      "max_uninstrumented_fits": 8,
+      "max_instrumented_fits": 2
+    },
+    "profile_policy": "after first failed fit, profile only that case; if all pass, profile the 8192/128 case for each recipe",
+    "stop_policy": "stop remaining uninstrumented fits at first non-pass; retain pending cases as not_run",
+    "scope": "eight original numeric Housing features, raw target units, training/validation only; no exporter imputation/indicator columns; diagnostic not E3/E4"
+  },
+  "status": "launch_error",
+  "cases": [],
+  "profiles": [],
+  "error": "Modal InvalidError: Generator functions do not support retries. No remote execution started."
+}
