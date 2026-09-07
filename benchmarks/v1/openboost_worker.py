@@ -1,4 +1,4 @@
-"""Current CPU A1/A2/A3/A5/A6/A7/A8/A9/A11 trials on frozen encoded train/validation packets.
+"""Current CPU A1/A2/A3/A5/A6/A7/A8/A9/A10/A11 trials on frozen encoded train/validation packets.
 
 Explicit validation targets are required even with fixed budgets. The caller
 controls process threads and resource limits. Test arrays are always rejected.
@@ -14,6 +14,7 @@ import numpy as np
 from openboost import ClassSchema, NumericData, Problem, RunContext
 from openboost.multioutput import TargetScale
 from openboost.recipes import (
+    aft,
     binary,
     gamma,
     multi_squared,
@@ -56,6 +57,8 @@ def fit(job, arrays):
         needed |= {"exposure_train", "exposure_validation"}
     if job["application"] == "A9":
         needed |= {"weight_train", "weight_validation"}
+    if job["application"] == "A10":
+        needed |= {"event_train", "event_validation"}
     if not needed <= set(arrays) or set(arrays) - needed - {"weight_train", "weight_validation"}:
         raise ValueError("explicit train/validation arrays only; no test arrays")
     external_ids = np.asarray(arrays["validation_row_ids"])
@@ -85,7 +88,7 @@ def fit(job, arrays):
             raise ValueError("explicit canonical classification count required")
         classes = ClassSchema(tuple(range(count)))
     problems = []
-    width = 1 if job["application"] in {"A1", "A5", "A7", "A8", "A9"} else 2
+    width = 1 if job["application"] in {"A1", "A5", "A7", "A8", "A9", "A10"} else 2
     if classification:
         width = 1 if job["application"] == "A2" else count
     multi = job["application"] == "A6"
@@ -126,11 +129,20 @@ def fit(job, arrays):
             ):
                 raise ValueError("aligned positive finite exposure required")
             structure = {"exposure": exposure[:, None]}
+        target = y if multi else y[:, None]
+        target_kind = "numeric"
+        if job["application"] == "A10":
+            event = np.asarray(arrays["event_" + part])
+            if event.shape != y.shape or not np.isin(event, [0, 1]).all() or np.any(y <= 0):
+                raise ValueError("positive times and aligned binary events required")
+            target = np.column_stack([y, np.where(event, y, np.inf)])
+            target_kind = "event_right"
         problems.append(
             Problem(
                 data,
-                y if multi else y[:, None],
+                target,
                 data.row_ids,
+                target_kind=target_kind,
                 weight=arrays.get("weight_" + part),
                 raw_width=width,
                 classes=classes,
@@ -149,10 +161,13 @@ def fit(job, arrays):
         "A7": poisson,
         "A8": gamma,
         "A9": tweedie,
+        "A10": aft,
         "A11": normal,
     }[job["application"]]
     if job["application"] == "A9":
         cfg["power"] = 1.5
+    if job["application"] == "A10":
+        cfg["sigma"] = 1.0
     result = recipe(
         *problems,
         context=RunContext("evaluation", job["seed"]),
@@ -169,6 +184,8 @@ def fit(job, arrays):
     )
     if job["application"] == "A9":
         saved["power"] = 1.5
+    if job["application"] == "A10":
+        saved["sigma"] = 1.0
     if multi:
         saved["target_scale"] = target_scale
     prediction = predict_saved(
@@ -212,6 +229,16 @@ def fit(job, arrays):
             target_units="annualized_paid_total",
             weight_role="exposure_once",
             selected_validation_tweedie_objective=Tweedie(1.5).loss(
+                problems[1], model.predict(problems[1].data)
+            ),
+        )
+    if job["application"] == "A10":
+        from openboost.survival import LogNormalAFT
+
+        training.update(
+            selection_metric="weighted_censored_nll",
+            sigma=1.0,
+            selected_validation_censored_nll=LogNormalAFT(1.0).loss(
                 problems[1], model.predict(problems[1].data)
             ),
         )

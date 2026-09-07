@@ -54,3 +54,8 @@ binding. Tests cover bounds rejection, three-round geometry/tree parity,
 finite differences, censoring effects, monotone outputs and fresh-process
 mixed/missing/unseen inference. Real A10 NLL/IPCW comparisons, calibration,
 learned scale, other censoring forms and CUDA remain open.
+
+The current A10 worker converts frozen time/event arrays to event_right bounds,
+fixes sigma=1 and persists it with a log-normal output tag. Five frozen Veteran
+folds pass bounded validation and exact fresh location/scale replay in Sprint 059.
+Independent censored NLL checks pass. This is not full A10 quality acceptance.

@@ -1,4 +1,4 @@
-"""Bounded current A1/A2/A3/A5/A6/A7/A8/A9/A11 worker integration on all five frozen folds."""
+"""Bounded current A1/A2/A3/A5/A6/A7/A8/A9/A10/A11 worker integration on all five frozen folds."""
 
 import argparse
 import hashlib
@@ -20,7 +20,7 @@ def run(directory, applications=("A1", "A6", "A11")):
     if (
         not applications
         or len(set(applications)) != len(applications)
-        or set(applications) - {"A1", "A2", "A3", "A5", "A6", "A7", "A8", "A9", "A11"}
+        or set(applications) - {"A1", "A2", "A3", "A5", "A6", "A7", "A8", "A9", "A10", "A11"}
     ):
         raise ValueError("unique supported applications required")
     root = Path(directory).resolve()
@@ -29,7 +29,7 @@ def run(directory, applications=("A1", "A6", "A11")):
         raise ValueError("fresh output directory required")
     repo = Path(__file__).resolve().parents[2]
     report = dict(
-        scope="Current A1/A2/A3/A5/A6/A7/A8/A9/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+        scope="Current A1/A2/A3/A5/A6/A7/A8/A9/A10/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
         revision=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
         dirty=bool(subprocess.check_output(["git", "status", "--porcelain"])),
         argv=[
@@ -150,6 +150,8 @@ def run(directory, applications=("A1", "A6", "A11")):
                         assert np.isfinite(actual["prediction"]).all()
                         if app in {"A7", "A8", "A9"}:
                             assert (actual["prediction"] > 0).all()
+                        if app == "A10":
+                            np.testing.assert_array_equal(actual["prediction"][:, 1], 1.0)
                         if app == "A11":
                             assert (actual["prediction"][:, 1] > 0).all()
                         if app in {"A2", "A3"}:
@@ -179,7 +181,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--applications",
         nargs="+",
-        choices=("A1", "A2", "A3", "A5", "A6", "A7", "A8", "A9", "A11"),
+        choices=("A1", "A2", "A3", "A5", "A6", "A7", "A8", "A9", "A10", "A11"),
         default=["A1", "A6", "A11"],
     )
     args = parser.parse_args()

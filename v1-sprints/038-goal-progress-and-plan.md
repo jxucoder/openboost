@@ -26,7 +26,9 @@ A7 count/exposure integration on all five frequency folds.
 [Sprint 056](056-aggregate-worker.md) adds direct A9 annualized aggregate means.
 [Sprint 057](057-paid-event-binding.md) binds matched paid-event inputs.
 [Sprint 058](058-composition-worker.md) trains/replays all five compositions.
-Next: A10 survival, remaining adapters/searches and D5; joint A9 selection is open.
+[Sprint 059](059-survival-worker.md) adds fixed-scale A10 survival and the CPU-to-GPU
+checkpoint. Next: A12, A4, remaining searches/D5 and B11 checks; joint A9 selection
+is open.
 Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),

@@ -24,6 +24,7 @@ OUTPUTS = {
     "A7": "period_count_mean",
     "A8": "positive_claim_mean",
     "A9": "annualized_paid_mean",
+    "A10": "lognormal_location_scale",
 }
 
 
@@ -64,6 +65,7 @@ def predict_saved(saved, x, *, exposure=None):
             {"format", "application", "output", "model"}
             | ({"target_scale"} if saved.get("application") == "A6" else set())
             | ({"power"} if saved.get("application") == "A9" else set())
+            | ({"sigma"} if saved.get("application") == "A10" else set())
         )
         or saved["format"] != "openboost-evaluation-v1"
         or saved["application"] not in OUTPUTS
@@ -72,6 +74,8 @@ def predict_saved(saved, x, *, exposure=None):
         raise ValueError("unsupported evaluation bundle")
     if saved["application"] == "A9" and saved["power"] != 1.5:
         raise ValueError("frozen aggregate power differs")
+    if saved["application"] == "A10" and saved["sigma"] != 1.0:
+        raise ValueError("frozen AFT scale differs")
     model = Model.from_record(saved["model"])
     scale = None
     if saved["application"] == "A6":
@@ -83,7 +87,7 @@ def predict_saved(saved, x, *, exposure=None):
         len(scale.mean)
         if scale is not None
         else 1
-        if saved["application"] in {"A1", "A7", "A8", "A9"}
+        if saved["application"] in {"A1", "A7", "A8", "A9", "A10"}
         else 2
     )
     classification = saved["application"] in {"A2", "A3"}
@@ -110,6 +114,8 @@ def predict_saved(saved, x, *, exposure=None):
     if scale is not None:
         return MultiOutputModel(model, scale).predict(data)
     raw = model.predict(data)
+    if saved["application"] == "A10":
+        return np.column_stack([raw[:, 0], np.full(len(raw), saved["sigma"])])
     if saved["application"] == "A7":
         if exposure is None:
             raise ValueError("prediction exposure required")

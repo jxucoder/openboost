@@ -1,0 +1,37 @@
+{
+  "source_and_artifact_hashes_match": true,
+  "rtol": 1e-12,
+  "atol": 1e-14,
+  "cells": [
+    {
+      "fold": 0,
+      "independent_censored_nll": 5.151468378018472,
+      "reported_nll": 5.151468378018473,
+      "source_ids_exact": true
+    },
+    {
+      "fold": 1,
+      "independent_censored_nll": 5.280621807552828,
+      "reported_nll": 5.280621807552828,
+      "source_ids_exact": true
+    },
+    {
+      "fold": 2,
+      "independent_censored_nll": 5.27085278893216,
+      "reported_nll": 5.270852788932159,
+      "source_ids_exact": true
+    },
+    {
+      "fold": 3,
+      "independent_censored_nll": 5.437543155714647,
+      "reported_nll": 5.437543155714646,
+      "source_ids_exact": true
+    },
+    {
+      "fold": 4,
+      "independent_censored_nll": 5.421118163064363,
+      "reported_nll": 5.421118163064362,
+      "source_ids_exact": true
+    }
+  ]
+}

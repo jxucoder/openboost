@@ -1,0 +1,20 @@
+{
+  "selection": "best_validation",
+  "stop": {
+    "rounds": 4,
+    "patience": 3,
+    "min_delta": 0.0,
+    "reference_score": 5.421118163064362,
+    "last_score": 5.421118163064362,
+    "completed_rounds": 4,
+    "stale_rounds": 0,
+    "reason": "budget"
+  },
+  "accepted_commits": 4,
+  "selected_model_identity": "2642c10434015170142db57467d6391b4fe601b250e433102a7ab7ee6a90ce9d",
+  "best_validation_score": 5.421118163064362,
+  "output": "lognormal_location_scale",
+  "selection_metric": "weighted_censored_nll",
+  "sigma": 1.0,
+  "selected_validation_censored_nll": 5.421118163064362
+}
