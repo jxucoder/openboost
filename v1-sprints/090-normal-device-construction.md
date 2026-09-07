@@ -1,7 +1,7 @@
 # Sprint 090: Normal device construction and independent fixtures
 
 Status: 090-A complete; 090-B operations constructed with hardware checks pending;
-090-C runtime integration next. No new device run.
+090-C mapped runtime constructed; 090-D recipe composition next. No new device run.
 Mapping: [079](079-cuda-distribution-and-extension.md) / B12 / F3.2 / R6 /
 C2–C5 / E1–E2 development conformance. Parent: `48a1386`.
 
@@ -221,6 +221,28 @@ ordinary direction, matching the public CPU operation.
 Reflection: these are composable operations, not a private second trainer. Device
 validation remains pending; CPU tests establish only configuration/import safety.
 Continue directly into 090-C mapped multi-term ownership and objective integration.
+
+### 090-C shared mapped transactions
+
+The existing DeviceRun now takes explicit objective operations and a K-wide base.
+Public DeviceTerm owns immutable mapping metadata; `validate_terms` performs
+structural checks outside numerical search. `propose_terms` snapshots all trees,
+adds each mapped prediction in declared order and publishes only a complete
+train/validation proposal. Commit/reject/best/release use the same state machinery
+as squared. The scalar convenience retains its original addition kernel and
+requires no mapping upload; K-column maps travel as small kernel arguments.
+
+Local verification: 37 CPU API/configuration checks, full **1400 passed / one
+Linux-only skip**, Ruff/docs, and 96 collected hardware cases. The latter contain
+the frozen 90-case transaction matrix plus mapped lifetime/schema/overflow and
+four partial-failure phases. They have not run on a GPU. Existing 212 hardware
+test files are unchanged. No new CUDA evidence follows from CPU import checks.
+
+Reflection after the third local commit since 090-A: the structural change lives
+in the shared runtime, without a Normal-specific state machine. Tuple ownership
+and per-term mapping preserve joint commit boundaries while permitting ordered
+public loops. Continue into 090-D and then the installed D2 package; hardware and
+full v1 gates remain open. The near-tie diagnostic is still carried separately.
 
 Full CPU regression passes **1371 tests**, with one Linux-only skip. Ruff and
 documentation build pass; see the [verification record](../learnings/2026-09-07-v1-normal-device-design.md).

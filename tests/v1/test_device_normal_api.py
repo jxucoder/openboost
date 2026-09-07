@@ -7,6 +7,9 @@ import numpy as np
 import pytest
 
 from openboost import device_normal
+from openboost.binning import Binning
+from openboost.device_runtime import DeviceTerm
+from openboost.device_tree import DeviceTree
 
 
 @pytest.mark.parametrize("floor", [0, -1, True, None, "1", np.nan, np.inf, 1e100, 1e-100])
@@ -31,3 +34,25 @@ def test_import_and_configuration_without_cuda_packages():
         ],
         check=True,
     )
+
+
+def metadata_tree():
+    # Host metadata only; attempting execution requires a registered real device tree.
+    return DeviceTree(Binning(("x",), (np.array([]),)), ((-1, -1, False, -1, -1),))
+
+
+def test_term_owns_immutable_mapping_metadata():
+    source = np.array([[1, -0.5]], np.float32)
+    term = DeviceTerm(metadata_tree(), source)
+    source[:] = 0
+    np.testing.assert_array_equal(term.mapping, [[1, -0.5]])
+    with pytest.raises(ValueError):
+        term.mapping.setflags(write=True)
+
+
+@pytest.mark.parametrize(
+    "mapping", [[], [1, 2], [[1], [2]], [[np.inf]], [[1e100]], [[None]], [[1j]]]
+)
+def test_invalid_mapping_metadata(mapping):
+    with pytest.raises(ValueError):
+        DeviceTerm(metadata_tree(), mapping)

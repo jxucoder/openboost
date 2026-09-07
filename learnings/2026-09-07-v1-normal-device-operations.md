@@ -58,4 +58,27 @@ All hardware/upload allowances remain consumed; no remote action occurred.
 ## Commits
 
 - `f75f501` — numerical preregistration.
-- This entry accompanies the 090-B resident operation construction.
+- `ab6a37b` — 090-B resident operation construction.
+
+## 090-C mapped runtime construction
+
+DeviceRun accepts the explicit objective record, keeps K-column raw state and
+snapshots tuples of mapped scalar trees. One tuple is one transaction; best-prefix
+selection remains independent. `DeviceTerm` owns immutable mapping metadata and
+`validate_terms` separates structural checks from numerical search. `map_update`
+passes small maps as kernel arguments, preserving scalar proposal no-upload
+checks. K=1 identity maps retain the existing scalar kernel. All shared terms
+keep their independent reference counts through proposal/parent release.
+
+Thirty-seven CPU API checks pass, including immutable maps and invalid metadata;
+96 new real-hardware cases collect. Ninety cover the frozen three-round matrix;
+six cover mapped lifetime/schema and partial failures in second-tree copy,
+prediction, validation and resolution. Full CPU regression is **1400 passed,
+one Linux-only skip** (`/tmp/openboost-090-c-cpu.log`), using the same command as
+090-B. Ruff and documentation build pass; staged diff reviewed before commit.
+No GPU execution occurred. Existing hardware test files remain unchanged.
+
+This third local slice triggers a reflection recorded in Sprint 090. The shared
+runtime now expresses Normal updates; the next step is actual joint/ordered
+recipe composition and an installed D2 consumer. No host training fallback,
+second private trainer or new hardware authority was introduced.

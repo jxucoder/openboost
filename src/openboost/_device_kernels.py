@@ -401,3 +401,20 @@ def direction_fields(direction, channel, output):
     r = cuda.grid(1)
     if r < output.shape[0]:
         output[r, 0], output[r, 1] = -direction[r, channel], float32(1)
+
+
+@cuda.jit
+def matrix_add_raw(raw, delta, coefficient, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        for k in range(output.shape[1]):
+            output[r, k] = raw[r, k] + libdevice.fmul_rn(coefficient, delta[r, k])
+
+
+@cuda.jit
+def mapped_add_raw(raw, scalar, mapping, coefficient, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        for k in range(output.shape[1]):
+            delta = libdevice.fmul_rn(scalar[r, 0], mapping[k])
+            output[r, k] = raw[r, k] + libdevice.fmul_rn(coefficient, delta)

@@ -217,7 +217,7 @@ unchanged; no epsilon tie band is applied.
 `openboost.device_runtime.DeviceRun(ops, train, validation, run_id=..., seed=...)`
 binds explicit CPU preparation and private resident problem/raw storage. Pass fitted
 `binning` to reuse chosen cuts, or `bins` to fit training data once and transform
-validation with those cuts. Only numeric scalar squared targets are supported.
+validation with those cuts. The default objective supports numeric scalar squared targets.
 `initialize`, `gradient`, `fields`, `propose`, `resolve`, `raw`, `export`, `release`
 and `close` are separate public operations. `add_raw` is a separate resident scalar
 update operation with a finite signed coefficient and independent output storage.
@@ -278,9 +278,31 @@ operations. Returned buffers and fields own their outputs; input buffers stay
 caller-owned. Release buffers with the context and field records with operations.
 
 `device_normal.objective(minimum_scale=...)` constructs an explicit
-`ObjectiveOperations` bundle (validation/preparation/base/loss) for upcoming shared
-runtime integration. It does not itself train a model. Runtime K=2 transactions
-and the Normal recipe are still under construction. The 23 new hardware tests
+`ObjectiveOperations` bundle (validation/preparation/base/loss). Pass it as
+`DeviceRun(..., objective=device_normal.objective())` to use the shared runtime.
+The bundle does not itself train a model. The Normal recipe is still under
+construction. The 23 new geometry hardware tests
 are collected locally, not executed: no Normal CUDA correctness or cost claim is
 established by these changes. The earlier 212 passing scalar cases remain tied to
 their measured revision and must be rerun after integration.
+
+`DeviceTerm(tree, mapping)` owns an immutable float32 `[1,K]` mapping. A
+`run.propose_terms(state, terms, coefficient=...)` call snapshots the entire tuple
+of trees and evaluates their mapped contributions in term order. All terms share
+one trial coefficient and commit atomically. A joint two-term proposal increments
+version once; an ordered loop may propose one parameter, resolve it, then recompute
+geometry from `run.raw(updated_state)` and `run.problem`. `validate_terms` exposes
+structural checks separately so schema errors fail before numerical step search.
+
+`map_update(ops, raw, scalar_prediction, mapping, coefficient)` is a separate public
+operation. Small mappings travel as kernel scalar metadata, with no bulk upload.
+Products are rounded separately before raw addition. The `[1]` identity mapping
+delegates to the existing scalar addition path. Generalized `add_raw` also accepts
+aligned `[N,K]` deltas. All outputs own their device storage. Runtime best-prefix
+selection, proposal rejection, keyed RNG and explicit record release remain the
+same contracts. Mapped model export uses the existing CPU TreeTerm format.
+
+Ninety frozen three-round Normal transaction cases and six ownership/rollback
+cases are collected for hardware execution. They include both update orders,
+independent cohort fields and failures after partially copying/predicting terms.
+Collection is not CUDA validation; no mapped-runtime hardware pass is claimed.
