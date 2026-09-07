@@ -221,3 +221,28 @@ resolves the observed receipt case, not every possible cross-platform difference
 Final verification with two test workers: **1031 passed, 1 skipped** (Linux-only).
 Production/support lint and documentation build pass. No new Modal run was needed
 to replay the unchanged Linux bundle on the host that exposed the counterexample.
+
+### Real A6 resource matrix preparation
+
+Compile the OpenBoost preflight directly from the frozen numeric-tree family in
+search-design.json. Use its 16 configurations unchanged for each of shared and
+independent topology, adding the frozen 255-bin budget and patience 50. This makes
+topology a separate method (32 fits per fold), not a hidden extra tuning dimension
+inside a 16-trial allowance. All five subject folds are required.
+
+The [generated plan](070-a6-resource-plan.json) contains 160 explicit jobs, source/
+preprocessing freeze hashes, one-thread worker semantics under the two-CPU ceiling,
+1800-second deadlines, 8192-MiB container requests, 8-GiB address limits and zero
+retries. Maximum fit-worker time is 288000 seconds (80 hours); reserved two-CPU
+time is 160 CPU-hours. Setup, inference and comparators are excluded from these
+ceilings. This is the OpenBoost portion only, not the complete A6 comparison matrix.
+
+First bounded probes are fold-zero configuration 00 for each topology, sequential
+and with stop-on-failure. Before dispatch, bind real train/validation packets and
+exclude all test material from candidate containers. No jobs are launched by this
+compiler. Seven focused tests verify complete config preservation and reject
+omissions, duplicates, shortened rounds, ignored fields and changed resource/fold
+budgets. Full comparator coverage and the complete R/C/A/E ledger remain open.
+
+Final validation: **1038 CPU tests passed, 1 Linux-only test skipped** with two
+test workers. Production/support lint and documentation build pass.

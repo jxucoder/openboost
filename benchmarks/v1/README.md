@@ -724,3 +724,12 @@ Default execution keeps the existing inherited-identity/environment behavior.
 CPU probe with synthetic protected fixtures; it uploads no real datasets or sealed
 tasks. Actual permission/resource errors remain distinct from the earlier injected
 judge statuses. Passing this probe does not qualify full-search or author-eval gates.
+
+### Full A6 OpenBoost resource planning
+
+`python -m benchmarks.v1.a6_preflight_plan OUTPUT.json` compiles the frozen
+300/1000-round configurations into 160 OpenBoost jobs (shared/independent topology,
+five folds, sixteen configurations each). It writes once and launches nothing.
+The plan records source-freeze hashes, fit-only upper bounds, first resource probes
+and remaining requirements. It does not represent the full comparator matrix or
+a completed full-search resource check. See `v1-sprints/070-a6-resource-plan.json`.
