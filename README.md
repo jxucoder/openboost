@@ -108,4 +108,6 @@ recipe while keeping model acceptance and best-model selection independent.
 [Experimental CUDA operations](docs/v1/execution.md) provide context-owned buffers,
 named fields, once-only weighting and routed histograms, with
 [33 passing real T4 checks](benchmarks/v1/evidence/cuda-aggregation-078/README.md).
-Training recipes remain CPU-only; device candidates, trees and boosting are next.
+Public device candidates, composable scores/feasibility masks, routing and scalar
+leaves are implemented with hardware validation pending. Training recipes remain
+CPU-only; resident trees and boosting are next.

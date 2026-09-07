@@ -95,5 +95,68 @@ Histogram execution exports two flags per field and no bulk arrays. Flag export
 and scratch release synchronize explicitly and are included in storage counters.
 These diagnostics are not an end-to-end fit-cost measurement.
 
-Trees, candidates, device gradients, custom-kernel registration, transactions and
-GPU training remain unimplemented. Current recipes and NumericData remain CPU-only.
+## Candidate, feasibility, route and leaf operations: awaiting hardware validation
+
+Sprint 087 adds Python CUDA kernels and public operations for scalar numeric
+splits. These additions have not run on a GPU. The earlier 33 passing tests verify
+the implementation at `ad2f4e6`, not this new slice. The frozen comparison uses an
+independent float64 original-row oracle and checks every candidate's sums, counts,
+gain and feasibility, then winner, routed rows and leaves. Float32 tolerances are
+rtol=1e-4/atol=1e-5; counts, row order and exact-tie winners must match exactly.
+
+`candidates(histogram)` returns named left/right sums `[slots, 2, fields]`, int64
+counts `[slots, 2]` and a bool active mask `[slots]`. Slots are padded to
+`features * max(bin_counts) * 2`, ordered by feature, threshold and missing-left
+False/True. `batch.key(index)` decodes metadata. Only bins observed in the full
+prepared data are active, including when the histogram uses a subset of rows.
+
+`newton_scores(batch, reg_lambda=1, split_penalty=0)` and
+`feasible(batch, min_child_h=0)` are separate operations. Both require named,
+once-weighted scalar gradient/curvature fields and nonnegative original row
+curvature. Ordinary feasibility requires two nonempty children with positive
+curvature meeting the minimum. Structurally illegal scores are zero. Legal scores,
+regularization and penalties must remain finite in float32.
+
+`child_minimum(batch, name, minimum)` tests a nonnegative independent-information
+column on both children. For example, with independently appended cohort columns,
+the following composes D2's constraint through the same public device boundary:
+
+```python
+batch = ops.candidates(histogram)
+scores = ops.newton_scores(batch)
+allowed = ops.feasible(batch)
+for name in ("cohort:red", "cohort:blue"):
+    allowed = ops.mask_and(allowed, ops.child_minimum(batch, name, 1))
+split = ops.choose(batch, scores, allowed)
+if split is not None:
+    left_rows, right_rows = ops.partition(rows, split)
+    left_histogram = ops.histogram(data, weighted, left_rows)
+    left_leaf = ops.leaf(left_histogram)
+```
+
+This sketch belongs inside the live context above, using fields that include the
+named cohorts. It is a development contract pending real-device acceptance.
+`scores(batch, buffer)` and `mask(batch, buffer)` also bind explicitly supplied
+resident float32/bool vectors. These bindings validate shape, finite scores and
+exact batch identity. Custom masks replace ordinary feasibility; callers compose
+it explicitly when needed. `choose` always excludes inactive padding and requires
+strictly positive scores. Exact ties select the first lexicographic slot.
+
+`partition` requires the exact row record used by the split's histogram. Its
+children contain actual original positions in input order, including empty views.
+`leaf(histogram, reg_lambda=1)` returns an owned float32 `[1]` buffer containing
+`-G / (H + lambda)` for those rows; a nonpositive/nonfinite denominator fails.
+Release the leaf through `execution.release`, and other records through
+`ops.release`. Candidate records retain histogram, field and row dependencies;
+keep those records and their borrowed buffers alive through scoring and routing.
+Records and their originating batch cannot be forged or substituted.
+
+All computation stays on the context stream. Validation flags remain explicit;
+choice exports one int32 winner index and partition exports two int32 child sizes.
+These are counted as `decision_export_bytes`, a subset of total export bytes.
+Diagnostic exports made by tests are separate from measured operation transfers.
+Allocation/validation cleanup preserves inputs but is not a boosting transaction.
+Initial choice and stable routing use ordered kernels; no speed claim is made.
+
+Trees, device gradients, custom-kernel registration, transactions and GPU training
+remain unimplemented. Current recipes and NumericData remain CPU-only.

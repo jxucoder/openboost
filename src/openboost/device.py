@@ -1,4 +1,4 @@
-"""Experimental public CUDA named fields and routed histograms; no training yet."""
+"""Experimental public CUDA fields, histograms and split operations; no training."""
 
 from dataclasses import dataclass
 from functools import wraps
@@ -48,6 +48,67 @@ class DeviceHistogram:
     total: DeviceBuffer
 
 
+@dataclass(frozen=True, eq=False)
+class DeviceCandidates:
+    histogram: DeviceHistogram
+    values: DeviceBuffer
+    counts: DeviceBuffer
+    active: DeviceBuffer
+
+    @property
+    def data(self):
+        return self.histogram.data
+
+    @property
+    def size(self):
+        return self.active.shape[0]
+
+    def key(self, index):
+        """Metadata for a padded slot; consult active before treating it as a candidate."""
+        if (
+            not isinstance(index, (int, np.integer))
+            or isinstance(index, bool)
+            or not 0 <= index < self.size
+        ):
+            raise ValueError("in-range integer candidate index required")
+        width = max(self.data.bin_counts)
+        return int(index // (2 * width)), int((index // 2) % width), bool(index % 2)
+
+
+@dataclass(frozen=True, eq=False)
+class DeviceScores:
+    candidates: DeviceCandidates
+    values: DeviceBuffer
+
+    @property
+    def data(self):
+        return self.candidates.data
+
+
+@dataclass(frozen=True, eq=False)
+class DeviceMask:
+    candidates: DeviceCandidates
+    values: DeviceBuffer
+
+    @property
+    def data(self):
+        return self.candidates.data
+
+
+@dataclass(frozen=True, eq=False)
+class DeviceSplit:
+    candidates: DeviceCandidates
+    index: int
+
+    @property
+    def data(self):
+        return self.candidates.data
+
+    @property
+    def key(self):
+        return self.candidates.key(self.index)
+
+
 def _atomic(method):
     """Discard this operation's new buffers/records after allocation/validation failure."""
 
@@ -89,6 +150,23 @@ def _schema(names, roles, width):
     return names, roles
 
 
+def _parameter(value):
+    if (
+        not isinstance(value, (int, float, np.integer, np.floating))
+        or isinstance(value, (bool, np.bool_))
+        or value < 0
+    ):
+        raise ValueError("finite nonnegative float32 parameter required")
+    with np.errstate(over="raise", invalid="raise"):
+        try:
+            result = np.float32(value)
+        except (ValueError, TypeError, OverflowError, FloatingPointError) as error:
+            raise ValueError("finite nonnegative float32 parameter required") from error
+    if not np.isfinite(result):
+        raise ValueError("finite nonnegative float32 parameter required")
+    return result
+
+
 class DeviceOperations:
     """Public composition of context-owned fields and actual routed reductions.
 
@@ -104,7 +182,12 @@ class DeviceOperations:
         execution._check()
         self.execution = execution
         self._records = {}
-        for key in ("kernel_launches", "kernel_dispatch_seconds", "validation_export_bytes"):
+        for key in (
+            "kernel_launches",
+            "kernel_dispatch_seconds",
+            "validation_export_bytes",
+            "decision_export_bytes",
+        ):
             execution._counts.setdefault(key, 0)
 
     def _record(self, record, handles, owned=()):
@@ -156,12 +239,14 @@ class DeviceOperations:
         if flags.any():
             raise ValueError(message)
 
-    def _validate(self, array, *, nonnegative=False):
+    def _validate(self, array, *, nonnegative=False, message=None):
         context = self.execution
         flags = context._empty((array.shape[1],), np.int32)
         self._launch("validate_fields", array.shape[1], array, nonnegative, context._array(flags))
         self._flags(
-            flags, "finite fields required; declared nonnegative information cannot be negative"
+            flags,
+            message
+            or "finite fields required; declared nonnegative information cannot be negative",
         )
 
     @_atomic
@@ -337,6 +422,254 @@ class DeviceOperations:
         self._validate(context._array(total).reshape(1, -1))
         record = DeviceHistogram(data, fields, rows, sums, counts, total)
         return self._record(record, (sums, counts, total), (sums, counts, total))
+
+    def _batch(self, batch):
+        self._get(batch, DeviceCandidates)
+        self._get(batch.histogram, DeviceHistogram)
+        self._get(batch.histogram.fields, DeviceFields)
+        self._get(batch.histogram.rows, DeviceRows)
+        return batch
+
+    def _newton_columns(self, histogram):
+        fields = self._get(histogram.fields, DeviceFields)
+        if any(name not in fields.names for name in ("gradient", "curvature")):
+            raise ValueError("named scalar gradient and curvature required")
+        g, h = fields.names.index("gradient"), fields.names.index("curvature")
+        if fields.roles[g] != "training" or fields.roles[h] != "training":
+            raise ValueError("once-weighted training gradient and curvature required")
+        self._validate(self.execution._array(fields.values)[:, h : h + 1], nonnegative=True)
+        return g, h
+
+    def _compact(self, buffer):
+        result = self.execution.export(buffer)
+        self.execution._counts["decision_export_bytes"] += result.nbytes
+        self.execution.release(buffer)
+        return result
+
+    @_atomic
+    def candidates(self, histogram):
+        """Resident padded candidates; active bins match the full prepared CPU universe."""
+        hist = self._get(histogram, DeviceHistogram)
+        self._get(hist.fields, DeviceFields)
+        self._get(hist.rows, DeviceRows)
+        context = self.execution
+        size = len(hist.data.bin_counts) * max(hist.data.bin_counts) * 2
+        if size > np.iinfo(np.int32).max:
+            raise ValueError("int32 candidate capacity exceeded")
+        width = len(hist.fields.names)
+        values = context._empty((size, 2, width), np.float32)
+        counts = context._empty((size, 2), np.int64)
+        active = context._empty((size,), bool)
+        self._launch(
+            "candidate_sums",
+            size * width,
+            context._array(hist.data.codes),
+            context._array(hist.data.missing),
+            hist.data.bin_counts,
+            context._array(hist.sums),
+            context._array(hist.counts),
+            context._array(values),
+            context._array(counts),
+            context._array(active),
+        )
+        self._validate(context._array(values).reshape(-1, width))
+        return self._record(
+            DeviceCandidates(hist, values, counts, active),
+            (values, counts, active),
+            (values, counts, active),
+        )
+
+    @_atomic
+    def scores(self, candidates, values):
+        """Bind an explicitly supplied finite resident score vector to one batch."""
+        batch = self._batch(candidates)
+        array = self._float(values, (batch.size,))
+        self._validate(array.reshape(-1, 1))
+        return self._record(DeviceScores(batch, values), (values,))
+
+    @_atomic
+    def mask(self, candidates, values):
+        """Bind an explicitly supplied resident bool vector to one batch."""
+        batch = self._batch(candidates)
+        array = self.execution._array(values)
+        if array.dtype != np.dtype(bool) or array.shape != (batch.size,):
+            raise ValueError("candidate-aligned bool mask required")
+        return self._record(DeviceMask(batch, values), (values,))
+
+    @_atomic
+    def newton_scores(self, candidates, *, reg_lambda=1.0, split_penalty=0.0):
+        batch = self._batch(candidates)
+        regularization, penalty = _parameter(reg_lambda), _parameter(split_penalty)
+        g, h = self._newton_columns(batch.histogram)
+        context = self.execution
+        output = context._empty((batch.size,), np.float32)
+        self._launch(
+            "scalar_scores",
+            batch.size,
+            context._array(batch.values),
+            context._array(batch.counts),
+            context._array(batch.active),
+            context._array(batch.histogram.total),
+            g,
+            h,
+            regularization,
+            penalty,
+            context._array(output),
+        )
+        self._validate(
+            context._array(output).reshape(-1, 1),
+            message="finite gains and positive finite Newton denominators required",
+        )
+        return self._record(DeviceScores(batch, output), (output,), (output,))
+
+    @_atomic
+    def feasible(self, candidates, *, min_child_h=0.0):
+        batch = self._batch(candidates)
+        minimum = _parameter(min_child_h)
+        _, h = self._newton_columns(batch.histogram)
+        context = self.execution
+        output = context._empty((batch.size,), bool)
+        self._launch(
+            "scalar_feasible",
+            batch.size,
+            context._array(batch.values),
+            context._array(batch.counts),
+            context._array(batch.active),
+            h,
+            minimum,
+            context._array(output),
+        )
+        return self._record(DeviceMask(batch, output), (output,), (output,))
+
+    @_atomic
+    def child_minimum(self, candidates, name, minimum):
+        """Both children meet one named independent-information minimum."""
+        batch = self._batch(candidates)
+        minimum = _parameter(minimum)
+        fields = batch.histogram.fields
+        if name not in fields.names or fields.roles[fields.names.index(name)] != "independent":
+            raise ValueError("named independent information field required")
+        q = fields.names.index(name)
+        context = self.execution
+        self._validate(context._array(fields.values)[:, q : q + 1], nonnegative=True)
+        output = context._empty((batch.size,), bool)
+        self._launch(
+            "information_minimum",
+            batch.size,
+            context._array(batch.values),
+            context._array(batch.active),
+            q,
+            minimum,
+            context._array(output),
+        )
+        return self._record(DeviceMask(batch, output), (output,), (output,))
+
+    @_atomic
+    def mask_and(self, left, right):
+        self._get(left, DeviceMask)
+        self._get(right, DeviceMask)
+        batch = self._batch(left.candidates)
+        if right.candidates is not batch:
+            raise ValueError("masks must belong to the same candidate batch")
+        context = self.execution
+        output = context._empty((batch.size,), bool)
+        self._launch(
+            "combine_masks",
+            batch.size,
+            context._array(left.values),
+            context._array(right.values),
+            context._array(output),
+        )
+        return self._record(DeviceMask(batch, output), (output,), (output,))
+
+    @_atomic
+    def choose(self, candidates, scores, mask):
+        """Best strictly positive masked gain; exact ties keep the first active key."""
+        batch = self._batch(candidates)
+        self._get(scores, DeviceScores)
+        self._get(mask, DeviceMask)
+        if scores.candidates is not batch or mask.candidates is not batch:
+            raise ValueError("scores and mask must belong to the same candidate batch")
+        context = self.execution
+        output = context._empty((1,), np.int32)
+        self._launch(
+            "choose_candidate",
+            1,
+            context._array(scores.values),
+            context._array(mask.values),
+            context._array(batch.active),
+            context._array(output),
+        )
+        index = int(self._compact(output)[0])
+        if index == -1:
+            return None
+        if not 0 <= index < batch.size:
+            raise RuntimeError("invalid device winner index")
+        return self._record(DeviceSplit(batch, index), ())
+
+    @_atomic
+    def partition(self, rows, split):
+        """Stable original-row child views; only child sizes return to the host."""
+        self._get(rows, DeviceRows)
+        self._get(split, DeviceSplit)
+        batch = self._batch(split.candidates)
+        if rows is not batch.histogram.rows:
+            raise ValueError("split belongs to different routed rows")
+        context = self.execution
+        route = context._empty(rows.positions.shape, bool)
+        sizes = context._empty((2,), np.int32)
+        f, threshold, missing_left = split.key
+        self._launch(
+            "split_routes",
+            1,
+            context._array(rows.data.codes),
+            context._array(rows.data.missing),
+            context._array(rows.positions),
+            f,
+            threshold,
+            missing_left,
+            context._array(route),
+            context._array(sizes),
+        )
+        left_size, right_size = (int(n) for n in self._compact(sizes))
+        if min(left_size, right_size) < 0 or left_size + right_size != rows.positions.shape[0]:
+            raise RuntimeError("invalid device child sizes")
+        left = context._empty((left_size,), np.int32)
+        right = context._empty((right_size,), np.int32)
+        self._launch(
+            "split_rows",
+            1,
+            context._array(rows.positions),
+            context._array(route),
+            context._array(left),
+            context._array(right),
+        )
+        context.release(route)
+        return tuple(self._record(DeviceRows(rows.data, b), (b,), (b,)) for b in (left, right))
+
+    @_atomic
+    def leaf(self, histogram, *, reg_lambda=1.0):
+        """Owned scalar Newton value for exactly the histogram's routed rows."""
+        hist = self._get(histogram, DeviceHistogram)
+        self._get(hist.rows, DeviceRows)
+        regularization = _parameter(reg_lambda)
+        g, h = self._newton_columns(hist)
+        context = self.execution
+        output = context._empty((1,), np.float32)
+        self._launch(
+            "scalar_leaf",
+            1,
+            context._array(hist.total),
+            g,
+            h,
+            regularization,
+            context._array(output),
+        )
+        self._validate(
+            context._array(output).reshape(1, 1),
+            message="finite leaf with nonnegative curvature and positive finite denominator required",
+        )
+        return output
 
     def release(self, record):
         """Release a record's owned allocations; caller-supplied buffers stay caller-owned."""

@@ -91,3 +91,25 @@ as CUDA correctness. No new author agent, held-out access or external contact.
 Reflect after each verified slice/three implementation commits, or an ownership
 counterexample. Next, after verified 078-B, is 078-C resident two-round training
 under atomic state and CPU-readable inference contracts.
+
+## Local implementation checkpoint
+
+The fixture/oracle slice is committed at `0ba39a3`. Public candidate records,
+scalar scores, independent predicates, composition, selection, stable routing and
+leaves are implemented. Fifty-five real-device tests cover the frozen cases,
+renamed/reordered information, explicit resident bindings, parameter/denominator
+failures, source lifetime, exact batch identity, allocation recovery and stream
+restoration. No simulator, device compile or hardware execution has been used.
+
+Full CPU regression: 1185 passed, one Linux-only skip. This includes 31 exhaustive
+split reference cases and the earlier eight run-2 judge checks. Local collection
+finds 55 new CUDA tests; collection is not device acceptance. Production/test lint
+passes. Hardware implementation risk remains open until the new run is approved
+and all preregistered cases pass.
+
+Reflection: D2 now composes named information and ordinary scalar legality without
+private task dispatch. The implementation keeps public score/mask bindings separate
+from arbitrary custom-kernel integration, which remains unimplemented. Candidate
+storage and ordered routing prioritize bounded correctness; performance and
+resident training are not established. Complete the run package before requesting
+hardware. Required author, application, quality and end-to-end cost gates remain.

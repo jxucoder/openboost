@@ -26,19 +26,20 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1146 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1185 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. Thirty-three real T4
 storage/aggregation tests pass; GPU training, independent author benefit, full quality/search and
 adoption remain unverified. The
 [064–084 roadmap](roadmap-after-063.md) retains those obligations; 085 changes their
 near-term priority and the bounded device entry rule. Reflect after each 085 slice
 and every three implementation commits. No independent author attempt has run.
-Both approved device runs are consumed. The planned retrospective is due before
-further hardware work; the next construction slice is 078-B candidate operations.
+Both approved device runs are consumed. Reflection led to local 078-B construction;
+further hardware work requires a concrete new freeze and allowance.
 See [078 evidence and reflection](078-cuda-scalar-path.md).
 The user continued into [087 local split construction](087-cuda-split-operations.md):
-freeze exhaustive candidate checks, implement public scores/masks/routes/leaves,
-then prepare a concrete new device-run request. No new GPU allowance is implied.
+the exhaustive oracle and public scores/masks/routes/leaves are implemented.
+Fifty-five new real-device cases await hardware validation. Next, freeze the
+installed-wheel run package. No new GPU allowance is implied.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

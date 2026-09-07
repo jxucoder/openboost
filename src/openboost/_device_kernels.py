@@ -76,3 +76,137 @@ def row_total(values, rows, total):
         for j in range(rows.size):
             value = float32(value + values[rows[j], q])
         total[q] = value
+
+
+@cuda.jit
+def candidate_sums(codes, missing, bins, sums, counts, output, child_counts, active):
+    i = cuda.grid(1)
+    width, slots = sums.shape[2], sums.shape[1] - 1
+    if i < output.shape[0] * width:
+        c, q = i // width, i % width
+        f, threshold, missing_left = c // (2 * slots), (c // 2) % slots, c % 2 == 1
+        left, right = float32(0), float32(0)
+        nl, nr = 0, 0
+        present = False
+        if threshold < bins[f]:
+            for b in range(threshold + 1):
+                left = float32(left + sums[f, b, q])
+                nl += counts[f, b]
+            # Match CPU suffix addition order without parent-minus-child cancellation.
+            for b in range(bins[f] - 1, threshold, -1):
+                right = float32(right + sums[f, b, q])
+                nr += counts[f, b]
+            if missing_left:
+                left = float32(left + sums[f, bins[f], q])
+                nl += counts[f, bins[f]]
+            else:
+                right = float32(right + sums[f, bins[f], q])
+                nr += counts[f, bins[f]]
+            if q == 0:
+                for r in range(codes.shape[1]):
+                    if not missing[f, r] and codes[f, r] == threshold:
+                        present = True
+        output[c, 0, q], output[c, 1, q] = left, right
+        if q == 0:
+            active[c] = present
+            child_counts[c, 0], child_counts[c, 1] = nl, nr
+
+
+@cuda.jit
+def scalar_scores(values, counts, active, parent, g, h, regularization, penalty, output):
+    c = cuda.grid(1)
+    if c < output.size:
+        gain = float32(0)
+        hl, hr = values[c, 0, h], values[c, 1, h]
+        if active[c] and counts[c, 0] > 0 and counts[c, 1] > 0 and hl > 0 and hr > 0:
+            dl, dr, dp = hl + regularization, hr + regularization, parent[h] + regularization
+            if not math.isfinite(dl) or not math.isfinite(dr) or not math.isfinite(dp) or dp <= 0:
+                gain = float32(math.nan)
+            else:
+                gl, gr = values[c, 0, g], values[c, 1, g]
+                gain = (
+                    float32(0.5) * gl * (gl / dl)
+                    + float32(0.5) * gr * (gr / dr)
+                    - float32(0.5) * parent[g] * (parent[g] / dp)
+                    - penalty
+                )
+        output[c] = gain
+
+
+@cuda.jit
+def scalar_feasible(values, counts, active, h, minimum, output):
+    c = cuda.grid(1)
+    if c < output.size:
+        hl, hr = values[c, 0, h], values[c, 1, h]
+        output[c] = (
+            active[c]
+            and counts[c, 0] > 0
+            and counts[c, 1] > 0
+            and hl > 0
+            and hr > 0
+            and hl >= minimum
+            and hr >= minimum
+        )
+
+
+@cuda.jit
+def information_minimum(values, active, q, minimum, output):
+    c = cuda.grid(1)
+    if c < output.size:
+        output[c] = active[c] and values[c, 0, q] >= minimum and values[c, 1, q] >= minimum
+
+
+@cuda.jit
+def combine_masks(left, right, output):
+    c = cuda.grid(1)
+    if c < output.size:
+        output[c] = left[c] and right[c]
+
+
+@cuda.jit
+def choose_candidate(scores, mask, active, output):
+    if cuda.grid(1) == 0:
+        best, gain = -1, float32(0)
+        for c in range(scores.size):
+            if active[c] and mask[c] and scores[c] > gain:
+                best, gain = c, scores[c]
+        output[0] = best
+
+
+@cuda.jit
+def split_routes(codes, missing, rows, feature, threshold, missing_left, route, sizes):
+    if cuda.grid(1) == 0:
+        nl, nr = 0, 0
+        for j in range(rows.size):
+            r = rows[j]
+            left = missing_left if missing[feature, r] else codes[feature, r] <= threshold
+            route[j] = left
+            if left:
+                nl += 1
+            else:
+                nr += 1
+        sizes[0], sizes[1] = nl, nr
+
+
+@cuda.jit
+def split_rows(rows, route, left, right):
+    if cuda.grid(1) == 0:
+        nl, nr = 0, 0
+        for j in range(rows.size):
+            if route[j]:
+                left[nl] = rows[j]
+                nl += 1
+            else:
+                right[nr] = rows[j]
+                nr += 1
+
+
+@cuda.jit
+def scalar_leaf(total, g, h, regularization, output):
+    if cuda.grid(1) == 0:
+        denominator = total[h] + regularization
+        output[0] = (
+            -total[g] / denominator
+            if total[h] >= 0 and denominator > 0 and math.isfinite(denominator)
+            else float32(math.nan)
+        )
