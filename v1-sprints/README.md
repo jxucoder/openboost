@@ -26,7 +26,7 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1247 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1262 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. Eighty-eight real T4
 storage/aggregation/split tests pass; new resident scalar training awaits GPU validation.
 Independent author benefit, full quality/search and
@@ -43,6 +43,9 @@ The user continued after this retrospective. [088 resident scalar training](088-
 is active local construction: accepted/proposal ownership, resident two-round
 scalar training and saved CPU inference. Further hardware work requires a new
 concrete freeze and allowance.
+The [088 run-4 package](078-resident-run4.json) now freezes 202 device cases and
+47 upload files. Compute and private upload approval are both pending. Local
+regression, judging, packaging and collection do not pass the hardware gate.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

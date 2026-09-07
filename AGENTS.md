@@ -93,6 +93,9 @@ accepted/proposal ownership and saved CPU inference. Retain the 065/068 contract
 078-C scalar objectives, trees, accepted/proposal integration and a squared recipe
 are locally implemented with pending real-device verifiers; none has new GPU
 acceptance yet. The earlier 88 passing cases do not validate the new code.
+The [run-4 package](v1-sprints/078-resident-run4.json) freezes 202 cases and 47
+private source/test/metadata files. Both compute and upload approval are pending;
+one T4 invocation, 900-second function/600-second tests and zero retries are proposed.
 Primitive checks do not pass transaction or boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
@@ -106,7 +109,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1247 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1262 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

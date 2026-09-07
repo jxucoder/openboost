@@ -81,6 +81,28 @@ open. Freeze the complete package and request one new compute/upload allowance n
 Runtime-slice full CPU regression passes 1247 tests, with one Linux-only skip and
 202 GPU tests deselected. Production/changed-test Ruff and documentation build pass.
 
+## Frozen run package
+
+The [run-4 protocol](../v1-sprints/078-resident-run4.json) freezes 47 private upload
+files, 202 exact GPU cases and 17 pinned dependencies. A separate upload guard
+prevents compute approval alone from enabling private source transfer. Existing
+historical protocols retain their completed evidence. Both new approvals remain
+pending; the CLI exits before Modal import/output creation and no run was dispatched.
+
+All 33 local manifest/judging checks pass, including exact source/case closure,
+missing/duplicate/skipped/failed cases, installed versions/sources and compute/upload
+guards. Full CPU regression passes 1262 cases with one Linux-only skip and 202 GPU
+cases deselected. Ruff and docs pass. Offline wheel/sdist builds succeed, and all
+27 packaged modules match the frozen source hashes. A no-isolation build initially
+failed for missing environment hatchling; offline isolated building used the
+already declared build dependency without changing the project environment.
+
+The initial allocation-failure injection during initialize was too early to leave
+a first raw output alive. The frozen verifier now fails allocation four, after the
+first raw output exists; proposal/commit checks still fail their second allocation.
+The failure-only custom-learner recipe explicitly uses four bins, preserving the
+32-bin bound even though it fails before histogram construction.
+
 ## Risks and Follow-ups
 
 Explicit release, borrowed inputs, model sharing and failed allocations must not
@@ -91,5 +113,5 @@ raw arrays. Device training and formal R/C/A/E acceptance remain unverified.
 ## Commits
 
 `3561738` freezes the design/oracle; `e616451` commits the resident objective/tree
-construction. Commit runtime/recipe and validation packages separately. No push or
-new remote upload/run without authorization.
+construction; `807232e` commits runtime/recipe and reflection. Commit the pending
+validation package separately. No push or new remote upload/run without authorization.

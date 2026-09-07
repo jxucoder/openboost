@@ -141,3 +141,37 @@ remain open. There is no new GPU acceptance, speed or adoption claim. The concre
 next gate is a frozen installed-package check of all 114 new and 88 prior cases,
 then user authorization for one additional T4 invocation and its exact private
 source/test upload. Do not dispatch from this construction record.
+
+## Run-4 package, pending authorization
+
+`807232e` commits the resident runtime/recipe. The frozen
+[protocol](078-resident-run4.json) names 202 cases (72 runtime, 42 tree/objective,
+55 split and 33 storage/aggregation), 47 private upload files, 27 production
+modules and the same 17 pinned dependencies as run 3. Forty-six file hashes are
+prefrozen; the protocol's dispatch hash completes the package. No entire working
+tree, sealed tasks or external datasets are uploaded. The allocation-failure test
+targets the second raw output during initialization, and the failure-only recipe
+uses four bins to stay within the declared preparation bounds.
+
+Proposed allowance: one T4 invocation, two CPU cores, 8192 MiB requested host memory,
+900-second function limit, 600-second tests, 16-MiB private pools and no retries.
+Bulk regression fixtures remain bounded by 8192 rows, 32 features and 32 bins.
+Training fixtures are at most eight rows, depth two and 24 rounds. These are
+correctness/lifetime checks, not a speed, quality, full search or scaling claim.
+
+Both `authorization` and `upload_authorization` are pending. The launcher rejects
+before Modal import or output creation unless both are explicitly approved. It
+retains clean-source and hash checks, installed-source/version checks and exact
+JUnit accounting, and refuses reused output. The pending CLI was invoked locally
+and rejected without any upload, output directory or hardware invocation.
+
+All 33 local manifest/judging tests pass (15 new plus 18 previous). Full CPU
+regression passes 1262 tests with one Linux-only skip; 202 GPU tests are deselected.
+Ruff, documentation and offline wheel/sdist build pass. All 27 wheel modules match
+the frozen bytes. The first no-isolation build failed because the active environment
+lacked hatchling; the ordinary offline isolated build succeeded with the declared
+build dependency. No dependency or project-environment mutation was needed.
+
+Stop here for the concrete new compute/private-upload allowance. Once authorized,
+commit that protocol state, dispatch once, retain every failure and reflect on the
+actual result before any additional run or broader construction.

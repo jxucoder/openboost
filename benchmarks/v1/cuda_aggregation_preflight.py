@@ -80,6 +80,11 @@ def check_frozen_sources(protocol_path, protocol, sources):
 def check_dispatch(repo, output, protocol):
     if protocol.get("authorization", "approved") != "approved":
         raise ValueError("new GPU allowance is pending; no remote dispatch")
+    if (
+        protocol.get("require_upload_authorization", False)
+        and protocol.get("upload_authorization") != "approved"
+    ):
+        raise ValueError("private source upload allowance is pending; no remote dispatch")
     if "output" in protocol and output.resolve() != (repo / protocol["output"]).resolve():
         raise ValueError("the single-run output location is fixed")
     if output.exists():

@@ -214,16 +214,18 @@ def test_partial_allocation_failure_is_atomic(phase, monkeypatch):
         original_reserve = context._reserve
         calls = 0
 
-        def fail_second(nbytes):
+        fail_at = 4 if phase == "initialize" else 2
+
+        def fail_later(nbytes):
             nonlocal calls
             calls += 1
-            if calls == 2:
-                raise MemoryError("intentional second allocation failure")
+            if calls == fail_at:
+                raise MemoryError("intentional allocation failure after partial output")
             original_reserve(nbytes)
 
         with monkeypatch.context() as patch:
-            patch.setattr(context, "_reserve", fail_second)
-            with pytest.raises(MemoryError, match="second allocation"):
+            patch.setattr(context, "_reserve", fail_later)
+            with pytest.raises(MemoryError, match="after partial output"):
                 if phase == "initialize":
                     run.initialize()
                 elif phase == "propose":
@@ -510,5 +512,7 @@ def test_retained_prior_state_and_failed_recipe_cleanup():
 
         ops = DeviceOperations(context)
         with pytest.raises(RuntimeError, match="learner failed"):
-            recipes.squared(ops, train, validation, run_id="failure", seed=0, learner=broken)
+            recipes.squared(
+                ops, train, validation, run_id="failure", seed=0, learner=broken, bins=4
+            )
         assert context.metrics["live_bytes"] == 0 and not ops._records
