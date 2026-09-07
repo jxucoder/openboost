@@ -682,3 +682,25 @@ the public recipe default. Frozen model configurations, selected-model semantics
 and prediction artifacts are unchanged. It reduces stored round arrays without
 qualifying the full search's resource or quality gate. Other worker families must
 be audited separately before large jobs.
+
+### Explicit Linux worker identity and address limits
+
+`process_runner.execute(..., address_limit_bytes=8 * 1024**3, unprivileged=True)`
+requires a Linux root evaluator. It launches with hard/soft RLIMIT_AS limits,
+UID/GID 65534, no supplementary groups, no_new_privs and a minimal explicit
+environment. The fresh output directory belongs to that worker; its ancestors
+must permit traversal. Evaluator-private inputs need separate root ownership and
+permissions. Unsupported setup is rejected; there is no advisory fallback.
+
+The runner records actual launch commands, configured limits, identity/environment
+policy, logs and errors. It kills remaining same-process-group descendants before
+artifact inspection in this mode. This is not a general hostile-code sandbox:
+new sessions and network are not restricted. Use separate containers for independent
+attempts and never share same-UID outputs across them. RLIMIT_AS limits virtual
+address space, not measured resident memory; enclosing-container policy is separate.
+Default execution keeps the existing inherited-identity/environment behavior.
+
+`python -m benchmarks.v1.access_preflight /tmp/fresh-output` runs a bounded Modal
+CPU probe with synthetic protected fixtures; it uploads no real datasets or sealed
+tasks. Actual permission/resource errors remain distinct from the earlier injected
+judge statuses. Passing this probe does not qualify full-search or author-eval gates.

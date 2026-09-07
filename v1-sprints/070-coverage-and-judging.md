@@ -96,3 +96,26 @@ and protect it. Summary retention is explicitly selected in the current worker;
 the full-search environment is still unqualified. See the
 [readiness inventory](070-readiness-inventory.md) for the next bounded work.
 Sprints 069/070 remain open; no independent author or expensive search was launched.
+
+### Preregistered real permission/resource probe
+
+Extend the existing process runner with explicit Linux address-limit and unprivileged
+worker modes. First source checks reject invalid limits and unsupported hosts before
+launch. Then commit the harness and run one Modal CPU container (2 CPUs, 8192 MiB,
+120 seconds, no application retries) with only three allowlisted probe/runner files.
+Use synthetic evaluator-only labels/verifier fixtures under root-owned mode-0700
+storage, never actual sealed tasks or test labels.
+
+The worker runs as UID/GID 65534 with empty supplementary groups, no_new_privs,
+an explicit 8-GiB address ceiling and minimal environment. Probe denied label reads,
+verifier writes, parent-environment reads, UID restoration and hard-limit raising;
+confirm evaluator files remain unchanged. Exercise a 9-GiB mapping rejection,
+actual worker error and a 0.25-second forced timeout with retained logs. A successful
+NumPy worker uses the 1800-second search timeout setting, verifies two BLAS threads
+and touched-allocation peak accounting; this does not wait 1800 seconds or qualify
+a 300/1000-round model workload.
+
+This checks a concrete UID/file boundary and process resource mechanism, not a
+complete hostile-code sandbox. Network/new sessions are not restricted and same-UID
+outputs must not be shared across independent attempts. Full author dispatch and
+full-search access/container integration remain open, even if these probes pass.
