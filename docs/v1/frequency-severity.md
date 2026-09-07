@@ -53,3 +53,8 @@ selection by aggregate-loss quality requires an explicit workflow evaluation.
 Tests verify three-round component training, products, units, row reordering,
 aggregate rejection and fresh-process mixed-feature persistence. Real A9
 quality/joins, joint selection, AFT and CUDA remain open.
+
+Sprint 057 binds matched positive-payment counts/totals to the frozen A9 policy
+rows. Sprint 058 trains both public recipes on all five packets and verifies exact
+fresh replay of all named outputs. Component selection remains independent and is
+recorded as such. These bounded runs do not establish joint aggregate quality.

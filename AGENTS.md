@@ -93,8 +93,9 @@ adds A7 explicit count/exposure binding on all five frozen frequency folds with
 exact replay. Sprint 055 adds A8 claim severity on all five frozen grouped folds.
 Sprint 056 adds direct A9 annualized Tweedie on all five aggregate folds, with
 verified exposure weights and period conversion. Sprint 057 binds matched paid
-events to all five frozen A9 input folds. Next: train/replay public frequency-severity
-composition on those packets, then remaining adapters/searches and D5 checks.
+events to all five frozen A9 input folds. Sprint 058 trains and replays the public
+composition on all five packets with independent component selection. Next: A10
+survival, remaining adapters/searches and D5 checks; joint A9 selection remains open.
 These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
