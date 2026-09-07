@@ -1,6 +1,6 @@
 # Sprint 067: Incremental transaction execution
 
-Status: ready after partial-profile diagnosis; implementation not started. Mapping: N2b / B05 / C4–C5 / E1.
+Status: implementation in progress; linear-work counterexample passes, practical rerun pending. Mapping: N2b / B05 / C4–C5 / E1.
 Depends on: [066](066-practical-cpu-profile.md) diagnosis justifying the change.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
@@ -48,3 +48,14 @@ state boundary. Preserve exact term-addition order; avoid summing a combined del
 that changes floating-point results. The baseline sweep has six passing cases,
 one preempted case and one not_run case. Comparisons must retain those gaps;
 no complete long-round baseline or speed claim exists.
+
+### First implementation slice
+
+Plan: reproduce the count failure; implement owned proposal evaluation and verified
+encoding reuse; run transaction/full-regression checks; commit; then repeat the
+frozen practical diagnostic and reflect on measured improvement and remaining costs.
+The first test failed at 60/120 and 216/432 tree calls for squared/Normal at 4/8
+rounds. New-term evaluation reduces these to 8/16 and 16/32 with exact independent
+full replay, preserving individual term-addition order. Public `preview_raw`
+serves external loops as well as built-in recipes. Runtime metadata/model-envelope
+work may still grow with ensemble size; this is not a claim of linear total fit time.

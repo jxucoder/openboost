@@ -121,9 +121,9 @@ def run(job, directory):
     calls = []
     original = Tree.predict
 
-    def counted(tree, data):
+    def counted(tree, data, **kwargs):
         calls.append(len(data.values))
-        return original(tree, data)
+        return original(tree, data, **kwargs)
 
     def fit():
         return recipe(train, valid, context=draws, **options)

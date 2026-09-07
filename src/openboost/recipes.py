@@ -27,7 +27,7 @@ from .ops import (
     vector_leaf,
     vector_score,
 )
-from .runtime import AcceptedState, initialize, preview, propose_terms, resolve
+from .runtime import AcceptedState, initialize, preview_raw, propose_terms, resolve
 from .stats import least_squares, newton, vector_newton
 from .stopping import StopState
 from .tree import depthwise
@@ -199,8 +199,8 @@ def _trials(state, terms, loss, loss_before, rate, policy, max_trials):
         coefficients.append(alpha)
         try:
             proposal = propose_terms(state, tuple(replace(t, coefficient=alpha) for t in terms))
-            candidate = preview(state, proposal)
-            candidate_loss = loss(state.train, candidate.predict(state.train.data))
+            candidate_raw, _ = preview_raw(state, proposal)
+            candidate_loss = loss(state.train, candidate_raw)
             accepted = policy == "fixed" or candidate_loss < loss_before
             updated = resolve(state, proposal, accept=accepted, score=loss)
         except (ValueError, FloatingPointError, OverflowError) as error:

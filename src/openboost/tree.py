@@ -8,8 +8,8 @@ from pathlib import Path
 import numpy as np
 
 from . import ops
-from .binning import Binning, _array
-from .data import _identity, _owned
+from .binning import BinnedData, Binning, _array
+from .data import MixedData, NumericData, _identity, _owned
 from .leaves import ResidualContext
 
 
@@ -90,8 +90,16 @@ class Tree:
     def output_width(self):
         return self.value.shape[1]
 
-    def predict(self, data):
-        binned = self.binning.transform(data)
+    def predict(self, data, *, binned=None):
+        if binned is None:
+            binned = self.binning.transform(data)
+        elif (
+            not isinstance(data, (NumericData, MixedData))
+            or not isinstance(binned, BinnedData)
+            or binned.data.identity != data.identity
+            or binned.binning.identity != self.binning.identity
+        ):
+            raise ValueError("prediction encoding data/binning identity differs")
         result = np.empty((len(data.values), self.output_width))
         pending = [(0, np.arange(len(data.values)))]
         while pending:

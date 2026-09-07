@@ -81,3 +81,20 @@ available alongside joint Normal updates with ordinary/Fisher directions. Initia
 heterogeneous sequential runs; interfaces remain provisional. Model construction
 uses a conservative absolute-value envelope to reject possible prediction
 overflow, which can reject extremely large terms even when they would cancel.
+
+## Incremental proposals
+
+`preview_raw(state, proposal)` returns immutable training and validation candidate
+raw arrays without observation offsets. A proposal evaluates only its new terms
+in their declared order. `resolve` transfers these internally derived values on
+acceptance; rejection leaves the original state and its encodings unchanged.
+Public state construction and dataclass replacement recompute predictions and do
+not accept raw cache arguments. `preview(state, proposal).predict(data)` remains
+an independent full-ensemble replay for verification and export.
+
+The runtime reuses `BinnedData` by immutable feature-data and fitted-binning
+identities within a run. Trees also accept `predict(data, binned=encoding)` after
+checking both identities, including row order, feature values and categorical
+schema. Neither caller-provided code arrays nor prediction caches are trusted.
+This reduces repeated tree evaluation; it does not claim all training work is
+linear, and does not change full trace retention or implement CUDA.

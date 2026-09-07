@@ -37,9 +37,9 @@ def run():
             calls = []
             original = Tree.predict
 
-            def counted(tree, inputs, *, calls=calls, original=original):
+            def counted(tree, inputs, *, calls=calls, original=original, **kwargs):
                 calls.append(len(inputs.values))
-                return original(tree, inputs)
+                return original(tree, inputs, **kwargs)
 
             with patch.object(Tree, "predict", counted):
                 result = recipe(
@@ -58,7 +58,7 @@ def run():
                 if isinstance(value := getattr(step, field.name), np.ndarray)
             }
             assert result.state.version == rounds
-            assert len(calls) == 3 * width * rounds * (rounds + 1)
+            assert len(calls) == 2 * width * rounds
             cases.append(dict(
                 recipe=name, rounds=rounds, train_rows=32, validation_rows=16,
                 parameters=width, tree_terms=len(result.state.model.terms),
