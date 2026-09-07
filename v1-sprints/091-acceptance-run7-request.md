@@ -1,7 +1,9 @@
 # Run 7: Capture the original Normal acceptance failures
 
-Status: frozen locally; upload and compute allowances are pending. All six prior
-allowances are consumed. [Exact protocol and hashes](091-acceptance-run7.json).
+Status: executed at clean `80740f2`; **383 passed, two failed**, with both diagnostic
+cases complete. Allowance consumed; no retry. See the
+[result](../benchmarks/v1/evidence/cuda-acceptance-091/README.md).
+[Exact protocol and hashes](091-acceptance-run7.json).
 Harness construction: `e0a043b`, with offline CLI provenance completed in this
 freeze. Production code and every old test/reference match run 6 byte for byte.
 
@@ -63,7 +65,8 @@ for product timing; no performance claim follows.
 
 ## Dispatch and stop boundary
 
-After explicit approval of this concrete package, mark both authorization fields
+The following approved procedure is retained for provenance. Its allowance is now
+consumed and must not be reactivated. After explicit approval, mark both authorization fields
 approved, commit, recheck the freeze and dispatch once:
 
 ```sh

@@ -26,7 +26,7 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1474 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1478 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.
@@ -54,17 +54,22 @@ at clean `4143d18`: [381/383 pass](../benchmarks/v1/evidence/cuda-normal-090/REA
 including all 212 earlier cases, all Normal operation/recipe checks and all twenty
 installed-D2/fresh-inference checks. Two mapped-runtime cases disagree with the
 frozen reference's ordered backtracking decisions near a stationary constant base.
-The cause is not yet proven. All nineteen saved models replay without CUDA or
+That run did not retain the failing states. All nineteen saved models replay without CUDA or
 the training extension; the separate split near-tie remains a known limitation.
 
-All six allowances are consumed; no retry occurred. After [090's retrospective](090-normal-device-construction.md),
-the user approved [091's local acceptance investigation](091-normal-acceptance-diagnostics.md)
-before more CUDA families. Independent high-precision differences and separate
-device observations precede a production policy decision.
-Normal conformance, original P7/E4, 069 accounting/isolation and full R/C/A scope
-remain open. The [run-7 request](091-acceptance-run7-request.md) freezes 70 files and
-385 cases, preserving all 383 old cases. Both source upload and one T4 allowance
-remain pending; diagnostic completion is distinct from repaired conformance.
+The separately approved [run 7](091-acceptance-run7-request.md) captures both failing
+states at clean `80740f2`: [383/385 pass](../benchmarks/v1/evidence/cuda-acceptance-091/README.md),
+with all 383 original outcomes unchanged and two successful observations. Both
+fail at round zero's mean update: float64 full-loss rounding reports improvement
+for an actually worsening candidate. Version/best updates and cleanup follow the
+recorded decisions. Full Normal conformance remains open.
+
+All seven allowances are consumed; no retry occurred. Stop at
+[091's retrospective](091-normal-acceptance-diagnostics.md). The next
+[092 proposal](092-normal-comparison-design.md) defines a programmable loss-change
+boundary, independent numerical evidence and explicit historical/revised cohorts
+before a production correction. Original P7/E4, 069 accounting/isolation and full
+R/C/A scope remain open. No additional upload, run or author attempt is authorized.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

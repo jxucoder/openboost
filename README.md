@@ -31,7 +31,9 @@ correction resolves the previous 14 failures without changing tolerances. See th
 The first [Normal K=2 and installed D2 T4 run](benchmarks/v1/evidence/cuda-normal-090/README.md)
 passes 381/383 checks, including all earlier scalar cases and nineteen saved-model
 CPU replays. Two ordered acceptance decisions fail the frozen reference; full
-Normal conformance remains open.
+Normal conformance remains open. The [follow-up diagnostic run](benchmarks/v1/evidence/cuda-acceptance-091/README.md)
+preserves both failures and identifies rounding-induced false improvement at
+near-stationary loss. Comparison policy is being designed; no correction is claimed.
 [Binary classification](docs/v1/binary.md) now
 persists typed class order and exposes probability/label inference.
 [Multiclass and vector leaves](docs/v1/multiclass.md) add joint softmax updates

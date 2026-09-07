@@ -184,6 +184,14 @@ def test_actual_failing_traces_preserve_ownership_and_false_improvement(order, s
         == source_hashes(config())["tests/v1/test_device_normal_runtime_cuda.py"]
     )
     report = analyze(trace)
+    stored_analysis = json.loads((output / f"analysis-{order}.json").read_text())
+    assert {key: stored_analysis[key] for key in report} == json.loads(json.dumps(report))
+    assert stored_analysis["trace_sha256"] == hashlib.sha256(
+        (output / "normal/acceptance" / f"{order}.json").read_bytes()
+    ).hexdigest()
+    assert stored_analysis["analysis_sources"] == {
+        name: source_hashes(config())[name] for name in stored_analysis["analysis_sources"]
+    }
     data = trace["inputs"]["training"]
     target, offset, weight = (unpack(data[k]) for k in ("target", "offset", "weight"))
     for observed in trace["steps"]:

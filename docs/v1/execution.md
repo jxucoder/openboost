@@ -305,8 +305,9 @@ Ninety frozen three-round Normal transaction cases and six ownership/rollback
 cases execute on T4: 94 pass and two fail. They include both update orders,
 independent cohort fields and failures after partially copying/predicting terms.
 The failures concern exact backtracking decisions in ordinary ordered depth-zero
-conflict fixtures near a stationary base. The retained traces do not prove the
-device cause. Strict acceptance remains implemented as a training-NLL decrease;
+conflict fixtures near a stationary base. Run 6 did not retain enough state to
+identify the cause; run 7's observations below close that gap. Strict acceptance
+remains implemented as a decrease in the reported training NLL;
 no tolerance was changed to turn these failures into passes.
 
 `device_recipes.normal(ops, train, validation, run_id=..., seed=...)` now composes
@@ -333,3 +334,19 @@ pass in run 6. Twenty additional installed-D2/fresh-inference checks pass, inclu
 nineteen saved models replayed in a separate CPU environment without CUDA or the
 training extension. Timing/copy/synchronization diagnostics are retained for tiny
 fits; original P7, full Normal acceptance and real-data quality/cost remain open.
+
+Run 7 at `80740f2` repeats all 383 original outcomes and passes two added observation
+cases. Both failures occur on round zero's mean update. At the accepted candidate,
+reported device NLL decreases by `8.88e-16` while high-precision original-row math
+at the exact stored inputs increases by `5.90e-18`. Ordinary float64 original-row
+loss subtraction also reports the wrong sign. The captured gradients/Fisher match
+their float32-rounded reference; float32 reduction cancellation creates a small
+leaf, and rounding of total losses misclassifies its update. Transaction ownership,
+version/best updates and saved inference remain correct for the measured decisions.
+
+Normal backtracking therefore remains experimental: independently rounded total
+losses are an unreliable comparison near stationarity. An objective-owned
+loss-change operation with an explicit numerical-resolution contract is proposed,
+not implemented. The repository archive `benchmarks/v1/evidence/cuda-acceptance-091/`
+retains both failures and the complete traces. No tolerance or original test was
+changed, and successful diagnostics do not pass full Normal conformance.

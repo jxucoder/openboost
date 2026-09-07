@@ -102,20 +102,25 @@ mapped runtime passes 94/96. Nineteen saved models replay without CUDA or the
 training extension. [Raw evidence and retrospective](benchmarks/v1/evidence/cuda-normal-090/README.md)
 retain both failures, all 79 raw artifacts and the separate known split near-tie.
 
-All six allowances are consumed; no retry or additional upload is authorized.
-After the planned retrospective in [090](v1-sprints/090-normal-device-construction.md),
-the user approved [091's local diagnostics](v1-sprints/091-normal-acceptance-diagnostics.md).
-Actual failing-state telemetry and an explicit numerical acceptance investigation
-precede more CUDA recipes. Independent math demonstrates a float64 full-loss
-comparison counterexample at a saved D2 base; this is not the failed trace.
-Do not label the
-near-stationary explanation proven: the failed tests did not retain intermediate
-loss/raw bits. No test/tolerance was changed, and full Normal acceptance remains
-open. Original P7/E4 and [069 accounting/isolation](v1-sprints/069-authoring-pilot.md)
-remain required. The [run-7 request](v1-sprints/091-acceptance-run7-request.md) now
-freezes 70 files and 385 cases: all 383 old cases plus two separate observations.
-Both upload and compute remain pending. Diagnostic completion does not repair
-the original failures or change the all-pass judge.
+The separately approved [run-7 diagnostics](v1-sprints/091-acceptance-run7-request.md)
+execute at clean `80740f2`: **383/385 pass**, retaining the exact two original
+failures. Both new observation cases pass; all original results and nineteen saved
+model bytes match run 6. [Actual traces and analyses](benchmarks/v1/evidence/cuda-acceptance-091/README.md)
+establish false improvement on round zero's mean update: measured NLL falls by
+`8.88e-16` while high-precision math at the same stored inputs worsens by `5.90e-18`.
+Rounded gradients/Fisher match the reference; float32 reduction cancellation creates
+a small leaf. The transaction follows the reported decision and releases ownership
+correctly. No acceptance-policy correction or full Normal conformance is claimed.
+
+All seven allowances are consumed; no retry or additional upload is authorized.
+Stop at [091's retrospective](v1-sprints/091-normal-acceptance-diagnostics.md).
+The [092 comparison proposal](v1-sprints/092-normal-comparison-design.md) specifies
+independent loss-change mathematics and explicit numerical resolution, then a public
+objective operation and separate training/best/stopping consumers. It remains a
+proposal. Preserve the old full-loss predicate cases and failed runs; any revised
+semantic cohort must be explicit before hardware. No blanket epsilon, hidden metric
+adjustment or aggregation-only fix establishes reliable comparison. Original P7/E4
+and [069 accounting/isolation](v1-sprints/069-authoring-pilot.md) remain required.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
@@ -129,7 +134,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1474 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1478 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
@@ -183,8 +188,9 @@ public split/feasibility/route/leaf operations plus the separate resident square
 recipe pass the bounded 212-case T4 matrix at `af026ef`, including weighted/missing
 parity, owned transactions and saved CPU inference. Normal K=2 device operations,
 mapped runtime and joint/ordered recipes execute in the bounded run-6 matrix,
-which passes 381/383 checks with two unresolved acceptance decisions. Installed
-D2 and nineteen CPU replays pass; full Normal conformance remains open. Other
+which passes 381/383 checks with two acceptance failures. Run 7 repeats both
+failures and captures the false-improvement mechanism; its two diagnostics pass.
+Installed D2 and nineteen CPU replays pass; full Normal conformance remains open. Other
 required CUDA recipes remain unimplemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 

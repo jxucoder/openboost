@@ -69,3 +69,24 @@ production correction or further hardware. All R/C/A, P7/E4 and author gates rem
 
 - `1e0acfb` — concrete run-7 freeze.
 - `80740f2` — explicit upload/compute approval and clean dispatch revision.
+- `6f204de` — immutable run, consumed allowance and archival verification.
+
+## Closure and next design
+
+The full CPU regression command from the agent guide, with `--no-sync` and the
+same cache setting, passes **1478 tests**, one Linux-only skip:
+`/tmp/openboost-091-results-cpu.log`. The archive suite's 23 checks include exact
+float32-rounded geometry at captured inputs and all nineteen new CPU replays.
+
+[Sprint 092](../v1-sprints/092-normal-comparison-design.md) is a proposed next
+construction plan: objective-owned differences and justified numerical resolution,
+then explicit comparison consumers for training, validation best and patience.
+It preserves absolute metric reporting and requires a separate, preregistered
+semantic cohort because the old test compares absolute scalar losses directly.
+No production policy, reference, kernel or historical verdict is changed here.
+Stop at the approved retrospective boundary; all seven allowances are consumed.
+
+The final combined archive/oracle/analysis suite passes **56 tests**, including
+reproduction of both committed derived analyses and their exact trace/source
+hashes. Production/changed-support Ruff and MkDocs pass; MkDocs retains the single
+pre-existing link warning for run-6 evidence outside its documentation tree.
