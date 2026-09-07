@@ -46,3 +46,8 @@ Remove that parameter; generator execution has no retry policy. The failed launc
 ran no remote work and is retained as `launch-error.json`. Retry uses identical
 frozen input/protocol in a fresh directory. Ruff and the ten focused profile tests
 pass before the correction commit.
+
+The launch correction also accidentally omitted the retry declaration from future
+freeze metadata. Restore that field and add a regression assertion. The active
+run uses the original committed protocol, which retained `retries: 0` throughout;
+its execution and inputs are unaffected. Ten focused tests and format checks pass.

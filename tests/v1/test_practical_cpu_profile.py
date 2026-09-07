@@ -35,6 +35,7 @@ def test_freeze_preserves_prefixes_and_excludes_test_rows(tmp_path, monkeypatch)
         np.testing.assert_array_equal(data["validation_ids"], partitions[1][:1024])
         np.testing.assert_array_equal(data["x_train"], x[partitions[0][:8192]])
         assert not np.intersect1d(data["train_ids"], partitions[2]).size
+    assert protocol["budgets"]["retries"] == 0
     assert len(protocol["cases"]) == 8
     assert len({c["id"] for c in protocol["cases"]}) == 8
     with pytest.raises(FileExistsError):
