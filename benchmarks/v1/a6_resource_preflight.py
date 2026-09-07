@@ -22,12 +22,23 @@ def profile_complete(execution, record):
     )
 
 
+def comparator_jobs(plan):
+    expected = [f"{library}:0:00" for library in ("xgboost", "lightgbm", "catboost")]
+    jobs = [job for name in expected for job in plan["jobs"] if job["id"] == name]
+    if [job["id"] for job in jobs] != expected:
+        raise ValueError("three unique frozen comparator probes required")
+    return jobs
+
+
 def probe(spec, *, profile=False, package_root=None):
     import runpy
 
     import numpy as np
 
     source = Path("/snapshot/benchmarks/v1")
+    comparator = spec["library"] != "openboost"
+    worker = "baseline_worker.py" if comparator else "openboost_worker.py"
+    predictor = "baseline_predict.py" if comparator else "openboost_predict.py"
     import tempfile
 
     root = Path(tempfile.mkdtemp(prefix="a6-probe-", dir="/tmp"))
@@ -71,20 +82,20 @@ def probe(spec, *, profile=False, package_root=None):
                 str(p.relative_to(root)): p.read_bytes() for p in root.rglob("*") if p.is_file()
             },
         )
-    wrapper = """import json,resource,runpy,sys
+    wrapper = """import json,resource,runpy,sys,importlib.metadata
 from pathlib import Path
 sys.argv=sys.argv[1:]
 sys.path.insert(0,str(Path(sys.argv[0]).parent))
 try:
     runpy.run_path(sys.argv[0],run_name='__main__')
 finally:
-    Path('resources.json').write_text(json.dumps(dict(peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024, package_file=getattr(sys.modules.get('openboost'),'__file__',None))))
+    Path('resources.json').write_text(json.dumps(dict(packages={d.metadata['Name']:d.version for d in importlib.metadata.distributions()}, peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024, package_file=getattr(sys.modules.get('openboost'),'__file__',None))))
 """
     if package_root is not None:
         wrapper = f"import sys; sys.path.insert(0, {package_root!r})\n" + wrapper
     fit = root / "fit"
     result = execute(
-        [sys.executable, "-c", wrapper, str(source / "openboost_worker.py"), str(path)],
+        [sys.executable, "-c", wrapper, str(source / worker), str(path)],
         fit,
         timeout_s=1800,
         threads=1,
@@ -108,10 +119,10 @@ finally:
                     [
                         sys.executable,
                         "-c",
-                        "import sys,runpy; "
+                        "import sys,runpy; sys.path.insert(0, '/snapshot/benchmarks/v1'); "
                         + (f"sys.path.insert(0, {package_root!r}); " if package_root else "")
                         + "sys.argv=sys.argv[1:]; runpy.run_path(sys.argv[0],run_name='__main__')",
-                        str(source / "openboost_predict.py"),
+                        str(source / predictor),
                         str(fit / "model.bin"),
                         str(root / "features.npz"),
                         str(root / "replay.npz"),
@@ -181,9 +192,9 @@ def paired_probe(spec):
     )
 
 
-def main(output, packets, *, profile=False, paired=False):
-    if profile and paired:
-        raise ValueError("profile and paired modes are separate experiments")
+def main(output, packets, *, profile=False, paired=False, comparators=False):
+    if sum((profile, paired, comparators)) > 1:
+        raise ValueError("profile, paired and comparator modes are separate experiments")
     import modal
 
     output = Path(output).resolve()
@@ -199,6 +210,8 @@ def main(output, packets, *, profile=False, paired=False):
         "preprocessing",
         "ranking",
     ]
+    if comparators:
+        names += ["baseline_worker", "baseline_predict"]
     paths = (
         sorted((repo / "src/openboost").rglob("*.py"))
         + [source.with_name(name + ".py") for name in names]
@@ -223,6 +236,18 @@ def main(output, packets, *, profile=False, paired=False):
     current = compile_plan(json.loads(source.with_name("search-design.json").read_text()))
     if {k: v for k, v in plan.items() if k != "input_files"} != current:
         raise ValueError("resource plan differs from compiler")
+    if comparators:
+        from benchmarks.v1.a6_search_plan import validate_plan
+
+        plan_path = repo / "v1-sprints/070-a6-cpu-search-plan-bins.json"
+        frozen = json.loads(plan_path.read_text())
+        for name, expected in frozen["input_files"].items():
+            if hashlib.sha256((source.parent / name).read_bytes()).hexdigest() != expected:
+                raise ValueError("changed frozen comparator plan input")
+        validate_plan(
+            frozen["plan"], json.loads(source.with_name("search-design.json").read_text())
+        )
+        plan = {**frozen["plan"], "input_files": frozen["input_files"]}
     packet_manifest = json.loads((packets / "manifest.json").read_text())
     if packet_manifest["application"] != "A6" or packet_manifest["dataset"] != "parkinsons":
         raise ValueError("A6 Parkinsons packet required")
@@ -251,7 +276,11 @@ def main(output, packets, *, profile=False, paired=False):
             "validation_row_ids",
         }:
             raise ValueError("train/validation packet only")
-    jobs = [j for trial in plan["first_probe_ids"] for j in plan["jobs"] if j["id"] == trial]
+    jobs = (
+        comparator_jobs(plan)
+        if comparators
+        else [j for trial in plan["first_probe_ids"] for j in plan["jobs"] if j["id"] == trial]
+    )
     if profile or paired:
         jobs = jobs[:1]
     baseline_revision = "17ab9de"
@@ -294,7 +323,13 @@ def main(output, packets, *, profile=False, paired=False):
         fold_metadata=fold["metadata"],
         packet_manifest=packet_manifest,
         jobs=jobs,
-        mode="profile" if profile else "paired" if paired else "resource",
+        mode="comparators"
+        if comparators
+        else "profile"
+        if profile
+        else "paired"
+        if paired
+        else "resource",
         status="running",
         modal_version=modal.__version__,
     )
@@ -310,6 +345,15 @@ def main(output, packets, *, profile=False, paired=False):
         .uv_pip_install("numpy==2.3.5", "pytest==9.0.2", "hatchling==1.27.0", uv_version="0.12.1")
         .env({"PYTHONDONTWRITEBYTECODE": "1"})
     )
+    if comparators:
+        image = image.apt_install("libgomp1").uv_pip_install(
+            "xgboost==3.4.1",
+            "lightgbm==4.7.0",
+            "catboost==1.2.10",
+            "scipy==1.16.3",
+            "scikit-learn==1.8.0",
+            uv_version="0.12.1",
+        )
     for path in paths:
         image = image.add_local_file(path, "/snapshot/" + str(path.relative_to(repo)), copy=True)
     image = image.uv_pip_install(
@@ -378,5 +422,12 @@ if __name__ == "__main__":
     parser.add_argument("packets", type=Path)
     parser.add_argument("--profile", action="store_true")
     parser.add_argument("--paired", action="store_true")
+    parser.add_argument("--comparators", action="store_true")
     args = parser.parse_args()
-    main(args.output, args.packets, profile=args.profile, paired=args.paired)
+    main(
+        args.output,
+        args.packets,
+        profile=args.profile,
+        paired=args.paired,
+        comparators=args.comparators,
+    )

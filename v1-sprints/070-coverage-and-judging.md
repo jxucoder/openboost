@@ -503,3 +503,17 @@ checks. Three source and thirteen artifact hashes verify; see the
 the earlier planning file stays historical. Explicit parameter translation is
 resolved for the synthetic installed boundary. Dispatch remains false until real
 full-budget resource/selection checks and broader coverage obligations are met.
+
+### Real comparator preflight preparation
+
+Plan: reuse the protected A6 resource harness for exactly three frozen fold-zero
+configuration-00 comparator jobs, add fresh-process A6 comparator replay, validate
+selection/input freezes and mode separation, commit, then run on Modal. Each fit
+keeps 1800 seconds, 8-GiB address space and one BLAS thread under a two-CPU/8192-MiB
+container request. Use the already approved train/validation-only packet, stop on
+failure, no retries. This preflight is three 300-round-budget jobs with patience
+50; it is not the 400-fit search or the deeper/1000-round qualification.
+
+Preparation validation: 1120 CPU tests passed, one Linux-only skip; 28 focused
+checks, lint and docs pass. All three new CLI replays exactly reproduce the
+committed 255-bin synthetic predictions. Remote execution is pending.

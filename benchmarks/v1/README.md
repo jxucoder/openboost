@@ -743,3 +743,9 @@ intervals. This applies to the worker's finite encoded inputs; it does not align
 native quantization algorithms. NGBoost explicitly rejects this setting. Omitted
 bins retain native defaults. `bin_budget_smoke.py` checks installed effective
 parameters, stopping records and fresh-process A6 replay at 7 and 255 bins.
+
+`a6_resource_preflight --comparators` runs only the three frozen fold-zero
+configuration-00 comparator resource probes. It verifies the updated A6 plan's
+input pins, uses the protected worker policy and fresh A6 replay, and stops on
+failure without retries. Profile, paired and comparator modes are mutually
+exclusive. This mode does not execute or certify the 400-job search.
