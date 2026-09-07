@@ -1,0 +1,84 @@
+{
+  "absent": [
+    "ob_cohort_splits",
+    "cupy",
+    "numba"
+  ],
+  "installed_path": "/opt/openboost-normal-cpu/venv/lib/python3.12/site-packages/openboost",
+  "python": "3.12.1 (main, Jan  8 2024, 04:46:10) [Clang 17.0.6 ]",
+  "numpy": "2.3.5",
+  "sources": {
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/_device_kernels.py": "c18e827ced73d985a034bf98a95ebfa7d8370e3a157b5980887e71f5f9a04fb3",
+    "src/openboost/device_recipes.py": "73b0e44cb8f1808d89328ef2961e345fe641fa2e5ceaf8ed69ab73e98c2cc2e7",
+    "src/openboost/__init__.py": "23cfde54172b152ccc913c955ff1ee59f74ec92c83f589e8d4741150f2fb7086",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/device_objectives.py": "709ed1ec569947c0ae860bfdcf41cddaed2b91dd5900b69743ecd50ebc09bda0",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/diagnostics.py": "54065428816f7092ebc0f2bb66c0d2006bc3d49a864c8950e3901c68e7b428bf",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/device_tree.py": "4f4916b195da9221f607ab27e6968ee38669e95b09cb60d742740a674d6e4dd1",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/device.py": "9f43d34ed5f9d1d81aa0ca04df186616bf63f13fb0bdbc80ea4617d3c2e8ae3a",
+    "src/openboost/device_runtime.py": "7286acf32996bc1ac11f15c4c907b698c8fd112f6b27b9d4e888c318bed8fdda",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/runtime.py": "aa51d6ab3678778c2795271ddcedf3718385d6eb2e335e46eaf3d49acd781c9c",
+    "src/openboost/recipes.py": "de920ffda40e2ecbd9a56b368515497c9fdb94d30a465be0f9c8ed0e39974082",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/stopping.py": "dcd61888233544ee2a94ea5d6046277bcf918b01b3b333ae7945714b3cb30ef5",
+    "src/openboost/execution.py": "817841600572c8062b36bf886a8a01d406195c508c856d2f4c4c90dd094411fe",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/ops.py": "fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/device_normal.py": "85de59453a60c66237668c33dfdde98b33a7965b69e969acb4e959a7b5a9d597",
+    "src/openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5"
+  },
+  "model_sha256": "ce8e547880e2e902168806b5cafffe448e909b8556c883624640ad6485b37420",
+  "raw": [
+    [
+      -1.1355081796646118,
+      -0.3013368248939514
+    ],
+    [
+      -1.1355081796646118,
+      -0.3013368248939514
+    ],
+    [
+      -1.1355081796646118,
+      -1.2263914942741394
+    ],
+    [
+      -1.1355081796646118,
+      -1.2263914942741394
+    ],
+    [
+      2.420006051659584,
+      1.1259573698043823
+    ],
+    [
+      2.420006051659584,
+      1.1259573698043823
+    ]
+  ],
+  "mean": [
+    -1.0105081796646118,
+    -1.1355081796646118,
+    -1.2605081796646118,
+    -1.0105081796646118,
+    2.420006051659584,
+    2.295006051659584
+  ],
+  "scale": [
+    0.6528963933221976,
+    0.8383355634894585,
+    0.2588797801690013,
+    0.33240821760353284,
+    2.7208854755290903,
+    3.4936861064758635
+  ],
+  "load_and_predict_seconds": 0.009083975000002908
+}

@@ -7,6 +7,7 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+import numpy as np
 import pytest
 from benchmarks.v1.cuda_aggregation_preflight import (
     check_dispatch,
@@ -185,3 +186,68 @@ def test_bounded_artifact_retention_and_partial_failure(tmp_path):
             dict(protocol, retained_artifacts=["../outside.json"]),
         )
     assert not (tmp_path.parent / "outside.json").exists()
+
+
+def test_completed_run_preserves_failure_verdict_and_all_raw_artifacts():
+    protocol = config()
+    output = ROOT / protocol["output"]
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert protocol["authorization"] == "consumed"
+    assert manifest["protocol"] == dict(protocol, authorization="approved")
+    assert manifest["revision"] == "4143d188b9635749308ef52382a1562928ae2612"
+    assert manifest["dirty"] is False and manifest["status"] == "fail"
+    assert manifest["result"]["exit_code"] == 1
+    assert len(manifest["artifacts"]) == 79
+    for name, digest in manifest["artifacts"].items():
+        assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
+    verdict = judge_run(
+        manifest["result"], (output / "junit.xml").read_text(), protocol, manifest["sources"]
+    )
+    assert verdict == json.loads((output / "verdict.json").read_text())
+    assert verdict["passed"] is False
+    assert all(
+        verdict[name]
+        for name in (
+            "installed_sources_match",
+            "versions_match",
+            "snapshot_sources_match",
+            "installed_extensions_match",
+            "cpu_environment_built",
+            "retained_artifacts_complete",
+        )
+    )
+    failed = [c["case"] for c in verdict["cases"] if c["status"] != "pass"]
+    assert failed == [
+        f"tests.v1.test_device_normal_runtime_cuda::test_frozen_three_round_transactions[False-8.0-{order}-ordinary-0-conflict-0-None]"
+        for order in ("forward", "reverse")
+    ]
+    assert (
+        len(verdict["cases"]) == 383 and sum(c["status"] == "pass" for c in verdict["cases"]) == 381
+    )
+    assert all(c["status"] == "pass" for c in verdict["cases"][:212])
+
+
+def test_nineteen_archived_models_match_fresh_cpu_replays():
+    from openboost.artifacts import Model
+    from openboost.data import NumericData
+
+    output = ROOT / config()["output"]
+    manifest = json.loads((output / "manifest.json").read_text())
+    paths = sorted((output / "normal").glob("*/model.json"))
+    assert len(paths) == 19
+    for path in paths:
+        inputs = json.loads(path.with_name("inputs.json").read_text())
+        replay = json.loads(path.with_name("cpu-replay.json").read_text())
+        assert replay["absent"] == ["ob_cohort_splits", "cupy", "numba"]
+        assert replay["sources"] == manifest["result"]["installed_sources"]
+        assert replay["model_sha256"] == hashlib.sha256(path.read_bytes()).hexdigest()
+        model = Model.load(path)
+        data = NumericData(inputs["values"], inputs["row_ids"], tuple(inputs["feature_names"]))
+        prediction = model.predict(data)
+        np.testing.assert_array_equal(prediction, replay["raw"])
+        np.testing.assert_allclose(prediction, inputs["expected_raw"], rtol=2e-4, atol=2e-5)
+        if path.parent.name == "missing-normal":
+            assert np.isnan(data.values).any()
+        else:
+            assert model.terms[0].learner.feature[0] == 0
+            assert model.terms[0].learner.threshold[0] == 1

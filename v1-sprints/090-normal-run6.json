@@ -1,6 +1,6 @@
 {
   "scope": "090 bounded Normal K=2 operations, shared mapped transactions, joint/ordered recipes and installed D2; all 212 run-5 regressions retained. The near-tie case validates diagnostic capture only. No full phase exit, P7 reproduction, quality, author benefit or performance claim.",
-  "authorization": "approved",
+  "authorization": "consumed",
   "upload_authorization": "approved",
   "require_upload_authorization": true,
   "upload_destination": "Modal",
