@@ -56,6 +56,31 @@ Full CPU regression passes 1232 tests with one Linux-only skip and 130 GPU cases
 deselected. Production/changed-test Ruff and documentation build pass. Imports
 also succeed with CUDA packages blocked. No hardware test was run for this slice.
 
+## Runtime/recipe construction and reflection
+
+DeviceRun separates state records from private raw arrays and model terms. Proposals
+copy caller trees; accepted states copy proposal raw arrays and increment immutable
+term references only after CUDA work succeeds. Rejection returns the same object.
+Wrong-parent/foreign/forged/released records fail; raw snapshots and prior state
+releases cannot invalidate accepted state. The deterministic recipe releases all
+superseded states and temporary work, retaining scalar history plus O(T) trees.
+StopState observes once per outer round independently of acceptance and best choice.
+
+Seventy-two runtime cases collect, including 36 two-round comparisons and 24-round
+retention/fresh-process inference. Combined with tree checks and prior regressions,
+the proposed device package has 202 cases. No CUDA execution occurred. Nineteen
+CPU API/import tests pass, including new configuration and unsupported-target checks.
+Initial target-rejection verifiers failed during Problem construction; correcting
+raw width, class codes and structured-role dimensions now exercises the actual
+public scalar boundary. The production validation runs before CUDA storage access.
+
+This advances the programmable foundation to a reviewable resident training path.
+It does not establish that kernels compile or pass on real CUDA. D2 remains known
+development work; independent author evidence and all broader R/C/A/E gates stay
+open. Freeze the complete package and request one new compute/upload allowance next.
+Runtime-slice full CPU regression passes 1247 tests, with one Linux-only skip and
+202 GPU tests deselected. Production/changed-test Ruff and documentation build pass.
+
 ## Risks and Follow-ups
 
 Explicit release, borrowed inputs, model sharing and failed allocations must not
@@ -65,5 +90,6 @@ raw arrays. Device training and formal R/C/A/E acceptance remain unverified.
 
 ## Commits
 
-Commit fixtures/design, operations, runtime/recipe and validation packages in
-separate verified slices. No push or new remote upload/run without authorization.
+`3561738` freezes the design/oracle; `e616451` commits the resident objective/tree
+construction. Commit runtime/recipe and validation packages separately. No push or
+new remote upload/run without authorization.

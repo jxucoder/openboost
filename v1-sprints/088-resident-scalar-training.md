@@ -113,3 +113,31 @@ empty-child candidate. Temporary callback allocations are scoped and discarded;
 preexisting caller buffers remain owned by their caller. Forty-two real-device
 cases collect locally; no CUDA execution or new upload has occurred. Accepted/
 proposal integration and the scalar recipe remain the next construction slice.
+
+## Local runtime construction and reflection
+
+`e616451` adds the objective/tree layer with 42 pending GPU cases. The next slice
+implements DeviceRun and the separate device squared recipe. Private raw storage,
+learner snapshots and reference-counted immutable terms enforce the chosen lifetime
+boundary by construction. Public raw access copies. Resolve copies proposal raw
+before changing references. Each proposal predicts only its new tree twice; the
+verifier counts those calls across two rounds. Recipe stopping observes once per
+outer round, while best selection remains strict validation improvement.
+
+Seventy-two runtime GPU cases are now written and collect, including all 36 frozen
+two-round combinations, rejected trials, wrong identities, allocation rollback,
+unrepresentable preparation, retained old state, owned stream restoration and a
+24-round installed-model inference check. The long check is a tiny ownership probe,
+not a scaling or performance experiment. CPU checks reject unsupported target
+schemas and recipe controls without CUDA access. Initial bad verifier inputs were
+corrected to construct valid vector/class/structured Problems before asking the
+scalar API to reject them; their earlier failures did not exercise that boundary.
+
+Reflection after the third local commit: the design now connects primitives to a
+public training path rather than extending the objective catalogue. D2 can enter
+through supplied operations; this is still known designer work. Independent author
+attempts, full CUDA scope, train-many, real application quality and end-to-end cost
+remain open. There is no new GPU acceptance, speed or adoption claim. The concrete
+next gate is a frozen installed-package check of all 114 new and 88 prior cases,
+then user authorization for one additional T4 invocation and its exact private
+source/test upload. Do not dispatch from this construction record.

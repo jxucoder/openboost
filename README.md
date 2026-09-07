@@ -23,8 +23,9 @@ these operations and persist validated numeric/categorical trees. The first comp
 and [Normal recipe](docs/v1/normal.md) support weights, offsets and
 fixed/backtracking steps on CPU. Normal exposes ordinary/Fisher directions and
 joint mean/log-scale updates. [Formula and sequential runs](docs/v1/formula-runs.md)
-add structured full-metric updates and independent heterogeneous jobs. CUDA
-training is not implemented yet. [Binary classification](docs/v1/binary.md) now
+add structured full-metric updates and independent heterogeneous jobs. Experimental
+resident scalar CUDA training is locally constructed with hardware validation
+pending. [Binary classification](docs/v1/binary.md) now
 persists typed class order and exposes probability/label inference.
 [Multiclass and vector leaves](docs/v1/multiclass.md) add joint softmax updates
 and separate split/leaf statistics with arbitrary output mappings.
@@ -110,4 +111,6 @@ named fields, once-only weighting, routed histograms, candidate scores, composab
 feasibility masks, routing and scalar leaves, with
 [88 passing real T4 checks](benchmarks/v1/evidence/cuda-splits-078/README.md).
 Independent cohort constraints change split selection through the public device
-operations. Training recipes remain CPU-only; resident trees and boosting are next.
+operations. Separate experimental resident squared geometry, scalar trees and
+accepted/proposal training now have local implementation and pending device tests;
+the 88-case result does not validate these new paths.

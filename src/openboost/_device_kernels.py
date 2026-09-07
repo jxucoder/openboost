@@ -285,3 +285,10 @@ def scalar_tree_predict(codes, missing, topology, values, output):
             left = topology[i, 2] != 0 if missing[f, r] else codes[f, r] <= t
             i = topology[i, 3] if left else topology[i, 4]
         output[r, 0] = values[i]
+
+
+@cuda.jit
+def scalar_add_raw(raw, delta, coefficient, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        output[r, 0] = raw[r, 0] + float32(coefficient * delta[r, 0])

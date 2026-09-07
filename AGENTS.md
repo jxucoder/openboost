@@ -90,7 +90,9 @@ continued after the retrospective; [088 resident scalar training](v1-sprints/088
 is the active local construction slice. Further hardware checks need a new concrete
 freeze and allowance. Build 078-C resident two-round training with explicit
 accepted/proposal ownership and saved CPU inference. Retain the 065/068 contracts.
-CUDA training and accepted/proposal integration remain unimplemented.
+078-C scalar objectives, trees, accepted/proposal integration and a squared recipe
+are locally implemented with pending real-device verifiers; none has new GPU
+acceptance yet. The earlier 88 passing cases do not validate the new code.
 Primitive checks do not pass transaction or boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
@@ -104,7 +106,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1232 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1247 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
@@ -155,7 +157,8 @@ independent heterogeneous runs. All recipes support independent validation patie
 through public StopState, separate from model acceptance and best-model selection.
 Training execution is sequential CPU; experimental CUDA storage and aggregation
 plus public split/feasibility/route/leaf operations are verified at `9ce790e`.
-CUDA training is not implemented.
+The separate experimental resident scalar recipe is locally constructed in 088,
+with real-device acceptance pending. Other required CUDA recipes remain unimplemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 
 The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018

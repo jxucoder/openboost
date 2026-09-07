@@ -1,4 +1,4 @@
-"""Explicit CUDA storage ownership; training recipes remain CPU-only."""
+"""Explicit CUDA storage ownership for experimental device composition."""
 
 import re
 import threading
@@ -22,7 +22,8 @@ class ExecutionContext:
     """Single-thread CUDA stream and private allocation pool, without CPU fallback.
 
     max_bytes caps the private CuPy pool, not CUDA context/driver memory. Public
-    handles never expose mutable owned arrays. No training or callback API yet.
+    handles never expose mutable owned arrays. Algorithms compose through separate
+    objective, tree and runtime modules.
     """
 
     def __init__(self, device="cuda:0", *, max_bytes=16 * 1024**2):

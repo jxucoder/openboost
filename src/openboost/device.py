@@ -1,4 +1,4 @@
-"""Experimental public CUDA fields, histograms and split operations; no training."""
+"""Experimental public CUDA fields, histograms and split operations."""
 
 from contextlib import contextmanager
 from dataclasses import dataclass

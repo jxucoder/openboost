@@ -164,8 +164,9 @@ Initial choice and stable routing use ordered kernels; no speed claim is made.
 
 Sprint 088 adds local construction in `openboost.device_objectives` and
 `openboost.device_tree`. These new paths have **not run on CUDA hardware** yet;
-the 88-case result above applies to its recorded revision. Current recipes and
-NumericData remain CPU-only; transactions and resident training are still pending.
+the 88-case result above applies to its recorded revision. The existing
+`openboost.recipes` and NumericData remain CPU interfaces. Experimental resident
+training uses the separate explicit device interfaces below.
 
 `device_objectives.prepare(ops, data, problem)` explicitly uploads scalar targets
 and offsets after checking the prepared problem identity. `base`, `broadcast`,
@@ -197,3 +198,46 @@ downloads node values into the existing validated CPU Tree artifact, which can b
 saved and loaded without CUDA packages. Forty-two pending real-device checks cover
 geometry, splits/leaves, predictions, supplied operations, failure cleanup and
 fresh-process CPU inference. Collection alone does not validate these behaviors.
+
+## Resident transactions and recipe: validation pending
+
+`openboost.device_runtime.DeviceRun(ops, train, validation, run_id=..., seed=...)`
+binds explicit CPU preparation and private resident problem/raw storage. Pass fitted
+`binning` to reuse chosen cuts, or `bins` to fit training data once and transform
+validation with those cuts. Only numeric scalar squared targets are supported.
+`initialize`, `gradient`, `fields`, `propose`, `resolve`, `raw`, `export`, `release`
+and `close` are separate public operations. `add_raw` is a separate resident scalar
+update operation with a finite signed coefficient and independent output storage.
+
+Accepted/proposal records expose immutable diagnostics, with no raw buffer handles.
+`run.raw(record, validation=False)` returns an independently releasable device copy.
+`propose(state, tree, coefficient=...)` snapshots the tree and adds only its new
+contribution to both accepted raw buffers. `resolve(..., accept=True/False)` requires
+an explicit boolean decision. Rejection returns the same state. Acceptance copies
+proposal raw buffers and shares only immutable private tree terms. Releasing the
+caller tree, proposal or earlier state cannot invalidate a retained newer state.
+Foreign/forged/released records and wrong-parent proposals fail.
+
+Strict validation improvement selects the best prefix of accepted terms, independently
+of acceptance. `run.export(state, best=True)` explicitly builds a CPU Model artifact.
+The model predicts raw values; observation offsets stay separate. Each raw snapshot
+costs storage until released. `run.close()` releases run-owned storage, preserving
+caller-owned buffers and the execution context. Closing the context invalidates all
+its buffers. These ownership contracts do not isolate hostile Python processes.
+
+`openboost.device_recipes.squared(ops, train, validation, run_id=..., seed=...)`
+composes that runtime with the public objective/tree operations. Its optional
+`learner(ops, data, fields)` can supply a tree from resident custom score, feasibility
+or leaf operations. It uses fixed acceptance or up to six backtracking trials with
+strict training-loss improvement. StopState observes accepted validation once per
+outer round, including full rejection. Keyed RNG retains run/seed/round/component/
+purpose semantics; the default deterministic recipe makes no sampling claim.
+
+The result contains its live run, final state, StopState and scalar step diagnostics.
+The recipe releases superseded raw states, proposals and callback workspace, leaving
+O(N) raw storage and O(T) tree storage. This is a separate experimental result,
+without implicit CPU run_many integration. Seventy-two pending runtime cases cover
+two rounds against the frozen oracle, ownership/rollback, policies, preparation,
+24-round retention and a saved model predicting in a CPU subprocess without CUDA.
+No new GPU run or transfer is authorized by local construction. Formal device
+recipes, train-many, quality, cost and author/adoption gates remain open.
