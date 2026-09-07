@@ -1,8 +1,8 @@
 # Sprint 089: Preserve scalar score symmetry
 
-Status: local correction and validation-package preparation after the user's
-continuation of the run-4 retrospective. Baseline `f5922fb`. No new hardware or
-private upload allowance, agents, CPU search, objective expansion or phase exit.
+Status: source correction committed at `d3ee1c3`; the 49-file, 212-case package is
+frozen with compute and private-upload approvals pending. Baseline `f5922fb`.
+No new hardware invocation, agents, CPU search, objective expansion or phase exit.
 
 ## Purpose and counterexample
 
@@ -20,7 +20,7 @@ cause, not a measured instruction trace. No CPU simulator can accept the CUDA fi
 
 ## Construction sequence
 
-1. Add real-device direct score checks: swapped child summaries, reordered named
+1. Add real-device direct score checks: swapped child summaries, reordered
    gradient/curvature columns, finite regularization/penalty and strictly unequal
    adjacent-ULP choices. Capture the actual weighted root gradients, histograms,
    candidate summaries and score bits before assertions. A test-only copy of the
@@ -92,3 +92,39 @@ operation. Direct historical/current score diagnostics will test the cause witho
 replacing the independent original-row oracle. The next deliverable is a frozen
 49-file, 212-case package with pending compute/upload authorization. No broader
 CUDA capability or quality claim follows from this source change.
+
+## Frozen run-5 package and reflection
+
+The [protocol](089-symmetry-run5.json) freezes 212 exact cases, 49 private
+source/test/metadata files, 27 production modules and the same 17 pinned packages
+as run 4. Forty-eight file hashes are prefrozen; the protocol's own hash is recorded
+at dispatch. All 202 prior cases and every original test/reference source byte are
+retained. The new ten-case file runs first to capture the weighted-root diagnostics
+before other assertions. The archived function is a diagnostic control only.
+
+The wrapper reuses the existing installed-package launcher and both approval
+guards. The output is fixed to `benchmarks/v1/evidence/cuda-score-symmetry-089`;
+an existing output blocks dispatch. Proposed compute is one T4 invocation, two CPU
+cores and 8192 MiB requested host memory, a 900-second function limit, 600-second
+test limit, 16-MiB private pools and zero retries. Previous size/round bounds and
+E1 tolerances remain unchanged. No whole-repository upload or sealed task content
+is in the closure. The exact file list is the protocol's `frozen_sources` plus
+the protocol itself.
+
+Forty local manifest/judging/arithmetic/source checks pass. The actual pending CLI
+rejects before importing Modal or creating output. Offline wheel/sdist builds pass;
+all 27 wheel modules match the frozen production bytes. Forty-eight prefrozen
+source hashes match, and the fixed output is absent. This establishes a reviewable
+package, not GPU compilation or training acceptance.
+
+Final package regression passes 1269 CPU tests with one Linux-only skip and 212
+GPU cases deselected. Production/changed-support Ruff, documentation build and
+whitespace checks pass. These local verifications do not consume device allowance.
+
+Reflection after the diagnostic, correction and package slices: the work remains
+inside one shared scoring operation, with unchanged mathematical/ownership gates.
+The next hardware result must retain original failures and the diagnostic context;
+if the hypothesis is wrong, investigate captured summaries/code before changing the
+scorer again. Do not expand objectives, author claims, CPU search or performance
+claims from local checks. Request explicit approval for this exact private upload
+to Modal and one bounded invocation; all prior allowances remain consumed.

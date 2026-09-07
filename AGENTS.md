@@ -98,8 +98,11 @@ The user continued after the planned retrospective. Active local work is
 score/code-generation diagnostics and all original cases retained. CPU arithmetic
 shows a compatible rounding mechanism; the actual GPU instruction sequence was
 not captured. Scalar score products now round independently; the correction and
-ten new diagnostic cases remain unverified on hardware. Further hardware
-checks require a new concrete source freeze and upload/compute allowance.
+ten new diagnostic cases remain unverified on hardware. The
+[run-5 package](v1-sprints/089-symmetry-run5.json) freezes 49 files and 212 cases,
+with both private-upload and compute approvals pending. The proposed single T4
+invocation retains the 900/600-second bounds and zero retries. Obtain that concrete
+allowance before dispatch; no prior allowance can be reused.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
@@ -113,7 +116,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1265 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1269 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

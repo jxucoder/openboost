@@ -26,7 +26,7 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1265 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1269 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. Eighty-eight real T4
 storage/aggregation/split tests pass. Resident scalar run 4 completes with 188
 passing and 14 failing cases; weighted/missing parity blocks training acceptance.
@@ -50,7 +50,9 @@ retain all failures and distinguish a rounding hypothesis from observed device d
 All four hardware allowances are consumed. The user continued after the run-4
 retrospective. [089 score symmetry](089-cuda-score-symmetry.md) is the active bounded
 correction, with direct candidate diagnostics and unchanged acceptance. No GPU
-retry has occurred. Further hardware work needs a new concrete freeze and allowance.
+retry has occurred. The [run-5 freeze](089-symmetry-run5.json) contains 49 files and
+212 cases, with both private-upload and compute approvals pending. Its single
+proposed T4 invocation keeps the 900/600-second limits and zero retries.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

@@ -59,7 +59,29 @@ metrics must pass the new frozen matrix. PTX and device-buffer observations must
 distinguish the contraction hypothesis from histogram/candidate accumulation.
 All broader v1 acceptance and author/adoption questions remain open.
 
+## Frozen package
+
+The [run-5 protocol](../v1-sprints/089-symmetry-run5.json) keeps all 202 original
+cases and their unchanged test/reference bytes, and adds ten diagnostics. Its
+49-file closure includes 27 production modules and no sealed cards or unbounded
+directory upload. Both compute and private-upload authorizations are pending;
+the existing launcher guards are reused. The actual pending CLI rejects before
+Modal import/output creation, and no new invocation or transfer occurs.
+
+All 40 focused manifest/judging/arithmetic/source checks pass. Offline `uv build
+--offline` produces a wheel and sdist; all 27 wheel modules match the freeze.
+All 48 prefrozen hashes match and the proposed output directory is absent.
+The protocol requests one invocation within the previous 900/600-second bounds,
+with zero retries. Existing run-4 raw artifacts and provenance remain immutable.
+
+Final package regression uses the full CPU command above: 1269 passed, one
+Linux-only skip and 212 GPU cases deselected. Production/changed-support Ruff,
+documentation build and whitespace checks pass. No environment mutation or remote
+execution was needed. The package is ready for a concrete approval decision, while
+the numerical fix remains unaccepted on real CUDA.
+
 ## Commits
 
-`f5922fb` records the failed device run and retrospective. Source correction and
-the next run freeze will be separate local commits; no push is requested.
+`f5922fb` records the failed device run and retrospective; `13fdd83` freezes
+diagnostic cases; `d3ee1c3` commits the candidate score correction. The next run
+freeze is a separate local commit; no push is requested.
