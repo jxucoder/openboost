@@ -1,6 +1,6 @@
 # Sprint 068: Bounded diagnostic retention
 
-Status: planned. Mapping: N2b / C4–C5 / E1 and practical resource evidence.
+Status: implementation in progress; source equivalence passes, installed/practical evidence pending. Mapping: N2b / C4–C5 / E1 and practical resource evidence.
 Depends on: [067](067-incremental-runtime.md).
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
@@ -37,3 +37,18 @@ search preflight, or record the next measured blocker. Do not claim formal E4.
 ## Results
 
 Not run. This card proposes a retention boundary, not a measured memory reduction.
+
+### Construction plan and first counterexample
+
+Measure full logical arrays, implement immediate per-round summary retention,
+verify all recipe/state/stop contracts and installed author-owned ordered payloads,
+commit, then rerun the fixed CPU diagnostic with summary retention and reflect.
+The pinned eight-round squared/Normal counterexample initially fails because
+`retention` is unsupported. Full traces exceed the summary array bound.
+
+All twelve built-ins now have explicit opt-in summary mode; full remains default.
+Summary retains scalar decisions/losses/trials and per-output MSE, dropping sample
+arrays immediately. External ordered recipes explicitly summarize their own state
+payloads; the structural result contract is unchanged. Tests cover all twelve
+families at normal, stopped and zero budgets, ordered updates, failed backtracking,
+immutable payload restrictions and final/best/stop identity equality.

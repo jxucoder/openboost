@@ -93,6 +93,7 @@ def main(output):
                 "core_inference.py",
                 "ordered_checks.py",
                 "scheduler_checks.py",
+                "retention_checks.py",
                 "custom_stopping.py",
                 "expectile_checks.py",
             ):
@@ -109,6 +110,7 @@ def main(output):
             )
             run([python, "-I", str(work / "ordered_checks.py"), str(output)], work)
             run([python, "-I", str(work / "scheduler_checks.py"), str(output)], work)
+            run([python, "-I", str(work / "retention_checks.py"), str(output)], work)
             run(
                 [
                     sys.executable,

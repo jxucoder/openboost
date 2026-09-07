@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, fields, replace
 from functools import partial
 
 import numpy as np
 
 from .artifacts import Model, TreeTerm
 from .binning import prepare_training
+from .diagnostics import TraceSummary, validate_retention
 from .objectives import (
     Binary,
     Formula,
@@ -59,10 +60,34 @@ class FitResult:
         | GammaStep
         | TweedieStep
         | AFTStep
-        | MultiSquaredStep,
+        | MultiSquaredStep
+        | TraceSummary,
         ...,
     ]
     stop: StopState
+
+
+class _Trace(list):
+    """Convert built-in evidence at append time, never after retaining a full run."""
+
+    def __init__(self, retention):
+        self.retention = validate_retention(retention)
+        super().__init__()
+
+    def append(self, step):
+        if self.retention == "summary":
+            values, omitted = [], []
+            for item in fields(step):
+                value = getattr(step, item.name)
+                if isinstance(value, np.ndarray):
+                    if item.name in ("mse_before", "mse_after"):
+                        value = tuple(value.tolist())
+                    else:
+                        omitted.append(item.name)
+                        continue
+                values.append((item.name, value))
+            step = TraceSummary(type(step).__name__, tuple(values), tuple(omitted))
+        super().append(step)
 
 
 def squared(
@@ -70,6 +95,7 @@ def squared(
     validation,
     *,
     context,
+    retention="full",
     rounds=2,
     patience=None,
     min_delta=0.0,
@@ -110,7 +136,7 @@ def squared(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, Squared.base(train), score=Squared.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         gradient = Squared.gradient(train, before)
@@ -233,6 +259,7 @@ def normal(
     validation,
     *,
     context,
+    retention="full",
     rounds=2,
     patience=None,
     min_delta=0.0,
@@ -277,7 +304,7 @@ def normal(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Normal.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         loss_before, gradient, metric = Normal.geometry(train, before)
@@ -328,6 +355,7 @@ def formula(
     validation,
     *,
     context,
+    retention="full",
     rounds=2,
     patience=None,
     min_delta=0.0,
@@ -364,7 +392,7 @@ def formula(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Formula.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         loss_before, gradient, metric = Formula.geometry(train, before)
@@ -414,6 +442,7 @@ def binary(
     validation,
     *,
     context,
+    retention="full",
     rounds=2,
     patience=None,
     min_delta=0.0,
@@ -449,7 +478,7 @@ def binary(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Binary.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         loss_before, gradient, curvature = Binary.geometry(train, before)
@@ -494,6 +523,7 @@ def multiclass(
     validation,
     *,
     context,
+    retention="full",
     rounds=2,
     patience=None,
     min_delta=0.0,
@@ -538,7 +568,7 @@ def multiclass(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Multiclass.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         loss_before, gradient, bound = Multiclass.geometry(train, before)
@@ -585,6 +615,7 @@ def ranking(
     validation,
     *,
     context,
+    retention="full",
     rounds=2,
     patience=None,
     min_delta=0.0,
@@ -621,7 +652,7 @@ def ranking(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, [0.0], score=objective.score)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         geometry = objective.geometry(train, before)
@@ -663,6 +694,7 @@ def quantile(
     validation,
     *,
     context,
+    retention="full",
     q=0.5,
     rounds=2,
     patience=None,
@@ -715,7 +747,7 @@ def quantile(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=objective.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         loss_before = objective.loss(train, before)
@@ -773,6 +805,7 @@ def poisson(
     validation,
     *,
     context,
+    retention="full",
     rounds=2,
     patience=None,
     min_delta=0.0,
@@ -810,7 +843,7 @@ def poisson(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         loss_before, gradient, curvature = objective.geometry(train, before)
@@ -861,6 +894,7 @@ def gamma(
     validation,
     *,
     context,
+    retention="full",
     rounds=2,
     patience=None,
     min_delta=0.0,
@@ -897,7 +931,7 @@ def gamma(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         loss_before, gradient, curvature = objective.geometry(train, before)
@@ -948,6 +982,7 @@ def tweedie(
     validation,
     *,
     context,
+    retention="full",
     power=1.5,
     minimum_mean=1e-6,
     rounds=2,
@@ -986,7 +1021,7 @@ def tweedie(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         loss_before, gradient, curvature = objective.geometry(train, before)
@@ -1037,6 +1072,7 @@ def aft(
     validation,
     *,
     context,
+    retention="full",
     sigma=1.0,
     rounds=2,
     patience=None,
@@ -1074,7 +1110,7 @@ def aft(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         loss_before, gradient, curvature = objective.geometry(train, before)
@@ -1124,6 +1160,7 @@ def multi_squared(
     validation,
     *,
     context,
+    retention="full",
     mode="shared",
     projection=None,
     rounds=2,
@@ -1178,7 +1215,7 @@ def multi_squared(
     state = initialize(context, train, validation, objective.base(train), score=objective.loss)
     mapping = np.eye(train.raw_width)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
-    steps = []
+    steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
         gradient = objective.gradient(train, before)

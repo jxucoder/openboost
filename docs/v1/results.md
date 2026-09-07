@@ -42,3 +42,28 @@ ordered recipes, retaining true completion and payloads through M=1/8/32 schedul
 Distinct-ID RNG, same-ID recovery, stale feature/row preparation rejection and
 valid target/weight reuse are checked without refitting shared binning. A model
 from the custom loop replays after the policy source and training plugins are removed.
+
+## Diagnostic retention
+
+All twelve built-in recipes accept `retention="full"` (the default) or
+`retention="summary"`. Summary converts each round immediately, keeping a
+`TraceSummary` with `kind`, immutable named scalar `values`, and `omitted` field
+names. Losses, acceptance, coefficients and failure outcomes present in the full
+record remain available. Multi-output MSE vectors become per-output scalar tuples.
+Gradients, geometry, directions and per-sample raw snapshots are omitted. Inspect
+named values with `dict(step.values)`; array fields remain available in full mode.
+
+Summary keeps final/current raw state and the selected best model unchanged,
+and retains one entry per completed outer round. It does not disable validation,
+alter stopping, remove model terms or summarize after first retaining a full run.
+For fixed output width and trial budget, built-in history is O(rounds) scalar
+records plus O(rows * outputs) run arrays and model/encoding storage; full history
+can retain O(rounds * rows * outputs) arrays. Logical retained bytes differ from
+process peak RSS; temporary training arrays still exist in summary mode.
+
+External diagnostic payloads remain author-owned. The structural result validator
+does not rewrite them. Authors may explicitly construct `TraceSummary`; its values
+reject arrays, states, mappings and models, allowing scalars and scalar tuples.
+The installed ordered-update example opts into this mode itself: each outer entry
+contains two scalar substeps, including commit versions, without old state objects.
+Outer-round counts remain distinct from accepted commit counts.
