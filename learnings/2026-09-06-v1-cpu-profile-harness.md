@@ -51,3 +51,18 @@ The launch correction also accidentally omitted the retry declaration from futur
 freeze metadata. Restore that field and add a regression assertion. The active
 run uses the original committed protocol, which retained `retries: 0` throughout;
 its execution and inputs are unaffected. Ten focused tests and format checks pass.
+
+### Preemption recovery amendment
+
+Modal preempted the sweep after six passing cases, during squared 8192/128, and
+announced infrastructure restart despite no application retry policy. Stop the app
+immediately; retain the six streamed cases and mark the interrupted case separately
+from a timeout. Normal 8192/128 remains not_run. No timing/RSS can be recovered for
+the interrupted child. Infrastructure recovery is not controlled by `retries`.
+
+Add an explicit profile-only recovery option selecting an existing frozen case.
+Before launching recovery, select squared-8192-128 with the original 60-second soft
+and 120-second hard deadlines. Do not repeat any uninstrumented fits. Reject a
+second preflight event to stop observed generator restarts before repeated fits.
+This detects a restart after its preflight, not preemption prevention or a guarantee
+against all infrastructure compute repetition. Retain the operational limitation.

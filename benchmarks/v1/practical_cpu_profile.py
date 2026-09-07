@@ -79,13 +79,15 @@ def freeze(archive, directory):
     return record
 
 
-def execute(directory):
+def execute(directory, profile_only=None):
     import modal
 
     root = Path(directory).resolve()
     protocol = json.loads((root / "protocol.json").read_text())
     if digest(root / "input.npz") != protocol["input_sha256"]:
         raise ValueError("frozen input changed")
+    if profile_only is not None and profile_only not in {c["id"] for c in protocol["cases"]}:
+        raise ValueError("profile case is absent from frozen protocol")
     output = root / "run"
     output.mkdir(exist_ok=False)
     wheels = output / "wheels"
@@ -110,6 +112,7 @@ def execute(directory):
         wheel_sha256=digest(wheel),
         modal_version=modal.__version__,
         protocol=protocol,
+        profile_only=profile_only,
         status="running",
         cases=[],
         profiles=[],
@@ -141,7 +144,7 @@ def execute(directory):
         include_source=False,
         is_generator=True,
     )
-    def remote(protocol):
+    def remote(protocol, profile_only):
         import hashlib
         import importlib.metadata
         import json
@@ -213,6 +216,10 @@ def execute(directory):
             yield fixture
             if fixture["execution"]["status"] != "pass":
                 return
+            if profile_only is not None:
+                case = next(c for c in protocol["cases"] if c["id"] == profile_only)
+                yield run_case(case, instrumented=True)
+                return
             failed = None
             for case in protocol["cases"]:
                 if failed is not None:
@@ -235,8 +242,12 @@ def execute(directory):
 
     try:
         with modal.enable_output(), app.run():
-            for item in remote.remote_gen(protocol):
+            for item in remote.remote_gen(protocol, profile_only):
                 if item["kind"] == "preflight":
+                    if "preflight" in manifest:
+                        raise RuntimeError(
+                            "restarted generator detected; stopping repeated execution"
+                        )
                     manifest["preflight"] = item
                     print("preflight", item["result"]["passed"], flush=True)
                 else:
@@ -253,7 +264,8 @@ def execute(directory):
                     print(item["id"], item["execution"]["status"], flush=True)
                 manifest["image_id"] = image.object_id
                 save()
-        manifest["status"] = "complete" if len(manifest["cases"]) == 8 else "incomplete"
+        complete = len(manifest["profiles"]) == 1 if profile_only else len(manifest["cases"]) == 8
+        manifest["status"] = "complete" if complete else "incomplete"
     except Exception as exc:
         manifest.update(status="error", error=str(exc))
         raise
@@ -269,6 +281,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("freeze", "run"))
     parser.add_argument("directory", type=Path)
+    parser.add_argument("--profile-only", help="Profile one frozen case after an interrupted sweep")
     parser.add_argument(
         "--archive", type=Path, default=Path("build/foundation_data/cal_housing.tgz")
     )
@@ -276,4 +289,4 @@ if __name__ == "__main__":
     if args.action == "freeze":
         freeze(args.archive, args.directory)
     else:
-        execute(args.directory)
+        execute(args.directory, args.profile_only)
