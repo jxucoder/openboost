@@ -52,3 +52,13 @@ comparator/resource coverage and 069 accounting. Keep the remaining 158 jobs pen
 Do not launch new agents, sealed author tasks, full searches or GPU work merely
 because the integrity smoke passes. These entries are remaining technical and
 experimental requirements, not new user approval requests for routine preparation.
+
+## A6 CPU method matrix checkpoint
+
+The [complete A6 CPU planning record](070-a6-cpu-search-plan.json) now retains
+400 jobs across five methods. Its 200 worker-hour / 400 reserved CPU-hour ceiling
+includes all three existing comparator paths. It is not a runtime estimate or
+full R/C/A/E ledger. Dispatch remains blocked: baseline_worker needs explicit
+bins=255 translation and installed verification, followed by frozen resource and
+selection checks. No new jobs ran. See the
+[learning record](../learnings/2026-09-07-v1-a6-complete-cpu-plan.md).

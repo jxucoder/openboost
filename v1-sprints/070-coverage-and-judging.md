@@ -451,3 +451,29 @@ This pair does not pass authoring, full quality/search, adoption or CUDA gates.
 Verification: 23 focused contracts and 1095 CPU tests passed with one Linux-only
 skip at the harness commit. The actual remote pair and fresh replay now pass;
 all source/artifact/input pins verify. No failed attempt or retry in this pair.
+
+### Complete A6 CPU planning slice
+
+Plan: audit current comparator call paths, compile all five CPU method matrices
+from the frozen search design, reject producer-shrunk method/fold/configuration
+sets against that evaluator plan, then commit a reproducible resource inventory.
+The first failing check requires the existing 160-job OpenBoost-only plan to
+include all three current comparator paths. Keep that earlier resource plan intact
+for reproducibility; add a separate complete A6 CPU search plan. This slice does
+not complete R/C/A/E coverage, run jobs or authorize test release.
+
+The new [A6 CPU plan](070-a6-cpu-search-plan.json) retains 400 jobs: both OpenBoost
+topologies and three existing comparator paths, each on all five folds and sixteen
+frozen configurations. The timeout ceiling is 200 worker-hours / 400 reserved
+CPU-hours, excluding setup, replay and selection. This is not expected cost.
+
+Audit finding: baseline_worker does not accept the shared explicit bins=255
+requirement. Planned comparator jobs retain that parameter, and dispatch_ready
+remains false until translation and installed execution are verified. The original
+160-job resource plan remains unchanged. No jobs or test release were launched.
+The plan validator rejects changed or omitted methods/folds/trials/configurations,
+budgets and a fabricated ready flag against the evaluator-owned design. This
+bounded A6 plan does not close the complete R/C/A/E ledger.
+
+Validation: 18 focused checks, 1106 CPU tests passed, one Linux-only skip; lint
+and docs pass. All seven planning-input hashes verify.
