@@ -40,3 +40,16 @@ resource checks. Frequency/severity and other worker families need separate audi
 ## Commits
 
 - Current evaluation summary policy; parent `63700db`.
+
+## Composition follow-through
+
+The frequency/severity worker also inherited full traces. A new test inspected both
+actual recipe results and failed before the fix. Both component calls now request
+summary retention and record that policy separately in component metadata. Frozen
+configuration validation and the public default remain unchanged. The parametric
+worker fits global controls and does not retain boosting round traces.
+
+Verification: **10 composition tests pass**, including direct full-recipe identities
+and fresh inference parity; **1019 CPU tests pass**, and scoped lint passes. No real
+composition search or memory improvement is inferred from this policy change.
+Implementation parent: `26a6797`.

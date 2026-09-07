@@ -119,3 +119,11 @@ This checks a concrete UID/file boundary and process resource mechanism, not a
 complete hostile-code sandbox. Network/new sessions are not restricted and same-UID
 outputs must not be shared across independent attempts. Full author dispatch and
 full-search access/container integration remain open, even if these probes pass.
+
+### Composition worker audit
+
+Frequency/severity calls now explicitly retain summaries, with per-component
+metadata. The failing-before payload check and existing direct full-recipe/fresh
+inference checks pass (10 focused, 1019 total CPU tests; lint passes). The global
+parametric control worker has no boosting trace history. This closes the remaining
+identified worker policy gap without changing frozen search configurations.

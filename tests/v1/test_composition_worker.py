@@ -104,3 +104,24 @@ def test_invalid_composition_contract(bad):
         job["config"]["sampling"] = 0.5
     with pytest.raises(ValueError):
         fit(job, a)
+
+
+def test_composition_worker_retains_only_summary_steps(monkeypatch):
+    from openboost import recipes
+    from openboost.diagnostics import TraceSummary
+
+    results = []
+    for name in ("poisson", "gamma"):
+        original = getattr(recipes, name)
+
+        def inspect(*args, _recipe=original, **kwargs):
+            result = _recipe(*args, **kwargs)
+            results.append(result)
+            return result
+
+        monkeypatch.setattr(recipes, name, inspect)
+    job, arrays = fixture()
+    _, _, training = fit(job, arrays)
+    assert len(results) == 2
+    assert all(isinstance(step, TraceSummary) for result in results for step in result.steps)
+    assert all(c["diagnostic_retention"] == "summary" for c in training["components"].values())

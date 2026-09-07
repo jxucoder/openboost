@@ -54,6 +54,7 @@ def fit(job, arrays):
             problems[1][i],
             context=RunContext(name, job["seed"]),
             patience=job["patience"],
+            retention="summary",
             **cfg,
         )
         model = result.state.model if job["patience"] is None else result.state.best_model
@@ -63,6 +64,7 @@ def fit(job, arrays):
             selected_identity=model.identity,
             best_score=result.state.best_score,
             accepted_commits=result.state.version,
+            diagnostic_retention="summary",
         )
     model = FrequencySeverity(*models)
     data = problems[1][0].data
