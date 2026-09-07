@@ -1,5 +1,6 @@
 """Run-5 upload freeze and dispatch guards; CPU checks are not CUDA evidence."""
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -10,6 +11,7 @@ import pytest
 from benchmarks.v1.cuda_aggregation_preflight import (
     check_dispatch,
     check_frozen_sources,
+    judge_run,
     snapshot_hashes,
     snapshot_paths,
 )
@@ -132,3 +134,43 @@ def test_pending_cli_does_not_import_modal_or_create_output(monkeypatch, tmp_pat
     with pytest.raises(ValueError, match="allowance"):
         cuda_symmetry_preflight.main(output, protocol_path=PROTOCOL)
     assert not output.exists()
+
+
+def test_completed_run_preserves_parity_and_measured_score_diagnostics():
+    config = protocol()
+    assert config["authorization"] == "consumed"
+    output = REPO / config["output"]
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["protocol"] == dict(config, authorization="approved")
+    assert manifest["revision"] == "af026efb2c4ad82cdca0228f83ba01dc064300c7"
+    assert manifest["dirty"] is False and manifest["status"] == "pass"
+    for name, digest in manifest["artifacts"].items():
+        assert hashlib.sha256((output / name).read_bytes()).hexdigest() == digest
+    verdict = judge_run(
+        manifest["result"], (output / "junit.xml").read_text(), config, manifest["sources"]
+    )
+    assert verdict == json.loads((output / "verdict.json").read_text())
+    assert verdict["passed"] is True and len(verdict["cases"]) == 212
+    diagnostics = [
+        json.loads(line.split("score_diagnostic=", 1)[1])
+        for line in (output / "pytest.log").read_text().splitlines()
+        if "score_diagnostic=" in line
+    ]
+    assert len(diagnostics) == 7
+    root = next(item for item in diagnostics if item["kind"] == "weighted_root")
+    assert root["summaries"][0] == root["summaries"][1][::-1]
+    assert root["score_bits"] == [0x401847A4, 0x401847A4]
+    assert root["archived_score_bits"] == [0x401847A3, 0x401847A4]
+    assert root["winner"] == [0, 0, True]
+    assert root["archived_winner"] == [0, 3, False]
+    for key in ("corrected_assembly", "archived_assembly"):
+        assert len(root[key]) == 1
+        code = root[key][0]
+        assert hashlib.sha256(code["ptx"].encode()).hexdigest() == code["sha256"]
+    corrected = root["corrected_assembly"][0]["ptx"]
+    assert "fma.rn.f32" not in corrected
+    assert corrected.count("mul.rn.f32") == 3
+    assert "fma.rn.f32" in root["archived_assembly"][0]["ptx"]
+    swapped = [item for item in diagnostics if item["kind"] == "swapped"]
+    assert len(swapped) == 6
+    assert all(item["score_bits"][0] == item["score_bits"][1] for item in swapped)

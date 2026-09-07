@@ -26,10 +26,10 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1269 passing tests (one Linux-only skip).
-Bounded real evaluation and installed extensions exist. Eighty-eight real T4
-storage/aggregation/split tests pass. Resident scalar run 4 completes with 188
-passing and 14 failing cases; weighted/missing parity blocks training acceptance.
+CPU implementation has twelve recipes and 1270 passing tests (one Linux-only skip).
+Bounded real evaluation and installed extensions exist. All 212 real T4 checks
+pass at clean `af026ef`, including resident scalar training and all earlier
+primitives. The shared score correction resolves run 4's 14 parity failures.
 Independent author benefit, full quality/search and
 adoption remain unverified. The
 [064–084 roadmap](roadmap-after-063.md) retains those obligations; 085 changes their
@@ -40,20 +40,20 @@ The two original device runs and the separately approved run 3 are consumed.
 all 33 previous regressions at clean `9ce790e`; see the
 [raw evidence and reflection](../benchmarks/v1/evidence/cuda-splits-078/README.md).
 D2 changes the selected split through public resident scores and feasibility masks.
-The user continued after that retrospective. [088 resident scalar training](088-resident-scalar-training.md)
-connects public operations to accepted/proposal ownership, two-round training and
-saved CPU inference. Its explicitly approved [run-4 package](078-resident-run4.json)
-uploaded 47 files and ran all 202 cases once at clean `c415755`. Dedicated ownership
-and export checks pass; 14 weighted/missing cases fail. The
-[raw result and arithmetic investigation](../benchmarks/v1/evidence/cuda-resident-078/README.md)
-retain all failures and distinguish a rounding hypothesis from observed device data.
-All four hardware allowances are consumed. The user continued after the run-4
-retrospective. [089 score symmetry](089-cuda-score-symmetry.md) is the active bounded
-correction, with direct candidate diagnostics and unchanged acceptance. No GPU
-retry has occurred. The [run-5 freeze](089-symmetry-run5.json) contains 49 files and
-212 cases. The user explicitly approved its private upload and single T4 invocation,
-with the existing 900/600-second limits and zero retries. Record the actual result
-and reflection before any further hardware work.
+[088 resident scalar training](088-resident-scalar-training.md) connects public
+operations to owned transactions, two-round training and saved CPU inference.
+The initial [run-4 failure](../benchmarks/v1/evidence/cuda-resident-078/README.md)
+is retained unchanged. [089 score symmetry](089-cuda-score-symmetry.md) fixes its
+numerical counterexample inside the existing scorer. All 202 original cases and
+ten added diagnostics pass at `af026ef`; the
+[run-5 evidence](../benchmarks/v1/evidence/cuda-score-symmetry-089/README.md) reproduces
+the archived scorer's wrong winner and the corrected scorer's exact tie on the
+same resident inputs, with both PTX outputs retained.
+All five allowances are consumed; no retry occurred. Stop at the result reflection
+before broader construction. Next local design is [079](079-cuda-distribution-and-extension.md)
+Normal K=2/ordered updates and an installed D2 device extension, alongside 069
+accounting/isolation. New kernels need frozen independent fixtures, and any new
+hardware run needs a concrete package and allowance. Full v1 gates remain open.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

@@ -1,8 +1,9 @@
 # Sprint 078: Resident scalar CUDA composition
 
-Status: 078-A/B primitives verified on T4 at `9ce790e` with 88 passing tests;
-resident training and transactions remain open. All three approved invocations
-are consumed; planned retrospective reached. Mapping: B12 / F3.1 / R1 / C1–C5 / E1.
+Status: bounded scalar correctness/residency and ownership accepted by run 5 at
+`af026ef`: 212 passing T4 cases. All five approved invocations are consumed;
+result reflection reached. Original P7 preparation and end-to-end cost work remain
+open. Mapping: B12 / F3.1 / R1 / C1–C5 / E1.
 Entry: bounded feasibility is approved by [085](085-foundation-focus-amendment.md)
 alongside 069, subject to relevant 065/068 ownership checks. Formal device gates
 still retain their full recipe, quality and authoring requirements.
@@ -49,8 +50,9 @@ revise that boundary before adding kernels. No general GPU-speed claim yet.
 
 ## Results
 
-Storage-only implementation and real-device results are recorded below. The
-two-round scalar training acceptance has not run or passed.
+The entries below retain the progression from storage to resident training at
+their recorded revisions. The final run-5 result supersedes earlier open-state
+statements; it does not close full R/C/A/E scope or cost/quality gates.
 
 ### Ownership audit
 
@@ -175,3 +177,26 @@ CPU-readable saved inference in scope. Current opaque handles and operation
 allocation cleanup do not pass the 065/068 transaction/retention requirements.
 Keep author accounting, full application quality, P7/E4 and adoption gaps visible.
 Stop for the planned retrospective before constructing the next slice.
+
+### Run-5 scalar result and retrospective
+
+[088](088-resident-scalar-training.md) constructs scalar geometry, public trees,
+owned transactions and a separate resident squared recipe. Its run 4 failed 14
+weighted/missing checks. [089](089-cuda-score-symmetry.md) corrects score-product
+rounding without changing the public boundary, frozen cases or tolerances.
+
+All 212 cases pass at clean `af026ef` on T4. The
+[raw evidence](../benchmarks/v1/evidence/cuda-score-symmetry-089/README.md) verifies
+all 49 uploaded files, 27 installed modules, 17 pinned dependencies and exact case
+accounting. Two-round scalar/D2/conflict parity, transaction ownership, retention,
+stop/best behavior and fresh CPU inference pass. Direct archived/current scoring
+on identical device inputs reproduces the old one-ULP error and corrected tie;
+the captured PTX explains the reproduced contraction mechanism.
+
+The bounded correctness/residency prerequisite for 079 is satisfied. This is not
+full R1 or other R/C/A/E acceptance, original P7 reproduction, matched-quality GPU
+cost, train-many scaling or author benefit. The timing of tiny tests cannot close
+those gaps. Next design 079's structurally different Normal K=2 path and installed
+D2 component, retaining 069 accounting/isolation preparation. All five allowances
+are consumed. Reflect before broader construction; no additional hardware or
+private upload is authorized by the pass.

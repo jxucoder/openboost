@@ -24,11 +24,10 @@ and [Normal recipe](docs/v1/normal.md) support weights, offsets and
 fixed/backtracking steps on CPU. Normal exposes ordinary/Fisher directions and
 joint mean/log-scale updates. [Formula and sequential runs](docs/v1/formula-runs.md)
 add structured full-metric updates and independent heterogeneous jobs. Experimental
-resident scalar CUDA training has run on T4: 188 of 202 checks pass, while 14
-weighted/missing parity failures block acceptance. See the
-[recorded result](benchmarks/v1/evidence/cuda-resident-078/README.md).
-The [score-symmetry correction](v1-sprints/089-cuda-score-symmetry.md) is pending
-hardware validation.
+resident scalar CUDA training passes all 212 bounded T4 checks, including
+weighted/missing parity, transactions and saved CPU inference. The shared scoring
+correction resolves the previous 14 failures without changing tolerances. See the
+[recorded result and scope](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
 [Binary classification](docs/v1/binary.md) now
 persists typed class order and exposes probability/label inference.
 [Multiclass and vector leaves](docs/v1/multiclass.md) add joint softmax updates
@@ -60,8 +59,9 @@ uv build
 
 Python 3.10+. Current tests cover CPU implementation, independent references and
 evaluation infrastructure. Experimental CUDA storage, named fields and histograms
-have real T4 evidence. CUDA training and the full required device gates remain
-open. Run GPU-marked tests only on real hardware; publishing remains separate.
+and bounded resident squared training have real T4 evidence. The full required
+device recipe, quality and cost gates remain open. Run GPU-marked tests only on
+real hardware; publishing remains separate.
 
 ## Historical implementation and evidence
 
@@ -116,5 +116,6 @@ feasibility masks, routing and scalar leaves, with
 [88 passing real T4 checks](benchmarks/v1/evidence/cuda-splits-078/README.md).
 Independent cohort constraints change split selection through the public device
 operations. Separate experimental resident squared geometry, scalar trees and
-accepted/proposal training now execute on T4, with a failed weighted/missing parity gate;
-the 88-case result does not validate these new paths.
+accepted/proposal training now pass the separate
+[212-case T4 matrix](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
+Other required CUDA recipes and full phase acceptance remain open.

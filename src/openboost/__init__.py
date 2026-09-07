@@ -15,7 +15,7 @@ Multi-output squared recipes support independent/shared topology and target scal
 Explicit prepared training data can be shared across independent CPU runs.
 Public StopState separates validation patience from model acceptance in all recipes.
 Experimental CUDA storage/operations have real T4 evidence. Resident scalar training
-in openboost.device_recipes is locally constructed with hardware acceptance pending.
+in openboost.device_recipes passes the bounded 212-case T4 correctness matrix.
 """
 
 from .data import ClassSchema, MixedData, NumericData, Problem

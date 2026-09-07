@@ -1,4 +1,4 @@
-"""Experimental composable resident scalar trees; hardware acceptance pending."""
+"""Experimental composable resident scalar trees; bounded T4 correctness verified."""
 
 from dataclasses import dataclass
 

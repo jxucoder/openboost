@@ -160,13 +160,14 @@ Diagnostic exports made by tests are separate from measured operation transfers.
 Allocation/validation cleanup preserves inputs but is not a boosting transaction.
 Initial choice and stable routing use ordered kernels; no speed claim is made.
 
-## Resident squared geometry and trees: partial device evidence
+## Resident squared geometry and trees: bounded T4 evidence
 
 Sprint 088 adds `openboost.device_objectives` and `openboost.device_tree`.
-The real T4 run at clean `c415755` passes 188 of 202 checks, including all 88
-prior regressions, but fails 14 weighted/missing checks. **Resident scalar training
-acceptance fails.** See `benchmarks/v1/evidence/cuda-resident-078/README.md` for
-unchanged raw failures and the separate CPU arithmetic investigation. The existing
+The real T4 run at clean `af026ef` passes all 212 checks, including all 202
+original cases and ten score diagnostics. This passes the bounded scalar
+correctness/residency matrix; full device scope and quality/cost gates remain open.
+See `benchmarks/v1/evidence/cuda-score-symmetry-089/README.md` for raw evidence.
+The earlier 14 failures at `c415755` remain recorded separately. The existing
 `openboost.recipes` and NumericData remain CPU interfaces. Experimental resident
 training uses the separate explicit device interfaces below.
 
@@ -197,21 +198,21 @@ excluding base and observation offsets. It checks exact fitted-binning identity,
 including for validation data with different row identities. `copy` makes an
 independent tree snapshot; release trees through `ops.release`. `export` explicitly
 downloads node values into the existing validated CPU Tree artifact, which can be
-saved and loaded without CUDA packages. Of 42 objective/tree checks, 36 pass and
-six weighted/missing cases fail at the first selected split. Their subsequent
-leaf/prediction assertions are not verified. The failures expose a tie-ordering
-gap; a compatible arithmetic hypothesis remains unconfirmed without direct device
-gain/code-generation diagnostics. Exact topology and float32 tolerances are unchanged.
+saved and loaded without CUDA packages. All 42 objective/tree checks pass, including
+the previously failing weighted/missing splits and their later leaf/prediction
+assertions. Exact topology and float32 tolerances are unchanged.
 
 Sprint 089 changes scalar score products to explicit nearest-even multiplication
 through libdevice, preserving symmetry when left/right child summaries are swapped.
-This correction is pending hardware validation. Ten additional device checks cover
+This correction passes real T4 validation. Ten additional device checks cover
 the original weighted root, swapped summaries and adjacent-ULP ordering. They also
 capture the archived and corrected kernels on identical inputs and their PTX.
+The archived scorer reproduces the one-ULP difference and wrong winner; the
+corrected scorer has equal scores and selects the original-row oracle's winner.
 The public score/mask/choice boundaries and strict lexicographic tie rule remain
 unchanged; no epsilon tie band is applied.
 
-## Resident transactions and recipe: failed scalar gate
+## Resident transactions and recipe: bounded scalar gate passed
 
 `openboost.device_runtime.DeviceRun(ops, train, validation, run_id=..., seed=...)`
 binds explicit CPU preparation and private resident problem/raw storage. Pass fitted
@@ -248,10 +249,10 @@ purpose semantics; the default deterministic recipe makes no sampling claim.
 The result contains its live run, final state, StopState and scalar step diagnostics.
 The recipe releases superseded raw states, proposals and callback workspace, leaving
 O(N) raw storage and O(T) tree storage. This is a separate experimental result,
-without implicit CPU run_many integration. Of 72 runtime cases, 64 pass and eight
-fail: six weighted/missing round comparisons fail at split selection and two
-depth-two recipe comparisons fail prediction parity. Dedicated ownership/rollback,
-policy, preparation, 24-round retention and fresh CPU-process inference checks pass.
-Those subsets do not pass the scalar gate or establish quality/performance claims.
-The one approved run is consumed; no retry is authorized. Formal device recipes,
-train-many, quality, cost and author/adoption gates remain open.
+without implicit CPU run_many integration. All 72 runtime cases pass, including
+weighted/missing two-round and recipe comparisons, dedicated ownership/rollback,
+policy, preparation, 24-round retention and fresh CPU-process inference checks.
+The fixtures establish this bounded correctness/residency gate, not real application
+quality or performance. All five approved runs are consumed; no retry is authorized.
+Other required device recipes, train-many, quality, cost and author/adoption gates
+remain open.

@@ -1,13 +1,14 @@
 # Sprint 089: Preserve scalar score symmetry
 
-Status: source correction committed at `d3ee1c3`; the 49-file, 212-case package is
-frozen with compute and private-upload approvals received. Baseline `f5922fb`.
-One unchanged invocation is authorized; no agents, CPU search, expansion or phase exit.
+Status: run 5 passes all 212 T4 checks at clean `af026ef`. The bounded scalar
+correction is accepted. All five allowances are consumed, with no retries.
+Baseline `f5922fb`; correction `d3ee1c3`. No agents, CPU search or formal phase exit.
+Earlier construction/approval statements below are historical.
 
 ## Purpose and counterexample
 
 This is a correctness correction within 078-C/B12/F3.1 and E1, following
-[088](088-resident-scalar-training.md). Resident squared training currently fails
+[088](088-resident-scalar-training.md). At entry, resident squared training fails
 14 of 202 real T4 cases. In the weighted/missing fixture, mathematically tied
 root candidates select different splits and two recipe predictions violate E1.
 The [run-4 evidence](../benchmarks/v1/evidence/cuda-resident-078/README.md) is immutable.
@@ -140,3 +141,55 @@ protocol approvals without changing any prefrozen source, case, package or limit
 2. Dispatch the original wrapper once from clean source to the fixed output.
 3. Audit installed/snapshot hashes, versions, raw artifacts and all 212 cases.
    Preserve score/PTX diagnostics and any failure, then reflect before further work.
+
+## Run-5 result and retrospective
+
+The approved invocation at `af026ef` passes 212 cases with no missing, duplicate,
+skipped, failed or error cases. All 49 snapshot hashes match the dispatch revision,
+27 installed module hashes and 17 package versions match, and all raw artifact
+hashes and exact judging verify. See the
+[full evidence](../benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
+All 202 original cases pass, including run 4's 14 failures. The live protocol is
+consumed; the original manifest retains the approved dispatch protocol.
+
+The root diagnostic exports exactly swapped child summaries. The archived scorer
+produces bits `0x401847a3` and `0x401847a4` and selects `(0, 3, False)`. The corrected
+scorer produces two `0x401847a4` values and selects the oracle's `(0, 0, True)`.
+Captured archived PTX fuses a child multiplication into the sum; corrected PTX has
+three `mul.rn.f32` instructions and separate addition/subtractions. This establishes
+the mechanism for the reproduced counterexample on identical device inputs in
+run 5. Run 4 did not capture PTX/SASS; do not invent a retrospective trace for it.
+The archived function remains a historical control, not an independent oracle.
+
+All six swapped-summary controls and all three adjacent-ULP choice checks pass.
+The unchanged full matrix verifies scalar gradients/fields, topology/routes,
+leaves, raw predictions and losses, plus ownership/rejection/retention, policy
+composition and saved CPU inference. The 24-round check is a storage-lifetime
+probe, not a scaling benchmark. Suite timings and warnings remain in raw evidence.
+
+Reflection: composition exposed a real numerical contract failure beyond the
+primitive suite. Explicit rounding repaired that failure inside the existing
+foundation operation; no API fork, tolerance relaxation or dropped case was needed.
+The bounded scalar correctness/residency gate now passes. Keep real-data quality,
+matched-quality device cost, full required recipes and independent author benefit
+separate. Local documentation changes after dispatch do not change the recorded
+device revision or original artifact hashes.
+
+Next design [079](079-cuda-distribution-and-extension.md) Normal K=2 ordinary/Fisher,
+joint/ordered states with accepted and rejected trials, and an installed D2 device
+extension. Freeze original-row geometry/state fixtures before kernels; carry forward
+these 212 regressions and ownership rules. Original P7 Normal and E4 remain separate
+required evaluations. Continue 069 accounting/isolation preparation without new
+agents or author attempts. Stop here for the planned reflection; further hardware
+work requires a new concrete package and allowance.
+
+## Archive verification
+
+The new CPU archive check verifies the consumed protocol, clean dispatch revision,
+exact case verdict and raw hashes, measured score bits/winners, both PTX hashes and
+the six swapped-score records. Full CPU regression passes 1270 tests with one
+Linux-only skip and 212 GPU cases deselected. Production/changed-test Ruff, docs
+and offline wheel/sdist builds pass. Only three module docstrings change after
+the device run; AST comparison excluding those docstrings matches the tested
+production source. Raw device evidence always identifies `af026ef`, not a later
+documentation revision.

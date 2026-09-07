@@ -1,10 +1,10 @@
 # Sprint 088: Resident scalar rounds and owned transactions
 
-Status: run 4 completed at clean `c415755`; 188 passed and 14 failed. Scalar
-training acceptance fails on weighted/missing parity. All four invocations are
-consumed, with no retry. Baseline `e1a9c20`. Implements 086's 078-C. Stop at the
-planned result retrospective before broader construction. No new agents, CPU
-search or phase exit. Earlier pending/approval statements below are historical.
+Status: bounded scalar acceptance passes in 089 run 5 at `af026ef`, with all 212
+T4 cases passing. Run 4's 188 passes and 14 failures remain unchanged evidence;
+089 corrects the shared scorer. All five invocations are consumed, with no retry.
+Baseline `e1a9c20`. Implements 086's 078-C. No new agents, CPU search or formal
+phase exit. Earlier pending/approval/result statements below are historical.
 
 ## Decision and public boundary
 
@@ -283,3 +283,14 @@ summaries before changing arithmetic again. Do not hide the result with a near-t
 band or a different fixture. Preserve author isolation and the broader required
 R/C/A/E scope. This result is designer development evidence, not independent author
 benefit, real application quality or end-to-end device cost.
+
+## Resolution in 089
+
+The [run-5 result](../benchmarks/v1/evidence/cuda-score-symmetry-089/README.md)
+passes all 202 original cases plus ten score diagnostics on T4 at clean `af026ef`.
+All original verifier/reference bytes and tolerances are retained. Independently
+rounded score products remove the reproduced one-ULP asymmetry, and previously
+failing tree/round cases now reach and pass their leaf/prediction/metric assertions.
+The bounded scalar contract is accepted; broader device recipes, P7/E4, real
+applications and independent author gates remain open. See 089's retrospective
+before next construction; no further invocation is authorized.

@@ -85,24 +85,20 @@ passes 88 real T4 tests at `9ce790e`: 55 candidate/feasibility/route/leaf checks
 plus all 33 previous cases. D2's independent cohort minima change the winning
 split through public device operations; named/reordered information also passes.
 See the [078-B evidence](benchmarks/v1/evidence/cuda-splits-078/README.md).
-[088 resident scalar training](v1-sprints/088-resident-scalar-training.md) now has
-real T4 evidence at clean `c415755`: 188 of 202 checks pass and 14 fail. All prior
-88 regressions pass; dedicated ownership, rollback and saved CPU inference checks
-pass. Weighted/missing split selection and two recipe prediction checks fail, so
-the scalar training gate is not accepted. See the
-[run-4 evidence and retrospective](benchmarks/v1/evidence/cuda-resident-078/README.md).
-The explicitly approved 47-file private upload and single bounded invocation are
-complete. All four hardware allowances are consumed; no retries are authorized.
-The user continued after the planned retrospective. Active local work is
-[089 score symmetry](v1-sprints/089-cuda-score-symmetry.md), with direct device
-score/code-generation diagnostics and all original cases retained. CPU arithmetic
-shows a compatible rounding mechanism; the actual GPU instruction sequence was
-not captured. Scalar score products now round independently; the correction and
-ten new diagnostic cases remain unverified on hardware. The
-[run-5 package](v1-sprints/089-symmetry-run5.json) freezes 49 files and 212 cases,
-with explicit private-upload and compute approval received for that unchanged
-package. The single T4 invocation retains the 900/600-second bounds and zero retries.
-Dispatch once from clean source and reflect on the result; no allowance can be reused.
+[088 resident scalar training](v1-sprints/088-resident-scalar-training.md) and
+[089 score symmetry](v1-sprints/089-cuda-score-symmetry.md) now pass all 212 real
+T4 checks at clean `af026ef`. The 14 weighted/missing failures from run 4 are fixed
+without changing original cases or tolerances. Measured device summaries and PTX
+reproduce the archived scorer's one-ULP asymmetry; independently rounded products
+restore equal scores and the expected split. All 202 original cases and ten added
+diagnostics pass. See the [run-5 evidence and retrospective](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
+Bounded scalar geometry, trees, transactions, retention and saved CPU inference
+are verified. The original failed run remains immutable. All five allowances are
+consumed; no retry or additional upload is authorized. Stop at the result reflection
+before broader construction. Next local design is [079 Normal K=2 and installed
+D2 extension](v1-sprints/079-cuda-distribution-and-extension.md), alongside 069
+accounting/isolation preparation. Freeze independent fixtures before new kernels
+and a concrete package/allowance before further hardware work.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
@@ -116,7 +112,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1269 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1270 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
@@ -165,10 +161,11 @@ class metadata, AFT scale and multi-output inverse scaling have persisted infere
 artifacts. PreparedData explicitly reuses fitted training binning/codes across
 independent heterogeneous runs. All recipes support independent validation patience
 through public StopState, separate from model acceptance and best-model selection.
-Training execution is sequential CPU; experimental CUDA storage and aggregation
-plus public split/feasibility/route/leaf operations are verified at `9ce790e`.
-The separate experimental resident scalar recipe executes on T4 but fails the
-088 weighted/missing parity gate. Other required CUDA recipes remain unimplemented.
+CPU recipes execute sequentially. Experimental CUDA storage, aggregation and
+public split/feasibility/route/leaf operations plus the separate resident squared
+recipe pass the bounded 212-case T4 matrix at `af026ef`, including weighted/missing
+parity, owned transactions and saved CPU inference. Other required CUDA recipes
+remain unimplemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 
 The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018

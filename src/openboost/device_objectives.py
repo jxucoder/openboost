@@ -1,4 +1,4 @@
-"""Experimental resident scalar squared geometry; real-device acceptance pending."""
+"""Experimental resident scalar squared geometry; bounded T4 correctness verified."""
 
 from dataclasses import dataclass
 
