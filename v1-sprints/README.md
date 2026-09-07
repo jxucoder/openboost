@@ -64,11 +64,12 @@ fail at round zero's mean update: float64 full-loss rounding reports improvement
 for an actually worsening candidate. Version/best updates and cleanup follow the
 recorded decisions. Full Normal conformance remains open.
 
-All seven allowances are consumed; no retry occurred. Stop at
-[091's retrospective](091-normal-acceptance-diagnostics.md). The next
-[092 proposal](092-normal-comparison-design.md) defines a programmable loss-change
-boundary, independent numerical evidence and explicit historical/revised cohorts
-before a production correction. Original P7/E4, 069 accounting/isolation and full
+All seven allowances are consumed; no retry occurred.
+[091's retrospective](091-normal-acceptance-diagnostics.md) is complete. The user
+approved local [092 construction](092-normal-comparison-design.md). Its independent
+[numerical experiment](092-normal-comparison-mathematics.md) precedes the public
+loss-change operation and three consumers; historical/revised cohorts must be
+explicit before production changes. Original P7/E4, 069 accounting/isolation and full
 R/C/A scope remain open. No additional upload, run or author attempt is authorized.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external

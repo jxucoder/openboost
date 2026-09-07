@@ -1,7 +1,9 @@
-# Sprint 092 proposal: Programmable, reliable loss comparison
+# Sprint 092: Programmable, reliable loss comparison
 
-Status: proposed after [091's measured retrospective](091-normal-acceptance-diagnostics.md).
-No implementation or new hardware allowance is included in this record. All seven
+Status: local execution approved by the user after
+[091's measured retrospective](091-normal-acceptance-diagnostics.md).
+092-A's independent mathematics prototype is in progress; public implementation
+and consumer changes remain pending. No new hardware allowance is included. All seven
 device invocations are consumed. This is the next bounded correctness slice of
 079/B12/R6, not a new private trainer or a change to the required R/C/A scope.
 
@@ -38,6 +40,11 @@ Do not manufacture a smaller `proposal.loss`, clamp a small gradient to zero, or
 hide a tolerance inside serialization to make the old scalar comparison pass.
 
 ## Candidate mathematics to evaluate before production
+
+The [092-A derivation and local experiment](092-normal-comparison-mathematics.md)
+establish a conditional arithmetic enclosure without treating platform `exp`
+accuracy measurements as guaranteed bounds. They retain the bounded-support and
+unresolved-sign cases. This is independent mathematics, not a production correction.
 
 For one Normal row let `r = mean_before + mean_offset - target`,
 `p = exp(-2 * (log_scale_before + scale_offset))`, `dm = mean_after - mean_before`
@@ -126,5 +133,6 @@ its corrected precision policy must be tested on all histogram/split consumers,
 including the still-open split near-tie, before broad changes. Stop after each
 slice/counterexample and at the next device retrospective. Once Normal comparison
 is verified, return to original P7, required CUDA families/train-many and 069's
-author accounting. No independent author, additional agent, upload or run is
-authorized here; all application families remain required.
+author accounting. The user's approval authorizes local 092 construction. No
+independent author, additional agent, upload or run is authorized here; all
+application families remain required.

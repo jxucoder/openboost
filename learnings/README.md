@@ -34,6 +34,10 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Normal comparison bounds](2026-09-07-v1-normal-comparison-bounds.md) — independent
+  arithmetic enclosure, measured false-improvement rejection and retained tiny
+  true improvements; public comparison and CUDA execution remain pending.
+
 - [English repository prose](2026-09-06-english-repository.md) — repository-wide
   translation with unchanged scope, gates, and historical evidence.
 

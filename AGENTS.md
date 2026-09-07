@@ -113,11 +113,12 @@ a small leaf. The transaction follows the reported decision and releases ownersh
 correctly. No acceptance-policy correction or full Normal conformance is claimed.
 
 All seven allowances are consumed; no retry or additional upload is authorized.
-Stop at [091's retrospective](v1-sprints/091-normal-acceptance-diagnostics.md).
-The [092 comparison proposal](v1-sprints/092-normal-comparison-design.md) specifies
+[091's retrospective](v1-sprints/091-normal-acceptance-diagnostics.md) is complete.
+The user approved local [092 comparison construction](v1-sprints/092-normal-comparison-design.md):
 independent loss-change mathematics and explicit numerical resolution, then a public
-objective operation and separate training/best/stopping consumers. It remains a
-proposal. Preserve the old full-loss predicate cases and failed runs; any revised
+objective operation and separate training/best/stopping consumers. The independent
+[092-A numerical experiment](v1-sprints/092-normal-comparison-mathematics.md) precedes
+production changes and adds no device allowance. Preserve the old full-loss predicate cases and failed runs; any revised
 semantic cohort must be explicit before hardware. No blanket epsilon, hidden metric
 adjustment or aggregation-only fix establishes reliable comparison. Original P7/E4
 and [069 accounting/isolation](v1-sprints/069-authoring-pilot.md) remain required.
