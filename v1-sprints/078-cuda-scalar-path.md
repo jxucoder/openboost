@@ -54,3 +54,14 @@ storage, host candidate callbacks and CPU accepted-state caches. First implement
 explicit execution-owned buffers/upload/export, then named fields and histograms;
 keep accepted storage separate from extension workspace. No CUDA implementation
 or hardware test is claimed by this audit. See its concrete acceptance checks.
+
+### Execution-owned storage implementation
+
+Plan: first fail import/validation for the absent execution API; implement opaque
+context-owned buffers with explicit upload/copy/export/release; verify validation
+locally and ownership/lifetimes on one real T4. Use CuPy 13.6.0 from uv.lock, NumPy
+2.3.5 and Python 3.12. The first 085 allocation is one function capped at 900 seconds,
+no retries, at most 8192x32 float32 test data and 16 MiB per-context pool limit.
+This consumes one of the two allowed device runs even on failure. Exact array
+copy equality is the oracle; no floating reductions or tolerance is needed yet.
+Do not call storage checks two-round boosting or transaction conformance.
