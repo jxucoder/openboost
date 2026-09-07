@@ -2,7 +2,7 @@
 
 Status: 090-A complete; 090-B operations constructed with hardware checks pending;
 090-C mapped runtime, 090-D recipes and 090-E external D2 constructed; 090-F's
-67-file/383-case package is frozen. Upload/run approval pending. No new device run.
+67-file/383-case package is frozen. Upload/run approved by the user; execution pending.
 Mapping: [079](079-cuda-distribution-and-extension.md) / B12 / F3.2 / R6 /
 C2–C5 / E1–E2 development conformance. Parent: `48a1386`.
 
@@ -390,3 +390,10 @@ order semantics and numerical-domain decisions must be frozen before kernels.
 Proceed with 090-B's float32-domain cases and public Normal operations; carry the
 tie-policy question into that slice. Installed D2, resident transactions, cleanup,
 cost, P7 and the broader 079 acceptance remain open.
+
+### Run-6 authorization
+
+The user explicitly approved the concrete 67-file Modal upload and one T4 run
+after reviewing the request. Both protocol authorization fields are approved.
+Reverify the source freeze, commit the approval, dispatch once, then archive and
+reflect. No retry, broader upload, push or independent-author attempt is included.

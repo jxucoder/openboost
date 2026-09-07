@@ -94,7 +94,7 @@ restore equal scores and the expected split. All 202 original cases and ten adde
 diagnostics pass. See the [run-5 evidence and retrospective](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
 Bounded scalar geometry, trees, transactions, retention and saved CPU inference
 are verified. The original failed run remains immutable. All five allowances are
-consumed; no retry or additional upload is authorized. The result reflection is
+consumed; the separately approved run-6 allowance is described below. The result reflection is
 recorded, and the user continued local [079 Normal K=2 and installed D2](v1-sprints/079-cuda-distribution-and-extension.md)
 construction through [090](v1-sprints/090-normal-device-construction.md). 090-A adds
 the design and 101 local independent-math/public-CPU checks, with a retained
@@ -102,7 +102,8 @@ zero-weight split ambiguity. 090-B/C/D now construct Normal geometry, shared
 mapped transactions and joint/ordered recipes. Their hardware tests collect but
 have not executed. External D2 construction and installed CPU import/replay checks now pass locally;
 its hardware cases remain pending. The [67-file/383-case run-6 package](v1-sprints/090-normal-run6-request.md)
-is frozen and awaits explicit upload/compute approval, alongside 069 accounting/isolation.
+is frozen; the user approved its upload and one T4 run. Execution is pending,
+alongside 069 accounting/isolation.
 No Normal CUDA pass is claimed. Retain the separate
 near-tie diagnostic under the recorded numerical policy and
 all 212 earlier device regressions. Freeze a concrete package/allowance before

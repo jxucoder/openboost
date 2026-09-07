@@ -1,6 +1,6 @@
 # Run 6: Normal and installed D2 correctness package
 
-Status: prepared locally; private upload and device allowance both pending.
+Status: user-approved private upload and one bounded device allowance; execution pending.
 Exact package: [090-normal-run6.json](090-normal-run6.json).
 Construction baseline: `ac7b1e1`; the protocol freezes every uploaded file except
 itself by SHA256. Dispatch requires a clean checkout and records its actual SHA,

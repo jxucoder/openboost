@@ -58,7 +58,7 @@ ambiguity as a separate diagnostic. 090-B/C/D construct Normal operations, share
 mapped transactions and joint/ordered recipes; their hardware checks collect but
 have not executed. External D2 and local installed import/replay checks now exist.
 The [67-file/383-case run-6 package](090-normal-run6-request.md) is frozen and
-awaits upload/compute approval, alongside 069 accounting/isolation work.
+has explicit upload/compute approval; execution is pending, alongside 069 accounting/isolation work.
 No Normal CUDA pass is claimed. New hardware requires the declared allowance;
 all 212 earlier device regressions remain required. Full v1 gates remain open.
 

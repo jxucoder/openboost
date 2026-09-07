@@ -87,3 +87,10 @@ is authorized by this preparation.
 ## Commits
 
 - `ac7b1e1` — external D2 construction and original replay checks.
+
+## Approved execution
+
+The user approved the concrete run-6 request. Both the private 67-file upload and
+one bounded T4 invocation are authorized. Only the protocol authorization fields
+change; all frozen sources/cases/resources remain unchanged. Verify the source
+freeze and ten manifest checks before committing this authorization and dispatch.
