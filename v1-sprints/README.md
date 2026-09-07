@@ -51,8 +51,9 @@ All four hardware allowances are consumed. The user continued after the run-4
 retrospective. [089 score symmetry](089-cuda-score-symmetry.md) is the active bounded
 correction, with direct candidate diagnostics and unchanged acceptance. No GPU
 retry has occurred. The [run-5 freeze](089-symmetry-run5.json) contains 49 files and
-212 cases, with both private-upload and compute approvals pending. Its single
-proposed T4 invocation keeps the 900/600-second limits and zero retries.
+212 cases. The user explicitly approved its private upload and single T4 invocation,
+with the existing 900/600-second limits and zero retries. Record the actual result
+and reflection before any further hardware work.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

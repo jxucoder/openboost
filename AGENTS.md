@@ -100,9 +100,9 @@ shows a compatible rounding mechanism; the actual GPU instruction sequence was
 not captured. Scalar score products now round independently; the correction and
 ten new diagnostic cases remain unverified on hardware. The
 [run-5 package](v1-sprints/089-symmetry-run5.json) freezes 49 files and 212 cases,
-with both private-upload and compute approvals pending. The proposed single T4
-invocation retains the 900/600-second bounds and zero retries. Obtain that concrete
-allowance before dispatch; no prior allowance can be reused.
+with explicit private-upload and compute approval received for that unchanged
+package. The single T4 invocation retains the 900/600-second bounds and zero retries.
+Dispatch once from clean source and reflect on the result; no allowance can be reused.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.

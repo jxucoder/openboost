@@ -85,3 +85,15 @@ the numerical fix remains unaccepted on real CUDA.
 `f5922fb` records the failed device run and retrospective; `13fdd83` freezes
 diagnostic cases; `d3ee1c3` commits the candidate score correction. The next run
 freeze is a separate local commit; no push is requested.
+
+## Explicit run-5 approval
+
+The user replied "sure" to the concrete 49-file private-upload request and one
+Modal T4 invocation of all 212 checks, with 900/600-second limits and zero retries.
+Both approvals are recorded for the unchanged package. Verify and commit before
+dispatch; retain the actual result separately from authorization. The freeze is
+`aab6882`; no new package or environment change is needed.
+All 40 local integrity/judging/arithmetic checks pass with approvals recorded.
+The 49-file closure and 48 prefrozen hashes match; output and launcher log are
+absent before dispatch. Existing full CPU and packaging checks apply to the
+unchanged source payload.

@@ -1,8 +1,8 @@
 # Sprint 089: Preserve scalar score symmetry
 
 Status: source correction committed at `d3ee1c3`; the 49-file, 212-case package is
-frozen with compute and private-upload approvals pending. Baseline `f5922fb`.
-No new hardware invocation, agents, CPU search, objective expansion or phase exit.
+frozen with compute and private-upload approvals received. Baseline `f5922fb`.
+One unchanged invocation is authorized; no agents, CPU search, expansion or phase exit.
 
 ## Purpose and counterexample
 
@@ -128,3 +128,15 @@ if the hypothesis is wrong, investigate captured summaries/code before changing 
 scorer again. Do not expand objectives, author claims, CPU search or performance
 claims from local checks. Request explicit approval for this exact private upload
 to Modal and one bounded invocation; all prior allowances remain consumed.
+
+## Run-5 approval and execution
+
+The user replied "sure" to the explicit request to upload the frozen 49-file
+private source/test/metadata package to Modal and run all 212 checks once on T4,
+with a 15-minute function limit, 10-minute test limit and no retries. Record both
+protocol approvals without changing any prefrozen source, case, package or limit.
+
+1. Recheck the exact source/case closure and dispatch guards; commit approval.
+2. Dispatch the original wrapper once from clean source to the fixed output.
+3. Audit installed/snapshot hashes, versions, raw artifacts and all 212 cases.
+   Preserve score/PTX diagnostics and any failure, then reflect before further work.
