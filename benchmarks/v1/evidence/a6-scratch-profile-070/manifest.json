@@ -1,0 +1,372 @@
+{
+  "revision": "21f76b1ca2fb53e6b6c3d6d2b15d476dd7740d23",
+  "dirty": false,
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/diagnostics.py": "54065428816f7092ebc0f2bb66c0d2006bc3d49a864c8950e3901c68e7b428bf",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "de920ffda40e2ecbd9a56b368515497c9fdb94d30a465be0f9c8ed0e39974082",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "aa51d6ab3678778c2795271ddcedf3718385d6eb2e335e46eaf3d49acd781c9c",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "dcd61888233544ee2a94ea5d6046277bcf918b01b3b333ae7945714b3cb30ef5",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5",
+    "benchmarks/v1/a6_resource_preflight.py": "659d4732d1a8d9531cfa1d553c49b3f6fe19d4cae482331bfa1710c4cf38f42f",
+    "benchmarks/v1/profile_worker.py": "58c824002f74e370d9bc4a15824752c15beb8ca739a5c474f1f91783286f3896",
+    "benchmarks/v1/openboost_worker.py": "b930f800b236f38a8dba20173cff528c88ca966e07bef42ba5bdec141366c28f",
+    "benchmarks/v1/openboost_predict.py": "a02951479b032ebd67376c8c8c91132bbec923f8e4b9438822903d78f557f257",
+    "benchmarks/v1/process_runner.py": "58d5730c89cde083206806495e8f3a7d27821954814b81ecc946a3477c36c776",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/ranking.py": "dab78a6a98b26490e3de66d7d8acdae8f6ce3ef94c4c5505bc6ace61176c08bb",
+    "benchmarks/__init__.py": "60861efe7f6ee96d030396144a9a1646f5ff2b897db25661ab09613be07e4e19",
+    "benchmarks/v1/__init__.py": "7420e86d8f099989c9ed62460143ae554f19518c0121c5146fb166c8b0897654",
+    "pyproject.toml": "51ba9b66fda02d5691cbb0852fff55182950b035e108a6069e6cbbf3a9af66d8",
+    "README.md": "97f863e2871513cc3706e22a5eb29e32fc11bd8501a729b152fc26927c0ccb6d",
+    "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/a6_resource_preflight.py",
+    "/tmp/openboost-a6-scratch-profile-070",
+    "/tmp/openboost-a6-probe-packets-070",
+    "--profile"
+  ],
+  "requested": {
+    "cpu": [
+      2,
+      2
+    ],
+    "memory_mib": [
+      8192,
+      8192
+    ],
+    "function_seconds": 120,
+    "retries": 0
+  },
+  "plan_sha256": "f678ee59ca3cc8d66fd743c8f985336cd6c3b0f02f486c65f61b0fc73b63f11a",
+  "packet": {
+    "path": "0/worker-input.npz",
+    "sha256": "0750282946e2e2e5636117db6564652c504b1958ff363c20474816dd3a849f53"
+  },
+  "fold_metadata": {
+    "target_scale": {
+      "mean": [
+        21.832476455405597,
+        29.161076799541192
+      ],
+      "std": [
+        8.446609478513288,
+        10.891162854284502
+      ],
+      "constant": [
+        false,
+        false
+      ]
+    }
+  },
+  "packet_manifest": {
+    "application": "A6",
+    "dataset": "parkinsons",
+    "folds": [
+      {
+        "seed": 0,
+        "artifacts": {
+          "worker-input": {
+            "path": "0/worker-input.npz",
+            "sha256": "0750282946e2e2e5636117db6564652c504b1958ff363c20474816dd3a849f53"
+          },
+          "train-rows": {
+            "path": "0/train-rows.npz",
+            "sha256": "cbd0f8b308a4b6bcf1994ccc52fc416753db2c7d0544cdc981755061963cbc48"
+          },
+          "validation": {
+            "path": "0/validation.npz",
+            "sha256": "018f27e04c960f316c425def9a9dc425ec9033c8d06f208acba646a0e23145ea"
+          },
+          "test-features": {
+            "path": "0/test-features.npz",
+            "sha256": "45e6fdeb7bdc716d4972005915c979eb699c1c830856a50d2212a05fa3611848"
+          },
+          "test-truth": {
+            "path": "0/test-truth.npz",
+            "sha256": "92cf249be956646637158b98bfe1808716c93e21333a3baccac4ce065e8d9991"
+          }
+        },
+        "metadata": {
+          "target_scale": {
+            "mean": [
+              21.832476455405597,
+              29.161076799541192
+            ],
+            "std": [
+              8.446609478513288,
+              10.891162854284502
+            ],
+            "constant": [
+              false,
+              false
+            ]
+          }
+        }
+      },
+      {
+        "seed": 1,
+        "artifacts": {
+          "worker-input": {
+            "path": "1/worker-input.npz",
+            "sha256": "5eca1356971580b2aa677ccbc3f8abe69b64c7478cd67f7fd25da1e029f7db25"
+          },
+          "train-rows": {
+            "path": "1/train-rows.npz",
+            "sha256": "9805269dd0594f6e654f4bc64df8694a02a34ffde8474468e4865df7bce4d1d8"
+          },
+          "validation": {
+            "path": "1/validation.npz",
+            "sha256": "4947fd9a0515b4646b9638256cf7bb57adf899762c8212a9c58402b0a3dade7f"
+          },
+          "test-features": {
+            "path": "1/test-features.npz",
+            "sha256": "827a1797ca4d64ec7722f4dbb76d2e874a575366eb12ca4e5c07aef15134066a"
+          },
+          "test-truth": {
+            "path": "1/test-truth.npz",
+            "sha256": "eb6829963b9cdeb2c70583ef5b38d883a4978c9b185e175f81b3302a405d636f"
+          }
+        },
+        "metadata": {
+          "target_scale": {
+            "mean": [
+              21.02220744409841,
+              28.889462439852874
+            ],
+            "std": [
+              8.707706178768547,
+              11.553396813667037
+            ],
+            "constant": [
+              false,
+              false
+            ]
+          }
+        }
+      },
+      {
+        "seed": 2,
+        "artifacts": {
+          "worker-input": {
+            "path": "2/worker-input.npz",
+            "sha256": "79189bbfde0c2e13fa27728ce8a6ead553065da83ad6d94fadaae6163d453296"
+          },
+          "train-rows": {
+            "path": "2/train-rows.npz",
+            "sha256": "d58b5d592d0c38ab1c7258046dc84598a57f1d447aca23cc750d99835b76f31a"
+          },
+          "validation": {
+            "path": "2/validation.npz",
+            "sha256": "c84b2ba1d2884415b029e050876a16d454f1c50d93f1d5804155ecd426d198e8"
+          },
+          "test-features": {
+            "path": "2/test-features.npz",
+            "sha256": "7a81dc178bd308c3799916ba5265742bcd9ca96383ab13f7d4d4ea415dee1a5b"
+          },
+          "test-truth": {
+            "path": "2/test-truth.npz",
+            "sha256": "c6a3198bfcde399f9add245ef86bae57d7a69457c46dddb48346c98e79efc979"
+          }
+        },
+        "metadata": {
+          "target_scale": {
+            "mean": [
+              22.402470691547656,
+              31.08271761800212
+            ],
+            "std": [
+              7.461557603692726,
+              9.80291946506434
+            ],
+            "constant": [
+              false,
+              false
+            ]
+          }
+        }
+      },
+      {
+        "seed": 3,
+        "artifacts": {
+          "worker-input": {
+            "path": "3/worker-input.npz",
+            "sha256": "cab04f13105a6e4c630bde542ab425099f4422c7b3dbb7f22e9f75aaac8c5406"
+          },
+          "train-rows": {
+            "path": "3/train-rows.npz",
+            "sha256": "545a95c32e526be45407754189eb4261559fc1e9fdd3b54bf0c19015da69636d"
+          },
+          "validation": {
+            "path": "3/validation.npz",
+            "sha256": "df4b66ebc77833c5df46e730f361f14e7f1728ec05883d22fb3208438f398c46"
+          },
+          "test-features": {
+            "path": "3/test-features.npz",
+            "sha256": "6a9d99374e40349110d4b525dcb6c97bee5cddc849de65b1d00da6b9a35de557"
+          },
+          "test-truth": {
+            "path": "3/test-truth.npz",
+            "sha256": "f696ba5fed863349a0bc216cfeb903a13e9d54ac44b57135c372dcc8759cb08a"
+          }
+        },
+        "metadata": {
+          "target_scale": {
+            "mean": [
+              21.36469700842268,
+              28.64957766482703
+            ],
+            "std": [
+              8.097653633950642,
+              10.41318564767784
+            ],
+            "constant": [
+              false,
+              false
+            ]
+          }
+        }
+      },
+      {
+        "seed": 4,
+        "artifacts": {
+          "worker-input": {
+            "path": "4/worker-input.npz",
+            "sha256": "b0ae47990cc48c72afc47dfcf2273c3cedc5d606289d0751ee2afa3edc465b67"
+          },
+          "train-rows": {
+            "path": "4/train-rows.npz",
+            "sha256": "4e0f851b54a87b26273eee75ac8d9c20243ea95324ef0329983ca127e9ae2905"
+          },
+          "validation": {
+            "path": "4/validation.npz",
+            "sha256": "b32c3fd08cec7781deb95a7d01057e2d8d2d8b0cd63c8c1368b4f5104a8ed95c"
+          },
+          "test-features": {
+            "path": "4/test-features.npz",
+            "sha256": "1d9081dee48c899212497db8d80630f81dd7d934bea31d00cc5781b92666ba0c"
+          },
+          "test-truth": {
+            "path": "4/test-truth.npz",
+            "sha256": "150f918c1496d3d6fc8062614ce7b592ee00d68a590464f52c50aefb6833b9cc"
+          }
+        },
+        "metadata": {
+          "target_scale": {
+            "mean": [
+              21.608206573705065,
+              28.812343511667468
+            ],
+            "std": [
+              7.37511081258478,
+              9.516732486364944
+            ],
+            "constant": [
+              false,
+              false
+            ]
+          }
+        }
+      }
+    ],
+    "source_freeze_sha256": "334cbda3dbd18849914a0069b6203035280cf5a716838b098a93856c4a2140f3",
+    "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+    "adapter_sha256": "6705574af0989bc5f34c3bb43a5466c86a34c08dcb6ea549cf9ad885c04719d0",
+    "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+  },
+  "jobs": [
+    {
+      "id": "openboost-shared:0:00",
+      "fold": 0,
+      "application": "A6",
+      "library": "openboost",
+      "device": "cpu",
+      "threads": 1,
+      "seed": 0,
+      "early_stopping_rounds": 50,
+      "config": {
+        "learning_rate": 0.03,
+        "max_depth": 4,
+        "reg_lambda": 0.0,
+        "rounds": 300,
+        "seed_from_fold": true,
+        "mode": "shared",
+        "bins": 255
+      }
+    }
+  ],
+  "mode": "profile",
+  "status": "complete",
+  "modal_version": "1.3.0.post1",
+  "results": [
+    {
+      "id": "openboost-shared:0:00",
+      "passed": true,
+      "outcome_kind": "instrumented_diagnostic_only",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "/snapshot/benchmarks/v1/profile_worker.py",
+          "/tmp/a6-probe-jnou59v4/job.json",
+          "--seconds",
+          "60",
+          "--no-stacks"
+        ],
+        "launch_command": [
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+          "8589934592",
+          "1",
+          "/usr/local/bin/python",
+          "/snapshot/benchmarks/v1/profile_worker.py",
+          "/tmp/a6-probe-jnou59v4/job.json",
+          "--seconds",
+          "60",
+          "--no-stacks"
+        ],
+        "address_limit_bytes": 8589934592,
+        "worker_identity": "uid_gid_65534_no_new_privs",
+        "environment_policy": "minimal_explicit",
+        "timeout_s": 90,
+        "threads": 1,
+        "status": "error",
+        "exit_code": 124,
+        "reason": "worker exited nonzero",
+        "wall_s": 60.226790862,
+        "artifacts": {
+          "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "profile.pstats": "9e36ce6194361dd84c2af9188165a067de399fbc593fcfa5626dab0e8d6c32d5",
+          "profile.txt": "869be8f0a71ffbe20ee17192176405897e3b9e1d694572f7f24215c2b296428f",
+          "profile.json": "6cd51c41337048587cbdcff998c51547b36be9a1b327ae04cc7f5746a81aa365"
+        }
+      },
+      "profile_status": "deadline"
+    }
+  ],
+  "image_id": "im-WmljD8wSCoHgXCw4e8h5Da",
+  "passed": true,
+  "artifacts": {
+    "openboost-shared-0-00/job.json": "f3d7e1b92e67b0ad41819b609abef56d01470180c6856f1cd924f66798c01581",
+    "openboost-shared-0-00/profile/profile.pstats": "9e36ce6194361dd84c2af9188165a067de399fbc593fcfa5626dab0e8d6c32d5",
+    "openboost-shared-0-00/profile/worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "openboost-shared-0-00/profile/execution.json": "7cdf0016e5657eac033da564544ebbd73b8b01fa0aa9c46df238523e6b94c8e0",
+    "openboost-shared-0-00/profile/profile.json": "6cd51c41337048587cbdcff998c51547b36be9a1b327ae04cc7f5746a81aa365",
+    "openboost-shared-0-00/profile/profile.txt": "869be8f0a71ffbe20ee17192176405897e3b9e1d694572f7f24215c2b296428f"
+  }
+}

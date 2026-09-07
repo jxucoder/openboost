@@ -30,9 +30,9 @@ fresh replay and frozen target scales. They stop by patience after 59/65 rounds
 and take 1077/767 seconds. See [evidence](../benchmarks/v1/evidence/a6-real-probes-070/README.md).
 The bounded profile at `dede27e` identifies candidate selection/vector scoring as
 the dominant sampled work. The bounded layout cache at `b642bd5` passes exact model/prediction conformance
-and resolves its schema once in the installed profile. Default scalar validation
-and temporary leaf work remain measured follow-ups; paired full-fit cost evidence
-is still required. Keep the remaining 158 jobs pending.
+and resolves its schema once in the installed profile. Scratch scoring at `21f76b1` also passes exact conformance and removes per-candidate
+owned leaves in the installed profile. Next run a paired real fit before further
+optimization or expansion. Keep the remaining 158 jobs pending.
 
 ## Next bounded slices
 

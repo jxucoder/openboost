@@ -387,3 +387,21 @@ Forty-two focused tests pass, including exact scores, ties/near ties, invalid
 curvature/NaNs/overflow and model bytes across all growers. Full regression: 1077
 passed, one Linux-only skip; lint passes. The next diagnostic must show the changed
 call path in installed execution; a profile does not prove full-fit speedup.
+
+### Installed scratch-path evidence and reflection
+
+At clean `21f76b1`, the [same approved diagnostic](../benchmarks/v1/evidence/a6-scratch-profile-070/README.md)
+completes. All 32 source hashes and six artifacts verify. Raw pstats records just
+77 vector_leaf calls (previous layout profile: 904838); temporary candidate leaves
+now take the scratch path. This prefix scores 352465 candidates, compared with
+301590 previously, but separate instrumented prefixes are not full-fit evidence.
+
+Reflection: the two narrow changes remove measured redundant work while retaining
+exact tested semantics. Stop stacking micro-optimizations now. Next prepare one
+paired real fit against the original scoring baseline in a common environment,
+requiring identical selected model bytes/predictions/stopping plus full cost and
+replay accounting. Keep the remaining search matrix pending until that evidence
+is reviewed. No end-to-end speedup is claimed.
+
+Validation: 1077 CPU tests passed, one Linux-only skip; lint/docs pass. The installed
+profile completes through the intended soft deadline, not a successful model fit.
