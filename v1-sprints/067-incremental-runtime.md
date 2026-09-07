@@ -59,3 +59,20 @@ rounds. New-term evaluation reduces these to 8/16 and 16/32 with exact independe
 full replay, preserving individual term-addition order. Public `preview_raw`
 serves external loops as well as built-in recipes. Runtime metadata/model-envelope
 work may still grow with ensemble size; this is not a claim of linear total fit time.
+
+### Same-container comparison amendment
+
+All eight optimized fits and both profiles pass at `e99e89c`. Cross-run inspection
+finds a changed OpenBLAS architecture (Haswell baseline, SkylakeX optimized).
+Squared models/predictions match exactly; Normal differs by at most 8.9e-16.
+Do not attribute this difference or the timing ratio to the runtime alone.
+
+Before interpreting timings, run six paired baseline/candidate cases in one
+container, in the original order, baseline first for each pair. Use the retained
+hash-verified baseline wheel and current wheel, identical input and dependencies,
+two numerical threads, 8-GiB address ceiling and 120-second per-child cap. Maximum
+12 uninstrumented fits, no profiles, one 1500-second function, stop at first failure.
+This is a separate diagnostic amendment, not a repeated realization of the original
+eight-fit budget. Do not run baseline 128-round cases. Verify exact predictions and
+model bytes between paired wheels, and report one observation per pair without
+statistical or formal gate claims. Preserve the cross-host results as such.

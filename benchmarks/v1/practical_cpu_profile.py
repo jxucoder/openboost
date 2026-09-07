@@ -79,7 +79,7 @@ def freeze(archive, directory):
     return record
 
 
-def execute(directory, profile_only=None):
+def execute(directory, profile_only=None, baseline_wheel=None):
     import modal
 
     root = Path(directory).resolve()
@@ -88,6 +88,18 @@ def execute(directory, profile_only=None):
         raise ValueError("frozen input changed")
     if profile_only is not None and profile_only not in {c["id"] for c in protocol["cases"]}:
         raise ValueError("profile case is absent from frozen protocol")
+    baseline = None
+    if baseline_wheel is not None:
+        if profile_only is not None:
+            raise ValueError("paired comparison and profile-only are separate modes")
+        baseline_wheel = Path(baseline_wheel).resolve()
+        baseline = json.loads(
+            (ROOT / "benchmarks/v1/evidence/practical-cpu-066/sweep/manifest.json").read_text()
+        )
+        if digest(baseline_wheel) != baseline["wheel_sha256"]:
+            raise ValueError("baseline wheel differs from retained Sprint 066 sweep")
+        if protocol != baseline["protocol"]:
+            raise ValueError("paired comparison must use unchanged baseline protocol")
     output = root / "run"
     output.mkdir(exist_ok=False)
     wheels = output / "wheels"
@@ -113,6 +125,18 @@ def execute(directory, profile_only=None):
         modal_version=modal.__version__,
         protocol=protocol,
         profile_only=profile_only,
+        paired_baseline=baseline,
+        comparison_policy=(
+            dict(
+                max_fits=12,
+                selected_cases=protocol["cases"][:6],
+                order="baseline then candidate for each case",
+                profiles=0,
+                scope="separate same-container amendment; original per-worker caps",
+            )
+            if baseline
+            else None
+        ),
         status="running",
         cases=[],
         profiles=[],
@@ -132,6 +156,8 @@ def execute(directory, profile_only=None):
     for name in ("cpu_profile_worker.py", "resource_preflight.py", "profile_worker.py"):
         image = image.add_local_file(ROOT / "benchmarks/v1" / name, "/opt/" + name, copy=True)
     image = image.add_local_file(root / "input.npz", "/opt/input.npz", copy=True)
+    if baseline_wheel is not None:
+        image = image.add_local_file(baseline_wheel, "/opt/baseline.whl", copy=True)
     app = modal.App("openboost-v1-practical-cpu-profile")
 
     @app.function(
@@ -144,7 +170,7 @@ def execute(directory, profile_only=None):
         include_source=False,
         is_generator=True,
     )
-    def remote(protocol, profile_only):
+    def remote(protocol, profile_only, paired):
         import hashlib
         import importlib.metadata
         import json
@@ -173,8 +199,16 @@ def execute(directory, profile_only=None):
             if not preflight["passed"]:
                 return
 
-            def run_case(case, instrumented=False, fixtures=False):
+            if paired:
+                import zipfile
+
+                with zipfile.ZipFile("/opt/baseline.whl") as archive:
+                    archive.extractall(work / "baseline")
+
+            def run_case(case, instrumented=False, fixtures=False, variant=None):
                 name = "fixtures" if fixtures else case["id"] + ("-profile" if instrumented else "")
+                if variant is not None:
+                    name = variant + "-" + name
                 out = work / name
                 command = [sys.executable, "/opt/cpu_profile_worker.py"]
                 if fixtures:
@@ -190,6 +224,15 @@ def execute(directory, profile_only=None):
                     job_path = work / (name + ".json")
                     job_path.write_text(json.dumps(job))
                     command.append(str(job_path))
+                if variant == "baseline":
+                    bootstrap = "import sys,runpy; sys.path.insert(0,'/opt'); sys.path.insert(0,sys.argv.pop(1)); sys.argv.pop(0); runpy.run_path(sys.argv[0],run_name='__main__')"
+                    command = [
+                        sys.executable,
+                        "-c",
+                        bootstrap,
+                        str(work / "baseline"),
+                        *command[1:],
+                    ]
                 execution = resources["bounded"](
                     command,
                     seconds=30 if fixtures else 120,
@@ -207,6 +250,7 @@ def execute(directory, profile_only=None):
                     kind="fixtures" if fixtures else "profile" if instrumented else "case",
                     id=name,
                     case=case,
+                    variant=variant,
                     execution=execution,
                     artifacts=artifacts,
                     hashes={n: hashlib.sha256(b).hexdigest() for n, b in artifacts.items()},
@@ -215,6 +259,26 @@ def execute(directory, profile_only=None):
             fixture = run_case({}, fixtures=True)
             yield fixture
             if fixture["execution"]["status"] != "pass":
+                return
+            if paired:
+                failed = False
+                # Only the six completed baseline cases, in original order.
+                for case in protocol["cases"][:6]:
+                    for variant in ("baseline", "candidate"):
+                        if failed:
+                            yield dict(
+                                kind="case",
+                                id=variant + "-" + case["id"],
+                                case=case,
+                                variant=variant,
+                                artifacts={},
+                                hashes={},
+                                execution=dict(status="not_run", reason="prior paired fit failed"),
+                            )
+                            continue
+                        result = run_case(case, variant=variant)
+                        yield result
+                        failed = result["execution"]["status"] != "pass"
                 return
             if profile_only is not None:
                 case = next(c for c in protocol["cases"] if c["id"] == profile_only)
@@ -242,7 +306,7 @@ def execute(directory, profile_only=None):
 
     try:
         with modal.enable_output(), app.run():
-            for item in remote.remote_gen(protocol, profile_only):
+            for item in remote.remote_gen(protocol, profile_only, baseline is not None):
                 if item["kind"] == "preflight":
                     if "preflight" in manifest:
                         raise RuntimeError(
@@ -264,7 +328,11 @@ def execute(directory, profile_only=None):
                     print(item["id"], item["execution"]["status"], flush=True)
                 manifest["image_id"] = image.object_id
                 save()
-        complete = len(manifest["profiles"]) == 1 if profile_only else len(manifest["cases"]) == 8
+        complete = (
+            len(manifest["profiles"]) == 1
+            if profile_only
+            else len(manifest["cases"]) == (12 if baseline else 8)
+        )
         manifest["status"] = "complete" if complete else "incomplete"
     except Exception as exc:
         manifest.update(status="error", error=str(exc))
@@ -281,6 +349,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("freeze", "run"))
     parser.add_argument("directory", type=Path)
+    parser.add_argument(
+        "--paired-baseline-wheel",
+        type=Path,
+        help="Pair six completed baseline cases in one container",
+    )
     parser.add_argument("--profile-only", help="Profile one frozen case after an interrupted sweep")
     parser.add_argument(
         "--archive", type=Path, default=Path("build/foundation_data/cal_housing.tgz")
@@ -289,4 +362,4 @@ if __name__ == "__main__":
     if args.action == "freeze":
         freeze(args.archive, args.directory)
     else:
-        execute(args.directory, args.profile_only)
+        execute(args.directory, args.profile_only, args.paired_baseline_wheel)

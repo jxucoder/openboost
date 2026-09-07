@@ -174,6 +174,11 @@ def run(job, directory):
     if not pools or any(p["num_threads"] != 2 for p in pools):
         raise ValueError("numerical thread policy differs")
     record = dict(
+        core_sources={
+            name: dict(path=str(path), sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+            for name in ("runtime", "recipes", "tree")
+            for path in [Path(sys.modules["openboost." + name].__file__)]
+        },
         status="pass",
         recipe=job["recipe"],
         rounds=job["rounds"],

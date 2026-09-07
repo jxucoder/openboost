@@ -64,3 +64,15 @@ including ten exact fresh-inference models after training packages are removed.
 Source and artifact hashes match the clean revision. Evidence is in
 [incremental-067](../benchmarks/v1/evidence/incremental-067/README.md).
 These strengthen semantic and installed-boundary checks, not formal author gates.
+
+### Architecture confound and bounded paired follow-up
+
+The first optimized sweep passes eight cases and two profiles, but selected BLAS
+architecture differs from Sprint 066. Three Normal predictions differ in final
+bits (maximum 8.9e-16); squared remains exact. This is an unresolved cross-host
+comparison, not permission to relax tolerances. Preregister six same-container
+pairs using the retained baseline wheel before interpreting the change. Extend
+the coordinator with explicit paired mode, verify baseline wheel/protocol hashes,
+retain both variants and stop after any failure. The exact amendment is in 067.
+Focused source tests and lint run before commit; actual paired execution verifies
+the new orchestration branch. No production changes in this follow-up.
