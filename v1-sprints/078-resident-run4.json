@@ -1,7 +1,7 @@
 {
   "scope": "078-C resident scalar squared objectives, trees, accepted/proposal transactions and recipe; all prior 88 regressions; no broader phase exit or performance claim",
-  "authorization": "pending",
-  "upload_authorization": "pending",
+  "authorization": "approved",
+  "upload_authorization": "approved",
   "require_upload_authorization": true,
   "upload_destination": "Modal",
   "upload_file_count": 47,

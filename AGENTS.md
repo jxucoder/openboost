@@ -94,8 +94,9 @@ accepted/proposal ownership and saved CPU inference. Retain the 065/068 contract
 are locally implemented with pending real-device verifiers; none has new GPU
 acceptance yet. The earlier 88 passing cases do not validate the new code.
 The [run-4 package](v1-sprints/078-resident-run4.json) freezes 202 cases and 47
-private source/test/metadata files. Both compute and upload approval are pending;
-one T4 invocation, 900-second function/600-second tests and zero retries are proposed.
+private source/test/metadata files. The user approved compute and this exact private
+upload: one T4 invocation, 900-second function/600-second tests and zero retries.
+Record and reflect on its result before any additional hardware allowance or scope.
 Primitive checks do not pass transaction or boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.

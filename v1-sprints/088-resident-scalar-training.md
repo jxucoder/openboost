@@ -1,8 +1,8 @@
 # Sprint 088: Resident scalar rounds and owned transactions
 
-Status: local construction after the user's continuation at the 087 retrospective.
-Baseline `e1a9c20`. Implements 086's 078-C. No GPU allowance is available: all
-three prior invocations are consumed. No new agents, CPU search or phase exit.
+Status: run-4 compute and exact private upload approved after local construction.
+Baseline `e1a9c20`. Implements 086's 078-C. The three prior invocations are consumed;
+one additional frozen invocation is approved below. No new agents, CPU search or phase exit.
 
 ## Decision and public boundary
 
@@ -175,3 +175,16 @@ build dependency. No dependency or project-environment mutation was needed.
 Stop here for the concrete new compute/private-upload allowance. Once authorized,
 commit that protocol state, dispatch once, retain every failure and reflect on the
 actual result before any additional run or broader construction.
+
+## Run-4 authorization and execution plan
+
+The user replied "continue" to the explicit request for one Modal T4 run and
+upload of the frozen 47-file private source/test/metadata package. This approves
+both actions for the existing package, with a 900-second function limit,
+600-second test limit and zero retries. Only the protocol's two authorization
+fields change; the 46 prefrozen hashes, 202 cases and 17 dependencies remain fixed.
+
+1. Recheck source/case integrity and dispatch guards; commit the approval record.
+2. Invoke the existing launcher exactly once from clean source and retain all output.
+3. Audit the installed sources, snapshot hashes, versions and every JUnit case;
+   record the actual result and reflection before any new run or expanded work.

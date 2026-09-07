@@ -44,7 +44,7 @@ is active local construction: accepted/proposal ownership, resident two-round
 scalar training and saved CPU inference. Further hardware work requires a new
 concrete freeze and allowance.
 The [088 run-4 package](078-resident-run4.json) now freezes 202 device cases and
-47 upload files. Compute and private upload approval are both pending. Local
+47 upload files. The user approved one bounded invocation and the exact private upload. Local
 regression, judging, packaging and collection do not pass the hardware gate.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
