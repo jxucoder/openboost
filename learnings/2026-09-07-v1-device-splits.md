@@ -60,6 +60,14 @@ whitespace checks pass. The limits and zero-retry policy remain fixed.
 
 The candidate API is absent at the starting revision; no remote experiment is run.
 
+At `043861a`, automatic approval review rejected creation of the Modal launcher
+process because source/test/metadata transfer to Modal needed explicit user
+authorization beyond the compute request. Do not retry through another route.
+The launcher log and fixed output directory are absent; the 39-file source closure
+still matches its freeze. No upload or remote invocation occurred and the approved
+single-run compute allowance remains unused. This supplies no GPU evidence.
+The documentation build and whitespace checks pass for the block record.
+
 ## Risks and Follow-ups
 
 Distinguish padded slots from actual candidates; preserve original row order and
@@ -75,4 +83,5 @@ runtime versions, driver support, image labels and package metadata.
 
 `0ba39a3` freezes the oracle before implementation; `0bcb52f` adds the operations
 and pending real-device cases. `161c02e` freezes the shared executor guards and
-run-3 package. The approval record is a separate commit. Nothing is pushed.
+run-3 package. `043861a` records the compute approval. The external-transfer block
+is recorded separately. Nothing is pushed.

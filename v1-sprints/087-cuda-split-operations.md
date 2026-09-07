@@ -1,6 +1,6 @@
 # Sprint 087: Public CUDA candidate and feasibility composition
 
-Status: frozen run-3 allowance approved; dispatch and evidence review next.
+Status: compute allowance approved; external source transfer blocked by automatic approval review.
 Baseline `4251a36`. Implements 086's 078-B; it is not a new phase or GPU allowance.
 Both 085 device runs are consumed. The user's continuation after the concrete
 run-3 approval request authorizes one additional bounded invocation below.
@@ -174,3 +174,19 @@ and all required application/device gates remain open.
 
 Authorization does not include another invocation, pushing commits, independent
 author attempts or an expanded experiment. No hardware outcome is known yet.
+
+## Dispatch approval block
+
+At clean source `043861a`, automatic approval review rejected process creation for
+the Modal launcher. The stated reason was that the bounded T4 compute allowance
+did not explicitly authorize uploading private source code, tests and metadata to
+Modal. No launcher process, output directory or redirected log was created; no
+remote invocation or upload occurred. The one approved invocation remains unused.
+This is an approval block before dispatch, not a failed CUDA test or a retry.
+
+The exact upload is the 39-file allowlist in the frozen package: 23 production
+Python modules, package metadata/README/license, the protocol, two launchers and
+the required test/oracle modules. It excludes credentials, other repository files
+and sealed task cards. All frozen source hashes still match and all 88 cases remain
+fixed. Request explicit permission to upload this package to Modal before retrying
+process creation. Do not use an indirect upload or another execution route.
