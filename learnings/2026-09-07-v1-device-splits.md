@@ -68,6 +68,12 @@ still matches its freeze. No upload or remote invocation occurred and the approv
 single-run compute allowance remains unused. This supplies no GPU evidence.
 The documentation build and whitespace checks pass for the block record.
 
+The user then explicitly approved uploading the frozen 39-file private source,
+test and metadata package to Modal for the approved single T4 run. This resolves
+the block without changing the payload scope, cases, limits or launcher route.
+All 17 local manifest/judge checks and whitespace checks pass with this recorded
+approval; the 38 prefrozen hashes still match and the case matrix remains 88.
+
 ## Risks and Follow-ups
 
 Distinguish padded slots from actual candidates; preserve original row order and

@@ -89,9 +89,9 @@ The [run-3 package](v1-sprints/078-splits-run3.json) freezes those cases plus al
 33 previous cases and one T4 invocation. The user's continuation after the concrete
 approval request authorizes that single run, capped at 900 seconds with no retries.
 Audit its evidence and record allowance consumption before any further device work.
-Automatic approval review blocked the Modal launcher before process creation:
-explicit permission to upload the frozen 39-file source/test/metadata package to
-Modal is still required. No remote run or upload occurred; the allowance is unused.
+The earlier automatic approval block occurred before process creation. The user
+has now explicitly approved uploading the frozen 39-file source/test/metadata
+package to Modal for this one run. No earlier remote invocation consumed it.
 CUDA training and accepted/proposal integration remain unimplemented.
 Aggregation checks do not pass transaction or boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity

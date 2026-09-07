@@ -1,6 +1,6 @@
 # Sprint 087: Public CUDA candidate and feasibility composition
 
-Status: compute allowance approved; external source transfer blocked by automatic approval review.
+Status: compute and frozen source upload approved; one dispatch and evidence audit next.
 Baseline `4251a36`. Implements 086's 078-B; it is not a new phase or GPU allowance.
 Both 085 device runs are consumed. The user's continuation after the concrete
 run-3 approval request authorizes one additional bounded invocation below.
@@ -190,3 +190,8 @@ the required test/oracle modules. It excludes credentials, other repository file
 and sealed task cards. All frozen source hashes still match and all 88 cases remain
 fixed. Request explicit permission to upload this package to Modal before retrying
 process creation. Do not use an indirect upload or another execution route.
+
+The user subsequently replied "Approved" to the explicit request to upload the
+frozen 39-file source/test/metadata package to Modal for the already approved
+single T4 run. This resolves the transfer block. Record approval and verify the
+unchanged package before using the original launcher; no workaround is needed.

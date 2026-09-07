@@ -43,8 +43,8 @@ Fifty-five new real-device cases await hardware validation. The
 it includes all 33 previous device cases. The user approved this single additional
 T4 run by continuing after the concrete approval request. Dispatch and audit it
 once, then record the retrospective and allowance consumption.
-Automatic approval review blocked launcher process creation pending explicit
-approval to upload the frozen 39-file package to Modal. No upload/run occurred.
+The earlier automatic approval block preceded any upload/run. The user has now
+explicitly approved the frozen 39-file upload to Modal; dispatch and audit remain.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.
