@@ -7,6 +7,7 @@ import os
 import platform
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 
@@ -21,7 +22,7 @@ def profile_complete(execution, record):
     )
 
 
-def probe(spec, *, profile=False):
+def probe(spec, *, profile=False, package_root=None):
     import runpy
 
     import numpy as np
@@ -77,8 +78,10 @@ sys.path.insert(0,str(Path(sys.argv[0]).parent))
 try:
     runpy.run_path(sys.argv[0],run_name='__main__')
 finally:
-    Path('resources.json').write_text(json.dumps(dict(peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024)))
+    Path('resources.json').write_text(json.dumps(dict(peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024, package_file=getattr(sys.modules.get('openboost'),'__file__',None))))
 """
+    if package_root is not None:
+        wrapper = f"import sys; sys.path.insert(0, {package_root!r})\n" + wrapper
     fit = root / "fit"
     result = execute(
         [sys.executable, "-c", wrapper, str(source / "openboost_worker.py"), str(path)],
@@ -90,6 +93,7 @@ finally:
     )
     passed = result["status"] == "pass"
     replay_status = "not_run"
+    replay_wall_s = None
     if passed:
         with np.load("/input/worker-input.npz", allow_pickle=False) as arrays:
             np.savez(
@@ -97,24 +101,36 @@ finally:
                 x=arrays["x_validation"],
                 row_ids=arrays["validation_row_ids"],
             )
+        replay_started = time.monotonic()
         with (root / "replay.log").open("wb") as log:
-            replay = subprocess.run(
-                [
-                    sys.executable,
-                    str(source / "openboost_predict.py"),
-                    str(fit / "model.bin"),
-                    str(root / "features.npz"),
-                    str(root / "replay.npz"),
-                ],
-                stdout=log,
-                stderr=subprocess.STDOUT,
-                timeout=60,
-                env=dict(
-                    os.environ, OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1"
-                ),
-            )
-        replay_status = "error"
-        if replay.returncode == 0:
+            try:
+                replay = subprocess.run(
+                    [
+                        sys.executable,
+                        "-c",
+                        "import sys,runpy; "
+                        + (f"sys.path.insert(0, {package_root!r}); " if package_root else "")
+                        + "sys.argv=sys.argv[1:]; runpy.run_path(sys.argv[0],run_name='__main__')",
+                        str(source / "openboost_predict.py"),
+                        str(fit / "model.bin"),
+                        str(root / "features.npz"),
+                        str(root / "replay.npz"),
+                    ],
+                    stdout=log,
+                    stderr=subprocess.STDOUT,
+                    timeout=60,
+                    env=dict(
+                        os.environ,
+                        OMP_NUM_THREADS="1",
+                        OPENBLAS_NUM_THREADS="1",
+                        MKL_NUM_THREADS="1",
+                    ),
+                )
+            except subprocess.TimeoutExpired:
+                replay = None
+        replay_wall_s = time.monotonic() - replay_started
+        replay_status = "timeout" if replay is None else "error"
+        if replay is not None and replay.returncode == 0:
             with np.load(fit / "predictions.npz") as a, np.load(root / "replay.npz") as b:
                 replay_status = (
                     "exact" if all(np.array_equal(a[k], b[k]) for k in a.files) else "mismatch"
@@ -126,6 +142,7 @@ finally:
         passed=passed,
         execution=result,
         replay=replay_status,
+        replay_wall_s=replay_wall_s,
         environment=dict(
             python=platform.python_version(), os=platform.platform(), numpy=np.__version__
         ),
@@ -135,7 +152,38 @@ finally:
     )
 
 
-def main(output, packets, *, profile=False):
+def pair_matches(results):
+    if len(results) != 2 or not all(r["passed"] and r["replay"] == "exact" for r in results):
+        return False
+    return all(
+        bool(results[0]["artifacts"].get(name))
+        and results[0]["artifacts"].get(name) == results[1]["artifacts"].get(name)
+        for name in ("fit/model.bin", "fit/predictions.npz", "fit/training.json", "replay.npz")
+    )
+
+
+def paired_probe(spec):
+    results = []
+    artifacts = {}
+    for label, root in (("baseline", "/baseline"), ("current", None)):
+        result = probe(spec, package_root=root)
+        result["variant"] = label
+        results.append(result)
+        artifacts.update({label + "/" + k: v for k, v in result["artifacts"].items()})
+        if not result["passed"]:
+            break
+    return dict(
+        id=spec["id"],
+        passed=pair_matches(results),
+        outcome_kind="same_container_real_fit_pair",
+        variants=[{k: v for k, v in result.items() if k != "artifacts"} for result in results],
+        artifacts=artifacts,
+    )
+
+
+def main(output, packets, *, profile=False, paired=False):
+    if profile and paired:
+        raise ValueError("profile and paired modes are separate experiments")
     import modal
 
     output = Path(output).resolve()
@@ -204,9 +252,31 @@ def main(output, packets, *, profile=False):
         }:
             raise ValueError("train/validation packet only")
     jobs = [j for trial in plan["first_probe_ids"] for j in plan["jobs"] if j["id"] == trial]
-    if profile:
+    if profile or paired:
         jobs = jobs[:1]
+    baseline_revision = "17ab9de"
+    baseline_files = []
+    baseline_hashes = {}
+    if paired:
+        baseline_revision = subprocess.check_output(
+            ["git", "rev-parse", baseline_revision], text=True
+        ).strip()
+        tracked = subprocess.check_output(
+            ["git", "ls-tree", "-r", "--name-only", baseline_revision, "src/openboost"], text=True
+        ).splitlines()
+        for name in tracked:
+            if not name.endswith(".py"):
+                continue
+            raw = subprocess.check_output(["git", "show", baseline_revision + ":" + name])
+            relative = Path(name).relative_to("src")
+            path = output / "baseline-source" / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(raw)
+            baseline_files.append((path, str(relative)))
+            baseline_hashes[name] = hashlib.sha256(raw).hexdigest()
     manifest = dict(
+        baseline_revision=baseline_revision if paired else None,
+        baseline_sources=baseline_hashes,
         revision=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
         dirty=bool(subprocess.check_output(["git", "status", "--porcelain"])),
         sources={
@@ -216,7 +286,7 @@ def main(output, packets, *, profile=False):
         requested=dict(
             cpu=[2, 2],
             memory_mib=[8192, 8192],
-            function_seconds=120 if profile else 1900,
+            function_seconds=120 if profile else 3800 if paired else 1900,
             retries=0,
         ),
         plan_sha256=hashlib.sha256(plan_path.read_bytes()).hexdigest(),
@@ -224,7 +294,7 @@ def main(output, packets, *, profile=False):
         fold_metadata=fold["metadata"],
         packet_manifest=packet_manifest,
         jobs=jobs,
-        mode="profile" if profile else "resource",
+        mode="profile" if profile else "paired" if paired else "resource",
         status="running",
         modal_version=modal.__version__,
     )
@@ -248,11 +318,14 @@ def main(output, packets, *, profile=False):
 
     image = image.add_local_file(packet, "/input/worker-input.npz", copy=True)
 
+    for path, relative in baseline_files:
+        image = image.add_local_file(path, "/baseline/" + relative, copy=True)
+
     @app.function(
         image=image,
         cpu=(2, 2),
         memory=(8192, 8192),
-        timeout=120 if profile else 1900,
+        timeout=120 if profile else 3800 if paired else 1900,
         retries=0,
         max_containers=1,
         serialized=True,
@@ -261,8 +334,9 @@ def main(output, packets, *, profile=False):
     def remote(job):
         import runpy
 
-        return runpy.run_path("/snapshot/benchmarks/v1/a6_resource_preflight.py")["probe"](
-            job, profile=profile
+        functions = runpy.run_path("/snapshot/benchmarks/v1/a6_resource_preflight.py")
+        return (
+            functions["paired_probe"](job) if paired else functions["probe"](job, profile=profile)
         )
 
     try:
@@ -303,5 +377,6 @@ if __name__ == "__main__":
     parser.add_argument("output", type=Path)
     parser.add_argument("packets", type=Path)
     parser.add_argument("--profile", action="store_true")
+    parser.add_argument("--paired", action="store_true")
     args = parser.parse_args()
-    main(args.output, args.packets, profile=args.profile)
+    main(args.output, args.packets, profile=args.profile, paired=args.paired)

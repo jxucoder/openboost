@@ -405,3 +405,24 @@ is reviewed. No end-to-end speedup is claimed.
 
 Validation: 1077 CPU tests passed, one Linux-only skip; lint/docs pass. The installed
 profile completes through the intended soft deadline, not a successful model fit.
+
+### Paired real-fit preparation
+
+Plan: freeze the original public CPU source at `17ab9de`, verify a strict pair
+judge and failure retention, commit the harness, then run one shared A6 fold-zero
+configuration in a single Modal invocation. The baseline runs first from an
+explicit source path; current runs from the installed package. Both use the same
+worker, dependencies, packet and configuration. Record the loaded package path,
+fit wall time, peak guest RSS and fresh-process replay wall time. Compare complete
+model, prediction, training/stopping and replay bytes before interpreting cost.
+
+The existing train/validation-only packet and allowlisted public source are the
+only inputs. Each fit retains the 1800-second child limit, 8-GiB address limit and
+one BLAS thread; each replay is bounded at 60 seconds. The one container requests
+two CPUs and 8192 MiB, with a 3800-second function limit and no retries. Stop after
+a failed baseline. Replay timeouts retain raw artifacts. This is one fixed-order
+pair, not repeated cost evidence or a full search. No further optimization is
+scheduled before this checkpoint.
+
+Verification: 23 focused checks; 1095 CPU tests pass, one Linux-only skip. Lint
+and documentation build pass. Remote pair remains pending.
