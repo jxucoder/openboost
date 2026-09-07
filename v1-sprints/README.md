@@ -36,6 +36,9 @@ and every three implementation commits. No independent author attempt has run.
 Both approved device runs are consumed. The planned retrospective is due before
 further hardware work; the next construction slice is 078-B candidate operations.
 See [078 evidence and reflection](078-cuda-scalar-path.md).
+The user continued into [087 local split construction](087-cuda-split-operations.md):
+freeze exhaustive candidate checks, implement public scores/masks/routes/leaves,
+then prepare a concrete new device-run request. No new GPU allowance is implied.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.
