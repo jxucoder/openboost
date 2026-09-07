@@ -1,6 +1,6 @@
 # Sprints 069/070 readiness inventory
 
-This is manual navigation after the first two Sprint 070 fixes. It is not the
+This is manual navigation after the Sprint 070 permission/resource checkpoint. It is not the
 protocol-derived coverage ledger and does not pass a phase gate. Required scope
 remains every R1–R9, C1–C7, A1–A13 and E0–E7 obligation.
 
@@ -8,10 +8,10 @@ remains every R1–R9, C1–C7, A1–A13 and E0–E7 obligation.
 | --- | --- | --- |
 | Producer-declared integrity | Existing judge checks artifacts/statuses but can accept a rehashed smaller matrix | Resolved for externally frozen executions at `63700db`; raw smoke preserves the old counterexample |
 | Independent expected set | Judge now accepts evaluator-owned exact execution manifest and pinned CLI file | Derive the complete matrix from frozen protocols; prove missing R/C/A/E obligations cannot shrink expected scope |
-| Reference ownership | CLI rejects a reference under the run root and a changed file pin | A real candidate process must fail to read/modify verifier inputs under actual permissions; directory location alone is insufficient |
-| Test-label access | Current worker rejects test arrays in its packet | Candidate container must lack test labels, and malicious read attempts must fail before selected release |
-| Time/memory/thread caps | Diagnostic Modal probes verify 120-second child deadline and 8-GiB address ceiling; loaded BLAS threads verified | Exercise the exact search worker and 1800-second policy; distinguish address space, RSS and unobservable cgroup caps |
-| Current-worker trace memory | Main A1–A12 and A5 quantile worker calls explicitly request/report summary at `1a7bfd5` | Audit other worker families, including frequency/severity composition, before large jobs |
+| Reference ownership | CLI pins the external reference; real UID probe denies synthetic verifier writes and parent-environment reads | Integrate evaluator ownership with the actual search/author container path; complete hostile-code isolation remains open |
+| Test-label access | Current worker rejects test arrays; real UID probe denies reading a known synthetic label file | Actual candidate container must lack real test labels until selected release |
+| Time/memory/thread caps | Real probe verifies 8-GiB address ceiling, two BLAS threads, touched-allocation peak accounting and forced 0.25-second termination | Exercise the exact search worker and 1800-second policy; distinguish address space, RSS and unobservable cgroup caps |
+| Current-worker trace memory | Main A1–A12/A5 and frequency/severity calls explicitly request/report summary (`1a7bfd5`, `8eace67`) | Policy audit resolved for current evaluation workers; measure full-workload resource use next |
 | Full selection | Existing synthetic selection checks and short real adapters are evidence, not full selected quality | After isolation checks, preflight frozen 16-config, 300/1000-round A6 search; retain all failures before wider launch |
 | A4/A10 provenance | Earlier source/terms gaps remain open | Resolve documented source terms/provenance or preregister justified substitutes before evaluation |
 | Authoring task definitions | Public D1–D5 cards and independent reference mathematics exist | Select/freeze control and deep-change arms after auditing appropriate incumbent paths; no sealed H inspection |

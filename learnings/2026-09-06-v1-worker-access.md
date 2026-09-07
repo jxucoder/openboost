@@ -30,8 +30,9 @@ docs pass before commit. Local tests do not certify the Linux privilege transiti
 
 ## Failed Attempts
 
-No actual permission probe has run yet. Keep file-location checks distinct from
-OS permissions and requested container memory distinct from an address-space limit.
+The clean Modal run at `26a6797` passes all 13 checks: one numerical success and
+six expected process failures. No retry or preemption was reported. Keep requested
+container memory distinct from the verified process address-space limit.
 
 ## Risks and Follow-ups
 
@@ -45,3 +46,13 @@ Full-search and independent author accounting remain separate unfinished work.
 ## Commits
 
 - Runner controls and preregistered real probe; parent `acac36a`.
+
+## Committed evidence checkpoint
+
+[Raw evidence](../benchmarks/v1/evidence/worker-access-070/README.md) retains seven
+execution records and all logs. Independent local inspection verifies 17 artifact
+hashes and three committed source hashes. Actual protected-path operations return
+PermissionError, 9-GiB mapping returns ENOMEM, and the short timeout exits -9 with
+its partial log retained. Numerical identity/privilege/environment assertions pass.
+The touched 64-MiB allocation verifies ru_maxrss accounting; proc high-water data
+is unavailable. These results do not qualify full search or independent authors.

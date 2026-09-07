@@ -1,0 +1,29 @@
+{
+  "address_limit_bytes": 8589934592,
+  "artifacts": {
+    "worker.log": "eff64b343dcb2b1dc113648e7089b9ce9f8a7f6c7808a03a2cffb4ad7302f606"
+  },
+  "command": [
+    "/usr/local/bin/python",
+    "-c",
+    "import time; print(\"started\",flush=True); time.sleep(10)"
+  ],
+  "environment_policy": "minimal_explicit",
+  "exit_code": -9,
+  "launch_command": [
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+    "8589934592",
+    "1",
+    "/usr/local/bin/python",
+    "-c",
+    "import time; print(\"started\",flush=True); time.sleep(10)"
+  ],
+  "reason": "wall budget exceeded; process group killed",
+  "status": "timeout",
+  "threads": 2,
+  "timeout_s": 0.25,
+  "wall_s": 0.25176242700000007,
+  "worker_identity": "uid_gid_65534_no_new_privs"
+}

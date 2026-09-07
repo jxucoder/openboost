@@ -1,0 +1,32 @@
+{
+  "address_limit_bytes": 8589934592,
+  "artifacts": {
+    "measurement.json": "24c1f9d9efbc430f8f62a5f7f24b6667d1da1234677af198e17d4f7794c4e8d5",
+    "model.bin": "0cae55736fab12ea9397d223a1be3ba82c7a9eb810bc3a505d96263d05a85101",
+    "predictions.npz": "7ee3bf1fb3b2edc8b1ad6ca8bd471560e8ddf6d11c2e2424c82edd0d6c0d5fad",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes,json,os,resource,runpy\nfrom pathlib import Path\nimport numpy as np\nmeasurement=runpy.run_path('/opt/resource_preflight.py')['worker_measurement']()\nassert os.getresuid()==(65534,65534,65534) and os.getresgid()==(65534,65534,65534)\nassert not os.getgroups()\nassert ctypes.CDLL(None).prctl(39,0,0,0,0)==1\nassert 'OPENBOOST_EVALUATOR_CANARY' not in os.environ\ntry:\n    os.setuid(0)\nexcept PermissionError:\n    pass\nelse:\n    raise AssertionError('worker regained root')\ntry:\n    resource.setrlimit(resource.RLIMIT_AS,(9*1024**3,9*1024**3))\nexcept (ValueError,PermissionError):\n    pass\nelse:\n    raise AssertionError('worker raised hard address limit')\nnp.savez('predictions.npz', prediction=np.array([1.,2.]))\nPath('model.bin').write_bytes(b'permission/resource probe, not a trained model')\nPath('measurement.json').write_text(json.dumps(dict(worker=measurement,uid=os.getresuid(),gid=os.getresgid(),groups=os.getgroups(),no_new_privs=True,root_restore_rejected=True,hard_limit_raise_rejected=True,evaluator_env_absent=True)))\n"
+  ],
+  "environment_policy": "minimal_explicit",
+  "exit_code": 0,
+  "launch_command": [
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+    "8589934592",
+    "1",
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes,json,os,resource,runpy\nfrom pathlib import Path\nimport numpy as np\nmeasurement=runpy.run_path('/opt/resource_preflight.py')['worker_measurement']()\nassert os.getresuid()==(65534,65534,65534) and os.getresgid()==(65534,65534,65534)\nassert not os.getgroups()\nassert ctypes.CDLL(None).prctl(39,0,0,0,0)==1\nassert 'OPENBOOST_EVALUATOR_CANARY' not in os.environ\ntry:\n    os.setuid(0)\nexcept PermissionError:\n    pass\nelse:\n    raise AssertionError('worker regained root')\ntry:\n    resource.setrlimit(resource.RLIMIT_AS,(9*1024**3,9*1024**3))\nexcept (ValueError,PermissionError):\n    pass\nelse:\n    raise AssertionError('worker raised hard address limit')\nnp.savez('predictions.npz', prediction=np.array([1.,2.]))\nPath('model.bin').write_bytes(b'permission/resource probe, not a trained model')\nPath('measurement.json').write_text(json.dumps(dict(worker=measurement,uid=os.getresuid(),gid=os.getresgid(),groups=os.getgroups(),no_new_privs=True,root_restore_rejected=True,hard_limit_raise_rejected=True,evaluator_env_absent=True)))\n"
+  ],
+  "reason": "",
+  "status": "pass",
+  "threads": 2,
+  "timeout_s": 1800,
+  "wall_s": 0.4718490750000002,
+  "worker_identity": "uid_gid_65534_no_new_privs"
+}

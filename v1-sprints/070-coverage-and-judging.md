@@ -127,3 +127,20 @@ metadata. The failing-before payload check and existing direct full-recipe/fresh
 inference checks pass (10 focused, 1019 total CPU tests; lint passes). The global
 parametric control worker has no boosting trace history. This closes the remaining
 identified worker policy gap without changing frozen search configurations.
+
+### Real probe results and reflection
+
+The [clean Modal probe](../benchmarks/v1/evidence/worker-access-070/README.md) at
+`26a6797` passes all 13 checks across seven subprocesses (one success, six expected
+failures). All 17 artifact hashes and three committed source hashes were checked
+locally, together with actual permission, allocation and timeout logs. Composition
+summary policy is committed at `8eace67`; 1019 CPU tests and lint pass.
+
+Reflection after three implementation/evidence slices: worker policy and a real
+UID permission mechanism now have direct evidence. They do not establish a full
+author sandbox, complete protocol coverage or real selected quality. The next
+bounded step is integrating the existing search worker with evaluator-owned data
+and container boundaries, then exercising that path before a full frozen search.
+Keep the protocol-derived expected matrix and 069 token/budget accounting explicit
+parallel planning obligations. No full search, independent attempt or GPU work was
+launched. Sprints 069/070 remain open.
