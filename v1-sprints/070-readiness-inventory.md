@@ -31,8 +31,11 @@ and take 1077/767 seconds. See [evidence](../benchmarks/v1/evidence/a6-real-prob
 The bounded profile at `dede27e` identifies candidate selection/vector scoring as
 the dominant sampled work. The bounded layout cache at `b642bd5` passes exact model/prediction conformance
 and resolves its schema once in the installed profile. Scratch scoring at `21f76b1` also passes exact conformance and removes per-candidate
-owned leaves in the installed profile. Next run a paired real fit before further
-optimization or expansion. Keep the remaining 158 jobs pending.
+owned leaves in the installed profile. The [same-container pair](../benchmarks/v1/evidence/a6-paired-070/README.md) at
+`73755b1` now passes with identical models/predictions/stopping/replay. Observed fit
+time is 992.047 seconds baseline and 757.480 seconds current (23.6448% lower in one
+fixed-order observation). End the optimization detour; return to complete matrix,
+comparator/resource coverage and 069 accounting. Keep the remaining 158 jobs pending.
 
 ## Next bounded slices
 
