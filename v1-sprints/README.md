@@ -13,7 +13,7 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
 Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 912 passes;
+shared training preparation. The latest full regression records 923 passes;
 this includes references/evaluation infrastructure and is not a phase gate.
 Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
 Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
@@ -45,7 +45,9 @@ event input packets. [Sprint 058](058-composition-worker.md) trains and replays
 all five compositions with independent component selection.
 [Sprint 059](059-survival-worker.md) adds A10 fixed-scale survival on all five folds
 and records the CPU-to-GPU checkpoint. [Sprint 060](060-structured-worker.md)
-adds A12 structured Formula. Next: A4, searches/D5 and B11 checks;
+adds A12 structured Formula. [Sprint 061](061-ranking-worker.md) adds the A4
+query-aware adapter; real MSLR binding remains open. Next: CPU phase-gap review
+and explicit GPU transition decision;
 joint A9 selection remains open.
 CUDA, formal author comparisons, real application
 acceptance and independent adoption remain open.

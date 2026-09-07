@@ -97,7 +97,9 @@ events to all five frozen A9 input folds. Sprint 058 trains and replays the publ
 composition on all five packets with independent component selection. Sprint 059
 adds A10 fixed-scale survival on all five frozen folds. Sprint 060 adds A12
 structured Formula with age separated from tree features on all five folds.
-Next: A4 ranking, remaining searches/D5 and B11 phase checks before CUDA.
+Sprint 061 adds the current A4 query-aware adapter with synthetic direct/fresh
+parity; MSLR source/binding remains open. Next: CPU phase-gap review covering
+A4 data, real searches/D5 and B11 checks, then an explicit GPU transition decision.
 Joint A9 selection remains open.
 These internal trials
 do not establish E5/E7.

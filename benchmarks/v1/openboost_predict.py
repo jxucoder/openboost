@@ -16,6 +16,7 @@ QUANTILES = (0.1, 0.5, 0.9)
 
 OUTPUTS = {
     "A1": "mean",
+    "A4": "ranking_score",
     "A5": "quantiles",
     "A2": "positive_class_probability",
     "A3": "class_probabilities",
@@ -90,7 +91,7 @@ def predict_saved(saved, x, *, exposure=None, age=None):
         len(scale.mean)
         if scale is not None
         else 1
-        if saved["application"] in {"A1", "A7", "A8", "A9", "A10"}
+        if saved["application"] in {"A1", "A4", "A7", "A8", "A9", "A10"}
         else 2
     )
     classification = saved["application"] in {"A2", "A3"}

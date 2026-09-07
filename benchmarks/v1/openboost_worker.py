@@ -1,4 +1,4 @@
-"""Current CPU A1/A2/A3/A5/A6/A7/A8/A9/A10/A11/A12 trials on frozen encoded train/validation packets.
+"""Current CPU A1/A2/A3/A4/A5/A6/A7/A8/A9/A10/A11/A12 trials on frozen encoded train/validation packets.
 
 Explicit validation targets are required even with fixed budgets. The caller
 controls process threads and resource limits. Test arrays are always rejected.
@@ -23,6 +23,7 @@ from openboost.recipes import (
     normal,
     poisson,
     quantile,
+    ranking,
     squared,
     tweedie,
 )
@@ -30,9 +31,11 @@ from openboost.recipes import (
 if __package__:
     from benchmarks.v1.openboost_predict import OUTPUTS, QUANTILES, predict_saved
     from benchmarks.v1.preprocessing import fit_target_scale
+    from benchmarks.v1.ranking import validate as validate_ranking
 else:
     from openboost_predict import OUTPUTS, QUANTILES, predict_saved
     from preprocessing import fit_target_scale
+    from ranking import validate as validate_ranking
 
 
 def fit(job, arrays):
@@ -62,8 +65,22 @@ def fit(job, arrays):
         needed |= {"event_train", "event_validation"}
     if job["application"] == "A12":
         needed |= {"age_train", "age_validation"}
-    if not needed <= set(arrays) or set(arrays) - needed - {"weight_train", "weight_validation"}:
+    ranking_groups = None
+    optional = {"weight_train", "weight_validation"}
+    if job["application"] == "A4":
+        needed |= {"query_train", "query_validation", "train_row_ids"}
+        optional = {"query_weight_train", "query_weight_validation"}
+    if not needed <= set(arrays) or set(arrays) - needed - optional:
         raise ValueError("explicit train/validation arrays only; no test arrays")
+    if job["application"] == "A4":
+        ranking_groups = validate_ranking(arrays, 1)
+        if any(
+            np.asarray(arrays[k]).dtype.kind not in "iu"
+            for k in ("train_row_ids", "validation_row_ids")
+        ):
+            raise ValueError("ranking requires integer source row IDs for stable ties")
+        if np.intersect1d(arrays["train_row_ids"], arrays["validation_row_ids"]).size:
+            raise ValueError("ranking source rows overlap")
     external_ids = np.asarray(arrays["validation_row_ids"])
     if (
         external_ids.ndim != 1
@@ -76,6 +93,8 @@ def fit(job, arrays):
     if cfg.pop("seed_from_fold", True) is not True:
         raise ValueError("seed semantics differ")
     allowed = {"rounds", "learning_rate", "max_depth", "reg_lambda", "bins"}
+    if job["application"] == "A4":
+        allowed |= {"lambdas"}
     if job["application"] == "A11":
         allowed |= {"mode", "damping", "minimum_scale"}
     if job["application"] == "A6":
@@ -91,7 +110,7 @@ def fit(job, arrays):
             raise ValueError("explicit canonical classification count required")
         classes = ClassSchema(tuple(range(count)))
     problems = []
-    width = 1 if job["application"] in {"A1", "A5", "A7", "A8", "A9", "A10"} else 2
+    width = 1 if job["application"] in {"A1", "A4", "A5", "A7", "A8", "A9", "A10"} else 2
     if classification:
         width = 1 if job["application"] == "A2" else count
     multi = job["application"] == "A6"
@@ -115,14 +134,24 @@ def fit(job, arrays):
             target_scale = fit_target_scale(y)
             scale = TargetScale(target_scale["mean"], target_scale["std"], target_scale["constant"])
         names = tuple(f"x{i}" for i in range(x.shape[1])) if names is None else names
-        # Packet IDs remain in emitted artifacts; public data uses local integer rows.
-        ids = np.arange(len(x))
+        # Ranking preserves source IDs for ties; other tasks use local integer rows.
+        ids = (
+            arrays["train_row_ids" if part == "train" else "validation_row_ids"]
+            if ranking_groups is not None
+            else np.arange(len(x))
+        )
         data = NumericData(x, ids, names)
         if job["application"] == "A9":
             weight = np.asarray(arrays["weight_" + part])
             if weight.shape != (len(x),) or not np.isfinite(weight).all() or np.any(weight <= 0):
                 raise ValueError("positive aligned aggregate exposure weights required")
         structure = None
+        if ranking_groups is not None:
+            _, sizes, weights = ranking_groups[0 if part == "train" else 1]
+            structure = {
+                "query": np.repeat(np.arange(len(sizes)), sizes)[:, None],
+                "query_weight": np.repeat(weights, sizes)[:, None],
+            }
         if job["application"] == "A7":
             exposure = np.asarray(arrays["exposure_" + part])
             if (
@@ -165,6 +194,7 @@ def fit(job, arrays):
         "A1": squared,
         "A2": binary,
         "A3": multiclass,
+        "A4": ranking,
         "A6": multi_squared,
         "A7": poisson,
         "A8": gamma,
@@ -264,6 +294,12 @@ def fit(job, arrays):
                     weights=arrays.get("weight_validation"),
                 )
             ),
+        )
+    if job["application"] == "A4":
+        training.update(
+            selection_metric="one_minus_query_weighted_ndcg_at_10",
+            lambdas=cfg.get("lambdas", False),
+            tie_break="integer_source_row_id",
         )
     if classification:
         training.update(class_order=list(classes.values), selection_metric="logloss")

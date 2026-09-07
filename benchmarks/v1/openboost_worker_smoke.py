@@ -62,6 +62,7 @@ def run(directory, applications=("A1", "A6", "A11")):
         "openboost_worker_smoke.py",
         "worker_data.py",
         "preprocessing.py",
+        "ranking.py",
         "process_runner.py",
     ):
         p = Path(__file__).with_name(name)

@@ -135,7 +135,7 @@ def test_unsupported_or_contaminated_inputs_fail(bad):
     elif bad == "threads":
         job["threads"] = 2
     else:
-        job["application"] = "A4"
+        job["application"] = "unsupported"
     with pytest.raises(ValueError):
         fit(job, arrays)
 
@@ -666,3 +666,103 @@ def test_formula_direct_structure_and_fresh(patience, tmp_path):
     for age in [None, np.zeros(4), np.ones((4, 1))]:
         with pytest.raises(ValueError):
             predict_saved(saved, arrays["x_validation"], age=age)
+
+
+def ranking_fixture():
+    job, arrays = fixture("A4")
+    arrays.pop("weight_train")
+    arrays.pop("weight_validation")
+    arrays.update(
+        train_row_ids=np.array([7, 6, 5, 4, 3, 2, 1, 0]),
+        validation_row_ids=np.array([11, 10, 9, 8]),
+        query_train=np.repeat(["a", "b"], 4),
+        query_validation=np.repeat(["c", "d"], 2),
+        query_weight_train=np.array([2.0, 0.5]),
+        query_weight_validation=np.array([0.25, 3.0]),
+        y_train=np.array([0, 4, 1, 2, 2, 1, 3, 0]),
+        y_validation=np.array([0, 3, 2, 0]),
+    )
+    return job, arrays
+
+
+@pytest.mark.parametrize("lambdas", [False, True])
+@pytest.mark.parametrize("patience", [None, 1])
+def test_ranking_direct_and_fresh(lambdas, patience, tmp_path):
+    from openboost.recipes import ranking
+
+    job, a = ranking_fixture()
+    job["config"]["lambdas"] = lambdas
+    job["early_stopping_rounds"] = patience
+    prediction, saved, training = fit(job, a)
+    problems = []
+    for part, size in [("train", 4), ("validation", 2)]:
+        ids = a["train_row_ids" if part == "train" else "validation_row_ids"]
+        d = NumericData(a["x_" + part], ids, ("x0",))
+        problems.append(
+            Problem(
+                d,
+                a["y_" + part][:, None],
+                ids,
+                structure={
+                    "query": np.repeat([0, 1], size)[:, None],
+                    "query_weight": np.repeat(a["query_weight_" + part], size)[:, None],
+                },
+            )
+        )
+    direct = ranking(
+        *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
+    )
+    model = direct.state.model if patience is None else direct.state.best_model
+    np.testing.assert_array_equal(prediction, model.predict(problems[1].data)[:, 0])
+    assert training["selected_model_identity"] == model.identity
+    assert training["best_validation_score"] == direct.state.best_score
+    path = tmp_path / "model.bin"
+    path.write_text(json.dumps(saved))
+    np.savez(tmp_path / "features.npz", x=a["x_validation"], row_ids=a["validation_row_ids"])
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [
+            sys.executable,
+            str(script),
+            str(path),
+            str(tmp_path / "features.npz"),
+            str(tmp_path / "replay.npz"),
+        ],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as r:
+        np.testing.assert_array_equal(prediction, r["prediction"])
+        np.testing.assert_array_equal(a["validation_row_ids"], r["row_ids"])
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        "fragment",
+        "query_overlap",
+        "row_weight",
+        "row_overlap",
+        "string_rows",
+        "relevance",
+        "query_weight",
+    ],
+)
+def test_ranking_invalid_contract(bad):
+    job, a = ranking_fixture()
+    if bad == "fragment":
+        a["query_train"] = np.array(["a", "b"] * 4)
+    elif bad == "query_overlap":
+        a["query_validation"][0:2] = "a"
+    elif bad == "row_weight":
+        a["weight_train"] = np.ones(8)
+    elif bad == "row_overlap":
+        a["validation_row_ids"][0] = 0
+    elif bad == "string_rows":
+        a["train_row_ids"] = a["train_row_ids"].astype(str)
+    elif bad == "relevance":
+        a["y_validation"][0] = 5
+    else:
+        a["query_weight_train"] = np.ones(8)
+    with pytest.raises(ValueError):
+        fit(job, a)

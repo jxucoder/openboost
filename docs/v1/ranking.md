@@ -52,3 +52,10 @@ Independent tests verify pair geometry, logistic finite differences, query
 isolation, rank tie permutations, three-round tree composition, offsets and
 fresh-process persistence. Real A4 evaluation, quantile/penalized leaves, CUDA
 and external-library quality/performance comparisons remain open.
+
+The current A4 evaluation adapter accepts contiguous disjoint integer/string
+query IDs, one weight per query and explicit integer training/validation row IDs.
+It maps query groups to public structure roles, preserves source row IDs for ties,
+and rejects ordinary row weights. Pairwise and lambda modes use the same public
+recipe; fresh inference needs features and row IDs only. Sprint 061 verifies
+synthetic weighted parity and replay. Real MSLR binding/quality remains open.

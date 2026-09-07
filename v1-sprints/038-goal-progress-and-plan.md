@@ -28,7 +28,9 @@ A7 count/exposure integration on all five frequency folds.
 [Sprint 058](058-composition-worker.md) trains/replays all five compositions.
 [Sprint 059](059-survival-worker.md) adds fixed-scale A10 survival and the CPU-to-GPU
 checkpoint. [Sprint 060](060-structured-worker.md) adds A12 structured Formula.
-Next: A4, remaining searches/D5 and B11 checks; joint A9 selection is open.
+[Sprint 061](061-ranking-worker.md) verifies the current A4 adapter synthetically;
+real MSLR binding remains open. Next: CPU phase-gap review and explicit GPU
+transition decision; remaining searches/D5, B11 and joint A9 selection stay open.
 Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),
