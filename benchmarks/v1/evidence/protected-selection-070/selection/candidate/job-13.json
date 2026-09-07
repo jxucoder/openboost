@@ -1,0 +1,17 @@
+{
+  "application": "A6",
+  "library": "openboost",
+  "device": "cpu",
+  "threads": 1,
+  "seed": 46,
+  "config": {
+    "rounds": 4,
+    "learning_rate": 0.1,
+    "max_depth": 2,
+    "mode": "independent",
+    "bins": 16,
+    "reg_lambda": 1.0
+  },
+  "early_stopping_rounds": 2,
+  "input_npz": "/tmp/selection-evidence/selection/candidate/worker-input.npz"
+}

@@ -34,3 +34,18 @@ The 1800-second child policy is configured, not observed expiring in this short 
 ## Commits
 
 - Bounded Linux harness; parent `176d556`.
+
+## Actual results and counterexample
+
+[Committed evidence](../benchmarks/v1/evidence/protected-selection-070/README.md):
+three Linux tests pass; the extra 16-trial protected search and selected replay
+pass. All five checks pass and 115 returned hashes/38 original source hashes verify.
+The container snapshot has separate literal provenance. Local CPU regression is
+1021 passed, one Linux-only skip; docs and lint pass.
+
+Cross-platform local re-audit rejects the unchanged Linux receipt because 12
+score values differ by up to 3.552713678800501e-15. Winner and all non-score fields
+match exactly. The raw diagnostic is preserved. The exact receipt check remains
+unchanged: define its numerical portability contract and test tampering/near-tie
+cases before deciding on a fix. This newly exercised boundary takes priority over
+expanding the search. Do not mistake fail-closed rejection for a quality failure.

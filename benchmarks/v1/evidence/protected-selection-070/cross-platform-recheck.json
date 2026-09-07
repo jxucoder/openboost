@@ -1,0 +1,96 @@
+{
+  "scope": "Diagnostic only; no tolerance gate applied",
+  "source_revision": "a0bc47337a91ed1c58653820c1bb7ab7e4a96d3a",
+  "recheck_revision": "a0bc47337a91ed1c58653820c1bb7ab7e4a96d3a",
+  "platform": "macOS-26.3-x86_64-i386-64bit",
+  "numpy": "2.3.5",
+  "selected": "openboost:15",
+  "all_nonscore_fields_exact": true,
+  "release_error": "receipt does not match independent selection",
+  "differences": [
+    {
+      "trial": "openboost:01",
+      "metric": "rmse_0",
+      "linux": 17.31729752178891,
+      "macos": 17.317297521788905,
+      "absolute_difference": 3.552713678800501e-15
+    },
+    {
+      "trial": "openboost:01",
+      "metric": "rmse_1",
+      "linux": 0.007304324648522006,
+      "macos": 0.007304324648522005,
+      "absolute_difference": 8.673617379884035e-19
+    },
+    {
+      "trial": "openboost:03",
+      "metric": "rmse_1",
+      "linux": 0.007287940686039496,
+      "macos": 0.007287940686039495,
+      "absolute_difference": 8.673617379884035e-19
+    },
+    {
+      "trial": "openboost:05",
+      "metric": "rmse_0",
+      "linux": 15.660526374748848,
+      "macos": 15.66052637474885,
+      "absolute_difference": 1.7763568394002505e-15
+    },
+    {
+      "trial": "openboost:05",
+      "metric": "selection",
+      "linux": 0.49508172374750514,
+      "macos": 0.4950817237475052,
+      "absolute_difference": 5.551115123125783e-17
+    },
+    {
+      "trial": "openboost:08",
+      "metric": "rmse_0",
+      "linux": 17.340914266980914,
+      "macos": 17.34091426698091,
+      "absolute_difference": 3.552713678800501e-15
+    },
+    {
+      "trial": "openboost:08",
+      "metric": "rmse_1",
+      "linux": 0.007232026727886918,
+      "macos": 0.007232026727886919,
+      "absolute_difference": 8.673617379884035e-19
+    },
+    {
+      "trial": "openboost:08",
+      "metric": "selection",
+      "linux": 0.5522297918581129,
+      "macos": 0.5522297918581128,
+      "absolute_difference": 1.1102230246251565e-16
+    },
+    {
+      "trial": "openboost:11",
+      "metric": "rmse_0",
+      "linux": 16.325844553002717,
+      "macos": 16.325844553002714,
+      "absolute_difference": 3.552713678800501e-15
+    },
+    {
+      "trial": "openboost:11",
+      "metric": "selection",
+      "linux": 0.5254395764320643,
+      "macos": 0.5254395764320642,
+      "absolute_difference": 1.1102230246251565e-16
+    },
+    {
+      "trial": "openboost:12",
+      "metric": "rmse_0",
+      "linux": 15.565413538647652,
+      "macos": 15.56541353864765,
+      "absolute_difference": 1.7763568394002505e-15
+    },
+    {
+      "trial": "openboost:15",
+      "metric": "rmse_0",
+      "linux": 13.7346798381242,
+      "macos": 13.734679838124201,
+      "absolute_difference": 1.7763568394002505e-15
+    }
+  ]
+}

@@ -179,3 +179,22 @@ the smoke's provenance remains literal; record the original revision and every
 uploaded hash in the outer manifest. No original Git history or sealed data moves.
 Probe denied reads of test features and completed models, and protocol writes,
 with actual known-path PermissionError logs and unchanged hashes.
+
+### Linux results and correctness reflection
+
+At `a0bc473`, all three focused tests run on Linux and pass. An additional retained
+16-trial protected selection and selected-model replay passes; actual feature read,
+protocol write and completed-model read attempts fail under permissions. All five
+harness checks pass. [Raw evidence](../benchmarks/v1/evidence/protected-selection-070/README.md)
+includes 115 verified artifact hashes and all 38 original source hashes.
+
+New counterexample: macOS re-audit of the unchanged Linux receipt rejects 12 last-bit
+score differences (maximum absolute difference 3.552713678800501e-15), although the
+winner and all non-score fields agree. Same-environment Linux release passed.
+Record this as a receipt portability limitation; do not silently replace the receipt
+or relax integrity. Next define and test the numerical receipt contract, including
+changed winners and near ties, before further search expansion. This correctness
+reflection supersedes the prior immediate full-search direction.
+
+Validation: 1021 local CPU tests pass, one Linux-only test skips locally and passes
+on Modal; lint/docs pass. Sprints 069/070 and full-search/author/device gates stay open.

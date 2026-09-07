@@ -19,6 +19,12 @@ remains every R1–R9, C1–C7, A1–A13 and E0–E7 obligation.
 | Author verifier isolation | Existing development source tests are accessible in this checkout | Throwaway attempt must fail to tamper with the evaluator and visibly exhaust the configured budget |
 | Independent participants | No new independent attempts launched | Use an authorized independent runner only after the task/arm/environment/accounting packet is frozen |
 
+The protected synthetic selection path now passes on Linux at `a0bc473`, including
+actual denied access and selected replay. Its unchanged receipt fails exact macOS
+score re-audit. See [evidence](../benchmarks/v1/evidence/protected-selection-070/README.md).
+Define and test numerical receipt portability before expanding the search; retain
+exact artifact pins and reject changed winners.
+
 ## Next bounded slices
 
 1. Audit remaining worker call paths and establish the actual candidate/judge data

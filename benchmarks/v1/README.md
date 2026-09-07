@@ -617,7 +617,10 @@ trial directories are reclaimed by root before the next trial starts. Installed
 Python/package/source paths and output ancestors must be traversable by that UID.
 Unsupported hosts fail before creating output; there is no privilege fallback.
 
-This mode is implemented but awaits the real Linux selection integration test.
+The [Linux selection integration](evidence/protected-selection-070/README.md) passes
+all three focused tests and a retained 16-trial run. Cross-platform receipt release
+remains unresolved: macOS recomputation differs in last-bit score values and the
+exact receipt check rejects it.
 It is a synthetic four-round grid, not the full 300/1000-round search. The earlier
 standalone permission probe does not validate this call path. Network/new-session
 restrictions and separate author containers remain outside this mode's guarantee.

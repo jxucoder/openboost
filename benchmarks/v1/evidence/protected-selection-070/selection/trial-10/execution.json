@@ -1,0 +1,32 @@
+{
+  "address_limit_bytes": 8589934592,
+  "artifacts": {
+    "model.bin": "7ec55ed1e5e25b5b5808aa0f36d8f54cbfbec76666ea739f7999221192c2829f",
+    "predictions.npz": "a6ad44fb295eb90ecb9a1a485437833a7abf874e14cbd64b4426e62ce9a565ba",
+    "training.json": "80cbfac46182200511aab3b021cc7a951e8e198fef1003b1fc96d64e7937c3f1",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/usr/local/bin/python",
+    "/snapshot/benchmarks/v1/openboost_worker.py",
+    "/tmp/selection-evidence/selection/candidate/job-10.json"
+  ],
+  "environment_policy": "minimal_explicit",
+  "exit_code": 0,
+  "launch_command": [
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+    "8589934592",
+    "1",
+    "/usr/local/bin/python",
+    "/snapshot/benchmarks/v1/openboost_worker.py",
+    "/tmp/selection-evidence/selection/candidate/job-10.json"
+  ],
+  "reason": "",
+  "status": "pass",
+  "threads": 1,
+  "timeout_s": 1800,
+  "wall_s": 0.7280250299999977,
+  "worker_identity": "uid_gid_65534_no_new_privs"
+}
