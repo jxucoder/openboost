@@ -21,8 +21,10 @@ and the remaining full folds are addressed in [Sprint 052](052-histogram-gather.
 All five bounded replays pass after histogram gather reuse.
 [Sprint 053](053-quantile-worker.md) adds current A5 independent quantile
 integration on all five Bike origins. [Sprint 054](054-count-worker.md) adds
-A7 count/exposure integration on all five frequency folds. Next: A8 severity,
-remaining application adapters/searches and D5 checks. Remaining M2 and M3–M6 are open.
+A7 count/exposure integration on all five frequency folds.
+[Sprint 055](055-severity-worker.md) adds A8 grouped claim severity. Next: A9
+aggregate/composition, remaining adapters/searches and D5 checks.
+Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), all

@@ -13,7 +13,7 @@ from benchmarks.v1.openboost_worker import fit
 
 from openboost import NumericData, Problem, RunContext
 from openboost.objectives import Normal
-from openboost.recipes import normal, squared
+from openboost.recipes import gamma, normal, squared
 
 
 def test_current_worker_is_available():
@@ -42,11 +42,14 @@ def fixture(app="A1"):
     return job, arrays
 
 
-@pytest.mark.parametrize("app", ["A1", "A11"])
+@pytest.mark.parametrize("app", ["A1", "A11", "A8"])
 @pytest.mark.parametrize("patience", [None, 1])
 def test_direct_recipe_parity_and_fresh_prediction(app, patience, tmp_path):
     job, arrays = fixture(app)
     job["early_stopping_rounds"] = patience
+    if app == "A8":
+        for part in ("train", "validation"):
+            arrays["y_" + part] = np.exp(arrays["y_" + part])
     prediction, saved, training = fit(job, arrays)
     problems = []
     for part in ("train", "validation"):
@@ -58,15 +61,22 @@ def test_direct_recipe_parity_and_fresh_prediction(app, patience, tmp_path):
                 y[:, None],
                 data.row_ids,
                 weight=arrays["weight_" + part],
-                raw_width=1 if app == "A1" else 2,
+                raw_width=1 if app in {"A1", "A8"} else 2,
             )
         )
-    direct = (squared if app == "A1" else normal)(
+    direct = {"A1": squared, "A11": normal, "A8": gamma}[app](
         *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
     )
     model = direct.state.model if patience is None else direct.state.best_model
     raw = model.predict(problems[1].data)
-    expected = raw[:, 0] if app == "A1" else Normal.parameters(raw)
+    expected = raw[:, 0] if app in {"A1", "A8"} else Normal.parameters(raw)
+    if app == "A8":
+        expected = np.exp(raw[:, 0])
+        loss = np.average(
+            arrays["y_validation"] / expected + np.log(expected),
+            weights=arrays["weight_validation"],
+        )
+        assert training["selected_validation_gamma_objective"] == pytest.approx(loss)
     np.testing.assert_array_equal(prediction, expected)
     assert training["selected_model_identity"] == model.identity
     assert training["stop"]["completed_rounds"] == direct.stop.completed_rounds
@@ -447,5 +457,20 @@ def test_count_worker_rejects_invalid_exposure_contract(bad):
         arrays["offset_train"] = np.zeros(8)
     else:
         job["application"] = "A1"
+    with pytest.raises(ValueError):
+        fit(job, arrays)
+
+
+@pytest.mark.parametrize("bad", ["zero", "negative", "exposure", "offset"])
+def test_severity_invalid_contracts(bad):
+    job, arrays = fixture("A8")
+    for part in ("train", "validation"):
+        arrays["y_" + part] = np.exp(arrays["y_" + part])
+    if bad == "zero":
+        arrays["y_train"][0] = 0
+    elif bad == "negative":
+        arrays["y_validation"][0] = -1
+    else:
+        arrays[bad + "_train"] = np.ones(8)
     with pytest.raises(ValueError):
         fit(job, arrays)

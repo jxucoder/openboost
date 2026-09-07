@@ -1,0 +1,556 @@
+{
+  "scope": "Current A1/A2/A3/A5/A6/A7/A8/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+  "revision": "606487c6387f5dc92c2e38d6334b515d5e6edad1",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "-m",
+    "benchmarks.v1.openboost_worker_smoke",
+    "/private/tmp/openboost-severity-055",
+    "--applications",
+    "A8"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "machine": "x86_64",
+  "cpu_count": 16,
+  "device": "cpu",
+  "gpu": null,
+  "threads": 1,
+  "memory_cap": null,
+  "packages": {
+    "numpy": "2.3.5",
+    "openboost": "1.0.0rc1"
+  },
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/openboost_worker.py": "d3b8a917d1e61a5091e3211dbaba4231531fa9d7bf3123e381957362d9730aa5",
+    "benchmarks/v1/openboost_predict.py": "d84f08075f3edda693d68f79d3f02439ff4e4aabb94b91e0695226b4ef21b46e",
+    "benchmarks/v1/openboost_worker_smoke.py": "ff40362ddb948ee711ac3ed9693837a35ea0f5e253240b04340808afea91e0a1",
+    "benchmarks/v1/worker_data.py": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "data": {
+    "A8": {
+      "application": "A8",
+      "dataset": "insurance",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "03db952aced3525dca5ec3cde4f0eaa6dca3c5212bab622230589564c6dfca8c"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "a0a52a08c3ec5721b50f1b9ae5e01ed24ba9f8a05cfc8a555a9a0a65f902bb90"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "33b30a6a888539777d662a221e772fbb90450b55373537c6050a73d3965617a8"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "54c5440028676ce444f4a4624f50357ac7148dcde7f1be6c8982c261738d7cb7"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "3a255c99d30eb1fbfd9d1c8b9171d86552cdab6857f92cacd532e5c5a620aebe"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "3d6d292ab33e4197544b9c792a426521b41b081a39b5bf1bd46025f57856c0e0"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "b95d35fdb052d7e0cd06a0adca88d710cdce173acf464fcaf9970aa12ab9a131"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "971f4a3b233d466669c895c9fe5ff1a62f9b63b607eed1e915028e2358033c7b"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "716684d70e40449adb55683e76e4489ee978b8d2411ef9cba065a978c3f38ad8"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "c6e5a0382c8d34b4985c4b05099cc31b7ae8500258af9a2ebeb084ca668cbb55"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "01fcbd94e702e793ca2919bdf9d8e3cd8cf2bf3074d1b310424fa0d59fe77f15"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "63a9af461ceb0e2443458610714545957b9797ff00579f41235d0826b6150c3e"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "3175895473a6e26f076fc80732baef91e55846d3f74482c481fff32999a1d73f"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "63cf82193cf0093052db810795d95016c0814557766aa210d001fb8faa67c8ae"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "c3bc7d268c3abeb0ed959e7cd957e4e239c5ebd15de38c932d014918fc6cacc6"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "61415468301edfb6fd706ccf62039d2b80000efccd0e717af24e01c1bebea9d6"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "f0645b5b368af10c5c78992e3273af397db2058ab4a4c61c74a5f0bb9e141f37"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "47e674c02e2baa771dc1cbad9f2e98939c8cbc58b9ca77952c3b66f970753624"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "9d89345272c27e30cc53b0fe62de5d8762ba2d398dde088efdf79219cec1a579"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "0548af93866271046298dbab7b1e21eb8f190468a071d2f74e2ef88249c8b422"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "9fba67e2769974330b33011748b57079326eef3d3e3831cd97d0f7a7ec3eab58"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "747aec63e7f4ce87bc17a5e2356b64948c5237efd7bf9e3d4e67a2a76e98612a"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "6386c1498846e98e30532877c10fc8f74961602df5d5b53a29f1093d329b84d3"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "f8168c59cb3df1c96b52cda6429622667cd9571be9581338cc4cce26f886d5fe"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "a0de74ec3da252ecdf928f4d1d151240052569e7a6191644f49bb2a550b27bb5"
+            }
+          },
+          "metadata": {
+            "row_identity": "zero-based retained positive joined claim position; group is policy ID"
+          }
+        }
+      ],
+      "source_freeze_sha256": "ff95579dd1b95595e87027f38afd512cd986b3182f08f50a7a2139ffb63f291f",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    }
+  },
+  "cells": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-severity-055/A8/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.750944667001022,
+      "artifacts": {
+        "model.bin": "a7e7270cb0ba31e68b97ba36bf10450483665ea15b9877199d71c1dcc10ebdef",
+        "training.json": "7165c6768e3d08122aa7179e05ff19653f8c64293323b258b64d1dd0da5187d2",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "02681157cb470eb69374c7659a047cdcfc518e1b5ad34c0e5f4234a8d496826c"
+      },
+      "application": "A8",
+      "fold": 0,
+      "job": {
+        "application": "A8",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-severity-055/A8/0/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-severity-055/A8/0/fit/model.bin",
+        "/private/tmp/openboost-severity-055/A8/0/fit/features.npz",
+        "/private/tmp/openboost-severity-055/A8/0/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        5253
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 8.744420199119517,
+          "last_score": 8.746309046366513,
+          "completed_rounds": 3,
+          "stale_rounds": 3,
+          "reason": "patience"
+        },
+        "accepted_commits": 3,
+        "selected_model_identity": "a40325483af9716ead0eabcfb972303bfe46bce2af242ffbab625124bd385e4f",
+        "best_validation_score": 8.744420199119517,
+        "output": "positive_claim_mean",
+        "selection_metric": "weighted_gamma_objective",
+        "target_units": "positive_claim_amount",
+        "raw_units": "log_mean",
+        "selected_validation_gamma_objective": 8.744420199119517
+      },
+      "replay_sha256": "02681157cb470eb69374c7659a047cdcfc518e1b5ad34c0e5f4234a8d496826c"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-severity-055/A8/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.0123621250095312,
+      "artifacts": {
+        "model.bin": "f8207651e64ced1e5ab737d6de0f3e2186b9198ec4fa7e09b51c2cce7f9a0935",
+        "training.json": "208f63c7b8054bfddf6cd29ed3b928b684f2355f719103a6aa5889a6818f7495",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "dfbc562475e3d53270bfd3fde86eed53e84599318485542132e37225f3bef270"
+      },
+      "application": "A8",
+      "fold": 1,
+      "job": {
+        "application": "A8",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-severity-055/A8/1/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-severity-055/A8/1/fit/model.bin",
+        "/private/tmp/openboost-severity-055/A8/1/fit/features.npz",
+        "/private/tmp/openboost-severity-055/A8/1/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        5441
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 8.761126882630645,
+          "last_score": 8.761126882630645,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "5ae6ada829af2064a8e6181b6a741dd7b52368410b9d505d3d71c95f4c1ae554",
+        "best_validation_score": 8.761126882630645,
+        "output": "positive_claim_mean",
+        "selection_metric": "weighted_gamma_objective",
+        "target_units": "positive_claim_amount",
+        "raw_units": "log_mean",
+        "selected_validation_gamma_objective": 8.761126882630645
+      },
+      "replay_sha256": "dfbc562475e3d53270bfd3fde86eed53e84599318485542132e37225f3bef270"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-severity-055/A8/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.9518517079995945,
+      "artifacts": {
+        "model.bin": "a05d3ec5f87888456eb233d7d70479c2ab97c43d0ade2004afb41aa98c0018a1",
+        "training.json": "d83c477cfee51f2d6bd1ad60271b6e9e660fb08497ed15b3988afcfe673e06c5",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "452cf73aa087a23ca5ef9cf6abde8cc09cf067b3a09da48a9c2e1528b832b6d4"
+      },
+      "application": "A8",
+      "fold": 2,
+      "job": {
+        "application": "A8",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-severity-055/A8/2/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-severity-055/A8/2/fit/model.bin",
+        "/private/tmp/openboost-severity-055/A8/2/fit/features.npz",
+        "/private/tmp/openboost-severity-055/A8/2/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        5156
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 8.694319429072479,
+          "last_score": 8.695301150208172,
+          "completed_rounds": 4,
+          "stale_rounds": 1,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "b95233c54aa9f2a8bd1514ab763334771920aabc1d7b5ded7e6c34d04aac3065",
+        "best_validation_score": 8.694319429072479,
+        "output": "positive_claim_mean",
+        "selection_metric": "weighted_gamma_objective",
+        "target_units": "positive_claim_amount",
+        "raw_units": "log_mean",
+        "selected_validation_gamma_objective": 8.694319429072479
+      },
+      "replay_sha256": "452cf73aa087a23ca5ef9cf6abde8cc09cf067b3a09da48a9c2e1528b832b6d4"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-severity-055/A8/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.9537569999956759,
+      "artifacts": {
+        "model.bin": "ff5af8bdf9a0200fd107443f759085658821d4cebd5fabd397a17a04ff34232e",
+        "training.json": "6b4a363ee8252aea43be04e064e0afbc12a18a7d701ca06ccdbb7c782c3eb08d",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "30b54989e39ce4fe963414ed71183068dcdd2c198028fe01dadfaf3e7a300345"
+      },
+      "application": "A8",
+      "fold": 3,
+      "job": {
+        "application": "A8",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-severity-055/A8/3/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-severity-055/A8/3/fit/model.bin",
+        "/private/tmp/openboost-severity-055/A8/3/fit/features.npz",
+        "/private/tmp/openboost-severity-055/A8/3/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        5247
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 8.536422353456345,
+          "last_score": 8.536422353456345,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "1f72764e0c35940a5a178c7e4458e40583b33fa3586409c3fed3c76f10e1cb4a",
+        "best_validation_score": 8.536422353456345,
+        "output": "positive_claim_mean",
+        "selection_metric": "weighted_gamma_objective",
+        "target_units": "positive_claim_amount",
+        "raw_units": "log_mean",
+        "selected_validation_gamma_objective": 8.536422353456345
+      },
+      "replay_sha256": "30b54989e39ce4fe963414ed71183068dcdd2c198028fe01dadfaf3e7a300345"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-severity-055/A8/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.9636980829964159,
+      "artifacts": {
+        "model.bin": "472d979a02d4333f14c537b9ac950272c7a62260256262db5b21fa93a7906c71",
+        "training.json": "b729a9df916cfb638b25051bf0d4fa72f2f6e0b7a2eb0c983822dd1bef99a52b",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "bb081d124847db964d2a845be7ea5cfecd96713cdb893d7a95a0022840fdf7dd"
+      },
+      "application": "A8",
+      "fold": 4,
+      "job": {
+        "application": "A8",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-severity-055/A8/4/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-severity-055/A8/4/fit/model.bin",
+        "/private/tmp/openboost-severity-055/A8/4/fit/features.npz",
+        "/private/tmp/openboost-severity-055/A8/4/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        5321
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 8.53698175155106,
+          "last_score": 8.537179094305902,
+          "completed_rounds": 4,
+          "stale_rounds": 2,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "fa6ec9b84c3c47568710f5962e08842a112928b0cbaa256d461dd4208635eabc",
+        "best_validation_score": 8.53698175155106,
+        "output": "positive_claim_mean",
+        "selection_metric": "weighted_gamma_objective",
+        "target_units": "positive_claim_amount",
+        "raw_units": "log_mean",
+        "selected_validation_gamma_objective": 8.53698175155106
+      },
+      "replay_sha256": "bb081d124847db964d2a845be7ea5cfecd96713cdb893d7a95a0022840fdf7dd"
+    }
+  ]
+}

@@ -10,7 +10,7 @@ from openboost import NumericData
 from openboost.artifacts import Model
 from openboost.multioutput import MultiOutputModel, TargetScale
 from openboost.objectives import Normal
-from openboost.outputs import poisson_mean
+from openboost.outputs import poisson_mean, positive_mean
 
 QUANTILES = (0.1, 0.5, 0.9)
 
@@ -22,6 +22,7 @@ OUTPUTS = {
     "A11": "normal_mean_scale",
     "A6": "multioutput_original_units",
     "A7": "period_count_mean",
+    "A8": "positive_claim_mean",
 }
 
 
@@ -75,7 +76,11 @@ def predict_saved(saved, x, *, exposure=None):
             raise ValueError("invalid evaluation target scale")
         scale = TargetScale(record["mean"], record["std"], record["constant"])
     width = (
-        len(scale.mean) if scale is not None else 1 if saved["application"] in {"A1", "A7"} else 2
+        len(scale.mean)
+        if scale is not None
+        else 1
+        if saved["application"] in {"A1", "A7", "A8"}
+        else 2
     )
     classification = saved["application"] in {"A2", "A3"}
     if classification:
@@ -105,6 +110,8 @@ def predict_saved(saved, x, *, exposure=None):
         if exposure is None:
             raise ValueError("prediction exposure required")
         return poisson_mean(raw, exposure)["count_mean"]
+    if saved["application"] == "A8":
+        return positive_mean(raw)
     return raw[:, 0] if width == 1 else Normal.parameters(raw)
 
 

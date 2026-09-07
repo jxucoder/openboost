@@ -1,4 +1,4 @@
-"""Current CPU A1/A2/A3/A5/A6/A7/A11 trials on frozen encoded train/validation packets.
+"""Current CPU A1/A2/A3/A5/A6/A7/A8/A11 trials on frozen encoded train/validation packets.
 
 Explicit validation targets are required even with fixed budgets. The caller
 controls process threads and resource limits. Test arrays are always rejected.
@@ -13,7 +13,16 @@ import numpy as np
 
 from openboost import ClassSchema, NumericData, Problem, RunContext
 from openboost.multioutput import TargetScale
-from openboost.recipes import binary, multi_squared, multiclass, normal, poisson, quantile, squared
+from openboost.recipes import (
+    binary,
+    gamma,
+    multi_squared,
+    multiclass,
+    normal,
+    poisson,
+    quantile,
+    squared,
+)
 
 if __package__:
     from benchmarks.v1.openboost_predict import OUTPUTS, QUANTILES, predict_saved
@@ -73,7 +82,7 @@ def fit(job, arrays):
             raise ValueError("explicit canonical classification count required")
         classes = ClassSchema(tuple(range(count)))
     problems = []
-    width = 1 if job["application"] in {"A1", "A5", "A7"} else 2
+    width = 1 if job["application"] in {"A1", "A5", "A7", "A8"} else 2
     if classification:
         width = 1 if job["application"] == "A2" else count
     multi = job["application"] == "A6"
@@ -131,6 +140,7 @@ def fit(job, arrays):
         "A3": multiclass,
         "A6": multi_squared,
         "A7": poisson,
+        "A8": gamma,
         "A11": normal,
     }[job["application"]]
     result = recipe(
@@ -169,6 +179,17 @@ def fit(job, arrays):
             target_units="period_count",
             raw_units="log_rate",
             selected_validation_nll=Poisson().loss(problems[1], model.predict(problems[1].data)),
+        )
+    if job["application"] == "A8":
+        from openboost.objectives import Gamma
+
+        training.update(
+            selection_metric="weighted_gamma_objective",
+            target_units="positive_claim_amount",
+            raw_units="log_mean",
+            selected_validation_gamma_objective=Gamma().loss(
+                problems[1], model.predict(problems[1].data)
+            ),
         )
     if classification:
         training.update(class_order=list(classes.values), selection_metric="logloss")

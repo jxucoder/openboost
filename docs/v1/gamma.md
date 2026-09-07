@@ -45,3 +45,9 @@ numeric/categorical/missing/unseen input composition.
 Independent tests verify derivatives, offset-aware base, three rounds, weight
 semantics, rejected updates and persistence. Real A8 quality/selection evaluation,
 dispersion/calibration, Tweedie/composition/A9, AFT/A10 and CUDA remain open.
+
+The current A8 evaluation worker binds individual eligible positive claims and
+original weights to Gamma, retaining explicit positive-claim output semantics.
+Five frozen policy-grouped severity folds pass bounded validation and exact fresh
+inference in Sprint 055. Selected scores are Gamma objectives, not estimated
+dispersion likelihoods. Full A8 quality/search acceptance remains open.
