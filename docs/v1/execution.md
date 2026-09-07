@@ -280,8 +280,7 @@ caller-owned. Release buffers with the context and field records with operations
 `device_normal.objective(minimum_scale=...)` constructs an explicit
 `ObjectiveOperations` bundle (validation/preparation/base/loss). Pass it as
 `DeviceRun(..., objective=device_normal.objective())` to use the shared runtime.
-The bundle does not itself train a model. The Normal recipe is still under
-construction. The 23 new geometry hardware tests
+The bundle does not itself train a model. The 23 new geometry hardware tests
 are collected locally, not executed: no Normal CUDA correctness or cost claim is
 established by these changes. The earlier 212 passing scalar cases remain tied to
 their measured revision and must be rerun after integration.
@@ -306,3 +305,25 @@ Ninety frozen three-round Normal transaction cases and six ownership/rollback
 cases are collected for hardware execution. They include both update orders,
 independent cohort fields and failures after partially copying/predicting terms.
 Collection is not CUDA validation; no mapped-runtime hardware pass is claimed.
+
+`device_recipes.normal(ops, train, validation, run_id=..., seed=...)` now composes
+these components. `mode` chooses ordinary/natural direction; `damping` belongs to
+the natural solve. `update` is `joint`, `forward` (mean then scale), or `reverse`.
+Joint learners share one geometry snapshot and one commit. Ordered substeps
+recompute geometry from the latest accepted raw state, including after rejection.
+`step` is fixed or backtracking; the default is at most six strict-NLL-decrease
+trials. Stopping observes accepted validation once per outer sweep.
+
+`try_terms(run, state, terms, ...)` exposes bounded search independently of the
+Normal recipe. It validates state/term structure before search, retains numerical
+failures and all finite candidate losses, and releases every temporary proposal.
+The caller owns the previous and returned states. Recipe history contains flat
+DeviceNormalStep records, each with channels, outer round, before/after versions
+and a tuple of DeviceTrial records. It keeps scalar diagnostics only; the recipe
+releases superseded states, geometry and working trees. Optional `learner` uses
+the same public device signature as squared and owns its tree configuration.
+
+The 31 additional recipe checks cover frozen trajectories, zero budgets, numeric
+sixth-trial recovery, partial/full rejection, patience, invalid-learner cleanup,
+24 ordered rounds and fresh CPU model loading with CUDA imports disabled. They
+are collected only. Hardware correctness, installed D2 and cost remain pending.

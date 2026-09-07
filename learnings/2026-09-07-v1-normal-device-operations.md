@@ -82,3 +82,21 @@ This third local slice triggers a reflection recorded in Sprint 090. The shared
 runtime now expresses Normal updates; the next step is actual joint/ordered
 recipe composition and an installed D2 consumer. No host training fallback,
 second private trainer or new hardware authority was introduced.
+
+## 090-D recipe composition
+
+`782c9c4` commits the shared runtime. The next slice adds Normal joint/forward/
+reverse recipes and public `try_terms`. Numerical search keeps every scalar
+coefficient, candidate training/validation score, decision and failure. State/term
+schema is validated before retry logic. Caller-owned previous state is retained
+by the search operation; the built-in recipe releases superseded states itself.
+Stopping observes each outer sweep once, with no per-round arrays in history.
+
+The 51 targeted API checks and full **1414 CPU tests** pass with one Linux-only
+skip (`/tmp/openboost-090-d-cpu.log`, same regression command). Ruff/docs pass.
+Thirty-one real-CUDA recipe cases collect; none executes locally. They cover
+fixed/backtracking trajectories, zero budgets, ordered partial acceptance,
+actual sixth-trial recovery, patience, second-learner failure and long-run/fresh
+CPU inference. A released/forged state must fail before numerical search, which
+motivated the public `validate_state` metadata check. No private optimizer or
+CPU training fallback was added. Next: installed D2 and hardware package freeze.

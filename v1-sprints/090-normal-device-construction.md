@@ -1,7 +1,8 @@
 # Sprint 090: Normal device construction and independent fixtures
 
 Status: 090-A complete; 090-B operations constructed with hardware checks pending;
-090-C mapped runtime constructed; 090-D recipe composition next. No new device run.
+090-C mapped runtime and 090-D recipes constructed; installed D2/package preparation
+next. No new device run.
 Mapping: [079](079-cuda-distribution-and-extension.md) / B12 / F3.2 / R6 /
 C2–C5 / E1–E2 development conformance. Parent: `48a1386`.
 
@@ -243,6 +244,23 @@ in the shared runtime, without a Normal-specific state machine. Tuple ownership
 and per-term mapping preserve joint commit boundaries while permitting ordered
 public loops. Continue into 090-D and then the installed D2 package; hardware and
 full v1 gates remain open. The near-tie diagnostic is still carried separately.
+
+### 090-D recipe construction
+
+The public Normal recipe now composes joint/forward/reverse updates, ordinary or
+natural directions, once-weighted direction fields and the shared runtime. Public
+`try_terms` independently exposes bounded search and preserves all scalar trial
+losses/failures. It validates state/term structure before numerical search.
+DeviceNormalStep tracks outer round, channels and before/after versions; stopping
+observes once per outer sweep, not once per committed parameter.
+
+Verification: **1414 CPU passed**, one Linux-only skip; 51 targeted configuration
+checks pass; Ruff/docs pass. Thirty-one recipe hardware cases collect, including
+the frozen trajectory, zero rounds, one rejected then accepted parameter, all
+six numeric trials, full rejection/patience, invalid-second-learner cleanup and
+24-round/fresh CPU inference. No GPU tests ran. Normal runtime and recipe are
+implemented but not yet hardware-validated. Continue to the installed D2 consumer
+and exact package closure before asking for hardware approval.
 
 Full CPU regression passes **1371 tests**, with one Linux-only skip. Ruff and
 documentation build pass; see the [verification record](../learnings/2026-09-07-v1-normal-device-design.md).

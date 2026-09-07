@@ -335,6 +335,11 @@ class DeviceRun:
                 raise ValueError("term fitted binning identity differs from run")
         return terms
 
+    def validate_state(self, state):
+        """Validate an accepted record without copying raw arrays or changing ownership."""
+        self._get(state, DeviceState)
+        return state
+
     def propose(self, state, tree, *, coefficient=1.0):
         """Scalar convenience, using the same mapped transaction as other algorithms."""
         return self.propose_terms(state, (DeviceTerm(tree, [[1]]),), coefficient=coefficient)

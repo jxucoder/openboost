@@ -26,7 +26,7 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1371 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1414 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.
@@ -54,9 +54,10 @@ recorded and the user continued local [079](079-cuda-distribution-and-extension.
 construction through [090](090-normal-device-construction.md): Normal operations,
 mapped multi-term runtime, joint/ordered loops, installed D2 and fresh inference.
 090-A adds 101 independent-math/public-CPU checks and retains a zero-weight split
-ambiguity as a separate diagnostic. Next: 090-B float32-domain fixtures and
-resident Normal operations, alongside 069 accounting/isolation. No Normal CUDA
-pass is claimed. New hardware needs a concrete frozen package and allowance;
+ambiguity as a separate diagnostic. 090-B/C/D construct Normal operations, shared
+mapped transactions and joint/ordered recipes; their hardware checks collect but
+have not executed. Next: installed D2 and package freeze, alongside 069 accounting/
+isolation. No Normal CUDA pass is claimed. New hardware needs a concrete frozen package and allowance;
 all 212 earlier device regressions remain required. Full v1 gates remain open.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external

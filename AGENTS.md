@@ -98,9 +98,11 @@ consumed; no retry or additional upload is authorized. The result reflection is
 recorded, and the user continued local [079 Normal K=2 and installed D2](v1-sprints/079-cuda-distribution-and-extension.md)
 construction through [090](v1-sprints/090-normal-device-construction.md). 090-A adds
 the design and 101 local independent-math/public-CPU checks, with a retained
-zero-weight split ambiguity. Next: 090-B float32-domain fixtures and resident
-Normal operations, alongside 069 accounting/isolation. No Normal CUDA pass is
-claimed. Resolve the recorded numerical policy before device acceptance; retain
+zero-weight split ambiguity. 090-B/C/D now construct Normal geometry, shared
+mapped transactions and joint/ordered recipes. Their hardware tests collect but
+have not executed. Next: installed D2 and the exact next-run package, alongside
+069 accounting/isolation. No Normal CUDA pass is claimed. Retain the separate
+near-tie diagnostic under the recorded numerical policy and
 all 212 earlier device regressions. Freeze a concrete package/allowance before
 further hardware work.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
@@ -116,7 +118,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1371 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1414 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
@@ -168,8 +170,9 @@ through public StopState, separate from model acceptance and best-model selectio
 CPU recipes execute sequentially. Experimental CUDA storage, aggregation and
 public split/feasibility/route/leaf operations plus the separate resident squared
 recipe pass the bounded 212-case T4 matrix at `af026ef`, including weighted/missing
-parity, owned transactions and saved CPU inference. Other required CUDA recipes
-remain unimplemented.
+parity, owned transactions and saved CPU inference. Normal K=2 device operations,
+mapped runtime and joint/ordered recipes are implemented with hardware checks
+pending. Other required CUDA recipes remain unimplemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 
 The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018
