@@ -14,7 +14,7 @@ Fixed-scale AFT supports event/right censoring and persisted survival outputs.
 Multi-output squared recipes support independent/shared topology and target scaling.
 Explicit prepared training data can be shared across independent CPU runs.
 Public StopState separates validation patience from model acceptance in all recipes.
-CUDA execution is not implemented yet.
+Experimental CUDA storage is available in openboost.execution; CUDA training is not implemented.
 """
 
 from .data import ClassSchema, MixedData, NumericData, Problem

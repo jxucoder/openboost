@@ -57,3 +57,8 @@ from model acceptance and strict best-model selection across all CPU recipes.
 
 [Public development extensions](extensions.md) exercise installed cohort split
 constraints and external penalized leaves, with core inference after plugin removal.
+
+
+[Experimental CUDA storage](execution.md) now provides explicit context-owned buffers,
+upload/copy/export and lifetime checks verified on a real T4. Training recipes
+remain CPU-only; device fields, trees and boosting are not implemented yet.

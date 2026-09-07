@@ -56,3 +56,21 @@ two-round scalar training, D2, P7 and formal E4 remain separate requirements.
 ## Commits
 
 Implementation commit precedes device execution. No push.
+
+## Real T4 result and reflection
+
+At `77aa105`, twelve installed tests pass on actual T4 hardware. All 26 source
+hashes and the raw test log hash verify. The 8192x32 float32 fixture records 1 MiB
+upload, 1 MiB device copy, 2 MiB export and a 2 MiB private-pool peak. This is not
+whole-device peak memory or a performance claim. See the
+[raw evidence](../benchmarks/v1/evidence/cuda-storage-078/README.md).
+
+The base image tag is CUDA 12.6.3, while actual runtime/driver API versions are
+12090/13000. Preserve this distinction when pinning future kernel experiments.
+No retry occurred. One of two 085 device runs is consumed; one capped 900-second
+run remains and needs its fixtures frozen before launch.
+
+Reflection: actual storage ownership works without mutable public aliases, but
+this is not accepted/proposal transaction conformance. Next implement named device
+fields and routed reductions, retaining independent D2 cohort columns. No GPU
+boosting, algorithm-author benefit, quality or cost gate is passed yet.

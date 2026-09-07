@@ -122,3 +122,11 @@ formal budgets. The paused deeper CPU probe is not a failed or passing trial.
 Next action: assemble the 069 D1/D2 accounting packet and audit the minimal device
 ownership seam for 078. No remote run or independent author attempt is performed
 by this amendment itself. Revisit sequencing after the first author/device results.
+
+
+## Device budget update
+
+Run 1: clean `77aa105`, twelve T4 storage tests pass; see
+[078 evidence](../benchmarks/v1/evidence/cuda-storage-078/README.md). One run capped
+at 900 seconds remains. This allocation verified storage only, not two-round
+scalar training. Preregister the next fixture/operation boundary before using it.

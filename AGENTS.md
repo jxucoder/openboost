@@ -74,7 +74,11 @@ designer work as independent author evidence or inspect sealed H1/H2 contents.
 
 The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
 completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant
-065/068 ownership on the actual device path. CUDA remains unimplemented. Formal
+065/068 ownership on the actual device path. Experimental context-owned CUDA
+storage now passes twelve real T4 tests at `77aa105`; CUDA training remains
+unimplemented. One of two 085 device runs is consumed; one 900-second run remains.
+Next implement named device fields and routed histograms, preserving D2 independent
+information. Storage checks do not pass transaction or boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
 
@@ -136,7 +140,7 @@ class metadata, AFT scale and multi-output inverse scaling have persisted infere
 artifacts. PreparedData explicitly reuses fitted training binning/codes across
 independent heterogeneous runs. All recipes support independent validation patience
 through public StopState, separate from model acceptance and best-model selection.
-Execution is sequential; CUDA execution is not implemented.
+Training execution is sequential CPU; experimental CUDA storage is verified, but CUDA training is not implemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 
 The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018

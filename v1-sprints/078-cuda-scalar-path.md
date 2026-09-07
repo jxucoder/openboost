@@ -65,3 +65,16 @@ no retries, at most 8192x32 float32 test data and 16 MiB per-context pool limit.
 This consumes one of the two allowed device runs even on failure. Exact array
 copy equality is the oracle; no floating reductions or tolerance is needed yet.
 Do not call storage checks two-round boosting or transaction conformance.
+
+### First real device result
+
+[Storage evidence](../benchmarks/v1/evidence/cuda-storage-078/README.md) at `77aa105`
+passes twelve installed T4 tests with exact copies, lifetimes, context/thread
+checks and visible transfer/pool accounting. All 26 source hashes and the log
+verify. The fixture private-pool peak is 2 MiB, not total GPU memory. Actual CUDA
+runtime/driver API versions are 12090/13000 despite the 12.6.3 image tag.
+
+085 budget: run 1 consumed, no retries; one further 900-second run remains. Freeze
+its field/reduction fixtures before dispatch. Next build named device fields and
+routed histograms with D2 information semantics. Two-round scalar training,
+accepted/proposal integration and CPU-readable trained artifacts remain open.

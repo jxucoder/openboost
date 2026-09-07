@@ -1,0 +1,61 @@
+{
+  "revision": "77aa1055e42b53eac29eb662bbac95e621aac96e",
+  "dirty": false,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/cuda_storage_preflight.py",
+    "/tmp/openboost-cuda-storage-078"
+  ],
+  "scope": "CUDA storage ownership only; not boosting or E1/E4 exit",
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/diagnostics.py": "54065428816f7092ebc0f2bb66c0d2006bc3d49a864c8950e3901c68e7b428bf",
+    "src/openboost/execution.py": "be6a49610c508bd7c1f3941fc3d7e0687f0d352eb5f4f0a980ed041c9066bec7",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "de920ffda40e2ecbd9a56b368515497c9fdb94d30a465be0f9c8ed0e39974082",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "aa51d6ab3678778c2795271ddcedf3718385d6eb2e335e46eaf3d49acd781c9c",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "dcd61888233544ee2a94ea5d6046277bcf918b01b3b333ae7945714b3cb30ef5",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5",
+    "pyproject.toml": "51ba9b66fda02d5691cbb0852fff55182950b035e108a6069e6cbbf3a9af66d8",
+    "README.md": "97f863e2871513cc3706e22a5eb29e32fc11bd8501a729b152fc26927c0ccb6d",
+    "LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "tests/v1/test_execution_cuda.py": "bac69fc4ec091a85344b342b1239226bcb16bbb6d186ee5d58957a42945a51e6",
+    "benchmarks/v1/cuda_storage_preflight.py": "ef1ef2f250936057e26560ef44d911fdc3191040bf2759e245360efd65687afb"
+  },
+  "budget": {
+    "gpu": "T4",
+    "function_seconds": 900,
+    "test_seconds": 600,
+    "retries": 0,
+    "run": 1,
+    "allowed_runs": 2
+  },
+  "status": "complete",
+  "result": {
+    "passed": true,
+    "exit_code": 0,
+    "python": "3.12.1",
+    "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.35",
+    "cupy": "13.6.0",
+    "numpy": "2.3.5",
+    "gpu": "Tesla T4, 580.95.05, 15360 MiB\n",
+    "cuda_runtime": 12090,
+    "cuda_driver": 13000
+  },
+  "image_id": "im-BJnnjZARgmGFYNXzrZMVLE",
+  "artifacts": {
+    "pytest.log": "c3ffb7276a377d7ae26ccadaa5bab45d497f87400e70ee9db56a08e4c7117a98"
+  }
+}

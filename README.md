@@ -103,3 +103,8 @@ projected splits and persisted training-only target scaling. Real A6 evaluation 
 across independent jobs, verified at M=1/8/32.
 [Independent stopping](docs/v1/stopping.md) adds validation patience to every CPU
 recipe while keeping model acceptance and best-model selection independent.
+
+
+[Experimental CUDA storage](docs/v1/execution.md) now provides explicit context-owned buffers,
+upload/copy/export and lifetime checks verified on a real T4. Training recipes
+remain CPU-only; device fields, trees and boosting are not implemented yet.
