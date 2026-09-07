@@ -55,3 +55,17 @@ Preparation and source audit first; clean packet evidence follows separately.
 Preparation validation: the dirty-tree guard rejects before creating output.
 Changed-file lint, MkDocs build and whitespace checks pass. Existing CPU tests
 were not rerun for this packaging/documentation-only slice.
+
+## Prepared packet result
+
+The clean build at `cfca092` succeeds with network access after sandbox DNS blocked
+hatchling resolution. Both logs are preserved in the
+[packet evidence](../benchmarks/v1/evidence/author-packet-069/README.md). Nine author
+file hashes and five evaluator input hashes verify; all twenty wheel source modules
+match the commit. The ninth file is uv's generated .gitignore, discovered when an
+initial eight-file inventory assertion failed. No solved extension or evaluator
+source is present in the author directory. No author/device attempt ran.
+
+This completes the bounded author-view export and CPU seam audit, not the complete
+069 packet or independent accounting. Next implement execution-owned device storage
+and prepare observable author accounting; retain each missing prerequisite explicitly.

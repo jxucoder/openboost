@@ -73,3 +73,10 @@ only selected current docs and task cards from a clean revision. It records hash
 missing accounting/isolation/arm prerequisites and zero attempts. No evaluator
 solution or H task content is copied into the author view. This does not implement
 an independent runner or prove filesystem isolation; dispatch remains false.
+
+At clean `cfca092`, the [author-view export](../benchmarks/v1/evidence/author-packet-069/README.md)
+builds successfully. Nine author files (including uv's .gitignore), five evaluator
+input hashes and twenty wheel source modules verify. Existing solutions/evaluator
+code are absent from the author directory. The initial DNS build failure is retained.
+The author view is not an OS sandbox; accounting, arm/model freeze and standalone
+verifier invocation remain missing. No independent attempt or measured benefit.
