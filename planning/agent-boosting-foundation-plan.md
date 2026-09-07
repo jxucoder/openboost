@@ -426,10 +426,10 @@ links and git diff --check, not nonexistent runtime changes. No push, release, m
 
 Starting instructions for the next execution model:
 
-> Read AGENTS.md, the 064–084 sprint roadmap and Sprint 065 for the next implementation
+> Read AGENTS.md, the 064–084 sprint roadmap and Sprint 066 for the next execution
 > card; Sprint 063 retains the rationale. Use this plan, construction design and
-> evaluation for scope and semantics. Sprint 064 stopping is complete; continue 065
-> installed D5 isolation. Follow 066 profile → 067 incremental runtime → 068 trace retention.
+> evaluation for scope and semantics. Sprints 064–065 stopping/installed isolation are complete.
+> Follow 066 profile → 067 incremental runtime → 068 trace retention.
 > Preparation for 069 author measurement and 070 coverage/judging can proceed
 > independently; 071 proves the real selection pipeline before the remaining
 > application cards. Later author/CUDA/delivery cards follow their stated entry

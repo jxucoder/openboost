@@ -36,3 +36,9 @@ recipes. Installed checks cover M=1/8/32, shared preparation without refitting,
 different validation stop rounds, reversed/regrouped execution, retries and an
 isolated malformed result. These are sequential correctness checks, not batching,
 speed, real model selection or a complete D5/E5 result.
+
+Installed checks also mix the external loss-threshold policy with built-in and
+ordered recipes, retaining true completion and payloads through M=1/8/32 schedules.
+Distinct-ID RNG, same-ID recovery, stale feature/row preparation rejection and
+valid target/weight reuse are checked without refitting shared binning. A model
+from the custom loop replays after the policy source and training plugins are removed.

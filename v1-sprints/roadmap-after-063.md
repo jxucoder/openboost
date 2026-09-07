@@ -1,6 +1,6 @@
 # Sprint roadmap after the v1 retrospective
 
-Planning baseline: `df23796`, 2026-09-06. Current execution: 064 complete, 065 next.
+Planning baseline: `df23796`, 2026-09-06. Current execution: 064–065 complete, 066 next.
 This decomposes Sprint 063 N1–N5 and its proposed GPU sequence into execution
 cards. It does not replace the [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), or
@@ -16,13 +16,13 @@ part of that hypothesis. Completing sprint cards is not a percentage of product 
 Each card has an entry dependency, a first falsifiable check, work boundaries,
 acceptance and a reflection question. Numbers identify cards, not calendar weeks
 or a requirement to finish every lower number before starting independent work.
-Sprint 064 is complete; Sprint 065 is the current implementation assignment. Later cards are planned;
+Sprints 064–065 are complete; Sprint 066 is the current execution assignment. Later cards are planned;
 pin their actual source revision, commands and workload before execution.
 
 | Sprint | Outcome | Entry dependency | Deciding evidence |
 |---|---|---|---|
 | [064](064-programmable-stopping-and-isolation.md) | Complete: public stopping completion | Current CPU contracts | Independent two-round policy, 77 focused / 943 CPU tests; installed checks follow in 065 |
-| [065](065-installed-run-isolation.md) | Installed independent runs | 064 | M=1/8/32 RNG, preparation, custom stop, failure/retry and plugin-free inference |
+| [065](065-installed-run-isolation.md) | Complete: installed independent runs | 064 | M=1/8/32 RNG, preparation, custom stop, failure/retry and plugin-free inference |
 | [066](066-practical-cpu-profile.md) | Practical CPU cost diagnosis | 065 | Eight frozen Housing cases; enforced limits, uninstrumented cost and separate profiles |
 | [067](067-incremental-runtime.md) | Incremental transaction execution | 066 diagnosis | New-term replay grows linearly; independent full replay and all state transitions agree |
 | [068](068-trace-retention.md) | Bounded diagnostic memory | 067 | Summary/full equivalence; bounded retained arrays; matched practical rerun |
@@ -147,5 +147,5 @@ replaces either decision.
 ## Planning result
 
 The initial decomposition changed only planning files/navigation. Implementation
-has since completed 064; follow the current card and its evidence. Original planning verification is recorded in the
+has since completed 064–065; follow the current card and its evidence. Original planning verification is recorded in the
 [sprint-decomposition learning](../learnings/2026-09-06-v1-sprint-decomposition.md).

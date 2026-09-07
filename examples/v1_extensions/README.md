@@ -21,8 +21,8 @@ require no core edits. The historical `examples/extensions/` packages remain sep
 [custom_stopping.py](custom_stopping.py) is a separate public-loop development
 example. It stops half-step squared-error boosting when measured training loss
 crosses its declared threshold, returning its own frozen stopping/result records.
-Source checks independently verify the recurrence and preserve the real reason
-through run_many. Installed custom-policy checks follow in Sprint 065; this example
+Source and installed checks independently verify the recurrence and preserve the real reason
+through run_many. Sprint 065 records installed custom-policy checks; this example
 is not another independent author or a statistical stopping-method reproduction.
 
 ## Reproduce
@@ -34,10 +34,11 @@ UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python examples/v
 The verifier builds five wheels offline, creates a fresh environment, installs
 the wheels and NumPy 2.3.5, and executes copied checks from outside the repository
 using Python `-I`. Installed module paths must be under site-packages. It then
-uninstalls all four extensions and starts another interpreter to load nine saved
-models and verify exact predictions with none of the extensions importable.
+uninstalls all four extensions, removes the copied custom-policy source and starts
+another interpreter to load ten saved models and verify exact predictions with
+none of the training extensions or the custom policy available.
 The report records source/wheel hashes, revision/dirty state, environment,
-commands, three-round outputs and failures. Offline dependencies must already be
+commands, per-recipe outputs and failures. Offline dependencies must already be
 cached. Nothing is uploaded or published. Run with Python 3.12 for the recorded
 environment; broader platform support has not been checked.
 
@@ -77,3 +78,8 @@ ordered recipes in run_many; installed M=1/8/32 checks exercise mixed recipes,
 independent stopping, failure isolation and reorder/regroup/retry equivalence.
 D4 reference traces and installed results are
 recorded separately from the earlier D2/D3 evidence.
+
+The Sprint 065 scheduler report additionally verifies distinct run-ID streams,
+custom-policy metadata/payload, changed feature/row identity rejection, safe
+target/weight preparation reuse, fresh-preparation equivalence and same-ID recovery
+from malformed completion or stale preparation. Original patience checks remain.

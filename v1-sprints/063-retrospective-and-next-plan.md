@@ -11,7 +11,8 @@ It does not replace the required application matrix or adopt the GPU amendment.
 The [064–084 sprint roadmap](roadmap-after-063.md) decomposes this review into
 bounded cards with dependencies and acceptance. [Sprint 064](064-programmable-stopping-and-isolation.md)
 has completed structural stopping; its installed-isolation follow-up is
-now the current [Sprint 065](065-installed-run-isolation.md) card.
+complete in [Sprint 065](065-installed-run-isolation.md). Current work is
+[Sprint 066 practical CPU profiling](066-practical-cpu-profile.md).
 
 ## 1. Verdict and product definition
 

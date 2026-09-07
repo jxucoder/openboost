@@ -1,7 +1,7 @@
 # Sprint 065: Installed run isolation
 
-Baseline: planning at `df23796`; pin the completed Sprint 064 revision at entry.
-Status: planned. Mapping: N1 / B11 / R9 / C4–C7 / D5 / E1–E2 and E6 development checks.
+Planning baseline: `df23796`; implementation parent `2871f0f`.
+Status: complete. Mapping: N1 / B11 / R9 / C4–C7 / D5 / E1–E2 and E6 development checks.
 Depends on: [Sprint 064](064-programmable-stopping-and-isolation.md).
 Shared evidence and closure rules: [sprint roadmap](roadmap-after-063.md).
 
@@ -72,4 +72,21 @@ as successful training. Do not count this internal verifier as an independent au
 
 ## Results
 
-Not run. Evidence paths above are planned destinations, not existing results.
+Installed verification passes with no core edits. Both the original patience suite
+and new mixed custom-policy suite pass at M=1/8/32, including K=1/2, distinct-ID
+streams, same-ID retry, reorder/regroup and no preparation refits. Changed features
+or row IDs fail explicitly; changed targets/weights reuse safely; fresh preparation
+matches direct execution and neighboring runs are unchanged.
+
+The genuine public loop retains its threshold/loss tuple and terminates at two of
+five rounds with independently checked raw predictions. Ten models replay exactly
+after all training plugins and copied custom-policy source are removed. The
+[raw evidence](../benchmarks/v1/evidence/scheduling-065/README.md) contains the full
+17-artifact matrix and manifest with source/wheel/environment/command hashes.
+See the [learning](../learnings/2026-09-06-v1-installed-isolation.md) for verification.
+
+Reflection: the structural contract change survived the installed boundary;
+remaining RNG/preparation cases needed evidence rather than another core abstraction.
+N1 is complete as development conformance. It does not pass formal E5/E6 or establish
+cost, CUDA or adoption. Next measure practical CPU execution in Sprint 066 before
+changing runtime state/trace ownership.
