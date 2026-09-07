@@ -618,9 +618,12 @@ Python/package/source paths and output ancestors must be traversable by that UID
 Unsupported hosts fail before creating output; there is no privilege fallback.
 
 The [Linux selection integration](evidence/protected-selection-070/README.md) passes
-all three focused tests and a retained 16-trial run. Cross-platform receipt release
-remains unresolved: macOS recomputation differs in last-bit score values and the
-exact receipt check rejects it.
+all three focused tests and a retained 16-trial run. The saved Linux receipt now has a macOS replay regression. Score-only
+recomputation permits at most eight times the smaller binary64 spacing of each
+finite value. All other receipt fields and the selected winner remain exact;
+changes to ordering across a near tie still reject release. The original receipt
+byte pin and every artifact hash remain exact. This bounded rule does not promise
+portability across arbitrary numerical libraries or metric changes.
 It is a synthetic four-round grid, not the full 300/1000-round search. The earlier
 standalone permission probe does not validate this call path. Network/new-session
 restrictions and separate author containers remain outside this mode's guarantee.

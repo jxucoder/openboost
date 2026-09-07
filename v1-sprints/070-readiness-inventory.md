@@ -20,10 +20,10 @@ remains every R1–R9, C1–C7, A1–A13 and E0–E7 obligation.
 | Independent participants | No new independent attempts launched | Use an authorized independent runner only after the task/arm/environment/accounting packet is frozen |
 
 The protected synthetic selection path now passes on Linux at `a0bc473`, including
-actual denied access and selected replay. Its unchanged receipt fails exact macOS
-score re-audit. See [evidence](../benchmarks/v1/evidence/protected-selection-070/README.md).
-Define and test numerical receipt portability before expanding the search; retain
-exact artifact pins and reject changed winners.
+actual denied access and selected replay. Its original unchanged receipt exposed last-bit macOS score differences. See [evidence](../benchmarks/v1/evidence/protected-selection-070/README.md).
+The observed receipt now has a passing replay regression using a bounded score-only
+roundoff rule; artifact pins and winner/order checks remain exact. Broader numerical
+portability and full resource qualification remain separate obligations.
 
 ## Next bounded slices
 

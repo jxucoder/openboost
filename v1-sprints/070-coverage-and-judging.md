@@ -198,3 +198,26 @@ reflection supersedes the prior immediate full-search direction.
 
 Validation: 1021 local CPU tests pass, one Linux-only test skips locally and passes
 on Modal; lint/docs pass. Sprints 069/070 and full-search/author/device gates stay open.
+
+### Numerical receipt replay contract
+
+Plan: reproduce the unchanged Linux receipt failure, specify a score-only numerical
+bound, retain exact identity/winner checks, then test boundary, malformed, material
+change and near-tie rejection. Three new tests failed before implementation.
+
+Recomputed finite scores may differ by at most eight times the smaller binary64
+spacing of the two values. There is no absolute-error floor or broad relative
+tolerance. Every non-score field, including winner, remains exact, and the saved
+score ordering must independently select that same winner. Receipt bytes and all
+artifact/protocol/record hashes remain exactly pinned. Changed winners across a
+near tie reject release rather than silently changing selection.
+
+The unchanged committed Linux receipt now releases on macOS. Thirty focused
+selection tests pass, including the 8/9-spacing boundary, malformed/material
+scores, near-tie reversal and existing artifact/receipt tampering checks. This
+resolves the observed receipt case, not every possible cross-platform difference
+(e.g. training-scale recomputation still has its own exact contract).
+
+Final verification with two test workers: **1031 passed, 1 skipped** (Linux-only).
+Production/support lint and documentation build pass. No new Modal run was needed
+to replay the unchanged Linux bundle on the host that exposed the counterexample.

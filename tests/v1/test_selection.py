@@ -237,3 +237,74 @@ def test_a6_scale_changes_winner_as_declared(tmp_path):
     assert receipt["selected"] == "first:00"
     assert receipt["scores"]["first:00"]["selection"] == 0.75
     assert receipt["scores"]["first:01"]["selection"] == 1.0
+
+
+@pytest.mark.parametrize("steps,accepted", [(1, True), (8, True), (9, False)])
+def test_receipt_score_replay_has_bounded_roundoff(tmp_path, steps, accepted):
+    p, records = example(tmp_path)
+    receipt = audit(p, records, tmp_path, digest(p))
+    value = receipt["scores"]["first:00"]["metrics"]["rmse"]
+    # Move toward zero to stay in the same binade for the ULP boundary check.
+    for _ in range(steps):
+        value = np.nextafter(value, 0.0)
+    receipt["scores"]["first:00"]["metrics"]["rmse"] = float(value)
+    saved = tmp_path / "receipt.json"
+    pin = seal(receipt, saved)
+    if accepted:
+        release_test(p, records, saved, tmp_path, digest(p), pin)
+    else:
+        with pytest.raises(ValueError, match="independent selection"):
+            release_test(p, records, saved, tmp_path, digest(p), pin)
+
+
+def test_committed_linux_receipt_releases_unchanged_on_current_host():
+    import json
+    from pathlib import Path
+
+    root = (
+        Path(__file__).resolve().parents[2]
+        / "benchmarks/v1/evidence/protected-selection-070/selection"
+    )
+    evaluator = root / "evaluator"
+    protocol = json.loads((evaluator / "protocol.json").read_text())
+    records = json.loads((evaluator / "records.json").read_text())
+    summary = json.loads((evaluator / "summary.json").read_text())
+    features, model = release_test(
+        protocol,
+        records,
+        evaluator / "receipt.json",
+        root,
+        digest(protocol),
+        summary["receipt_sha256"],
+    )
+    assert features["x"].shape == (16, 3)
+    assert model == records[15]["model"]
+
+
+def test_roundoff_allowance_cannot_reverse_a_near_tie(tmp_path):
+    p, records = example(tmp_path)
+    competitor = records[15]
+    np.savez(
+        tmp_path / competitor["prediction"]["path"],
+        row_ids=[2, 3],
+        prediction=[0.5000000000000002, 1.5000000000000002],
+    )
+    competitor["prediction"] = entry(tmp_path / competitor["prediction"]["path"])
+    receipt = audit(p, records, tmp_path, digest(p))
+    assert receipt["selected"] == "second:00"
+    receipt["scores"]["first:15"]["selection"] = float(np.nextafter(0.5, 0.0))
+    saved = tmp_path / "receipt.json"
+    pin = seal(receipt, saved)
+    with pytest.raises(ValueError, match="independent selection"):
+        release_test(p, records, saved, tmp_path, digest(p), pin)
+
+
+@pytest.mark.parametrize("bad", [True, "16", None, {"extra": 16}, 16.00001])
+def test_roundoff_allowance_rejects_invalid_or_material_scores(tmp_path, bad):
+    p, records = example(tmp_path)
+    receipt = audit(p, records, tmp_path, digest(p))
+    receipt["scores"]["first:00"]["metrics"]["rmse"] = bad
+    saved = tmp_path / "receipt.json"
+    pin = seal(receipt, saved)
+    with pytest.raises(ValueError, match="independent selection"):
+        release_test(p, records, saved, tmp_path, digest(p), pin)
