@@ -1,0 +1,65 @@
+{
+  "scope": "Local instrumented diagnostic; not Modal timing or protected resource qualification",
+  "revision": "6c608b2a0297eca5c9f65b028131a77cbe67c04e",
+  "dirty": false,
+  "platform": "macOS-26.3-x86_64-i386-64bit",
+  "python": "3.12.12",
+  "packet_sha256": "0750282946e2e2e5636117db6564652c504b1958ff363c20474816dd3a849f53",
+  "sources": {
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/diagnostics.py": "54065428816f7092ebc0f2bb66c0d2006bc3d49a864c8950e3901c68e7b428bf",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/runtime.py": "aa51d6ab3678778c2795271ddcedf3718385d6eb2e335e46eaf3d49acd781c9c",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/stopping.py": "dcd61888233544ee2a94ea5d6046277bcf918b01b3b333ae7945714b3cb30ef5",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/recipes.py": "de920ffda40e2ecbd9a56b368515497c9fdb94d30a465be0f9c8ed0e39974082",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "benchmarks/v1/profile_worker.py": "fd070e691537ca093530b81b495792f83b619aa14df073c94bed6656a12d3218",
+    "benchmarks/v1/openboost_worker.py": "b930f800b236f38a8dba20173cff528c88ca966e07bef42ba5bdec141366c28f",
+    "benchmarks/v1/process_runner.py": "58d5730c89cde083206806495e8f3a7d27821954814b81ecc946a3477c36c776"
+  },
+  "execution": {
+    "command": [
+      "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+      "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py",
+      "/tmp/openboost-a6-profile-local-070/job.json",
+      "--seconds",
+      "60"
+    ],
+    "launch_command": [
+      "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+      "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py",
+      "/tmp/openboost-a6-profile-local-070/job.json",
+      "--seconds",
+      "60"
+    ],
+    "address_limit_bytes": null,
+    "worker_identity": "inherited",
+    "environment_policy": "inherited",
+    "timeout_s": 90,
+    "threads": 1,
+    "status": "timeout",
+    "exit_code": -9,
+    "reason": "wall budget exceeded; process group killed",
+    "wall_s": 90.0177878329996,
+    "artifacts": {
+      "profile.pstats": "4f960405a8f8f01783818e9cd15b374e4fac63457cf0ad5ccdb08c43ed6e5231",
+      "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stacks.txt": "097d37fc19c7a56a92b9831e191e76d35a6b4a1088957b94b349b9bcef2c042e",
+      "profile.json": "44a6f1738b935ccf8c4074e3ca22d254d08f4231c598440767e0e768f05595d2",
+      "profile.txt": "cb55dc0f698144ecd99d6752dba27c9ef895f14dde4dc9b5ebbbdc2ba7916d77"
+    }
+  }
+}

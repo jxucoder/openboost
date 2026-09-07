@@ -10,6 +10,7 @@ import runpy
 import signal
 import sys
 import time
+from contextlib import nullcontext
 from pathlib import Path
 
 
@@ -82,11 +83,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("job", type=Path)
     parser.add_argument("--seconds", type=float, default=60)
+    parser.add_argument(
+        "--no-stacks", action="store_true", help="Disable periodic faulthandler dumps"
+    )
     args = parser.parse_args()
     worker = Path(__file__).with_name("openboost_worker.py")
     sys.argv = [str(worker), str(args.job.resolve())]
-    with Path("stacks.txt").open("w") as stream:
-        faulthandler.dump_traceback_later(20, repeat=True, file=stream)
+    with nullcontext() if args.no_stacks else Path("stacks.txt").open("w") as stream:
+        if not args.no_stacks:
+            faulthandler.dump_traceback_later(20, repeat=True, file=stream)
         try:
             profile_call(
                 lambda: runpy.run_path(str(worker), run_name="__main__"), Path.cwd(), args.seconds
@@ -94,7 +99,8 @@ def main():
         except ProfileDeadline:
             raise SystemExit(124) from None
         finally:
-            faulthandler.cancel_dump_traceback_later()
+            if not args.no_stacks:
+                faulthandler.cancel_dump_traceback_later()
 
 
 if __name__ == "__main__":

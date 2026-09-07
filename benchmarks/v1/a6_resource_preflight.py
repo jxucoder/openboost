@@ -40,7 +40,14 @@ def probe(spec, *, profile=False):
     if profile:
         fit = root / "profile"
         result = execute(
-            [sys.executable, str(source / "profile_worker.py"), str(path), "--seconds", "60"],
+            [
+                sys.executable,
+                str(source / "profile_worker.py"),
+                str(path),
+                "--seconds",
+                "60",
+                "--no-stacks",
+            ],
             fit,
             timeout_s=90,
             threads=1,

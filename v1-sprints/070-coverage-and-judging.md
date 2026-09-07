@@ -300,3 +300,16 @@ and container cap 120 seconds, two reserved CPUs/8192 MiB, one worker thread, no
 retries. Exit 124 with a retained deadline profile is diagnostic completion only.
 Missing profiles, unexpected errors and hard timeouts fail the diagnostic check.
 No model optimization or full search follows without inspection of measured work.
+
+### Instrumentation failure and revised diagnostic
+
+The first approved Modal profile exits -11 at 20.19 seconds while its first
+faulthandler dump is incomplete. No profile.json exists. The local profile retains
+60-second pstats but hangs until its 90-second hard timeout; its stack dump is also
+truncated. Both failures are preserved under a6-profile-modal-failed-070 and
+a6-profile-local-failed-070. Neither is counted as a completed diagnostic.
+
+Hypothesis: periodic faulthandler stack dumping interferes with this instrumented
+NumPy/Python path. Test a new committed revision with explicit --no-stacks, retaining
+cProfile, the same input/configuration, soft/hard limits and one-thread execution.
+This is a revised diagnostic, not an automatic retry or a model-resource failure.
