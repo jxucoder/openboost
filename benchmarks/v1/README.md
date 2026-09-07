@@ -672,3 +672,13 @@ experimental design, authenticate provenance, prove all R/C/A/E obligations or
 establish quality. `gate_results` stays empty. The evaluator must control the pin,
 invocation and reference file. An outside-directory check is not an OS permission
 boundary: process/container isolation remains separate work in Sprint 070.
+
+### Current OpenBoost trial retention
+
+`openboost_worker` explicitly runs its A1–A12 recipe and independent A5 quantile
+paths with `retention="summary"`, reporting `diagnostic_retention` in training
+metadata. This is a worker policy, not a new search hyperparameter or a change to
+the public recipe default. Frozen model configurations, selected-model semantics
+and prediction artifacts are unchanged. It reduces stored round arrays without
+qualifying the full search's resource or quality gate. Other worker families must
+be audited separately before large jobs.

@@ -70,3 +70,13 @@ Full regression: **1010 passed**; lint/docs pass. A nine-case reproducible smoke
 includes the valid matrix, rehashed fold omission/code change, missing/duplicate
 records, wrong backend, worker-error/timeout status and nonfinite metrics. These
 are injected judge inputs, not evidence of actual OS resource/access enforcement.
+
+### Real worker retention follow-through
+
+The current A1–A12 worker still inherited full traces after 068. Three failing
+checks observed full payloads through actual squared, Normal and A5 quantile
+calls. It now explicitly passes summary retention and records that policy in
+training metadata, without adding a search parameter. All current-worker direct
+recipe and fresh-prediction parity checks run before commit. Other worker families,
+including composed frequency/severity, remain a separate preflight audit item.
+This fixes a known diagnostic-memory policy gap; it is not a full-search launch.

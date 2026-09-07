@@ -211,6 +211,7 @@ def fit(job, arrays):
         *problems,
         context=RunContext("evaluation", job["seed"]),
         patience=job.get("early_stopping_rounds"),
+        retention="summary",
         **cfg,
     )
     selection = "final" if job.get("early_stopping_rounds") is None else "best_validation"
@@ -234,6 +235,7 @@ def fit(job, arrays):
         age=arrays.get("age_validation"),
     )
     training = dict(
+        diagnostic_retention="summary",
         selection=selection,
         stop={**asdict(result.stop), "reason": result.stop.reason},
         accepted_commits=result.state.version,
@@ -324,6 +326,7 @@ def fit_quantiles(job, cfg, problems, x_validation):
             context=RunContext("evaluation", job["seed"]),
             q=q,
             patience=job.get("early_stopping_rounds"),
+            retention="summary",
             **cfg,
         )
         model = result.state.model if selection == "final" else result.state.best_model
@@ -349,6 +352,7 @@ def fit_quantiles(job, cfg, problems, x_validation):
     )
     prediction = predict_saved(saved, x_validation)
     training = dict(
+        diagnostic_retention="summary",
         selection=selection,
         output=OUTPUTS["A5"],
         quantiles=list(QUANTILES),
