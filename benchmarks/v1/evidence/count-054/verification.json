@@ -1,0 +1,55 @@
+{
+  "source_and_artifact_hashes_match": true,
+  "nll_check": {
+    "rtol": 1e-12,
+    "atol": 1e-14,
+    "initial_attempt": "rtol=1e-13, atol=0 failed at absolute difference 2.38420395e-14; reduction/exp-log rounding; prediction replay remains exact"
+  },
+  "cells": [
+    {
+      "fold": 0,
+      "selected_validation_nll": 0.20832365973734113,
+      "fsum_nll": 0.2083236597373411,
+      "reported_nll": 0.2083236597373237,
+      "absolute_difference": 1.7430501486614958e-14,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    },
+    {
+      "fold": 1,
+      "selected_validation_nll": 0.21490285596050876,
+      "fsum_nll": 0.21490285596050876,
+      "reported_nll": 0.21490285596051276,
+      "absolute_difference": 3.9968028886505635e-15,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    },
+    {
+      "fold": 2,
+      "selected_validation_nll": 0.20879400813870572,
+      "fsum_nll": 0.20879400813870572,
+      "reported_nll": 0.20879400813868187,
+      "absolute_difference": 2.3842039453825237e-14,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    },
+    {
+      "fold": 3,
+      "selected_validation_nll": 0.21052100429835358,
+      "fsum_nll": 0.21052100429835358,
+      "reported_nll": 0.21052100429834292,
+      "absolute_difference": 1.0658141036401503e-14,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    },
+    {
+      "fold": 4,
+      "selected_validation_nll": 0.2096419191110117,
+      "fsum_nll": 0.20964191911101168,
+      "reported_nll": 0.20964191911099933,
+      "absolute_difference": 1.2378986724570495e-14,
+      "source_row_ids_exact": true,
+      "positive_means": true
+    }
+  ]
+}

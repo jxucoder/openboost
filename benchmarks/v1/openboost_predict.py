@@ -10,6 +10,7 @@ from openboost import NumericData
 from openboost.artifacts import Model
 from openboost.multioutput import MultiOutputModel, TargetScale
 from openboost.objectives import Normal
+from openboost.outputs import poisson_mean
 
 QUANTILES = (0.1, 0.5, 0.9)
 
@@ -20,10 +21,13 @@ OUTPUTS = {
     "A3": "class_probabilities",
     "A11": "normal_mean_scale",
     "A6": "multioutput_original_units",
+    "A7": "period_count_mean",
 }
 
 
-def predict_saved(saved, x):
+def predict_saved(saved, x, *, exposure=None):
+    if exposure is not None and (not isinstance(saved, dict) or saved.get("application") != "A7"):
+        raise ValueError("exposure is supported only for count inference")
     if isinstance(saved, dict) and saved.get("application") == "A5":
         if (
             set(saved) != {"format", "application", "output", "quantiles", "models"}
@@ -70,7 +74,9 @@ def predict_saved(saved, x):
         if not isinstance(record, dict) or set(record) != {"mean", "std", "constant"}:
             raise ValueError("invalid evaluation target scale")
         scale = TargetScale(record["mean"], record["std"], record["constant"])
-    width = len(scale.mean) if scale is not None else 1 if saved["application"] == "A1" else 2
+    width = (
+        len(scale.mean) if scale is not None else 1 if saved["application"] in {"A1", "A7"} else 2
+    )
     classification = saved["application"] in {"A2", "A3"}
     if classification:
         if model.classes is None:
@@ -95,6 +101,10 @@ def predict_saved(saved, x):
     if scale is not None:
         return MultiOutputModel(model, scale).predict(data)
     raw = model.predict(data)
+    if saved["application"] == "A7":
+        if exposure is None:
+            raise ValueError("prediction exposure required")
+        return poisson_mean(raw, exposure)["count_mean"]
     return raw[:, 0] if width == 1 else Normal.parameters(raw)
 
 
@@ -104,14 +114,17 @@ def main():
     parser.add_argument("features", type=Path)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
+    saved = json.loads(args.model.read_text())
     with np.load(args.features, allow_pickle=False) as arrays:
-        if set(arrays.files) != {"x", "row_ids"}:
-            raise ValueError("prediction packet must contain only features and row IDs")
+        if set(arrays.files) != (
+            {"x", "row_ids"} | ({"exposure"} if saved.get("application") == "A7" else set())
+        ):
+            raise ValueError("prediction packet differs from declared feature/exposure schema")
         x, ids = arrays["x"], arrays["row_ids"]
+        exposure = arrays.get("exposure")
     if ids.ndim != 1 or len(ids) != len(x) or len(np.unique(ids)) != len(ids):
         raise ValueError("unique aligned prediction row IDs required")
-    saved = json.loads(args.model.read_text())
-    prediction = predict_saved(saved, x)
+    prediction = predict_saved(saved, x, exposure=exposure)
     np.savez(args.output, row_ids=ids, prediction=prediction)
 
 

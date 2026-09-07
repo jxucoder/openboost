@@ -1,4 +1,4 @@
-"""Current CPU A1/A2/A3/A5/A6/A11 trials on frozen encoded train/validation packets.
+"""Current CPU A1/A2/A3/A5/A6/A7/A11 trials on frozen encoded train/validation packets.
 
 Explicit validation targets are required even with fixed budgets. The caller
 controls process threads and resource limits. Test arrays are always rejected.
@@ -13,7 +13,7 @@ import numpy as np
 
 from openboost import ClassSchema, NumericData, Problem, RunContext
 from openboost.multioutput import TargetScale
-from openboost.recipes import binary, multi_squared, multiclass, normal, quantile, squared
+from openboost.recipes import binary, multi_squared, multiclass, normal, poisson, quantile, squared
 
 if __package__:
     from benchmarks.v1.openboost_predict import OUTPUTS, QUANTILES, predict_saved
@@ -42,6 +42,8 @@ def fit(job, arrays):
     if type(job["seed"]) is not int or job["seed"] < 0:
         raise ValueError("nonnegative integer seed required")
     needed = {"x_train", "y_train", "x_validation", "y_validation", "validation_row_ids"}
+    if job["application"] == "A7":
+        needed |= {"exposure_train", "exposure_validation"}
     if not needed <= set(arrays) or set(arrays) - needed - {"weight_train", "weight_validation"}:
         raise ValueError("explicit train/validation arrays only; no test arrays")
     external_ids = np.asarray(arrays["validation_row_ids"])
@@ -71,7 +73,7 @@ def fit(job, arrays):
             raise ValueError("explicit canonical classification count required")
         classes = ClassSchema(tuple(range(count)))
     problems = []
-    width = 1 if job["application"] in {"A1", "A5"} else 2
+    width = 1 if job["application"] in {"A1", "A5", "A7"} else 2
     if classification:
         width = 1 if job["application"] == "A2" else count
     multi = job["application"] == "A6"
@@ -98,6 +100,16 @@ def fit(job, arrays):
         # Packet IDs remain in emitted artifacts; public data uses local integer rows.
         ids = np.arange(len(x))
         data = NumericData(x, ids, names)
+        structure = None
+        if job["application"] == "A7":
+            exposure = np.asarray(arrays["exposure_" + part])
+            if (
+                exposure.shape != (len(x),)
+                or not np.isfinite(exposure).all()
+                or np.any(exposure <= 0)
+            ):
+                raise ValueError("aligned positive finite exposure required")
+            structure = {"exposure": exposure[:, None]}
         problems.append(
             Problem(
                 data,
@@ -106,15 +118,21 @@ def fit(job, arrays):
                 weight=arrays.get("weight_" + part),
                 raw_width=width,
                 classes=classes,
+                structure=structure,
             )
         )
     if multi:
         problems = [scale.transform(p) for p in problems]
     if job["application"] == "A5":
         return fit_quantiles(job, cfg, problems, arrays["x_validation"])
-    recipe = {"A1": squared, "A2": binary, "A3": multiclass, "A6": multi_squared, "A11": normal}[
-        job["application"]
-    ]
+    recipe = {
+        "A1": squared,
+        "A2": binary,
+        "A3": multiclass,
+        "A6": multi_squared,
+        "A7": poisson,
+        "A11": normal,
+    }[job["application"]]
     result = recipe(
         *problems,
         context=RunContext("evaluation", job["seed"]),
@@ -131,7 +149,9 @@ def fit(job, arrays):
     )
     if multi:
         saved["target_scale"] = target_scale
-    prediction = predict_saved(saved, arrays["x_validation"])
+    prediction = predict_saved(
+        saved, arrays["x_validation"], exposure=arrays.get("exposure_validation")
+    )
     training = dict(
         selection=selection,
         stop={**asdict(result.stop), "reason": result.stop.reason},
@@ -140,6 +160,16 @@ def fit(job, arrays):
         best_validation_score=result.state.best_score,
         output=saved["output"],
     )
+    if job["application"] == "A7":
+        from openboost.objectives import Poisson
+
+        training.update(
+            selection_metric="weighted_poisson_nll",
+            exposure_role="likelihood_once",
+            target_units="period_count",
+            raw_units="log_rate",
+            selected_validation_nll=Poisson().loss(problems[1], model.predict(problems[1].data)),
+        )
     if classification:
         training.update(class_order=list(classes.values), selection_metric="logloss")
     if multi:

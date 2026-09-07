@@ -51,3 +51,9 @@ nonfinite geometry and means outside positive float64 range fail explicitly.
 Tests verify independent geometry, offset-aware initialization, three-round
 trees, zero counts and exposure scaling. Real A7 deviance/calibration comparisons,
 Gamma/A8, Tweedie/composition/A9, AFT/A10 and CUDA remain required work.
+
+The current A7 evaluation worker binds frozen exposure vectors to the public
+structure role and persists a period-count output tag with the raw model.
+Prediction packets must supply new exposure; extra offsets and exposure on
+other tasks are rejected. Five frozen frequency folds pass bounded validation
+and exact fresh inference in Sprint 054. Full A7 quality/search gates stay open.

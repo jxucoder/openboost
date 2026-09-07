@@ -360,3 +360,92 @@ def test_quantile_crossings_are_not_sorted():
         models=[Model(("x0",), [v]).record() for v in [3, 2, 1]],
     )
     np.testing.assert_array_equal(predict_saved(saved, [[0], [1]]), [[3, 2, 1], [3, 2, 1]])
+
+
+@pytest.mark.parametrize("patience", [None, 1])
+def test_count_exposure_direct_and_fresh(patience, tmp_path):
+    import math
+
+    from openboost.outputs import poisson_mean
+    from openboost.recipes import poisson
+
+    job, arrays = fixture("A7")
+    job["early_stopping_rounds"] = patience
+    problems = []
+    for part in ("train", "validation"):
+        x = arrays["x_" + part]
+        arrays["y_" + part] = np.arange(len(x)) % 3
+        arrays["exposure_" + part] = np.linspace(0.1, 2, len(x))
+        data = NumericData(x, np.arange(len(x)), ("x0",))
+        problems.append(
+            Problem(
+                data,
+                arrays["y_" + part][:, None],
+                data.row_ids,
+                weight=arrays["weight_" + part],
+                structure={"exposure": arrays["exposure_" + part][:, None]},
+            )
+        )
+    direct = poisson(
+        *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
+    )
+    prediction, saved, training = fit(job, arrays)
+    model = direct.state.model if patience is None else direct.state.best_model
+    np.testing.assert_array_equal(
+        prediction,
+        poisson_mean(model.predict(problems[1].data), arrays["exposure_validation"])["count_mean"],
+    )
+    assert training["selected_model_identity"] == model.identity
+    y = arrays["y_validation"]
+    nll = np.average(
+        prediction - y * np.log(prediction) + [math.lgamma(v + 1) for v in y],
+        weights=arrays["weight_validation"],
+    )
+    assert training["selected_validation_nll"] == pytest.approx(nll)
+    np.testing.assert_allclose(
+        predict_saved(saved, arrays["x_validation"], exposure=arrays["exposure_validation"] * 2),
+        prediction * 2,
+    )
+    path = tmp_path / "model.bin"
+    path.write_text(json.dumps(saved))
+    packet = tmp_path / "features.npz"
+    np.savez(
+        packet,
+        x=arrays["x_validation"],
+        row_ids=arrays["validation_row_ids"],
+        exposure=arrays["exposure_validation"],
+    )
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [sys.executable, str(script), str(path), str(packet), str(tmp_path / "replay.npz")],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as replay:
+        np.testing.assert_array_equal(replay["prediction"], prediction)
+        np.testing.assert_array_equal(replay["row_ids"], arrays["validation_row_ids"])
+    for exposure in [None, np.zeros(4), np.ones((4, 1)), np.full(4, np.nan)]:
+        with pytest.raises(ValueError):
+            predict_saved(saved, arrays["x_validation"], exposure=exposure)
+
+
+@pytest.mark.parametrize("bad", ["missing", "zero", "shape", "fractional", "offset", "foreign"])
+def test_count_worker_rejects_invalid_exposure_contract(bad):
+    job, arrays = fixture("A7")
+    for part in ["train", "validation"]:
+        arrays["y_" + part] = np.zeros(len(arrays["y_" + part]))
+        arrays["exposure_" + part] = np.ones(len(arrays["y_" + part]))
+    if bad == "missing":
+        arrays.pop("exposure_train")
+    elif bad == "zero":
+        arrays["exposure_validation"][0] = 0
+    elif bad == "shape":
+        arrays["exposure_train"] = arrays["exposure_train"][:, None]
+    elif bad == "fractional":
+        arrays["y_train"][0] = 0.5
+    elif bad == "offset":
+        arrays["offset_train"] = np.zeros(8)
+    else:
+        job["application"] = "A1"
+    with pytest.raises(ValueError):
+        fit(job, arrays)

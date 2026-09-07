@@ -1,0 +1,561 @@
+{
+  "scope": "Current A1/A2/A3/A5/A6/A7/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+  "revision": "003fdac127ed782c77e2766f2082a3d33c665077",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "-m",
+    "benchmarks.v1.openboost_worker_smoke",
+    "/private/tmp/openboost-count-054",
+    "--applications",
+    "A7"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "machine": "x86_64",
+  "cpu_count": 16,
+  "device": "cpu",
+  "gpu": null,
+  "threads": 1,
+  "memory_cap": null,
+  "packages": {
+    "numpy": "2.3.5",
+    "openboost": "1.0.0rc1"
+  },
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/openboost_worker.py": "6b34bfaf017e6817f87b29aa748150ed54b2d8fe06c92e17eccb7312ebdf6de5",
+    "benchmarks/v1/openboost_predict.py": "ca01fc530e46fd3446711138858f57e29760ba99869c6bddbda4fa25c99758c6",
+    "benchmarks/v1/openboost_worker_smoke.py": "dfdd1955d0f6ed4d8b4fcca33e44ebcb92c38ac51c2663c60e69d254b0dc4080",
+    "benchmarks/v1/worker_data.py": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "data": {
+    "A7": {
+      "application": "A7",
+      "dataset": "insurance",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "0ae4d0a206449d6df81dbc470fd1654d8f33e72f0f5fbd52bec89c27257671ac"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "ae02673c24506bbcab8b6aa80affd2631d19bd11e5dc14065b23f987beecac59"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "72af1635e878c0524add52ee4c8d8f70cfb0c4705c10f75eb8d0d66a4fd35c56"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "ecc90640de9fce6c1ef627406f672173ea6a2864e198124a0353ea0d1d9175bc"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "12f542a463d871e64bf08e9ea5984779c4ce0167ea59e864d3262900b5722a0b"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "e0b36f2fbff96b6f8ddacd97603548f8db752cbcce9af696ac1bc3de86f86ba3"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "b18f410fb6e3a5f10fdb2969abff571aa7ffd953dd95931da33a582ac0c63a2e"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "5f8b9d853ea30d7f5f539ba7824e5c5c56ef0a3c10e68fda464be00e645c6aa9"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "2f34597a81ee7b1bda9c5ca59dc0f42b8b9ff9f83e95397fe46774e978a34c05"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "d2e51308260a3463c71ea77ab2d1c2263e3f5fc6d7f0a7c4c484b08f374502f6"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "c0aa76b4f8a137dfaa3d7d17aa7004445e12681c2e3941e2a25def2e03f7a8c7"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "ab4d1c7b433009c417e74d0f3d65427c5bcb67eabb036e7403a04813f294eb6c"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "d6ee43a322790bbc503a5e241a21ba1f616901efb96d0a2b513381982d86ebb3"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "b55efde0c0ab9b912a7a6a456fb92cd4353f65ccddc92b0c4bdba8a4d0ad8284"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "a937ab72404e6bf594fe0521e71f8027b42668e2305cffd6e684cb51c9922edb"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "2855dd7fb3504747e141f31126324463b928191c5676e7ed7527c71dd820d407"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "6607785a3a6d5c4cae9c35176d79fc1a1fe1cec82b6023578b3585d08203b528"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "ca4d768608b607071dd949acd6e1f79d65bb89387dd9bb925a5356ca6099a580"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "4011f9ac79a4428c817ab04571cd89adde54dbee0a20478c62f80d8a8e76be54"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "7d02ebaaab85c9125403d2cf88c1c4f91e06e4ab7b847d87969533668ec0ec26"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "dd2ce518a7a30d3450ac9482d1ac590704b54049db3be7ae5103a4d4cb140545"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "ca2a814621a984aa23b62ef2d1d5e6b94bfc1e470f5cbc5e6abaed46bc22d0c3"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "e8e5c584010cae9fc538baf3e58dcf0c6afe276bb5e350ee269132f771b76145"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "a05ac0c8203720466d313518d36e72d940f2d75b716c28a453ee2a2bcb27fcb4"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "d0820179812781e72c26a433a71de8113c1c83c00b9740dae328bfe030cb082a"
+            }
+          },
+          "metadata": {
+            "target_units": "period count; exposure is an offset, unit training weights"
+          }
+        }
+      ],
+      "source_freeze_sha256": "ff95579dd1b95595e87027f38afd512cd986b3182f08f50a7a2139ffb63f291f",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    }
+  },
+  "cells": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-count-054/A7/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 21.164322082986473,
+      "artifacts": {
+        "model.bin": "0874d7fa1b02b758abeffc2168af65d175a76209a9fdf363e8cb5dd2725b54d0",
+        "training.json": "84a8558552194e40979acafe9c4d46f5e728b4d611ea7578b45dc51ec8a7ff91",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "ad0e4938a36be16ee431c23341c4a770f31f666e4ca0aeab82e8047d407633cb"
+      },
+      "application": "A7",
+      "fold": 0,
+      "job": {
+        "application": "A7",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-count-054/A7/0/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-count-054/A7/0/fit/model.bin",
+        "/private/tmp/openboost-count-054/A7/0/fit/features.npz",
+        "/private/tmp/openboost-count-054/A7/0/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        135603
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.2083236597373237,
+          "last_score": 0.2083236597373237,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "86f34d6fd9d289f4d7c825dceed9dd0bd1c18d9d632684093f45bd7fde484ac4",
+        "best_validation_score": 0.2083236597373237,
+        "output": "period_count_mean",
+        "selection_metric": "weighted_poisson_nll",
+        "exposure_role": "likelihood_once",
+        "target_units": "period_count",
+        "raw_units": "log_rate",
+        "selected_validation_nll": 0.2083236597373237
+      },
+      "replay_sha256": "ad0e4938a36be16ee431c23341c4a770f31f666e4ca0aeab82e8047d407633cb"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-count-054/A7/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 21.184419583005365,
+      "artifacts": {
+        "model.bin": "93cec7231ee4ad1ce1c9761ad605d60c387475ea82d4ea20220d2c508f588496",
+        "training.json": "28014d8e6482b10714710444c37c427ba3f543a826e196eee7a92b233c57ecd9",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "b9a58aa4dbcbdf9d67c61ef49b4d3f740f78cde28915ca33d3b7fc754fe8c632"
+      },
+      "application": "A7",
+      "fold": 1,
+      "job": {
+        "application": "A7",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-count-054/A7/1/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-count-054/A7/1/fit/model.bin",
+        "/private/tmp/openboost-count-054/A7/1/fit/features.npz",
+        "/private/tmp/openboost-count-054/A7/1/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        135603
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.21490285596051276,
+          "last_score": 0.21490285596051276,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "6071e53d5196b96fc40a1d023a58b4e91b65ff714a0416e12c296e5f22d2dbdf",
+        "best_validation_score": 0.21490285596051276,
+        "output": "period_count_mean",
+        "selection_metric": "weighted_poisson_nll",
+        "exposure_role": "likelihood_once",
+        "target_units": "period_count",
+        "raw_units": "log_rate",
+        "selected_validation_nll": 0.21490285596051276
+      },
+      "replay_sha256": "b9a58aa4dbcbdf9d67c61ef49b4d3f740f78cde28915ca33d3b7fc754fe8c632"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-count-054/A7/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 20.89408908301266,
+      "artifacts": {
+        "model.bin": "396c15700ccfa2cb69cab4687742a5de4e272e020313fb2cd9f91997c416dd9a",
+        "training.json": "f49411032b854dcea152d2d6e6e36096ff40c4ffa11765a918a1864320173bcd",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "0f3ae5fc91dd10b83017c81fed05a339ee26b935d1cbc243242faddd93f2e0ba"
+      },
+      "application": "A7",
+      "fold": 2,
+      "job": {
+        "application": "A7",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-count-054/A7/2/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-count-054/A7/2/fit/model.bin",
+        "/private/tmp/openboost-count-054/A7/2/fit/features.npz",
+        "/private/tmp/openboost-count-054/A7/2/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        135603
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.20879400813868187,
+          "last_score": 0.20879400813868187,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "5da07a6716b5bda1f49d3c196043e9f11497a317e5fba1ba3f60e3c1e28a9d68",
+        "best_validation_score": 0.20879400813868187,
+        "output": "period_count_mean",
+        "selection_metric": "weighted_poisson_nll",
+        "exposure_role": "likelihood_once",
+        "target_units": "period_count",
+        "raw_units": "log_rate",
+        "selected_validation_nll": 0.20879400813868187
+      },
+      "replay_sha256": "0f3ae5fc91dd10b83017c81fed05a339ee26b935d1cbc243242faddd93f2e0ba"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-count-054/A7/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 21.10490912500245,
+      "artifacts": {
+        "model.bin": "c75b80a3918aab45500a291851fa532d3c5cfb4be3a4cb67578a92e188bdf9b3",
+        "training.json": "c542a36e964597a02337a626b7738c7cca26532b376b6a625f2e4c7ee0a28137",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "401e8ab1b275caba057479b82b8eeb5bcda94051cd1e24d3c35887e124492fdd"
+      },
+      "application": "A7",
+      "fold": 3,
+      "job": {
+        "application": "A7",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-count-054/A7/3/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-count-054/A7/3/fit/model.bin",
+        "/private/tmp/openboost-count-054/A7/3/fit/features.npz",
+        "/private/tmp/openboost-count-054/A7/3/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        135603
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.21052100429834292,
+          "last_score": 0.21052100429834292,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "2e46fda2590a66497de505c4169958996fe9d13baf87e434253cb1c53aead5b6",
+        "best_validation_score": 0.21052100429834292,
+        "output": "period_count_mean",
+        "selection_metric": "weighted_poisson_nll",
+        "exposure_role": "likelihood_once",
+        "target_units": "period_count",
+        "raw_units": "log_rate",
+        "selected_validation_nll": 0.21052100429834292
+      },
+      "replay_sha256": "401e8ab1b275caba057479b82b8eeb5bcda94051cd1e24d3c35887e124492fdd"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-count-054/A7/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 20.812743167000008,
+      "artifacts": {
+        "model.bin": "eef1cb2bcd5031f2a6567ef17f94c24f3083601e1f46041ebc01465af4c45f73",
+        "training.json": "d3ee90d9056f8d460788e5d06ab62f5f082192360b66ff8997288bfd1ae32e0f",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "88d18b1f59f33e0665360bbf1847c6af782f3633acc1bec221241a70e28725a9"
+      },
+      "application": "A7",
+      "fold": 4,
+      "job": {
+        "application": "A7",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-count-054/A7/4/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-count-054/A7/4/fit/model.bin",
+        "/private/tmp/openboost-count-054/A7/4/fit/features.npz",
+        "/private/tmp/openboost-count-054/A7/4/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        135603
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 0.20964191911099933,
+          "last_score": 0.20964191911099933,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "2367e6b5f493d1396b1419938dd956102fdb6b939aeb874ea1b2c96fc094fd19",
+        "best_validation_score": 0.20964191911099933,
+        "output": "period_count_mean",
+        "selection_metric": "weighted_poisson_nll",
+        "exposure_role": "likelihood_once",
+        "target_units": "period_count",
+        "raw_units": "log_rate",
+        "selected_validation_nll": 0.20964191911099933
+      },
+      "replay_sha256": "88d18b1f59f33e0665360bbf1847c6af782f3633acc1bec221241a70e28725a9"
+    }
+  ]
+}

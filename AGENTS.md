@@ -88,8 +88,9 @@ the other folds were pending at that revision. Sprint 052 reuses selected
 histogram statistics with exact conformance checks;
 all five full Covertype folds pass within the unchanged cap and replay exactly.
 Sprint 053 connects A5 independent quantiles to all five frozen Bike origins
-with exact fresh replay and independently recomputed pinball scores. Next: A7
-count/exposure integration, remaining application adapters/searches and D5 checks.
+with exact fresh replay and independently recomputed pinball scores. Sprint 054
+adds A7 explicit count/exposure binding on all five frozen frequency folds with
+exact replay. Next: A8 severity, remaining application adapters/searches and D5 checks.
 These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
