@@ -22,8 +22,10 @@ def profile_complete(execution, record):
     )
 
 
-def comparator_jobs(plan):
-    expected = [f"{library}:0:00" for library in ("xgboost", "lightgbm", "catboost")]
+def comparator_jobs(plan, *, config_index=0):
+    if config_index not in (0, 5):
+        raise ValueError("only frozen comparator configurations 00 and 05 are preflighted")
+    expected = [f"{library}:0:{config_index:02}" for library in ("xgboost", "lightgbm", "catboost")]
     jobs = [job for name in expected for job in plan["jobs"] if job["id"] == name]
     if [job["id"] for job in jobs] != expected:
         raise ValueError("three unique frozen comparator probes required")
@@ -192,9 +194,11 @@ def paired_probe(spec):
     )
 
 
-def main(output, packets, *, profile=False, paired=False, comparators=False):
+def main(output, packets, *, profile=False, paired=False, comparators=False, comparator_config=0):
     if sum((profile, paired, comparators)) > 1:
         raise ValueError("profile, paired and comparator modes are separate experiments")
+    if comparator_config not in (0, 5) or (comparator_config != 0 and not comparators):
+        raise ValueError("comparator configuration requires comparator mode and index 00 or 05")
     import modal
 
     output = Path(output).resolve()
@@ -277,7 +281,7 @@ def main(output, packets, *, profile=False, paired=False, comparators=False):
         }:
             raise ValueError("train/validation packet only")
     jobs = (
-        comparator_jobs(plan)
+        comparator_jobs(plan, config_index=comparator_config)
         if comparators
         else [j for trial in plan["first_probe_ids"] for j in plan["jobs"] if j["id"] == trial]
     )
@@ -423,6 +427,7 @@ if __name__ == "__main__":
     parser.add_argument("--profile", action="store_true")
     parser.add_argument("--paired", action="store_true")
     parser.add_argument("--comparators", action="store_true")
+    parser.add_argument("--comparator-config", type=int, choices=(0, 5), default=0)
     args = parser.parse_args()
     main(
         args.output,
@@ -430,4 +435,5 @@ if __name__ == "__main__":
         profile=args.profile,
         paired=args.paired,
         comparators=args.comparators,
+        comparator_config=args.comparator_config,
     )

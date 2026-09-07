@@ -533,3 +533,15 @@ in for practical comparative cost. Carry this into the next retrospective. Next
 qualify deeper/1000-round resource cases before expanding the expensive matrix;
 keep every failure and frozen budget. The other 237 comparator jobs and the
 broader R/C/A/E ledger and author accounting remain required.
+
+### Deeper comparator resource check
+
+Plan: extend the existing comparator selector to frozen configuration 05, reject
+unplanned indices/mode combinations, commit, then run the three fold-zero probes.
+This uses depth 6 for XGBoost/CatBoost, 31 LightGBM leaves, 1000-round maxima and
+patience 50. Keep the same packet, resource limits, exact replay and stop-on-failure
+policy. No budget shrink or full search follows success. Deeper OpenBoost remains
+a separate expensive resource check; comparator qualification does not qualify it.
+
+Preparation validation: 1125 CPU tests passed, one Linux-only skip; 33 focused
+checks, lint and docs pass. Real configuration-05 execution remains pending.

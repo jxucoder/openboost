@@ -749,3 +749,8 @@ configuration-00 comparator resource probes. It verifies the updated A6 plan's
 input pins, uses the protected worker policy and fresh A6 replay, and stops on
 failure without retries. Profile, paired and comparator modes are mutually
 exclusive. This mode does not execute or certify the 400-job search.
+
+Add `--comparator-config 5` to that mode for the frozen deeper-tree/1000-round
+configuration-05 probes. Only indices 0 and 5 are accepted; early stopping remains
+active, so a 1000-round budget need not produce 1000 completed rounds. These
+comparator probes do not qualify deeper OpenBoost execution or the full search.
