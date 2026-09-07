@@ -28,7 +28,7 @@ pin their actual source revision, commands and workload before execution.
 | [067](067-incremental-runtime.md) | Complete: incremental transaction execution | 066 diagnosis | 957 tests; installed checks, eight fits/two profiles and six exact same-container pairs pass |
 | [068](068-trace-retention.md) | Complete: bounded diagnostic memory | 067 | 1000 tests, installed parity; sixteen exact paired fits and two profiles; scoped guest RSS savings |
 | [069](069-authoring-pilot.md) | Exploratory authoring measurement | Preparation can start now; attempts after 065 and accounting checks | Fair control/deep-change arms, measurable budgets and isolated verifiers |
-| [070](070-coverage-and-judging.md) | Trustworthy coverage and selection infrastructure | Inventory can start now; execution preflight uses 068 | Missing evidence fails; test labels and resource caps actually isolated/enforced |
+| [070](070-coverage-and-judging.md) | In progress: coverage and selection infrastructure | Execution preflight uses 068 | Frozen execution binding and worker summary policy pass; complete ledger and actual access/resource probes open |
 | [071](071-real-multioutput-selection.md) | First complete real selection workflow: A6/A13 | 068, 070 | Full frozen search, validation selection, sealed release, original-unit quality and cost |
 | [072](072-regression-and-distribution-quality.md) | A1/A11 selected quality | 071 pipeline | Housing regression and Normal each judged independently |
 | [073](073-classification-quality.md) | A2/A3 selected quality | 071 pipeline | Adult and full Covertype quality, probability semantics and resource outcomes |

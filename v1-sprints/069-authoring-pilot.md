@@ -1,6 +1,6 @@
 # Sprint 069: Exploratory authoring pilot
 
-Status: planned. Mapping: N3 / B11 / C6–C7 / exploratory F2.1.
+Status: readiness inspected; executable packet and accounting smoke not yet implemented. Mapping: N3 / B11 / C6–C7 / exploratory F2.1.
 Entry: preparation can start now; attempts use 065 or a later pinned CPU revision.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
@@ -45,3 +45,13 @@ was the right path. Carry the accounting result into [077](077-formal-author-eva
 ## Results
 
 Not run. No new independent author attempt or cost claim is recorded.
+
+### Initial readiness inspection
+
+The public D cards/reference mathematics exist, but no complete independent
+model dispatch, generated-token measurement or verifier access-isolation smoke
+was found in the inspected evaluation tooling. No task/arm/model/settings packet
+is frozen and no independent attempt ran. These gaps must remain visible rather
+than substituting designer activity or synthetic token counts for author evidence.
+The [shared readiness inventory](070-readiness-inventory.md) separates preparation
+from the two completed Sprint 070 integrity/worker-policy slices.

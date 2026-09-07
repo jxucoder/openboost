@@ -65,6 +65,13 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 Current execution: [Sprint 069 authoring preparation](v1-sprints/069-authoring-pilot.md)
 and [Sprint 070 coverage/judging](v1-sprints/070-coverage-and-judging.md).
+070 now binds integrity to an evaluator-owned execution freeze, rejecting rehashed
+fold omission. Current A1–A12/A5 workers explicitly request/report summary retention.
+1013 CPU tests pass. The complete ledger, actual access/resource fault probes and
+069 accounting/dispatch packet remain open; see the
+[readiness inventory](v1-sprints/070-readiness-inventory.md). No independent author
+attempt or full search has been launched. Next test actual evaluator/test-label
+access boundaries and full-search resource policy, not more injected status claims.
 Sprint 068 completes explicit full/summary retention: 1000 CPU tests, installed
 M=1/8/32 parity, sixteen paired fits and two profiles pass. All eight full/summary
 pairs have exact predictions/models; 128-round guest RSS falls by about 14.8 MiB

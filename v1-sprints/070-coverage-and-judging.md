@@ -80,3 +80,19 @@ training metadata, without adding a search parameter. All current-worker direct
 recipe and fresh-prediction parity checks run before commit. Other worker families,
 including composed frequency/severity, remain a separate preflight audit item.
 This fixes a known diagnostic-memory policy gap; it is not a full-search launch.
+
+### Evidence checkpoint
+
+The [clean synthetic smoke](../benchmarks/v1/evidence/frozen-judge-070/README.md)
+accepts one valid bundle and rejects eight faults. Source hashes match `63700db`.
+Worker summary policy at `1a7bfd5` passes 86 adapter tests and 1013 total CPU tests,
+including direct full-recipe and fresh inference checks. No core production API
+changed in these slices.
+
+Reflection: two concrete gaps are closed, but their evidence must not be promoted
+to full isolation or coverage acceptance. A producer cannot shrink an externally
+frozen execution matrix; the evaluator must still construct that matrix correctly
+and protect it. Summary retention is explicitly selected in the current worker;
+the full-search environment is still unqualified. See the
+[readiness inventory](070-readiness-inventory.md) for the next bounded work.
+Sprints 069/070 remain open; no independent author or expensive search was launched.

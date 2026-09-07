@@ -13,6 +13,9 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 Current execution: [069 authoring preparation](069-authoring-pilot.md) and
 [070 coverage/judging](070-coverage-and-judging.md), before full real searches.
+070 adds evaluator-frozen manifest binding and explicit current-worker summary
+retention; 1013 CPU tests pass. Actual access/resource enforcement, complete coverage
+and the 069 accounting packet remain open in the [readiness inventory](070-readiness-inventory.md).
 [Sprint 068](068-trace-retention.md) completes opt-in summary retention with
 1000 CPU tests, installed parity, sixteen paired fits and two profiles. Every
 full/summary pair has exact models/predictions; measured RSS savings are scoped

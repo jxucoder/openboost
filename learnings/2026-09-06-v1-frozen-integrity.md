@@ -47,3 +47,12 @@ accounting yet; no author cost or compliance claim is justified.
 ## Commits
 
 - Frozen execution-manifest binding; parent `e9058cc`.
+
+### Clean evidence and reflection
+
+At `63700db`, nine synthetic cases give one valid pass and eight anchored failures.
+Source hashes checked against Git; [raw smoke](../benchmarks/v1/evidence/frozen-judge-070/README.md)
+preserves the producer-relative omission/code-change passes. The new predicate
+binds a trusted execution freeze; it is neither trust establishment nor complete
+coverage generation. Follow the shared readiness inventory for access/resource
+fault workers and the missing author-accounting packet. No new agent or full search.

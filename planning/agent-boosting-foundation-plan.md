@@ -438,7 +438,9 @@ Starting instructions for the next execution model:
 > eight fits/two profiles and six same-container old/new pairs. Sprint 068 now
 > passes explicit retention, installed parity and sixteen exact full/summary fits
 > with two profiles. Prepare 069 accounting/isolation and 070 judging/resources;
-> select summary explicitly in full-search workers before 071's exact preflight.
+> current A1–A12/A5 workers now select summary. 070 also binds an evaluator-owned
+> execution freeze; full coverage and actual access/resource probes remain open.
+> Read the 070 readiness inventory before 071's exact full-search preflight.
 > Retain baseline gaps, cross-host confounds and separate address/RSS scope.
 > Preparation for 069 author measurement and 070 coverage/judging can proceed
 > independently; 071 proves the real selection pipeline before the remaining
