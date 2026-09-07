@@ -41,3 +41,17 @@ Commit preparation before remote execution; evidence follows separately. No push
 
 Preparation validation: 1125 CPU tests passed, one Linux-only skip; 33 focused
 checks, lint and docs pass. Real configuration-05 execution remains pending.
+
+## Clean real result
+
+At `2521619`, all three configuration-05 probes pass with exact fresh replay and
+matching training-only scales. Recorded rounds are XGBoost 63, LightGBM 75/66 and
+CatBoost 66; all requested maxima remain 1000. This is not sustained 1000-round
+execution. All 34 source, 30 outer artifact and fifteen inner artifact hashes
+verify. [Raw evidence](../benchmarks/v1/evidence/a6-deeper-comparators-070/README.md)
+retains the complete histories, models, predictions, logs and resource records.
+
+No failure or retry occurred. The other 234 comparator configurations remain open.
+Next check OpenBoost shared configuration 05 under the unchanged 1800-second
+limit; a timeout must remain a resource failure and stop blind expansion. This
+bounded comparator result does not pass full search, quality, authoring or CUDA.

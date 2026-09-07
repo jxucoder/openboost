@@ -76,3 +76,10 @@ execution highlights a practical CPU runtime concern relative to the earlier
 OpenBoost observation; it is not a matched-quality speed ratio. Next qualify
 deeper/1000-round resource cases before full-matrix expansion, and retain the
 complete coverage/author-accounting obligations.
+
+The [deeper comparator probes](../benchmarks/v1/evidence/a6-deeper-comparators-070/README.md)
+at `2521619` pass configuration 05 on fold zero. Their frozen 1000-round maxima
+stop early at 63/75/66/66 recorded rounds; sustained 1000-round behavior remains
+unmeasured. Next run OpenBoost shared configuration 05 with the unchanged timeout,
+retaining any failure before further expansion. Comparator qualification does
+not qualify OpenBoost or the remaining full-search/coverage/accounting gates.

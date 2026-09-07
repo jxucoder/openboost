@@ -545,3 +545,14 @@ a separate expensive resource check; comparator qualification does not qualify i
 
 Preparation validation: 1125 CPU tests passed, one Linux-only skip; 33 focused
 checks, lint and docs pass. Real configuration-05 execution remains pending.
+
+Clean configuration-05 [real comparator evidence](../benchmarks/v1/evidence/a6-deeper-comparators-070/README.md)
+at `2521619` passes all three fits and exact fresh replay. Recorded rounds are
+63, 75/66 and 66, despite unchanged 1000-round maxima. All 34 source, 30 outer
+artifact and fifteen inner artifact hashes verify. No failure or retry occurred.
+This does not prove sustained 1000-round execution or qualify deeper OpenBoost.
+
+Next bounded check: OpenBoost shared fold-zero configuration 05, with the original
+1800-second timeout and no retry. Preserve a timeout/failure as a gate result and
+stop expansion if observed. Six comparator configurations have now passed, with
+234 still unqualified; full coverage, selection and author accounting stay open.
