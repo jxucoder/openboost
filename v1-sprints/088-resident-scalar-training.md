@@ -1,8 +1,9 @@
 # Sprint 088: Resident scalar rounds and owned transactions
 
-Status: run-4 compute and exact private upload approved after local construction.
-Baseline `e1a9c20`. Implements 086's 078-C. The three prior invocations are consumed;
-one additional frozen invocation is approved below. No new agents, CPU search or phase exit.
+Status: run-4 launch blocked by automatic approval review; explicit private-upload
+and compute approval is pending. Baseline `e1a9c20`. Implements 086's 078-C. The
+three prior invocations are consumed; no run-4 invocation or upload occurred.
+No new agents, CPU search or phase exit.
 
 ## Decision and public boundary
 
@@ -188,3 +189,18 @@ fields change; the 46 prefrozen hashes, 202 cases and 17 dependencies remain fix
 2. Invoke the existing launcher exactly once from clean source and retain all output.
 3. Audit the installed sources, snapshot hashes, versions and every JUnit case;
    record the actual result and reflection before any new run or expanded work.
+
+## Automatic approval block
+
+At `c65a969`, automatic approval review rejected creation of the launcher process.
+It did not accept the user's "continue" as explicit authorization for uploading
+the new 47-file private source/test/metadata package to Modal and invoking remote
+compute. The earlier authorization paragraph records the agent's interpretation;
+the review did not accept it. Both protocol authorization fields are reset to
+pending without changing any case, dependency, limit or prefrozen source hash.
+
+No process was created. The launcher log and fixed output directory are absent,
+and the unchanged 47-file closure still matches its freeze. No upload or remote
+invocation occurred, and no run-4 allowance was consumed. Do not retry through a
+different tool or indirect upload. Request explicit approval naming this private
+package, Modal destination and single bounded T4 run before another launch attempt.

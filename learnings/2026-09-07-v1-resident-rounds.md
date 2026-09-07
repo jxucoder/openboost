@@ -105,11 +105,22 @@ The failure-only custom-learner recipe explicitly uses four bins, preserving the
 
 ## Risks and Follow-ups
 
-The user replied "continue" to the explicit run-4 compute/private-upload request.
-Both protocol approvals are now recorded for the unchanged 47-file package and
-one T4 invocation, with the existing time bounds and no retry. Recheck and commit
-the authorization before dispatch; this approval itself is not device evidence.
-All 33 local manifest/judging tests pass with the approvals recorded. The 46
+Automatic approval review rejected launcher process creation at `c65a969`. The
+stated reason was that "continue" was not explicit enough to authorize the new
+47-file private package upload to Modal and remote compute. The approval
+interpretation below was therefore not accepted. Both protocol fields are reset
+to pending; no source freeze, case, dependency or limit changes. The launcher log
+and fixed output are absent, and all 46 prefrozen hashes still match. No upload or
+GPU invocation occurred. Request explicit approval rather than changing execution
+routes. This is an authorization block, not a failed GPU correctness result.
+All 33 local manifest/judging tests and the documentation build pass after recording
+the block. Whitespace checks pass. The frozen source and test package is unchanged.
+
+Before that rejection, the user replied "continue" to the explicit run-4
+compute/private-upload request. The agent recorded both approvals at `c65a969`
+for the unchanged 47-file package and one T4 invocation, with the existing time
+bounds and no retry. This initial interpretation was not device evidence.
+All 33 local manifest/judging tests passed with that interpretation recorded. The 46
 prefrozen hashes are unchanged, all 202 cases remain present, the 47-file closure
 matches, and the fixed output directory is absent. The existing local Modal
 client is 1.3.0.post1. No package/environment changes are needed for dispatch.
@@ -122,5 +133,7 @@ raw arrays. Device training and formal R/C/A/E acceptance remain unverified.
 ## Commits
 
 `3561738` freezes the design/oracle; `e616451` commits the resident objective/tree
-construction; `807232e` commits runtime/recipe and reflection. Commit the pending
-validation package separately. No push or new remote upload/run without authorization.
+construction; `807232e` commits runtime/recipe and reflection; `3a8ca34` freezes the
+validation package. `c65a969` records the initial approval interpretation; commit
+the review block and pending state separately. No push or remote retry without
+the explicit approval requested by automatic review.
