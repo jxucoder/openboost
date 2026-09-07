@@ -13,7 +13,7 @@ from benchmarks.v1.openboost_worker import fit
 
 from openboost import NumericData, Problem, RunContext
 from openboost.objectives import Normal
-from openboost.recipes import gamma, normal, squared
+from openboost.recipes import gamma, normal, squared, tweedie
 
 
 def test_current_worker_is_available():
@@ -42,14 +42,17 @@ def fixture(app="A1"):
     return job, arrays
 
 
-@pytest.mark.parametrize("app", ["A1", "A11", "A8"])
+@pytest.mark.parametrize("app", ["A1", "A11", "A8", "A9"])
 @pytest.mark.parametrize("patience", [None, 1])
 def test_direct_recipe_parity_and_fresh_prediction(app, patience, tmp_path):
     job, arrays = fixture(app)
     job["early_stopping_rounds"] = patience
-    if app == "A8":
+    if app in {"A8", "A9"}:
         for part in ("train", "validation"):
             arrays["y_" + part] = np.exp(arrays["y_" + part])
+    if app == "A9":
+        arrays["weight_train"] += 0.1
+        arrays["y_train"][0] = 0
     prediction, saved, training = fit(job, arrays)
     problems = []
     for part in ("train", "validation"):
@@ -61,22 +64,30 @@ def test_direct_recipe_parity_and_fresh_prediction(app, patience, tmp_path):
                 y[:, None],
                 data.row_ids,
                 weight=arrays["weight_" + part],
-                raw_width=1 if app in {"A1", "A8"} else 2,
+                raw_width=1 if app in {"A1", "A8", "A9"} else 2,
             )
         )
-    direct = {"A1": squared, "A11": normal, "A8": gamma}[app](
+    direct = {"A1": squared, "A11": normal, "A8": gamma, "A9": tweedie}[app](
         *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
     )
     model = direct.state.model if patience is None else direct.state.best_model
     raw = model.predict(problems[1].data)
-    expected = raw[:, 0] if app in {"A1", "A8"} else Normal.parameters(raw)
-    if app == "A8":
+    expected = raw[:, 0] if app in {"A1", "A8", "A9"} else Normal.parameters(raw)
+    if app in {"A8", "A9"}:
         expected = np.exp(raw[:, 0])
         loss = np.average(
             arrays["y_validation"] / expected + np.log(expected),
             weights=arrays["weight_validation"],
         )
-        assert training["selected_validation_gamma_objective"] == pytest.approx(loss)
+        if app == "A8":
+            assert training["selected_validation_gamma_objective"] == pytest.approx(loss)
+        else:
+            loss = np.average(
+                2 * arrays["y_validation"] / np.sqrt(expected) + 2 * np.sqrt(expected),
+                weights=arrays["weight_validation"],
+            )
+            assert training["selected_validation_tweedie_objective"] == pytest.approx(loss)
+            assert saved["power"] == 1.5
     np.testing.assert_array_equal(prediction, expected)
     assert training["selected_model_identity"] == model.identity
     assert training["stop"]["completed_rounds"] == direct.stop.completed_rounds
@@ -474,3 +485,36 @@ def test_severity_invalid_contracts(bad):
         arrays[bad + "_train"] = np.ones(8)
     with pytest.raises(ValueError):
         fit(job, arrays)
+
+
+@pytest.mark.parametrize(
+    "bad", ["missing", "zero", "negative_target", "exposure", "offset", "power"]
+)
+def test_aggregate_contract_rejects_invalid_inputs(bad):
+    job, arrays = fixture("A9")
+    arrays["y_train"] = np.abs(arrays["y_train"])
+    arrays["y_validation"] = np.abs(arrays["y_validation"])
+    arrays["weight_train"] += 0.1
+    if bad == "missing":
+        arrays.pop("weight_train")
+    elif bad == "zero":
+        arrays["weight_validation"][0] = 0
+    elif bad == "negative_target":
+        arrays["y_train"][0] = -1
+    elif bad == "power":
+        job["config"]["power"] = 1.9
+    else:
+        arrays[bad + "_train"] = np.ones(8)
+    with pytest.raises(ValueError):
+        fit(job, arrays)
+
+
+def test_aggregate_bundle_power_is_validated():
+    job, arrays = fixture("A9")
+    for part in ("train", "validation"):
+        arrays["y_" + part] = np.abs(arrays["y_" + part])
+        arrays["weight_" + part] += 0.1
+    _, saved, _ = fit(job, arrays)
+    saved["power"] = 1.9
+    with pytest.raises(ValueError):
+        predict_saved(saved, arrays["x_validation"])

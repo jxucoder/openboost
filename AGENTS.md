@@ -91,7 +91,9 @@ Sprint 053 connects A5 independent quantiles to all five frozen Bike origins
 with exact fresh replay and independently recomputed pinball scores. Sprint 054
 adds A7 explicit count/exposure binding on all five frozen frequency folds with
 exact replay. Sprint 055 adds A8 claim severity on all five frozen grouped folds.
-Next: A9 aggregate/composition, remaining application adapters/searches and D5 checks.
+Sprint 056 adds direct A9 annualized Tweedie on all five aggregate folds, with
+verified exposure weights and period conversion. Next: matched positive-payment
+frequency-severity integration, remaining adapters/searches and D5 checks.
 These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared

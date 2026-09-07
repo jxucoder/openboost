@@ -1,0 +1,22 @@
+{
+  "selection": "best_validation",
+  "stop": {
+    "rounds": 4,
+    "patience": 3,
+    "min_delta": 0.0,
+    "reference_score": 49.34804057969191,
+    "last_score": 49.34804057969191,
+    "completed_rounds": 4,
+    "stale_rounds": 0,
+    "reason": "budget"
+  },
+  "accepted_commits": 4,
+  "selected_model_identity": "4d7d373be82611dc5e6fbb1c1651c24e7c33cd7e80249e748800d3b59a331b6d",
+  "best_validation_score": 49.34804057969191,
+  "output": "annualized_paid_mean",
+  "selection_metric": "weighted_tweedie_objective",
+  "power": 1.5,
+  "target_units": "annualized_paid_total",
+  "weight_role": "exposure_once",
+  "selected_validation_tweedie_objective": 49.34804057969191
+}

@@ -23,6 +23,7 @@ OUTPUTS = {
     "A6": "multioutput_original_units",
     "A7": "period_count_mean",
     "A8": "positive_claim_mean",
+    "A9": "annualized_paid_mean",
 }
 
 
@@ -62,12 +63,15 @@ def predict_saved(saved, x, *, exposure=None):
         != (
             {"format", "application", "output", "model"}
             | ({"target_scale"} if saved.get("application") == "A6" else set())
+            | ({"power"} if saved.get("application") == "A9" else set())
         )
         or saved["format"] != "openboost-evaluation-v1"
         or saved["application"] not in OUTPUTS
         or saved["output"] != OUTPUTS[saved["application"]]
     ):
         raise ValueError("unsupported evaluation bundle")
+    if saved["application"] == "A9" and saved["power"] != 1.5:
+        raise ValueError("frozen aggregate power differs")
     model = Model.from_record(saved["model"])
     scale = None
     if saved["application"] == "A6":
@@ -79,7 +83,7 @@ def predict_saved(saved, x, *, exposure=None):
         len(scale.mean)
         if scale is not None
         else 1
-        if saved["application"] in {"A1", "A7", "A8"}
+        if saved["application"] in {"A1", "A7", "A8", "A9"}
         else 2
     )
     classification = saved["application"] in {"A2", "A3"}
@@ -110,7 +114,7 @@ def predict_saved(saved, x, *, exposure=None):
         if exposure is None:
             raise ValueError("prediction exposure required")
         return poisson_mean(raw, exposure)["count_mean"]
-    if saved["application"] == "A8":
+    if saved["application"] in {"A8", "A9"}:
         return positive_mean(raw)
     return raw[:, 0] if width == 1 else Normal.parameters(raw)
 

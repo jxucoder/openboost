@@ -1,0 +1,601 @@
+{
+  "scope": "Current A1/A2/A3/A5/A6/A7/A8/A9/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+  "revision": "d7622f4c1d3494d5e6b5019b66db1d80708e6c23",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "-m",
+    "benchmarks.v1.openboost_worker_smoke",
+    "/private/tmp/openboost-aggregate-056",
+    "--applications",
+    "A9"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "machine": "x86_64",
+  "cpu_count": 16,
+  "device": "cpu",
+  "gpu": null,
+  "threads": 1,
+  "memory_cap": null,
+  "packages": {
+    "numpy": "2.3.5",
+    "openboost": "1.0.0rc1"
+  },
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/openboost_worker.py": "f659290d0190e6c507876c715bbbc94d11729c3b8f43fa70634ec42c1ae96494",
+    "benchmarks/v1/openboost_predict.py": "7b0fa9e9231a5259750359f7f191664b93f1fd0160ad85fdb9d7a45c4e790233",
+    "benchmarks/v1/openboost_worker_smoke.py": "225da1c92963e963e38e8cca47fc7da3ae4c69a9c66a8e49a06e4050cd3bd8de",
+    "benchmarks/v1/worker_data.py": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "data": {
+    "A9": {
+      "application": "A9",
+      "dataset": "insurance",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "1e3cd8d7e7bd157745bff7db14534bd1fbcecff3abef8f4341fa1f58a9583f0f"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "89ca61cb3b97a660065989fc29d4083af85a8b78081ff71dba6f316710421bbb"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "e9d6286fffd61b5c7dd91b7a027684fa561d72fe0d57a14f0b846b3eae1e8c20"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "6dcf4429e95ed60936e9fce3a8ce1ad4cfe23524dc1ec3115f5ab2ea2a686153"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "0b43c2d68dcea2f014cc1ef202e89fce4055b61723a241d71dbefd6be62efcaf"
+            },
+            "validation-period": {
+              "path": "0/validation-period.npz",
+              "sha256": "38b3c8adea524a454dbceb35cb3b18f97a77e332da742607b505cb263d38bdc0"
+            },
+            "test-period": {
+              "path": "0/test-period.npz",
+              "sha256": "4a65bf4de6a61bd5434bc9301092c35e4cd0cc636675978d48e0b703978c9a36"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "e8c4d49a1008615af63446d04a049fadb9eb2c65243942defc4765272d1e8dac"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "34d0dd6b71e9c4c95461c3eb03fd32da250352b89fc9c113f9c44ff6b9f2f8b9"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "0e80cdbb30a5f39d7a0aa66133f65d5f59bdc9a0cdab73560c3606ff09130f4e"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "8db330118e63840ca6ba192426d475f17c43478418a684fa1283698c80f789b4"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "722b45843d3dfa5494bdf2ad027a398b74d0dbe3ca3ffe3f432d12549bed3a40"
+            },
+            "validation-period": {
+              "path": "1/validation-period.npz",
+              "sha256": "cc873cd194e217b151323af8c6ca5078357f5b8fc45c97d0c286d1cd624417a4"
+            },
+            "test-period": {
+              "path": "1/test-period.npz",
+              "sha256": "627c93a4f32751fc739ac8a6f1d1b9f6ee36d3213ade9cf5c31847073abdcf7b"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "c2a2c40926e231d1e596f7e4c662219d923e6f926a96df27b4717abd7445f420"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "605ce72c18c2ab8b1b00045782ae01f5a7f22bdb38d4ac24074715e39628a3ab"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "55528b0dadba7c2a172ca8eae888750afa418c91ca22991d62873957466b84a9"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "cabecd0aced4f18a10a6029f372f6f7657a45d5fff5d5bbfafedceb7b1190439"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "aba1155b233c75fc269f02c7ce530fda1146d192d7352c4aa9bf1d0b13907e09"
+            },
+            "validation-period": {
+              "path": "2/validation-period.npz",
+              "sha256": "7b42a1c4f591debe3866e1d42886de0a5d74c7a58dc9586296c20e2c16dd80c3"
+            },
+            "test-period": {
+              "path": "2/test-period.npz",
+              "sha256": "eb23a461b880d1053a00c712426a1f7132d4e1e86c8bfffeffc0db4338cb8438"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "7b3cd2b815775626af17f54545b2bbbc1c0bffd23882005f76a8e67e066cfbf2"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "ccc9af5cc82c64fe0ed87d85e8ce2192fc4c685a7c49695a053ec23ff1b49ead"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "5a8f2913e280a26ace47d7d703759109bf6bcc944de930a3aa1bc4f3dc0da054"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "a77c65f78cd60d0ef0765f78721ad123d509c0b911071ea830efa838aee90e2e"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "96ef0af1e84246bec68d60b9d75655873faa375a2d52b436e83e44becd6c4955"
+            },
+            "validation-period": {
+              "path": "3/validation-period.npz",
+              "sha256": "1f023d3f7bc39802a59b329474b1e2c80dafd07f29fc6fef6b1fd82447548dc5"
+            },
+            "test-period": {
+              "path": "3/test-period.npz",
+              "sha256": "e2c56c144be922042ea2bd671dfd0e99a7d8353d1c8380c767d3418bf7725539"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "668e0a57c88afc0ab5b6cf73cd578f7b84c6327670cf4a312f450ca65a558781"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "d11bbf0515574a7e4b7d42ef82e433a7e279f587bf353b8e06fc50db5de1861b"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "cfc3c8aa97ef035aceb7ed96d798f7ee922c4a2e86c076e4ddd7431b2ee6a27d"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "df794e119ee5272352c86b5400198061d8a289ccf782ff85c4af81c2d1d22abd"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "ffd62d22198e3cbd25e42308cc6e1509cbc5c386fdecd66bf7282ac8292196c8"
+            },
+            "validation-period": {
+              "path": "4/validation-period.npz",
+              "sha256": "e5f545a742edbd9e9a768ad386f2ce59430c3d2a8c7dec99a95edd9885a91b91"
+            },
+            "test-period": {
+              "path": "4/test-period.npz",
+              "sha256": "19a4f4480b0c627a83f3a331fe94004368effa70aa56eb0959d7fdec5bccfbbd"
+            }
+          },
+          "metadata": {
+            "target_units": "annualized paid total; exposure weight once, no offset"
+          }
+        }
+      ],
+      "source_freeze_sha256": "ff95579dd1b95595e87027f38afd512cd986b3182f08f50a7a2139ffb63f291f",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    }
+  },
+  "cells": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-aggregate-056/A9/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 19.495609958001296,
+      "artifacts": {
+        "model.bin": "05cb37e2b36082e4258cea1ee81d26d048d677dcc265df9f06887cf59bec40a2",
+        "training.json": "73c8cf78fd6b2886c56ae11ccf1cd4c5913541482d811562d36423dd8c252c8e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "106aa1fc8ff5625ddc993ae7dedf00a86eef64ba429f5bda7b93616b9d21c6b5"
+      },
+      "application": "A9",
+      "fold": 0,
+      "job": {
+        "application": "A9",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-aggregate-056/A9/0/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-aggregate-056/A9/0/fit/model.bin",
+        "/private/tmp/openboost-aggregate-056/A9/0/fit/features.npz",
+        "/private/tmp/openboost-aggregate-056/A9/0/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        133882
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 51.70042410974455,
+          "last_score": 51.70042410974455,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "af0bd669e888ff1edf10426468ca28ff885f247fd1ff08ca9379253aebb40a83",
+        "best_validation_score": 51.70042410974455,
+        "output": "annualized_paid_mean",
+        "selection_metric": "weighted_tweedie_objective",
+        "power": 1.5,
+        "target_units": "annualized_paid_total",
+        "weight_role": "exposure_once",
+        "selected_validation_tweedie_objective": 51.70042410974455
+      },
+      "replay_sha256": "106aa1fc8ff5625ddc993ae7dedf00a86eef64ba429f5bda7b93616b9d21c6b5"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-aggregate-056/A9/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 20.152059833999374,
+      "artifacts": {
+        "model.bin": "15bdd5f6ba73ea3bb3969191dd63354bd083dfdb34635006abfb4a833b56bfe1",
+        "training.json": "8a1741e37dbff6dd7b0c9eeb3bec738cee13bb1216230899020cffc0a783139f",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "f58ce6bede3751f1b6ff4942dc0fd7a8d35de6798e1d830b88fc3708be239b7e"
+      },
+      "application": "A9",
+      "fold": 1,
+      "job": {
+        "application": "A9",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-aggregate-056/A9/1/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-aggregate-056/A9/1/fit/model.bin",
+        "/private/tmp/openboost-aggregate-056/A9/1/fit/features.npz",
+        "/private/tmp/openboost-aggregate-056/A9/1/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        133784
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 52.3764006685093,
+          "last_score": 52.3764006685093,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "930f666118a59084e6ec65e602a1df9b0b2e8564f8993a462dd597cf060559fd",
+        "best_validation_score": 52.3764006685093,
+        "output": "annualized_paid_mean",
+        "selection_metric": "weighted_tweedie_objective",
+        "power": 1.5,
+        "target_units": "annualized_paid_total",
+        "weight_role": "exposure_once",
+        "selected_validation_tweedie_objective": 52.3764006685093
+      },
+      "replay_sha256": "f58ce6bede3751f1b6ff4942dc0fd7a8d35de6798e1d830b88fc3708be239b7e"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-aggregate-056/A9/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 19.741415374999633,
+      "artifacts": {
+        "model.bin": "72ccb03ca4cc86a168aca7ed639fdd99d6277ab698ac18248ffef363adb4fc57",
+        "training.json": "adcf617c8cdaf2192326bd3c655d727fdaff6b069f5786df39e8efbae51b212c",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "b67bea8283b4c4e20c4689b4c08072fe222b373ad932c7a23864227c054298e0"
+      },
+      "application": "A9",
+      "fold": 2,
+      "job": {
+        "application": "A9",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-aggregate-056/A9/2/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-aggregate-056/A9/2/fit/model.bin",
+        "/private/tmp/openboost-aggregate-056/A9/2/fit/features.npz",
+        "/private/tmp/openboost-aggregate-056/A9/2/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        133785
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 49.34804057969191,
+          "last_score": 49.34804057969191,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "4d7d373be82611dc5e6fbb1c1651c24e7c33cd7e80249e748800d3b59a331b6d",
+        "best_validation_score": 49.34804057969191,
+        "output": "annualized_paid_mean",
+        "selection_metric": "weighted_tweedie_objective",
+        "power": 1.5,
+        "target_units": "annualized_paid_total",
+        "weight_role": "exposure_once",
+        "selected_validation_tweedie_objective": 49.34804057969191
+      },
+      "replay_sha256": "b67bea8283b4c4e20c4689b4c08072fe222b373ad932c7a23864227c054298e0"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-aggregate-056/A9/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 19.94566566600406,
+      "artifacts": {
+        "model.bin": "33e56109bfc0b9440576e5c1a2dc7c7c95f7ce2ae02f5dafa8a3ec82e6300350",
+        "training.json": "53f7125180accfad79f7a03a27a3e50c5438847a99eb8a47c07b02855bc1dc83",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "dffffcb748d3af7b00b0fbbaa88aa3aea636240f7e4c5200b2b7ab2c0241d370"
+      },
+      "application": "A9",
+      "fold": 3,
+      "job": {
+        "application": "A9",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-aggregate-056/A9/3/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-aggregate-056/A9/3/fit/model.bin",
+        "/private/tmp/openboost-aggregate-056/A9/3/fit/features.npz",
+        "/private/tmp/openboost-aggregate-056/A9/3/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        133767
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 46.36994019294434,
+          "last_score": 46.36994019294434,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "bd44db95e658015c525c3dee3a28fabec82f215bc36cd5c3047d8a30e8e892ac",
+        "best_validation_score": 46.36994019294434,
+        "output": "annualized_paid_mean",
+        "selection_metric": "weighted_tweedie_objective",
+        "power": 1.5,
+        "target_units": "annualized_paid_total",
+        "weight_role": "exposure_once",
+        "selected_validation_tweedie_objective": 46.36994019294434
+      },
+      "replay_sha256": "dffffcb748d3af7b00b0fbbaa88aa3aea636240f7e4c5200b2b7ab2c0241d370"
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-aggregate-056/A9/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 19.91552079099347,
+      "artifacts": {
+        "model.bin": "3d5dbdd0e47cd8a82b2d2fd471f663fa03f62f93b8ea7005aa8d556951721787",
+        "training.json": "e582594b3d93277a5fd62bb26c822604cbb7d856f99ef33595ca8604d23f978e",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "2cb450a55f36e48b81f3c145e09dce733a362631d0a055dd2e797887e24f6054"
+      },
+      "application": "A9",
+      "fold": 4,
+      "job": {
+        "application": "A9",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-aggregate-056/A9/4/worker-input.npz"
+      },
+      "replay_command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-aggregate-056/A9/4/fit/model.bin",
+        "/private/tmp/openboost-aggregate-056/A9/4/fit/features.npz",
+        "/private/tmp/openboost-aggregate-056/A9/4/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        133883
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 46.51041983102714,
+          "last_score": 46.51041983102714,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "6b26ac22d0be34cf25b677ed1c99903854b947676468045a4c32298e6813536b",
+        "best_validation_score": 46.51041983102714,
+        "output": "annualized_paid_mean",
+        "selection_metric": "weighted_tweedie_objective",
+        "power": 1.5,
+        "target_units": "annualized_paid_total",
+        "weight_role": "exposure_once",
+        "selected_validation_tweedie_objective": 46.51041983102714
+      },
+      "replay_sha256": "2cb450a55f36e48b81f3c145e09dce733a362631d0a055dd2e797887e24f6054"
+    }
+  ]
+}

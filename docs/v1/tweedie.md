@@ -55,3 +55,9 @@ Independent tests cover three powers, zero-target finite differences, intercepts
 three rounds, annualized weights, rejected steps and persistence. Frequency–
 severity composition, real A9 quality, calibrated tails, AFT/A10 and CUDA remain
 separate required work.
+
+The current direct A9 worker requires annualized targets and positive exposure
+weights, fixes evaluation power at 1.5 and persists annualized output metadata.
+Five frozen aggregate folds pass bounded validation and exact fresh inference
+in Sprint 056. Independent checks verify weights and period-unit conversion.
+Frequency-severity evaluation and full A9 quality/search remain separate work.

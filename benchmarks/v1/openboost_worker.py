@@ -1,4 +1,4 @@
-"""Current CPU A1/A2/A3/A5/A6/A7/A8/A11 trials on frozen encoded train/validation packets.
+"""Current CPU A1/A2/A3/A5/A6/A7/A8/A9/A11 trials on frozen encoded train/validation packets.
 
 Explicit validation targets are required even with fixed budgets. The caller
 controls process threads and resource limits. Test arrays are always rejected.
@@ -22,6 +22,7 @@ from openboost.recipes import (
     poisson,
     quantile,
     squared,
+    tweedie,
 )
 
 if __package__:
@@ -53,6 +54,8 @@ def fit(job, arrays):
     needed = {"x_train", "y_train", "x_validation", "y_validation", "validation_row_ids"}
     if job["application"] == "A7":
         needed |= {"exposure_train", "exposure_validation"}
+    if job["application"] == "A9":
+        needed |= {"weight_train", "weight_validation"}
     if not needed <= set(arrays) or set(arrays) - needed - {"weight_train", "weight_validation"}:
         raise ValueError("explicit train/validation arrays only; no test arrays")
     external_ids = np.asarray(arrays["validation_row_ids"])
@@ -82,7 +85,7 @@ def fit(job, arrays):
             raise ValueError("explicit canonical classification count required")
         classes = ClassSchema(tuple(range(count)))
     problems = []
-    width = 1 if job["application"] in {"A1", "A5", "A7", "A8"} else 2
+    width = 1 if job["application"] in {"A1", "A5", "A7", "A8", "A9"} else 2
     if classification:
         width = 1 if job["application"] == "A2" else count
     multi = job["application"] == "A6"
@@ -109,6 +112,10 @@ def fit(job, arrays):
         # Packet IDs remain in emitted artifacts; public data uses local integer rows.
         ids = np.arange(len(x))
         data = NumericData(x, ids, names)
+        if job["application"] == "A9":
+            weight = np.asarray(arrays["weight_" + part])
+            if weight.shape != (len(x),) or not np.isfinite(weight).all() or np.any(weight <= 0):
+                raise ValueError("positive aligned aggregate exposure weights required")
         structure = None
         if job["application"] == "A7":
             exposure = np.asarray(arrays["exposure_" + part])
@@ -141,8 +148,11 @@ def fit(job, arrays):
         "A6": multi_squared,
         "A7": poisson,
         "A8": gamma,
+        "A9": tweedie,
         "A11": normal,
     }[job["application"]]
+    if job["application"] == "A9":
+        cfg["power"] = 1.5
     result = recipe(
         *problems,
         context=RunContext("evaluation", job["seed"]),
@@ -157,6 +167,8 @@ def fit(job, arrays):
         output=OUTPUTS[job["application"]],
         model=model.record(),
     )
+    if job["application"] == "A9":
+        saved["power"] = 1.5
     if multi:
         saved["target_scale"] = target_scale
     prediction = predict_saved(
@@ -188,6 +200,18 @@ def fit(job, arrays):
             target_units="positive_claim_amount",
             raw_units="log_mean",
             selected_validation_gamma_objective=Gamma().loss(
+                problems[1], model.predict(problems[1].data)
+            ),
+        )
+    if job["application"] == "A9":
+        from openboost.objectives import Tweedie
+
+        training.update(
+            selection_metric="weighted_tweedie_objective",
+            power=1.5,
+            target_units="annualized_paid_total",
+            weight_role="exposure_once",
+            selected_validation_tweedie_objective=Tweedie(1.5).loss(
                 problems[1], model.predict(problems[1].data)
             ),
         )
