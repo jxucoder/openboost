@@ -103,9 +103,12 @@ training extension. [Raw evidence and retrospective](benchmarks/v1/evidence/cuda
 retain both failures, all 79 raw artifacts and the separate known split near-tie.
 
 All six allowances are consumed; no retry or additional upload is authorized.
-Stop at the planned retrospective in [090](v1-sprints/090-normal-device-construction.md).
-Its next-tranche proposal calls for actual failing-state telemetry and an explicit
-numerical acceptance investigation before more CUDA recipes. Do not label the
+After the planned retrospective in [090](v1-sprints/090-normal-device-construction.md),
+the user approved [091's local diagnostics](v1-sprints/091-normal-acceptance-diagnostics.md).
+Actual failing-state telemetry and an explicit numerical acceptance investigation
+precede more CUDA recipes. Independent math demonstrates a float64 full-loss
+comparison counterexample at a saved D2 base; this is not the failed trace.
+Do not label the
 near-stationary explanation proven: the failed tests did not retain intermediate
 loss/raw bits. No test/tolerance was changed, and full Normal acceptance remains
 open. Original P7/E4 and [069 accounting/isolation](v1-sprints/069-authoring-pilot.md)

@@ -57,8 +57,10 @@ frozen reference's ordered backtracking decisions near a stationary constant bas
 The cause is not yet proven. All nineteen saved models replay without CUDA or
 the training extension; the separate split near-tie remains a known limitation.
 
-All six allowances are consumed; no retry occurred. Stop at [090's retrospective](090-normal-device-construction.md),
-with an acceptance-policy investigation proposed before more CUDA families.
+All six allowances are consumed; no retry occurred. After [090's retrospective](090-normal-device-construction.md),
+the user approved [091's local acceptance investigation](091-normal-acceptance-diagnostics.md)
+before more CUDA families. Independent high-precision differences and separate
+device observations precede a production policy decision.
 Normal conformance, original P7/E4, 069 accounting/isolation and full R/C/A scope
 remain open. Further hardware needs a concrete frozen package and a new allowance.
 
