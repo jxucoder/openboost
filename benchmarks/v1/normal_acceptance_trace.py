@@ -4,6 +4,8 @@ import argparse
 import hashlib
 import json
 import math
+import platform
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -202,11 +204,25 @@ if __name__ == "__main__":
     args = parser.parse_args()
     report = analyze(json.loads(args.trace.read_text()))
     report["trace_sha256"] = hashlib.sha256(args.trace.read_bytes()).hexdigest()
+    root = Path(__file__).resolve().parents[2]
     report["analysis_sources"] = {
-        str(p): hashlib.sha256(p.read_bytes()).hexdigest()
+        str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in (
             Path(__file__),
-            Path(__file__).resolve().parents[2] / "tests/v1/reference/normal_acceptance.py",
+            *(
+                root / "tests/v1/reference" / name
+                for name in (
+                    "normal_acceptance.py",
+                    "device_normal.py",
+                    "device_rounds.py",
+                    "device_splits.py",
+                    "device_histogram.py",
+                )
+            ),
         )
     }
+    report["environment"] = dict(
+        python=platform.python_version(), numpy=np.__version__, os=platform.platform()
+    )
+    report["argv"] = sys.argv
     args.output.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n")

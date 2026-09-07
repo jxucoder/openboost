@@ -26,7 +26,7 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1434 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1474 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.
@@ -62,7 +62,9 @@ the user approved [091's local acceptance investigation](091-normal-acceptance-d
 before more CUDA families. Independent high-precision differences and separate
 device observations precede a production policy decision.
 Normal conformance, original P7/E4, 069 accounting/isolation and full R/C/A scope
-remain open. Further hardware needs a concrete frozen package and a new allowance.
+remain open. The [run-7 request](091-acceptance-run7-request.md) freezes 70 files and
+385 cases, preserving all 383 old cases. Both source upload and one T4 allowance
+remain pending; diagnostic completion is distinct from repaired conformance.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

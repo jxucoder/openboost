@@ -95,3 +95,35 @@ Focused verification: the same CPU command now includes
 -o addopts= -q`; neither executes locally. Production/changed-file Ruff and MkDocs
 pass; MkDocs retains the pre-existing execution-page evidence-link warning.
 No production source, old test, tolerance, failed artifact or all-pass judge changes.
+
+## Frozen diagnostic request and final local verification
+
+`e0a043b` commits the observation harness and counterexample. The subsequent
+[run-7 request](../v1-sprints/091-acceptance-run7-request.md) freezes **70 files**,
+**385 cases** and **78 retained JSON files**, under the same T4/2-CPU/8192-MiB,
+900-second function/600-second test ceilings, 2-MiB artifact limit and no retry.
+The CLI report records all analysis/reference hashes and its CPU environment.
+Both compute and upload fields remain pending; neither prior approval nor a
+complete trace is a new hardware allowance or a conformance pass.
+
+- Full `OPENBOOST_BACKEND=cpu UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run
+  --no-sync pytest tests/ -m 'not gpu and not benchmark' -q --tb=short`:
+  **1474 passed, one Linux-only skip**; `/tmp/openboost-091-cpu.log`.
+- Seven new `tests/v1/test_cuda_acceptance_manifest.py` checks verify the exact
+  source closure, unchanged 28 core files and all old verifiers/references, all
+  383 old cases followed by two diagnostics, resource bounds, both pending
+  allowances and the unchanged strict judge. Two successful diagnostic cases
+  cannot convert two original failures into a pass.
+- Copy exactly `snapshot_paths` to a disposable directory and collect with
+  installed Python `-I -m pytest <declared files> --rootdir=<snapshot>
+  --collect-only -o addopts= -q` outside the repository: all **385** cases collect.
+  The installed core's 28 source hashes match the frozen package. Log:
+  `/tmp/openboost-091-isolated-collection.log`. No GPU execution or emulation.
+- Production/new-support Ruff and MkDocs pass. The old docs evidence-link warning
+  is unchanged. Staged freeze is inspected before commit.
+
+Reflection: enough local work is now complete to make the next allowance concrete.
+The missing observation is actual device state, not another CPU-only theory or a
+new recipe. Measure it once, retain any overall failure and revisit acceptance
+semantics explicitly. No policy correction, publication, push or author attempt
+is claimed by this sprint's local results.

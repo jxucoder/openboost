@@ -1,8 +1,9 @@
 # Sprint 091: Measure the Normal acceptance boundary
 
-Status: local investigation authorized by the user's approval after the run-6
-retrospective. All six hardware allowances are consumed. No new device execution
-or source upload is authorized by this card.
+Status: local preparation complete; [run 7](091-acceptance-run7-request.md) is
+frozen with upload/compute pending. Local investigation was authorized by the
+user's approval after the run-6 retrospective. All six previous hardware allowances
+are consumed. No new device execution or source upload is authorized by this card.
 
 ## Question and construction plan
 
@@ -72,5 +73,26 @@ that distinction while constructing the oracle and device observations.
   as a failure, and measure named fields and actual prepared inputs. Constructor
   geometry occurs before run initialization and is captured separately. Logging
   ownership guards and restoration require actual device verification.
-- Next freeze the exact import closure and budget. No production acceptance
-  change or new compute/upload approval follows from these local results.
+- `e0a043b`: original-test observation harness and retained counterexample.
+- [Run 7](091-acceptance-run7.json) freezes 70 files and 385 cases with 78 declared
+  JSON artifacts, the same pinned dependencies/resource ceilings and no retry.
+  Seven dispatch/freeze checks pass. Full CPU regression: **1474 passed**, one
+  Linux-only skip. Isolated installed-core collection: all 385 cases, no execution.
+  Production/changed-file Ruff and MkDocs pass. Upload and compute remain pending.
+
+## Reflection at the request boundary
+
+The second algorithm family exposed a numerical issue that belongs to the
+foundation's acceptance boundary. A float64 full-loss reference is insufficient
+as a universal arbiter for near-stationary float32 candidates. The new oracle
+demonstrates both false improvements and hidden real improvements, which rules out
+a blanket epsilon as an evidence-based fix. No source correction is justified
+until the device's exact failing inputs, reductions and decisions are retained.
+
+The next run intentionally measures the unresolved failure without changing its
+contract. Its purpose is to choose a defensible comparison/precision policy, not
+accumulate passing tests or claim another algorithm family complete. Preserve
+the original failure and the split near-tie independently. After one separately
+authorized result, reflect again before correcting semantics or expanding CUDA.
+Original P7/E4, remaining required recipes and actual independent author benefit
+stay on the plan; no author attempt, push or hardware retry occurred here.

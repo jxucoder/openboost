@@ -112,7 +112,10 @@ Do not label the
 near-stationary explanation proven: the failed tests did not retain intermediate
 loss/raw bits. No test/tolerance was changed, and full Normal acceptance remains
 open. Original P7/E4 and [069 accounting/isolation](v1-sprints/069-authoring-pilot.md)
-remain required. A new hardware package needs a concrete freeze and allowance.
+remain required. The [run-7 request](v1-sprints/091-acceptance-run7-request.md) now
+freezes 70 files and 385 cases: all 383 old cases plus two separate observations.
+Both upload and compute remain pending. Diagnostic completion does not repair
+the original failures or change the all-pass judge.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
@@ -126,7 +129,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1434 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1474 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
