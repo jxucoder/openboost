@@ -258,3 +258,16 @@ retention; the container requests two CPUs and 8192 MiB with a 1900-second timeo
 Record actual fit status, ru_maxrss in Linux bytes, and exact fresh validation
 replay. The 300-round budget includes preregistered patience 50, so legitimate
 early stopping is not a budget shrink. No full search or test release is implied.
+
+### Dispatch blocked before upload
+
+Automatic approval review rejected the Modal command before execution. It requires
+explicit authorization for this real Parkinsons train/validation payload despite
+prior general Modal authorization. No remote probe or upload occurred. Do not
+retry via another mechanism. The local packet is 1494662 bytes: training features
+3487 by 38 and targets 3487 by 2; validation features 1151 by 38 and targets 1151
+by 2, plus 1151 validation row IDs. No test files are allowlisted.
+
+Local CPU validation: 1038 passed, one Linux-only skip; lint, compilation and docs
+pass. The committed harness is ready for review; actual resource/replay outcomes
+remain unknown until payload upload is explicitly approved.
