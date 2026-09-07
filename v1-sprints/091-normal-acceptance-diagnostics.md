@@ -60,3 +60,17 @@ and `9.73e-17`. This falsifies the assumption that a float64 total-loss comparis
 always resolves adjacent float32 candidates correctly. It does not establish
 which round/channel or candidate caused either failed GPU assertion. Preserve
 that distinction while constructing the oracle and device observations.
+
+## Local slices
+
+- `ba46b3a`: independent difference oracle, fourteen CPU checks and study producer.
+- The clean-revision [study artifact](../benchmarks/v1/evidence/normal-acceptance-local-091/README.md)
+  is retained separately from device evidence. Added reproduction/trace-analysis
+  checks bring the focused suite to 45 passes, including twelve run-6 archive
+  checks. Two new real-CUDA observation cases collect without executing.
+- The wrappers call the unchanged failing test, record the original assertion
+  as a failure, and measure named fields and actual prepared inputs. Constructor
+  geometry occurs before run initialization and is captured separately. Logging
+  ownership guards and restoration require actual device verification.
+- Next freeze the exact import closure and budget. No production acceptance
+  change or new compute/upload approval follows from these local results.

@@ -1,6 +1,8 @@
 """Independent likelihood differences, including a retained-input counterexample."""
 
+import json
 from decimal import Decimal
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -78,3 +80,23 @@ def test_recorded_device_base_neighbors_reverse_float64_improvement_sign():
         assert row["high_precision"]["signs"] == [1, 1]
         assert (row["float64_nll_difference"] < 0) == (row["channel"] == 0)
     assert report["neighbors"][0]["float64_nll_difference"] == -np.spacing(report["float64_nll"])
+
+
+def test_committed_local_study_reproduces_numerical_results():
+    path = (
+        Path(__file__).resolve().parents[2]
+        / "benchmarks/v1/evidence/normal-acceptance-local-091/neighbors.json"
+    )
+    stored, current = json.loads(path.read_text()), analyze()
+    assert stored["dirty"] is False
+    assert stored["source_revision"].startswith("ba46b3a")
+    for key in (
+        "neighbors",
+        "base",
+        "base_float32_bits",
+        "float64_nll_bits",
+        "input_manifest_sha256",
+        "input_model",
+        "original_inputs",
+    ):
+        assert stored[key] == current[key]

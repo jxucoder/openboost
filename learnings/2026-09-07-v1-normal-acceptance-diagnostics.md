@@ -55,3 +55,43 @@ stay open; no push occurred.
 ## Commits
 
 - `abd5b1a` — prior run-6 retrospective and proposed investigation.
+- `ba46b3a` — independent loss-difference oracle and local sprint plan.
+
+## Observation construction and local verification
+
+The [neighbor artifact](../benchmarks/v1/evidence/normal-acceptance-local-091/README.md)
+was generated at clean `ba46b3a`; its mathematical results reproduce exactly.
+The separate device diagnostic calls the original failing test with temporary
+wrappers around initialization, growth, geometry/direction, field/leaf operations
+and proposal/resolve. It captures values and bits before the original assertions,
+then restores every patched method. Only the original coefficient-list assertion
+is retained as a known conformance failure inside a successful measurement;
+unexpected assertions/exceptions propagate. Partial JSON survives either path.
+
+Read-only diagnostic access to private prepared target/offset handles and the base
+is deliberate: these records lack a public export operation. It establishes actual
+stored inputs instead of assuming a host cast matched preparation. No production
+API is expanded for diagnostic convenience. All other raw snapshots are public
+owned copies. Guards check buffer/record sets, run serial, state/proposal ownership,
+live bytes and uploads around observation; actual device behavior remains unrun.
+
+Source inspection caught two harness errors before hardware: Normal initialization
+calls geometry before the run is initialized, and field roles describe weighting
+while field names identify gradient/curvature. The wrapper now captures constructor
+geometry separately; offline analysis indexes named fields. A CPU analytic record
+with reordered columns verifies that distinction. Synthetic analysis-test records
+are explicitly labeled and never used as device evidence.
+
+The offline analyzer compares captured gradients/Fisher and reductions to original
+rows at exactly the stored inputs, and loss differences at both precisions. It
+checks bit integrity, trial halving/parents, strict acceptance, state continuity,
+rejection identity, accepted snapshots and independent best-prefix selection.
+Observed values never drive the original algorithm's decisions.
+
+Focused verification: the same CPU command now includes
+`tests/v1/test_normal_acceptance_trace.py` and passes **45 tests** (15 oracle/study,
+18 analysis, twelve archive checks). Both new GPU cases collect with
+`uv run --no-sync pytest tests/v1/test_device_normal_acceptance_cuda.py --collect-only
+-o addopts= -q`; neither executes locally. Production/changed-file Ruff and MkDocs
+pass; MkDocs retains the pre-existing execution-page evidence-link warning.
+No production source, old test, tolerance, failed artifact or all-pass judge changes.
