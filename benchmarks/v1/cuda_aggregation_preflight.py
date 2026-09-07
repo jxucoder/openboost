@@ -42,30 +42,82 @@ def judge_junit(xml, expected):
     )
 
 
-def main(output):
-    import modal
-
-    repo = Path(__file__).resolve().parents[2]
-    if subprocess.check_output(["git", "status", "--porcelain"], cwd=repo):
-        raise ValueError("clean source required")
-    protocol = json.loads((repo / PROTOCOL).read_text())
-    output.mkdir(parents=True, exist_ok=False)
-    paths = sorted((repo / "src/openboost").rglob("*.py")) + [
+def snapshot_paths(repo, protocol_path, protocol):
+    """Exact upload closure; never upload an entire working tree or hidden task cards."""
+    return sorted((repo / "src/openboost").rglob("*.py")) + [
         repo / p
         for p in (
             "pyproject.toml",
             "README.md",
             "LICENSE",
-            PROTOCOL,
+            protocol_path,
             "benchmarks/v1/cuda_aggregation_preflight.py",
             "tests/__init__.py",
             "tests/v1/__init__.py",
             "tests/v1/reference/__init__.py",
             "tests/v1/reference/device_histogram.py",
             "tests/v1/test_device_histogram_reference.py",
+            *protocol.get("support_files", []),
             *protocol["test_files"],
         )
     ]
+
+
+def snapshot_hashes(repo, paths):
+    if len(set(paths)) != len(paths):
+        raise ValueError("duplicate snapshot paths")
+    return {str(p.relative_to(repo)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+
+
+def check_frozen_sources(protocol_path, protocol, sources):
+    """The protocol's own hash is recorded at dispatch; all other files are prefrozen."""
+    if "frozen_sources" in protocol and protocol["frozen_sources"] != {
+        p: digest for p, digest in sources.items() if p != protocol_path
+    }:
+        raise ValueError("source freeze changed; review and freeze before dispatch")
+
+
+def check_dispatch(repo, output, protocol):
+    if protocol.get("authorization", "approved") != "approved":
+        raise ValueError("new GPU allowance is pending; no remote dispatch")
+    if "output" in protocol and output.resolve() != (repo / protocol["output"]).resolve():
+        raise ValueError("the single-run output location is fixed")
+    if output.exists():
+        raise ValueError("run output already exists; the allowance cannot be reused")
+
+
+def judge_run(result, junit, protocol, sources):
+    verdict = judge_junit(junit, protocol["expected_cases"])
+    expected_sources = {k: v for k, v in sources.items() if k.startswith("src/openboost/")}
+    versions = {p.split("==")[0]: p.split("==")[1] for p in protocol["packages"]}
+    verdict["installed_sources_match"] = result.get("installed_sources") == expected_sources
+    verdict["versions_match"] = result.get("packages") == versions
+    verdict["snapshot_sources_match"] = (
+        result.get("snapshot_sources") == sources if "frozen_sources" in protocol else None
+    )
+    verdict["passed"] = (
+        verdict["passed"]
+        and result.get("exit_code") == 0
+        and verdict["installed_sources_match"]
+        and verdict["versions_match"]
+        and verdict["snapshot_sources_match"] is not False
+    )
+    return verdict
+
+
+def main(output, *, protocol_path=PROTOCOL):
+    repo = Path(__file__).resolve().parents[2]
+    protocol = json.loads((repo / protocol_path).read_text())
+    check_dispatch(repo, output, protocol)
+    if subprocess.check_output(["git", "status", "--porcelain"], cwd=repo):
+        raise ValueError("clean source required")
+    paths = snapshot_paths(repo, protocol_path, protocol)
+    sources = snapshot_hashes(repo, paths)
+    check_frozen_sources(protocol_path, protocol, sources)
+
+    import modal
+
+    output.mkdir(parents=True, exist_ok=False)
     manifest = dict(
         revision=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip(),
         dirty=False,
@@ -73,9 +125,7 @@ def main(output):
         protocol=protocol,
         started=datetime.now(timezone.utc).isoformat(),
         status="running",
-        sources={
-            str(p.relative_to(repo)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths
-        },
+        sources=sources,
         requested=dict(cpu=2, memory_mib=8192, gpu="T4", timeout_seconds=900, retries=0),
     )
 
@@ -91,7 +141,7 @@ def main(output):
     image = image.uv_pip_install(
         "/snapshot", extra_options="--no-deps --no-build-isolation", uv_version="0.12.1"
     )
-    app = modal.App("openboost-v1-cuda-aggregation")
+    app = modal.App(protocol.get("app_name", "openboost-v1-cuda-aggregation"))
 
     @app.function(
         image=image,
@@ -116,7 +166,7 @@ def main(output):
         import openboost
 
         started = time.perf_counter()
-        config = json.loads(Path("/snapshot/" + PROTOCOL).read_text())
+        config = json.loads(Path("/snapshot/" + protocol_path).read_text())
         installed = Path(openboost.__file__).parent
         versions = {
             p.split("==")[0]: importlib.metadata.version(p.split("==")[0])
@@ -148,6 +198,11 @@ def main(output):
             cuda_runtime=cp.cuda.runtime.runtimeGetVersion(),
             cuda_driver=cp.cuda.runtime.driverGetVersion(),
         )
+        if "frozen_sources" in config:
+            result["snapshot_sources"] = {
+                p: hashlib.sha256(Path("/snapshot", p).read_bytes()).hexdigest()
+                for p in (*config["frozen_sources"], protocol_path)
+            }
         work = Path("/tmp/openboost-aggregation")
         work.mkdir()
         command = [
@@ -184,18 +239,8 @@ def main(output):
         manifest["result"] = result
         for name, key in (("pytest.log", "log"), ("junit.xml", "junit")):
             (output / name).write_text(result.pop(key))
-        verdict = judge_junit((output / "junit.xml").read_text(), protocol["expected_cases"])
-        expected_sources = {
-            k: v for k, v in manifest["sources"].items() if k.startswith("src/openboost/")
-        }
-        versions = {p.split("==")[0]: p.split("==")[1] for p in protocol["packages"]}
-        verdict["installed_sources_match"] = result["installed_sources"] == expected_sources
-        verdict["versions_match"] = result["packages"] == versions
-        verdict["passed"] = (
-            verdict["passed"]
-            and result["exit_code"] == 0
-            and verdict["installed_sources_match"]
-            and verdict["versions_match"]
+        verdict = judge_run(
+            result, (output / "junit.xml").read_text(), protocol, manifest["sources"]
         )
         (output / "verdict.json").write_text(json.dumps(verdict, indent=2) + "\n")
         manifest.update(

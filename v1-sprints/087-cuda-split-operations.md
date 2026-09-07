@@ -1,6 +1,6 @@
 # Sprint 087: Public CUDA candidate and feasibility composition
 
-Status: local construction after the user's continuation at the 078-A retrospective.
+Status: local implementation and run package committed; new GPU allowance pending.
 Baseline `4251a36`. Implements 086's 078-B; it is not a new phase or GPU allowance.
 Both 085 device runs are consumed. No further remote dispatch is authorized yet.
 
@@ -113,3 +113,50 @@ from arbitrary custom-kernel integration, which remains unimplemented. Candidate
 storage and ordered routing prioritize bounded correctness; performance and
 resident training are not established. Complete the run package before requesting
 hardware. Required author, application, quality and end-to-end cost gates remain.
+
+## Concrete run-3 request
+
+Implementation `0bcb52f` and the exhaustive CPU oracle `0ba39a3` are frozen in
+[078-splits-run3.json](078-splits-run3.json). The new allowance is **pending**.
+The package includes exactly 88 preregistered cases: 55 new split cases and all
+33 previous storage/aggregation cases, with the same 17 pinned dependencies.
+It freezes hashes of 38 uploaded files; the protocol itself is the 39th file and
+is hashed in the dispatch manifest. Installed production modules, the uploaded
+snapshot and package versions must all match, alongside an exact passing JUnit
+case matrix and zero exit code. Missing/skipped/duplicated cases fail acceptance.
+
+Requested resources: one additional T4 invocation, two requested CPU cores and
+8192 MiB requested host memory, function timeout 900 seconds, test timeout 600
+seconds, no automatic retries and one container maximum. Private CuPy pools stay
+within 16 MiB; this excludes CUDA context/driver/JIT allocations. The original
+8192-row aggregation regression remains the largest fixture. New split fixtures
+are at most eight rows. No training, performance search or real-data evaluation
+is included. A failed dispatch consumes this allowance; no automatic repair run.
+
+After explicit user approval, record authorization in the protocol and commit
+that state before running from clean source:
+
+```bash
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python \
+  -m benchmarks.v1.cuda_splits_preflight benchmarks/v1/evidence/cuda-splits-078
+```
+
+The launcher rejects pending/consumed authorization, changed source hashes, dirty
+source, a different output location or an existing output directory. It records
+the runtime/driver versions separately from the CUDA image tag. Preserve failures,
+logs, JUnit, installed hashes and verdict under that fixed evidence directory.
+Hardware success or failure is the next retrospective boundary before 078-C.
+
+Local package verification: 17 manifest/judge checks pass (nine new and eight
+existing); collection matches all 88 cells. Production and changed support lint,
+documentation build and offline wheel/sdist build pass. All 23 production modules
+in the built wheel match the frozen source bytes. The pending launcher fails
+before importing Modal or creating output. No remote call, upload, device compile
+or GPU execution occurred. Full CPU regression remains the 1185-pass/one-skip
+implementation check above; the nine new harness checks are additional local tests.
+
+Reflection: foundation construction progressed through a public algorithm-change
+boundary without treating implementation as device evidence. Keep the next step
+bounded to validating this boundary. Do not accumulate a resident trainer on top
+of unverified kernels or restart CPU throughput work. Independent author accounting
+and all required application/device gates remain open.

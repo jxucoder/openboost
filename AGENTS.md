@@ -85,6 +85,9 @@ run freeze and allowance. The user continued after reflection into
 [087 local split construction](v1-sprints/087-cuda-split-operations.md).
 078-B candidate/feasibility/route/leaf operations retain D2 independent information;
 implementation and 55 real-device cases exist, but hardware validation is pending.
+The [run-3 package](v1-sprints/078-splits-run3.json) freezes those cases plus all
+33 previous cases and a proposed single T4 invocation. Its authorization remains
+pending; do not dispatch until the user grants that concrete new allowance.
 CUDA training and accepted/proposal integration remain unimplemented.
 Aggregation checks do not pass transaction or boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity

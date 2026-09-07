@@ -38,8 +38,9 @@ further hardware work requires a concrete new freeze and allowance.
 See [078 evidence and reflection](078-cuda-scalar-path.md).
 The user continued into [087 local split construction](087-cuda-split-operations.md):
 the exhaustive oracle and public scores/masks/routes/leaves are implemented.
-Fifty-five new real-device cases await hardware validation. Next, freeze the
-installed-wheel run package. No new GPU allowance is implied.
+Fifty-five new real-device cases await hardware validation. The
+[88-case run-3 package](078-splits-run3.json) is frozen and locally checked;
+it includes all 33 previous device cases. A new one-run allowance remains pending.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

@@ -43,6 +43,14 @@ Production and changed-test lint pass; all 55 new GPU tests collect locally.
 Collection is not kernel compilation or correctness validation. There is no new
 GPU artifact or author-independence evidence.
 
+The run-3 package freezes 88 real-device cases and 38 source files plus the
+protocol's dispatch hash. Seventeen local judge/manifest tests pass (nine new,
+eight existing), including actual collection equality, source drift, missing
+installed/snapshot/version evidence, pending/consumed authorization and output
+reuse. Documentation, lint and offline wheel/sdist builds pass; the wheel's 23
+production modules match the frozen source bytes. The pending CLI exits before
+Modal import or output creation. No GPU allowance is consumed by these checks.
+
 ## Failed Attempts
 
 The candidate API is absent at the starting revision; no remote experiment is run.
@@ -53,8 +61,13 @@ Distinguish padded slots from actual candidates; preserve original row order and
 identity. Validate schemas and buffer/batch ownership before dispatch. Counts and
 routes are exact; the original E1 tolerances and mathematical failures remain.
 No CPU search expansion, author-cost claim or training implementation is included.
+The new run request is one T4 invocation, 900-second function/600-second tests,
+16-MiB private pools, two requested CPU cores/8192-MiB host capacity, zero retries.
+Actual hardware behavior remains unknown. Preserve the distinction between
+runtime versions, driver support, image labels and package metadata.
 
 ## Commits
 
-`0ba39a3` freezes the oracle before implementation. Commit subsequent local slices
-separately. Do not push.
+`0ba39a3` freezes the oracle before implementation; `0bcb52f` adds the operations
+and pending real-device cases. The next commit freezes the shared executor guards
+and run-3 package. Nothing is pushed.
