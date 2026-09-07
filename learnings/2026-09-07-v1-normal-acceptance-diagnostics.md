@@ -127,3 +127,12 @@ The missing observation is actual device state, not another CPU-only theory or a
 new recipe. Measure it once, retain any overall failure and revisit acceptance
 semantics explicitly. No policy correction, publication, push or author attempt
 is claimed by this sprint's local results.
+
+## Run-7 approval
+
+The user explicitly approved the frozen 70-file Modal upload and one bounded T4
+invocation after reviewing the concrete request at `1e0acfb`. Both authorization
+fields are approved. Source hashes, cases, resource ceilings and retained outputs
+remain unchanged. Recheck the freeze, commit this approval, dispatch once, archive
+even an overall failure, and stop for the planned numerical-policy retrospective.
+No retry, broader upload, production correction or push is included.

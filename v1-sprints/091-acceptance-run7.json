@@ -1,7 +1,7 @@
 {
   "scope": "091 Normal acceptance diagnostics on the original failing call path; all 383 run-6 cases and production sources unchanged. Diagnostic completeness does not repair conformance. No new acceptance policy, GPU recipe, quality, author benefit or performance claim.",
-  "authorization": "pending",
-  "upload_authorization": "pending",
+  "authorization": "approved",
+  "upload_authorization": "approved",
   "require_upload_authorization": true,
   "upload_destination": "Modal",
   "upload_file_count": 70,
