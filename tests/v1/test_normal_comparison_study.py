@@ -1,10 +1,27 @@
 """Full historical accounting and independent comparison-cohort preregistration."""
 
+import hashlib
 import json
+import subprocess
 from collections import Counter
 from decimal import Decimal
 
 from benchmarks.v1.normal_comparison_study import ROOT, mapping, study
+
+
+def test_archived_clean_study_reproduces_every_case_and_source():
+    saved = json.loads(
+        (ROOT / "benchmarks/v1/evidence/normal-comparison-092/study.json").read_text()
+    )
+    assert saved["dirty"] is False and saved["source_revision"].startswith("a5967b5")
+    current = study()
+    for key in ("cases", "counts", "sources", "historical_mapping_sha256", "device_execution"):
+        assert saved[key] == current[key]
+    for path, digest in saved["sources"].items():
+        committed = subprocess.check_output(
+            ["git", "show", saved["source_revision"] + ":" + path], cwd=ROOT
+        )
+        assert hashlib.sha256(committed).hexdigest() == digest
 
 
 def test_every_original_case_has_one_explicit_disposition_and_no_revised_pass():

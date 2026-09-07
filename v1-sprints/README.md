@@ -26,7 +26,7 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1478 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1506 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.
@@ -68,8 +68,10 @@ All seven allowances are consumed; no retry occurred.
 [091's retrospective](091-normal-acceptance-diagnostics.md) is complete. The user
 approved local [092 construction](092-normal-comparison-design.md). Its independent
 [numerical experiment](092-normal-comparison-mathematics.md) precedes the public
-loss-change operation and three consumers; historical/revised cohorts must be
-explicit before production changes. Original P7/E4, 069 accounting/isolation and full
+loss-change operation and three consumers. The
+[106-case evidence](../benchmarks/v1/evidence/normal-comparison-092/README.md) and
+[complete historical mapping](092-comparison-cohorts.md) close 092-A; 092-B is the
+next approved local slice. Original P7/E4, 069 accounting/isolation and full
 R/C/A scope remain open. No additional upload, run or author attempt is authorized.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external

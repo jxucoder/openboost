@@ -118,7 +118,11 @@ The user approved local [092 comparison construction](v1-sprints/092-normal-comp
 independent loss-change mathematics and explicit numerical resolution, then a public
 objective operation and separate training/best/stopping consumers. The independent
 [092-A numerical experiment](v1-sprints/092-normal-comparison-mathematics.md) precedes
-production changes and adds no device allowance. Preserve the old full-loss predicate cases and failed runs; any revised
+production changes and adds no device allowance. Its
+[106-case local evidence](benchmarks/v1/evidence/normal-comparison-092/README.md) and
+[383-case mapping](v1-sprints/092-comparison-cohorts.md) complete the mathematics gate.
+Next is 092-B's public comparison operation, then separate best/stopping consumers;
+neither is implemented yet. Preserve the old full-loss predicate cases and failed runs; any revised
 semantic cohort must be explicit before hardware. No blanket epsilon, hidden metric
 adjustment or aggregation-only fix establishes reliable comparison. Original P7/E4
 and [069 accounting/isolation](v1-sprints/069-authoring-pilot.md) remain required.
@@ -135,7 +139,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1478 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1506 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

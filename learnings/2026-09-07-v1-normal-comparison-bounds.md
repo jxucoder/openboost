@@ -49,12 +49,22 @@ device conformance is claimed.
   agreement, exact-rational basic arithmetic, exponential endpoints, f32/f64 whole
   expressions, weight transformations and invalid/unsupported domains.
 - Ruff check and formatting cover only the new support files. Full regression
-  results and the reproducible case mapping follow before 092-A closes.
+  results and the complete reproducible case mapping are recorded below.
 - CPU Python 3.12.12 on macOS; no CUDA run, emulator or host fallback.
 - `OPENBOOST_BACKEND=cpu UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync pytest tests/v1/test_normal_comparison_study.py tests/v1/test_normal_comparison_reference.py -n 0 -q --tb=short`: **27 passed**.
 - Full CPU regression after the cohort harness: **1505 passed, one Linux-only
   skip**. Production/changed support lint passes. MkDocs builds with the existing
   run-6 evidence link outside the documentation tree warning; no new warning.
+- [Raw local study](../benchmarks/v1/evidence/normal-comparison-092/study.json)
+  generated at clean `a5967b5`: **38 improvements, 59 worsening changes, seven
+  unchanged and two unresolved**, across 106 declared comparisons. All 105
+  available bounds contain the high-precision estimates. The unsupported
+  exponent case has no manufactured estimate/bound. Source hashes and every
+  numerical case are checked against the archived clean-source result.
+- Closure verification: **66 focused numerical/archive tests pass**; the full
+  CPU suite passes **1506 tests with one Linux-only skip** after adding archive
+  reproducibility. Production/changed support lint and MkDocs pass; the existing
+  documentation-tree link warning remains. No production source changed.
 
 ## Failed Attempts
 
@@ -72,10 +82,14 @@ device conformance is claimed.
   Polynomial and interval costs need measurement after public construction.
 - Unsupported exponent/intermediate ranges are unresolved, not clipped or sent
   to the CPU from CUDA. Production Normal domain checks remain prerequisites.
-- Publish the complete 383-case mapping before 092-B. Public operations, distinct
-  training/best/stopping anchors and a separately approved hardware freeze remain.
+- The complete 383-case mapping is published before 092-B. Public operations,
+  distinct training/best/stopping anchors and a separately approved hardware
+  freeze remain. The [slice reflection](../v1-sprints/092-normal-comparison-design.md#092-a-closure-and-reflection)
+  keeps this addition objective-owned, with no expansion into general math
+  libraries, CPU optimization, or unsupported algorithm-value claims.
 
 ## Commits
 
 - `8d0e92f` — independently verified interval mathematics and numerical contract.
-- Cohort/harness commit follows; the clean-source evidence is archived separately.
+- `a5967b5` — complete historical mapping and numerical study harness.
+- Clean-source evidence and 092-A reflection are archived in the closure commit.

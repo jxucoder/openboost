@@ -2,8 +2,8 @@
 
 Status: local execution approved by the user after
 [091's measured retrospective](091-normal-acceptance-diagnostics.md).
-092-A's independent mathematics and complete historical mapping are implemented
-locally; reproducible evidence archival and reflection are next. Public implementation
+092-A's independent mathematics, complete historical mapping and clean-source
+evidence are complete. The slice's reflection is recorded below. Public implementation
 and consumer changes remain pending. No new hardware allowance is included. All seven
 device invocations are consumed. This is the next bounded correctness slice of
 079/B12/R6, not a new private trainer or a change to the required R/C/A scope.
@@ -140,3 +140,37 @@ is verified, return to original P7, required CUDA families/train-many and 069's
 author accounting. The user's approval authorizes local 092 construction. No
 independent author, additional agent, upload or run is authorized here; all
 application families remain required.
+
+## 092-A closure and reflection
+
+`8d0e92f` implements the independent arithmetic prototype and distinguishing tests;
+`a5967b5` freezes the full historical mapping and 106-case study harness. The
+[clean-source evidence](../benchmarks/v1/evidence/normal-comparison-092/README.md)
+records 38 improvements, 59 worsening changes, seven unchanged raw pairs and two
+unresolved comparisons. All 105 available enclosures contain the original-row
+high-precision estimates; the deliberately unsupported exponent case has no bound.
+Both recorded false-improvement decisions are rejected, and the analytic tiny
+true improvement survives. No core, old test, tolerance or raw run artifact changed.
+
+The main numerical discovery is that neither CPU libm wrappers nor CUDA's
+test-derived exponential error table supplies the bound the original proposal
+needs. The bounded Taylor/interval construction supplies a mathematical enclosure
+under explicit basic-arithmetic assumptions. This is a justified restriction of
+the experiment, not a declaration of universal or machine-verified accuracy.
+Cancellation also requires higher precision in one diagnostic oracle, recorded
+without weakening its target or modifying frozen source.
+
+This supports an objective-owned programmable comparison boundary: the grower
+and transaction storage should not learn a Normal-specific rule. The independent
+prototype is deliberately not the foundation implementation. Its finite support
+and polynomial cost must remain visible when constructing public CPU/CUDA
+operations. Do not expand into a general math-library project or change reduction
+precision to hide comparison failures.
+
+The next approved local work is **092-B**, followed by **092-C** under the existing
+local approval. Before C, make the best/patience ownership decision explicit and
+bind planned requirements to concrete verifiers. A comparison record alone does
+not repair the three consumers. Additional device activity still requires 092-D's
+concrete freeze and a new allowance. Required CUDA families/train-many, original
+P7/E4 and 069 independent accounting remain open; no CPU search or new agent work
+was resumed by this slice.
