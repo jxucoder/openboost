@@ -256,3 +256,31 @@ The fixtures establish this bounded correctness/residency gate, not real applica
 quality or performance. All five approved runs are consumed; no retry is authorized.
 Other required device recipes, train-many, quality, cost and author/adoption gates
 remain open.
+
+## Normal components: constructed, hardware verification pending
+
+`openboost.device_normal` now provides resident `prepare`, `base`, `geometry` and
+`loss` operations for scalar targets with two raw columns (mean/log scale).
+Preparation checks Normal schema and owns float32 target/offset copies. Geometry
+returns two independently owned float32 `[N,2]` buffers: unweighted gradient and
+Fisher diagonal. Offset-aware initialization uses normalized weights; its scale
+floor is used only at initialization. Loss exports one weighted mean float64 NLL.
+Row expressions and reductions use float64 intermediates on stored float32 inputs.
+Scale/Fisher must be positive finite float32 and gradients finite float32, including
+zero-weight rows. Numerical violations fail explicitly without clipping.
+
+`device_objectives.broadcast` supports a `[K]` base. The separate public
+`diagonal_direction(ops, gradient, metric, mode=..., damping=...)` and
+`least_squares(ops, data, direction, channel)` functions compose across objectives.
+The latter produces once-weighted `G=-w*z, H=w`; Fisher belongs in the direction
+solve. Independent cohort information can be appended using the existing field
+operations. Returned buffers and fields own their outputs; input buffers stay
+caller-owned. Release buffers with the context and field records with operations.
+
+`device_normal.objective(minimum_scale=...)` constructs an explicit
+`ObjectiveOperations` bundle (validation/preparation/base/loss) for upcoming shared
+runtime integration. It does not itself train a model. Runtime K=2 transactions
+and the Normal recipe are still under construction. The 23 new hardware tests
+are collected locally, not executed: no Normal CUDA correctness or cost claim is
+established by these changes. The earlier 212 passing scalar cases remain tied to
+their measured revision and must be rerun after integration.

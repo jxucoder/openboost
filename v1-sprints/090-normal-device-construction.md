@@ -1,6 +1,7 @@
 # Sprint 090: Normal device construction and independent fixtures
 
-Status: 090-A complete; 090-B next. No Normal device implementation or new device run.
+Status: 090-A complete; 090-B operations constructed with hardware checks pending;
+090-C runtime integration next. No new device run.
 Mapping: [079](079-cuda-distribution-and-extension.md) / B12 / F3.2 / R6 /
 C2–C5 / E1–E2 development conformance. Parent: `48a1386`.
 
@@ -198,6 +199,28 @@ record both gains, selected key and prediction differences. Its mathematical
 cross-backend structural parity remains a known limitation and cannot be counted
 as repaired conformance. It must travel in the next hardware package alongside
 the main matrix. No epsilon-based chooser or retroactive tolerance expansion.
+
+### 090-B operation construction
+
+`device_normal` implements preparation/base/geometry/loss; `device_objectives`
+adds generic K-column broadcast, diagonal directions, direction regression fields
+and an explicit objective dependency record. Twenty-three hardware cases cover
+the frozen domain, weights/offsets/missing data, directions/fields, independent
+cohorts, input/record lifetime, sixth-trial numerical recovery and large relative
+precision with large weights. They collect without CUDA but have not executed.
+
+The first API check failed because `device_normal` was absent. After construction,
+40 targeted CPU configuration/reference tests and the full **1392-test** CPU suite
+pass (one Linux-only skip), as do Ruff and docs. A review counterexample requires
+normalizing weights before multiplying by offset precision: weights `1e30` and
+offset log scale `-345` would unnecessarily overflow an unnormalized float64
+initialization. The normalized formula is implemented and its real-device check
+retained. Strictly positive metric diagonals remain required even with damping or
+ordinary direction, matching the public CPU operation.
+
+Reflection: these are composable operations, not a private second trainer. Device
+validation remains pending; CPU tests establish only configuration/import safety.
+Continue directly into 090-C mapped multi-term ownership and objective integration.
 
 Full CPU regression passes **1371 tests**, with one Linux-only skip. Ruff and
 documentation build pass; see the [verification record](../learnings/2026-09-07-v1-normal-device-design.md).

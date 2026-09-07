@@ -293,3 +293,111 @@ def scalar_add_raw(raw, delta, coefficient, output):
     r = cuda.grid(1)
     if r < output.shape[0]:
         output[r, 0] = raw[r, 0] + float32(coefficient * delta[r, 0])
+
+
+@cuda.jit
+def raw_broadcast(value, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        for k in range(output.shape[1]):
+            output[r, k] = value[k]
+
+
+@cuda.jit(device=True)
+def normal_row(mean, ell, target):
+    precision = math.exp(-2 * ell)
+    scale = math.exp(ell)
+    residual = mean - target
+    square = residual * residual * precision
+    g0, g1, h0 = float32(residual * precision), float32(1 - square), float32(precision)
+    value = ell + square / 2 + math.log(2 * math.pi) / 2
+    if (
+        not math.isfinite(value)
+        or not math.isfinite(g0)
+        or not math.isfinite(g1)
+        or not math.isfinite(h0)
+        or h0 <= 0
+        or not math.isfinite(float32(scale))
+        or float32(scale) <= 0
+    ):
+        return float64(math.nan), float32(math.nan), float32(math.nan), float32(math.nan)
+    return value, g0, g1, h0
+
+
+@cuda.jit
+def normal_base(target, offset, weight, floor, output):
+    if cuda.grid(1) == 0:
+        total, adjusted_mass, mass = float64(0), float64(0), float64(0)
+        for r in range(weight.size):
+            mass += float64(weight[r])
+        for r in range(weight.size):
+            precision = math.exp(-2 * float64(offset[r, 1]))
+            if not math.isfinite(precision) or precision <= 0:
+                output[0], output[1] = math.nan, math.nan
+                return
+            q = (float64(weight[r]) / mass) * precision
+            total += q * (float64(target[r, 0]) - float64(offset[r, 0]))
+            adjusted_mass += q
+        if not math.isfinite(adjusted_mass) or adjusted_mass <= 0:
+            output[0], output[1] = math.nan, math.nan
+            return
+        mean = total / adjusted_mass
+        variance = float64(0)
+        for r in range(weight.size):
+            residual = float64(target[r, 0]) - float64(offset[r, 0]) - mean
+            variance += (
+                (float64(weight[r]) / mass)
+                * math.exp(-2 * float64(offset[r, 1]))
+                * residual
+                * residual
+            )
+        output[0] = mean
+        output[1] = math.log(max(math.sqrt(variance), float64(floor)))
+
+
+@cuda.jit
+def normal_geometry(target, offset, raw, gradient, fisher):
+    r = cuda.grid(1)
+    if r < raw.shape[0]:
+        value, g0, g1, h0 = normal_row(
+            float64(raw[r, 0]) + float64(offset[r, 0]),
+            float64(raw[r, 1]) + float64(offset[r, 1]),
+            float64(target[r, 0]),
+        )
+        gradient[r, 0], gradient[r, 1] = g0, g1
+        fisher[r, 0], fisher[r, 1] = h0, float32(2)
+
+
+@cuda.jit
+def normal_loss(target, offset, weight, raw, output):
+    if cuda.grid(1) == 0:
+        total, mass = float64(0), float64(0)
+        for r in range(weight.size):
+            value, _, _, _ = normal_row(
+                float64(raw[r, 0]) + float64(offset[r, 0]),
+                float64(raw[r, 1]) + float64(offset[r, 1]),
+                float64(target[r, 0]),
+            )
+            total += float64(weight[r]) * value
+            mass += float64(weight[r])
+        output[0] = total / mass
+
+
+@cuda.jit
+def diagonal_direction(gradient, metric, natural, damping, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        for k in range(output.shape[1]):
+            denominator = float64(metric[r, k]) + float64(damping) if natural else float64(1)
+            output[r, k] = (
+                -float64(gradient[r, k]) / denominator
+                if metric[r, k] > 0 and denominator > 0
+                else math.nan
+            )
+
+
+@cuda.jit
+def direction_fields(direction, channel, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        output[r, 0], output[r, 1] = -direction[r, channel], float32(1)
