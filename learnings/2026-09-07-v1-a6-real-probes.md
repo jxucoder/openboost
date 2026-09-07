@@ -48,3 +48,21 @@ by 2, plus 1151 validation row IDs. No test files are allowlisted.
 Local CPU validation: 1038 passed, one Linux-only skip; lint, compilation and docs
 pass. The committed harness is ready for review; actual resource/replay outcomes
 remain unknown until payload upload is explicitly approved.
+
+### Approved dispatch results and reflection
+
+After explicit payload approval, the two real probes run successfully from clean
+`9387d9f`. [Raw evidence](../benchmarks/v1/evidence/a6-real-probes-070/README.md):
+shared trees take 1077.14 seconds with 59 completed rounds and 108097536-byte peak
+RSS; independent trees take 767.13 seconds with 65 rounds and 136032256-byte peak
+RSS. Both stop by frozen patience 50 within their 300-round budgets and replay
+validation predictions exactly in a fresh process. No test data is uploaded.
+All 31 source hashes, 20 artifacts, packet/plan hashes and target scales verify.
+
+These are two scoped resource passes, not full-search qualification. Practical
+runtime is now directly measured and substantial despite early stopping. Before
+expanding to the remaining configurations, inspect a bounded profile of this exact
+input and configuration, then decide whether a targeted change is justified. No
+bottleneck or comparative speed claim follows from wall time alone. Keep the
+complete ledger, comparator matrix and author accounting open. This is a reflection
+checkpoint; no additional jobs or optimization are included in this slice.

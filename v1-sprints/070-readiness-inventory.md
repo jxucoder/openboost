@@ -25,6 +25,12 @@ The observed receipt now has a passing replay regression using a bounded score-o
 roundoff rule; artifact pins and winner/order checks remain exact. Broader numerical
 portability and full resource qualification remain separate obligations.
 
+The two named real fold-zero OpenBoost probes now pass at `9387d9f`, with exact
+fresh replay and frozen target scales. They stop by patience after 59/65 rounds
+and take 1077/767 seconds. See [evidence](../benchmarks/v1/evidence/a6-real-probes-070/README.md).
+Review a bounded profile of that practical workload before expanding the remaining
+158 OpenBoost jobs; this is a measured runtime concern, not an identified bottleneck.
+
 ## Next bounded slices
 
 1. Audit remaining worker call paths and establish the actual candidate/judge data
