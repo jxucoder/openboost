@@ -40,7 +40,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Planned CUDA development dependencies; the reset namespace has no GPU API yet.
+# Experimental CUDA storage/operations; GPU training remains unimplemented.
 cuda = [
     "numba-cuda>=0.23",
     "cupy-cuda12x>=13.0",

@@ -92,3 +92,17 @@ CPU operation tests pass before device implementation; hand totals include
 [10,9,4,4] and zero-weight-only [0,0,2,0]. The new public device import fails as
 absent. Next implement DeviceOperations fields/rows/histograms. No additional
 GPU run is consumed by these local reference checks.
+
+### 078-A implementation awaiting real-device validation
+
+DeviceOperations provides public prepared data, named fields, once-only weighting,
+independent-column append, resident/host row views and routed histograms. Initial
+numba-cuda reductions use the owned CuPy stream/pool and export compact validation
+flags. Partial allocation/validation failures preserve existing input buffers.
+No custom-kernel registration, candidates, gradients, trees or GPU training yet.
+
+Local checks: 21 focused pass; full CPU suite 1146 passed, one Linux-only skip.
+Thirty-three real-CUDA cases collect but have not executed. See the
+[learning record](../learnings/2026-09-07-v1-device-aggregation.md) and public
+[execution docs](../docs/v1/execution.md). Run 2 remains available pending the
+committed installed-wheel harness and expected-case freeze.

@@ -88,6 +88,13 @@ class ExecutionContext:
         )
         return handle
 
+    def _empty(self, shape, dtype):
+        """Internal owned output allocation, including genuine zero-length views."""
+        dtype = np.dtype(dtype)
+        self._reserve(int(np.prod(shape)) * dtype.itemsize)
+        with self._scope():
+            return self._register(self._cp.empty(shape, dtype=dtype))
+
     def synchronize(self):
         self._check()
         with self._device:
