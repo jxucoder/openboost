@@ -63,12 +63,14 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-Current execution card: [Sprint 067 incremental runtime](v1-sprints/067-incremental-runtime.md).
-Sprint 066's diagnosis is complete: six practical fits pass, while infrastructure
-preemption leaves the 128-round sweep incomplete. Its separate partial profile
-places 75.3% of fit time in tree prediction, including 67.5% in re-encoding.
-Next implement incremental new-term evaluation and identity-bound encoding reuse,
-preserving exact replay and transaction ownership. No production optimization yet.
+Current execution card: [Sprint 068 bounded retention](v1-sprints/068-trace-retention.md).
+Sprint 067 implements incremental proposal evaluation and identity-bound encoding
+reuse, with 957 CPU tests, installed extension/isolation checks, eight bounded fits
+and two profiles passing. Six same-container old/new pairs produce exact models
+and predictions; full evidence is in incremental-067. Tree prediction is below
+0.3% of the new instrumented fits; tree construction now dominates. Full trace
+retention remains unchanged and is next. Sprint 066's interrupted baseline and
+cross-host architecture differences remain recorded; no broad speed/phase claim.
 The worker verifies an 8-GiB address ceiling and two-thread BLAS; host cgroup caps
 remain unobservable. Keep address space, guest RSS and infrastructure failures distinct.
 Sprint 064 structural stopping passes 943 CPU tests; Sprint 065 installed custom-policy,

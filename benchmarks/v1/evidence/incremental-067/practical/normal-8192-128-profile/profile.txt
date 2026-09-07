@@ -1,0 +1,68 @@
+         27549399 function calls in 26.395 seconds
+
+   Ordered by: cumulative time
+   List reduced from 231 to 60 due to restriction <60>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000   26.409   26.409 cpu_profile_worker.py:128(fit)
+        1    0.004    0.004   26.409   26.409 recipes.py:231(normal)
+      384    0.004    0.000   20.500    0.053 recipes.py:285(<genexpr>)
+      256    0.014    0.000   20.435    0.080 tree.py:273(depthwise)
+     1792    0.087    0.000   18.360    0.010 tree.py:241(best)
+      768    0.520    0.001   10.439    0.014 ops.py:202(choose)
+   356260    0.315    0.000    8.485    0.000 tree.py:246(cached)
+   356260    0.633    0.000    8.120    0.000 ops.py:183(score)
+      768    0.004    0.000    7.834    0.010 tree.py:238(options)
+  1068780    0.669    0.000    6.994    0.000 ops.py:184(node)
+      768    1.866    0.002    6.973    0.009 ops.py:102(candidates)
+  1070572    3.091    0.000    6.217    0.000 ops.py:152(newton_leaf)
+      128    0.002    0.000    5.669    0.044 recipes.py:188(_trials)
+      128    0.002    0.000    5.164    0.040 runtime.py:207(resolve)
+      130    0.001    0.000    5.141    0.040 runtime.py:85(_identify)
+      260    0.258    0.001    5.130    0.020 artifacts.py:159(identity)
+     1931    0.026    0.000    4.275    0.002 data.py:20(_identity)
+   810129    1.394    0.000    4.089    0.000 data.py:12(_owned)
+     2986    0.005    0.000    3.921    0.001 __init__.py:183(dumps)
+  2886016    2.997    0.000    3.917    0.000 ops.py:146(_nonnegative)
+     2986    0.006    0.000    3.915    0.001 encoder.py:183(encode)
+     2197    3.907    0.002    3.907    0.002 encoder.py:205(iterencode)
+     2816    0.988    0.000    2.380    0.001 ops.py:35(histogram)
+      768    0.005    0.000    1.539    0.002 tree.py:254(split)
+     1792    0.012    0.000    1.500    0.001 tree.py:216(append)
+   388608    0.558    0.000    1.432    0.000 ops.py:164(feasible)
+   813221    0.259    0.000    1.264    0.000 {method 'all' of 'numpy.ndarray' objects}
+     9744    0.015    0.000    1.229    0.000 _arraysetops_impl.py:145(unique)
+     9744    0.035    0.000    1.208    0.000 _arraysetops_impl.py:348(_unique1d)
+     3584    0.062    0.000    1.173    0.000 ops.py:12(_rows)
+   844407    1.031    0.000    1.031    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+   813221    0.183    0.000    1.006    0.000 _methods.py:66(_all)
+   388608    0.960    0.000    0.960    0.000 <string>:2(__init__)
+  2886914    0.634    0.000    0.921    0.000 numeric.py:1964(isscalar)
+     9744    0.754    0.000    0.754    0.000 {built-in method numpy._core._multiarray_umath._unique_hash}
+      260    0.049    0.000    0.693    0.003 artifacts.py:135(record)
+    33016    0.268    0.000    0.621    0.000 tree.py:121(record)
+      256    0.002    0.000    0.482    0.002 tree.py:175(__init__)
+   859810    0.466    0.000    0.466    0.000 {built-in method numpy.array}
+   839071    0.459    0.000    0.459    0.000 {built-in method numpy.frombuffer}
+      768    0.053    0.000    0.441    0.001 ops.py:218(partition)
+  3598532    0.422    0.000    0.422    0.000 {method 'index' of 'tuple' objects}
+     9744    0.385    0.000    0.385    0.000 {method 'sort' of 'numpy.ndarray' objects}
+      642    0.056    0.000    0.342    0.001 objectives.py:104(geometry)
+   495500    0.326    0.000    0.326    0.000 {method 'tolist' of 'numpy.ndarray' objects}
+   840871    0.312    0.000    0.312    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+      514    0.001    0.000    0.305    0.001 objectives.py:124(loss)
+  2976797    0.299    0.000    0.301    0.000 {built-in method builtins.isinstance}
+      128    0.000    0.000    0.295    0.002 runtime.py:139(propose_terms)
+      384    0.017    0.000    0.294    0.001 runtime.py:168(_evaluate)
+   840615    0.268    0.000    0.268    0.000 {method 'tobytes' of 'numpy.ndarray' objects}
+  1101128    0.226    0.000    0.226    0.000 {built-in method builtins.min}
+      642    0.017    0.000    0.214    0.000 objectives.py:74(parameters)
+      257    0.131    0.001    0.200    0.001 artifacts.py:59(__post_init__)
+      512    0.001    0.000    0.190    0.000 runtime.py:146(preview)
+     2986    0.176    0.000    0.176    0.000 {method 'encode' of 'str' objects}
+     3460    0.003    0.000    0.172    0.000 {method 'sum' of 'numpy.ndarray' objects}
+     3460    0.002    0.000    0.169    0.000 _methods.py:49(_sum)
+     5972    0.133    0.000    0.133    0.000 {method 'update' of '_hashlib.HASH' objects}
+    24710    0.085    0.000    0.114    0.000 _shape_base_impl.py:628(column_stack)
+
+

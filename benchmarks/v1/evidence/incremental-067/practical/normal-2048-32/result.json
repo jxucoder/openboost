@@ -1,0 +1,50 @@
+{
+  "status": "pass",
+  "recipe": "normal",
+  "rounds": 32,
+  "train_rows": 2048,
+  "validation_rows": 1024,
+  "parameters": 2,
+  "options": {
+    "rounds": 32,
+    "bins": 32,
+    "max_depth": 2,
+    "learning_rate": 0.1,
+    "reg_lambda": 1.0,
+    "patience": null,
+    "step": "fixed",
+    "mode": "natural",
+    "damping": 0.0,
+    "minimum_scale": 1e-06
+  },
+  "setup_s": 0.006752971000000052,
+  "fit_s": 3.1306576669999995,
+  "predict_s": 0.05345595300000028,
+  "export_s": 0.008558895000000177,
+  "end_to_end_s": 3.199425486,
+  "instrumented": false,
+  "validation_metric": 0.9424152703663746,
+  "final_raw_exact": true,
+  "tree_terms": 64,
+  "tree_predict_calls": null,
+  "tree_row_visits": null,
+  "trace_array_bytes": 4227072,
+  "guest_peak_rss_bytes": 91676672,
+  "address_limit_bytes": [
+    8589934592,
+    8589934592
+  ],
+  "pools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 2,
+      "prefix": "libscipy_openblas",
+      "filepath": "/usr/local/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ],
+  "timing_scope": "setup records + full fit including binning/validation + train/validation prediction + export; outer wall also includes imports, input load and verification"
+}

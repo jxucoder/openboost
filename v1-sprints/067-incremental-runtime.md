@@ -1,6 +1,6 @@
 # Sprint 067: Incremental transaction execution
 
-Status: implementation in progress; linear-work counterexample passes, practical rerun pending. Mapping: N2b / B05 / C4–C5 / E1.
+Status: complete; exact paired replay, installed isolation and bounded practical sweep pass. Mapping: N2b / B05 / C4–C5 / E1.
 Depends on: [066](066-practical-cpu-profile.md) diagnosis justifying the change.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
@@ -41,7 +41,7 @@ card with the counterexample. Next: [068](068-trace-retention.md).
 
 ## Results
 
-Not implemented. Sprint 066's partial 60-second Housing profile finds tree
+Initial design basis (implementation/evidence below supersede this status): Sprint 066's partial 60-second Housing profile finds tree
 prediction at 75.3% of fit time, with nested re-encoding at 67.5%. Address accepted
 ensemble replay and repeated encoding together through the smallest justified
 state boundary. Preserve exact term-addition order; avoid summing a combined delta
@@ -76,3 +76,41 @@ This is a separate diagnostic amendment, not a repeated realization of the origi
 eight-fit budget. Do not run baseline 128-round cases. Verify exact predictions and
 model bytes between paired wheels, and report one observation per pair without
 statistical or formal gate claims. Preserve the cross-host results as such.
+
+### Closure and reflection
+
+Implementation `e99e89c` passes 957 CPU tests, the installed D1–D4/custom-policy/
+ordered M=1/8/32 checks and ten exact fresh inference models. The count artifact
+verifies 2*K*T tree evaluations at 4/8/16/32 rounds. All eight frozen practical
+fits and both 128-round profiles pass with exact full replay. The profiles use
+256/512 tree predictions and three encodings each; tree prediction is below 0.3%
+of fit time. Tree construction is now about 77–78% of instrumented fit time.
+
+The same-container comparison at `da0fede` passes all twelve fits. Actual loaded
+source hashes distinguish the baseline/candidate wheels. All six paired raw
+predictions and model JSON files are exact, resolving the numerical ambiguity
+without changing tolerances. At 8192/32, squared fit is 8.136 → 1.783 seconds and
+Normal 11.929 → 3.644 seconds (observed 4.56x/3.27x fit ratios, 4.37x/3.17x
+end-to-end ratios). One ordered observation per case is not a stable speed claim.
+The cross-host results and missing 128-round baseline are retained explicitly.
+
+All evidence and exact commands are in
+[incremental-067](../benchmarks/v1/evidence/incremental-067/README.md).
+Source/artifact hashes, per-worker loaded sources, independent validation metrics
+and paired predictions/model bytes were checked. Ruff, docs and offline packaging
+pass; later harness-only amendments pass ten focused profile tests. Raw pstats
+text preserves its original trailing blank line despite whitespace lint.
+
+Reflection: the measured repeated-work cause is removed through the public
+transaction boundary, which remains usable by external recipes via `preview_raw`.
+Full replay stays independent, acceptance/rejection ownership stays explicit and
+no broad cache framework or second trainer was introduced. CPU architecture was
+an important comparison confound; same-container wheel pairing is preferable for
+future correctness/performance attribution. Full trace retention still grows with
+rounds and samples, so follow 068 before expanding full searches. Tree construction
+is the remaining measured CPU hotspot, not an automatic license for another
+optimization sprint. Formal phase/quality/author/CUDA/adoption gates remain open.
+
+This is a retrospective checkpoint after implementation, installed/count evidence,
+a comparison amendment and practical evidence. Next: Sprint 068's explicit
+summary/full diagnostic retention, preserving all accepted/best/stop semantics.

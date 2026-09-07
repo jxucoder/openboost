@@ -76,3 +76,24 @@ the coordinator with explicit paired mode, verify baseline wheel/protocol hashes
 retain both variants and stop after any failure. The exact amendment is in 067.
 Focused source tests and lint run before commit; actual paired execution verifies
 the new orchestration branch. No production changes in this follow-up.
+
+### Paired resolution and sprint closure
+
+At `da0fede`, all twelve same-container fits pass. Recorded loaded core sources
+match the respective wheel manifests, both pools report SkylakeX, and all six
+pairs have exactly equal predictions and byte-identical model JSON. No tolerance
+change. At 8192/32, observed fit ratios are 4.56x squared and 3.27x Normal;
+end-to-end ratios are 4.37x and 3.17x. These are one ordered pair each, not repeated
+performance estimates. The original different-architecture comparison remains
+preserved with its final-bit difference, not relabeled exact.
+
+All eight optimized original-protocol fits and both full 128-round profiles pass.
+Tree prediction now uses under 0.3% of instrumented fit time; three encoding
+operations suffice. Tree construction accounts for about 77–78%. At 128 rounds,
+full trace arrays still retain 16.0625 MiB squared and 64.125 MiB Normal; this is
+logical memory, not RSS.
+
+Source/artifact hashes, actual per-worker core sources, independent metrics and
+paired model bytes checked. Evidence is in incremental-067 practical/ and paired/.
+No further production change beyond `e99e89c`. Close 067 and proceed to 068 explicit
+retention modes at the next execution checkpoint; all formal gates remain open.

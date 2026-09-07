@@ -11,11 +11,13 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-Current execution card: [Sprint 067](067-incremental-runtime.md), ready for implementation.
-[Sprint 066](066-practical-cpu-profile.md) diagnoses repeated tree replay/encoding
-from six passing practical fits and a separate partial profile. The 128-round
-sweep is incomplete after infrastructure preemption; no missing result is a pass.
-951 CPU tests pass. No production runtime optimization has started.
+Current execution card: [Sprint 068](068-trace-retention.md), explicit summary/full retention.
+[Sprint 067](067-incremental-runtime.md) completes incremental proposal evaluation
+and encoding reuse: 957 CPU tests, installed isolation, eight practical fits and
+two profiles pass. Six same-container baseline/candidate pairs have exact predictions
+and model files. Full trace retention is unchanged; tree construction is now the
+largest profiled cost. [Sprint 066](066-practical-cpu-profile.md)'s baseline timing
+gaps remain explicit. Formal quality/cost/author/CUDA/adoption gates remain open.
 [Sprint 065](065-installed-run-isolation.md) passes installed custom completion,
 independent RNG/preparation/failure checks and ten plugin-free inference models.
 [Sprint 064](064-programmable-stopping-and-isolation.md) completed structural stopping
@@ -28,7 +30,7 @@ The merge passed 923 local CPU tests and all five CI checks. Broad public CPU
 components and application validation exist; formal phase exits, selected real
 quality/cost, CUDA and independent adoption remain open.
 
-Next: 067 incremental runtime and 068 trace retention. Cards 069–077 cover exploratory/formal authoring,
+Next: 068 trace retention. Cards 069–077 cover exploratory/formal authoring,
 judging and every required application's selected quality; 078–082 cover CUDA and
 cost after their entry gates. 083 audits engineering v1 and 084 separately tests
 external adoption. These are scope cards, not calendar estimates or new phase exits.
