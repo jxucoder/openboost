@@ -246,3 +246,15 @@ budgets. Full comparator coverage and the complete R/C/A/E ledger remain open.
 
 Final validation: **1038 CPU tests passed, 1 Linux-only test skipped** with two
 test workers. Production/support lint and documentation build pass.
+
+### Real packet binding and probe dispatch
+
+The existing exporter verifies all five Parkinsons subject folds against source
+and preprocessing freezes. Only fold zero's train/validation worker packet is
+allowlisted for upload (no test arrays/files). Dispatch the two preregistered
+configuration-00 jobs sequentially, with no retries and stop after any failure.
+Each child has 1800 seconds, an 8-GiB address limit, one worker thread and summary
+retention; the container requests two CPUs and 8192 MiB with a 1900-second timeout.
+Record actual fit status, ru_maxrss in Linux bytes, and exact fresh validation
+replay. The 300-round budget includes preregistered patience 50, so legitimate
+early stopping is not a budget shrink. No full search or test release is implied.
