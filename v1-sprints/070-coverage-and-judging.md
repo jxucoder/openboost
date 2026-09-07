@@ -144,3 +144,27 @@ and container boundaries, then exercising that path before a full frozen search.
 Keep the protocol-derived expected matrix and 069 token/budget accounting explicit
 parallel planning obligations. No full search, independent attempt or GPU work was
 launched. Sprints 069/070 remain open.
+
+### Protected selection integration slice
+
+Plan: extend the existing current selection smoke with an opt-in Linux permission
+mode, verify unsupported-host rejection before any writes, preserve the local
+16-trial selection/replay path, then exercise actual Linux permissions and workers.
+The first two host tests failed on the missing interface.
+
+Implementation separates evaluator records/test features from read-only candidate
+packets, applies the existing unprivileged runner with an 8-GiB address ceiling
+and 1800-second deadline, and reclaims completed output directories before another
+worker starts. The current recipe worker still requires one thread; this stays
+within the two-thread ceiling and is not a claim of exact two-thread execution.
+
+Local validation: 16 four-round trials succeed and select `openboost:15`; the
+existing independent validation audit and fresh selected-model replay succeed.
+CPU regression: **1021 passed, 1 skipped**; lint passes. The skip is the new real
+Linux/root integration test, which attempts protected-file reads/writes and runs
+all 16 actual workers. It must pass in a traversable installed Linux environment
+before this mode is considered operationally verified. No full search was launched.
+
+Next: run that integration test on bounded Modal CPU hardware from a committed
+source snapshot, retaining execution evidence. Do not infer this new path passes
+from the standalone probe at `26a6797`.

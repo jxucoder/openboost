@@ -608,6 +608,20 @@ release. All trials and failures are retained. It scores no test labels and is
 not the frozen real-data quality grid, a speed benchmark or fused train-many.
 A6 final comparative quality reporting and the remaining real searches remain open.
 
+The same smoke accepts `--protected` on Linux with a root evaluator. It places
+protocol, validation/scale records, test features and the selection receipt under
+an evaluator-owned mode-0700 directory. Workers receive read-only train/validation
+packets and job files, run as UID/GID 65534 with an 8-GiB address limit and a
+1800-second deadline, and retain the current worker's one-thread contract. Completed
+trial directories are reclaimed by root before the next trial starts. Installed
+Python/package/source paths and output ancestors must be traversable by that UID.
+Unsupported hosts fail before creating output; there is no privilege fallback.
+
+This mode is implemented but awaits the real Linux selection integration test.
+It is a synthetic four-round grid, not the full 300/1000-round search. The earlier
+standalone permission probe does not validate this call path. Network/new-session
+restrictions and separate author containers remain outside this mode's guarantee.
+
 ### A6 paired quality reporting
 
 A6 quality cells require all `rmse_k` primary metrics followed by
