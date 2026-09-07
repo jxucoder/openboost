@@ -91,4 +91,16 @@ precision, so reverse and joint updates need not differ mathematically.
 ## Commits
 
 - Parent `48a1386` — run-5 evidence and scoped retrospective.
-- This entry is committed with the 090-A design/oracle slice.
+- `05b7c66` — 090-A design/oracle slice.
+
+## 090-B numerical preregistration
+
+Before adding kernels, 11 new CPU reference checks pass for explicit float32
+geometry support and the sixth-trial recovery case. The numerical amendment in
+090 freezes storage, float64 intermediate arithmetic, comparison tolerances and
+the separate near-tie diagnostic. It does not claim that float64 and float32 have
+identical overflow boundaries. No production code or earlier device fixture was
+changed in this freeze. Verify with `uv run --no-sync pytest
+tests/v1/test_normal_precision_reference.py -n 0 -q` (11 passed), using the same
+`UV_CACHE_DIR` as above. Ruff passes for the two new Python files. Next implement
+the declared resident operations; no new GPU/upload authority is inferred.

@@ -168,6 +168,37 @@ claim follows from any number of these development tests.
 
 ## Results and reflection
 
+### 090-B numerical freeze
+
+The continuing user instruction asks execution to proceed through verified slices
+without stopping at each commit. No hardware/upload allowance is added.
+`tests/v1/reference/normal_precision.py` freezes nine domain cases before kernels:
+ordinary origin/offset states, log scales +/-40, precision overflow/underflow,
+scale overflow, gradient overflow and an offset-induced violation. All rows are
+validated even at zero weight. Normal geometry and loss evaluate row expressions
+with float64 intermediates on stored float32 inputs, then require positive finite
+float32 scale/Fisher and finite float32 gradients. Reductions accumulate float64;
+returned raw, geometry and direction buffers remain float32. No fast-math or
+clipping is introduced. Generic direction division uses float64 intermediates on
+stored gradient/Fisher and damping, then validates its float32 output.
+
+Frozen new comparisons: geometry/fields/base/directions/raw use `rtol=2e-4,
+atol=2e-5`; loss uses `rtol=2e-5, atol=2e-6`. These tolerances apply only to the new
+in-domain fixtures. Exact shape/schema/condition/decision checks remain exact;
+no old tolerances change. For `(100,5000)` at rate .2, float32 geometry permits
+only the sixth coefficient .00625, unlike the third float64 candidate. The last
+candidate must improve actual NLL. Explicit numerical failure is the contract.
+
+Split policy: `choose` continues to compare stored finite scores strictly and
+select the first exact maximum. Identical stored child summaries retain 089's
+symmetry guarantee. The main Normal matrix requires its frozen conditions and
+decisions; a failure is retained, not reclassified after running. The captured
+zero-weight near-tie is a separate diagnostic: compare actual original-row sums,
+record both gains, selected key and prediction differences. Its mathematical
+cross-backend structural parity remains a known limitation and cannot be counted
+as repaired conformance. It must travel in the next hardware package alongside
+the main matrix. No epsilon-based chooser or retroactive tolerance expansion.
+
 Full CPU regression passes **1371 tests**, with one Linux-only skip. Ruff and
 documentation build pass; see the [verification record](../learnings/2026-09-07-v1-normal-device-design.md).
 
