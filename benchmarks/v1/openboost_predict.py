@@ -9,7 +9,7 @@ import numpy as np
 from openboost import NumericData
 from openboost.artifacts import Model
 from openboost.multioutput import MultiOutputModel, TargetScale
-from openboost.objectives import Normal
+from openboost.objectives import Formula, Normal
 from openboost.outputs import poisson_mean, positive_mean
 
 QUANTILES = (0.1, 0.5, 0.9)
@@ -25,10 +25,13 @@ OUTPUTS = {
     "A8": "positive_claim_mean",
     "A9": "annualized_paid_mean",
     "A10": "lognormal_location_scale",
+    "A12": "saturation_age28_mean",
 }
 
 
-def predict_saved(saved, x, *, exposure=None):
+def predict_saved(saved, x, *, exposure=None, age=None):
+    if age is not None and (not isinstance(saved, dict) or saved.get("application") != "A12"):
+        raise ValueError("age structure only supported for A12")
     if exposure is not None and (not isinstance(saved, dict) or saved.get("application") != "A7"):
         raise ValueError("exposure is supported only for count inference")
     if isinstance(saved, dict) and saved.get("application") == "A5":
@@ -114,6 +117,13 @@ def predict_saved(saved, x, *, exposure=None):
     if scale is not None:
         return MultiOutputModel(model, scale).predict(data)
     raw = model.predict(data)
+    if saved["application"] == "A12":
+        if age is None:
+            raise ValueError("age/28 structure required for inference")
+        age = np.asarray(age)
+        if age.shape != (len(raw),):
+            raise ValueError("aligned age vector required")
+        return Formula.predict(raw, age[:, None])[:, 0]
     if saved["application"] == "A10":
         return np.column_stack([raw[:, 0], np.full(len(raw), saved["sigma"])])
     if saved["application"] == "A7":
@@ -134,14 +144,17 @@ def main():
     saved = json.loads(args.model.read_text())
     with np.load(args.features, allow_pickle=False) as arrays:
         if set(arrays.files) != (
-            {"x", "row_ids"} | ({"exposure"} if saved.get("application") == "A7" else set())
+            {"x", "row_ids"}
+            | ({"exposure"} if saved.get("application") == "A7" else set())
+            | ({"age"} if saved.get("application") == "A12" else set())
         ):
             raise ValueError("prediction packet differs from declared feature/exposure schema")
         x, ids = arrays["x"], arrays["row_ids"]
         exposure = arrays.get("exposure")
+        age = arrays.get("age")
     if ids.ndim != 1 or len(ids) != len(x) or len(np.unique(ids)) != len(ids):
         raise ValueError("unique aligned prediction row IDs required")
-    prediction = predict_saved(saved, x, exposure=exposure)
+    prediction = predict_saved(saved, x, exposure=exposure, age=age)
     np.savez(args.output, row_ids=ids, prediction=prediction)
 
 

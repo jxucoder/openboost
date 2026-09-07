@@ -178,6 +178,11 @@ def bind(application, data, parts, frozen):
         packets["validation"]["event"] = event[parts["validation"]]
         packets["test-truth"]["event"] = event[parts["test"]]
     if application == "A12":
+        formula_packet = dict(worker)
+        for part in ("train", "validation"):
+            formula_packet["x_" + part] = worker["x_" + part][:, :-1]
+            formula_packet["age_" + part] = age[parts[part]]
+        packets["formula-input"] = formula_packet
         for part in ("validation", "test"):
             packets[part + "-structure"] = dict(
                 row_ids=ids[parts[part]],

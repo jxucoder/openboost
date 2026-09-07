@@ -95,8 +95,9 @@ Sprint 056 adds direct A9 annualized Tweedie on all five aggregate folds, with
 verified exposure weights and period conversion. Sprint 057 binds matched paid
 events to all five frozen A9 input folds. Sprint 058 trains and replays the public
 composition on all five packets with independent component selection. Sprint 059
-adds A10 fixed-scale survival on all five frozen folds. Next: A12 structured
-Formula and A4 ranking, remaining searches/D5 and B11 phase checks before CUDA.
+adds A10 fixed-scale survival on all five frozen folds. Sprint 060 adds A12
+structured Formula with age separated from tree features on all five folds.
+Next: A4 ranking, remaining searches/D5 and B11 phase checks before CUDA.
 Joint A9 selection remains open.
 These internal trials
 do not establish E5/E7.

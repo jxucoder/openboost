@@ -604,3 +604,65 @@ def test_survival_invalid_contract(bad):
         job["config"]["sigma"] = 2
     with pytest.raises(ValueError):
         fit(job, arrays)
+
+
+@pytest.mark.parametrize("patience", [None, 1])
+def test_formula_direct_structure_and_fresh(patience, tmp_path):
+    from openboost.recipes import formula
+
+    job, arrays = fixture("A12")
+    job["early_stopping_rounds"] = patience
+    problems = []
+    for part in ("train", "validation"):
+        x = arrays["x_" + part]
+        arrays["age_" + part] = np.linspace(0.1, 3, len(x))
+        arrays["y_" + part] = 10 * -np.expm1(-arrays["age_" + part])
+        d = NumericData(x, np.arange(len(x)), ("x0",))
+        problems.append(
+            Problem(
+                d,
+                arrays["y_" + part][:, None],
+                d.row_ids,
+                raw_width=2,
+                weight=arrays["weight_" + part],
+                structure={"x": arrays["age_" + part][:, None]},
+            )
+        )
+    direct = formula(
+        *problems, context=RunContext("evaluation", 7), patience=patience, **job["config"]
+    )
+    prediction, saved, training = fit(job, arrays)
+    model = direct.state.model if patience is None else direct.state.best_model
+    a, b = np.logaddexp(0, model.predict(problems[1].data)).T
+    np.testing.assert_allclose(prediction, a * -np.expm1(-b * arrays["age_validation"]), rtol=1e-14)
+    assert training["selected_model_identity"] == model.identity
+    assert training["selected_validation_half_squared_error"] == pytest.approx(
+        np.average(
+            (prediction - arrays["y_validation"]) ** 2 / 2, weights=arrays["weight_validation"]
+        )
+    )
+    path = tmp_path / "model.bin"
+    path.write_text(json.dumps(saved))
+    np.savez(
+        tmp_path / "features.npz",
+        x=arrays["x_validation"],
+        row_ids=arrays["validation_row_ids"],
+        age=arrays["age_validation"],
+    )
+    script = Path(__file__).resolve().parents[2] / "benchmarks/v1/openboost_predict.py"
+    subprocess.run(
+        [
+            sys.executable,
+            str(script),
+            str(path),
+            str(tmp_path / "features.npz"),
+            str(tmp_path / "replay.npz"),
+        ],
+        cwd=tmp_path,
+        check=True,
+    )
+    with np.load(tmp_path / "replay.npz") as r:
+        np.testing.assert_array_equal(prediction, r["prediction"])
+    for age in [None, np.zeros(4), np.ones((4, 1))]:
+        with pytest.raises(ValueError):
+            predict_saved(saved, arrays["x_validation"], age=age)

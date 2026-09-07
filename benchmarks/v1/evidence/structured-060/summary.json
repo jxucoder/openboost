@@ -1,0 +1,626 @@
+{
+  "scope": "Current A1/A2/A3/A5/A6/A7/A8/A9/A10/A11/A12 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+  "revision": "3ff97c3d249271f6c8423b95562ccf03d773b676",
+  "dirty": true,
+  "argv": [
+    "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+    "-m",
+    "benchmarks.v1.openboost_worker_smoke",
+    "/private/tmp/openboost-structured-060-retry",
+    "--applications",
+    "A12"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "machine": "x86_64",
+  "cpu_count": 16,
+  "device": "cpu",
+  "gpu": null,
+  "threads": 1,
+  "memory_cap": null,
+  "packages": {
+    "numpy": "2.3.5",
+    "openboost": "1.0.0rc1"
+  },
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/openboost_worker.py": "d71a5a0f9a5bf38c9a12c82999820d15470c6b95a0c3310fc2877ff33a0bcb8c",
+    "benchmarks/v1/openboost_predict.py": "a8edf51cdf5be05536545ba8f56dce336cd71d2134b3b9debf7cc0bd29bd628f",
+    "benchmarks/v1/openboost_worker_smoke.py": "ff6413c05cd2296f9e70f3508b2f53a04e825380eaeabd95bb57cdb37e6f2ba0",
+    "benchmarks/v1/worker_data.py": "6705574af0989bc5f34c3bb43a5466c86a34c08dcb6ea549cf9ad885c04719d0",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "data": {
+    "A12": {
+      "application": "A12",
+      "dataset": "concrete",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "1409cb024293499551527b6bbf635c9d01e97de7731ec170d4e5950b13aea531"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "810fd9c5067134e4de2fe9ab61092908713a2bcb3fc99f9aa86d6835649bf878"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "616c8feb197f7cce51a5c21fa3badb29532f4453d8fb1a212c5e71caa403a969"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "2cf36ce99d30c832c86a07a1cf250d8a992f2c2a6d1cdd3089d220eb42c88534"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "cc6daae2aa8d170f17aa018439cfbbc5e606a9ece3c455a455bf8c1a985e6a3f"
+            },
+            "formula-input": {
+              "path": "0/formula-input.npz",
+              "sha256": "8e23b2b69e6288cb62410b30a44857006066e8783d27e360080a067b9637d77b"
+            },
+            "validation-structure": {
+              "path": "0/validation-structure.npz",
+              "sha256": "59ebd7cd5785f96c4f808dcde1ef3709a81b346b6937073bc09f7cb157962a07"
+            },
+            "test-structure": {
+              "path": "0/test-structure.npz",
+              "sha256": "05fe7a98b2dc54e8824293afdf17137715ae6d3616919978de9f729a18ebf0d4"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "d17dd325727de736821bf3435ad5051ae36c00b7d4f7efcf99dcb16dacfbc7b4"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "2bfd635778f518a16be87778cc72601cd927d9e34be5e6eda638480ac7947cc9"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "8f79da547abcce2ff7c262cf4f25b54f2ca2fd0af13c3f02b4074af02007ce7c"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "a4612a16d835cd2d712f37484d5ff3db4f0e2a0c22bde74b581d6dc8bf54df64"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "19478323cc0ec2d8bf8378c375c29afae01d1dacae29a40a70666f071e49960a"
+            },
+            "formula-input": {
+              "path": "1/formula-input.npz",
+              "sha256": "47459d1692775a02dec8a53224ece7e492252539b67aced659d434a38b26a932"
+            },
+            "validation-structure": {
+              "path": "1/validation-structure.npz",
+              "sha256": "b8e961ee37afa13f939ac261834c328667f1aaf44c8f88db85d8d4b813d96880"
+            },
+            "test-structure": {
+              "path": "1/test-structure.npz",
+              "sha256": "1ad63654994b3fdc6aad9e318410b8df8bf5bcd39c04a28db640b4059e7f454b"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "074688f4eb2b2a68e812f8af1768364d0dc2ca08a9962f930076c9d1e8e5d9ef"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "edf5a2d705375a06bdc9ef06e647ea150dc099c2ff44139e7b0675d3a7e0d1a0"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "bb1b0fe4e32d296a92a0d8971aa2ae88d16f766e39868e475c93c7ce50d83aec"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "ca23ff9eea4c59b9acfc2fd36fa9b3404b908fae1a566a9f1d06673b84215478"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "17ad5fce88828052c181bdaf81a8022bc0201fdb7952015bf9df16953cf693ab"
+            },
+            "formula-input": {
+              "path": "2/formula-input.npz",
+              "sha256": "00379285c100d8aa48276da08b565f591a2228917e44e64014926db4d5158ee3"
+            },
+            "validation-structure": {
+              "path": "2/validation-structure.npz",
+              "sha256": "a9c070ca3d998086e4a02acc40d0953430edb43934db4f649aca2a756bcf6360"
+            },
+            "test-structure": {
+              "path": "2/test-structure.npz",
+              "sha256": "c25925aa72084a9b3d9d62285ca793a49bf820333c2f4993734caa4a3fc33302"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "1722d246878ffead019d3d9b94e7343325c9f162c1a565ddd95664d6dd37f959"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "bf38782ee6b21b3748ab91c048be51663bc2517dd4734cee8b9d5932b6a49a7f"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "9b102f96fe81c4177da8c2ab0d0bf17107f80576544dc6337bfe1af978974871"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "9c07a03bd91275e86df11fea4f2c835261a305b626a76a3b10a4621c979ed877"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "3cdf2601b954023779c32ab58401241c201cc0bfb4a3951f99ced2c0dd3609cf"
+            },
+            "formula-input": {
+              "path": "3/formula-input.npz",
+              "sha256": "721bf7ab4587781d97b4a381c3b90d77d6cf20ac7974f584bde23d4aecbe2a4a"
+            },
+            "validation-structure": {
+              "path": "3/validation-structure.npz",
+              "sha256": "7e5be679ee51be580728d0b93086ba61de01c61badb36f8a74f08636dc1e95bf"
+            },
+            "test-structure": {
+              "path": "3/test-structure.npz",
+              "sha256": "ada5a1c15447085d3f249c39a17b8df6dd04b2bc507d97dec03cef434c3d5dde"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "c82bdfd8634be906a9717cfe1d17175519311ad4b262c4b5ef9a30ef4b04abce"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "5d8f14f0b1648ea0d8322d6a1114cf1745367f6ba0f17f3268fd68620dc7e370"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "a8a6d3bd7f7844e4829cca0761b8085d3d352b3ef1cba89663cf22577a43d8a2"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "6b266d810547087863bcd3e9c03ab123b549e461f8a4f02cc19ddafea08cab0d"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "d2423a1c9cafa045ea935f6fc952e037402f8c21cb660ab2e0a8ac412d67150f"
+            },
+            "formula-input": {
+              "path": "4/formula-input.npz",
+              "sha256": "dda8433ac442de41b483121fa3f3a7e44a6148ea4a4cbea0c369863b9e6577af"
+            },
+            "validation-structure": {
+              "path": "4/validation-structure.npz",
+              "sha256": "525e5e63ecc36671289b3a60d4b3efecf69f6cdfc203db5dc8b34cc8de26717b"
+            },
+            "test-structure": {
+              "path": "4/test-structure.npz",
+              "sha256": "e6a7b82c20849d16220050d3112a342e460a81f12e248216a0b112280c0a6804"
+            }
+          },
+          "metadata": {
+            "age_train_range": [
+              0.03571428571428571,
+              13.035714285714286
+            ]
+          }
+        }
+      ],
+      "source_freeze_sha256": "094049cfe8a9137b02a2599e6be823d669f191d31828989a9dae46797ef6e439",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6705574af0989bc5f34c3bb43a5466c86a34c08dcb6ea549cf9ad885c04719d0",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    }
+  },
+  "cells": [
+    {
+      "command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-structured-060-retry/A12/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.4035154579905793,
+      "artifacts": {
+        "model.bin": "e723924c0b03211a7a260d1a535efd38afe31dddda52768edaa43f894125e8c0",
+        "training.json": "6ab94d465c7bd840dd581916032ccedc1f1acc84f7a2822893249ee61340faec",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "cb0f328baed5184e48147235af96f32de178190b73fe5ff133e984ba960b7c17"
+      },
+      "application": "A12",
+      "fold": 0,
+      "job": {
+        "application": "A12",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-structured-060-retry/A12/0/formula-input.npz"
+      },
+      "replay_command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-structured-060-retry/A12/0/fit/model.bin",
+        "/private/tmp/openboost-structured-060-retry/A12/0/fit/features.npz",
+        "/private/tmp/openboost-structured-060-retry/A12/0/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        187
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 86.35143120334615,
+          "last_score": 86.35143120334615,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "5b50ffbefa0b954e57a4328a8465649d930d3444669d1d7a740dedd04bacb19c",
+        "best_validation_score": 86.35143120334615,
+        "output": "saturation_age28_mean",
+        "selection_metric": "weighted_half_squared_error",
+        "structure_units": "age_days_divided_by_28",
+        "selected_validation_half_squared_error": 86.35143120334617
+      },
+      "replay_sha256": "cb0f328baed5184e48147235af96f32de178190b73fe5ff133e984ba960b7c17"
+    },
+    {
+      "command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-structured-060-retry/A12/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.39672091700776946,
+      "artifacts": {
+        "model.bin": "291cffaf6be535982048f5b6a8fb50e4f0477b6a23bb2fa920091990b42d72e9",
+        "training.json": "89e7090c23d706ffb058234989850a22f50656c8c38295bc41877ac71d2e697d",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "79f25c1b44b3ba03cbde7192d9f8aeaef0582363f87f9e1a8c3d73efc84b6d53"
+      },
+      "application": "A12",
+      "fold": 1,
+      "job": {
+        "application": "A12",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-structured-060-retry/A12/1/formula-input.npz"
+      },
+      "replay_command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-structured-060-retry/A12/1/fit/model.bin",
+        "/private/tmp/openboost-structured-060-retry/A12/1/fit/features.npz",
+        "/private/tmp/openboost-structured-060-retry/A12/1/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        201
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 107.65127949306486,
+          "last_score": 107.65127949306486,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "bc5958133fde7992e0aff23ba41ed985c7cb78008c550cd0daf2b1512a4fe1de",
+        "best_validation_score": 107.65127949306486,
+        "output": "saturation_age28_mean",
+        "selection_metric": "weighted_half_squared_error",
+        "structure_units": "age_days_divided_by_28",
+        "selected_validation_half_squared_error": 107.65127949306486
+      },
+      "replay_sha256": "79f25c1b44b3ba03cbde7192d9f8aeaef0582363f87f9e1a8c3d73efc84b6d53"
+    },
+    {
+      "command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-structured-060-retry/A12/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.46374233400274534,
+      "artifacts": {
+        "model.bin": "7722978e5fd2f7b111183aab17ec66fe6e2d0c8e576ed9c9fc4450e656127ec2",
+        "training.json": "c1dbc33157d257beb1e213aac646979e7d8760548e59f4639cf81c57c5401650",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "542631411ebbebe01ac0986a02393e7e8d4ec7f5bfd3b5cef8a8dd11193ac24c"
+      },
+      "application": "A12",
+      "fold": 2,
+      "job": {
+        "application": "A12",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-structured-060-retry/A12/2/formula-input.npz"
+      },
+      "replay_command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-structured-060-retry/A12/2/fit/model.bin",
+        "/private/tmp/openboost-structured-060-retry/A12/2/fit/features.npz",
+        "/private/tmp/openboost-structured-060-retry/A12/2/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        215
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 98.35053291841649,
+          "last_score": 98.35053291841649,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "107e8f460377fd34edb745cba87112998e7d64708d001b8c0658951b3d59e304",
+        "best_validation_score": 98.35053291841649,
+        "output": "saturation_age28_mean",
+        "selection_metric": "weighted_half_squared_error",
+        "structure_units": "age_days_divided_by_28",
+        "selected_validation_half_squared_error": 98.35053291841649
+      },
+      "replay_sha256": "542631411ebbebe01ac0986a02393e7e8d4ec7f5bfd3b5cef8a8dd11193ac24c"
+    },
+    {
+      "command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-structured-060-retry/A12/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.399459874999593,
+      "artifacts": {
+        "model.bin": "922c780fef44596f77a75d207cdb1cf419f207da60a7ea4dc3a62e822979fc79",
+        "training.json": "2067ff22856601b4dd6e17e336c1a077f0dd0f184cbbf4eee6f1510ba2d5faac",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "99f4748adda6655a0d0ffffd271e3ed8604b2be1bbde5f7cc8e011f18c87ef2a"
+      },
+      "application": "A12",
+      "fold": 3,
+      "job": {
+        "application": "A12",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-structured-060-retry/A12/3/formula-input.npz"
+      },
+      "replay_command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-structured-060-retry/A12/3/fit/model.bin",
+        "/private/tmp/openboost-structured-060-retry/A12/3/fit/features.npz",
+        "/private/tmp/openboost-structured-060-retry/A12/3/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        217
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 98.50360535028574,
+          "last_score": 98.50360535028574,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "1e9aa2d47bf8783ce736e9aabac7ce60d38ef40037be05f319826ff3ba0e0c0c",
+        "best_validation_score": 98.50360535028574,
+        "output": "saturation_age28_mean",
+        "selection_metric": "weighted_half_squared_error",
+        "structure_units": "age_days_divided_by_28",
+        "selected_validation_half_squared_error": 98.50360535028572
+      },
+      "replay_sha256": "99f4748adda6655a0d0ffffd271e3ed8604b2be1bbde5f7cc8e011f18c87ef2a"
+    },
+    {
+      "command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-structured-060-retry/A12/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.4077891670021927,
+      "artifacts": {
+        "model.bin": "ac23139aff7dc7bce97a5f5745b360d7672b83c982f3fce80c416fc6624cb4f3",
+        "training.json": "42d4967646077aec0548fa2bc9d1471d289e6602b376380b91bf203c85fdc554",
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "predictions.npz": "a96b3fa851b8c5c2adf62c62d552121f72fdad29a6d6b0265f42f59366cf18d4"
+      },
+      "application": "A12",
+      "fold": 4,
+      "job": {
+        "application": "A12",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-structured-060-retry/A12/4/formula-input.npz"
+      },
+      "replay_command": [
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_predict.py",
+        "/private/tmp/openboost-structured-060-retry/A12/4/fit/model.bin",
+        "/private/tmp/openboost-structured-060-retry/A12/4/fit/features.npz",
+        "/private/tmp/openboost-structured-060-retry/A12/4/fit/replay.npz"
+      ],
+      "prediction_shape": [
+        211
+      ],
+      "fresh_process_exact": true,
+      "training": {
+        "selection": "best_validation",
+        "stop": {
+          "rounds": 4,
+          "patience": 3,
+          "min_delta": 0.0,
+          "reference_score": 127.67160192185678,
+          "last_score": 127.67160192185678,
+          "completed_rounds": 4,
+          "stale_rounds": 0,
+          "reason": "budget"
+        },
+        "accepted_commits": 4,
+        "selected_model_identity": "5ff9c74bdb0e6db51ec400f1c99d7a84210e8907038e9746e7189edfea0513ba",
+        "best_validation_score": 127.67160192185678,
+        "output": "saturation_age28_mean",
+        "selection_metric": "weighted_half_squared_error",
+        "structure_units": "age_days_divided_by_28",
+        "selected_validation_half_squared_error": 127.67160192185676
+      },
+      "replay_sha256": "a96b3fa851b8c5c2adf62c62d552121f72fdad29a6d6b0265f42f59366cf18d4"
+    }
+  ]
+}

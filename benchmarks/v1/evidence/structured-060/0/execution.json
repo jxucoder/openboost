@@ -1,0 +1,19 @@
+{
+  "artifacts": {
+    "model.bin": "e723924c0b03211a7a260d1a535efd38afe31dddda52768edaa43f894125e8c0",
+    "predictions.npz": "cb0f328baed5184e48147235af96f32de178190b73fe5ff133e984ba960b7c17",
+    "training.json": "6ab94d465c7bd840dd581916032ccedc1f1acc84f7a2822893249ee61340faec",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/tmp/openboost-research-uv-cache/builds-v0/.tmp3iI6Gk/bin/python",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+    "/private/tmp/openboost-structured-060-retry/A12/0/job.json"
+  ],
+  "exit_code": 0,
+  "reason": "",
+  "status": "pass",
+  "threads": 1,
+  "timeout_s": 90,
+  "wall_s": 0.4035154579905793
+}

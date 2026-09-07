@@ -180,3 +180,22 @@ def test_survival_events_and_training_support_are_not_recomputed_on_validation()
     frozen["censoring_support"]["survival"][0] = 0
     with pytest.raises(ValueError, match="censoring support"):
         bind("A10", data, parts, frozen)
+
+
+def test_formula_packet_keeps_age_out_of_tree_features():
+    data = dict(
+        x=np.arange(18.0).reshape(9, 2),
+        y=np.arange(9.0) + 1,
+        structure=np.arange(9.0) / 28 + 0.1,
+        group=np.arange(9),
+    )
+    parts = dict(train=np.arange(3), validation=np.arange(3, 6), test=np.arange(6, 9))
+    frozen = prepare("concrete", data, [parts])[0]
+    packets, _ = bind("A12", data, parts, frozen)
+    formula = packets["formula-input"]
+    ordinary = packets["worker-input"]
+    for p in ["train", "validation"]:
+        np.testing.assert_array_equal(formula["x_" + p], ordinary["x_" + p][:, :-1])
+        np.testing.assert_array_equal(formula["age_" + p], ordinary["x_" + p][:, -1])
+        assert formula["x_" + p].shape[1] == ordinary["x_" + p].shape[1] - 1
+    assert not any("test" in k for k in formula)

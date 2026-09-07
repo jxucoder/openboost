@@ -1,4 +1,4 @@
-"""Current CPU A1/A2/A3/A5/A6/A7/A8/A9/A10/A11 trials on frozen encoded train/validation packets.
+"""Current CPU A1/A2/A3/A5/A6/A7/A8/A9/A10/A11/A12 trials on frozen encoded train/validation packets.
 
 Explicit validation targets are required even with fixed budgets. The caller
 controls process threads and resource limits. Test arrays are always rejected.
@@ -16,6 +16,7 @@ from openboost.multioutput import TargetScale
 from openboost.recipes import (
     aft,
     binary,
+    formula,
     gamma,
     multi_squared,
     multiclass,
@@ -59,6 +60,8 @@ def fit(job, arrays):
         needed |= {"weight_train", "weight_validation"}
     if job["application"] == "A10":
         needed |= {"event_train", "event_validation"}
+    if job["application"] == "A12":
+        needed |= {"age_train", "age_validation"}
     if not needed <= set(arrays) or set(arrays) - needed - {"weight_train", "weight_validation"}:
         raise ValueError("explicit train/validation arrays only; no test arrays")
     external_ids = np.asarray(arrays["validation_row_ids"])
@@ -129,6 +132,11 @@ def fit(job, arrays):
             ):
                 raise ValueError("aligned positive finite exposure required")
             structure = {"exposure": exposure[:, None]}
+        if job["application"] == "A12":
+            age = np.asarray(arrays["age_" + part])
+            if age.shape != y.shape or not np.isfinite(age).all() or np.any(age <= 0):
+                raise ValueError("aligned positive age/28 structure required")
+            structure = {"x": age[:, None]}
         target = y if multi else y[:, None]
         target_kind = "numeric"
         if job["application"] == "A10":
@@ -163,6 +171,7 @@ def fit(job, arrays):
         "A9": tweedie,
         "A10": aft,
         "A11": normal,
+        "A12": formula,
     }[job["application"]]
     if job["application"] == "A9":
         cfg["power"] = 1.5
@@ -189,7 +198,10 @@ def fit(job, arrays):
     if multi:
         saved["target_scale"] = target_scale
     prediction = predict_saved(
-        saved, arrays["x_validation"], exposure=arrays.get("exposure_validation")
+        saved,
+        arrays["x_validation"],
+        exposure=arrays.get("exposure_validation"),
+        age=arrays.get("age_validation"),
     )
     training = dict(
         selection=selection,
@@ -240,6 +252,17 @@ def fit(job, arrays):
             sigma=1.0,
             selected_validation_censored_nll=LogNormalAFT(1.0).loss(
                 problems[1], model.predict(problems[1].data)
+            ),
+        )
+    if job["application"] == "A12":
+        training.update(
+            selection_metric="weighted_half_squared_error",
+            structure_units="age_days_divided_by_28",
+            selected_validation_half_squared_error=float(
+                np.average(
+                    (prediction - arrays["y_validation"]) ** 2 / 2,
+                    weights=arrays.get("weight_validation"),
+                )
             ),
         )
     if classification:
