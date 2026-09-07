@@ -44,9 +44,8 @@ is active local construction: accepted/proposal ownership, resident two-round
 scalar training and saved CPU inference. Further hardware work requires a new
 concrete freeze and allowance.
 The [088 run-4 package](078-resident-run4.json) now freezes 202 device cases and
-47 upload files. Automatic approval review rejected the launch because "continue"
-was not accepted as explicit approval for the private upload and compute. No run
-or upload occurred; both protocol approvals are pending explicit clarification. Local
+47 upload files. After the initial automatic-review block, the user explicitly
+approved this private package's upload to Modal and the single bounded T4 run. Local
 regression, judging, packaging and collection do not pass the hardware gate.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external

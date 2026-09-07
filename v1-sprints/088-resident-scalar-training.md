@@ -1,8 +1,8 @@
 # Sprint 088: Resident scalar rounds and owned transactions
 
-Status: run-4 launch blocked by automatic approval review; explicit private-upload
-and compute approval is pending. Baseline `e1a9c20`. Implements 086's 078-C. The
-three prior invocations are consumed; no run-4 invocation or upload occurred.
+Status: explicit private-upload and compute approval received after the initial
+automatic-review block. Baseline `e1a9c20`. Implements 086's 078-C. The three prior
+invocations are consumed; one unchanged run-4 invocation is now authorized.
 No new agents, CPU search or phase exit.
 
 ## Decision and public boundary
@@ -204,3 +204,12 @@ and the unchanged 47-file closure still matches its freeze. No upload or remote
 invocation occurred, and no run-4 allowance was consumed. Do not retry through a
 different tool or indirect upload. Request explicit approval naming this private
 package, Modal destination and single bounded T4 run before another launch attempt.
+
+## Explicit approval after the block
+
+The user replied "approve" to the explicit question authorizing upload of the
+frozen 47 private source/test/metadata files to Modal and execution of all 202
+checks once on a T4, with a 15-minute function limit and no retries. Record both
+protocol approvals without changing the payload, cases, dependencies or bounds.
+This resolves the stated approval ambiguity; use the original launcher after
+verification and a clean local commit. No alternate execution route is needed.

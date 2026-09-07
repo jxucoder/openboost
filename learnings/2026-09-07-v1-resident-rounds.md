@@ -105,6 +105,16 @@ The failure-only custom-learner recipe explicitly uses four bins, preserving the
 
 ## Risks and Follow-ups
 
+The user subsequently replied "approve" to the explicit question naming the 47
+private source/test/metadata files, Modal destination and one T4 run of all 202
+checks with a 15-minute limit and no retries. Both approvals are recorded again
+for the unchanged package. This resolves the ambiguity cited by automatic review;
+retain the same launcher and payload. Commit before dispatch and record its actual
+result separately from authorization.
+All 33 local manifest/judging checks pass with the explicit approvals. The 46
+prefrozen hashes and 202 cases remain unchanged; neither output nor launcher log
+exists before dispatch. No environment or package changes are needed.
+
 Automatic approval review rejected launcher process creation at `c65a969`. The
 stated reason was that "continue" was not explicit enough to authorize the new
 47-file private package upload to Modal and remote compute. The approval
