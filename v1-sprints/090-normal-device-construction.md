@@ -1,8 +1,9 @@
 # Sprint 090: Normal device construction and independent fixtures
 
-Status: 090-A complete; 090-B operations constructed with hardware checks pending;
-090-C mapped runtime, 090-D recipes and 090-E external D2 constructed; 090-F's
-67-file/383-case package is frozen. Upload/run approved by the user; execution pending.
+Status: first hardware execution archived; 381/383 passed at `4143d18`.
+Operations, recipes and installed D2 pass their bounded checks; two mapped-runtime
+acceptance cases fail. Normal acceptance remains open. All six allowances are
+consumed; stop at the planned retrospective. No retry or additional upload.
 Mapping: [079](079-cuda-distribution-and-extension.md) / B12 / F3.2 / R6 /
 C2–C5 / E1–E2 development conformance. Parent: `48a1386`.
 
@@ -397,3 +398,78 @@ The user explicitly approved the concrete 67-file Modal upload and one T4 run
 after reviewing the request. Both protocol authorization fields are approved.
 Reverify the source freeze, commit the approval, dispatch once, then archive and
 reflect. No retry, broader upload, push or independent-author attempt is included.
+
+### Run-6 result and retrospective
+
+The [committed raw evidence](../benchmarks/v1/evidence/cuda-normal-090/README.md)
+contains 381 passes, two failures and no skips/errors across the exact 383 cases.
+All 67 dispatch source hashes, installed core/extension hashes, 18 pinned versions
+and 79 raw artifact hashes verify. All 76 declared model/input/measurement/replay
+files are retained. The overall verdict is false. No production source, frozen
+test or tolerance was changed after execution, and no retry occurred.
+
+| Boundary | Device result |
+| --- | --- |
+| Existing scalar/storage/split cases | 212/212 pass unchanged |
+| Normal preparation/base/geometry/directions/fields | 23/23 pass |
+| Mapped Normal transactions and ownership | 94/96 pass; two decision mismatches |
+| Joint/ordered Normal recipes and retention | 31/31 pass |
+| Installed D2, identity/cleanup and fresh inference | 20/20 pass; nineteen saved models |
+| Separate known split near-tie diagnostic | Measurement passes; structural difference remains |
+
+The two failing cases are ordinary forward/reverse updates, depth zero, the
+conflict fixture and rate 8 with backtracking. They stop after coefficients `(8,4)`
+where the float64 oracle requires `(8,4,2,1,.5,.25)`. The oracle starts at the
+constant optimum; its gradient sums are around `1e-16`. The actual saved base in
+a passing D2 model with equal training inputs differs at float32 precision, and
+independent math there has nonzero gradient sums. This supports a near-stationary
+numerical-boundary hypothesis, not a proven device root cause. The failing tests
+did not emit the current round/channel, raw states, gradients or loss bits; keep
+that observation gap explicit. The [reproducible analysis](../benchmarks/v1/evidence/cuda-normal-090/analysis.json)
+does not execute or emulate CUDA.
+
+The independent near-tie diagnostic records equal stored device scores but a
+`0.009251285171136714` prediction difference on zero-weight row 0 relative to the
+CPU tree. Its passing measurement checks do not repair that earlier limitation.
+These two numerical questions concern different boundaries: transaction acceptance
+and split ordering. Neither can be resolved by counting the other's passing cases.
+
+The architecture result is concrete: the same public device operations support a
+second algorithm family and an installed external D2 policy, without a second
+private trainer or core edits for the extension. It is still designer-created
+development evidence. Independent E5/author benefit, adoption, full R/C/A coverage,
+original P7 and E4 remain required and open. Sprint 079 cannot close on this run.
+
+Cost reflection: the whole dispatch took 363.47 seconds, with a 68.76-second worker
+interval and 66.84 seconds reported by pytest. Thirty-six six-row D2 fits include
+186 rejected trials. Repeated fit times span 0.268-0.464 seconds with 1066-1241
+synchronizations in the shown natural-backtracking examples. Validation checks
+and owned copies contribute separately from metric decisions. These are tiny
+diagnostics with setup/binned-input qualifications, not competitive benchmarks;
+the raw measurements motivate later profiling, not speculative CPU optimization
+or removal of correctness guards.
+
+### Proposed next tranche after this retrospective
+
+1. Instrument both failures before any assertion: round/channel, current and
+   proposed raw bits, initialization, gradient/Fisher and root summaries, leaf,
+   coefficient, both metric values/bits, acceptance and version/best prefix.
+   Keep all original cases and the failed archive unchanged.
+2. Compare device values to independent original-row math at the same stored
+   input/state, including high-precision loss differences where the float64 loss
+   is indistinguishable. Separate a kernel error, rounding-scale objective change
+   and a contract that asks different precisions to make incompatible decisions.
+3. Specify the numerical acceptance policy before correcting implementation.
+   Evaluate stable loss differences or an explicit convergence rule only with
+   supporting counterexamples. Do not add a blanket epsilon or silently change
+   the frozen oracle. A semantic revision needs a separately documented cohort;
+   this run remains a failure regardless of a later result.
+4. Freeze the smallest correction/diagnostic package with all 383 regressions and
+   request a new allowance when it is reviewable. After full Normal acceptance,
+   return to 079's original-P7 obligations and 080's required CUDA matrix, keeping
+   069 accounting/isolation in scope without launching authors or new agents.
+
+This is a follow-up proposal, not a new upload/run allowance. Stop here at the
+planned reflection boundary. Local archival checks and the full CPU regression
+pass **1434 tests**, with one Linux-only skip; Ruff/docs and nineteen saved-model
+replays pass. No push or external publication occurred.

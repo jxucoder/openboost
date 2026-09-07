@@ -61,3 +61,38 @@ CUDA recipes and independent-author accounting remain open.
 
 - `a5de692` — frozen run-6 package.
 - `4143d18` — explicit upload and compute approval at dispatch.
+- `ad9792f` — immutable run result, consumed allowance and archival tests.
+
+## Retrospective verification and next boundary
+
+`benchmarks/v1/analyze_normal_run6.py` derives the separate committed
+[analysis.json](../benchmarks/v1/evidence/cuda-normal-090/analysis.json) from the raw
+manifest/artifacts plus independent original-row CPU mathematics. It verifies
+all raw hashes and preserves the failing verdict. It records its own source hash
+and reference hashes. Reproduce with `uv run --no-sync python -m
+benchmarks.v1.analyze_normal_run6 /tmp/openboost-run6-analysis.json`; it executes
+no device kernels or emulator. The generated artifact is separate from the
+original 79 raw hashes and never rewrites the dispatch manifest.
+
+The reference constant optimum has gradient sums about `[-5.55e-17,-1.11e-16]`.
+A recorded D2 device base with identical training inputs produces nonzero
+gradients when evaluated by the CPU oracle; this comparison identifies a
+stationarity/precision boundary worth investigating. It does not reconstruct the
+missing failed-device raw/loss trace. The next package must emit those values
+before its first assertion. No source correction or changed acceptance policy
+is claimed. The original two failures remain required; the separately recorded
+zero-weight split near-tie is also unresolved.
+
+All 36 first/repeated D2 fits and 186 rejected trials remain in the raw artifacts.
+Repeated tiny fits take 0.268-0.464 seconds; the shown natural-backtracking cases
+have 1066-1241 synchronizations. This motivates scoped profiling after correctness,
+not a performance comparison or removal of validation/ownership guarantees.
+Dispatch wall time includes roughly six minutes of image/orchestration/testing;
+the worker itself is 68.76 seconds. Original P7 and E4 remain open.
+
+After archival tests were added, the full CPU regression passes **1434 tests**,
+with one Linux-only skip (`/tmp/openboost-090-results-cpu.log`, same CPU command as
+the freeze). Production/changed-support Ruff and MkDocs pass. The post-run
+retrospective changes documentation and adds a read-only analysis script; it
+does not alter any executed production code or device tests. Stop at the planned
+retrospective. Six allowances are consumed; no retry or push occurred.

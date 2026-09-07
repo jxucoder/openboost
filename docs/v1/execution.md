@@ -257,7 +257,7 @@ quality or performance. All five approved runs are consumed; no retry is authori
 Other required device recipes, train-many, quality, cost and author/adoption gates
 remain open.
 
-## Normal components: constructed, hardware verification pending
+## Normal components: bounded evidence with acceptance failures
 
 `openboost.device_normal` now provides resident `prepare`, `base`, `geometry` and
 `loss` operations for scalar targets with two raw columns (mean/log scale).
@@ -280,10 +280,10 @@ caller-owned. Release buffers with the context and field records with operations
 `device_normal.objective(minimum_scale=...)` constructs an explicit
 `ObjectiveOperations` bundle (validation/preparation/base/loss). Pass it as
 `DeviceRun(..., objective=device_normal.objective())` to use the shared runtime.
-The bundle does not itself train a model. The 23 new geometry hardware tests
-are collected locally, not executed: no Normal CUDA correctness or cost claim is
-established by these changes. The earlier 212 passing scalar cases remain tied to
-their measured revision and must be rerun after integration.
+The bundle does not itself train a model. [Run 6](../../benchmarks/v1/evidence/cuda-normal-090/README.md)
+passes all 23 Normal geometry checks and reruns all 212 scalar cases successfully
+at `4143d18`. The overall 383-case run fails two ordered acceptance checks, so it
+does not establish full Normal conformance or quality/cost parity.
 
 `DeviceTerm(tree, mapping)` owns an immutable float32 `[1,K]` mapping. A
 `run.propose_terms(state, terms, coefficient=...)` call snapshots the entire tuple
@@ -302,9 +302,12 @@ selection, proposal rejection, keyed RNG and explicit record release remain the
 same contracts. Mapped model export uses the existing CPU TreeTerm format.
 
 Ninety frozen three-round Normal transaction cases and six ownership/rollback
-cases are collected for hardware execution. They include both update orders,
+cases execute on T4: 94 pass and two fail. They include both update orders,
 independent cohort fields and failures after partially copying/predicting terms.
-Collection is not CUDA validation; no mapped-runtime hardware pass is claimed.
+The failures concern exact backtracking decisions in ordinary ordered depth-zero
+conflict fixtures near a stationary base. The retained traces do not prove the
+device cause. Strict acceptance remains implemented as a training-NLL decrease;
+no tolerance was changed to turn these failures into passes.
 
 `device_recipes.normal(ops, train, validation, run_id=..., seed=...)` now composes
 these components. `mode` chooses ordinary/natural direction; `damping` belongs to
@@ -325,5 +328,8 @@ the same public device signature as squared and owns its tree configuration.
 
 The 31 additional recipe checks cover frozen trajectories, zero budgets, numeric
 sixth-trial recovery, partial/full rejection, patience, invalid-learner cleanup,
-24 ordered rounds and fresh CPU model loading with CUDA imports disabled. They
-are collected only. Hardware correctness, installed D2 and cost remain pending.
+24 ordered rounds and fresh CPU model loading with CUDA imports disabled. All 31
+pass in run 6. Twenty additional installed-D2/fresh-inference checks pass, including
+nineteen saved models replayed in a separate CPU environment without CUDA or the
+training extension. Timing/copy/synchronization diagnostics are retained for tiny
+fits; original P7, full Normal acceptance and real-data quality/cost remain open.

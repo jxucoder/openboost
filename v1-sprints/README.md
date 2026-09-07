@@ -26,7 +26,7 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1432 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1434 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.
@@ -49,18 +49,18 @@ ten added diagnostics pass at `af026ef`; the
 [run-5 evidence](../benchmarks/v1/evidence/cuda-score-symmetry-089/README.md) reproduces
 the archived scorer's wrong winner and the corrected scorer's exact tie on the
 same resident inputs, with both PTX outputs retained.
-All five allowances are consumed; no retry occurred. The result reflection is
-recorded and the user continued local [079](079-cuda-distribution-and-extension.md)
-construction through [090](090-normal-device-construction.md): Normal operations,
-mapped multi-term runtime, joint/ordered loops, installed D2 and fresh inference.
-090-A adds 101 independent-math/public-CPU checks and retains a zero-weight split
-ambiguity as a separate diagnostic. 090-B/C/D construct Normal operations, shared
-mapped transactions and joint/ordered recipes; their hardware checks collect but
-have not executed. External D2 and local installed import/replay checks now exist.
-The [67-file/383-case run-6 package](090-normal-run6-request.md) is frozen and
-has explicit upload/compute approval; execution is pending, alongside 069 accounting/isolation work.
-No Normal CUDA pass is claimed. New hardware requires the declared allowance;
-all 212 earlier device regressions remain required. Full v1 gates remain open.
+The later approved [run-6 Normal/D2 package](090-normal-run6-request.md) executes
+at clean `4143d18`: [381/383 pass](../benchmarks/v1/evidence/cuda-normal-090/README.md),
+including all 212 earlier cases, all Normal operation/recipe checks and all twenty
+installed-D2/fresh-inference checks. Two mapped-runtime cases disagree with the
+frozen reference's ordered backtracking decisions near a stationary constant base.
+The cause is not yet proven. All nineteen saved models replay without CUDA or
+the training extension; the separate split near-tie remains a known limitation.
+
+All six allowances are consumed; no retry occurred. Stop at [090's retrospective](090-normal-device-construction.md),
+with an acceptance-policy investigation proposed before more CUDA families.
+Normal conformance, original P7/E4, 069 accounting/isolation and full R/C/A scope
+remain open. Further hardware needs a concrete frozen package and a new allowance.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

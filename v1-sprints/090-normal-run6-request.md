@@ -1,6 +1,7 @@
 # Run 6: Normal and installed D2 correctness package
 
-Status: user-approved private upload and one bounded device allowance; execution pending.
+Status: executed at `4143d18`; 381 passed and two failed. Allowance consumed;
+no retry authorized. See the [result](../benchmarks/v1/evidence/cuda-normal-090/README.md).
 Exact package: [090-normal-run6.json](090-normal-run6.json).
 Construction baseline: `ac7b1e1`; the protocol freezes every uploaded file except
 itself by SHA256. Dispatch requires a clean checkout and records its actual SHA,
@@ -53,6 +54,9 @@ required CUDA recipes and the full R/C/A scope remain open. No quality, speed,
 adoption or formal phase-exit claim follows from this run.
 
 ## Dispatch and stop boundary
+
+The following is the approved dispatch procedure retained for provenance. This
+allowance is now consumed and must not be reactivated to rerun the command.
 
 After explicit approval, set this protocol's compute and upload authorization
 fields to `approved`, commit, recheck the source freeze and run:

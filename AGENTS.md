@@ -93,21 +93,23 @@ reproduce the archived scorer's one-ULP asymmetry; independently rounded product
 restore equal scores and the expected split. All 202 original cases and ten added
 diagnostics pass. See the [run-5 evidence and retrospective](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
 Bounded scalar geometry, trees, transactions, retention and saved CPU inference
-are verified. The original failed run remains immutable. All five allowances are
-consumed; the separately approved run-6 allowance is described below. The result reflection is
-recorded, and the user continued local [079 Normal K=2 and installed D2](v1-sprints/079-cuda-distribution-and-extension.md)
-construction through [090](v1-sprints/090-normal-device-construction.md). 090-A adds
-the design and 101 local independent-math/public-CPU checks, with a retained
-zero-weight split ambiguity. 090-B/C/D now construct Normal geometry, shared
-mapped transactions and joint/ordered recipes. Their hardware tests collect but
-have not executed. External D2 construction and installed CPU import/replay checks now pass locally;
-its hardware cases remain pending. The [67-file/383-case run-6 package](v1-sprints/090-normal-run6-request.md)
-is frozen; the user approved its upload and one T4 run. Execution is pending,
-alongside 069 accounting/isolation.
-No Normal CUDA pass is claimed. Retain the separate
-near-tie diagnostic under the recorded numerical policy and
-all 212 earlier device regressions. Freeze a concrete package/allowance before
-further hardware work.
+are verified. The original failed run remains immutable. The user subsequently
+approved [090's Normal/D2 run 6](v1-sprints/090-normal-run6-request.md), which executes
+at clean `4143d18`: **381/383 pass**, with two ordinary ordered depth-zero
+backtracking-decision failures. All 212 scalar regressions, 23 Normal operation
+checks, 31 recipe checks and twenty installed-D2/fresh-inference checks pass;
+mapped runtime passes 94/96. Nineteen saved models replay without CUDA or the
+training extension. [Raw evidence and retrospective](benchmarks/v1/evidence/cuda-normal-090/README.md)
+retain both failures, all 79 raw artifacts and the separate known split near-tie.
+
+All six allowances are consumed; no retry or additional upload is authorized.
+Stop at the planned retrospective in [090](v1-sprints/090-normal-device-construction.md).
+Its next-tranche proposal calls for actual failing-state telemetry and an explicit
+numerical acceptance investigation before more CUDA recipes. Do not label the
+near-stationary explanation proven: the failed tests did not retain intermediate
+loss/raw bits. No test/tolerance was changed, and full Normal acceptance remains
+open. Original P7/E4 and [069 accounting/isolation](v1-sprints/069-authoring-pilot.md)
+remain required. A new hardware package needs a concrete freeze and allowance.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
@@ -121,7 +123,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1432 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1434 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
@@ -174,8 +176,10 @@ CPU recipes execute sequentially. Experimental CUDA storage, aggregation and
 public split/feasibility/route/leaf operations plus the separate resident squared
 recipe pass the bounded 212-case T4 matrix at `af026ef`, including weighted/missing
 parity, owned transactions and saved CPU inference. Normal K=2 device operations,
-mapped runtime and joint/ordered recipes are implemented with hardware checks
-pending. Other required CUDA recipes remain unimplemented.
+mapped runtime and joint/ordered recipes execute in the bounded run-6 matrix,
+which passes 381/383 checks with two unresolved acceptance decisions. Installed
+D2 and nineteen CPU replays pass; full Normal conformance remains open. Other
+required CUDA recipes remain unimplemented.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 
 The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018

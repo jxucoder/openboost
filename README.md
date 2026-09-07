@@ -28,6 +28,10 @@ resident scalar CUDA training passes all 212 bounded T4 checks, including
 weighted/missing parity, transactions and saved CPU inference. The shared scoring
 correction resolves the previous 14 failures without changing tolerances. See the
 [recorded result and scope](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
+The first [Normal K=2 and installed D2 T4 run](benchmarks/v1/evidence/cuda-normal-090/README.md)
+passes 381/383 checks, including all earlier scalar cases and nineteen saved-model
+CPU replays. Two ordered acceptance decisions fail the frozen reference; full
+Normal conformance remains open.
 [Binary classification](docs/v1/binary.md) now
 persists typed class order and exposes probability/label inference.
 [Multiclass and vector leaves](docs/v1/multiclass.md) add joint softmax updates
@@ -118,4 +122,7 @@ Independent cohort constraints change split selection through the public device
 operations. Separate experimental resident squared geometry, scalar trees and
 accepted/proposal training now pass the separate
 [212-case T4 matrix](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
+Shared mapped transactions, Normal geometry and joint/ordered recipes now have
+[bounded device evidence with two unresolved acceptance failures](benchmarks/v1/evidence/cuda-normal-090/README.md).
+The installed D2 learner uses the same public field/feasibility/tree operations.
 Other required CUDA recipes and full phase acceptance remain open.

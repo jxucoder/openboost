@@ -54,11 +54,14 @@ information, binning=...)` before calling `device_recipes.normal(...,
 learner=learner, binning=...)`, and call `learner.close()` after training, before
 closing the execution context. It uploads independent cohort columns once and
 uses public field, feasibility and depthwise operations for every parameter.
-Its buffer lifetime is independent of the run. Installed import/source checks
-pass locally; device behavior is **not yet hardware-validated**. Sprint 090's
-nineteen installed-device cases cover fixed/backtracking, three update orders,
-ordinary/natural/damped directions, ownership and fresh CPU inference. This is
-repository-authored development work, not an independent author attempt.
+Its buffer lifetime is independent of the run. [Run 6](../../benchmarks/v1/evidence/cuda-normal-090/README.md)
+passes all nineteen installed D2 hardware cases: eighteen combinations cover
+fixed/backtracking, three update orders and ordinary/natural/damped directions;
+another checks identity/failure cleanup. A separate missing-input Normal replay
+also passes in the fresh CPU environment. The full run fails two other Normal
+transaction acceptance cases, so this is bounded D2 evidence and does not establish
+full Normal conformance. This is repository-authored development work, not an
+independent author attempt.
 
 Pass `PenalizedLeaves(q=0.7, penalty=5, anchor=4)` as
 `quantile(..., q=0.7, grower=...)`. Keep the recipe and solver quantile aligned
