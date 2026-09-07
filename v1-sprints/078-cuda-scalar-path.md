@@ -83,3 +83,12 @@ runtime/driver API versions are 12090/13000 despite the 12.6.3 image tag.
 its field/reduction fixtures before dispatch. Next build named device fields and
 routed histograms with D2 information semantics. Two-round scalar training,
 accepted/proposal integration and CPU-readable trained artifacts remain open.
+
+### 078-A fixture freeze
+
+The 086 eight-row and 8192x32 inputs now have a float64 original-row loop oracle
+in tests/v1/reference/device_histogram.py. Seven fixture cases and eighteen public
+CPU operation tests pass before device implementation; hand totals include
+[10,9,4,4] and zero-weight-only [0,0,2,0]. The new public device import fails as
+absent. Next implement DeviceOperations fields/rows/histograms. No additional
+GPU run is consumed by these local reference checks.
