@@ -83,3 +83,12 @@ spawned training workers; numerical threads share the bounded address space.
 This adds a stricter declared constraint without changing any formal search gate.
 Next freeze input prefixes/case order and rerun these checks in the profiling
 image before fits. See the [follow-up learning](../learnings/2026-09-06-v1-worker-resources.md).
+
+### Frozen harness
+
+The eight-case [protocol](../benchmarks/v1/evidence/practical-cpu-066/README.md)
+is committed before fits. Source checks cover exact replay, independent squared/Normal
+metrics, input isolation and deterministic rejected/backtracked transactions.
+Ruff passes; CPU regression: **951 passed**. Source tests do not certify numerical
+thread configuration; actual-image preflight and worker inspection remain mandatory.
+See the [harness learning](../learnings/2026-09-06-v1-cpu-profile-harness.md).

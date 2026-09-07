@@ -1,0 +1,96 @@
+{
+  "schema": "practical-cpu-066",
+  "input_sha256": "cbba2b3dde7c088c041be2a260f228c4e1bfd1b71fb4edb462361f93819de06a",
+  "features": [
+    "MedInc",
+    "HouseAge",
+    "AveRooms",
+    "AveBedrms",
+    "Population",
+    "AveOccup",
+    "Latitude",
+    "Longitude"
+  ],
+  "archive_sha256": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681",
+  "member_sha256": "a2b44dcc7e1c9091b43c4f458b25cbd1f7e8068d08edd26bc4703108d3fa6214",
+  "source_freeze_sha256": "93a5e050bdf4c3ae0c526fb0a75bd806df404c8ab558e3019bcc0bdcd28448ae",
+  "training_prefix_sha256": "ab0cef4fb55112c7a71b35a3054475408bcbc462d79a8c39f215fb3c269f5e27",
+  "small_training_prefix_sha256": "f5d0f98bd34ec56b96156b0b0b66e2f7fa944104eae472a3f31d549f47b8d8af",
+  "validation_prefix_sha256": "288a5a9387ba9166fa521eaf86f5cf80c3657f76aeca160a211f56bff070ef8f",
+  "cases": [
+    {
+      "id": "squared-8192-4",
+      "recipe": "squared",
+      "train_rows": 8192,
+      "rounds": 4
+    },
+    {
+      "id": "normal-8192-4",
+      "recipe": "normal",
+      "train_rows": 8192,
+      "rounds": 4
+    },
+    {
+      "id": "squared-2048-32",
+      "recipe": "squared",
+      "train_rows": 2048,
+      "rounds": 32
+    },
+    {
+      "id": "normal-2048-32",
+      "recipe": "normal",
+      "train_rows": 2048,
+      "rounds": 32
+    },
+    {
+      "id": "squared-8192-32",
+      "recipe": "squared",
+      "train_rows": 8192,
+      "rounds": 32
+    },
+    {
+      "id": "normal-8192-32",
+      "recipe": "normal",
+      "train_rows": 8192,
+      "rounds": 32
+    },
+    {
+      "id": "squared-8192-128",
+      "recipe": "squared",
+      "train_rows": 8192,
+      "rounds": 128
+    },
+    {
+      "id": "normal-8192-128",
+      "recipe": "normal",
+      "train_rows": 8192,
+      "rounds": 128
+    }
+  ],
+  "seed": 0,
+  "round_options": {
+    "bins": 32,
+    "max_depth": 2,
+    "learning_rate": 0.1,
+    "reg_lambda": 1.0,
+    "patience": null,
+    "step": "fixed"
+  },
+  "budgets": {
+    "worker_seconds": 120,
+    "profile_soft_seconds": 60,
+    "worker_address_bytes": 8589934592,
+    "numerical_threads": 2,
+    "container_memory_mib": [
+      8192,
+      8192
+    ],
+    "function_seconds": 1500,
+    "retries": 0,
+    "max_uninstrumented_fits": 8,
+    "max_instrumented_fits": 2
+  },
+  "profile_policy": "after first failed fit, profile only that case; if all pass, profile the 8192/128 case for each recipe",
+  "stop_policy": "stop remaining uninstrumented fits at first non-pass; retain pending cases as not_run",
+  "scope": "eight original numeric Housing features, raw target units, training/validation only; no exporter imputation/indicator columns; diagnostic not E3/E4"
+}
