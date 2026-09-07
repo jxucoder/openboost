@@ -261,3 +261,105 @@ def test_missing_second_fold_fails_even_with_all_applications_present(bundle):
         record["cache_key"] = cache_key(manifest, cell)
     report = judge(manifest, cases, root)
     assert report["errors"] == ["missing case: A1/cpu/1"]
+
+
+def test_rehashed_omitted_fold_cannot_shrink_evaluator_manifest(bundle):
+    from copy import deepcopy
+
+    root, manifest, cases = bundle
+    extra = deepcopy(manifest["expected"][0])
+    extra.update(id="A1/cpu/1", fold="1", split_sha256="f" * 64)
+    manifest["expected"].append(extra)
+    record = deepcopy(cases[0])
+    record["id"] = extra["id"]
+    cases.append(record)
+    for record, cell in zip(cases, manifest["expected"], strict=True):
+        record["cache_key"] = cache_key(manifest, cell)
+    frozen = deepcopy(manifest)
+    assert judge(manifest, cases, root)["integrity_pass"]
+    manifest["expected"].pop()
+    cases.pop()
+    for record, cell in zip(cases, manifest["expected"], strict=True):
+        record["cache_key"] = cache_key(manifest, cell)
+    # Existing integrity is relative to the producer's declared matrix.
+    assert judge(manifest, cases, root)["integrity_pass"]
+    result = judge(manifest, cases, root, frozen_manifest=frozen)
+    assert not result["integrity_pass"]
+    assert not result["frozen_manifest_match"]
+    assert result["gate_results"] == {}
+    assert any("frozen" in e for e in result["errors"])
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "none",
+        "protocol",
+        "code",
+        "environment",
+        "optional",
+        "backend",
+        "duplicate",
+        "omitted_application",
+    ],
+)
+def test_evaluator_freeze_binds_rehashed_changes(bundle, mutation):
+    from copy import deepcopy
+
+    root, manifest, cases = bundle
+    frozen = deepcopy(manifest)
+    if mutation == "protocol":
+        manifest["protocol_sha256"] = "f" * 64
+    elif mutation == "code":
+        manifest["provenance"]["code_sha"] = "f" * 40
+    elif mutation == "environment":
+        manifest["provenance"]["environment"]["os"] = "changed"
+    elif mutation == "optional":
+        manifest["expected"][0]["required"] = False
+    elif mutation == "backend":
+        manifest["expected"][0]["backend"] = "cuda"
+        cases[0]["backend"] = "cuda"
+    elif mutation == "duplicate":
+        manifest["expected"].append(deepcopy(manifest["expected"][0]))
+    elif mutation == "omitted_application":
+        manifest["expected"].pop()
+        cases.pop()
+    for record, cell in zip(cases, manifest["expected"], strict=False):
+        record["cache_key"] = cache_key(manifest, cell)
+    result = judge(manifest, cases, root, frozen_manifest=frozen)
+    assert result["integrity_pass"] is (mutation == "none")
+    assert result["frozen_manifest_match"] is (mutation == "none")
+    assert result["gate_results"] == {}
+
+
+def test_frozen_cli_checks_owner_boundary_and_file_pin(bundle, tmp_path_factory):
+    import subprocess
+    import sys
+
+    root, manifest, cases = bundle
+    payload = json.dumps(manifest).encode()
+    (root / "manifest.json").write_bytes(payload)
+    (root / "cases.jsonl").write_text("\n".join(json.dumps(r) for r in cases))
+    frozen = tmp_path_factory.mktemp("evaluator") / "frozen.json"
+    frozen.write_bytes(payload)
+
+    def invoke(path, pin):
+        command = [
+            sys.executable,
+            "-m",
+            "benchmarks.v1.judge",
+            str(root),
+            "--frozen-manifest",
+            str(path),
+            "--frozen-sha256",
+            pin,
+        ]
+        result = subprocess.run(command, capture_output=True, text=True, check=False)
+        return result.returncode, json.loads(result.stdout)
+
+    code, report = invoke(frozen, digest(payload))
+    assert code == 0 and report["frozen_manifest_match"]
+    assert invoke(frozen, "0" * 64)[0] == 1
+    assert invoke(root / "manifest.json", digest(payload))[0] == 1
+    frozen.write_bytes(payload + b" ")
+    assert invoke(frozen, digest(payload))[0] == 1

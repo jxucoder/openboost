@@ -648,3 +648,27 @@ remain pending. The smoke accepts explicit A2/A3 selections, with seven classes
 for Covertype. Defaults remain A1/A6/A11 to avoid silently broadening existing
 runs. These four-round probes establish no classification quality/calibration,
 search, CUDA or speed claim.
+
+## Evaluator-owned execution freeze (Sprint 070)
+
+For a pinned execution, provide a manifest independently frozen by the evaluator:
+
+```bash
+uv run --no-sync python -m benchmarks.v1.judge /path/to/producer-run \
+  --frozen-manifest /path/to/evaluator/frozen.json --frozen-sha256 EVALUATOR_PINNED_FILE_SHA256
+```
+
+Both options are required together. The file must be outside the producer run
+directory and match the evaluator-supplied raw-byte hash. Strict JSON parsing and
+manifest validation apply to both inputs. The producer manifest must match the
+entire evaluator manifest, including the expected cells, protocol and provenance.
+Rehashing a producer-shrunken matrix cannot satisfy the independent freeze.
+The Python API accepts `frozen_manifest=` from a trusted caller; its reported
+`frozen_manifest_sha256` hashes canonical JSON and can differ from the CLI raw-file pin.
+
+Without this argument, integrity remains relative to the producer's declared
+matrix and `frozen_manifest_match` is null. A true match does not validate the
+experimental design, authenticate provenance, prove all R/C/A/E obligations or
+establish quality. `gate_results` stays empty. The evaluator must control the pin,
+invocation and reference file. An outside-directory check is not an OS permission
+boundary: process/container isolation remains separate work in Sprint 070.

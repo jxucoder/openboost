@@ -1,6 +1,6 @@
 # Sprint 070: Coverage ledger and trustworthy selection judging
 
-Status: planned. Mapping: N4 / B02–B11 / C6 / F0.3 and CPU F1 entry/exit auditing.
+Status: in progress; evaluator-freeze integrity slice implemented, broader gates open. Mapping: N4 / B02–B11 / C6 / F0.3 and CPU F1 entry/exit auditing.
 Entry: inventory/source work can start now; practical execution preflight follows 068.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
@@ -46,3 +46,27 @@ Reflect on whether the report now proves conditions or merely inventories files.
 ## Results
 
 Not run. Existing integrity and short quality reports do not establish these gates.
+
+### Plan and first counterexample
+
+First inspect existing coverage/integrity tools, reproduce a producer-shrunk matrix,
+add an evaluator-owned execution freeze to the existing judge, verify malformed/
+rehashed cases and CLI pin checks, then commit a reproducible smoke. Separately
+inventory remaining accounting/isolation and complete-coverage work before large jobs.
+
+The old judge correctly rejects missing records relative to its manifest, but a
+producer can delete a second required A1 fold from both manifest and records and
+recompute all cache keys. All A1–A13 are still present and declared integrity passes.
+The new optional evaluator freeze rejects that attack, changes to provenance/
+protocol/backend/requiredness and duplicate/omitted cases even after rehashing.
+The CLI requires a pinned reference-file hash outside the producer output root.
+58 focused tests pass, including the deliberately failing initial counterexample.
+
+This is an execution-manifest binding, not the complete R/C/A/E coverage ledger.
+The reference and invocation must be evaluator-owned; filesystem/process isolation
+and actual experiment completeness remain open. No E-gate result is emitted.
+
+Full regression: **1010 passed**; lint/docs pass. A nine-case reproducible smoke
+includes the valid matrix, rehashed fold omission/code change, missing/duplicate
+records, wrong backend, worker-error/timeout status and nonfinite metrics. These
+are injected judge inputs, not evidence of actual OS resource/access enforcement.

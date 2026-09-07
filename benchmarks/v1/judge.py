@@ -157,18 +157,34 @@ def _case(record, cell, manifest, root):
         _require(not cell["required"], f"required status is {record['status']}")
 
 
-def judge(manifest, records, directory):
-    """Check all declared cells, retaining errors. Integrity is necessary, not sufficient."""
+def judge(manifest, records, directory, *, frozen_manifest=None):
+    """Check integrity against declared cells and, optionally, an evaluator-owned freeze.
+
+    The caller must obtain frozen_manifest independently of producer output. An
+    exact match binds provenance and the entire expected matrix, not gate validity.
+    """
     report = {
         "schema": SCHEMA,
         "integrity_pass": False,
         "errors": [],
         "statuses": {},
         "gate_results": {},
+        "frozen_manifest_match": None,
+        "frozen_manifest_sha256": None,
         "scope": "artifact integrity only; quality and E0-E7 not evaluated",
     }
     errors = report["errors"]
     try:
+        if frozen_manifest is not None:
+            report["frozen_manifest_match"] = False
+            _manifest(frozen_manifest)
+            frozen_bytes = _canonical(frozen_manifest)
+            report["frozen_manifest_sha256"] = hashlib.sha256(frozen_bytes).hexdigest()
+            _require(
+                _canonical(manifest) == frozen_bytes,
+                "producer manifest differs from evaluator frozen manifest",
+            )
+            report["frozen_manifest_match"] = True
         expected = _manifest(manifest)
         _require(isinstance(records, list), "cases must be a list")
         root = Path(directory).resolve()
@@ -197,13 +213,36 @@ def judge(manifest, records, directory):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
+    parser.add_argument(
+        "--frozen-manifest",
+        type=Path,
+        help="Evaluator-owned execution manifest, outside producer run directory",
+    )
+    parser.add_argument("--frozen-sha256", help="Evaluator-pinned SHA256 of frozen file bytes")
     args = parser.parse_args()
     try:
+        frozen = None
+        _require(
+            bool(args.frozen_manifest) == bool(args.frozen_sha256),
+            "frozen manifest and pinned SHA256 must be supplied together",
+        )
+        if args.frozen_manifest is not None:
+            _hash(args.frozen_sha256)
+            _require(
+                not args.frozen_manifest.resolve().is_relative_to(args.directory.resolve()),
+                "frozen manifest must be outside producer run directory",
+            )
+            payload = args.frozen_manifest.read_bytes()
+            _require(
+                hashlib.sha256(payload).hexdigest() == args.frozen_sha256,
+                "frozen manifest file hash mismatch",
+            )
+            frozen = read_json(payload)
         manifest = read_json((args.directory / "manifest.json").read_bytes())
         records = [
             read_json(line) for line in (args.directory / "cases.jsonl").read_bytes().splitlines()
         ]
-        report = judge(manifest, records, args.directory)
+        report = judge(manifest, records, args.directory, frozen_manifest=frozen)
     except (ValueError, TypeError, OSError, OverflowError) as exc:
         report = {
             "schema": SCHEMA,
