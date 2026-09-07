@@ -94,11 +94,15 @@ restore equal scores and the expected split. All 202 original cases and ten adde
 diagnostics pass. See the [run-5 evidence and retrospective](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
 Bounded scalar geometry, trees, transactions, retention and saved CPU inference
 are verified. The original failed run remains immutable. All five allowances are
-consumed; no retry or additional upload is authorized. Stop at the result reflection
-before broader construction. Next local design is [079 Normal K=2 and installed
-D2 extension](v1-sprints/079-cuda-distribution-and-extension.md), alongside 069
-accounting/isolation preparation. Freeze independent fixtures before new kernels
-and a concrete package/allowance before further hardware work.
+consumed; no retry or additional upload is authorized. The result reflection is
+recorded, and the user continued local [079 Normal K=2 and installed D2](v1-sprints/079-cuda-distribution-and-extension.md)
+construction through [090](v1-sprints/090-normal-device-construction.md). 090-A adds
+the design and 101 local independent-math/public-CPU checks, with a retained
+zero-weight split ambiguity. Next: 090-B float32-domain fixtures and resident
+Normal operations, alongside 069 accounting/isolation. No Normal CUDA pass is
+claimed. Resolve the recorded numerical policy before device acceptance; retain
+all 212 earlier device regressions. Freeze a concrete package/allowance before
+further hardware work.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
 does not pass them. See the main plan amendment for the exception to F2→F3 entry.
@@ -112,7 +116,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1270 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1371 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

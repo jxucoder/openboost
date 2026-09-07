@@ -26,7 +26,7 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1270 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes and 1371 passing tests (one Linux-only skip).
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.
@@ -49,11 +49,15 @@ ten added diagnostics pass at `af026ef`; the
 [run-5 evidence](../benchmarks/v1/evidence/cuda-score-symmetry-089/README.md) reproduces
 the archived scorer's wrong winner and the corrected scorer's exact tie on the
 same resident inputs, with both PTX outputs retained.
-All five allowances are consumed; no retry occurred. Stop at the result reflection
-before broader construction. Next local design is [079](079-cuda-distribution-and-extension.md)
-Normal K=2/ordered updates and an installed D2 device extension, alongside 069
-accounting/isolation. New kernels need frozen independent fixtures, and any new
-hardware run needs a concrete package and allowance. Full v1 gates remain open.
+All five allowances are consumed; no retry occurred. The result reflection is
+recorded and the user continued local [079](079-cuda-distribution-and-extension.md)
+construction through [090](090-normal-device-construction.md): Normal operations,
+mapped multi-term runtime, joint/ordered loops, installed D2 and fresh inference.
+090-A adds 101 independent-math/public-CPU checks and retains a zero-weight split
+ambiguity as a separate diagnostic. Next: 090-B float32-domain fixtures and
+resident Normal operations, alongside 069 accounting/isolation. No Normal CUDA
+pass is claimed. New hardware needs a concrete frozen package and allowance;
+all 212 earlier device regressions remain required. Full v1 gates remain open.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

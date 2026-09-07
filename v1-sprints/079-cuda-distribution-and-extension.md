@@ -1,6 +1,7 @@
 # Sprint 079: CUDA distribution updates and a public extension
 
-Status: planned. Mapping: B12 / F3.2 / R6 / C2–C5 / E1–E2 device conformance.
+Status: local construction underway in [090](090-normal-device-construction.md);
+device implementation and acceptance open. Mapping: B12 / F3.2 / R6 / C2–C5 / E1–E2 device conformance.
 Depends on: [078](078-cuda-scalar-path.md) correctness/residency acceptance.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
@@ -45,4 +46,8 @@ separate cohorts after a semantic change. Next: 080's required device matrix.
 
 ## Results
 
-Not run. A scalar CUDA pass alone will not establish this sprint's acceptance.
+No Normal device run. [090-A](090-normal-device-construction.md) records the local
+design and 101 independent-math/public-CPU checks before new kernels, including a
+retained zero-weight split ambiguity. 090-B prepares explicit float32-domain
+checks and resident operations next. A scalar CUDA pass or these CPU fixtures
+alone will not establish this sprint's acceptance.
