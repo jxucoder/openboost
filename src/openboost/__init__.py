@@ -18,7 +18,8 @@ Experimental CUDA storage/operations have real T4 evidence. Resident scalar trai
 in openboost.device_recipes passes the bounded 212-case T4 correctness matrix.
 """
 
+from .comparison import LossChange
 from .data import ClassSchema, MixedData, NumericData, Problem
 from .runtime import RunContext
 
-__all__ = ("ClassSchema", "MixedData", "NumericData", "Problem", "RunContext")
+__all__ = ("ClassSchema", "LossChange", "MixedData", "NumericData", "Problem", "RunContext")

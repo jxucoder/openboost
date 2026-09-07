@@ -56,3 +56,32 @@ updates, additional distributions and CUDA remain required later work.
 [Formula](formula-runs.md) now probes full GGN geometry through shared components. No real-dataset quality or speed advantage is claimed.
 Per-round traces retain arrays, and trial validation currently recomputes ensemble
 predictions. Formula and heterogeneous sequential runs now provide the next construction probe.
+
+## Comparing stored predictions
+
+`Normal.compare(problem, before_raw, after_raw)` is a separate public CPU operation.
+It returns an immutable `LossChange`, bounding the weighted mean NLL change at the
+exact stored raw values in the problem's row order. It applies offsets and weights
+once and validates both snapshots, including zero-weight rows. It does not call
+the reporting loss or gradient callbacks. Absolute `Normal.loss` values retain
+their existing meaning.
+
+`change.lower` and `change.upper` are authoritative bounds. `estimate` and
+`uncertainty` are derived diagnostics; `method` identifies the numerical method.
+`status` distinguishes improvement, worsening, identical stored raw, and unresolved
+sign. `change.improves(min_delta=0)` requires `upper < -min_delta`. An unchanged
+stored pair has exactly zero bounds; a different pair with equal loss is unresolved.
+Unresolved support carries a `reason` and `None` bounds/diagnostics.
+
+The current method uses bounded Taylor/interval arithmetic with separately rounded
+binary64 operations and gradual underflow. Evaluated exponent intervals must stay
+within `[-64,64]`; finite inputs outside that comparison support are unresolved.
+Invalid Normal domains raise, and there is no clipping or implicit fallback. The
+bound does not rest on an assumed universal error for platform `exp`/`expm1`.
+CPU correctness checks include recorded false improvements and an analytic
+`-2^-61` improvement lost by subtraction of full losses. No speed claim is made.
+
+This operation is available for explicit algorithm composition. Current recipe
+backtracking, best-model selection and patience still compare reported losses;
+their migration is the separate Sprint 092-C work. A comparison component alone
+does not establish corrected boosting conformance.

@@ -34,6 +34,10 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Public loss comparison](2026-09-07-v1-public-loss-comparison.md) — immutable
+  objective-owned loss-change evidence and CPU Normal operation; device and
+  consumer validation remain separate gates.
+
 - [Normal comparison bounds](2026-09-07-v1-normal-comparison-bounds.md) — independent
   arithmetic enclosure, measured false-improvement rejection and retained tiny
   true improvements; public comparison and CUDA execution remain pending.
