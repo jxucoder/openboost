@@ -17,7 +17,10 @@ before additional adapters. [Sprint 050](050-covertype-profile.md) identifies
 histogram aggregation and repeated candidate row hashing; next remove invariant
 rehashing with exact conformance checks. [Sprint 051](051-candidate-row-hash.md)
 implements that change and completes fold zero within the cap; histogram cost
-and the remaining full folds are next. Remaining M2 and M3–M6 are open.
+and the remaining full folds are addressed in [Sprint 052](052-histogram-gather.md).
+All five bounded replays pass after histogram gather reuse. Next resume missing
+real-data adapters, starting with A5 temporal quantiles, followed by remaining
+application rows/searches and D5 checks. Remaining M2 and M3–M6 are open.
 This updates execution priorities after Sprints 036–037. It preserves the
 [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), all

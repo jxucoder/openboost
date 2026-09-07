@@ -84,8 +84,11 @@ Sprint 050 identifies histogram aggregation and repeated candidate row hashing
 in a bounded full-input profile. Next hoist invariant candidate row hashing with
 exact identity/candidate checks, then rerun the bounded workload. Sprint 051
 completes that change: fold zero passes in 87.4 seconds with exact fresh replay;
-other folds remain pending. Next optimize the separately measured histogram cost
-with exact statistic/routing checks, then repeat full-fold validation.
+the other folds were pending at that revision. Sprint 052 reuses selected
+histogram statistics with exact conformance checks;
+all five full Covertype folds pass within the unchanged cap and replay exactly.
+Next resume remaining real-data adapters, starting with A5 temporal quantiles,
+then remaining application rows/searches and D5 checks.
 These internal trials
 do not establish E5/E7.
 Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared

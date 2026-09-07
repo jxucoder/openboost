@@ -1,0 +1,371 @@
+{
+  "scope": "Current A1/A2/A3/A6/A11 real-data validation plumbing only; four rounds, no test scores, quality or performance claim",
+  "revision": "0def101a0f91e52a654aa4d3d734144d0a98411f",
+  "dirty": true,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "-m",
+    "benchmarks.v1.openboost_worker_smoke",
+    "/private/tmp/openboost-covertype-049",
+    "--applications",
+    "A3"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "machine": "x86_64",
+  "cpu_count": 16,
+  "device": "cpu",
+  "gpu": null,
+  "threads": 1,
+  "memory_cap": null,
+  "packages": {
+    "numpy": "2.3.5",
+    "openboost": "1.0.0rc1"
+  },
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "aa73cc40df7c79203505f91e3b86292dffbb3b9348467be60d8587e3bfd8c6ad",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/openboost_worker.py": "d53f4796353430002ca2231de1852c139492fd7de1c7e4936374da1befebd33d",
+    "benchmarks/v1/openboost_predict.py": "b0c21aca3046eb3ad40f52f4c845dc159872d10261a0afca2d1cd01357354d04",
+    "benchmarks/v1/openboost_worker_smoke.py": "42461c49d72f23a8a1896d3ec3f09bd6e2352f6b9d513865c1c1e6e7e410c020",
+    "benchmarks/v1/worker_data.py": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/process_runner.py": "5ccc984919d2932974f89cfc16691e79dd0e2c35a5da145993d5c9b1a0cd8eab"
+  },
+  "data": {
+    "A3": {
+      "application": "A3",
+      "dataset": "covertype",
+      "folds": [
+        {
+          "seed": 0,
+          "artifacts": {
+            "worker-input": {
+              "path": "0/worker-input.npz",
+              "sha256": "9bc25256b6a57efa51f13e714c6b47496239858ac851e97c3d74ebe47db71f1a"
+            },
+            "train-rows": {
+              "path": "0/train-rows.npz",
+              "sha256": "be5d90d83aa4daede0678e41425ff4ba5c45dbf074938113af0ad17b421a2f6c"
+            },
+            "validation": {
+              "path": "0/validation.npz",
+              "sha256": "36dda823586db6a9ddf91fd0d9e2520339d2673c05376469b685b6477f9a766d"
+            },
+            "test-features": {
+              "path": "0/test-features.npz",
+              "sha256": "0b1dff90f6c0f819af4212b7c8f70f4ad81fc601c82d7cfa654cca1a6818f314"
+            },
+            "test-truth": {
+              "path": "0/test-truth.npz",
+              "sha256": "939fae1e6bb73bd032846d1d746ca878d9d04e632fa44fa167186f62274ce168"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 1,
+          "artifacts": {
+            "worker-input": {
+              "path": "1/worker-input.npz",
+              "sha256": "d64c60a6f43d571eeddc9a9bcbda756b80fe4941f86322908f32e7f4717fad39"
+            },
+            "train-rows": {
+              "path": "1/train-rows.npz",
+              "sha256": "4a76893b287be4ae6d426237a31964d3ced678a3146b130774e5375925eb23d1"
+            },
+            "validation": {
+              "path": "1/validation.npz",
+              "sha256": "28c6c8c65d8a2bea7ae4143cad6779663210cc9f96fb80c7964916df0f1be0d7"
+            },
+            "test-features": {
+              "path": "1/test-features.npz",
+              "sha256": "58cb3d94f756b63b04a367e966f35cc96f89575a7648a8ddfdc8a8557e91e0d8"
+            },
+            "test-truth": {
+              "path": "1/test-truth.npz",
+              "sha256": "8bca09f723c78f2d5b76b502a9b9c13c32d128d500468eb569ec3e1206ef8d06"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 2,
+          "artifacts": {
+            "worker-input": {
+              "path": "2/worker-input.npz",
+              "sha256": "5714e839b4f64cb5c9aba8bb348126f0f472adffba9370ca4c2c478e8f922766"
+            },
+            "train-rows": {
+              "path": "2/train-rows.npz",
+              "sha256": "dc1172c948a9a36e8655ae0cd8abfe06a20e36edb95a2dcf848a0fbca56e05b6"
+            },
+            "validation": {
+              "path": "2/validation.npz",
+              "sha256": "0008f26455bff9cf865f311e8e12827f4f7ee3a6e130ae8e7cbddf52bff08e22"
+            },
+            "test-features": {
+              "path": "2/test-features.npz",
+              "sha256": "55d1bfe08be7912d5bf6abc393debce5e3256b966fd028b9c58ff25ae105425d"
+            },
+            "test-truth": {
+              "path": "2/test-truth.npz",
+              "sha256": "93fbfff4e8b6f0d0af1e2545a2880912000bc10b13edf7ca04558405239c5efa"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 3,
+          "artifacts": {
+            "worker-input": {
+              "path": "3/worker-input.npz",
+              "sha256": "3925324d0008087680b73df1ce383154ccb06c15b3781c6d614e461b58caa1a4"
+            },
+            "train-rows": {
+              "path": "3/train-rows.npz",
+              "sha256": "b9bd2397c5589902abd54b030e034a6d15391d08e3ba7b8417b730d255ebb287"
+            },
+            "validation": {
+              "path": "3/validation.npz",
+              "sha256": "8dc679559db25ab5b539ea1b497b17f648b873d53918a55908c6510df3ec9728"
+            },
+            "test-features": {
+              "path": "3/test-features.npz",
+              "sha256": "f30c6b3b8b37878446033c7876190aff6bd7338ee53471965776c3f121ab4062"
+            },
+            "test-truth": {
+              "path": "3/test-truth.npz",
+              "sha256": "a9cc4943bbe5511863e1f44c50e0a6fa842f255acc4ad641553ac63f9efb177b"
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "seed": 4,
+          "artifacts": {
+            "worker-input": {
+              "path": "4/worker-input.npz",
+              "sha256": "2887c6bba88c012857b33c316dd0f60bf53218d0d966ab1a1a7e1ea1a7fd54df"
+            },
+            "train-rows": {
+              "path": "4/train-rows.npz",
+              "sha256": "375c27849c96df36923c5d0725e339d1158147330b7b90f88d9f060c6e7152a0"
+            },
+            "validation": {
+              "path": "4/validation.npz",
+              "sha256": "ec378b293641f6c2994840ebeb39545d4b13cafff26e4fe3652ac514a01d83a3"
+            },
+            "test-features": {
+              "path": "4/test-features.npz",
+              "sha256": "c8e80caf8655a4cb2cb2f6a259fba3db8f87279c0992514107465f59b5babd69"
+            },
+            "test-truth": {
+              "path": "4/test-truth.npz",
+              "sha256": "7113772cb35562a039be77a3874cc6f807886f16f51603c2318547170c2f1153"
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "source_freeze_sha256": "a4c9a1614b7e0d4d74d99194f498a0a387f9d547992981b8c3219ca79cd1f675",
+      "preprocessing_freeze_sha256": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+      "adapter_sha256": "6d2b09303abaace59b22aebd666317b2da57a0efd37f8cbfb138766a933749f1",
+      "scope": "Five frozen folds; validation worker input includes early-stopping labels. Test files require evaluation-side custody, not enforced by this exporter."
+    }
+  },
+  "cells": [
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-covertype-049/A3/0/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "timeout",
+      "exit_code": -9,
+      "reason": "wall budget exceeded; process group killed",
+      "wall_s": 90.12871720900876,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "application": "A3",
+      "fold": 0,
+      "job": {
+        "application": "A3",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-covertype-049/A3/0/worker-input.npz",
+        "classes": 7
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-covertype-049/A3/1/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "timeout",
+      "exit_code": -9,
+      "reason": "wall budget exceeded; process group killed",
+      "wall_s": 90.12180937499215,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "application": "A3",
+      "fold": 1,
+      "job": {
+        "application": "A3",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-covertype-049/A3/1/worker-input.npz",
+        "classes": 7
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-covertype-049/A3/2/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "timeout",
+      "exit_code": -9,
+      "reason": "wall budget exceeded; process group killed",
+      "wall_s": 90.088346250006,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "application": "A3",
+      "fold": 2,
+      "job": {
+        "application": "A3",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-covertype-049/A3/2/worker-input.npz",
+        "classes": 7
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-covertype-049/A3/3/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "timeout",
+      "exit_code": -9,
+      "reason": "wall budget exceeded; process group killed",
+      "wall_s": 90.08695199999784,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "application": "A3",
+      "fold": 3,
+      "job": {
+        "application": "A3",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-covertype-049/A3/3/worker-input.npz",
+        "classes": 7
+      }
+    },
+    {
+      "command": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/Users/jiaruixu/work_space/openboost/benchmarks/v1/openboost_worker.py",
+        "/private/tmp/openboost-covertype-049/A3/4/job.json"
+      ],
+      "timeout_s": 90,
+      "threads": 1,
+      "status": "timeout",
+      "exit_code": -9,
+      "reason": "wall budget exceeded; process group killed",
+      "wall_s": 90.09158687500167,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "application": "A3",
+      "fold": 4,
+      "job": {
+        "application": "A3",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 3,
+        "config": {
+          "rounds": 4,
+          "learning_rate": 0.1,
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 32
+        },
+        "input_npz": "/private/tmp/openboost-covertype-049/A3/4/worker-input.npz",
+        "classes": 7
+      }
+    }
+  ]
+}

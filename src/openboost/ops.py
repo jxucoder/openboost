@@ -48,6 +48,11 @@ def histogram(data, fields, rows=None):
     if "unweighted" in fields.roles:
         raise ValueError("apply objective training weights before aggregation")
     selected = _rows(rows, len(data.data.values))
+    selected_values = fields.values[selected]
+    # Preserve the original C-order reduction before laying out contiguous columns.
+    total = _owned(selected_values.sum(axis=0), ndim=1)
+    columns = np.ascontiguousarray(selected_values.T)
+    del selected_values
     sums, counts = [], []
     for feature, bins in enumerate(data.binning.bin_counts):
         codes = np.where(data.missing[feature, selected], bins, data.codes[feature, selected])
@@ -55,8 +60,8 @@ def histogram(data, fields, rows=None):
             _owned(
                 np.column_stack(
                     [
-                        np.bincount(codes, weights=column[selected], minlength=bins + 1)
-                        for column in fields.values.T
+                        np.bincount(codes, weights=column, minlength=bins + 1)
+                        for column in columns
                     ]
                 ),
                 ndim=2,
@@ -69,7 +74,7 @@ def histogram(data, fields, rows=None):
         fields,
         tuple(sums),
         tuple(counts),
-        _owned(fields.values[selected].sum(axis=0), ndim=1),
+        total,
     )
 
 
