@@ -1,7 +1,8 @@
 # Sprint 066: Practical CPU cost profile
 
-Status: planned. Mapping: N2a / F1 / C4 / E1 and diagnostic cost evidence.
-Depends on: [065](065-installed-run-isolation.md). Pin its actual revision at entry.
+Status: in progress; resource preflight incomplete, no profiling fits started.
+Mapping: N2a / F1 / C4 / E1 and diagnostic cost evidence.
+Depends on: [065](065-installed-run-isolation.md), completed at `e2b6c4c`.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
 ## Outcome and first check
@@ -38,4 +39,32 @@ in this measurement sprint.
 
 ## Results
 
-Not run. No practical timing or memory improvement has been established.
+The [resource preflight](../benchmarks/v1/evidence/resource-preflight-066/README.md)
+ran on one Modal CPU container. It verified child allocation rejection under
+128-MiB RLIMIT_AS, process-group timeout killing, retained partial logs and successful
+normal execution. Both cgroup inspection paths are unavailable in the gVisor
+environment, so the complete preflight remains failed/incomplete. Requested
+container caps were not disproven; this mechanism could not verify them.
+
+The local macOS RLIMIT_AS attempt was rejected before allocation, so local advisory
+configuration was not used as an enforced-budget result. No Housing case ran.
+All eight diagnostic cases remain not_run and no runtime optimization has started.
+
+### Reflection and next bounded slice
+
+This is the requested retrospective checkpoint after three verified implementation/
+evidence commits: 064 resolves a concrete public-boundary restriction; 065 verifies
+installed semantics without more core edits; 066 exposes an instrumentation gap.
+The foundation hypothesis now has stronger internal conformance evidence, not
+author-cost, practical CPU, CUDA or adoption evidence.
+
+Keep the profile-first plan. Next verify the actual 8-GiB per-worker address-space
+ceiling and peak-RSS accounting on the same Modal environment, explicitly separating
+address space, resident memory and requested container limits. Preserve this failed
+inspection record. A more conservative process ceiling must be declared, not
+silently equated with an RSS measurement or changed formal search budget. Confirm
+two-thread numerical execution before freezing the eight cases and launching fits.
+
+Only after resource checks pass should the diagnostic profile determine the remedy
+in 067. No additional objective family, GPU expansion or second runtime is justified
+by the current findings. See the [learning](../learnings/2026-09-06-v1-resource-preflight.md).

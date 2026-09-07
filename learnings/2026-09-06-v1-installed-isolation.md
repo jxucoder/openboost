@@ -34,7 +34,7 @@ Commands use `UV_CACHE_DIR=/tmp/openboost-research-uv-cache`.
 - Independently verified all 17 artifact hashes and all verifier/reference/core
   source hashes; checked M=1/8/32 coverage, exact threshold recurrence predictions,
   injected ValueErrors and preparation acceptance [false, false, true].
-- Strict docs, final Ruff and local link/diff checks are recorded at commit closure.
+- Strict docs, final Ruff and local link/diff checks passed at commit closure.
   The last full CPU suite is Sprint 064's 943 passes; no core changed afterward.
 
 The manifest records parent revision plus dirty verifier state; source hashes match
