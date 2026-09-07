@@ -79,7 +79,7 @@ def freeze(archive, directory):
     return record
 
 
-def execute(directory, profile_only=None, baseline_wheel=None):
+def execute(directory, profile_only=None, baseline_wheel=None, retention_pair=False):
     import modal
 
     root = Path(directory).resolve()
@@ -88,6 +88,8 @@ def execute(directory, profile_only=None, baseline_wheel=None):
         raise ValueError("frozen input changed")
     if profile_only is not None and profile_only not in {c["id"] for c in protocol["cases"]}:
         raise ValueError("profile case is absent from frozen protocol")
+    if retention_pair and (profile_only is not None or baseline_wheel is not None):
+        raise ValueError("retention comparison is a separate mode")
     baseline = None
     if baseline_wheel is not None:
         if profile_only is not None:
@@ -126,6 +128,16 @@ def execute(directory, profile_only=None, baseline_wheel=None):
         protocol=protocol,
         profile_only=profile_only,
         paired_baseline=baseline,
+        retention_comparison=(
+            dict(
+                max_fits=16,
+                profiles=2,
+                order="full then summary per frozen case",
+                scope="same-wheel same-container retention amendment; original per-worker caps and aggregate function deadline",
+            )
+            if retention_pair
+            else None
+        ),
         comparison_policy=(
             dict(
                 max_fits=12,
@@ -170,7 +182,7 @@ def execute(directory, profile_only=None, baseline_wheel=None):
         include_source=False,
         is_generator=True,
     )
-    def remote(protocol, profile_only, paired):
+    def remote(protocol, profile_only, paired, retention_pair):
         import hashlib
         import importlib.metadata
         import json
@@ -221,6 +233,8 @@ def execute(directory, profile_only=None, baseline_wheel=None):
                         input_sha256=protocol["input_sha256"],
                         instrumented=instrumented,
                     )
+                    if variant in ("full", "summary"):
+                        job["retention"] = variant
                     job_path = work / (name + ".json")
                     job_path.write_text(json.dumps(job))
                     command.append(str(job_path))
@@ -260,11 +274,12 @@ def execute(directory, profile_only=None, baseline_wheel=None):
             yield fixture
             if fixture["execution"]["status"] != "pass":
                 return
-            if paired:
+            if paired or retention_pair:
                 failed = False
-                # Only the six completed baseline cases, in original order.
-                for case in protocol["cases"][:6]:
-                    for variant in ("baseline", "candidate"):
+                selected = protocol["cases"] if retention_pair else protocol["cases"][:6]
+                variants = ("full", "summary") if retention_pair else ("baseline", "candidate")
+                for case in selected:
+                    for variant in variants:
                         if failed:
                             yield dict(
                                 kind="case",
@@ -279,6 +294,9 @@ def execute(directory, profile_only=None, baseline_wheel=None):
                         result = run_case(case, variant=variant)
                         yield result
                         failed = result["execution"]["status"] != "pass"
+                if retention_pair and not failed:
+                    for case in protocol["cases"][-2:]:
+                        yield run_case(case, instrumented=True, variant="summary")
                 return
             if profile_only is not None:
                 case = next(c for c in protocol["cases"] if c["id"] == profile_only)
@@ -306,7 +324,9 @@ def execute(directory, profile_only=None, baseline_wheel=None):
 
     try:
         with modal.enable_output(), app.run():
-            for item in remote.remote_gen(protocol, profile_only, baseline is not None):
+            for item in remote.remote_gen(
+                protocol, profile_only, baseline is not None, retention_pair
+            ):
                 if item["kind"] == "preflight":
                     if "preflight" in manifest:
                         raise RuntimeError(
@@ -331,7 +351,7 @@ def execute(directory, profile_only=None, baseline_wheel=None):
         complete = (
             len(manifest["profiles"]) == 1
             if profile_only
-            else len(manifest["cases"]) == (12 if baseline else 8)
+            else len(manifest["cases"]) == (16 if retention_pair else 12 if baseline else 8)
         )
         manifest["status"] = "complete" if complete else "incomplete"
     except Exception as exc:
@@ -354,6 +374,9 @@ if __name__ == "__main__":
         type=Path,
         help="Pair six completed baseline cases in one container",
     )
+    parser.add_argument(
+        "--paired-retention", action="store_true", help="Pair full/summary for all frozen cases"
+    )
     parser.add_argument("--profile-only", help="Profile one frozen case after an interrupted sweep")
     parser.add_argument(
         "--archive", type=Path, default=Path("build/foundation_data/cal_housing.tgz")
@@ -362,4 +385,6 @@ if __name__ == "__main__":
     if args.action == "freeze":
         freeze(args.archive, args.directory)
     else:
-        execute(args.directory, args.profile_only, args.paired_baseline_wheel)
+        execute(
+            args.directory, args.profile_only, args.paired_baseline_wheel, args.paired_retention
+        )

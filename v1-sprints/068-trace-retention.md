@@ -52,3 +52,18 @@ arrays immediately. External ordered recipes explicitly summarize their own stat
 payloads; the structural result contract is unchanged. Tests cover all twelve
 families at normal, stopped and zero budgets, ordered updates, failed backtracking,
 immutable payload restrictions and final/best/stop identity equality.
+
+### Preregistered retention comparison
+
+Use the unchanged eight frozen cases in one CPU container with the same wheel,
+full then summary for each case. This explicit amendment permits at most sixteen
+uninstrumented fits and two summary profiles after all pairs pass. Keep two threads,
+8-GiB per-worker address ceiling, 120-second per-worker deadline, 60-second soft
+profile deadline and 1500-second aggregate function ceiling. Stop after a failure;
+retain missing measurements. No tolerance or algorithm settings change.
+
+Compare exact final predictions and model files within each pair, plus retained
+array bytes, guest peak RSS and timing. Summary still records every completed
+round. One ordered pair per case supports scoped observations, not a statistical
+speed or memory guarantee. Same-container pairing avoids Sprint 067's architecture
+confound. No old baseline wheel or unmeasured search budget expansion is involved.

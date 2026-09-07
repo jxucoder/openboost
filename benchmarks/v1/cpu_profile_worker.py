@@ -116,6 +116,8 @@ def run(job, directory):
         patience=None,
         step="fixed",
     )
+    if "retention" in job:
+        options["retention"] = job["retention"]
     if width == 2:
         options.update(mode="natural", damping=0.0, minimum_scale=1e-6)
     calls = []
@@ -198,6 +200,8 @@ def run(job, directory):
         tree_predict_calls=len(calls) if job["instrumented"] else None,
         tree_row_visits=sum(calls) if job["instrumented"] else None,
         trace_array_bytes=sum(v.nbytes for v in retained.values()),
+        trace_steps=len(result.steps),
+        trace_retention=options.get("retention", "full"),
         guest_peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         * (1 if sys.platform == "darwin" else 1024),
         address_limit_bytes=list(resource.getrlimit(resource.RLIMIT_AS)),

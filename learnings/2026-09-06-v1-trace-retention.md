@@ -44,3 +44,14 @@ same-container comparison when CPU architecture differs; preserve baseline evide
 ## Commits
 
 - Retention implementation; parent `dd2d696`.
+
+### Measurement harness
+
+Extend the existing frozen CPU coordinator with explicit same-wheel full/summary
+pairing over all eight cases, followed by two summary profiles. Per-worker and
+aggregate caps remain unchanged; the sixteen-fit/two-profile amendment is recorded
+before execution. Worker outputs retain trace mode, completed records and logical
+array bytes separately from guest RSS. Add a focused summary-worker assertion and
+extend the synthetic count audit with an explicit retention option. No runtime
+change in this measurement slice. Eleven focused profile tests and lint run before
+commit; installed extension execution is recorded separately.

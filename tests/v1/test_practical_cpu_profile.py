@@ -119,3 +119,14 @@ def test_forced_rejection_fixtures():
     result = rejection_fixtures()
     assert result["rejection_state_unchanged"]
     assert result["backtracking_coefficients"] == [16, 8, 4, 2]
+
+
+def test_summary_worker_keeps_round_records_without_array_history(tmp_path, monkeypatch):
+    job = packet(tmp_path)
+    job["retention"] = "summary"
+    monkeypatch.setattr(
+        "benchmarks.v1.cpu_profile_worker.threadpool_info", lambda: [dict(num_threads=2)]
+    )
+    result = run(job, tmp_path)
+    assert result["trace_array_bytes"] == 0 and result["trace_steps"] == job["rounds"]
+    assert result["final_raw_exact"] and result["trace_retention"] == "summary"

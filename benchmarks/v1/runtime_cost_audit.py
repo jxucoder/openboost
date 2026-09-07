@@ -19,7 +19,7 @@ from openboost.recipes import normal, squared
 from openboost.tree import Tree
 
 
-def run():
+def run(retention="full"):
     repo = Path(__file__).resolve().parents[2]
     x = np.arange(96, dtype=float).reshape(32, 3) / 32
     data = NumericData(x, np.arange(32), ("x0", "x1", "x2"))
@@ -44,7 +44,7 @@ def run():
             with patch.object(Tree, "predict", counted):
                 result = recipe(
                     train, valid, context=RunContext("runtime-audit", 63), rounds=rounds,
-                    patience=None, step="fixed", bins=8, max_depth=1,
+                    patience=None, step="fixed", bins=8, max_depth=1, retention=retention,
                 )
             # Outside the counted interval: independently replay the final models.
             np.testing.assert_array_equal(result.state.train_raw, result.state.model.predict(data))
@@ -60,7 +60,7 @@ def run():
             assert result.state.version == rounds
             assert len(calls) == 2 * width * rounds
             cases.append(dict(
-                recipe=name, rounds=rounds, train_rows=32, validation_rows=16,
+                recipe=name, retention=retention, rounds=rounds, train_rows=32, validation_rows=16,
                 parameters=width, tree_terms=len(result.state.model.terms),
                 tree_predict_calls_during_fit=len(calls), tree_row_visits=sum(calls),
                 distinct_step_arrays=len(arrays),
@@ -89,5 +89,6 @@ def run():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--retention", choices=("full", "summary"), default="full")
     args = parser.parse_args()
-    args.output.write_text(json.dumps(run(), indent=2, allow_nan=False) + "\n")
+    args.output.write_text(json.dumps(run(args.retention), indent=2, allow_nan=False) + "\n")
