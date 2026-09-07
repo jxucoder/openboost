@@ -1,6 +1,7 @@
 """Composable scalar CPU histogram, candidate, routing and Newton operations."""
 
 from dataclasses import dataclass
+from functools import lru_cache
 
 import numpy as np
 
@@ -59,10 +60,7 @@ def histogram(data, fields, rows=None):
         sums.append(
             _owned(
                 np.column_stack(
-                    [
-                        np.bincount(codes, weights=column, minlength=bins + 1)
-                        for column in columns
-                    ]
+                    [np.bincount(codes, weights=column, minlength=bins + 1) for column in columns]
                 ),
                 ndim=2,
             )
@@ -233,12 +231,24 @@ def partition(data, rows, candidate):
 
 
 def _vector_indices(names):
+    # Return caller-owned lists: cached mutable indices could poison later trees.
+    key = tuple(names)
+    if not all(isinstance(name, str) for name in key):
+        layout = _vector_layout.__wrapped__(key)
+    else:
+        layout = _vector_layout(key)
+    return list(layout[0]), list(layout[1])
+
+
+@lru_cache(maxsize=128)
+def _vector_layout(names):
+    """Bounded immutable schema metadata; no data, gradients, or run state."""
     width = sum(n.startswith("gradient:") for n in names)
     if width == 0:
         raise ValueError("vector Newton fields required")
     return (
-        [names.index(f"gradient:{k}") for k in range(width)],
-        [names.index(f"curvature:{k}") for k in range(width)],
+        tuple(names.index(f"gradient:{k}") for k in range(width)),
+        tuple(names.index(f"curvature:{k}") for k in range(width)),
     )
 
 

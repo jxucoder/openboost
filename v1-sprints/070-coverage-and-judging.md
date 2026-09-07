@@ -333,3 +333,22 @@ for this bounded, measured follow-up; other coverage/author obligations stay ope
 
 Validation: 1043 local CPU tests pass, one Linux-only test skips; lint/docs pass.
 The revised real Modal diagnostic completes. No production algorithm changed here.
+
+### First vector scoring change: bounded schema reuse
+
+Plan: reproduce repeated name resolution, cache only immutable layout metadata,
+compare exact model bytes/predictions with the old resolver, then re-profile the
+approved practical packet. Keep validation, arithmetic and callbacks unchanged.
+
+The first failing test observes repeated field-name scans. A 128-entry cache now
+stores tuple index layouts by immutable names; callers receive fresh lists, so
+mutating returned indices cannot poison later trees. No row, gradient, candidate
+or run state is retained. Non-string invalid names bypass caching and retain
+prior resolver behavior. Parameter checks and parent-score reuse are deliberately
+left for separate measured slices.
+
+Fifteen focused tests pass: mutation isolation, malformed fields, negative/zero
+curvature, nonfinite/overflow leaves, and exact three-round model bytes/predictions
+across all growers and projected layouts. Full CPU suite: 1058 passed, one Linux-only
+skip. Lint passes after import sorting. Next run the same approved 60-second Modal
+diagnostic; no end-to-end speed claim is established by this change.
