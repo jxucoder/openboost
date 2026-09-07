@@ -83,3 +83,14 @@ stop early at 63/75/66/66 recorded rounds; sustained 1000-round behavior remains
 unmeasured. Next run OpenBoost shared configuration 05 with the unchanged timeout,
 retaining any failure before further expansion. Comparator qualification does
 not qualify OpenBoost or the remaining full-search/coverage/accounting gates.
+
+
+## User-approved priority change: 2026-09-07
+
+The [085 amendment](085-foundation-focus-amendment.md) supersedes historical next
+steps above. Pause the OpenBoost configuration-05 CPU probe and wider matrix
+expansion. Prioritize 069 D1/D2 author accounting and bounded 078 scalar CUDA,
+carrying D2 onto the device boundary. Retain all existing freezes/evidence and
+full coverage obligations. This sprint supports immediate correctness/isolation
+needs; completing its CPU matrix is not an entry gate for that feasibility work.
+The paused probe is neither a failure nor a pass. No new execution occurred.

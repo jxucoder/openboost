@@ -55,3 +55,12 @@ is frozen and no independent attempt ran. These gaps must remain visible rather
 than substituting designer activity or synthetic token counts for author evidence.
 The [shared readiness inventory](070-readiness-inventory.md) separates preparation
 from the two completed Sprint 070 integrity/worker-policy slices.
+
+
+## 2026-09-07 priority amendment
+
+[085](085-foundation-focus-amendment.md) makes this the active authoring priority:
+prepare D1 expectile control and D2 cohort-feasibility deep change, with actual
+accounting/isolation before independent attempts. D2 subsequently exercises the
+bounded scalar CUDA boundary. Formal E5 and H1/H2 handling remain unchanged.
+This preparation need not wait for the full 070 CPU search matrix.

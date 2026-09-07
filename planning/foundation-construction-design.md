@@ -332,3 +332,13 @@ Dependencies determine order, not whether every case must finish.
   G/H, fix row views. If GPU pulls full raw every round, fix residency/ownership before fusion.
 - This design guides implementation; references, CPU/CUDA code, author benefits and all real quality
   still require verification at this design baseline. The document itself passes no F1/E-gate and changes no thresholds.
+
+
+## 2026-09-07 sequencing amendment
+
+The user-approved [foundation-focus card](../v1-sprints/085-foundation-focus-amendment.md)
+allows B12 scalar device feasibility alongside exploratory B11 authoring before
+formal F2 completion. Data/state ownership, public bulk operations, atomic updates,
+CPU-readable persistence and all required later CUDA recipes remain unchanged.
+D2 extra statistics and feasibility test the same public boundary on CPU and CUDA.
+This exception changes construction order, not semantic contracts or acceptance.

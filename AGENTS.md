@@ -63,60 +63,43 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-Current execution: [Sprint 069 authoring preparation](v1-sprints/069-authoring-pilot.md)
-and [Sprint 070 coverage/judging](v1-sprints/070-coverage-and-judging.md).
-070 now binds integrity to an evaluator-owned execution freeze, rejecting rehashed
-fold omission. Current A1–A12/A5 workers explicitly request/report summary retention.
-1013 CPU tests pass. The complete ledger, actual access/resource fault probes and
-069 accounting/dispatch packet remain open; see the
-[readiness inventory](v1-sprints/070-readiness-inventory.md). No independent author
-attempt or full search has been launched. Next test actual evaluator/test-label
-access boundaries and full-search resource policy, not more injected status claims.
-Sprint 068 completes explicit full/summary retention: 1000 CPU tests, installed
-M=1/8/32 parity, sixteen paired fits and two profiles pass. All eight full/summary
-pairs have exact predictions/models; 128-round guest RSS falls by about 14.8 MiB
-squared and 63.4 MiB Normal in single paired observations. Full remains default;
-real search workers must explicitly select summary. No full-search gate is passed.
-Sprint 067's incremental transaction/encoding change remains exact and installed-
-verified. Return to authoring and real-use-case evaluation after these bounded
-runtime fixes. Do not start another optimization without measured necessity.
-069 does not authorize new agents; prepare accounting/isolation before independent
-attempts. 070 must verify exact search resource/test-label isolation before 071.
-The diagnostic worker verifies an 8-GiB address ceiling and two-thread BLAS; host
-cgroup caps remain unobservable. Keep address space and guest RSS distinct.
-Sprint 064 structural stopping passes 943 CPU tests; Sprint 065 installed custom-policy,
-RNG/preparation/failure checks and ten plugin-free inference models pass without core edits. The [064–084 sprint roadmap](v1-sprints/roadmap-after-063.md)
-defines bounded deliverables, dependencies and acceptance. [Sprint 063 retrospective and next plan](v1-sprints/063-retrospective-and-next-plan.md)
-provides the rationale and later milestones, reviewing merged PR #24 at `47108db`.
-[Sprint 062](v1-sprints/062-cpu-exit-and-gpu-entry.md)
-retains the preceding CPU/GPU gate audit; earlier sprint status is historical.
+Current execution is governed by the user-approved
+[Sprint 085 foundation-focus amendment](v1-sprints/085-foundation-focus-amendment.md).
+Prioritize [069 authoring preparation](v1-sprints/069-authoring-pilot.md) and bounded
+[078 scalar CUDA feasibility](v1-sprints/078-cuda-scalar-path.md). Prepare existing
+D1 expectile control and D2 cohort-feasibility deep change; D2 must later exercise
+the same programmable device boundary. No new agents are authorized by this card.
+Actual independent accounting/isolation must precede author attempts; never count
+designer work as independent author evidence or inspect sealed H1/H2 contents.
 
-The public CPU foundation has twelve recipes, specialized inference, independent
-stopping, installed D1–D4 development extensions and sequential M=1/8/32 checks.
-Current real validation/replay covers A1–A3/A5–A12; A4 has synthetic adapter checks.
-These bounded runs do not establish full quality, authoring cost or adoption.
-A13 real search/release, A9 joint selection, source gaps and formal gates remain open.
+The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
+completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant
+065/068 ownership on the actual device path. CUDA remains unimplemented. Formal
+R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity
+does not pass them. See the main plan amendment for the exception to F2→F3 entry.
 
-Sprint 064 separates structural stopping completion from the default patience
-policy. Sprint 065 verifies installed D5 distinct run-ID RNG, stale preparation
-and external stopping results. Next: Sprint 066 profiles practical CPU execution. See the [landscape feedback addendum](v1-sprints/063-landscape-feedback.md)
-for the concrete StopState restriction and comparator updates. Sprints 066–068
-separate practical profiling, incremental runtime and diagnostic retention.
-069 prepares exploratory author measurement; 070 closes coverage/judging gaps;
-071 proves real A6/A13 selection before 072–076 cover every remaining application.
-077 formal authoring and 078–082 CUDA/cost follow their explicit prerequisites;
-083 audits engineering acceptance, and 084 records independent adoption separately.
-Sprint numbers do not force independent work to wait for all lower numbers.
-The Sprint 063 diagnostic confirms quadratic tree replay and
-linear retained trace-array growth on its tiny fixed-step paths; it is not timing
-or peak-memory evidence. Measure the practical regime before the full search matrix.
+Pause the next OpenBoost A6 configuration-05 CPU probe, wider 400-job CPU search
+expansion and speculative CPU optimization. Sprint 070 remains open and supports
+correctness/isolation needs of the active work; its complete ledger, real selection,
+source gaps and author-accounting obligations are not removed. CPU is the semantic
+reference and usable development path, not a mature-library CPU speed contest.
+Resume wider evaluation only for a specific product correctness/quality/cost
+question recorded at reflection, without altering formal budgets.
 
-CUDA is unimplemented. Sprint 063 recommends a bounded B12 feasibility overlap
-after N1/relevant N2 ownership checks, but that amendment is **not adopted**.
-Current F2→F3 ordering remains in force until an explicit amendment is recorded.
-All R1–R9/C1–C7/A1–A13 and E0–E7 requirements remain unchanged. No new objective
-catalog or unmeasured optimization is scheduled; demonstrated correctness failures
-and consumer blockers take priority. Test counts and adapter counts are not exits.
+Current evidence: twelve CPU recipes, installed D1–D5 development checks,
+sequential M=1/8/32 semantics and 1125 passing CPU tests (one Linux-only skip).
+The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
+six real comparator probes passed in seconds. These separate observations expose
+a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
+counts nor adapter counts prove author benefit, quality, device cost or adoption.
+No independent author attempt or full search has launched. Guest RSS, address
+limits and requested container capacity remain distinct.
+
+The [064–084 roadmap](v1-sprints/roadmap-after-063.md) retains remaining scope;
+[070 readiness](v1-sprints/070-readiness-inventory.md) retains open evaluation gaps.
+Reflect after each 085 slice, every three implementation commits, phase transitions
+or architectural/correctness counterexamples. Keep sprint evidence and learnings
+current. Silent correctness failures and demonstrated consumer blockers take priority.
 
 1. Explicit algorithm tasks, fair baselines, and independent correctness oracles.
 2. A minimal CPU foundation tested by structurally different use cases.

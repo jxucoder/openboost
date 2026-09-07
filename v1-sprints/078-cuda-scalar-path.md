@@ -1,8 +1,9 @@
 # Sprint 078: Resident scalar CUDA composition
 
 Status: planned, device work not started. Mapping: B12 / F3.1 / R1 / C1–C5 / E1.
-Depends on: 068 state/diagnostic ownership and formal F2 pass from 077, unless
-the proposed bounded overlap is explicitly adopted in the main plan first.
+Entry: bounded feasibility is approved by [085](085-foundation-focus-amendment.md)
+alongside 069, subject to relevant 065/068 ownership checks. Formal device gates
+still retain their full recipe, quality and authoring requirements.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
 ## Outcome and first failing check

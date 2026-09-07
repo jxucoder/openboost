@@ -11,35 +11,25 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-Current execution: [069 authoring preparation](069-authoring-pilot.md) and
-[070 coverage/judging](070-coverage-and-judging.md), before full real searches.
-070 adds evaluator-frozen manifest binding and explicit current-worker summary
-retention; 1013 CPU tests pass. Actual access/resource enforcement, complete coverage
-and the 069 accounting packet remain open in the [readiness inventory](070-readiness-inventory.md).
-[Sprint 068](068-trace-retention.md) completes opt-in summary retention with
-1000 CPU tests, installed parity, sixteen paired fits and two profiles. Every
-full/summary pair has exact models/predictions; measured RSS savings are scoped
-single observations. Full remains default. [Sprint 067](067-incremental-runtime.md)
-completed incremental prediction/encoding; both measured runtime blockers are
-resolved. Formal quality/cost/author/CUDA/adoption gates remain open.
-[Sprint 065](065-installed-run-isolation.md) passes installed custom completion,
-independent RNG/preparation/failure checks and ten plugin-free inference models.
-[Sprint 064](064-programmable-stopping-and-isolation.md) completed structural stopping
-and its independent public-loop checks; 943 CPU tests pass. The [064–084 sprint roadmap](roadmap-after-063.md)
-links each bounded card, dependency, acceptance check and reflection point.
-[Sprint 063](063-retrospective-and-next-plan.md)
-provides the retrospective and remaining plan following merged
-[PR #24](https://github.com/jxucoder/openboost/pull/24).
-The merge passed 923 local CPU tests and all five CI checks. Broad public CPU
-components and application validation exist; formal phase exits, selected real
-quality/cost, CUDA and independent adoption remain open.
+The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
+sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
+and bounded [078 scalar CUDA feasibility](078-cuda-scalar-path.md). D1 is the control;
+D2 cohort-feasibility is the deep change carried through the programmable CPU/device
+boundary. This explicitly permits feasibility before formal F2 completion.
 
-Next: 069 preparation and 070 judging/resource readiness. Cards 069–077 cover exploratory/formal authoring,
-judging and every required application's selected quality; 078–082 cover CUDA and
-cost after their entry gates. 083 audits engineering v1 and 084 separately tests
-external adoption. These are scope cards, not calendar estimates or new phase exits.
-The proposed bounded CUDA overlap is not adopted; current phase ordering remains
-in force. All required cases remain.
+Pause the next OpenBoost configuration-05 CPU probe and wider CPU search expansion.
+[070](070-coverage-and-judging.md) remains open and supports correctness/isolation
+requirements for these workstreams. Its [readiness inventory](070-readiness-inventory.md)
+retains the full coverage, selection and source gaps. All R/C/A/E requirements,
+formal E5, required CUDA recipes and P7/E4 remain unchanged.
+
+CPU implementation has twelve recipes and 1125 passing tests (one Linux-only skip).
+Bounded real evaluation and installed extensions exist; independent author benefit,
+full quality/search, CUDA and adoption remain unverified. The
+[064–084 roadmap](roadmap-after-063.md) retains those obligations; 085 changes their
+near-term priority and the bounded device entry rule. Reflect after each 085 slice
+and every three implementation commits. No new author or device run has occurred
+under this amendment yet.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

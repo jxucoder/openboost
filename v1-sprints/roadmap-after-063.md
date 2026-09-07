@@ -62,13 +62,12 @@ family. Each individual application still needs its own acceptance.
 prerequisites, and a frozen authoring environment. 070 records that entry audit
 and every unresolved prerequisite; a coverage table alone cannot pass it.
 
-CUDA entry retains the current F2→F3 rule. Sprint 063 recommends allowing bounded
-078/079 feasibility after 065/068, but **that amendment has not been adopted**.
-The earlier approved B03–B06 overlap is not authorization for B12. If an amendment
-is adopted, record it in the main plan first and keep formal E5 cohorts immutable.
-No acceptance threshold changes under either sequence. Once entered, CUDA work
-can coexist with independent application quality work; formal E4 still needs
-quality-qualified workloads. An execution track is not permission to spawn agents.
+The user-approved [085 amendment](085-foundation-focus-amendment.md) now allows
+bounded 078 scalar CUDA feasibility alongside 069 author preparation, before formal
+F2 completion. Relevant 065/068 ownership checks still apply. Formal E5 cohorts,
+all required device recipes, P7 and E4 remain unchanged. Pause wider CPU searches
+and the next OpenBoost configuration-05 probe. This exception changes priority
+and entry sequencing, not final scope. No agent is spawned by the amendment.
 
 External trial material may be prepared early. Actual E7 contact requires explicit
 authorization and does not block unrelated engineering. Existing authorization

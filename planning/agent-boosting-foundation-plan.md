@@ -14,9 +14,10 @@ for delivered boundaries and remaining work, and the
 [064–084 sprint roadmap](../v1-sprints/roadmap-after-063.md) for bounded execution cards.
 Amended phase dependencies and
 acceptance gates below still apply; implemented recipe count is not a phase exit.
-Sprint 063 proposes a bounded GPU feasibility overlap; it is not adopted. The
-existing phase dependencies remain in force. Historical checkboxes below require
-current evidence reconciliation and are not a substitute for the latest status.
+The user-approved 2026-09-07 amendment adopts bounded scalar CUDA feasibility
+alongside exploratory authoring; see [085](../v1-sprints/085-foundation-focus-amendment.md).
+It supersedes the earlier unadopted-overlap proposal. Formal acceptance remains
+unchanged. Historical checkboxes require current evidence reconciliation.
 
 This plan supersedes future investment order in the old GPU checklist and the
 [ScoringBench-first plan](impact-adoption-value-next.md). Old experiments and failures remain valid.
@@ -426,25 +427,32 @@ links and git diff --check, not nonexistent runtime changes. No push, release, m
 
 Starting instructions for the next execution model:
 
-> Read AGENTS.md, the 064–084 sprint roadmap and Sprints 069/070 for the next execution
-> card; Sprint 063 retains the rationale. Use this plan, construction design and
-> evaluation for scope and semantics. Sprints 064–065 stopping/installed isolation are complete.
-> Follow 066 profile → 067 incremental runtime → 068 trace retention.
-> Sprint 066's numerical-worker checks pass an actual 8-GiB address ceiling,
-> two-thread BLAS and guest peak-RSS response. Host cgroups remain unobservable.
-> Sprint 066 has six passing practical fits and a partial profile showing repeated
-> tree prediction/re-encoding dominates. Preemption leaves the long-round sweep
-> incomplete. Sprint 067 now passes exact incremental evaluation, installed isolation,
-> eight fits/two profiles and six same-container old/new pairs. Sprint 068 now
-> passes explicit retention, installed parity and sixteen exact full/summary fits
-> with two profiles. Prepare 069 accounting/isolation and 070 judging/resources;
-> current A1–A12/A5 workers now select summary. 070 also binds an evaluator-owned
-> execution freeze; full coverage and actual access/resource probes remain open.
-> Read the 070 readiness inventory before 071's exact full-search preflight.
-> Retain baseline gaps, cross-host confounds and separate address/RSS scope.
-> Preparation for 069 author measurement and 070 coverage/judging can proceed
-> independently; 071 proves the real selection pipeline before the remaining
-> application cards. Later author/CUDA/delivery cards follow their stated entry
-> gates, not numerical order alone. Preserve failures, thresholds and every case.
-> CUDA feasibility overlap remains a proposal until an explicit amendment is recorded.
-> No phase exit follows from implemented objective counts or green local tests.
+> Read AGENTS.md and the approved Sprint 085 amendment. Prioritize 069 D1/D2
+> authoring/accounting and bounded 078 scalar CUDA feasibility. Pause the next
+> OpenBoost CPU configuration-05 probe and wider search expansion. Carry the D2
+> composition onto the programmable device boundary. Audit actual ownership and
+> enforce independent accounting/isolation; designer work is not author evidence.
+> Preserve all R/C/A/E requirements, E5 cohorts, required CUDA recipes and P7/E4.
+> Record results and reflect at each bounded slice. No phase exit follows from
+> objective counts, green tests or a single scalar GPU fixture.
+
+
+### Approved foundation-priority amendment: 2026-09-07
+
+The user approved prioritizing measured algorithm authoring and a bounded GPU
+path over further CPU resource qualification. The controlling execution card is
+[Sprint 085](../v1-sprints/085-foundation-focus-amendment.md). Pause the next A6
+OpenBoost configuration-05 probe and wider CPU search expansion. Existing
+correctness/evidence obligations and all R1–R9/C1–C7/A1–A13/E0–E7 scope remain.
+
+Exploratory 069/F2.1 D1 control and D2 deep-change measurement may now overlap
+bounded 078/B12/F3.1 scalar device construction before formal F2/E5 completion.
+Audit relevant 065/068 ownership on the actual device path. The same D2 composition
+must subsequently exercise the programmable device boundary. This is an explicit
+exception to the default F2→F3 entry sequence, not an F2/F3/E4/E5 exit or permission
+to drop Normal/P7, required device recipes, full quality or held-out evaluation.
+
+CPU is a correct, usable reference/development backend; mature-library CPU speed
+parity is not a standalone objective. Measure author benefit and practical execution
+of useful compositions. The amendment defines acceptance, bounded device budgets,
+reflection points and the conditions for revisiting paused evaluation work.
