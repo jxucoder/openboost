@@ -10,7 +10,18 @@ import sys
 from pathlib import Path
 
 
-def probe(spec):
+def profile_complete(execution, record):
+    """A retained soft deadline is diagnostic completion, never a successful fit."""
+    return (
+        execution.get("status") == "error"
+        and execution.get("exit_code") == 124
+        and record.get("status") == "deadline"
+        and record.get("soft_limit_s") == 60
+        and bool(record.get("functions"))
+    )
+
+
+def probe(spec, *, profile=False):
     import runpy
 
     import numpy as np
@@ -26,6 +37,32 @@ def probe(spec):
     path.write_text(json.dumps(job))
     path.chmod(0o444)
     execute = runpy.run_path(str(source / "process_runner.py"))["execute"]
+    if profile:
+        fit = root / "profile"
+        result = execute(
+            [sys.executable, str(source / "profile_worker.py"), str(path), "--seconds", "60"],
+            fit,
+            timeout_s=90,
+            threads=1,
+            address_limit_bytes=8 * 1024**3,
+            unprivileged=True,
+        )
+        record = (
+            json.loads((fit / "profile.json").read_text())
+            if (fit / "profile.json").exists()
+            else {}
+        )
+        root.chmod(0o700)
+        return dict(
+            id=spec["id"],
+            passed=profile_complete(result, record),
+            outcome_kind="instrumented_diagnostic_only",
+            execution=result,
+            profile_status=record.get("status"),
+            artifacts={
+                str(p.relative_to(root)): p.read_bytes() for p in root.rglob("*") if p.is_file()
+            },
+        )
     wrapper = """import json,resource,runpy,sys
 from pathlib import Path
 sys.argv=sys.argv[1:]
@@ -91,7 +128,7 @@ finally:
     )
 
 
-def main(output, packets):
+def main(output, packets, *, profile=False):
     import modal
 
     output = Path(output).resolve()
@@ -100,6 +137,7 @@ def main(output, packets):
     repo = source.parents[2]
     names = [
         "a6_resource_preflight",
+        "profile_worker",
         "openboost_worker",
         "openboost_predict",
         "process_runner",
@@ -159,6 +197,8 @@ def main(output, packets):
         }:
             raise ValueError("train/validation packet only")
     jobs = [j for trial in plan["first_probe_ids"] for j in plan["jobs"] if j["id"] == trial]
+    if profile:
+        jobs = jobs[:1]
     manifest = dict(
         revision=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
         dirty=bool(subprocess.check_output(["git", "status", "--porcelain"])),
@@ -166,12 +206,18 @@ def main(output, packets):
             str(p.relative_to(repo)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths
         },
         argv=sys.argv,
-        requested=dict(cpu=[2, 2], memory_mib=[8192, 8192], function_seconds=1900, retries=0),
+        requested=dict(
+            cpu=[2, 2],
+            memory_mib=[8192, 8192],
+            function_seconds=120 if profile else 1900,
+            retries=0,
+        ),
         plan_sha256=hashlib.sha256(plan_path.read_bytes()).hexdigest(),
         packet=descriptor,
         fold_metadata=fold["metadata"],
         packet_manifest=packet_manifest,
         jobs=jobs,
+        mode="profile" if profile else "resource",
         status="running",
         modal_version=modal.__version__,
     )
@@ -199,7 +245,7 @@ def main(output, packets):
         image=image,
         cpu=(2, 2),
         memory=(8192, 8192),
-        timeout=1900,
+        timeout=120 if profile else 1900,
         retries=0,
         max_containers=1,
         serialized=True,
@@ -208,7 +254,9 @@ def main(output, packets):
     def remote(job):
         import runpy
 
-        return runpy.run_path("/snapshot/benchmarks/v1/a6_resource_preflight.py")["probe"](job)
+        return runpy.run_path("/snapshot/benchmarks/v1/a6_resource_preflight.py")["probe"](
+            job, profile=profile
+        )
 
     try:
         results = []
@@ -247,5 +295,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     parser.add_argument("packets", type=Path)
+    parser.add_argument("--profile", action="store_true")
     args = parser.parse_args()
-    main(args.output, args.packets)
+    main(args.output, args.packets, profile=args.profile)

@@ -289,3 +289,14 @@ input and configuration, then decide whether a targeted change is justified. No
 bottleneck or comparative speed claim follows from wall time alone. Keep the
 complete ledger, comparator matrix and author accounting open. This is a reflection
 checkpoint; no additional jobs or optimization are included in this slice.
+
+### Preregistered practical A6 profile
+
+Use the existing profile_worker via an explicit mode of a6_resource_preflight.
+Run only shared fold-zero configuration 00 on the same approved train/validation
+packet and unchanged model configuration. A 60-second soft profile deadline retains
+stacks, raw pstats and function timings; the protected child hard cap is 90 seconds
+and container cap 120 seconds, two reserved CPUs/8192 MiB, one worker thread, no
+retries. Exit 124 with a retained deadline profile is diagnostic completion only.
+Missing profiles, unexpected errors and hard timeouts fail the diagnostic check.
+No model optimization or full search follows without inspection of measured work.
