@@ -18,6 +18,9 @@ The user-approved 2026-09-07 amendment adopts bounded scalar CUDA feasibility
 alongside exploratory authoring; see [085](../v1-sprints/085-foundation-focus-amendment.md).
 It supersedes the earlier unadopted-overlap proposal. Formal acceptance remains
 unchanged. Historical checkboxes require current evidence reconciliation.
+The [086 execution plan](../v1-sprints/086-next-execution-plan.md) specifies the
+next fields/histogram slice, its frozen fixtures, the remaining device allowance
+and the path to resident training. Storage is verified; CUDA boosting remains open.
 
 This plan supersedes future investment order in the old GPU checklist and the
 [ScoringBench-first plan](impact-adoption-value-next.md). Old experiments and failures remain valid.
@@ -435,6 +438,8 @@ Starting instructions for the next execution model:
 > Preserve all R/C/A/E requirements, E5 cohorts, required CUDA recipes and P7/E4.
 > Record results and reflect at each bounded slice. No phase exit follows from
 > objective counts, green tests or a single scalar GPU fixture.
+> Follow Sprint 086's 078-A fixtures next. One 900-second device run remains;
+> stop for a retrospective after that run. Further device runs need a new bound.
 
 
 ### Approved foundation-priority amendment: 2026-09-07

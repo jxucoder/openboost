@@ -16,6 +16,9 @@ sets the current order: [069 authoring/accounting preparation](069-authoring-pil
 and bounded [078 scalar CUDA feasibility](078-cuda-scalar-path.md). D1 is the control;
 D2 cohort-feasibility is the deep change carried through the programmable CPU/device
 boundary. This explicitly permits feasibility before formal F2 completion.
+The [086 next execution plan](086-next-execution-plan.md) breaks construction into
+named fields/routed histograms, candidate operations and resident two-round
+training, with explicit acceptance and a retrospective after the remaining run.
 
 Pause the next OpenBoost configuration-05 CPU probe and wider CPU search expansion.
 [070](070-coverage-and-judging.md) remains open and supports correctness/isolation
@@ -23,13 +26,15 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1125 passing tests (one Linux-only skip).
-Bounded real evaluation and installed extensions exist; independent author benefit,
-full quality/search, CUDA and adoption remain unverified. The
+CPU implementation has twelve recipes and 1135 passing tests (one Linux-only skip).
+Bounded real evaluation and installed extensions exist. Twelve real T4 storage
+tests pass; GPU training, independent author benefit, full quality/search and
+adoption remain unverified. The
 [064–084 roadmap](roadmap-after-063.md) retains those obligations; 085 changes their
 near-term priority and the bounded device entry rule. Reflect after each 085 slice
-and every three implementation commits. No new author or device run has occurred
-under this amendment yet.
+and every three implementation commits. No independent author attempt has run.
+One of two device runs is consumed; one capped 900-second run remains for the
+declared next aggregation checks. See [078 evidence](078-cuda-scalar-path.md).
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.

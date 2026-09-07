@@ -1,7 +1,9 @@
 # Sprint 078: CPU ownership seam audit
 
-Status: source audit, not a device implementation. Follows the approved 085
-sequencing exception. No CUDA run has occurred or consumed its two-run budget.
+Status: historical source audit before `77aa105`, not a device implementation.
+Follows the approved 085 sequencing exception. At audit time no CUDA run had
+occurred; subsequent [078 storage evidence](078-cuda-scalar-path.md) consumed
+run 1. See [086](086-next-execution-plan.md) for the current plan and remaining run.
 
 ## Findings from actual call paths
 

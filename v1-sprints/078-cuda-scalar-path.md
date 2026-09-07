@@ -1,10 +1,13 @@
 # Sprint 078: Resident scalar CUDA composition
 
-Status: planned, device work not started. Mapping: B12 / F3.1 / R1 / C1–C5 / E1.
+Status: experimental storage verified on T4; resident fields, operations and
+training remain open. Mapping: B12 / F3.1 / R1 / C1–C5 / E1.
 Entry: bounded feasibility is approved by [085](085-foundation-focus-amendment.md)
 alongside 069, subject to relevant 065/068 ownership checks. Formal device gates
 still retain their full recipe, quality and authoring requirements.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
+Next construction slices, frozen aggregation fixtures and run-2 stop boundary:
+[086 execution plan](086-next-execution-plan.md).
 
 ## Outcome and first failing check
 
@@ -45,7 +48,8 @@ revise that boundary before adding kernels. No general GPU-speed claim yet.
 
 ## Results
 
-Not run. Current OpenBoost has no CUDA implementation.
+Storage-only implementation and real-device results are recorded below. The
+two-round scalar training acceptance has not run or passed.
 
 ### Ownership audit
 
@@ -53,7 +57,8 @@ The [actual CPU seam audit](078-device-boundary-audit.md) identifies forced NumP
 storage, host candidate callbacks and CPU accepted-state caches. First implement
 explicit execution-owned buffers/upload/export, then named fields and histograms;
 keep accepted storage separate from extension workspace. No CUDA implementation
-or hardware test is claimed by this audit. See its concrete acceptance checks.
+or hardware test was claimed by that initial audit. The later storage result
+below supersedes its implementation status; the operation/state gaps remain.
 
 ### Execution-owned storage implementation
 

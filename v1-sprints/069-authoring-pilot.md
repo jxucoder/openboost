@@ -1,8 +1,10 @@
 # Sprint 069: Exploratory authoring pilot
 
-Status: readiness inspected; executable packet and accounting smoke not yet implemented. Mapping: N3 / B11 / C6–C7 / exploratory F2.1.
+Status: clean author view/wheel prepared; complete dispatch packet, accounting and
+isolation smoke remain open. Mapping: N3 / B11 / C6–C7 / exploratory F2.1.
 Entry: preparation can start now; attempts use 065 or a later pinned CPU revision.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
+Next bounded preparation steps: [086 execution plan](086-next-execution-plan.md).
 
 ## Outcome and first check
 

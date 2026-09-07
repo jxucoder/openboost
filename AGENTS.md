@@ -65,6 +65,9 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 Current execution is governed by the user-approved
 [Sprint 085 foundation-focus amendment](v1-sprints/085-foundation-focus-amendment.md).
+The [086 next execution plan](v1-sprints/086-next-execution-plan.md) decomposes
+that work into fields/histograms, candidate operations and resident training;
+it freezes the next aggregation fixtures and the run-2 retrospective boundary.
 Prioritize [069 authoring preparation](v1-sprints/069-authoring-pilot.md) and bounded
 [078 scalar CUDA feasibility](v1-sprints/078-cuda-scalar-path.md). Prepare existing
 D1 expectile control and D2 cohort-feasibility deep change; D2 must later exercise
@@ -91,7 +94,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1125 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1135 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

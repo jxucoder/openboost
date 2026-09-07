@@ -1,7 +1,8 @@
 # Sprint 085: Return to the programmable-foundation hypothesis
 
-Status: user-approved sequencing amendment, 2026-09-07; implementation and
-independent measurement pending. This card redirects 069 and bounded 078 work;
+Status: user-approved sequencing amendment, 2026-09-07; storage is verified,
+training and independent measurement remain pending. This card redirects 069
+and bounded 078 work;
 it does not create a new v1 scope or certify a phase exit.
 
 ## Goal and retrospective
@@ -119,9 +120,11 @@ optimizing. Resume wider CPU searches only when they answer a specific correctne
 quality or cost question for the product, with a recorded decision and unchanged
 formal budgets. The paused deeper CPU probe is not a failed or passing trial.
 
-Next action: assemble the 069 D1/D2 accounting packet and audit the minimal device
-ownership seam for 078. No remote run or independent author attempt is performed
-by this amendment itself. Revisit sequencing after the first author/device results.
+Original next action was to assemble the 069 D1/D2 accounting packet and audit
+the device ownership seam. The author view and storage implementation/evidence
+now exist; full accounting and training remain open. Follow the
+[086 execution plan](086-next-execution-plan.md) for the next aggregation slice
+and retrospective. This planning record itself dispatches no author or device run.
 
 
 ## Device budget update
