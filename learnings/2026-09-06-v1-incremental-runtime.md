@@ -55,3 +55,12 @@ interruptions and partial profiles. No CUDA implementation or formal gate claim.
 ## Commits
 
 - Incremental transaction/encoding implementation; parent `b9cc57a`.
+
+### Clean-revision conformance evidence
+
+At `e99e89c`, synthetic 4/8/16/32-round checks pass 2*K*T tree calls with exact
+full replay. The installed D1–D4/custom-stopping/ordered M=1/8/32 suite passes,
+including ten exact fresh-inference models after training packages are removed.
+Source and artifact hashes match the clean revision. Evidence is in
+[incremental-067](../benchmarks/v1/evidence/incremental-067/README.md).
+These strengthen semantic and installed-boundary checks, not formal author gates.
