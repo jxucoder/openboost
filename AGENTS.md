@@ -93,11 +93,11 @@ the scalar training gate is not accepted. See the
 [run-4 evidence and retrospective](benchmarks/v1/evidence/cuda-resident-078/README.md).
 The explicitly approved 47-file private upload and single bounded invocation are
 complete. All four hardware allowances are consumed; no retries are authorized.
-Stop at the planned retrospective before broader construction. The next bounded
-correction is score symmetry under swapped child summaries, with direct device
+The user continued after the planned retrospective. Active local work is
+[089 score symmetry](v1-sprints/089-cuda-score-symmetry.md), with direct device
 score/code-generation diagnostics and all original cases retained. CPU arithmetic
 shows a compatible rounding mechanism; the actual GPU instruction sequence was
-not captured. No production fix is included in this result. Further hardware
+not captured. The archived result contains no production fix. Further hardware
 checks require a new concrete source freeze and upload/compute allowance.
 Retain the 065/068 contracts. Passing subsets do not pass full boosting conformance. Formal
 R1/R4/R5/R6/R8 device scope, R9, P7 and E4 remain required; two-round scalar parity

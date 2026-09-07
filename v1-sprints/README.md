@@ -47,10 +47,10 @@ uploaded 47 files and ran all 202 cases once at clean `c415755`. Dedicated owner
 and export checks pass; 14 weighted/missing cases fail. The
 [raw result and arithmetic investigation](../benchmarks/v1/evidence/cuda-resident-078/README.md)
 retain all failures and distinguish a rounding hypothesis from observed device data.
-All four hardware allowances are consumed. Stop at the run-4 retrospective before
-broader construction. Next is a bounded score-symmetry correction with direct
-candidate diagnostics and unchanged acceptance; no production fix or GPU retry
-has occurred. Further hardware work needs a new concrete freeze and allowance.
+All four hardware allowances are consumed. The user continued after the run-4
+retrospective. [089 score symmetry](089-cuda-score-symmetry.md) is the active bounded
+correction, with direct candidate diagnostics and unchanged acceptance. No GPU
+retry has occurred. Further hardware work needs a new concrete freeze and allowance.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.
