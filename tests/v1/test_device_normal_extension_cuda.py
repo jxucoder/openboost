@@ -150,6 +150,11 @@ def test_installed_d2_normal_and_fresh_cpu(update, mode, damping, fixed, tmp_pat
                     validation_nll_crps=list(scores),
                 )
             )
+    fresh_replay(directory, validation, actual, measurements)
+    print("NORMAL_D2_MEASUREMENT=" + json.dumps(dict(case=directory.name, repeats=measurements)))
+
+
+def fresh_replay(directory, validation, actual, measurements):
     # JSON null represents a missing numeric input, so all retained JSON is strict.
     values = [[None if np.isnan(v) else float(v) for v in row] for row in validation.data.values]
     record = dict(
@@ -177,7 +182,31 @@ def test_installed_d2_normal_and_fresh_cpu(update, mode, damping, fixed, tmp_pat
     }
     assert replay["numpy"] == "2.3.5"
     close(replay["raw"], actual)
-    print("NORMAL_D2_MEASUREMENT=" + json.dumps(dict(case=directory.name, repeats=measurements)))
+
+
+def test_missing_normal_replays_without_cuda_or_training_plugin(tmp_path):
+    train, validation, binned, _ = prepared_fixture("weighted")
+    assert np.any(np.isnan(train.data.values)) and np.any(np.isnan(validation.data.values))
+    directory = Path(os.environ.get("OPENBOOST_NORMAL_ARTIFACTS", tmp_path)) / "missing-normal"
+    directory.mkdir(parents=True)
+    with ExecutionContext() as context:
+        result = recipes.normal(
+            DeviceOperations(context),
+            train,
+            validation,
+            run_id="missing-replay",
+            seed=7,
+            rounds=3,
+            update="forward",
+            step="fixed",
+            max_depth=1,
+            binning=binned.binning,
+        )
+        actual = raw(context, result.run, result.state, True)
+        result.run.export(result.state).save(directory / "model.json")
+        result.run.close()
+        assert context.metrics["live_bytes"] == 0
+    fresh_replay(directory, validation, actual, [])
 
 
 def test_installed_d2_rejects_wrong_identity_and_releases_after_failure():

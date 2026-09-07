@@ -107,7 +107,49 @@ def judge_run(result, junit, protocol, sources):
         and verdict["versions_match"]
         and verdict["snapshot_sources_match"] is not False
     )
+    if "install_projects" in protocol:
+        expected = {
+            project["distribution"]: dict(
+                version=project["version"],
+                sources={
+                    k: v for k, v in sources.items() if k.startswith(project["source_root"] + "/")
+                },
+            )
+            for project in protocol["install_projects"]
+        }
+        verdict["installed_extensions_match"] = result.get("installed_extensions") == expected
+        verdict["passed"] &= verdict["installed_extensions_match"]
+    if protocol.get("normal_cpu_environment"):
+        verdict["cpu_environment_built"] = result.get("cpu_environment", {}).get("passed") is True
+        verdict["retained_artifacts_complete"] = sorted(
+            result.get("retained_artifact_hashes", {})
+        ) == sorted(protocol["retained_artifacts"])
+        verdict["passed"] &= (
+            verdict["cpu_environment_built"] and verdict["retained_artifacts_complete"]
+        )
     return verdict
+
+
+def retain_artifacts(output, payload, protocol):
+    """Persist only declared bounded JSON artifacts, including partial failed runs."""
+    allowed = set(protocol.get("retained_artifacts", []))
+    if set(payload) - allowed:
+        raise ValueError("undeclared retained artifact")
+    if sum(len(value.encode()) for value in payload.values()) > protocol.get(
+        "retained_artifact_bytes", 0
+    ):
+        raise ValueError("retained artifact byte limit exceeded")
+    hashes = {}
+    for name, value in payload.items():
+        path = Path(name)
+        if path.is_absolute() or ".." in path.parts or path.suffix != ".json":
+            raise ValueError("relative JSON artifact path required")
+        json.loads(value)
+        target = output / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(value)
+        hashes[name] = hashlib.sha256(target.read_bytes()).hexdigest()
+    return hashes
 
 
 def main(output, *, protocol_path=PROTOCOL):
@@ -146,6 +188,14 @@ def main(output, *, protocol_path=PROTOCOL):
     image = image.uv_pip_install(
         "/snapshot", extra_options="--no-deps --no-build-isolation", uv_version="0.12.1"
     )
+    for project in protocol.get("install_projects", []):
+        image = image.uv_pip_install(
+            "/snapshot/" + project["path"],
+            extra_options="--no-deps --no-build-isolation",
+            uv_version="0.12.1",
+        )
+    if protocol.get("normal_cpu_environment"):
+        image = image.run_commands("python /snapshot/benchmarks/v1/normal_build_cpu_env.py")
     app = modal.App(protocol.get("app_name", "openboost-v1-cuda-aggregation"))
 
     @app.function(
@@ -161,6 +211,7 @@ def main(output, *, protocol_path=PROTOCOL):
     )
     def run():
         import importlib.metadata
+        import importlib.util
         import os
         import platform
         import time
@@ -203,6 +254,29 @@ def main(output, *, protocol_path=PROTOCOL):
             cuda_runtime=cp.cuda.runtime.runtimeGetVersion(),
             cuda_driver=cp.cuda.runtime.driverGetVersion(),
         )
+        if "install_projects" in config:
+            result["installed_extensions"] = {}
+            for project in config["install_projects"]:
+                installed_extension = Path(
+                    importlib.util.find_spec(project["module"]).origin
+                ).parent
+                if "site-packages" not in installed_extension.parts:
+                    raise ValueError("extension must be installed outside snapshot")
+                result["installed_extensions"][project["distribution"]] = dict(
+                    version=importlib.metadata.version(project["distribution"]),
+                    sources={
+                        project["source_root"]
+                        + "/"
+                        + str(p.relative_to(installed_extension)): hashlib.sha256(
+                            p.read_bytes()
+                        ).hexdigest()
+                        for p in installed_extension.rglob("*.py")
+                    },
+                )
+        if config.get("normal_cpu_environment"):
+            result["cpu_environment"] = json.loads(
+                Path("/opt/openboost-normal-cpu/build.json").read_text()
+            )
         if "frozen_sources" in config:
             result["snapshot_sources"] = {
                 p: hashlib.sha256(Path("/snapshot", p).read_bytes()).hexdigest()
@@ -210,6 +284,12 @@ def main(output, *, protocol_path=PROTOCOL):
             }
         work = Path("/tmp/openboost-aggregation")
         work.mkdir()
+        environment = dict(os.environ)
+        if config.get("normal_cpu_environment"):
+            environment.update(
+                OPENBOOST_FRESH_CPU_PYTHON="/opt/openboost-normal-cpu/venv/bin/python",
+                OPENBOOST_NORMAL_ARTIFACTS=str(work / "normal"),
+            )
         command = [
             sys.executable,
             "-m",
@@ -225,7 +305,7 @@ def main(output, *, protocol_path=PROTOCOL):
         result["test_argv"] = command
         try:
             completed = subprocess.run(
-                command, cwd=work, capture_output=True, text=True, timeout=600
+                command, cwd=work, env=environment, capture_output=True, text=True, timeout=600
             )
             result.update(exit_code=completed.returncode, log=completed.stdout + completed.stderr)
         except subprocess.TimeoutExpired as error:
@@ -235,6 +315,18 @@ def main(output, *, protocol_path=PROTOCOL):
 
             result.update(exit_code="timeout", log=decode(error.stdout) + decode(error.stderr))
         result["junit"] = (work / "junit.xml").read_text() if (work / "junit.xml").exists() else ""
+        if config.get("normal_cpu_environment"):
+            # Preserve partial outputs after a failed/timed-out test as well.
+            paths = sorted((work / "normal").rglob("*.json"))
+            if sum(p.stat().st_size for p in paths) > config["retained_artifact_bytes"]:
+                result.update(
+                    exit_code="artifact-limit", artifact_error="retained JSON byte limit exceeded"
+                )
+                result["retained_artifacts"] = {}
+            else:
+                result["retained_artifacts"] = {
+                    str(p.relative_to(work)): p.read_text() for p in paths
+                }
         result["worker_wall_seconds"] = time.perf_counter() - started
         return result
 
@@ -244,6 +336,10 @@ def main(output, *, protocol_path=PROTOCOL):
         manifest["result"] = result
         for name, key in (("pytest.log", "log"), ("junit.xml", "junit")):
             (output / name).write_text(result.pop(key))
+        if "retained_artifacts" in result:
+            result["retained_artifact_hashes"] = retain_artifacts(
+                output, result.pop("retained_artifacts"), protocol
+            )
         verdict = judge_run(
             result, (output / "junit.xml").read_text(), protocol, manifest["sources"]
         )
@@ -256,6 +352,7 @@ def main(output, *, protocol_path=PROTOCOL):
                 for name in ("pytest.log", "junit.xml", "verdict.json")
             },
         )
+        manifest["artifacts"].update(result.get("retained_artifact_hashes", {}))
     except Exception as error:
         manifest.update(status="error", error=str(error))
         raise

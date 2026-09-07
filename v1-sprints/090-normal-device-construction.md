@@ -1,8 +1,8 @@
 # Sprint 090: Normal device construction and independent fixtures
 
 Status: 090-A complete; 090-B operations constructed with hardware checks pending;
-090-C mapped runtime, 090-D recipes and 090-E external D2 constructed; exact
-hardware package preparation next. No new device run.
+090-C mapped runtime, 090-D recipes and 090-E external D2 constructed; 090-F's
+67-file/383-case package is frozen. Upload/run approval pending. No new device run.
 Mapping: [079](079-cuda-distribution-and-extension.md) / B12 / F3.2 / R6 /
 C2–C5 / E1–E2 development conformance. Parent: `48a1386`.
 
@@ -291,6 +291,32 @@ wheel path/hash is verified without CUDA. The new CPU replay script also passes
 on a CPU-trained Normal model after actual D2 removal from a fresh Python 3.12
 environment; this checks the replay harness, not a CUDA-trained model. Continue
 directly into 090-F's exact file/case/environment freeze and allowance request.
+
+### 090-F package freeze and reflection
+
+[Run 6 is concrete](090-normal-run6-request.md): 67 files with exact hashes,
+383 expected cases, pinned dependencies, an installed D2 wheel and a separate
+CPU inference environment. Preserve all 212 run-5 tests unchanged. The additional
+missing-input replay raises the earlier E selection by one case, because the
+D2 validation fixture has only finite inputs. Preserve 76 declared JSON artifacts
+with a 2 MiB cap, plus raw output, JUnit, manifest and verdict.
+
+The shared runner retains optional extension/replay accounting without altering
+old result schemas. Forty-nine manifest/dispatch checks pass, including replay of
+old evidence. Full CPU regression is **1432 passed, one Linux-only skip**, with
+Ruff/docs passing. All 383 GPU cases collect from the exact copied snapshot using
+an isolated interpreter and installed core wheel. No GPU tests have executed.
+The local wheel/replay workflow passes with the available cached build backend;
+the pinned remote image still needs its first execution.
+
+Reflection: Normal plus external D2 exercises a programmable boundary beyond the
+first scalar recipe, but implementation and collectable tests are not verified
+GPU behavior. The next useful evidence is one bounded execution of this frozen
+package, with failures retained. The current tranche has reached its actual
+allowance boundary; no new construction or speculative optimization is needed
+before that result. Request the upload and one-T4 allowance, then archive/reflect
+at the predefined run boundary. Original P7 and all broader formal gates remain
+open; do not translate a future subset pass into a phase exit.
 
 ### 090-A original verification record
 
