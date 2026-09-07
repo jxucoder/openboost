@@ -111,3 +111,19 @@ def test_a6_requires_output_columns_before_importing_trainer(target):
     arrays["y_train"] = target
     with pytest.raises(ValueError, match="matrix targets"):
         fit(job, arrays)
+
+
+@pytest.mark.parametrize("bins", [None, True, 0, 1, -1, 2.5, "255", 257])
+def test_invalid_explicit_bin_budget_rejected_before_import(bins):
+    job, arrays = fixture()
+    job["config"]["bins"] = bins
+    with pytest.raises(ValueError, match="bins"):
+        fit(job, arrays)
+
+
+def test_explicit_bins_not_ignored_by_ngboost():
+    job, arrays = fixture()
+    job["library"] = "ngboost"
+    job["config"]["bins"] = 255
+    with pytest.raises(ValueError, match="bins unsupported"):
+        fit(job, arrays)

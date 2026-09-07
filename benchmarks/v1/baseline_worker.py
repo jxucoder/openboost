@@ -83,6 +83,15 @@ def fit(job, arrays):
     if w.shape != (len(y),) or np.any(w < 0) or not np.isfinite(w).all() or w.sum() <= 0:
         raise ValueError("invalid sample weights")
     cfg = dict(job["config"])
+    bin_params = {}
+    if "bins" in cfg:
+        bins = cfg.pop("bins")
+        if type(bins) is not int or not 2 <= bins <= 256:
+            raise ValueError("bins must be an integer from 2 to 256")
+        if library == "ngboost":
+            raise ValueError("bins unsupported for NGBoost exact-tree weak learner")
+        # Encoded inputs are finite: B intervals require at most B-1 borders.
+        bin_params = {"border_count": bins - 1} if library == "catboost" else {"max_bin": bins}
     rounds = cfg.pop("rounds")
     seed = job["seed"]
     lr = cfg.pop("learning_rate")
@@ -162,6 +171,7 @@ def fit(job, arrays):
         }
         params = dict(
             cfg,
+            **bin_params,
             objective=objectives[task],
             eta=lr,
             nthread=job["threads"],
@@ -244,6 +254,7 @@ def fit(job, arrays):
         }
         params = dict(
             cfg,
+            **bin_params,
             objective=objectives[task],
             learning_rate=lr,
             num_threads=job["threads"],
@@ -362,6 +373,7 @@ def fit(job, arrays):
             )
         model = klass(
             **cfg,
+            **bin_params,
             iterations=rounds,
             learning_rate=lr,
             loss_function=losses[task],

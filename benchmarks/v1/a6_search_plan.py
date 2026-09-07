@@ -59,7 +59,7 @@ def compile_plan(design):
         policy=partial["policy"],
         dispatch_ready=False,
         blockers=[
-            "Translate explicit bins=255 in all three comparator adapters; current worker rejects this field",
+            "Verify explicit bin translation on installed full-budget comparator workers",
             "Verify comparator installed fit, stopping, saved-model replay and exact resource policy",
             "Bind all five verified train/validation packets and evaluator-owned selection protocols",
             "Qualify deeper/1000-round resource cases, retaining failures without retries or budget shrink",

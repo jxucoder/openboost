@@ -733,3 +733,13 @@ five folds, sixteen configurations each). It writes once and launches nothing.
 The plan records source-freeze hashes, fit-only upper bounds, first resource probes
 and remaining requirements. It does not represent the full comparator matrix or
 a completed full-search resource check. See `v1-sprints/070-a6-resource-plan.json`.
+
+### Explicit comparator bin budgets
+
+The numeric baseline worker accepts optional `config.bins`, an integer in [2, 256].
+XGBoost and LightGBM receive `max_bin=bins`; CatBoost receives
+`border_count=bins-1`, since that parameter counts split borders rather than
+intervals. This applies to the worker's finite encoded inputs; it does not align
+native quantization algorithms. NGBoost explicitly rejects this setting. Omitted
+bins retain native defaults. `bin_budget_smoke.py` checks installed effective
+parameters, stopping records and fresh-process A6 replay at 7 and 255 bins.

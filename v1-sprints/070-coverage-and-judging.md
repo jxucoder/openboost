@@ -477,3 +477,21 @@ bounded A6 plan does not close the complete R/C/A/E ledger.
 
 Validation: 18 focused checks, 1106 CPU tests passed, one Linux-only skip; lint
 and docs pass. All seven planning-input hashes verify.
+
+### Explicit comparator quantization budget
+
+Plan: reproduce missing/invalid bins handling, implement finite numeric bin-budget
+translation, run installed A6 fit/stopping/fresh reload at small and frozen bin
+budgets, and retain evidence before refreshing the planning freeze. XGBoost and
+LightGBM count bins; CatBoost counts split borders, so B bins map to B-1 borders.
+This sets an upper budget, not identical cuts or histogram algorithms. Legacy
+jobs without bins retain native defaults; explicit unsupported values fail.
+
+Implementation accepts bins in [2,256] for the three numeric comparators and
+rejects unsupported NGBoost usage. A development installed run verifies actual
+native parameters, stopping records and exact fresh replay in six synthetic A6
+fits at 7/255 bins, including a constant output. This does not qualify full-budget
+real execution. A clean-revision artifact follows the implementation commit.
+
+Validation: 1115 CPU tests passed, one Linux-only skip; changed-file lint and
+documentation build pass.
