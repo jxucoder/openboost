@@ -12,10 +12,10 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 ## Current execution position
 
 Current execution card: [Sprint 066](066-practical-cpu-profile.md).
-Its first resource probe passes child allocation/deadline/log checks, but cannot
-inspect container cgroup caps on Modal gVisor. The full preflight is incomplete;
-no Housing profiling fits or runtime optimization have started. This is the current
-retrospective checkpoint; the card records the next bounded instrumentation slice.
+Its numerical-worker resource probe now passes exact 8-GiB address-ceiling,
+two-thread BLAS and guest peak-RSS checks. Cgroup inspection remains unavailable
+and its failed evidence is retained. No Housing profiling fit or runtime optimization
+has started; the next slice freezes and runs the diagnostic with explicit memory scope.
 [Sprint 065](065-installed-run-isolation.md) passes installed custom completion,
 independent RNG/preparation/failure checks and ten plugin-free inference models.
 [Sprint 064](064-programmable-stopping-and-isolation.md) completed structural stopping

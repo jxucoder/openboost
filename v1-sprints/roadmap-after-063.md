@@ -1,7 +1,7 @@
 # Sprint roadmap after the v1 retrospective
 
 Planning baseline: `df23796`, 2026-09-06. Current execution: 064–065 complete,
-066 resource preflight in progress; paused at the requested retrospective checkpoint.
+066 numerical-worker resource checks pass; profiling preparation is current.
 This decomposes Sprint 063 N1–N5 and its proposed GPU sequence into execution
 cards. It does not replace the [main plan](../planning/agent-boosting-foundation-plan.md),
 [construction design](../planning/foundation-construction-design.md), or
@@ -24,7 +24,7 @@ pin their actual source revision, commands and workload before execution.
 |---|---|---|---|
 | [064](064-programmable-stopping-and-isolation.md) | Complete: public stopping completion | Current CPU contracts | Independent two-round policy, 77 focused / 943 CPU tests; installed checks follow in 065 |
 | [065](065-installed-run-isolation.md) | Complete: installed independent runs | 064 | M=1/8/32 RNG, preparation, custom stop, failure/retry and plugin-free inference |
-| [066](066-practical-cpu-profile.md) | In progress: practical CPU cost diagnosis | 065 | Child limit/deadline probes pass; container inspection unavailable; eight Housing cases remain not_run |
+| [066](066-practical-cpu-profile.md) | In progress: practical CPU cost diagnosis | 065 | Worker address/thread/guest peak checks pass; host cgroups unavailable; eight Housing cases remain not_run |
 | [067](067-incremental-runtime.md) | Incremental transaction execution | 066 diagnosis | New-term replay grows linearly; independent full replay and all state transitions agree |
 | [068](068-trace-retention.md) | Bounded diagnostic memory | 067 | Summary/full equivalence; bounded retained arrays; matched practical rerun |
 | [069](069-authoring-pilot.md) | Exploratory authoring measurement | Preparation can start now; attempts after 065 and accounting checks | Fair control/deep-change arms, measurable budgets and isolated verifiers |

@@ -127,10 +127,117 @@ def probe(directory):
     )
 
 
+def worker_measurement():
+    """Measure a single numerical process under the actual diagnostic ceiling."""
+    import errno
+    import gc
+    import mmap
+    import resource
+
+    import numpy as np
+    from threadpoolctl import threadpool_info
+
+    def peaks():
+        status = Path("/proc/self/status").read_text()
+        rows = {
+            line.split(":", 1)[0]: line.split(":", 1)[1].strip()
+            for line in status.splitlines()
+            if ":" in line
+        }
+        value = rows.get("VmHWM", "").split()
+        return dict(
+            ru_maxrss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+            proc_vmhwm_bytes=int(value[0]) * 1024 if len(value) == 2 and value[1] == "kB" else None,
+        )
+
+    limit = list(resource.getrlimit(resource.RLIMIT_AS))
+    rejected, error = False, None
+    try:
+        mapping = mmap.mmap(-1, 9 * 1024**3)
+    except OSError as exc:
+        rejected, error = exc.errno == errno.ENOMEM, str(exc)
+    else:
+        mapping.close()
+    a = np.ones((128, 128))
+    np.testing.assert_array_equal(a @ a, np.full((128, 128), 128.0))
+    pools = threadpool_info()
+    before = peaks()
+    size = 64 * 1024**2
+    data = bytearray(size)
+    for i in range(0, size, 4096):
+        data[i] = 1
+    during = peaks()
+    del data
+    gc.collect()
+    after = peaks()
+    verified = [
+        name
+        for name in before
+        if all(type(p[name]) is int and p[name] > 0 for p in (before, during, after))
+        and during[name] - before[name] >= size * 0.75
+        and after[name] >= during[name]
+    ]
+    checks = dict(
+        exact_8gib_address_limit=limit == [8 * 1024**3] * 2,
+        oversized_mapping_rejected=rejected,
+        two_thread_blas=bool(pools) and all(p["num_threads"] == 2 for p in pools),
+        peak_counter_verified=bool(verified),
+    )
+    return dict(
+        checks=checks,
+        address_limit=limit,
+        mapping_error=error,
+        numpy=np.__version__,
+        pools=pools,
+        touched_bytes=size,
+        peaks=dict(before=before, during=during, after=after),
+        verified_peak_counters=verified,
+    )
+
+
+def worker_probe(directory):
+    """Verify process-level enforcement; retain unavailable host inspection separately."""
+    original = probe(directory)
+    source = str(Path(__file__).resolve())
+    code = f"import runpy,json; print(json.dumps(runpy.run_path({source!r})['worker_measurement']()))"
+    worker = bounded(
+        [sys.executable, "-c", code],
+        seconds=30,
+        address_bytes=8 * 1024**3,
+        directory=Path(directory) / "worker",
+    )
+    measurement = json.loads(worker["log"]) if worker["status"] == "pass" else None
+    checks = {
+        name: original["checks"][name]
+        for name in (
+            "allocation_rejected",
+            "timeout_killed",
+            "partial_log_retained",
+            "valid_child_succeeds",
+        )
+    }
+    checks["numerical_worker_passed"] = worker["status"] == "pass"
+    if measurement is not None:
+        checks.update(measurement["checks"])
+    original.update(
+        passed=all(checks.values()),
+        checks=checks,
+        numerical_worker=worker,
+        measurement=measurement,
+        scope="single-process 8-GiB virtual-address ceiling and verified peak counters; host cgroups remain unobservable",
+    )
+    return original
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     parser.add_argument("--modal", action="store_true")
+    parser.add_argument(
+        "--worker",
+        action="store_true",
+        help="verify the numerical worker ceiling and peak accounting",
+    )
     args = parser.parse_args()
     if args.output.exists():
         raise ValueError("fresh output path required")
@@ -141,14 +248,16 @@ def main():
         source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
         argv=sys.argv,
         requested=dict(cpu=[2, 2], memory_mib=[8192, 8192], timeout_s=60, retries=0),
+        mode="worker" if args.worker else "container-inspection",
     )
     if args.modal:
         import modal
 
         app = modal.App("openboost-v1-resource-preflight")
-        image = modal.Image.debian_slim(python_version="3.12").add_local_file(
-            source, "/opt/resource_preflight.py", copy=True
-        )
+        image = modal.Image.debian_slim(python_version="3.12")
+        if args.worker:
+            image = image.uv_pip_install("numpy==2.3.5", "threadpoolctl==3.6.0")
+        image = image.add_local_file(source, "/opt/resource_preflight.py", copy=True)
 
         @app.function(
             image=image,
@@ -160,20 +269,22 @@ def main():
             serialized=True,
             include_source=False,
         )
-        def remote_probe():
+        def remote_probe(worker_mode):
             import runpy
             import tempfile
 
             with tempfile.TemporaryDirectory() as directory:
-                return runpy.run_path("/opt/resource_preflight.py")["probe"](directory)
+                return runpy.run_path("/opt/resource_preflight.py")[
+                    "worker_probe" if worker_mode else "probe"
+                ](directory)
 
         with modal.enable_output(), app.run():
-            result = remote_probe.remote()
+            result = remote_probe.remote(args.worker)
             manifest["image_id"] = image.object_id
         manifest["modal_version"] = modal.__version__
     else:
         with tempfile.TemporaryDirectory() as directory:
-            result = probe(directory)
+            result = (worker_probe if args.worker else probe)(directory)
     args.output.write_text(json.dumps(dict(manifest=manifest, result=result), indent=2) + "\n")
     print(json.dumps(result["checks"], indent=2))
     if not result["passed"]:

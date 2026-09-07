@@ -1,6 +1,6 @@
 # Sprint 066: Practical CPU cost profile
 
-Status: in progress; resource preflight incomplete, no profiling fits started.
+Status: in progress; numerical-worker resource checks pass, profiling fits not started.
 Mapping: N2a / F1 / C4 / E1 and diagnostic cost evidence.
 Depends on: [065](065-installed-run-isolation.md), completed at `e2b6c4c`.
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
@@ -68,3 +68,18 @@ two-thread numerical execution before freezing the eight cases and launching fit
 Only after resource checks pass should the diagnostic profile determine the remedy
 in 067. No additional objective family, GPU expansion or second runtime is justified
 by the current findings. See the [learning](../learnings/2026-09-06-v1-resource-preflight.md).
+
+### Numerical-worker follow-up
+
+The [new worker preflight](../benchmarks/v1/evidence/worker-resources-066/README.md)
+passes nine checks. Exact 8-GiB RLIMIT_AS limits reject a 9-GiB virtual mapping;
+OpenBLAS reports two threads; guest ru_maxrss responds to a touched 64-MiB
+allocation and retains the peak after release. VmHWM and host cgroups remain
+unavailable. Prior failed inspection evidence is preserved.
+
+The diagnostic will use this conservative per-process address ceiling, explicitly
+separate from requested container RAM and measured resident memory. It runs no
+spawned training workers; numerical threads share the bounded address space.
+This adds a stricter declared constraint without changing any formal search gate.
+Next freeze input prefixes/case order and rerun these checks in the profiling
+image before fits. See the [follow-up learning](../learnings/2026-09-06-v1-worker-resources.md).

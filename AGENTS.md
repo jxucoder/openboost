@@ -64,9 +64,10 @@ themselves. Verify the actual call path and the tests that exercise it.
 ## Current Priority Order
 
 Current execution card: [Sprint 066 practical CPU profile](v1-sprints/066-practical-cpu-profile.md).
-Resource preflight verifies child allocation/deadline behavior, but cgroup cap
-inspection is unavailable on Modal gVisor. No profiling fits have run. The next
-slice verifies the actual worker memory bound and peak-RSS accounting before fitting.
+The numerical-worker preflight verifies an 8-GiB address ceiling, two-thread BLAS
+and responsive guest peak-RSS accounting. Host cgroup caps remain unobservable;
+address space and RSS are reported separately. No profiling fits have run. Next
+freeze the eight cases and repeat preflight in the profiling image before fitting.
 Sprint 064 structural stopping passes 943 CPU tests; Sprint 065 installed custom-policy,
 RNG/preparation/failure checks and ten plugin-free inference models pass without core edits. The [064–084 sprint roadmap](v1-sprints/roadmap-after-063.md)
 defines bounded deliverables, dependencies and acceptance. [Sprint 063 retrospective and next plan](v1-sprints/063-retrospective-and-next-plan.md)

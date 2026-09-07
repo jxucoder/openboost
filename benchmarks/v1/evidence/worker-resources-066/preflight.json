@@ -1,0 +1,172 @@
+{
+  "manifest": {
+    "revision": "e3af6c96299424ec000f982121085fd4a4ec7aa2",
+    "dirty": true,
+    "source_sha256": "97d344d966826fd97b819d9e3a41dcf5622f8b6e2cc04a60968c232c6d0b61d8",
+    "argv": [
+      "/Users/jiaruixu/work_space/openboost/benchmarks/v1/resource_preflight.py",
+      "/tmp/openboost-resource-worker-066.json",
+      "--modal",
+      "--worker"
+    ],
+    "requested": {
+      "cpu": [
+        2,
+        2
+      ],
+      "memory_mib": [
+        8192,
+        8192
+      ],
+      "timeout_s": 60,
+      "retries": 0
+    },
+    "mode": "worker",
+    "image_id": "im-HN61vUCy50eJ3S41pI6ekL",
+    "modal_version": "1.3.0.post1"
+  },
+  "result": {
+    "passed": true,
+    "checks": {
+      "allocation_rejected": true,
+      "timeout_killed": true,
+      "partial_log_retained": true,
+      "valid_child_succeeds": true,
+      "numerical_worker_passed": true,
+      "exact_8gib_address_limit": true,
+      "oversized_mapping_rejected": true,
+      "two_thread_blas": true,
+      "peak_counter_verified": true
+    },
+    "cgroup_limits": {
+      "/sys/fs/cgroup/memory.max": null,
+      "/sys/fs/cgroup/cpu.max": null
+    },
+    "environment": {
+      "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+      "python": "3.12.10",
+      "cpu": "",
+      "cpu_count": 2,
+      "gpu": null
+    },
+    "cases": {
+      "allocation": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "134217728",
+          "/usr/local/bin/python",
+          "-c",
+          "import resource,sys; print('address_limit',resource.getrlimit(resource.RLIMIT_AS),flush=True);\ntry: data=bytearray(256*1024**2)\nexcept MemoryError: print('expected allocation rejected',flush=True); sys.exit(73)\nprint('ERROR allocation escaped limit',flush=True)"
+        ],
+        "timeout_s": 10,
+        "address_limit_bytes": 134217728,
+        "threads": 2,
+        "status": "error",
+        "exit_code": 73,
+        "wall_s": 0.06876211099999985,
+        "log": "address_limit (134217728, 134217728)\nexpected allocation rejected\n"
+      },
+      "timeout": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "134217728",
+          "/usr/local/bin/python",
+          "-c",
+          "import time; print('started',flush=True); time.sleep(10)"
+        ],
+        "timeout_s": 1,
+        "address_limit_bytes": 134217728,
+        "threads": 2,
+        "status": "timeout",
+        "exit_code": -9,
+        "wall_s": 1.004068602,
+        "log": "started\n"
+      },
+      "success": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "134217728",
+          "/usr/local/bin/python",
+          "-c",
+          "print('success')"
+        ],
+        "timeout_s": 10,
+        "address_limit_bytes": 134217728,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 0.06764780300000028,
+        "log": "success\n"
+      }
+    },
+    "scope": "single-process 8-GiB virtual-address ceiling and verified peak counters; host cgroups remain unobservable",
+    "numerical_worker": {
+      "command": [
+        "/usr/local/bin/python",
+        "-c",
+        "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+        "8589934592",
+        "/usr/local/bin/python",
+        "-c",
+        "import runpy,json; print(json.dumps(runpy.run_path('/opt/resource_preflight.py')['worker_measurement']()))"
+      ],
+      "timeout_s": 30,
+      "address_limit_bytes": 8589934592,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "wall_s": 0.6764255319999997,
+      "log": "{\"checks\": {\"exact_8gib_address_limit\": true, \"oversized_mapping_rejected\": true, \"two_thread_blas\": true, \"peak_counter_verified\": true}, \"address_limit\": [8589934592, 8589934592], \"mapping_error\": \"[Errno 12] Cannot allocate memory\", \"numpy\": \"2.3.5\", \"pools\": [{\"user_api\": \"blas\", \"internal_api\": \"openblas\", \"num_threads\": 2, \"prefix\": \"libscipy_openblas\", \"filepath\": \"/usr/local/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so\", \"version\": \"0.3.30\", \"threading_layer\": \"pthreads\", \"architecture\": \"Haswell\"}], \"touched_bytes\": 67108864, \"peaks\": {\"before\": {\"ru_maxrss_bytes\": 85733376, \"proc_vmhwm_bytes\": null}, \"during\": {\"ru_maxrss_bytes\": 152322048, \"proc_vmhwm_bytes\": null}, \"after\": {\"ru_maxrss_bytes\": 152322048, \"proc_vmhwm_bytes\": null}}, \"verified_peak_counters\": [\"ru_maxrss_bytes\"]}\n"
+    },
+    "measurement": {
+      "checks": {
+        "exact_8gib_address_limit": true,
+        "oversized_mapping_rejected": true,
+        "two_thread_blas": true,
+        "peak_counter_verified": true
+      },
+      "address_limit": [
+        8589934592,
+        8589934592
+      ],
+      "mapping_error": "[Errno 12] Cannot allocate memory",
+      "numpy": "2.3.5",
+      "pools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 2,
+          "prefix": "libscipy_openblas",
+          "filepath": "/usr/local/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+          "version": "0.3.30",
+          "threading_layer": "pthreads",
+          "architecture": "Haswell"
+        }
+      ],
+      "touched_bytes": 67108864,
+      "peaks": {
+        "before": {
+          "ru_maxrss_bytes": 85733376,
+          "proc_vmhwm_bytes": null
+        },
+        "during": {
+          "ru_maxrss_bytes": 152322048,
+          "proc_vmhwm_bytes": null
+        },
+        "after": {
+          "ru_maxrss_bytes": 152322048,
+          "proc_vmhwm_bytes": null
+        }
+      },
+      "verified_peak_counters": [
+        "ru_maxrss_bytes"
+      ]
+    }
+  }
+}
