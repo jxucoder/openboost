@@ -8,6 +8,8 @@ not enacted. All R1–R9/C1–C7/A1–A13 and E0–E7 thresholds remain unchange
 Subsequent [landscape feedback review](063-landscape-feedback.md) adds a concrete
 external stopping-result probe to N1 and sharpens N3 comparator/task choices.
 It does not replace the required application matrix or adopt the GPU amendment.
+[Sprint 064](064-programmable-stopping-and-isolation.md) turns N1 into the current
+implementation card, with contract decisions, two slices and acceptance checks.
 
 ## 1. Verdict and product definition
 

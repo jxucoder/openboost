@@ -424,9 +424,10 @@ links and git diff --check, not nonexistent runtime changes. No push, release, m
 
 Starting instructions for the next execution model:
 
-> Read AGENTS.md and Sprint 063 for current work; use this plan, construction design
-> and evaluation for scope and semantics. Start N1: complete installed D5 run-ID RNG
-> and stale-preparation probes through public wheels. Continue N2 practical runtime
+> Read AGENTS.md and Sprint 064 for the next implementation card; Sprint 063 retains
+> the rationale and later plan. Use this plan, construction design and evaluation
+> for scope and semantics. Start N1: structural stopping completion, then installed
+> D5 run-ID RNG, stale preparation and external-policy probes. Continue N2 practical runtime
 > diagnostics, N3 exploratory author-accounting preparation and N4 current coverage/
 > real A6/A13 selection. Preserve existing failures, frozen thresholds and all cases.
 > CUDA feasibility overlap remains a proposal until an explicit amendment is recorded.
