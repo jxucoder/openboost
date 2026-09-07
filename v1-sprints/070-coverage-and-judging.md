@@ -168,3 +168,14 @@ before this mode is considered operationally verified. No full search was launch
 Next: run that integration test on bounded Modal CPU hardware from a committed
 source snapshot, retaining execution evidence. Do not infer this new path passes
 from the standalone probe at `26a6797`.
+
+### Linux selection preregistration
+
+Run the three current selection tests and retain one additional 16-trial protected
+selection/replay bundle on Modal (two CPUs, 8192 MiB, 180 seconds, zero application
+retries). Upload only public CPU sources, named support modules, the focused test
+and packaging metadata. Create a separate Git snapshot inside the container so
+the smoke's provenance remains literal; record the original revision and every
+uploaded hash in the outer manifest. No original Git history or sealed data moves.
+Probe denied reads of test features and completed models, and protocol writes,
+with actual known-path PermissionError logs and unchanged hashes.
