@@ -85,9 +85,10 @@ passes 88 real T4 tests at `9ce790e`: 55 candidate/feasibility/route/leaf checks
 plus all 33 previous cases. D2's independent cohort minima change the winning
 split through public device operations; named/reordered information also passes.
 See the [078-B evidence](benchmarks/v1/evidence/cuda-splits-078/README.md).
-The original two runs and the additional single run are consumed. Stop at the
-planned retrospective; further hardware checks need a new concrete freeze and
-allowance. Next construction is 078-C resident two-round training with explicit
+The original two runs and the additional single run are consumed. The user
+continued after the retrospective; [088 resident scalar training](v1-sprints/088-resident-scalar-training.md)
+is the active local construction slice. Further hardware checks need a new concrete
+freeze and allowance. Build 078-C resident two-round training with explicit
 accepted/proposal ownership and saved CPU inference. Retain the 065/068 contracts.
 CUDA training and accepted/proposal integration remain unimplemented.
 Primitive checks do not pass transaction or boosting conformance. Formal

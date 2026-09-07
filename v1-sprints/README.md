@@ -38,9 +38,10 @@ The two original device runs and the separately approved run 3 are consumed.
 all 33 previous regressions at clean `9ce790e`; see the
 [raw evidence and reflection](../benchmarks/v1/evidence/cuda-splits-078/README.md).
 D2 changes the selected split through public resident scores and feasibility masks.
-Stop at this retrospective before 078-C's accepted/proposal ownership design,
-resident two-round scalar training and saved CPU inference. Further hardware work
-requires a new concrete freeze and allowance.
+The user continued after this retrospective. [088 resident scalar training](088-resident-scalar-training.md)
+is active local construction: accepted/proposal ownership, resident two-round
+scalar training and saved CPU inference. Further hardware work requires a new
+concrete freeze and allowance.
 
 The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
 stopping-result restriction and refines authoring comparators and development probes.
