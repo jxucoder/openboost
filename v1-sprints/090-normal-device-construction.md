@@ -1,8 +1,8 @@
 # Sprint 090: Normal device construction and independent fixtures
 
 Status: 090-A complete; 090-B operations constructed with hardware checks pending;
-090-C mapped runtime and 090-D recipes constructed; installed D2/package preparation
-next. No new device run.
+090-C mapped runtime, 090-D recipes and 090-E external D2 constructed; exact
+hardware package preparation next. No new device run.
 Mapping: [079](079-cuda-distribution-and-extension.md) / B12 / F3.2 / R6 /
 C2–C5 / E1–E2 development conformance. Parent: `48a1386`.
 
@@ -261,6 +261,38 @@ six numeric trials, full rejection/patience, invalid-second-learner cleanup and
 24-round/fresh CPU inference. No GPU tests ran. Normal runtime and recipe are
 implemented but not yet hardware-validated. Continue to the installed D2 consumer
 and exact package closure before asking for hardware approval.
+
+### 090-E external D2 and diagnostic preparation
+
+The external wheel now provides DeviceCohortLearner using public device imports
+only, with no core edit. It uploads independent cohort columns before the recipe,
+binds them to operations/problem identity and reuses them for every direction
+learner. Augmented fields are released on success/failure; closing a run leaves
+the caller's cohort buffers intact. Explicit learner close releases those buffers.
+
+Nineteen installed-device cases collect but have not run: eighteen combinations
+of update order, ordinary/natural/damped direction and fixed/backtracking, plus
+identity/failure cleanup. Each trajectory has a first/repeated fit, exact frozen
+conditions/trials, NLL/CRPS, scalar transfer/retention counters and separately timed
+CPU model prediction. First-in-case timing is not labelled cold: previous tests
+may have compiled kernels. Saved models replay in a separately installed CPU
+environment with neither CUDA dependencies nor the training plugin available.
+
+The retained near-tie has its own collectable hardware diagnostic. It records
+original/stored inputs, original-row and device sums/gains, actual selected key,
+partitions and depth-2 prediction differences. A passing diagnostic validates the
+measurement only, not repaired structural parity. All original 212 files remain
+unchanged. The resulting GPU selection is 382 cases, pending exact freeze.
+
+Local verification: **1422 CPU passed / one Linux-only skip**; ten focused checks,
+Ruff and docs pass. The existing installed D1-D5 verifier passes, including ten
+saved-model replays after plugin removal. The new D2 device module's installed
+wheel path/hash is verified without CUDA. The new CPU replay script also passes
+on a CPU-trained Normal model after actual D2 removal from a fresh Python 3.12
+environment; this checks the replay harness, not a CUDA-trained model. Continue
+directly into 090-F's exact file/case/environment freeze and allowance request.
+
+### 090-A original verification record
 
 Full CPU regression passes **1371 tests**, with one Linux-only skip. Ruff and
 documentation build pass; see the [verification record](../learnings/2026-09-07-v1-normal-device-design.md).

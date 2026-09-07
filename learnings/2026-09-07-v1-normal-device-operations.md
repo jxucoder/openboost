@@ -100,3 +100,44 @@ actual sixth-trial recovery, patience, second-learner failure and long-run/fresh
 CPU inference. A released/forged state must fail before numerical search, which
 motivated the public `validate_state` metadata check. No private optimizer or
 CPU training fallback was added. Next: installed D2 and hardware package freeze.
+
+## 090-E external D2 and replay harness
+
+`1498aad` commits the Normal recipe. This slice adds an external device learner,
+nineteen installed-device cases and the separate known near-tie diagnostic. No
+core production changes are needed. Independent columns are uploaded once before
+the recipe workspace begins and released explicitly by the caller. The installed
+checks verify that run close preserves those buffers and callback failure cleans
+only its own work. First/repeated whole-fit counters include unsuccessful trials;
+CPU prediction and fresh CPU load/prediction are separately measured.
+
+Verification (Python 3.12.12/macOS, no GPU execution):
+
+- The first focused source test failed because `device.py` was absent. After
+  construction, `uv run --no-sync pytest tests/v1/test_device_cohort_extension_api.py
+  tests/v1/test_public_extensions.py -n 0 -q` passes ten cases.
+- Full CPU regression, same command as 090-B: **1422 passed, one Linux-only skip**;
+  `/tmp/openboost-090-e-cpu.log`. Ruff and MkDocs pass. Twenty GPU cases collect.
+- `uv run --no-sync python examples/v1_extensions/verify.py
+  /tmp/openboost-090-e-installed` passes installed D1-D5 checks and plugin removal
+  inference. This is local development verification, not a performance artifact.
+- `uv build --wheel --offline --out-dir /tmp/openboost-090-e-wheels` for the root
+  and `examples/v1_extensions/cohort_splits`; `uv venv --offline --python
+  .venv/bin/python /tmp/openboost-090-e-cpu312`; offline `uv pip install --python`
+  that environment with both wheels and NumPy 2.3.5. Installed device.py matches
+  source SHA256 `0f8be24f4d9062be17b61fa3cf68e171d83be14a528716ed93e225238b3b54bc`.
+  After `uv pip uninstall --python ... ob-cohort-splits`, running
+  `.../bin/python -I benchmarks/v1/normal_cpu_inference.py
+  /tmp/openboost-090-e-replay` passes on a CPU-trained weighted/missing Normal
+  model. This validates the new file/interpreter harness, not CUDA inference.
+
+All uv commands use `UV_CACHE_DIR=/tmp/openboost-research-uv-cache`. A first venv
+without an explicit interpreter selected Python 3.14, for which offline NumPy was
+not cached; it installed nothing. The corrected probe pins the project's Python
+3.12 interpreter. Freeze the remote CPU interpreter explicitly as well.
+
+Reflection: the same public device components express D2 across scalar and Normal
+training; an installed execution test remains essential. This is designer work,
+not independent-author evidence. The near-tie diagnostic cannot certify a repair.
+Next commit freezes the exact 382-case hardware package and requests a new bounded
+upload/run allowance only when all files and limits are concrete.
