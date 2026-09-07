@@ -28,8 +28,9 @@ portability and full resource qualification remain separate obligations.
 The two named real fold-zero OpenBoost probes now pass at `9387d9f`, with exact
 fresh replay and frozen target scales. They stop by patience after 59/65 rounds
 and take 1077/767 seconds. See [evidence](../benchmarks/v1/evidence/a6-real-probes-070/README.md).
-Review a bounded profile of that practical workload before expanding the remaining
-158 OpenBoost jobs; this is a measured runtime concern, not an identified bottleneck.
+The bounded profile at `dede27e` identifies candidate selection/vector scoring as
+the dominant sampled work. Next prepare invariant default-scoring metadata with
+exact conformance and paired evidence; keep the remaining 158 jobs pending.
 
 ## Next bounded slices
 

@@ -313,3 +313,23 @@ Hypothesis: periodic faulthandler stack dumping interferes with this instrumente
 NumPy/Python path. Test a new committed revision with explicit --no-stacks, retaining
 cProfile, the same input/configuration, soft/hard limits and one-thread execution.
 This is a revised diagnostic, not an automatic retry or a model-resource failure.
+
+### Completed Modal profile and implementation boundary
+
+At clean `dede27e`, the revised profile exits 124 at its intended 60-second soft
+deadline, retaining all timings. [Evidence](../benchmarks/v1/evidence/a6-profile-070/README.md)
+verifies 32 source hashes and six raw artifacts. choose takes 52.273 cumulative
+seconds, vector_score 39.420, vector_feasible 11.562; vector_leaf (28.933) and
+_vector_indices (8.836) are overlapping descendants. The prior crashes/timeouts
+remain recorded and are not counted as completed profiles.
+
+Reflection after the harness, instrumentation correction and evidence slices:
+there is now a measured candidate-scoring target. Prepare invariant vector field
+indices/parameters once for default scoring and consider reusing parent scores.
+Preserve custom callbacks and public operations; require exact candidate selection,
+model bytes/predictions, and invalid-input/near-tie conformance before timing.
+No speedup follows from cumulative profile rows. Full-search expansion stays paused
+for this bounded, measured follow-up; other coverage/author obligations stay open.
+
+Validation: 1043 local CPU tests pass, one Linux-only test skips; lint/docs pass.
+The revised real Modal diagnostic completes. No production algorithm changed here.

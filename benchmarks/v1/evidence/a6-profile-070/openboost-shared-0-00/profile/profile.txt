@@ -1,0 +1,68 @@
+         60119037 function calls (60116315 primitive calls) in 59.037 seconds
+
+   Ordered by: cumulative time
+   List reduced from 1402 to 60 due to restriction <60>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000   60.001   60.001 profile_worker.py:97(<lambda>)
+        1    0.000    0.000   60.001   60.001 <frozen runpy>:262(run_path)
+    286/2    0.020    0.000   59.995   29.998 {built-in method builtins.exec}
+        1    0.000    0.000   59.994   59.994 <frozen runpy>:91(_run_module_code)
+        1    0.000    0.000   59.994   59.994 <frozen runpy>:65(_run_code)
+        1    0.000    0.000   59.994   59.994 openboost_worker.py:1(<module>)
+        1    0.000    0.000   59.773   59.773 openboost_worker.py:366(main)
+        1    0.001    0.001   59.751   59.751 openboost_worker.py:41(fit)
+        1    0.000    0.000   59.721   59.721 recipes.py:1158(multi_squared)
+        3    0.009    0.003   59.669   19.890 tree.py:273(depthwise)
+       64    0.106    0.002   59.486    0.929 tree.py:241(best)
+       32    0.693    0.022   52.273    1.634 ops.py:202(choose)
+   256753    0.547    0.000   40.017    0.000 tree.py:246(cached)
+   256753    0.936    0.000   39.420    0.000 ops.py:256(vector_score)
+   770259    4.820    0.000   36.039    0.000 ops.py:259(node)
+   770324    2.449    0.000   28.933    0.000 ops.py:245(vector_leaf)
+  1540648    6.783    0.000   14.327    0.000 ops.py:152(newton_leaf)
+   271986    4.390    0.000   11.562    0.000 ops.py:276(vector_feasible)
+  1330534    3.456    0.000   10.938    0.000 data.py:12(_owned)
+  1299063    3.563    0.000    8.836    0.000 ops.py:235(_vector_indices)
+  3610039    6.380    0.000    8.270    0.000 ops.py:146(_nonnegative)
+       32    0.002    0.000    7.108    0.222 tree.py:238(options)
+       32    1.913    0.060    7.017    0.219 ops.py:102(candidates)
+  2358500    4.724    0.000    4.724    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+  1027012    0.771    0.000    4.397    0.000 fromnumeric.py:2589(all)
+  1299063    1.205    0.000    4.154    0.000 {built-in method builtins.sum}
+  1330698    0.640    0.000    3.872    0.000 {method 'all' of 'numpy.ndarray' objects}
+  1027376    1.449    0.000    3.629    0.000 fromnumeric.py:89(_wrapreduction_any_all)
+  1330698    0.466    0.000    3.232    0.000 _methods.py:66(_all)
+  6495315    1.694    0.000    2.949    0.000 ops.py:236(<genexpr>)
+  3610045    1.260    0.000    1.889    0.000 numeric.py:1964(isscalar)
+  8277548    1.674    0.000    1.674    0.000 {method 'index' of 'tuple' objects}
+   770338    0.617    0.000    1.280    0.000 _ufunc_config.py:448(__enter__)
+  5198163    1.256    0.000    1.256    0.000 {method 'startswith' of 'str' objects}
+  1334593    1.228    0.000    1.228    0.000 {built-in method numpy.frombuffer}
+  1345837    1.131    0.000    1.131    0.000 {built-in method numpy.array}
+  1334619    0.809    0.000    0.809    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+   770338    0.349    0.000    0.695    0.000 _ufunc_config.py:464(__exit__)
+  3627864    0.633    0.000    0.633    0.000 {built-in method builtins.isinstance}
+  1334700    0.460    0.000    0.460    0.000 {method 'tobytes' of 'numpy.ndarray' objects}
+       12    0.001    0.000    0.428    0.036 __init__.py:1(<module>)
+   770338    0.385    0.000    0.385    0.000 {built-in method numpy._core._multiarray_umath._make_extobj}
+   770338    0.346    0.000    0.346    0.000 {method 'reset' of '_contextvars.ContextVar' objects}
+   770338    0.279    0.000    0.279    0.000 {method 'set' of '_contextvars.ContextVar' objects}
+      100    0.135    0.001    0.248    0.002 ops.py:35(histogram)
+   138/11    0.001    0.000    0.246    0.022 <frozen importlib._bootstrap>:1349(_find_and_load)
+   138/11    0.001    0.000    0.246    0.022 <frozen importlib._bootstrap>:1304(_find_and_load_unlocked)
+   135/11    0.001    0.000    0.242    0.022 <frozen importlib._bootstrap>:911(_load_unlocked)
+   124/11    0.001    0.000    0.242    0.022 <frozen importlib._bootstrap_external>:993(exec_module)
+   330/25    0.000    0.000    0.233    0.009 <frozen importlib._bootstrap>:480(_call_with_frames_removed)
+  1027509    0.226    0.000    0.226    0.000 {method 'items' of 'dict' objects}
+   770339    0.176    0.000    0.176    0.000 _ufunc_config.py:438(__init__)
+    354/8    0.000    0.000    0.162    0.020 {built-in method builtins.__import__}
+  1027012    0.160    0.000    0.160    0.000 fromnumeric.py:2584(_all_dispatcher)
+       65    0.001    0.000    0.158    0.002 tree.py:216(append)
+   178/26    0.000    0.000    0.157    0.006 <frozen importlib._bootstrap>:1390(_handle_fromlist)
+       31    0.001    0.000    0.153    0.005 tree.py:254(split)
+   770259    0.139    0.000    0.139    0.000 multiarray.py:769(dot)
+   272884    0.126    0.000    0.126    0.000 {built-in method builtins.min}
+      124    0.001    0.000    0.092    0.001 <frozen importlib._bootstrap_external>:1066(get_code)
+
+

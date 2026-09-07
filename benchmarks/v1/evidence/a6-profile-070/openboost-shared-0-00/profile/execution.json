@@ -1,0 +1,38 @@
+{
+  "address_limit_bytes": 8589934592,
+  "artifacts": {
+    "profile.json": "ffd77eb1a6967d1becd690f904d42fbf4c1171baaab020bc4404acce9c1aed3c",
+    "profile.pstats": "1192038355d376528ebc9accd61b646b0993153b576b1b39584acbdf02326e40",
+    "profile.txt": "e1ecda97b15967b69398cb5ee9adbd323fe07c26c079e22f9f19d56537a8e472",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/usr/local/bin/python",
+    "/snapshot/benchmarks/v1/profile_worker.py",
+    "/tmp/a6-probe-igej3mcs/job.json",
+    "--seconds",
+    "60",
+    "--no-stacks"
+  ],
+  "environment_policy": "minimal_explicit",
+  "exit_code": 124,
+  "launch_command": [
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+    "8589934592",
+    "1",
+    "/usr/local/bin/python",
+    "/snapshot/benchmarks/v1/profile_worker.py",
+    "/tmp/a6-probe-igej3mcs/job.json",
+    "--seconds",
+    "60",
+    "--no-stacks"
+  ],
+  "reason": "worker exited nonzero",
+  "status": "error",
+  "threads": 1,
+  "timeout_s": 90,
+  "wall_s": 60.243284257,
+  "worker_identity": "uid_gid_65534_no_new_privs"
+}
