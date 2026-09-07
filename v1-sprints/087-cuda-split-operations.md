@@ -1,8 +1,9 @@
 # Sprint 087: Public CUDA candidate and feasibility composition
 
-Status: local implementation and run package committed; new GPU allowance pending.
+Status: frozen run-3 allowance approved; dispatch and evidence review next.
 Baseline `4251a36`. Implements 086's 078-B; it is not a new phase or GPU allowance.
-Both 085 device runs are consumed. No further remote dispatch is authorized yet.
+Both 085 device runs are consumed. The user's continuation after the concrete
+run-3 approval request authorizes one additional bounded invocation below.
 
 ## Retrospective decision
 
@@ -117,7 +118,8 @@ hardware. Required author, application, quality and end-to-end cost gates remain
 ## Concrete run-3 request
 
 Implementation `0bcb52f` and the exhaustive CPU oracle `0ba39a3` are frozen in
-[078-splits-run3.json](078-splits-run3.json). The new allowance is **pending**.
+[078-splits-run3.json](078-splits-run3.json). The user approved the new allowance
+by replying "Continue" to the concrete 88-case, 900-second, zero-retry request.
 The package includes exactly 88 preregistered cases: 55 new split cases and all
 33 previous storage/aggregation cases, with the same 17 pinned dependencies.
 It freezes hashes of 38 uploaded files; the protocol itself is the 39th file and
@@ -160,3 +162,15 @@ boundary without treating implementation as device evidence. Keep the next step
 bounded to validating this boundary. Do not accumulate a resident trainer on top
 of unverified kernels or restart CPU throughput work. Independent author accounting
 and all required application/device gates remain open.
+
+## Approved execution sequence
+
+1. Verify unchanged source hashes and the exact 88-case matrix, record approval
+   and commit it before any upload. Only the protocol authorization changes.
+2. Dispatch the fixed installed-wheel package once on T4 with the frozen limits.
+   Preserve any failure; do not retry or change the cases after seeing results.
+3. Audit raw logs, JUnit, installed/snapshot hashes and environment metadata;
+   record acceptance or failure, consume the allowance and reflect before 078-C.
+
+Authorization does not include another invocation, pushing commits, independent
+author attempts or an expanded experiment. No hardware outcome is known yet.

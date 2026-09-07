@@ -51,6 +51,11 @@ reuse. Documentation, lint and offline wheel/sdist builds pass; the wheel's 23
 production modules match the frozen source bytes. The pending CLI exits before
 Modal import or output creation. No GPU allowance is consumed by these checks.
 
+The user replied "Continue" to the concrete additional T4 approval request. Record
+that allowance in the protocol and commit before dispatch. All 17 local manifest
+checks pass again, verifying unchanged frozen sources and all 88 cases; diff
+whitespace checks pass. The limits and zero-retry policy remain fixed.
+
 ## Failed Attempts
 
 The candidate API is absent at the starting revision; no remote experiment is run.
@@ -69,5 +74,5 @@ runtime versions, driver support, image labels and package metadata.
 ## Commits
 
 `0ba39a3` freezes the oracle before implementation; `0bcb52f` adds the operations
-and pending real-device cases. The next commit freezes the shared executor guards
-and run-3 package. Nothing is pushed.
+and pending real-device cases. `161c02e` freezes the shared executor guards and
+run-3 package. The approval record is a separate commit. Nothing is pushed.

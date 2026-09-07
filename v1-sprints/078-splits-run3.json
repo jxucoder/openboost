@@ -1,6 +1,6 @@
 {
   "scope": "078-B public scalar candidate, score, feasibility, route and leaf operations; prior 33 storage/aggregation regressions; no training",
-  "authorization": "pending",
+  "authorization": "approved",
   "implementation_revision": "0bcb52f0428fa52d9ce02834ec11717d873dd129",
   "app_name": "openboost-v1-cuda-splits",
   "output": "benchmarks/v1/evidence/cuda-splits-078",
