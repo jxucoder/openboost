@@ -63,52 +63,29 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-Current execution map: [Sprint 038 goal/progress review and plan](v1-sprints/038-goal-progress-and-plan.md).
-Installed public D2/D3 development wheels pass in Sprint 040 without core edits.
-Sprint 041 adds installed ordered Normal/Formula updates through public transactions.
-Sprint 042 resolves external result interoperability through the structural
-RecipeResult contract and installed mixed M=1/8/32 checks. Sprint 043 adds an installed D1 expectile objective. Next: remaining
-D5 author probes, plus remaining OpenBoost real-data adapters. Sprint 044 connects
-current A1/A11 workers to all five frozen housing folds; this is validation plumbing,
-not real-data quality acceptance. Sprint 045 adds A6 frozen target-scale binding
-and original-unit prediction on all five Parkinsons folds. Next: A13 selection
-and remaining adapters/D5 checks. Sprint 046 adds training-scale-verified A6
-selection and a synthetic 16-trial current search/release check. Real searches
-and remaining adapters/D5 checks are open. Sprint 047 adds verified-scale A6
-standardized quality reporting alongside every per-target gate. Sprint 048 adds
-A2/A3 probability adapters and five-fold Adult integration; full Covertype runs
-and remaining adapters/searches/D5 are open. Sprint 049 records all five full
-Covertype folds timing out at the 90-second fit cap. Next profile the current
-CPU path on that same input before expanding adapters; A3 validation is incomplete.
-Sprint 050 identifies histogram aggregation and repeated candidate row hashing
-in a bounded full-input profile. Next hoist invariant candidate row hashing with
-exact identity/candidate checks, then rerun the bounded workload. Sprint 051
-completes that change: fold zero passes in 87.4 seconds with exact fresh replay;
-the other folds were pending at that revision. Sprint 052 reuses selected
-histogram statistics with exact conformance checks;
-all five full Covertype folds pass within the unchanged cap and replay exactly.
-Sprint 053 connects A5 independent quantiles to all five frozen Bike origins
-with exact fresh replay and independently recomputed pinball scores. Sprint 054
-adds A7 explicit count/exposure binding on all five frozen frequency folds with
-exact replay. Sprint 055 adds A8 claim severity on all five frozen grouped folds.
-Sprint 056 adds direct A9 annualized Tweedie on all five aggregate folds, with
-verified exposure weights and period conversion. Sprint 057 binds matched paid
-events to all five frozen A9 input folds. Sprint 058 trains and replays the public
-composition on all five packets with independent component selection. Sprint 059
-adds A10 fixed-scale survival on all five frozen folds. Sprint 060 adds A12
-structured Formula with age separated from tree features on all five folds.
-Sprint 061 adds the current A4 query-aware adapter with synthetic direct/fresh
-parity; MSLR source/binding remains open. [Sprint 062](v1-sprints/062-cpu-exit-and-gpu-entry.md)
-reviews CPU exit and GPU entry. Next: installed D5 probes for distinct run-ID RNG
-streams and stale preparation rejection, then source/workflow and gate reconciliation.
-Real searches, joint A9 selection and formal E5 remain open. F3 has not started;
-the review defines its first vertical path without changing phase ordering.
-These internal trials
-do not establish E5/E7.
-Independent validation stopping is implemented in Sprint 039. A6 CPU workflows and shared
-preparation/M=1/8/32 fixed-budget equivalence are implemented (Sprints 036–037).
-Do not infer F1/B11 readiness from implemented objective count. The
-[Sprint 035 audit](v1-sprints/035-cpu-coverage-audit.md) remains historical evidence.
+Current execution map: [Sprint 063 retrospective and next plan](v1-sprints/063-retrospective-and-next-plan.md),
+reviewing merged PR #24 at `47108db`. [Sprint 062](v1-sprints/062-cpu-exit-and-gpu-entry.md)
+retains the preceding CPU/GPU gate audit; earlier sprint status is historical.
+
+The public CPU foundation has twelve recipes, specialized inference, independent
+stopping, installed D1–D4 development extensions and sequential M=1/8/32 checks.
+Current real validation/replay covers A1–A3/A5–A12; A4 has synthetic adapter checks.
+These bounded runs do not establish full quality, authoring cost or adoption.
+A13 real search/release, A9 joint selection, source gaps and formal gates remain open.
+
+Next: N1 installed D5 distinct run-ID RNG and stale-preparation probes. Then N2
+practical runtime/state checks and N3 exploratory author-accounting preparation;
+N4 closes the coverage ledger and one real A6/A13 search/release before extending
+remaining schemas. The Sprint 063 diagnostic confirms quadratic tree replay and
+linear retained trace-array growth on its tiny fixed-step paths; it is not timing
+or peak-memory evidence. Measure the practical regime before the full search matrix.
+
+CUDA is unimplemented. Sprint 063 recommends a bounded B12 feasibility overlap
+after N1/relevant N2 ownership checks, but that amendment is **not adopted**.
+Current F2→F3 ordering remains in force until an explicit amendment is recorded.
+All R1–R9/C1–C7/A1–A13 and E0–E7 requirements remain unchanged. No new objective
+catalog or unmeasured optimization is scheduled; demonstrated correctness failures
+and consumer blockers take priority. Test counts and adapter counts are not exits.
 
 1. Explicit algorithm tasks, fair baselines, and independent correctness oracles.
 2. A minimal CPU foundation tested by structurally different use cases.

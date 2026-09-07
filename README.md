@@ -53,7 +53,8 @@ uv run ruff check src/openboost tests/v1 tests/conftest.py
 uv build
 ```
 
-Python 3.10+. Current tests are CPU-only reference checks. CUDA is a future
+Python 3.10+. Current tests cover CPU implementation, independent references and
+evaluation infrastructure. CUDA is a future
 required execution subset, not an implemented capability of this reset checkout.
 GPU and publishing workflows stay unavailable until their v1 gates are met.
 
@@ -91,9 +92,9 @@ and persists two-model inference with explicit output units. Real A9 evaluation 
 [Log-normal AFT](docs/v1/aft.md) adds event/right-censored CPU training and
 persisted scale-aware survival outputs. Real A10 evaluation remains open.
 
-[Current CPU coverage audit](v1-sprints/035-cpu-coverage-audit.md) identifies
-external author workflows and real-data integration as remaining CPU
-prerequisites; Sprint 036 supplies the audited A6 recipe/scaling gap.
+[Current retrospective and plan](v1-sprints/063-retrospective-and-next-plan.md)
+separates implemented CPU coverage from remaining authoring, practical execution,
+real selection and GPU evidence.
 
 [Multi-output squared regression](docs/v1/multioutput.md) supports independent/shared trees,
 projected splits and persisted training-only target scaling. Real A6 evaluation remains open.

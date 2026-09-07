@@ -1,7 +1,7 @@
 # OpenBoost v1: Programmable boosting foundation design, execution and acceptance
 
 Date: 2026-09-05. Version: **the real v1 planning baseline**, explicitly designated by the user.
-Status as of Sprint 038: **F0.1/F0.2 delivered; F0.3 open; broad CPU construction delivered, formal F1 exit and author/quality/cost evaluation incomplete**.
+Status reviewed at merged PR #24 / Sprint 063: **F0.1/F0.2 delivered; F0.3 open; broad CPU construction delivered, formal F1 exit and author/quality/cost evaluation incomplete**.
 v1 denotes this product/architecture goal, not the existing PyPI version or a claim that P0–P7 completed v1.
 Code-review baseline: 3ac1552; branch: codex/gpu-python-foundation-design.
 Execution: [v1-sprints](../v1-sprints/README.md); Sprint 010 completed the
@@ -9,9 +9,12 @@ Execution: [v1-sprints](../v1-sprints/README.md); Sprint 010 completed the
 phase status follows evidence. At the user's request, Sprint 002 retired old production early.
 Reproduce it at `50acfc6`. The package now has shared CPU components, twelve
 recipes and explicit training-preparation reuse. See the
-[current goal/progress review and execution plan](../v1-sprints/038-goal-progress-and-plan.md)
+[current retrospective and execution plan](../v1-sprints/063-retrospective-and-next-plan.md)
 for delivered boundaries and remaining work. Amended phase dependencies and
 acceptance gates below still apply; implemented recipe count is not a phase exit.
+Sprint 063 proposes a bounded GPU feasibility overlap; it is not adopted. The
+existing phase dependencies remain in force. Historical checkboxes below require
+current evidence reconciliation and are not a substitute for the latest status.
 
 This plan supersedes future investment order in the old GPU checklist and the
 [ScoringBench-first plan](impact-adoption-value-next.md). Old experiments and failures remain valid.
@@ -421,9 +424,10 @@ links and git diff --check, not nonexistent runtime changes. No push, release, m
 
 Starting instructions for the next execution model:
 
-> Read AGENTS.md, this plan, evaluation, release review, application contracts and v1 planning learning.
-> Read F0.1 cards, construction design and Sprint 010 exit. Execute B02/F0.3: freeze actual data/hashes,
-> installed capabilities, budgets/held-outs and manifest/runner/judge in verified commits.
-> Never use production objectives as the sole oracle, maintain old compatibility or rewrite kernels early.
-> Report passes and unverified scope, preserve failures and all required cases. F1 follows B03–B10
-> component connections; cards, oracles or rewrapped old trainers are not an implemented foundation.
+> Read AGENTS.md and Sprint 063 for current work; use this plan, construction design
+> and evaluation for scope and semantics. Start N1: complete installed D5 run-ID RNG
+> and stale-preparation probes through public wheels. Continue N2 practical runtime
+> diagnostics, N3 exploratory author-accounting preparation and N4 current coverage/
+> real A6/A13 selection. Preserve existing failures, frozen thresholds and all cases.
+> CUDA feasibility overlap remains a proposal until an explicit amendment is recorded.
+> No phase exit follows from implemented objective counts or green local tests.

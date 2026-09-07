@@ -11,48 +11,22 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
-Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 923 passes;
-this includes references/evaluation infrastructure and is not a phase gate.
-Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
-Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
-Ordered updates pass in [Sprint 041](041-ordered-updates.md). Shared result
-interoperability passes in [Sprint 042](042-result-contract.md). D1 expectile passes in [Sprint 043](043-expectile-extension.md). Next: remaining
-D5 author probes and additional real-data adapters. [Sprint 044](044-current-worker.md)
-connects current A1/A11 workers to all five frozen housing folds.
-[Sprint 045](045-multioutput-worker.md) adds scale-bound A6 Parkinsons folds.
-[Sprint 046](046-scale-bound-selection.md) binds A6 selection to training scales
-and runs a current 16-configuration synthetic search with sealed model release.
-[Sprint 047](047-multioutput-quality.md) adds verified-scale A6 standardized
-quality reporting while retaining every per-target gate. Next: remaining
-application adapters, real search integration and D5 checks.
-[Sprint 048](048-classification-workers.md) adds A2/A3 probability adapters and
-five-fold Adult integration. [Sprint 049](049-covertype-worker.md) records all
-five full Covertype folds timing out at 90 seconds. [Sprint 050](050-covertype-profile.md) profiles the full input:
-histogram aggregation and repeated candidate row hashing dominate the sampled
-window. [Sprint 051](051-candidate-row-hash.md) hoists the invariant digest;
-fold zero completes within 90 seconds with exact fresh replay.
-[Sprint 052](052-histogram-gather.md) reuses selected histogram statistics;
-all five full folds pass within the unchanged cap with exact fresh replay.
-[Sprint 053](053-quantile-worker.md) adds current A5 independent quantiles on
-all five Bike origins. [Sprint 054](054-count-worker.md) adds A7 explicit
-count/exposure integration on all five frequency folds.
-[Sprint 055](055-severity-worker.md) adds A8 severity on all five grouped claim
-folds. [Sprint 056](056-aggregate-worker.md) adds direct A9 aggregate integration
-on all five folds. [Sprint 057](057-paid-event-binding.md) verifies matched paid
-event input packets. [Sprint 058](058-composition-worker.md) trains and replays
-all five compositions with independent component selection.
-[Sprint 059](059-survival-worker.md) adds A10 fixed-scale survival on all five folds
-and records the CPU-to-GPU checkpoint. [Sprint 060](060-structured-worker.md)
-adds A12 structured Formula. [Sprint 061](061-ranking-worker.md) adds the A4
-query-aware adapter; real MSLR binding remains open.
-[Sprint 062](062-cpu-exit-and-gpu-entry.md) reviews CPU exit and GPU entry.
-Next: installed D5 run-ID RNG and stale-preparation probes, then source/workflow
-and gate reconciliation. Real searches and joint A9 selection remain open.
-F3 has not started; the review preserves current phase ordering.
-CUDA, formal author comparisons, real application
-acceptance and independent adoption remain open.
+Current review and remaining plan: [Sprint 063](063-retrospective-and-next-plan.md),
+following merged [PR #24](https://github.com/jxucoder/openboost/pull/24).
+The merge passed 923 local CPU tests and all five CI checks. Broad public CPU
+components and application validation exist; formal phase exits, selected real
+quality/cost, CUDA and independent adoption remain open.
+
+Next: installed D5 probes (N1), practical state/trace execution checks (N2),
+exploratory author-accounting preparation (N3), and a required-coverage ledger
+plus one real A6/A13 selection/release (N4). The proposed bounded CUDA overlap
+is not adopted; current phase ordering remains in force. All required cases remain.
+
+[Sprint 062](062-cpu-exit-and-gpu-entry.md) retains the preceding CPU/GPU audit.
+[Sprint 038](038-goal-progress-and-plan.md) and Sprints 039–061 record the earlier
+construction, installed extensions and application evidence. The new
+[runtime diagnostic](../benchmarks/v1/evidence/runtime-audit-063/README.md) counts
+quadratic tree replay on tiny fixed-step paths, not wall time or GPU performance.
 
 The chronological entries below record status at each sprint's revision. Their
 historical "next" statements are superseded by the current review.

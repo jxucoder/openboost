@@ -1,0 +1,152 @@
+{
+  "scope": "Synthetic operation counts only; no wall-time, peak-memory, quality or E-gate claim",
+  "revision": "47108db5d9fe3157e59621115860aa1dd06e9bf4",
+  "dirty": true,
+  "source_sha256": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "b33bb8c658678bf5319a1e76b9a420112debea4f26361acad166f6f1e641585d",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "2374873a01dba8d7b359cd484337de228ca6c805d6a43b23bcf51598416746a1",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581",
+    "benchmarks/v1/runtime_cost_audit.py": "d433bb61e6b72cc3fe80a0c06986aef6812f30e12fe6f3e2a528f17d1125dfce"
+  },
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/runtime_cost_audit.py",
+    "benchmarks/v1/evidence/runtime-audit-063/counts.json"
+  ],
+  "environment": {
+    "python": "3.12.12",
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "numpy": "2.3.5",
+    "cpu_count": 16,
+    "threads": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    },
+    "gpu": null,
+    "peak_memory": null,
+    "wall_time": null
+  },
+  "cases": [
+    {
+      "recipe": "squared",
+      "rounds": 4,
+      "train_rows": 32,
+      "validation_rows": 16,
+      "parameters": 1,
+      "tree_terms": 4,
+      "tree_predict_calls_during_fit": 60,
+      "tree_row_visits": 1440,
+      "distinct_step_arrays": 9,
+      "step_array_logical_bytes": 2304,
+      "final_raw_exact": true
+    },
+    {
+      "recipe": "squared",
+      "rounds": 8,
+      "train_rows": 32,
+      "validation_rows": 16,
+      "parameters": 1,
+      "tree_terms": 8,
+      "tree_predict_calls_during_fit": 216,
+      "tree_row_visits": 5184,
+      "distinct_step_arrays": 17,
+      "step_array_logical_bytes": 4352,
+      "final_raw_exact": true
+    },
+    {
+      "recipe": "squared",
+      "rounds": 16,
+      "train_rows": 32,
+      "validation_rows": 16,
+      "parameters": 1,
+      "tree_terms": 16,
+      "tree_predict_calls_during_fit": 816,
+      "tree_row_visits": 19584,
+      "distinct_step_arrays": 33,
+      "step_array_logical_bytes": 8448,
+      "final_raw_exact": true
+    },
+    {
+      "recipe": "squared",
+      "rounds": 32,
+      "train_rows": 32,
+      "validation_rows": 16,
+      "parameters": 1,
+      "tree_terms": 32,
+      "tree_predict_calls_during_fit": 3168,
+      "tree_row_visits": 76032,
+      "distinct_step_arrays": 65,
+      "step_array_logical_bytes": 16640,
+      "final_raw_exact": true
+    },
+    {
+      "recipe": "normal",
+      "rounds": 4,
+      "train_rows": 32,
+      "validation_rows": 16,
+      "parameters": 2,
+      "tree_terms": 8,
+      "tree_predict_calls_during_fit": 120,
+      "tree_row_visits": 2880,
+      "distinct_step_arrays": 17,
+      "step_array_logical_bytes": 8704,
+      "final_raw_exact": true
+    },
+    {
+      "recipe": "normal",
+      "rounds": 8,
+      "train_rows": 32,
+      "validation_rows": 16,
+      "parameters": 2,
+      "tree_terms": 16,
+      "tree_predict_calls_during_fit": 432,
+      "tree_row_visits": 10368,
+      "distinct_step_arrays": 33,
+      "step_array_logical_bytes": 16896,
+      "final_raw_exact": true
+    },
+    {
+      "recipe": "normal",
+      "rounds": 16,
+      "train_rows": 32,
+      "validation_rows": 16,
+      "parameters": 2,
+      "tree_terms": 32,
+      "tree_predict_calls_during_fit": 1632,
+      "tree_row_visits": 39168,
+      "distinct_step_arrays": 65,
+      "step_array_logical_bytes": 33280,
+      "final_raw_exact": true
+    },
+    {
+      "recipe": "normal",
+      "rounds": 32,
+      "train_rows": 32,
+      "validation_rows": 16,
+      "parameters": 2,
+      "tree_terms": 64,
+      "tree_predict_calls_during_fit": 6336,
+      "tree_row_visits": 152064,
+      "distinct_step_arrays": 129,
+      "step_array_logical_bytes": 66048,
+      "final_raw_exact": true
+    }
+  ]
+}
