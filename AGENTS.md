@@ -148,11 +148,11 @@ next construction is required multiclass geometry/comparison/recipe integration
 under 080, then AFT and vector topology. No speed ratio or formal E4 pass follows.
 Preserve consumed run sources by revision when current implementation changes.
 
-The user then requests another PR and preparation for merge. Follow the
-[109 integration checkpoint](v1-sprints/109-pr-integration.md) before further
-construction: repair demonstrated CI/docs blockers, publish the reviewed branch
-as an English PR and inspect hosted checks. Preserve execution SHAs with a merge
-commit; the current request does not execute the merge or resume hardware/models.
+The [109 integration checkpoint](v1-sprints/109-pr-integration.md) is complete:
+all five hosted checks pass at `bbd69ea`, and the user's subsequent merge request
+lands PR 25 as merge commit `167ed53`, preserving execution SHAs. The README
+follow-up documents the current foundation and vision. No hardware/model study
+resumes as part of this documentation update.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
