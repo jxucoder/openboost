@@ -80,6 +80,9 @@ comparison and an unverified resident implementation with 117 collected GPU case
 CPU regression passes 1794 checks with one Linux-only skip. No run-8 upload or
 invocation is authorized; the next boundary is its concrete allowance and
 post-run retrospective.
+The [093 checkpoint](093-foundation-progress-and-next-steps.md) explains current
+implementation/evidence and the proposed authoring and workload priorities. It is
+a planning review, with no new execution allowance.
 Original P7/E4, 069 accounting/isolation and full
 R/C/A scope remain open. No additional upload, run or author attempt is authorized.
 
