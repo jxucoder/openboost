@@ -1,7 +1,7 @@
 # Sprint 104: Early squared/Normal performance checkpoint
 
-Status: frozen; study and exact source upload approved after the user resolves
-the automatic approval review block. No remote run has executed. The user's
+Status: closed after the single approved run; measurement acceptance failed
+with one passing and five timed-out cases. The allowance is consumed. The user's
 approval of an early GPU performance checkpoint after Sprint 103 moves this bounded measurement ahead
 of further 080 recipe ports; it does not replace or relax formal 082/E4.
 
@@ -44,7 +44,7 @@ optimization is bundled into the initial measurement.
 
 ## Acceptance and retrospective
 
-All four workload/backend pairs must complete with finite metrics, identical
+All four primary workload/backend pairs and the additional control must complete with finite metrics, identical
 inputs/settings, complete repetitions and explicit provenance. Validate exported
 model replay, declared rounds and resource cleanup. Compare held-out predictions
 and squared loss or Normal NLL/CRPS against the CPU run, and independently recompute
@@ -146,3 +146,60 @@ all 45 prefrozen source hashes, cases, thresholds and deadlines remain unchanged
 The original local collection report remains historical. Commit this authorization
 before dispatch, execute once, preserve any failed measurements and stop for
 retrospective. No additional invocation or upload is authorized.
+
+## Run-10 result and retrospective
+
+Execute once at clean `c8f7ebc57274399dbe120cd97d7933455e6559e4` on real T4.
+The [raw evidence and offline audit](../benchmarks/v1/evidence/early-performance-104/README.md)
+retain all sixteen declared JSON artifacts, JUnit, log and the false verdict.
+All 46 uploaded hashes, 31 installed core sources and eighteen pinned packages
+match. Worker time is 463.174 s; total dispatch time including image setup is
+547.098 s. No retry occurs. The embedded dispatch protocol remains approved;
+the active protocol separately records both allowances as consumed.
+
+Only squared 10,000 rows completes both backends and qualifies: CPU first/warm
+7.006/7.044 s, GPU first/three-warm median 9.394/2.941 s. The warm ratio is 2.395,
+relative half-MSE difference 1.09e-7 and normalized prediction RMSE 1.95e-7.
+This is an internal synthetic observation, not competitive speed evidence.
+
+Squared 100,000 rows completes CPU first/warm fits in 16.744/16.928 s. GPU retains
+20.486 s first and 13.757/13.748 s warm fits before the 50 s child timeout; the
+required third warm fit and final quality artifact are missing. No ratio qualifies.
+Normal GPU warm medians are 5.111 s at 1,000 rows and 6.858 s at 10,000 rows.
+CPU Normal retains one 48.009 s fit at 1,000 rows before its 90 s timeout, and no
+completed fits at 10,000/100,000 rows within their 30 s caps. Normal GPU 100,000
+rows retains only its 49.503 s first fit before timeout. All these pairs fail.
+
+The separate 100,000-row profile retains one 57.953 s fit before its 60 s timeout;
+the warm profile is missing. Its inclusive export wait is 28.964 s for 5,553
+blocking exports, while launch cost is 22.766 s including 15.694 s in compiler
+calls. These overlap and cannot be summed or treated as pure transfer/compiler
+times. Every retained finished GPU fit closes its owned buffers to zero.
+
+Three conclusions govern the next work:
+
+1. The GPU implementation works at these sizes, but has substantial fixed and
+   row-dependent cost. Normal 10,000 rows requires 9,417 launches and 12,982
+   synchronizations. Squared 10,000/100,000 rows keep 4,531 launches while warm
+   fit time rises from 2.94 s to observed 13.75 s. Dispatch stays near 1.4 s.
+   Source inspection shows serial validation/reductions and full-row histogram
+   scans; the profile does not isolate which kernel dominates.
+2. Local Normal calibration underestimated the remote CPU first-fit cost, and
+   the GPU/profile deadlines cannot accommodate all required repetitions at the
+   observed sizes. Partial fits are valuable diagnoses but never completed
+   timing pairs. Future packets need measured deadline headroom and progress
+   snapshots containing models and quality, without changing this run's verdict.
+3. The synthetic generator is not an exact portable input artifact. On macOS
+   x86_64/NumPy 2.3.5, regenerated Problem hashes differ from Linux even though all
+   five fully saved models replay exactly and local metric differences are at
+   most 4.74e-9. The exact cause remains unisolated; a double-sine substitution
+   does not fix it. Same-host CPU/GPU identities and the remote independent judge
+   pass for the qualifying pair. Retain this limitation and save exact inputs
+   in the next packet; do not substitute local targets into the frozen judgment.
+
+The [proposed next slice](105-parallel-validation-and-reproducible-cost.md) first
+addresses parallel boolean/domain validation without changing numerical reduction
+or acceptance policy, and repairs input/progress retention. Stop here for the
+planned retrospective boundary. Further hardware requires a new concrete freeze
+and allowance. Required 080 recipes, 081 train-many, 082/E4, all R/C/A families
+and deferred author evidence remain open; none is replaced by this checkpoint.

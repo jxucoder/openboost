@@ -43,7 +43,17 @@ exact private-source payload and Modal destination were not explicitly approved.
 No run occurs or allowance is consumed by that rejected attempt. The user's next
 "approve" explicitly authorizes the requested 46-file, approximately 358 kB Modal
 upload for one T4, two CPUs, 8192 MiB, 900 function seconds, 600 test seconds and
-zero retries. The source freeze is unchanged; execute once and retain its outcome.
+zero retries. Run 10 then executes once at clean `c8f7ebc`, with all sixteen case
+artifacts and matching sources/packages. Only squared 10,000 rows completes and
+qualifies: 7.044 s CPU versus 2.941 s warm GPU, ratio 2.395. Four other pairs and
+the profile remain incomplete after deadlines; preserve the
+[raw false verdict](../benchmarks/v1/evidence/early-performance-104/README.md).
+No ratio is assigned to partial 100,000-row timings. Exact synthetic input hashes
+also fail to reproduce on the local macOS audit host; same-host CPU/GPU identity
+and the remote quality judge remain valid. Save exact inputs in future evidence.
+All ten GPU allowances are consumed. Stop for the planned retrospective; the
+[105 proposal](105-parallel-validation-and-reproducible-cost.md) targets parallel
+validation and complete reproducible timing before further breadth.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

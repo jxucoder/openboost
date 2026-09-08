@@ -33,7 +33,11 @@ passes 381/383 checks, including all earlier scalar cases and nineteen saved-mod
 CPU replays. Two ordered acceptance decisions fail the frozen reference; full
 Normal conformance remains open. The [follow-up diagnostic run](benchmarks/v1/evidence/cuda-acceptance-091/README.md)
 preserves both failures and identifies rounding-induced false improvement at
-near-stationary loss. Comparison policy is being designed; no correction is claimed.
+near-stationary loss. The subsequent objective-owned comparison correction and
+[bounded revalidation](benchmarks/v1/evidence/cuda-recipe-103/README.md) establish
+514 earlier passes plus fifteen new recipe passes with identical production.
+All 529 revised requirements have passing evidence across two executions;
+the original failed verdicts remain preserved. This is not full Normal conformance.
 [Binary classification](docs/v1/binary.md) now
 persists typed class order and exposes probability/label inference.
 [Multiclass and vector leaves](docs/v1/multiclass.md) add joint softmax updates
@@ -41,8 +45,14 @@ and separate split/leaf statistics with arbitrary output mappings.
 
 Independent references and comparator/data checks remain evaluation preparation.
 F0.3 is still open; the user approved overlapping B03–B06 construction without
-removing any v1 scope or acceptance requirements. No real quality, GPU performance
+removing any v1 scope or acceptance requirements. No real quality, competitive GPU performance
 or agent/adoption advantage has been established for the new foundation.
+
+The [early same-host performance checkpoint](benchmarks/v1/evidence/early-performance-104/README.md)
+measures squared-error boosting at 10,000 rows in 7.04 s on CPU and 2.94 s on a
+warm T4, with comparable quality. The four other timing pairs and the separate
+profile are incomplete after deadlines. This synthetic internal result establishes
+neither external-library speed parity nor practical performance across all recipes.
 
 - [Execution and reflections](v1-sprints/README.md)
 - [Construction design](planning/foundation-construction-design.md)
@@ -103,7 +113,7 @@ and persists two-model inference with explicit output units. Real A9 evaluation 
 [Log-normal AFT](docs/v1/aft.md) adds event/right-censored CPU training and
 persisted scale-aware survival outputs. Real A10 evaluation remains open.
 
-[Current retrospective and plan](v1-sprints/063-retrospective-and-next-plan.md)
+[Current execution and reflections](v1-sprints/README.md)
 separates implemented CPU coverage from remaining authoring, practical execution,
 real selection and GPU evidence.
 
@@ -125,6 +135,7 @@ operations. Separate experimental resident squared geometry, scalar trees and
 accepted/proposal training now pass the separate
 [212-case T4 matrix](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
 Shared mapped transactions, Normal geometry and joint/ordered recipes now have
-[bounded device evidence with two unresolved acceptance failures](benchmarks/v1/evidence/cuda-normal-090/README.md).
+[bounded passing comparison and recipe evidence](benchmarks/v1/evidence/cuda-recipe-103/README.md),
+with the historical numerical failures preserved in the earlier archives.
 The installed D2 learner uses the same public field/feasibility/tree operations.
 Other required CUDA recipes and full phase acceptance remain open.

@@ -92,24 +92,30 @@ passes plus fifteen new passes with identical production. Bounded revised covera
 is complete across two runs, not one 529/529 invocation or full Normal conformance.
 The retrospective is complete; all nine GPU allowances are consumed.
 
-The user then approves an [early performance checkpoint](v1-sprints/104-early-performance-checkpoint.md)
-before further recipe ports. Measure existing squared/Normal CPU and CUDA paths
-on the frozen synthetic workloads, retain incomplete/quality-failing outcomes,
-and profile separately. Its new 46-file source closure and one T4 invocation are
-bounded in the run-10 protocol; preserve all previous freezes. Automatic approval
-review blocks its private-source upload before process creation: the study is
-approved, but the exact 46-file Modal payload requires explicit upload approval.
-No run-10 allowance is consumed by that rejected attempt. The user subsequently
-replies "approve" to the exact 46-file, approximately 358 kB upload to Modal for
-one T4 invocation: two CPUs, 8192 MiB, 900 function seconds, 600 test seconds and
-zero retries. Both authorizations are now approved; execute the unchanged freeze
-once, retain failures and stop for retrospective. This checkpoint does not pass
-formal E4.
+The user then approves the exact 46-file Modal upload for an
+[early performance checkpoint](v1-sprints/104-early-performance-checkpoint.md).
+Run 10 executes once at clean `c8f7ebc`: one of six cases passes, with every
+declared artifact and source/package identity retained. Squared 10,000 rows
+qualifies at 7.044 s CPU versus 2.941 s warm GPU, a 2.395 internal ratio with
+near-identical quality. Four other timing pairs and the separate warm profile
+remain incomplete after child deadlines. Preserve the
+[raw failed verdict and partial timings](benchmarks/v1/evidence/early-performance-104/README.md).
+The 100,000-row squared GPU has only two of three required warm fits; it has no
+qualified ratio. Normal 1,000/10,000-row GPU fits complete, but CPU pairs time out.
+All ten allowances are consumed. Exact generated inputs do not reproduce across
+the audited macOS/Linux hosts, despite matching same-host CPU/GPU identities;
+the next packet must retain lossless input snapshots. Formal E4 remains unpassed.
+
+Stop at the 104 retrospective boundary. The
+[105 proposal](v1-sprints/105-parallel-validation-and-reproducible-cost.md) targets
+parallel boolean/domain validation and complete reproducible cost evidence,
+preserving numerical decisions and all public checks. No further hardware or
+upload is authorized; a new concrete freeze and allowance are required.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
 sources and past results. All R/C/A requirements remain; author/adoption benefit
-is unverified. No source upload beyond this single run-10 packet is authorized.
+is unverified. The 105 cost response does not replace any required recipe or gate.
 
 The historical sequence below records prior instructions and evidence. Its
 authoring continuations and limited F2-to-F3 overlap rule are superseded by 101;

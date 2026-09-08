@@ -1,0 +1,179 @@
+{
+  "status": "timeout",
+  "backend": "cuda",
+  "recipe": "normal",
+  "train_rows": 100000,
+  "config": {
+    "features": 16,
+    "bins": 32,
+    "rounds": 20,
+    "max_depth": 3,
+    "learning_rate": 0.1,
+    "reg_lambda": 1.0,
+    "step": "fixed",
+    "seed": 7,
+    "repetitions": 4,
+    "cpu_repetitions": 2,
+    "pool_bytes": 536870912
+  },
+  "measurements": [
+    {
+      "fit_seconds": 57.95323565699999,
+      "context_seconds": 2.4344843760000003,
+      "host_preparation_seconds": 0.10882594400004564,
+      "training_seconds": 55.33821684100002,
+      "export_seconds": 0.027452568000001065,
+      "cleanup_seconds": 0.04420084299999871,
+      "metrics": {
+        "upload_bytes": 11532000,
+        "export_bytes": 35624,
+        "device_copy_bytes": 41951200,
+        "synchronizations": 12980,
+        "live_bytes": 12654408,
+        "peak_live_bytes": 18561784,
+        "peak_pool_bytes": 22325760,
+        "kernel_launches": 9417,
+        "kernel_dispatch_seconds": 21.728168702999767,
+        "validation_export_bytes": 27600,
+        "decision_export_bytes": 3360,
+        "metric_export_bytes": 336,
+        "comparison_calls": 60,
+        "comparison_export_bytes": 1920
+      },
+      "final_metrics": {
+        "upload_bytes": 11532000,
+        "export_bytes": 35624,
+        "device_copy_bytes": 41951200,
+        "synchronizations": 12982,
+        "live_bytes": 0,
+        "peak_live_bytes": 18561784,
+        "peak_pool_bytes": 22325760,
+        "kernel_launches": 9417,
+        "kernel_dispatch_seconds": 21.728168702999767,
+        "validation_export_bytes": 27600,
+        "decision_export_bytes": 3360,
+        "metric_export_bytes": 336,
+        "comparison_calls": 60,
+        "comparison_export_bytes": 1920
+      },
+      "live_bytes_after_run_close": 0,
+      "state": {
+        "version": 20,
+        "terms": 40,
+        "best_terms": 40
+      },
+      "stop": {
+        "reason": "budget",
+        "completed_rounds": 20
+      },
+      "binning_identity": "0310dfbb92ee3318c84aa50d34b5ededd4ca6ed5fb2110eb0ceb6db6cdb82c10",
+      "repeat": 0,
+      "phase": "first"
+    }
+  ],
+  "profile": true,
+  "profile_calls": [
+    {
+      "repeat": 0,
+      "calls": [
+        {
+          "file": "openboost/execution.py",
+          "line": 132,
+          "function": "export",
+          "calls": 5553,
+          "own_seconds": 0.029122245,
+          "inclusive_seconds": 28.964125349000003
+        },
+        {
+          "file": "openboost/device.py",
+          "line": 245,
+          "function": "_launch",
+          "calls": 9417,
+          "own_seconds": 0.17642120600000002,
+          "inclusive_seconds": 22.766481231
+        },
+        {
+          "file": "numba_cuda/numba/cuda/dispatcher.py",
+          "line": 1878,
+          "function": "compile",
+          "calls": 24,
+          "own_seconds": 0.001028773,
+          "inclusive_seconds": 15.693557062000002
+        },
+        {
+          "file": "openboost/execution.py",
+          "line": 141,
+          "function": "release",
+          "calls": 6533,
+          "own_seconds": 0.016751977,
+          "inclusive_seconds": 1.188593256
+        },
+        {
+          "file": "openboost/execution.py",
+          "line": 99,
+          "function": "synchronize",
+          "calls": 7429,
+          "own_seconds": 1.1573372990000002,
+          "inclusive_seconds": 1.165735156
+        },
+        {
+          "file": "openboost/execution.py",
+          "line": 105,
+          "function": "upload",
+          "calls": 50,
+          "own_seconds": 0.0010476600000000002,
+          "inclusive_seconds": 0.092090585
+        },
+        {
+          "file": "openboost/device_runtime.py",
+          "line": 460,
+          "function": "export",
+          "calls": 1,
+          "own_seconds": 4.7716e-05,
+          "inclusive_seconds": 0.019534283
+        },
+        {
+          "file": "openboost/device_tree.py",
+          "line": 159,
+          "function": "export",
+          "calls": 40,
+          "own_seconds": 0.00010015700000000001,
+          "inclusive_seconds": 0.016413843
+        },
+        {
+          "file": "openboost/device.py",
+          "line": 722,
+          "function": "release",
+          "calls": 640,
+          "own_seconds": 0.00442147,
+          "inclusive_seconds": 0.00973264
+        },
+        {
+          "file": "openboost/device_runtime.py",
+          "line": 472,
+          "function": "release",
+          "calls": 40,
+          "own_seconds": 0.0005885900000000001,
+          "inclusive_seconds": 0.004792478
+        }
+      ]
+    }
+  ],
+  "child_exit_code": null,
+  "child_wall_seconds": 60.123896059,
+  "child_timeout_seconds": 60,
+  "child_argv": [
+    "/usr/local/bin/python",
+    "/snapshot/benchmarks/v1/performance_checkpoint.py",
+    "--recipe",
+    "normal",
+    "--rows",
+    "100000",
+    "--backend",
+    "cuda",
+    "--output",
+    "/tmp/openboost-aggregation/normal/checkpoint/profile.json",
+    "--profile"
+  ],
+  "child_log": "/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 9 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 16 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 8 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 8 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 9 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 16 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 8 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 9 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 16 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 8 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 9 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 16 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n/usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 8 will likely result in GPU under-utilization due to low occupancy.\n  warn(errors.NumbaPerformanceWarning(msg))\n"
+}

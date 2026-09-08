@@ -63,9 +63,12 @@ constraints and external penalized leaves, with core inference after plugin remo
 named fields, histograms, candidate/feasibility/routing/leaf operations and resident
 scalar boosting. The bounded scalar path passes 212 real T4 checks at `af026ef`.
 Normal joint/ordered updates and an installed cohort-feasibility extension also
-exist; the latest hardware diagnostic passes 383/385 cases at `80740f2`, retaining
-two numerical acceptance failures. The current comparison correction passes CPU
-checks but awaits the separately frozen run-8 hardware validation. These results
+exist. The objective-owned comparison correction rejects both historical false
+improvements on real T4. Run 8 passes 528/529 revised cases; a corrected no-op
+best-prefix fixture then passes with all fifteen recipe cases in run 9.
+Together these establish 514 earlier passes plus fifteen new passes with identical
+production, completing bounded revised coverage across two executions. The
+original failed verdicts remain preserved. These results
 do not establish current full CUDA conformance, speed parity, fused train-many or
 support for every CPU recipe. See the execution page for exact public operations
 and evidence boundaries.

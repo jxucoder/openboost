@@ -446,3 +446,21 @@ expected disagreements, and run 8's overall raw verdict remains failed. See
 `benchmarks/v1/evidence/cuda-recipe-103/README.md` for the new result and source
 bindings. No full Normal/application conformance, matched-quality speed or broader
 CUDA recipe claim follows from these results; the split near-tie limitation remains.
+
+## Early performance checkpoint
+
+Run 10 measures existing squared and joint Normal recipes on the same T4 host,
+with sixteen features, 32 bins, depth three and twenty fixed rounds. Only squared
+10,000 rows completes both backends and qualifies: 7.044 s CPU versus 2.941 s
+warm GPU, with relative half-MSE difference 1.09e-7. GPU first-fit cost is 9.394 s.
+Four other timing pairs and the separate profile time out before all repetitions
+finish. Their partial timings do not qualify a speed ratio.
+
+Normal GPU warm fits complete at 5.111 s for 1,000 rows and 6.858 s for 10,000
+rows, but CPU comparisons time out. Normal 100,000 rows retains only a 49.503 s
+first fit. High launch/synchronization counts and blocking export waits motivate
+the next proposed validation optimization; no exclusive kernel attribution or
+external-library speed claim follows. See
+`benchmarks/v1/evidence/early-performance-104/README.md` for all failures, raw
+timings, source bindings and the cross-platform input-regeneration limitation.
+The run-10 allowance is consumed, and formal E4 remains open.

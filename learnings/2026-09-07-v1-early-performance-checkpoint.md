@@ -102,3 +102,74 @@ Verification: 73 focused performance/aggregation/Normal/comparison manifest test
 pass in 2.12 seconds. All 45 prefrozen hashes match; the exact upload contains
 46 files and 357,936 bytes. The fixed output is absent and the approved dispatch
 guard passes. No production or benchmark source changes accompany authorization.
+
+## Run-10 result and retrospective
+
+The exact authorization is committed at `c8f7ebc`; the one Modal invocation then
+completes with one pass and five failures. All 46 uploaded hashes, 31 installed
+core sources, eighteen pinned packages and sixteen case artifacts match. The
+[archive](../benchmarks/v1/evidence/early-performance-104/README.md) preserves the
+false verdict, all child timeouts and partial completed repetitions. The tenth
+allowance is consumed without retry. Production and frozen benchmark code do not
+change; public documentation is updated after execution to correct stale Normal
+failure claims and describe the measured performance boundary.
+
+Squared 10,000 rows is the only qualified pair: 7.044 s CPU versus 2.941 s warm
+GPU, ratio 2.395 with relative half-MSE difference 1.09e-7. At 100,000 rows GPU
+retains a 20.486 s first fit and two roughly 13.75 s warm fits before timeout;
+the third warm fit and final quality artifacts are absent, so no ratio qualifies.
+Normal GPU warm fits complete at 5.111/6.858 s for 1,000/10,000 rows; CPU pairs
+time out. The 1,000-row CPU first fit takes 48.009 s, substantially above the
+unqualified local calibration. This exposes insufficient remote deadline headroom.
+Normal 100,000 rows retains only a 49.503 s GPU first fit. Its separate profiled
+first fit takes 57.953 s; the required warm profile is missing after the 60 s cap.
+
+Normal 10,000/100,000-row fits make 9,417 launches and 12,982 synchronizations.
+The partial profile attributes 28.964 inclusive seconds to blocking exports and
+22.766 seconds to launch, including 15.694 seconds in compiler calls. These
+overlap; blocking exports include preceding kernel wait. Source inspection finds
+serial validation/reductions and full-row scans per histogram cell. A specific
+dominant kernel is not measured. The
+[105 proposal](../v1-sprints/105-parallel-validation-and-reproducible-cost.md)
+starts with parallel boolean/domain validation, preserving numerical reduction
+order, public checks and accepted/best-state semantics. Further hardware requires
+a new frozen allowance. Stop here for retrospective; all formal scope remains.
+
+## Offline regeneration counterexample
+
+The first offline auditor correctly rejects its assumption that the same NumPy
+version regenerates exact remote Problem hashes. On macOS x86_64/NumPy 2.3.5,
+training and validation identities differ from Linux for all five fully saved
+children. All five saved models replay bit-exactly on local validation features;
+local metric differences are at most 4.74e-9. The exact input discrepancy remains
+unisolated, and replacing float32 sine with double sine does not recover it.
+Do not silently relax the frozen judge or replace remote targets. Its qualifying
+pair has matching same-host CPU/GPU inputs and independent score recomputation.
+
+The offline audit now distinguishes source/hash/state/prediction verification
+and qualification from retained same-host metrics from host-dependent input
+regeneration. It records the Mac observation explicitly. A check on another host
+still runs prediction replay but does not require its regeneration observation to
+equal the recorded Mac observation. Future evidence must preserve exact input
+bytes, and completed models/quality after each fit, to survive later timeouts.
+
+## Closure verification
+
+- The offline run-10 audit verifies 46 dispatch source hashes, nineteen raw artifact
+  hashes, all six case identities, all 22 retained finished fits and five exact
+  saved-model prediction replays. It reproduces eligibility from the retained
+  same-host scores while reporting the local input-regeneration gap separately.
+- The prior run-9 combined audit still passes and verifies all 420 indexed run-8
+  files unchanged. The run-10 active dispatch guard rejects reuse; all 45 prefrozen
+  payload hashes match the historical dispatch manifest. Only current public
+  documentation changes after the run, not production/benchmark implementation.
+- The 73 focused performance/aggregation/Normal/comparison manifest tests pass in
+  2.62 seconds. Production/analyzer Ruff and MkDocs pass, with the existing 090
+  evidence-link warning. The earlier 1965-test CPU regression remains the last
+  full suite; no production code changes in this closure.
+- The archive index hashes all 23 other archive files. Sixteen retained JSON
+  artifacts total 4,110,926 bytes, below the frozen 32 MiB limit. Raw timeout/log/
+  verdict bytes are preserved, including literal whitespace.
+
+`c8f7ebc` is the clean execution revision; this closure commits evidence and the
+retrospective proposal without pushing or starting another hardware run.
