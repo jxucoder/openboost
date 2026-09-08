@@ -75,17 +75,21 @@ def audit_wheel(repo, wheel):
         str(p.relative_to(repo / "src")): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in sorted((repo / "src/openboost").rglob("*.py"))
     }
+    marker = repo / "src/openboost/py.typed"
+    support = {"openboost/py.typed": marker.read_bytes()} if marker.is_file() else {}
     with zipfile.ZipFile(wheel) as archive:
         names = archive.namelist()
         if len(names) != len(set(names)):
             raise ValueError("wheel contains duplicate entries")
         for name in names:
-            if name not in expected and not (
+            if name not in expected and name not in support and not (
                 name.startswith("openboost-")
                 and ".dist-info/" in name
                 and ".." not in name.split("/")
             ):
                 raise ValueError("wheel includes a file outside the public core and metadata")
+        if any(name not in names or archive.read(name) != data for name, data in support.items()):
+            raise ValueError("wheel package marker differs from the source")
         actual = {
             name: hashlib.sha256(archive.read(name)).hexdigest()
             for name in names

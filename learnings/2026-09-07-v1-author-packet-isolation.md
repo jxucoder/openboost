@@ -47,9 +47,15 @@ Stop speculative policy widening and retain the failure. No author was dispatche
   answer read succeeds. Stronger policy fails during the first positive example.
 - Committed-source reproduction, final regression and artifact hashes are recorded
   at closure. Original author/device archives and the run-8 freeze stay unchanged.
+- Marker correction: all 11 packet tests pass; the existing installed wheel's
+  31 Python modules and exact source marker pass the corrected audit. Ruff passes.
 
 ## Failed Attempts
 
+- The initial wheel audit at `40dd684` rejected the legitimate `openboost/py.typed`
+  marker. The wheel-level positive check exposed this after the initial focused
+  suite. Verify the marker against source bytes and add positive/missing/changed
+  marker regression cases; do not broadly allow arbitrary package data.
 - Nested sandbox application failed with Operation not permitted; the standard tool
   escalation allowed the no-op capability check and bounded local experiments.
 - Denying only named evaluator locations misses other copies. A manifest hash is
@@ -67,4 +73,5 @@ upload, independent author result or cost advantage was produced.
 
 ## Commits
 
-- Implementation and clean-source evidence are separate local slices.
+- `40dd684` — packet/rejection/probe construction; the subsequent marker correction
+  is required before the clean packet export can pass.

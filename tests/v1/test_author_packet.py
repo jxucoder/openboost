@@ -87,3 +87,21 @@ def test_failed_build_is_retained_as_incomplete(tmp_path, monkeypatch):
     assert manifest["build"]["exit_code"] == 1
     assert "missing cached dependency" in manifest["build"]["stderr"]
     assert manifest["author_files"] and manifest["attempts"] == []
+
+
+@pytest.mark.parametrize("marker", ["valid", "missing", "changed"])
+def test_legitimate_package_marker_is_verified(tmp_path, marker):
+    source = tmp_path / "src/openboost"
+    source.mkdir(parents=True)
+    (source / "__init__.py").write_text("# core\n")
+    (source / "py.typed").write_bytes(b"")
+    wheel = tmp_path / "core.whl"
+    with zipfile.ZipFile(wheel, "w") as archive:
+        archive.writestr("openboost/__init__.py", "# core\n")
+        if marker != "missing":
+            archive.writestr("openboost/py.typed", b"" if marker == "valid" else b"unexpected")
+    if marker == "valid":
+        assert set(audit_wheel(tmp_path, wheel)) == {"openboost/__init__.py"}
+    else:
+        with pytest.raises(ValueError, match="package marker"):
+            audit_wheel(tmp_path, wheel)
