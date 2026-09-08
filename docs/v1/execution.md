@@ -257,7 +257,7 @@ quality or performance. All five approved runs are consumed; no retry is authori
 Other required device recipes, train-many, quality, cost and author/adoption gates
 remain open.
 
-## Normal components: bounded evidence with acceptance failures
+## Normal components: bounded evidence and preserved historical failures
 
 `openboost.device_normal` now provides resident `prepare`, `base`, `geometry` and
 `loss` operations for scalar targets with two raw columns (mean/log scale).
@@ -418,7 +418,7 @@ if reporting floats are equal. It releases old anchors, observation scratch and
 the final anchor on completion/failure. During training this adds one retained
 `4*N_validation*K` snapshot, plus a temporary snapshot during observation.
 
-Fourteen of fifteen separate recipe CUDA tests pass in run 8: three-anchor sequences,
+All fifteen separate recipe CUDA tests pass in run 9 at `a7173d9`: three-anchor sequences,
 equal-score anchor replacement, full rejection across every update order, zero
 rounds, and failures during initial/observation copy, comparison, invalid callback
 result or a later learner. Together with the twelve transaction cases, these
@@ -432,11 +432,17 @@ comparisons independently. All ninety float64 reference trajectories retain thei
 original summaries. All 383 bound requirements pass in run 8, and all 2,548
 recorded trajectory comparisons pass their independent stored-input audit.
 
-The full revised result is 528/529, not complete acceptance. A forward three-anchor
-fixture expects a best prefix of ten after a zero-valued tenth term; strict
-improvement retains prefix nine. Independent fixture mathematics agrees with the
-observed state. The assertion is corrected locally and CPU no-op prefix checks
-pass. Its follow-up assertions still need real-device validation. Historical
-results retain all 26 expected
-disagreements, and the overall raw verdict remains failed. No full Normal,
-matched-quality speed or broader CUDA recipe claim follows from these results.
+Run 8's full revised result remains 528/529. Its forward three-anchor fixture
+expects a best prefix of ten after a zero-valued tenth term; strict improvement
+retains prefix nine. The test-only correction has independent CPU no-op coverage.
+Run 9 then passes the corrected case and all later best-score/raw, comparison and
+ownership assertions, along with its fourteen recipe siblings. All uploaded and
+installed sources and pinned versions match the separate run-9 freeze.
+
+The combined audit establishes 514 earlier passes plus fifteen new recipe passes
+with identical production, completing the bounded revised coverage across two
+runs. It is not a single 529/529 invocation. Historical results retain all 26
+expected disagreements, and run 8's overall raw verdict remains failed. See
+`benchmarks/v1/evidence/cuda-recipe-103/README.md` for the new result and source
+bindings. No full Normal/application conformance, matched-quality speed or broader
+CUDA recipe claim follows from these results; the split near-tie limitation remains.

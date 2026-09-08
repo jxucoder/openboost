@@ -1,7 +1,7 @@
 {
   "scope": "103 corrected Normal recipe group only. Preserve run 8 literal failure; any combined coverage requires the separate provenance review.",
-  "authorization": "approved",
-  "upload_authorization": "approved",
+  "authorization": "consumed",
+  "upload_authorization": "consumed",
   "require_upload_authorization": true,
   "upload_destination": "Modal",
   "app_name": "openboost-v1-normal-recipe-revalidation",

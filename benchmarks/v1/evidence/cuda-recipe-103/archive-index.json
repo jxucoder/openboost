@@ -1,0 +1,12 @@
+{
+  "schema": "openboost-evidence-index-v1",
+  "files": {
+    "README.md": "f4a12db8185de379f56be4fd36a89e3dd548b8aa890fcf925cc6e40982088a39",
+    "analysis.json": "933b35da869ba01fc01e8066b1d7c5ed765def5c89424b7dc85dc2f9c4276e1f",
+    "analyze.py": "fdfe2308672a5083727201302144d4fc579049a0cac3fffd0ddd2873f7e78a7f",
+    "junit.xml": "db28e0c8014ab70f04ef1a4bfb20ef7c30795a08abb62c22fd4b8860fb66a6d4",
+    "manifest.json": "611c95cc6a9ba687a553a94a41ec7c92ee005487a192f6591b94d4563b3e6994",
+    "pytest.log": "6a7035dc04945372dd0b7925a9e2c998a21bd42b9b1ccb301e858943923a470b",
+    "verdict.json": "dfd8d19aaf61d2055b060ca332b2bef13c01bdc307fbbdd4360c2c7651ed4b23"
+  }
+}

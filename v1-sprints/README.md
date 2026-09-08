@@ -24,20 +24,17 @@ term; independent derivation requires nine, while the test expects ten. Preserve
 the [raw failed verdict](../benchmarks/v1/evidence/cuda-comparison-092/README.md).
 Run 8's allowance is consumed, and agent studies remain paused.
 
-The fixture expectation is corrected locally; three new CPU cases verify best
-prefixes at each ordered/joint commit boundary and accepted no-ops. The fifteen
-CUDA recipe cases collect, but the changed test has not rerun on hardware. The
-consumed run-8 protocol and all archived evidence stay byte-identical.
+The fixture correction at `6026ebb` has three CPU checks for ordered/joint best
+prefixes and accepted no-ops. [103's real T4 revalidation](103-normal-cuda-revalidation.md)
+then passes all fifteen recipe cases at clean `a7173d9`, including the forward
+case's later assertions. All 46 uploaded sources and eighteen pinned packages
+match. [Combined evidence](../benchmarks/v1/evidence/cuda-recipe-103/README.md)
+verifies 514 earlier passes plus fifteen new passes with identical production.
+Bounded revised coverage is complete across two runs; the historical failed
+verdict and all 420 indexed run-8 files stay intact. The retrospective is complete,
+and all nine GPU allowances are consumed. No further hardware is authorized.
 
-[103's revalidation packet](103-normal-cuda-revalidation.md) freezes 46 uploads
-for the fifteen-case recipe group under a separate proposed T4 allowance. Its
-installed local snapshot collects all fifteen cases, production matches run 8,
-and 57 harness checks pass. The user explicitly approves its exact upload and
-single T4 invocation after `7fe4937`; execute once and retain the raw result.
-Future combined coverage must report 514 earlier passes plus the new recipe result;
-the historical failed verdict stays intact.
-
-Next engineering order: revalidate the corrected fixture, then advance
+Next engineering order: advance
 [required CUDA recipes](080-cuda-required-recipes.md),
 [train-many](081-cuda-train-many.md) and [real-workload quality/cost](082-end-to-end-cost.md).
 No new model call is needed for

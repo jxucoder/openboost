@@ -1,0 +1,8 @@
+...............
+=============================== warnings summary ===============================
+tests/v1/test_device_comparison_recipe_cuda.py: 30 warnings
+  /usr/local/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: Grid size 1 will likely result in GPU under-utilization due to low occupancy.
+    warn(errors.NumbaPerformanceWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+15 passed, 30 warnings in 13.51s

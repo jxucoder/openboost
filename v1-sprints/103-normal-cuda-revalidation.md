@@ -1,8 +1,8 @@
 # Sprint 103: Revalidate the corrected Normal CUDA recipe fixture
 
-Status: explicitly approved for one execution. The user replied "approve" to the
-46-file Modal upload and single bounded T4 request after preparation commit
-`7fe4937`. Run 8's allowance remains consumed; this is the separate run-9 allowance.
+Status: **complete; 15/15 real T4 cases pass** at clean `a7173d9`. The separately
+approved run-9 allowance is consumed. The original request and local preparation
+below remain historical records; they authorize no retry.
 
 ## Purpose and plan
 
@@ -118,3 +118,41 @@ hashes, cases, resources and package versions remain unchanged from `7fe4937`.
 The local collection report retains the original pending protocol hash and remains
 collection-only evidence. Record the approved protocol hash and clean execution
 revision in the new run manifest. Execute once and stop for the planned retrospective.
+
+## Execution result and retrospective
+
+The [raw archive](../benchmarks/v1/evidence/cuda-recipe-103/README.md) preserves
+all fifteen passing cases with no failures, errors or skips. Installed core sources,
+all 46 uploaded hashes and eighteen pinned packages match. The worker uses Tesla
+T4 / driver 580.95.05, runtime API 12090 and Python 3.12.1. Pytest takes 13.509
+seconds, the worker 15.463 seconds and full dispatch 102.618 seconds. The thirty
+low-occupancy warnings reflect tiny correctness fixtures, not a throughput result.
+
+The previously failing forward case now reaches every later assertion: best score,
+best raw prediction, comparison records and owned live bytes before/after closure.
+Its best prefix is nine with ten accepted terms; joint/reverse select ten. All
+ownership/failure siblings pass. Production is unchanged; correcting the fixture
+was sufficient. No numerical tolerance, comparison policy or state rule changes.
+
+The offline audit verifies 514 passing revised cases outside this recipe group
+from run 8 plus fifteen passing cases from run 9, with identical production and
+reused support. This closes the **bounded revised coverage** gap across two runs;
+it is not one 529/529 invocation. All 420 indexed run-8 files and its raw failed
+verdict remain unchanged, including the original failed fixture and historical
+disagreements. The original local collection report and both consumed source
+freezes are preserved. All nine GPU allowances are consumed.
+
+The failure was in the test's model-selection expectation: acceptance can advance
+the current prefix while strict best selection retains an earlier equivalent
+prefix. The CPU transaction check and real device recipe now agree. Keep that
+distinction when porting other objectives; do not infer best state from accepted
+term count. The planned retrospective is complete, and no broader formal
+R/C/A or cost gate is passed by these fifteen cases.
+
+Next enter 080 with the required CUDA matrix from the canonical application table:
+retain squared/Normal evidence, then cover binary, multiclass, Poisson offset,
+event/right-censored AFT and squared multi-output topology. First verify the matrix
+rejects missing cells, skipped GPU checks and hidden host fallbacks; port each
+objective as a separate tested slice. Continue with 081 compatible train-many and
+082 real workload quality/cost after correctness. Do not resume deferred author
+or model studies. Further hardware requires a separately frozen concrete allowance.

@@ -81,20 +81,21 @@ the failed verdict. One forward recipe fixture expects best prefix ten after a
 zero-valued tenth term; strict improvement and independent fixture mathematics
 require nine. The expectation is corrected locally with three CPU no-op prefix
 checks; production code and the consumed run's frozen sources/verdict remain
-unchanged. The revised CUDA test has collected but has not rerun. Validate that
-changed test before claiming full revised acceptance. The run-8 allowance is consumed.
+unchanged. The run-8 allowance is consumed and its raw verdict remains false.
 
-[Sprint 103](v1-sprints/103-normal-cuda-revalidation.md) prepares its narrow
-revalidation: 46 frozen uploads, fifteen unchanged recipe IDs, identical production
-sources and a separate single T4 allowance. The installed local snapshot collects
-all fifteen cases and 57 harness checks pass. The user explicitly approves the
-46-file Modal upload and one bounded T4 invocation after `7fe4937`. Execute this
-unchanged packet once, retain every result and stop for its retrospective.
+[Sprint 103](v1-sprints/103-normal-cuda-revalidation.md) then executes the narrow
+revalidation at clean `a7173d9`: all fifteen recipe cases pass on real T4, including
+the corrected forward case's later prediction/comparison/ownership assertions.
+All 46 uploaded sources and eighteen pinned packages match. The
+[combined audit](benchmarks/v1/evidence/cuda-recipe-103/README.md) verifies 514 earlier
+passes plus fifteen new passes with identical production. Bounded revised coverage
+is complete across two runs, not one 529/529 invocation or full Normal conformance.
+The retrospective is complete; all nine GPU allowances are consumed.
 
-After this correction/retrospective, advance required CUDA recipes (080), compatible
+Next advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
 sources and past results. All R/C/A requirements remain; author/adoption benefit
-is unverified. No GPU run or source upload beyond this run-9 packet is authorized.
+is unverified. No additional GPU run or source upload is currently authorized.
 
 The historical sequence below records prior instructions and evidence. Its
 authoring continuations and limited F2-to-F3 overlap rule are superseded by 101;

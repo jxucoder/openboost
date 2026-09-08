@@ -1,0 +1,84 @@
+{
+  "manifest_sha256": "611c95cc6a9ba687a553a94a41ec7c92ee005487a192f6591b94d4563b3e6994",
+  "execution_revision": "a7173d980cb5ea925de0b8b8f1ffab9b2595456a",
+  "raw_artifacts_verified": 3,
+  "dispatch_sources_verified": 46,
+  "run9_passed": true,
+  "recipe_cases": [
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[joint]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_equal_score_improvements_replace_patience_anchor[joint]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_equal_score_improvements_replace_patience_anchor[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_equal_score_improvements_replace_patience_anchor[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_full_rejection_observes_once_per_outer_sweep[joint]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_full_rejection_observes_once_per_outer_sweep[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_full_rejection_observes_once_per_outer_sweep[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[initial_anchor]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[observation_copy]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[comparison]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[result]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[learner]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_zero_round_recipe_releases_temporary_patience_storage",
+      "status": "pass"
+    }
+  ],
+  "earlier_revision": "469ca0ea4fa2ca0af3ea007bfa8c0f02e51e2d95",
+  "earlier_raw_verdict": false,
+  "earlier_archive_files_verified": 420,
+  "earlier_dispatch_sources_verified": 86,
+  "production_sources_match": true,
+  "changed_reused_sources": [
+    "tests/v1/test_device_comparison_recipe_cuda.py"
+  ],
+  "earlier_other_cases_passed": 514,
+  "new_recipe_cases_passed": 15,
+  "combined_revised_coverage_passed": true,
+  "combined_revised_cases": 529,
+  "dispatch_seconds": 102.617552,
+  "worker_seconds": 15.462807701000001,
+  "scope": "514 earlier passes plus fifteen new recipe cases with identical production. Not one 529-case passing invocation or full Normal/application/performance conformance."
+}
