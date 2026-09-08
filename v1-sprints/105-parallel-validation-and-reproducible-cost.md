@@ -91,3 +91,24 @@ fits with the generator disabled, installed core/NumPy only and no CuPy/Numba.
 Its commands and exact source hashes are retained in the neighboring installation
 record. No GPU execution or performance claim is made. Next: parallel field
 validation, keeping public errors and existing allocation/launch contracts.
+
+## Slice B: cooperating field-validation blocks
+
+The candidate assigns one 128-thread block to each field. Lanes scan disjoint
+strided rows and all participate in `cuda.syncthreads_or`, including lanes with
+no rows. One lane writes the same int32 flag as before. No scratch allocation,
+extra launch, floating-point reduction, error suppression or ownership change is
+introduced. Resident row-index validation is left unchanged until field-validation
+benefit is actually measured, as required by the construction order.
+
+Thirty-nine new real-CUDA cases collect locally: float32/float64, nonnegative on/
+off, empty/short/exact/tail shapes up to 100,003 rows and seventeen columns,
+per-column flags against an independent NumPy predicate, invalid zero-weight
+tails, negative zero, and allocation/before-launch/after-launch recovery. Existing
+aggregation/Normal/D2 consumer tests remain unchanged. No GPU case has run here.
+The next slice freezes the original/candidate installations, exact inputs,
+consumer checks, per-kernel instrumentation and feasible cost deadlines.
+
+Full local CPU regression: 1975 passed, one Linux-only skip, 14.98 seconds.
+Production and new test lint pass. This remains an unvalidated CUDA candidate
+until the next real-device result; no performance gate has passed.

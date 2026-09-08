@@ -274,7 +274,8 @@ class DeviceOperations:
     def _validate(self, array, *, nonnegative=False, message=None):
         context = self.execution
         flags = context._empty((array.shape[1],), np.int32)
-        self._launch("validate_fields", array.shape[1], array, nonnegative, context._array(flags))
+        # _launch uses 128 lanes; validation assigns one whole block per column.
+        self._launch("validate_fields", array.shape[1] * 128, array, nonnegative, context._array(flags))
         self._flags(
             flags,
             message

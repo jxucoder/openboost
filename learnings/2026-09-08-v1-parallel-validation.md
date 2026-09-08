@@ -61,3 +61,25 @@ was absent from the project runtime. Use the declared build environment through
 `uv build --offline` instead; the actual replay environment still contains only
 NumPy/core. The final replay reruns after support metadata/validation is complete.
 No project environment mutation or network installation is needed.
+
+## Slice B design
+
+Use one 128-thread block per field, with strided row visits and an integer OR
+barrier. Every lane participates, including lanes outside a short/tail row tile.
+This follows the [Numba CUDA barrier contract](https://nvidia.github.io/numba-cuda/reference/kernel.html#numba.cuda.syncthreads_or).
+It keeps the existing single launch and per-column flag allocation; no atomic
+initialization kernel or floating reduction is needed. Domain errors and all
+zero-weight rows remain checked. Only the field validation kernel and its launch
+size change. Row-index validation and all algorithm arithmetic remain unchanged.
+
+Thirty-nine new GPU cases collect without execution, covering independent flags,
+tail rows, negative zero, invalid zero-weight rows and public failure recovery.
+CPU tests cannot prove the barrier lowering or device speed; the next frozen
+real-device run must verify both. Existing raw run-10 and run-8/9 archives remain
+immutable; historical code is retrieved from its committed execution revision
+when auditing after this production change.
+
+Slice B local verification: full CPU regression passes 1975 tests with one
+Linux-only skip in 14.98 seconds. Production/new-test Ruff passes and the new
+39-case device collection succeeds. This verifies CPU regression and collection,
+not CUDA correctness or acceleration. Slice A is committed at `680bf84`.

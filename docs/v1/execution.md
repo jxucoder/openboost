@@ -464,3 +464,13 @@ external-library speed claim follows. See
 `benchmarks/v1/evidence/early-performance-104/README.md` for all failures, raw
 timings, source bindings and the cross-platform input-regeneration limitation.
 The run-10 allowance is consumed, and formal E4 remains open.
+
+## Parallel field-validation candidate
+
+Sprint 105 changes only the scheduling of finite/nonnegative field checks: one
+128-thread block cooperates on each column and reduces integer invalid flags.
+All rows, including zero-weight rows and tail lanes, remain checked. Flag buffer
+sizes, error messages, launch counts and public ownership remain unchanged;
+histogram/loss sums and comparison decisions retain their existing arithmetic.
+The candidate has local collection and CPU regression checks only until the next
+frozen real-device run. No speed improvement or CUDA validation is claimed yet.

@@ -15,13 +15,17 @@ _compare_add, _compare_mul, _compare_div, _normal_change = make_normal_math(
 
 @cuda.jit
 def validate_fields(values, nonnegative, flags):
-    q = cuda.grid(1)
+    # One cooperating block per field; no floating-point reduction or scratch.
+    q = cuda.blockIdx.x
+    invalid = 0
     if q < values.shape[1]:
-        invalid = 0
-        for r in range(values.shape[0]):
+        for r in range(cuda.threadIdx.x, values.shape[0], cuda.blockDim.x):
             v = values[r, q]
             if not math.isfinite(v) or (nonnegative and v < 0):
                 invalid = 1
+    # Every lane participates, including lanes with no rows in a partial tile.
+    invalid = cuda.syncthreads_or(invalid)
+    if q < values.shape[1] and cuda.threadIdx.x == 0:
         flags[q] = invalid
 
 
