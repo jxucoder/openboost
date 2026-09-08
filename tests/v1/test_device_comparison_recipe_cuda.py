@@ -96,7 +96,10 @@ def test_recipe_current_best_and_patience_have_distinct_validation_anchors(monke
         )
         assert result.run.comparison == "objective"
         assert [(r, s) for r, s, _ in observations] == list(enumerate([1, 2, 3, 4, 0], 1))
-        assert result.stop.reason == "budget" and result.state.best_n_terms == 10
+        assert result.stop.reason == "budget" and result.state.n_terms == 10
+        # Forward improves at term nine, then commits a zero log-scale term.
+        # Strict best selection retains nine; joint/reverse improve at term ten.
+        assert result.state.best_n_terms == (9 if update == "forward" else 10)
         observed_steps = [step for step in result.steps if step.validation_change is not None]
         assert len(observed_steps) == 5
         assert [s.validation_change for s in observed_steps] == [

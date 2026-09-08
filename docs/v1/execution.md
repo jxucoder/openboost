@@ -435,7 +435,8 @@ recorded trajectory comparisons pass their independent stored-input audit.
 The full revised result is 528/529, not complete acceptance. A forward three-anchor
 fixture expects a best prefix of ten after a zero-valued tenth term; strict
 improvement retains prefix nine. Independent fixture mathematics agrees with the
-observed state. The assertion and its unexecuted follow-up checks need separate
-correction and real-device validation. Historical results retain all 26 expected
+observed state. The assertion is corrected locally and CPU no-op prefix checks
+pass. Its follow-up assertions still need real-device validation. Historical
+results retain all 26 expected
 disagreements, and the overall raw verdict remains failed. No full Normal,
 matched-quality speed or broader CUDA recipe claim follows from these results.

@@ -81,3 +81,26 @@ correction plus independent CPU no-op prefix coverage.
 - `b58b168`, `dffcfd5` — preserve the initial authorization interpretation and rejection.
 - `469ca0e` — explicitly approved clean execution revision.
 - This commit archives the failed run, independent analysis and retrospective.
+
+## Local correction after the evidence commit
+
+Archive commit `c36f96a` precedes the source change. The CUDA fixture now checks
+ten accepted terms and the order-specific strict best prefix separately. Three
+new CPU tests use public transactions to check all joint/ordered commit boundaries,
+accepted no-op retention and equal final predictions. Production code, tolerances,
+all run-8 artifacts and its consumed freeze remain unchanged. The frozen old test
+hash still identifies the actual failed execution; current test source differs.
+
+The focused consumer file passes all thirteen checks in 0.26 seconds. Fifteen CUDA
+recipe cases collect with the original IDs, without device execution. The archived
+analyzer reproduces its original report. Full regression and final checks are
+recorded before the correction commit:
+
+- `OPENBOOST_BACKEND=cpu UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync pytest tests/ -m 'not gpu and not benchmark' --tb=short`:
+  1949 pass, one Linux-only skip in 13.25 seconds.
+- Production/changed-test Ruff, Markdown link checks and MkDocs build pass; the
+  existing 090 evidence-link warning remains. No frozen artifact or consumed
+  protocol changes; only the active recipe test differs from run-8 sources.
+
+Actual CUDA validation of the changed
+assertion and its previously unreached checks remains outstanding.

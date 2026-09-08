@@ -24,7 +24,12 @@ term; independent derivation requires nine, while the test expects ten. Preserve
 the [raw failed verdict](../benchmarks/v1/evidence/cuda-comparison-092/README.md).
 Run 8's allowance is consumed, and agent studies remain paused.
 
-Next engineering order: correct and revalidate that fixture, then advance
+The fixture expectation is corrected locally; three new CPU cases verify best
+prefixes at each ordered/joint commit boundary and accepted no-ops. The fifteen
+CUDA recipe cases collect, but the changed test has not rerun on hardware. The
+consumed run-8 protocol and all archived evidence stay byte-identical.
+
+Next engineering order: revalidate the corrected fixture, then advance
 [required CUDA recipes](080-cuda-required-recipes.md),
 [train-many](081-cuda-train-many.md) and [real-workload quality/cost](082-end-to-end-cost.md).
 No new model call is needed for
@@ -118,7 +123,7 @@ retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
 CPU implementation has twelve recipes; the latest full CPU regression passes
-1946 tests (one Linux-only skip), including author/evaluation support checks.
+1949 tests (one Linux-only skip), including author/evaluation support checks.
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.

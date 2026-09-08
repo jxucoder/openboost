@@ -85,3 +85,25 @@ The earlier `finish` instruction was initially interpreted as approval in
 pending packet. No upload or allowance was consumed then. The subsequent explicit
 `approve` response authorized the exact 86-file upload and bounded invocation;
 `469ca0e` is the clean execution revision. All eight GPU allowances are now consumed.
+
+## Local fixture correction after the retrospective
+
+The raw archive and analysis are committed at `c36f96a` before changing tests.
+The CUDA assertion now checks ten accepted terms independently of the best
+prefix, expecting nine only for forward order. All later ownership, prediction,
+stopping and comparison assertions remain. No production code, tolerance or
+original raw artifact changes.
+
+Three new CPU cases exercise the public transaction path with the same controlled
+mean sequence. They verify every committed best prefix, including joint atomic
+boundaries, ordered zero terms and identical final current/best predictions.
+All thirteen focused consumer checks pass in 0.26 seconds. All fifteen device
+recipe cases collect with unchanged test IDs; none reruns on hardware in this
+slice. The historical analyzer still verifies every archived source at `469ca0e`.
+Full CPU regression passes 1949 tests with one Linux-only skip in 13.25 seconds.
+Ruff and documentation checks pass; the existing 090 evidence-link warning remains.
+
+The consumed run-8 protocol retains its original test-source hash. It intentionally
+differs from the corrected active test; never regenerate that consumed freeze to
+hide the difference. A subsequent hardware packet must identify the corrected
+source and preserve the original failed result. The full revised gate remains open.

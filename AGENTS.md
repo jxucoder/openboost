@@ -79,8 +79,10 @@ improvements are correctly rejected and all 2,548 trajectory comparison audits
 pass. [Raw evidence](benchmarks/v1/evidence/cuda-comparison-092/README.md) preserves
 the failed verdict. One forward recipe fixture expects best prefix ten after a
 zero-valued tenth term; strict improvement and independent fixture mathematics
-require nine. Correct that expectation separately and validate the changed test
-before claiming full revised acceptance. The run-8 allowance is consumed.
+require nine. The expectation is corrected locally with three CPU no-op prefix
+checks; production code and the consumed run's frozen sources/verdict remain
+unchanged. The revised CUDA test has collected but has not rerun. Validate that
+changed test before claiming full revised acceptance. The run-8 allowance is consumed.
 
 After this correction/retrospective, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
@@ -233,7 +235,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1946 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1949 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

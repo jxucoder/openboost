@@ -8,7 +8,7 @@ import pytest
 from openboost import LossChange, RunContext, recipes
 from openboost.artifacts import ConstantTerm
 from openboost.objectives import Normal
-from openboost.runtime import initialize, preview_raw, propose, resolve
+from openboost.runtime import initialize, preview_raw, propose, propose_terms, resolve
 from openboost.stopping import StopState
 from openboost.tree import depthwise
 from tests.v1.test_loss_change import CASES, problem_for
@@ -80,6 +80,41 @@ def test_current_best_and_patience_use_three_distinct_anchors():
     np.testing.assert_allclose(reference_means, [2, 2, 2, 2, 1.89], rtol=0, atol=1e-15)
     assert stale == [1, 2, 3, 4, 0]
     assert stop.reason == "budget"
+
+
+@pytest.mark.parametrize(
+    "update,expected_prefixes",
+    [
+        ("joint", [0, 4, 4, 8, 10]),
+        ("forward", [0, 0, 3, 3, 3, 3, 7, 7, 9, 9]),
+        ("reverse", [0, 0, 0, 4, 4, 4, 4, 8, 8, 10]),
+    ],
+)
+def test_accepted_noop_preserves_best_prefix_at_each_commit_boundary(update, expected_prefixes):
+    p = zero_problem()
+    state = initialize(RunContext(update, 3), p, p, [2, 0], score=Normal.loss)
+    prefixes = []
+    for mean in (3, 1.95, 1.97, 1.9, 1.89):
+        delta = np.float32(mean) - np.float32(state.train_raw[0, 0])
+        terms = (ConstantTerm([delta, 0]), ConstantTerm([0, 0]))
+        if update == "reverse":
+            terms = terms[::-1]
+        batches = (terms,) if update == "joint" else tuple((term,) for term in terms)
+        for batch in batches:
+            previous = state
+            candidate = propose_terms(state, batch)
+            raw, _ = preview_raw(state, candidate)
+            unchanged = np.array_equal(raw, state.train_raw)
+            state = resolve(state, candidate, accept=True, score=Normal.loss, compare=Normal.compare)
+            assert state.version == previous.version + 1
+            if unchanged:
+                assert state.best_model is previous.best_model
+            prefixes.append(len(state.best_model.terms))
+    # With target/scale fixed at zero/one, mean squared determines the strict
+    # ranking. Joint commits expose only even prefixes; forward's last term is zero.
+    assert prefixes == expected_prefixes
+    assert len(state.model.terms) == 10
+    np.testing.assert_array_equal(state.best_model.predict(p.data), state.train_raw)
 
 
 @pytest.mark.parametrize("retention", ["full", "summary"])
