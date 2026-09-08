@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "uv",
+    "run",
+    "--no-sync",
+    "python",
+    "-m",
+    "benchmarks.v1.authoring.modal_worker"
+  ],
+  "exit_code": 0,
+  "stdout": "{\"status\": \"local_inputs_verified\", \"remote_run\": false, \"dispatch_ready\": false, \"uploads\": 13, \"cases\": 19}\n",
+  "stderr": ""
+}

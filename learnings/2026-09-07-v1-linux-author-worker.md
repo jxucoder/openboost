@@ -43,6 +43,11 @@ simulated token events or reinterpret host-generated activity as author evidence
   not a product performance claim.
 - Ruff and `git diff --check` pass. MkDocs builds with the existing
   `execution.md` external-evidence link warning.
+- At clean `cda1947`, the [local preparation archive](../benchmarks/v1/evidence/author-linux-preparation-096/README.md)
+  retains the successful CLI check and installed SDK signatures/image construction.
+  All 22 CPU smoke inputs and all 85 run-8 sources match their hashes. No image
+  build, upload or remote run occurs. After adding build-log retention, the 25
+  focused worker tests and Ruff also pass; remote behavior remains unverified.
 
 ## Failed Attempts
 
@@ -65,4 +70,5 @@ gates. No model call, remote upload, GPU run, independent attempt or push occurr
 
 ## Commits
 
-- Pending verified preparation commit.
+- `cda1947` — verified Linux worker preparation and pending CPU smoke freeze.
+- Subsequent evidence commit — clean-source local audit; no remote result.

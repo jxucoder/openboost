@@ -1,0 +1,22 @@
+{
+  "schema": "openboost-linux-worker-local-preparation-v1",
+  "revision": "cda1947b9759118caf3c7a0752db070fc75be9b7",
+  "dirty": false,
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "python": "3.12.12",
+  "local_inputs_verified": true,
+  "remote_isolation": "not_run",
+  "dispatch_ready": false,
+  "attempts": [],
+  "generated_tokens": null,
+  "freeze_sha256": "5a8bf02872d8ed73ee1e79480ea4b75c1f07a336951f3ac6754b47697bfc4a3a",
+  "frozen_files": 22,
+  "uploaded_files": 0,
+  "proposed_upload_files": 13,
+  "proposed_cases": 19,
+  "run8_sources_unchanged": 85,
+  "artifacts": {
+    "check-command.json": "d67db365c844b7b05f155709e2f09178b698d432a803ef5ef266c1afeb96bb52",
+    "sdk.json": "f1c45e96eb003e1d0668ba68ac6ef1fddd8324e28118be57534a185ce3d194d5"
+  }
+}
