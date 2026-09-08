@@ -93,6 +93,21 @@ def expected(case):
             )
         )
     result = dict(base=base, trace=trace, raw=raw.tolist())
+    rejection_names = (
+        ("tau_zero", "tau_one", "tau_nan", "tau_boolean", "rate_zero", "rate_infinite")
+        if d1
+        else (
+            "rows",
+            "rank",
+            "empty",
+            "negative",
+            "nan",
+            "infinite",
+            "foreign_problem",
+            "foreign_rows",
+        )
+    )
+    result["rejections"] = dict.fromkeys(rejection_names, True)
     if d1:
         loss, g, h = geometry(np.array(case["geometry_raw"]))
         result["geometry"] = dict(loss=loss, gradient=g.tolist(), curvature=h.tolist())
@@ -127,7 +142,7 @@ def export(destination):
         ROOT / f"tests/v1/reference/{name}.py" for name in REFERENCE_MODULES
     ]
     manifest = dict(
-        schema="openboost-d1-d2-development-verifier-v1",
+        schema="openboost-d1-d2-development-verifier-v2",
         dispatch_ready=False,
         attempts=[],
         revision=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),

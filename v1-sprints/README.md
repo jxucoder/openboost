@@ -11,7 +11,8 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-The latest local continuation is [094 standalone author-verifier preparation](094-author-verifier-preparation.md),
+The latest local continuation is [095 author packet and local isolation](095-author-packet-and-local-isolation.md),
+building on [094 standalone author-verifier preparation](094-author-verifier-preparation.md),
 following the [093 checkpoint](093-foundation-progress-and-next-steps.md).
 Standalone D1/D2 development checks and a concrete runner audit advance 069;
 independent dispatch remains blocked on actual accounting/isolation and arm/settings

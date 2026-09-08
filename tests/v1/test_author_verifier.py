@@ -2,6 +2,7 @@
 
 import ast
 import json
+from types import SimpleNamespace
 
 import pytest
 from benchmarks.v1.authoring.development import collect
@@ -130,3 +131,49 @@ def test_oracle_provenance_covers_relative_import_closure():
         for node in ast.walk(ast.parse(source.read_text())):
             if isinstance(node, ast.ImportFrom) and node.level:
                 assert node.level == 1 and node.module in REFERENCE_MODULES
+
+
+def test_invalid_tau_accepting_extension_fails_despite_correct_training(tmp_path):
+    bundle, observations = tmp_path / "bundle", tmp_path / "observations"
+    export(bundle)
+    plugin = load(ROOT / "expectile/src/ob_expectile/__init__.py", "bad_tau_control")
+
+    def permissive(tau):
+        try:
+            return plugin.Expectile(tau)
+        except ValueError:
+            return plugin.Expectile(0.8)
+
+    collect(
+        bundle / "inputs.json",
+        observations,
+        "D1",
+        SimpleNamespace(Expectile=permissive, fit=plugin.fit),
+    )
+    with pytest.raises(ValueError, match="rejections.tau_zero"):
+        judge(bundle, observations, "D1")
+
+
+def test_missing_rejection_is_not_success(prepared):
+    bundle, observations = prepared
+    path = observations / "D2.json"
+    data = json.loads(path.read_text())
+    del data["d2-depthwise-ordinary"]["rejections"]["foreign_rows"]
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValueError, match="rejections"):
+        judge(bundle, observations, "D2")
+
+
+def test_foreign_problem_accepting_extension_fails_correct_numerical_control(tmp_path):
+    bundle, observations = tmp_path / "bundle", tmp_path / "observations"
+    export(bundle)
+    plugin = load(ROOT / "cohort_splits/src/ob_cohort_splits/__init__.py", "bad_identity_control")
+
+    class Permissive(plugin.CohortLearner):
+        def __call__(self, binned, fields):
+            self.problem_identity = fields.problem_identity
+            return super().__call__(binned, fields)
+
+    collect(bundle / "inputs.json", observations, "D2", SimpleNamespace(CohortLearner=Permissive))
+    with pytest.raises(ValueError, match="rejections.foreign_problem"):
+        judge(bundle, observations, "D2")

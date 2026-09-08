@@ -16,6 +16,47 @@ from openboost.stats import newton
 from openboost.tree import best_first, depthwise, symmetric
 
 
+def rejections(case, plugin, problem):
+    """Observe declared input/identity failures in the known development adapters."""
+    actions = {}
+    if case["task"] == "D1":
+        for name, tau in (("zero", 0), ("one", 1), ("nan", np.nan), ("boolean", True)):
+            actions[f"tau_{name}"] = lambda tau=tau: plugin.Expectile(tau)
+        for name, rate in (("zero", 0), ("infinite", np.inf)):
+            actions[f"rate_{name}"] = lambda rate=rate: plugin.fit(
+                problem, problem, context=RunContext("invalid-rate", 19), learning_rate=rate
+            )
+    else:
+        valid = np.array(case["information"])
+        variants = dict(rows=valid[:-1], rank=valid[:, 0], empty=valid[:, :0])
+        for name, value in (("negative", -1), ("nan", np.nan), ("infinite", np.inf)):
+            changed = valid.copy()
+            changed[0, 0] = value
+            variants[name] = changed
+        for name, value in variants.items():
+            actions[name] = lambda value=value: plugin.CohortLearner(problem, value)
+        learner = plugin.CohortLearner(problem, valid)
+        binned = Binning.fit(problem.data, bins=case["bins"]).transform(problem.data)
+        foreign = replace(problem, target=problem.target + 1)
+        actions["foreign_problem"] = lambda: learner(
+            binned, Squared.fields(foreign, foreign.target)
+        )
+        reversed_data = NumericData(problem.data.values[::-1], problem.data.row_ids[::-1], ("x",))
+        reordered = Problem(reversed_data, problem.target[::-1], reversed_data.row_ids)
+        actions["foreign_rows"] = lambda: learner(
+            binned, Squared.fields(reordered, reordered.target)
+        )
+    result = {}
+    for name, action in actions.items():
+        try:
+            action()
+        except (TypeError, ValueError):
+            result[name] = True
+        else:
+            result[name] = False
+    return result
+
+
 def observe(case, plugin, destination):
     data = NumericData(
         np.asarray(case["values"], dtype=float), np.arange(len(case["values"])), ("x",)
@@ -69,6 +110,7 @@ def observe(case, plugin, destination):
         base=float(result.state.model.base[0]),
         trace=trace,
         raw=result.state.train_raw[:, 0].tolist(),
+        rejections=rejections(case, plugin, problem),
     )
     if d1:
         payload["geometry"] = geometry(np.array(case["geometry_raw"])[:, None])

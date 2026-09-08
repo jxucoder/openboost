@@ -40,6 +40,9 @@ def compare(actual, expected, path="result"):
     elif expected is None:
         if actual is not None:
             raise ValueError(f"{path}: expected a leaf")
+    elif isinstance(expected, bool):
+        if actual is not expected:
+            raise ValueError(f"{path}: rejection observation differs")
     elif (
         isinstance(actual, bool)
         or not isinstance(actual, (float, int))
@@ -51,7 +54,7 @@ def compare(actual, expected, path="result"):
 
 def verify_bundle(bundle):
     manifest = read_json(bundle / "manifest.json")
-    if manifest["schema"] != "openboost-d1-d2-development-verifier-v1":
+    if manifest["schema"] != "openboost-d1-d2-development-verifier-v2":
         raise ValueError("unknown verifier schema")
     files = manifest["runtime_files"]
     if set(files) != {"judge.py", "inputs.json", "expected.json"}:

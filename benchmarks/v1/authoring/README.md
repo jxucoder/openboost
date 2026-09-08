@@ -56,13 +56,17 @@ retained. This command runs only designer-authored Python extensions, not an age
 - D2: depthwise, best-first and symmetric growers, constrained root choice and
   predictions, independent information surviving zero objective weight, no legal
   split, two constrained squared rounds and saved scalar inference.
+- Verifier schema v2 adds D1 invalid tau/rate observations and D2 wrong shape,
+  negative/nonfinite information and foreign problem/row identity rejection.
+  Known implementations that accept invalid tau or foreign problem bindings
+  fail despite correct numerical training. The v1 archive remains unchanged.
 - Judge: exact fields/array lengths, finite numbers, duplicate-key rejection,
   complete rounds, saved output shape, independent model replay and changed-file
   detection against the trusted manifest. Numerical tolerance is fixed at
   `rtol=1e-10, atol=1e-12`; these tiny CPU cases do not set GPU tolerances.
 
-This stage does not yet collect invalid-input rejection, problem-identity misuse,
-private/core edits, arbitrary algorithm variants, independent validation, CUDA
+This stage does not yet collect private/core edits, arbitrary algorithm variants,
+independent validation, CUDA
 attempts or time to first correct result. Existing development tests cover several
 of these separately; they are not silently counted as standalone pilot acceptance.
 
@@ -81,3 +85,33 @@ Before any independent attempt, finish that actual isolation/accounting smoke,
 freeze task adapters and missing checks, select fair incumbent arms and pin the
 model/tools/settings. Refresh the author view as a new named revision; do not
 reinterpret this development artifact as an author result or an E5 pass.
+
+## Current author view and experimental local isolation
+
+`uv run python -m benchmarks.v1.prepare_author_packet /tmp/author-view` requires a
+clean checkout and a new output directory. It copies an explicit set of six public
+CPU pages plus the D1/D2 cards, renders omitted links as labeled plain text, and
+records original and delivered file hashes. It never follows links to expand the
+allowlist. Offline builds retain failures, and every Python wheel entry must match
+the source core; extra files outside core/metadata are rejected.
+
+`isolation.py` is an experimental native macOS worker probe, not an author runner.
+It accepts that packet, an exported evaluator bundle and a fresh output outside
+the repository. It copies the real evaluator inputs, installs a core-only runtime
+with independent file copies, and retains all outcomes in `manifest.json`, including
+startup failures. It changes no host settings. Each probe runs in a short-lived
+subprocess with network denied and writes limited to its work directory.
+
+The first, narrower policy passed six installed public-document checks and denied
+the declared evaluator/core accesses, child/symlink/hardlink attempts and a simple
+wall timeout. It nevertheless allowed another answer copy outside the denied
+locations. The stronger read-allowlist policy aborts the current macOS/x86_64 Python
+runtime before Python starts. Do not count that as successful isolation or fall
+back silently to the weaker policy. [Sprint 095](../../../v1-sprints/095-author-packet-and-local-isolation.md)
+retains these outcomes. The native probe does not establish protection from all IPC
+channels, unrelated processes, resource exhaustion or an escaping process session.
+Its wall timeout is a worker smoke, not enforcement of the full author budget.
+
+The next runner decision needs a supported execution environment plus real token
+accounting. Independent dispatch, incumbent/model/settings freeze and the pending
+GPU run remain separate gates.

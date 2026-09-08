@@ -32,8 +32,8 @@ weights once. Binning uses training features only. Validation selects an immutab
 `step="backtracking"`, at most `max_trials` (1–6) coefficients are tried, halving
 `learning_rate` each time. Strict training-loss improvement accepts a trial; full
 rejection leaves terms, caches, best model and version unchanged. A learner is
-fitted once per round. The initial CPU implementation recomputes ensemble
-predictions during trial validation; prediction caching remains future work.
+fitted once per round. Trial validation computes each new term's increment through
+the public runtime and reuses owned training/validation encodings.
 Nonfinite fixed-step arithmetic raises; backtracking rejects an invalid numerical
 trial and continues at a smaller coefficient. Structural errors raise immediately.
 
@@ -46,9 +46,13 @@ code can instead use `Squared.fields`, `depthwise`, `TreeTerm`, `propose_terms`,
 
 This recipe accepts scalar `[N, 1]` targets and raw_width=1. The
 [Normal recipe](normal.md) provides two-parameter distributional geometry.
-[Binary classification](binary.md) is available. Multiclass, specialized targets,
-vector learners, callbacks/early stopping,
-CUDA remains a future slice. [Categorical inputs](categorical.md) are supported. Best-first and symmetric
+[Binary classification](binary.md), multiclass, specialized targets and vector
+learners have separate recipes. [Validation patience](stopping.md) is supported
+through `patience` and `min_delta`, independently of acceptance and best selection.
+The separate experimental resident CUDA path has its own execution contract and
+hardware evidence; this callable executes on CPU. [Categorical inputs](categorical.md)
+are supported. Best-first and symmetric
 growers can be substituted through the learner argument. Unsupported arguments fail.
-The trace retains per-round arrays for correctness inspection, and is not a
-memory-efficient large-workload implementation or a training-resume checkpoint.
+`retention="full"` retains per-round arrays for correctness inspection;
+`retention="summary"` records summaries without retaining the per-round arrays.
+These modes preserve training behavior and are not training-resume checkpoints.
