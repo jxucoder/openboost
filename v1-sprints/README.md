@@ -24,6 +24,12 @@ worker runs as root and modifies core/material files. Timeout is not reached.
 The evaluator remains outside the worker and unchanged. Explicit process privilege
 reduction is the next local correction; a repeat needs a new freeze/allowance.
 
+The user's subsequent "sure" approves [097's explicit identity correction](097-explicit-worker-identity.md)
+and one separately frozen CPU smoke. It adds only a trusted launcher, preserving
+all nineteen original checks. Two identity records must verify real/effective/saved
+UID/GID, empty supplementary groups and inherited `no_new_privs` before work.
+Execute once from a clean commit, retain every outcome and stop for reflection.
+
 The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
 sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
 and bounded [078 scalar CUDA feasibility](078-cuda-scalar-path.md). D1 is the control;
@@ -40,7 +46,7 @@ retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
 CPU implementation has twelve recipes; the latest full CPU regression passes
-1853 tests (one Linux-only skip), including author/evaluation support checks.
+1880 tests (one Linux-only skip), including author/evaluation support checks.
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.

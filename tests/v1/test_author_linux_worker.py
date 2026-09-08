@@ -15,20 +15,22 @@ ROOT = Path(__file__).resolve().parents[2]
 @pytest.fixture
 def snapshot(tmp_path):
     shutil.copytree(ROOT / worker.PACKET, tmp_path / worker.PACKET)
-    probe = tmp_path / worker.PROBE
-    probe.parent.mkdir(parents=True)
-    probe.write_bytes((ROOT / worker.PROBE).read_bytes())
+    for name in (worker.PROBE, worker.LAUNCHER):
+        source = tmp_path / name
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes((ROOT / name).read_bytes())
     packet = json.loads((tmp_path / worker.PACKET / "manifest.json").read_text())
     uploads = {
         f"{worker.PACKET}/author/{name}": f"/materials/{name}" for name in packet["author_files"]
     }
     uploads[worker.PROBE] = "/opt/probe.py"
+    uploads[worker.LAUNCHER] = "/opt/launcher.py"
     files = {
         name: worker.digest((tmp_path / name).read_bytes())
         for name in [*uploads, f"{worker.PACKET}/manifest.json"]
     }
     return tmp_path, dict(
-        schema="openboost-linux-worker-smoke-v1",
+        schema="openboost-linux-worker-smoke-v2",
         files=files,
         uploads=uploads,
         cases=list(CASES),
@@ -43,7 +45,7 @@ def test_real_packet_is_staged_file_by_file_and_sdk_can_construct_image(snapshot
     root, freeze = snapshot
     packet, uploads = worker.inputs(root, freeze)
     delivery = worker.stage(root, uploads, freeze["files"], tmp_path / "delivery")
-    assert len(delivery) == 13 and len(packet["wheel_sources"]) == 31
+    assert len(delivery) == 14 and len(packet["wheel_sources"]) == 31
     assert set(delivery) == set(uploads.values())
     assert not any("evaluator" in path or "expected.json" in path for path in delivery)
     assert isinstance(worker.image_for(modal, delivery), modal.Image)

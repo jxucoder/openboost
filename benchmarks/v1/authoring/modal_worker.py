@@ -16,7 +16,8 @@ ROOT = Path(__file__).resolve().parents[3]
 PACKET = "benchmarks/v1/evidence/author-preparation-095/packet"
 EVALUATOR = "benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator"
 PROBE = "benchmarks/v1/authoring/linux_probe.py"
-FREEZE = ROOT / "v1-sprints/096-linux-worker-smoke.json"
+LAUNCHER = "benchmarks/v1/authoring/linux_launcher.py"
+FREEZE = ROOT / "v1-sprints/097-worker-identity-smoke.json"
 SDK = "1.3.0.post1"
 RESOURCES = dict(
     sandboxes=1,
@@ -55,7 +56,7 @@ def regular(root, name):
 def inputs(root, freeze):
     """Validate explicit local sources without initializing a Modal client."""
     if (
-        freeze["schema"] != "openboost-linux-worker-smoke-v1"
+        freeze["schema"] != "openboost-linux-worker-smoke-v2"
         or freeze["resources"] != RESOURCES
         or freeze["modal_version"] != SDK
     ):
@@ -80,14 +81,15 @@ def inputs(root, freeze):
         raise ValueError("unlisted or missing author file")
     uploads = {f"{PACKET}/author/{name}": f"/materials/{name}" for name in files}
     uploads[PROBE] = "/opt/probe.py"
+    uploads[LAUNCHER] = "/opt/launcher.py"
     if freeze["uploads"] != uploads:
-        raise ValueError("upload closure differs from author materials and generic probe")
+        raise ValueError("upload closure differs from author materials, probe and launcher")
     for name, expected_hash in files.items():
         source = f"{PACKET}/author/{name}"
         if freeze["files"].get(source) != expected_hash:
             raise ValueError("author delivery digest differs from packet")
-    if PROBE not in freeze["files"]:
-        raise ValueError("probe is not frozen")
+    if not {PROBE, LAUNCHER}.issubset(freeze["files"]):
+        raise ValueError("probe or launcher is not frozen")
     if freeze["cases"] != list(CASES):
         raise ValueError("case set changed")
     return packet, uploads
@@ -117,7 +119,7 @@ def image_for(modal, delivery):
         image.uv_pip_install(
             "numpy==2.3.5", "uv==0.12.1", wheel, uv_version="0.12.1", extra_options="--no-deps"
         )
-        .dockerfile_commands("RUN mkdir -p /work && chown 1000:1000 /work", "USER 1000:1000")
+        .dockerfile_commands("RUN mkdir -p /work && chown 1000:1000 /work")
         .env(
             {
                 "HOME": "/work",
@@ -130,6 +132,23 @@ def image_for(modal, delivery):
         )
         .workdir("/work")
     )
+
+
+def worker_command(private_paths):
+    """The trusted root entrypoint always precedes the original probe."""
+    return [
+        "python",
+        "-I",
+        "-B",
+        "/opt/launcher.py",
+        "drop",
+        "python",
+        "-I",
+        "-B",
+        "/opt/probe.py",
+        "/materials",
+        json.dumps(private_paths),
+    ]
 
 
 def classify(stdout, timed_out, packet):
@@ -159,6 +178,27 @@ def classify(stdout, timed_out, packet):
         == {"openboost": "1.0.0.dev0", "numpy": "2.3.5", "uv": "0.12.1"}
     )
     return dict(passed=passed, records=records)
+
+
+def classify_identity(stdout, timed_out, packet):
+    """Keep the original 096 verdict and additionally require both identity guards."""
+    records = [json.loads(line) for line in stdout.splitlines() if line.strip()]
+    expected = [
+        dict(
+            kind="identity",
+            phase=phase,
+            uids=[1000] * 3,
+            gids=[1000] * 3,
+            groups=[],
+            no_new_privs=1,
+        )
+        for phase in ("before_exec", "after_exec")
+    ]
+    guarded = records[:2] == expected
+    original = classify("\n".join(map(json.dumps, records[2:])), timed_out, packet)
+    runtime = [r for r in records[2:] if r.get("kind") == "runtime"]
+    probe_identity = len(runtime) == 1 and runtime[0].get("uid") == runtime[0].get("gid") == 1000
+    return dict(passed=guarded and probe_identity and original["passed"], records=records)
 
 
 def retain(output, report, root, protected):
@@ -196,7 +236,7 @@ def execute(root, freeze, freeze_bytes, output):
     output.mkdir(parents=True, exist_ok=False)
     (output / "freeze.json").write_bytes(freeze_bytes)
     report = dict(
-        schema="openboost-linux-author-isolation-v1",
+        schema="openboost-linux-author-isolation-v2",
         passed=False,
         dispatch_ready=False,
         attempts=[],
@@ -224,7 +264,7 @@ def execute(root, freeze, freeze_bytes, output):
             raise ValueError("actual evaluator closure is not frozen")
         delivery = stage(root, uploads, freeze["files"], output / "upload")
         image = image_for(modal, delivery)
-        app = modal.App.lookup("openboost-v1-author-isolation-096", create_if_missing=True)
+        app = modal.App.lookup("openboost-v1-author-isolation-097", create_if_missing=True)
         private_paths = [str(root / name) for name in protected]
         private_paths += [
             str(
@@ -232,7 +272,7 @@ def execute(root, freeze, freeze_bytes, output):
                 / "benchmarks/v1/evidence/author-preparation-095/isolation/development-narrow/unlisted-counterexample.json"
             )
         ]
-        command = ["python", "-I", "-B", "/opt/probe.py", "/materials", json.dumps(private_paths)]
+        command = worker_command(private_paths)
         report["command"] = command
         started = time.monotonic()
         with (
@@ -273,7 +313,7 @@ def execute(root, freeze, freeze_bytes, output):
         (output / "stderr.txt").write_text(stderr)
         if len(stdout.encode()) + len(stderr.encode()) > RESOURCES["max_output_bytes"]:
             raise ValueError("smoke output exceeds the frozen 1-MiB bound")
-        report.update(classify(stdout, timed_out, packet))
+        report.update(classify_identity(stdout, timed_out, packet))
         report["status"] = "complete"
     except Exception as error:
         report["error"] = f"{type(error).__name__}: {error}"

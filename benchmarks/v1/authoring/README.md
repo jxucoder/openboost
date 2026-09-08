@@ -116,10 +116,10 @@ The next runner decision needs a supported execution environment plus real token
 accounting. Independent dispatch, incumbent/model/settings freeze and the pending
 GPU run remain separate gates.
 
-## Linux worker smoke and current failure
+## Linux worker smoke and explicit identity correction
 
 [Sprint 096](../../../v1-sprints/096-linux-author-worker.md) chooses a Modal CPU
-Sandbox for the next bounded isolation smoke. `modal_worker.py` verifies the
+Sandbox for the next bounded isolation smoke. Its original controller verified the
 frozen 095 packet and constructs an image from thirteen individually selected
 files: twelve author materials and the generic `linux_probe.py`. The evaluator
 stays on the controller host. No directory mount, author solution, credential or
@@ -136,7 +136,7 @@ UV_CACHE_DIR=/tmp/openboost-research-uv-cache \
   uv run --no-sync python -m benchmarks.v1.authoring.modal_worker
 ```
 
-The exact source/upload closure and one 90-second CPU Sandbox are recorded in
+The original source/upload closure and one 90-second CPU Sandbox are recorded in
 `v1-sprints/096-linux-worker-smoke.json`. Its allowance is consumed and normal
 `--execute` reuse is blocked. The original approved freeze, raw output, versions,
 core hashes, controller-side evaluator hashes and provider status are archived.
@@ -152,3 +152,19 @@ The full author time/token boundary, fair arms and independent dispatch remain
 open. This smoke runs no model and makes no author-cost claim. Follow the
 [096 retrospective](../../../v1-sprints/096-linux-worker-result.md) for the next
 explicit privilege-drop correction; the original case definitions stay fixed.
+
+[Sprint 097](../../../v1-sprints/097-explicit-worker-identity.md) replaces the ignored
+image directive with `linux_launcher.py`, delivered as the fourteenth selected
+file. The trusted root entrypoint sets `no_new_privs`, clears supplementary groups,
+sets all three UID/GID values to 1000, and checks those values. A fresh interpreter
+checks inheritance before executing the unchanged probe. The controller requires
+both identity records, the original nineteen checks and actual provider expiry.
+The launcher fails before worker code on an unsupported host or failed syscall.
+Every future author command must use this entrypoint; direct root command access
+must not be exposed to the author. This does not implement the full author runner.
+
+The local-check command above now uses `v1-sprints/097-worker-identity-smoke.json`.
+The user's "sure" approves one corrected 90-second / 2-CPU / 2048-MiB smoke, with
+no retries, GPU or model calls. Exact inputs are frozen and committed before
+service access. Local syscall-order and classifier tests do not establish actual
+Linux enforcement; retain the remote outcome separately from the original failure.

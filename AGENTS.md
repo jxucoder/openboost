@@ -85,6 +85,12 @@ every author command, followed by a separate concrete freeze/allowance. No retry
 model attempt or additional CPU upload is authorized by this result. Independent
 token enforcement, fair arms/model/settings and GPU run 8 remain open.
 
+The user subsequently approved [097's identity correction](v1-sprints/097-explicit-worker-identity.md)
+and one separate corrected CPU smoke under the same resource bounds. The new
+freeze adds only a trusted privilege launcher to the thirteen original uploads.
+Commit exact inputs, execute once and stop for retrospective; no application retry,
+model dispatch or GPU invocation is included. All nineteen original cases remain.
+
 The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
 completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant
 065/068 ownership on the actual device path. Experimental CUDA storage, named
@@ -164,7 +170,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1853 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1880 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
