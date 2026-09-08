@@ -63,3 +63,55 @@ cancel attempt is not a guarantee of immediate provider cancellation.
 
 - `71ef69e`: preceding local request accounting.
 - This slice adds local cancellation construction, not a provider result.
+
+## Frozen smoke construction and reflection
+
+The second slice constructs `accounting_smoke.py` and the pending
+[099 packet](../v1-sprints/099-accounting-smoke.json). Twelve exact source hashes
+cover the implementation, tests, plan and dependency lock. Three fixed ASCII
+integer-list prompts exercise two cap requests (128 then 64, sharing 192 tokens)
+and one cancellation request (4096 tokens, five seconds). Total possible output
+reservation is 4288. The proposed allowance is $0.05; the conservative token
+estimate is $0.0082176, not an account-level hard dollar limit or a measured bill.
+
+Preflight performs no HTTP or credential access. Execution requires the separately
+approved packet, a clean committed source tree and a fixed fresh output directory.
+The runner archives raw operations, accounting, source bytes and hashes, stops at
+the first failed case and blocks reuse of that directory. This is a smoke-specific
+one-use guard, not the full authority for independently authored attempts.
+
+Review found that `service_tier=default` can still return a different actual tier.
+The first check for this failed: the harness would issue a second generation after
+an unexpected priority-tier response. The correction checks the retained returned
+tier and stops before another generation. Actual counts stay known even when this
+separate pricing/dispatch condition fails. The fixed default tier is now explicit
+in every controller request; all original protocol cases still pass.
+
+Verification:
+
+- All 53 focused accounting/background/smoke checks pass in 5.50 seconds. These
+  include the two-request exhaustion call path, cancellation with/without final
+  usage, early completion, no speculative extra generation, source integrity,
+  pending/consumed authorization, stop-on-failure and one-use output handling.
+- Full CPU suite: 1933 pass, one Linux-only skip in 13.78 seconds. Ruff and format
+  checks pass for production and changed support code. The source freeze is
+  separately checked with the no-network CLI after final source preparation.
+- All 85 run-8 source hashes and 24 source hashes in the consumed 097 freeze are
+  unchanged. All 20 original 096 and 21 original 097 indexed artifacts match.
+- No real model call, Modal invocation, GPU execution or push occurs in either
+  local construction slice. No private/sealed task content is used.
+
+The next useful observation is the one frozen live smoke, not more protocol
+fixtures. Its acceptance distinguishes actual cancellation from complete usage;
+the documented null-usage example makes failure plausible. Preserve that result
+without adaptive retries. Even a pass would not establish a full author runner,
+20k/1800-second enforcement, independent author benefit, or formal E5 completion.
+
+- `67ecc94`: locally verified background cancellation and usage reconciliation.
+- This second commit prepares the live request; authorization remains pending.
+
+Final packet preflight passes with `network_used=false`, prompt sizes 151/89/163
+bytes and all twelve sources verified. The focused ten-case smoke suite passes
+again after adding exact prompt-hash and archived-config checks. MkDocs builds
+with its existing `execution.md` evidence-link warning. These checks use no live
+model and do not consume the proposed allowance.

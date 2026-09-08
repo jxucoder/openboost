@@ -233,3 +233,19 @@ controller. A cancel acknowledgement alone does not prove final usage; current
 provider documentation includes a cancelled response with null usage. Abrupt
 controller loss can still prevent cleanup. Real behavior and complete author
 integration remain unverified.
+
+The [099 live packet](../../../v1-sprints/099-accounting-smoke.json) now fixes
+three integer-list prompts, the model alias/settings, twelve source hashes and
+all request/token/time bounds. It is pending approval. Run a no-network preflight:
+
+```bash
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.authoring.accounting_smoke
+```
+
+The [run request and acceptance](../../../v1-sprints/099-background-accounting-smoke.md)
+explain the proposed $0.05 allowance, conservative $0.0082176 token estimate,
+one-use output directory, failure retention and retrospective boundary. The
+runner rejects pending/consumed authorization, dirty or changed sources and output
+reuse. Exhaustion must pass before the cancellation case starts. A different
+returned service tier or excess reported input stops further generation. No
+author code, evaluator, repository source or dataset enters these model requests.

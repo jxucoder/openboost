@@ -40,6 +40,15 @@ Protocol fixtures are explicitly labeled and do not count as real token evidence
 Actual provider exhaustion/cancellation, complete worker integration and the
 model/input/spend freeze remain open. No model request or new upload has occurred.
 
+[099 background accounting](099-background-accounting-smoke.md) adds cancellation
+and final retrieval within a fifteen-second cleanup window. Known usage is
+reconciled while stopped answers are withheld; null usage stays unknown. Its
+[concrete live smoke](099-accounting-smoke.json) freezes twelve source files and
+three harmless text prompts, with at most three generations / 4288 output tokens
+and a proposed $0.05 allowance. Fifty-three local checks pass. No model request
+has run: the no-network preflight is ready and live authorization is pending.
+After the one approved observation, stop for retrospective regardless of outcome.
+
 The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
 sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
 and bounded [078 scalar CUDA feasibility](078-cuda-scalar-path.md). D1 is the control;
@@ -56,7 +65,7 @@ retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
 CPU implementation has twelve recipes; the latest full CPU regression passes
-1912 tests (one Linux-only skip), including author/evaluation support checks.
+1933 tests (one Linux-only skip), including author/evaluation support checks.
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.

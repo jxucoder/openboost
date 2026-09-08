@@ -103,6 +103,15 @@ author runner. Model tools/worker integration, attempt authority and the concret
 model/input/spend freeze remain open. No model request or remote allowance is
 included; injected protocol tests cannot pass the real accounting gate.
 
+[099 background accounting](v1-sprints/099-background-accounting-smoke.md) now adds
+bounded cancellation/retrieval and withholding of stopped answers. Its concrete
+[model smoke](v1-sprints/099-accounting-smoke.json) is pending: at most three
+generation requests, 4288 output tokens and a proposed $0.05 allowance. Local
+preflight uses no network. Fifty-three accounting/transport/harness checks pass;
+these are protocol fixtures, not real token evidence. Obtain the concrete model
+allowance before dispatch, execute once and stop for retrospective. Null cancelled
+usage remains unknown. No worker, independent author or GPU allowance is included.
+
 The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
 completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant
 065/068 ownership on the actual device path. Experimental CUDA storage, named
@@ -182,7 +191,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1912 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1933 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

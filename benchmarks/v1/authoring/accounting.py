@@ -157,6 +157,7 @@ class Controller:
                 stream=False,
                 background=self.background,
                 store=False,
+                service_tier="default",
             )
             entry = dict(
                 sequence=len(self.record["requests"]) + 1,
