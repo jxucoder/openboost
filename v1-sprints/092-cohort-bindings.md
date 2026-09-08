@@ -63,3 +63,23 @@ bounds independently. Instrumented timing is labelled explicitly. The nineteen
 revised saved-model replays use a separate artifact root from historical outputs.
 All 147 revised cases collect; none has run on CUDA. Hardware protocol construction
 is the remaining local step.
+
+## Local hardware-freeze result
+
+The pending [run-8 protocol](092-comparison-run8.json) freezes 86 files. An
+[isolated wheel/snapshot collection](092-isolated-collection.json) collects all
+385 historical and 529 revised cases, with no CUDA execution. Separate verdicts
+retain the historical failures and require complete revised results, provenance
+and artifacts. Thirty-seven new local harness checks pass; the full CPU suite
+passes 1794 tests with one Linux-only skip. The linked
+[learning](../learnings/2026-09-07-v1-comparison-hardware-freeze.md) records failed
+local attempts and exact verification.
+
+Reflection at the construction-to-hardware boundary: this slice completes local
+092-C/D preparation. All old outcomes and sources remain intact; all ninety
+independent reference trajectories remain unchanged. The correctness instrument
+now audits actual stored inputs, while a separate fit-cost check avoids that
+instrumentation. The extra work is justified by the demonstrated false-improvement
+counterexample. It does not establish device conformance or support broader CPU
+optimization. The next step requires one concrete upload/run allowance, then a
+retrospective before any further device invocation.
