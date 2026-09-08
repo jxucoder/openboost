@@ -1,5 +1,14 @@
 # OpenBoost v1: Programmable boosting foundation design, execution and acceptance
 
+Current sequencing amendment: [Sprint 101](../v1-sprints/101-defer-author-evaluation.md)
+adopts the user's request to defer agent-friendliness evaluation. Pause F2/E5,
+author-pilot preparation and its model-accounting infrastructure, including the
+pending 100 live test. These no longer block foundation construction, required
+CUDA recipes, train-many or scoped quality/cost work. Composability, independent
+mathematical checks and all R/C/A scope remain. Original agent/adoption criteria
+remain unpassed; resume that study only at the user's direction. This amendment
+supersedes older sequencing and continuation instructions below, including 085.
+
 Date: 2026-09-05. Version: **the real v1 planning baseline**, explicitly designated by the user.
 Status reviewed at merged PR #24 / Sprint 063: **F0.1/F0.2 delivered; F0.3 open; broad CPU construction delivered, formal F1 exit and author/quality/cost evaluation incomplete**.
 v1 denotes this product/architecture goal, not the existing PyPI version or a claim that P0–P7 completed v1.
@@ -433,18 +442,17 @@ links and git diff --check, not nonexistent runtime changes. No push, release, m
 
 Starting instructions for the next execution model:
 
-> Read AGENTS.md and the approved Sprint 085 amendment. Prioritize 069 D1/D2
-> authoring/accounting and bounded 078 scalar CUDA feasibility. Pause the next
-> OpenBoost CPU configuration-05 probe and wider search expansion. Carry the D2
-> composition onto the programmable device boundary. Audit actual ownership and
-> enforce independent accounting/isolation; designer work is not author evidence.
-> Preserve all R/C/A/E requirements, E5 cohorts, required CUDA recipes and P7/E4.
-> Record results and reflect at each bounded slice. No phase exit follows from
-> objective counts, green tests or a single scalar GPU fixture.
-> Sprint 087's 078-A/B primitives pass 88 real T4 checks, including D2's public
-> candidate/feasibility/route/leaf composition. All three invocations are consumed;
-> stop for the planned retrospective before 078-C ownership and resident training.
-> Further hardware checks require a new concrete freeze and allowance.
+> Read AGENTS.md and Sprint 101. Agent evaluation and its accounting infrastructure
+> are deferred; do not run the pending 100 model test or resume study preparation.
+> The existing 092 Normal CUDA correction is the next engineering checkpoint.
+> Its run-8 source and acceptance freeze is complete; hardware approval is pending.
+> Preserve original failures, verify all revised cases on real hardware, and stop
+> for retrospective after the bounded run. Then advance required CUDA recipes,
+> compatible train-many and scoped real-workload quality/cost evidence.
+> Keep public composition, D2 device behavior, ownership and persistence checks.
+> Preserve all R/C/A scope and P7/E4; E5/E7 remain unpassed and deferred.
+> Wider CPU searches and speculative CPU optimization remain paused. Commit verified
+> slices and reflect every three implementation commits or after a counterexample.
 
 
 ### Approved foundation-priority amendment: 2026-09-07

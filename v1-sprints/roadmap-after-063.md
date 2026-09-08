@@ -1,5 +1,13 @@
 # Sprint roadmap after the v1 retrospective
 
+Current override: [101](101-defer-author-evaluation.md) defers 069/077 agent studies
+and their 094–100 accounting/isolation preparation. F2/E5 no longer blocks current
+foundation/CUDA work. Resume at the existing 092 Normal correction checkpoint,
+then 080 required CUDA recipes, 081 train-many and scoped 082 quality/cost work.
+All R/C/A scope remains. Author/adoption criteria are unpassed and deferred;
+the historical dependencies below do not reactivate them. The pending 100 model
+test is shelved, and run 8 still requires its concrete hardware allowance.
+
 Planning baseline: `df23796`, 2026-09-06. Current execution: 064–065 complete,
 067–068 incremental execution and summary retention pass; 069/070 preparation is current.
 This decomposes Sprint 063 N1–N5 and its proposed GPU sequence into execution

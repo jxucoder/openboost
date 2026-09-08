@@ -11,7 +11,23 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-The latest result is [099's provider accounting smoke](099-accounting-result.md):
+The user's [101 deferral](101-defer-author-evaluation.md) pauses agent-friendliness
+evaluation and its accounting/isolation preparation, including the unapproved
+100 live model test. F2/E5 remains unpassed but no longer gates foundation or
+CUDA construction. Public composability and correctness remain required.
+
+Next engineering order: validate the existing [Normal CUDA correction](092-comparison-run8-request.md),
+review its result, then advance [required CUDA recipes](080-cuda-required-recipes.md),
+[train-many](081-cuda-train-many.md) and [real-workload quality/cost](082-end-to-end-cost.md).
+Run 8's upload/compute allowance remains pending. No new model call is needed for
+these engineering checks. Preserve every application family and all past evidence.
+Resume the deferred author study only at the user's direction.
+
+## Prior preparation and evidence
+
+The following authoring continuations and 085 priority order are historical and
+superseded by 101. The latest live author-accounting result is
+[099's provider accounting smoke](099-accounting-result.md):
 real cap exhaustion passes and cancellation remains unexercised, leaving the
 frozen overall verdict failed. It follows
 [097's passing corrected Linux worker smoke](097-worker-identity-result.md),

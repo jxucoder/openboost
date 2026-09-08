@@ -63,7 +63,24 @@ themselves. Verify the actual call path and the tests that exercise it.
 
 ## Current Priority Order
 
-Current execution is governed by the user-approved
+Current execution is governed by the user-directed
+[Sprint 101 deferral](v1-sprints/101-defer-author-evaluation.md). Pause agent
+friendliness studies, 069 author preparation, 077/F2/E5 trials and their 094–100
+accounting/isolation infrastructure. Do not request or run the pending Sprint 100
+model test. Resume author evaluation only when the user asks. F2/E5 remains
+unpassed but does not block foundation construction, required CUDA recipes,
+train-many or scoped quality/cost work. Public composability, installed-extension
+checks and mathematical/state/persistence correctness remain active requirements.
+
+Next: the existing [Normal CUDA run-8 checkpoint](v1-sprints/092-comparison-run8-request.md),
+then required CUDA recipes (080), compatible train-many (081) and evidence-led
+quality/cost work (082). Run 8 still needs its concrete upload/compute allowance;
+this priority change authorizes no remote run. Preserve all frozen packets and
+past results. All R/C/A requirements remain; author/adoption benefit is unverified.
+
+The historical sequence below records prior instructions and evidence. Its
+authoring continuations and limited F2-to-F3 overlap rule are superseded by 101.
+The earlier execution was governed by the user-approved
 [Sprint 085 foundation-focus amendment](v1-sprints/085-foundation-focus-amendment.md).
 The [086 next execution plan](v1-sprints/086-next-execution-plan.md) decomposes
 that work into fields/histograms, candidate operations and resident training;
@@ -220,12 +237,15 @@ Reflect after each 085 slice, every three implementation commits, phase transiti
 or architectural/correctness counterexamples. Keep sprint evidence and learnings
 current. Silent correctness failures and demonstrated consumer blockers take priority.
 
-1. Explicit algorithm tasks, fair baselines, and independent correctness oracles.
-2. A minimal CPU foundation tested by structurally different use cases.
-3. Evidence that agents can make verified algorithm changes with less work.
-4. Verified single-GPU execution and scoped end-to-end cost, including train-many.
-5. Real use-case value and independent authors' repeated use.
-6. Stabilize packaging and the public contracts justified by that evidence.
+1. Resolve demonstrated correctness failures using independent mathematical oracles.
+2. Verify programmable single-GPU execution against the CPU semantic reference.
+3. Complete required CUDA recipes and compatible train-many semantics.
+4. Measure real use-case quality and complete execution cost with fair baselines.
+5. Stabilize packaging and public contracts supported by that evidence.
+
+Comparative agent authoring and adoption studies are deferred under 101. Existing
+E5/E7 criteria remain unpassed and are not engineering entry prerequisites during
+this deferral.
 
 Silent correctness and persistence failures on any exercised path take priority
 within every stage. ScoringBench is a distributional quality instrument, not the
