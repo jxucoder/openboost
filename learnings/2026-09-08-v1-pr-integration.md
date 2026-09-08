@@ -83,6 +83,29 @@ in 102.11 seconds. Ninety deselections are explicitly historical full-loss cases
 all ninety replacement settings pass. Strict docs also pass. The first failed
 hosted run is preserved; the correction still needs a complete hosted matrix.
 
+## Cross-platform report replay
+
+The [second hosted run](https://github.com/jxucoder/openboost/actions/runs/34241204310)
+at `8df852c` passes both Linux versions. Both macOS versions pass current comparison
+coverage and fail one exact JSON replay check: four reporting fields are one ULP
+lower, `2.3308416471007942` versus retained `2.3308416471007947`. Each reports 2,282
+passes, two skips and 970 deselections; no decision, setting or source hash differs.
+
+Keep the original `c881259` artifact bytes pinned by SHA256, and compare recomputed
+reporting scores with a one-ULP maximum. All other fields remain exact, including
+coefficients, accepted flags and model prefixes. Ten focused binding/replay checks
+pass in 6.84 seconds, including rejection of two-ULP or nonfinite scores and changed
+decisions/coefficients/sources. Full production/test Ruff and whitespace checks pass.
+This reporting-only replay bound never participates in training or acceptance.
+
+The integration reflection is that frozen provenance, recomputed floating-point
+reports and current semantic conformance require separate checks. Platform-specific
+rounding cannot justify changing a recorded verdict or weakening decision checks.
+
+The final parallel CPU command (`pytest tests/ -m 'not gpu and not benchmark' -q
+--tb=short`, configured xdist discovery) passes 2,292 checks with one skip in
+18.23 seconds. The next hosted run must still confirm all four supported cells.
+
 ## Risks and Follow-ups
 
 Use a merge commit: squash/rebase would replace execution SHAs needed by audits.

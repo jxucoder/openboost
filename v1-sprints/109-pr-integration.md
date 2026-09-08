@@ -99,3 +99,25 @@ and 970 deselections in 102.11 seconds. The deselections comprise 880 GPU/benchm
 cases and ninety historical full-loss trajectories, each with an active revised
 counterpart. Full production/test Ruff, strict docs and whitespace checks pass.
 Hosted checks must now verify the pushed correction on all four matrix cells.
+
+## Reporting replay on hosted macOS
+
+At `8df852c`, both Linux matrix cells pass. Both macOS cells pass the current
+comparison cohorts but fail the exact JSON trajectory replay: the same four
+`best_score`/`validation_score` fields differ by one ULP, from
+`2.3308416471007947` to `2.3308416471007942`. All non-report fields match exactly;
+each macOS cell reports 2,282 passes, two platform/privilege skips and one failure.
+
+Keep the original trajectory artifact at `c881259` byte-identical and explicitly
+pin its SHA256 in the replay test. Separate that integrity check from recomputed
+reporting values: allow at most one float64 ULP for `loss`, `validation_score` and
+`best_score` only, require finite values, and keep every decision, coefficient,
+prefix, setting, initial value and source hash exact. The old artifact and all
+production comparisons remain unchanged. Ten focused checks pass, including
+one-ULP replay and failures for two ULPs, nonfinite reports, changed acceptance,
+prefixes, coefficients and sources. Verify the full hosted matrix again.
+
+Final local regression passes 2,292 tests with one platform skip in 18.23 seconds
+using the configured parallel CPU suite. Full lint passes. Commit the correction
+and let the PR record the next complete hosted matrix; leave the actual merge to
+the user's next instruction.

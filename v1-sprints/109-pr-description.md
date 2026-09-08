@@ -11,7 +11,7 @@ files are evidence rather than production code.
 
 ## Validation and evidence
 
-- Local CPU regression: 2,284 passed, one platform skip, 880 GPU/benchmark and
+- Local CPU regression: 2,292 passed, one platform skip, 880 GPU/benchmark and
   ninety explicitly historical full-loss deselections. All ninety settings have
   active objective-comparison replacements, verified by collection and execution.
   Full production/test Ruff, strict MkDocs and wheel/sdist builds pass.
@@ -35,6 +35,11 @@ files are evidence rather than production code.
   tests now exercise objective comparisons under native and controlled reporting;
   original full-loss sources and hardware evidence remain unchanged. The matrix
   retains all host/version outcomes with fail-fast disabled.
+- The [second hosted run](https://github.com/jxucoder/openboost/actions/runs/34241204310)
+  passes both Linux cells and identifies four one-ULP reporting differences on
+  macOS. Replay now pins original artifact bytes and requires exact decisions,
+  settings and source identities, with at most one ULP for recomputed reporting
+  scores. Tests reject larger errors and changes to coefficients or model prefixes.
 
 ## Scope and remaining work
 
