@@ -95,6 +95,14 @@ actual generated-token/wall-budget enforcement and fair-arm/model/settings desig
 No model dispatch, further remote invocation or GPU allowance follows from this
 known-code isolation result. The raw failure and correction are both retained.
 
+The user's subsequent "continue" starts [098 request accounting](v1-sprints/098-author-request-accounting.md).
+Local text-request construction reserves the remaining cap before dispatch,
+counts final output usage once and fails closed on unknown/interrupted usage.
+It does not establish real provider token enforcement, cancellation or a complete
+author runner. Model tools/worker integration, attempt authority and the concrete
+model/input/spend freeze remain open. No model request or remote allowance is
+included; injected protocol tests cannot pass the real accounting gate.
+
 The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
 completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant
 065/068 ownership on the actual device path. Experimental CUDA storage, named
@@ -174,7 +182,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1880 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1912 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

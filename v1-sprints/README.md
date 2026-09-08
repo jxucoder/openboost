@@ -33,6 +33,13 @@ That allowance is consumed, with no retry. The retrospective is complete: next
 design actual generated-token/wall-budget enforcement and fair-arm/model/settings
 before any independent attempt. No model or additional remote run is authorized.
 
+[098 request accounting](098-author-request-accounting.md) now constructs the
+trusted text-request boundary locally: durable pre-dispatch reservations, final
+usage validation, no automatic retries and local transport-process deadlines.
+Protocol fixtures are explicitly labeled and do not count as real token evidence.
+Actual provider exhaustion/cancellation, complete worker integration and the
+model/input/spend freeze remain open. No model request or new upload has occurred.
+
 The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
 sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
 and bounded [078 scalar CUDA feasibility](078-cuda-scalar-path.md). D1 is the control;
@@ -49,7 +56,7 @@ retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
 CPU implementation has twelve recipes; the latest full CPU regression passes
-1880 tests (one Linux-only skip), including author/evaluation support checks.
+1912 tests (one Linux-only skip), including author/evaluation support checks.
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.

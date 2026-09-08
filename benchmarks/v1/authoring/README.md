@@ -178,3 +178,42 @@ This removes the observed worker-identity blocker. The
 [retrospective](../../../v1-sprints/097-worker-identity-result.md) returns to actual
 token-budget enforcement and the fair-arm/model/settings packet. No model or
 independent author attempt ran, and no broader isolation or author-cost claim follows.
+
+## Trusted request accounting under construction
+
+[Sprint 098](../../../v1-sprints/098-author-request-accounting.md) adds a text-only
+Responses boundary in `accounting.py` and `responses_transport.py`. It is evaluator
+support code, outside the installed OpenBoost package and author worker image.
+Each controller requires an explicit model/setting, token/request limits and wall
+deadline. Requests are serialized; the trusted ledger and exact request are saved
+before sending a cap no larger than the remaining allowance.
+
+The ledger distinguishes confirmed output totals, a pending reservation and the
+complete generated total. The latter stays `null` while a request is unresolved.
+Returned output usage includes reasoning; its reasoning breakdown is not added
+again. Only terminal responses matching the model and requested cap can supply
+final usage. Inconsistent/missing usage or duplicate IDs stop all further requests.
+Late complete usage is retained, but the response is not returned to the caller.
+Known usage survives a failure to write the final ledger. Failures never trigger
+automatic request retries or a reset of the directory's budget.
+
+The actual transport starts an isolated trusted Python process for one HTTPS POST
+to the Responses endpoint. It reads `OPENAI_API_KEY` only there, stores no auth
+headers or exception messages, follows no redirects and uses no SDK retry loop.
+The parent supervises the process with the remaining total deadline. Raw response
+bytes, HTTP/request identifiers and failures are retained in the trusted directory;
+the body is bounded to 4 MiB plus one overflow-detection byte. No model tools or
+worker commands are exposed by this text-only slice.
+
+Local tests verify the protocol and actually kill a sleeping transport process.
+The default transport also fails before HTTP when its test environment has no
+credential. Injected transports are labeled `injected_protocol_test`; their counts
+are fixtures, not model evidence. No live model request or generation has occurred.
+Client termination does not confirm provider cancellation or final usage. On an
+interruption without final usage, the full reservation remains, generated usage is
+unknown and continuation is blocked. A future authority must prevent reissuing the
+same attempt under another directory and supervise worker lifetime independently.
+
+Next: freeze and authorize a real cap/exhaustion and cancellation/usage smoke,
+then integrate the verified worker command boundary and fair D1/D2 arms. Neither
+this controller nor passing local tests closes 069 preparation or formal E5.
