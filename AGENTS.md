@@ -92,10 +92,17 @@ passes plus fifteen new passes with identical production. Bounded revised covera
 is complete across two runs, not one 529/529 invocation or full Normal conformance.
 The retrospective is complete; all nine GPU allowances are consumed.
 
-Next advance required CUDA recipes (080), compatible
+The user then approves an [early performance checkpoint](v1-sprints/104-early-performance-checkpoint.md)
+before further recipe ports. Measure existing squared/Normal CPU and CUDA paths
+on the frozen synthetic workloads, retain incomplete/quality-failing outcomes,
+and profile separately. Its new 46-file source closure and one T4 invocation are
+bounded in the run-10 protocol; preserve all previous freezes. Execute once and
+reflect before choosing an optimization. This checkpoint does not pass formal E4.
+
+After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
 sources and past results. All R/C/A requirements remain; author/adoption benefit
-is unverified. No additional GPU run or source upload is currently authorized.
+is unverified. No GPU run or upload beyond this checkpoint is authorized.
 
 The historical sequence below records prior instructions and evidence. Its
 authoring continuations and limited F2-to-F3 overlap rule are superseded by 101;

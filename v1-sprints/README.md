@@ -34,7 +34,12 @@ Bounded revised coverage is complete across two runs; the historical failed
 verdict and all 420 indexed run-8 files stay intact. The retrospective is complete,
 and all nine GPU allowances are consumed. No further hardware is authorized.
 
-Next engineering order: advance
+The user subsequently approves [104's early performance checkpoint](104-early-performance-checkpoint.md)
+on the existing squared/Normal paths. Its frozen, bounded same-host CPU/CUDA runs
+precede further recipe ports; compilation/profiling and quality-qualified timing
+remain distinct. No external-library speed or formal E4 claim is implied.
+
+After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),
 [train-many](081-cuda-train-many.md) and [real-workload quality/cost](082-end-to-end-cost.md).
 No new model call is needed for
