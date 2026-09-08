@@ -1,7 +1,8 @@
 # Sprint 092-C: Separate comparison consumers and their anchors
 
-Status: CPU and resident consumers constructed; CPU verification passes and
-resident execution/revised hardware-cohort bindings remain open. This design recorded the ownership
+Status: CPU and resident consumers constructed with complete
+[historical requirement bindings](092-cohort-bindings.md); CPU verification passes
+and resident execution remains open. This design recorded the ownership
 decision before runtime/recipe edits. Actual CUDA verification still requires the
 later 092-D freeze and a new allowance.
 
@@ -179,3 +180,8 @@ Keep those original assertions/outcomes and bind revised memory requirements
 explicitly. The 90 trajectory settings, six transaction failure requirements,
 31 recipe and twenty installed-D2/inference requirements still need their complete
 new-cohort bindings. No C closure or device-run request is justified yet.
+
+The subsequent [binding construction](092-cohort-bindings.md) completes those
+collected counterparts while preserving every original source and tolerance.
+CPU regression now passes 1757 checks with one Linux-only skip. This closes local
+092-C construction; CUDA acceptance remains the separately frozen 092-D run.

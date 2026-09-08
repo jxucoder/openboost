@@ -125,11 +125,14 @@ production changes and adds no device allowance. Its
 is constructed: the CPU operation passes the 106-case numerical study, and the
 resident CUDA operation has a separate 117-case cohort collected but unrun.
 092-C's CPU Normal consumers now use separate acceptance/best/stopping comparisons;
-1653 CPU checks pass with one Linux-only skip. Resident runs now offer explicit
+1757 CPU checks pass with one Linux-only skip. Resident runs now offer explicit
 objective comparison and owned best anchors; twelve new ownership/consumer CUDA
 tests collect but remain unrun. The Normal device recipe now selects objective
 comparison and owns a separate patience anchor; fifteen additional recipe CUDA
-tests collect, unrun. Complete historical-cohort bindings remain next. Preserve
+tests collect, unrun. The [collected bindings](v1-sprints/092-cohort-bindings.md)
+now cover all 383 requirements, including 147 revised transaction/recipe/D2 cases.
+All ninety independent float64 reference trajectories retain their original
+summaries. Exact-source hardware freeze and separate cohort judging remain next. Preserve
 the old full-loss predicate cases and failed runs; any revised
 semantic cohort must be explicit before hardware. No blanket epsilon, hidden metric
 adjustment or aggregation-only fix establishes reliable comparison. Original P7/E4
@@ -147,7 +150,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1653 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1757 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

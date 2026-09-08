@@ -423,4 +423,9 @@ result or a later learner. Together with the twelve transaction cases, these
 distinguish the new consumers; they do not replace the original 383 requirements.
 Historical Normal recipe byte assertions exclude the new best snapshot and will
 disagree by `4*N_validation*K`; that planned semantic difference is retained in
-the historical cohort. Full revised trajectory/D2 bindings and hardware remain open.
+the historical cohort. All 383 historical requirements now have collected
+counterparts, including 147 revised transaction/recipe/installed-D2 checks.
+They retain original settings and tolerances and audit actual stored-input
+comparisons independently. All ninety float64 reference trajectories retain their
+original summaries. These are local reference and collection results; revised
+CUDA execution and hardware acceptance remain open.
