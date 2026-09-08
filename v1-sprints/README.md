@@ -56,8 +56,14 @@ All ten GPU allowances are consumed. The approved
 exact input/per-fit evidence, adds cooperative field validation and prepares a
 [frozen 88-file T4 comparison](105-validation-run11-request.md). Full CPU regression
 passes 1994 tests with one Linux-only skip; 474 real-device cases collect from an
-isolated wheel. Upload and the next invocation are pending. The CUDA candidate's
-correctness and speed remain unverified; no new hardware has run.
+isolated wheel. The user then approves that exact upload and invocation. Run 11
+executes once at clean `dd84247`: all 474 T4 checks and three cost gates pass, all
+28 fits replay exactly from retained inputs, and large squared warm fit cost falls
+13.513 to 8.947 seconds. [Raw evidence and audit](../benchmarks/v1/evidence/parallel-validation-105/README.md)
+retain all artifacts and exact original/candidate models. All eleven allowances
+are consumed. Keep the optimization and stop at the completed 105 retrospective;
+next construction returns to required 080 recipes and inference metadata. These
+synthetic results do not pass formal E4 or full Normal conformance.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

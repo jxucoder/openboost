@@ -1,0 +1,541 @@
+{
+  "execution_revision": "dd842478a1af55a88cee580682f9471342f1e404",
+  "manifest_sha256": "09e05ec43518b9cb718d404c5852b6cbc12103b118b9c51c3b4edc1dbab98e03",
+  "raw_status": "pass",
+  "raw_verdict": true,
+  "cases_total": 474,
+  "cases_passed": 474,
+  "dispatch_sources_verified": 88,
+  "raw_artifacts_verified": 20,
+  "retained_json_bytes": 33985980,
+  "retained_completed_fits_replayed": 28,
+  "baseline_installation_verified": true,
+  "local_audit_environment": {
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "machine": "x86_64",
+    "python": "3.12.12",
+    "numpy": "2.3.5"
+  },
+  "dispatch_seconds": 765.509313,
+  "worker_seconds": 380.142932519,
+  "junit_seconds": 377.754,
+  "pairs": [
+    {
+      "case": "squared-10000",
+      "input_sha256": "e9dca56ff243e5bb37f8847ebba7cfa6bb6f3132be469e6477fc6cad84bab22d",
+      "arms": {
+        "baseline": {
+          "status": "complete",
+          "completed_fits": 4,
+          "child_seconds": 19.432277411,
+          "child_cap_seconds": 30,
+          "first_fit_seconds": 8.57980426200001,
+          "observed_warm_fit_seconds": [
+            2.8380135090000067,
+            2.8357181370000006,
+            2.8692439339999964
+          ],
+          "complete_warm_median_seconds": 2.8380135090000067,
+          "quality": {
+            "half_mse": 0.3372482702512653
+          },
+          "last_state": {
+            "version": 20,
+            "terms": 20,
+            "best_terms": 20
+          },
+          "last_final_metrics": {
+            "upload_bytes": 1110000,
+            "export_bytes": 15564,
+            "device_copy_bytes": 975600,
+            "synchronizations": 6272,
+            "live_bytes": 0,
+            "peak_live_bytes": 1376220,
+            "peak_pool_bytes": 1464320,
+            "kernel_launches": 4531,
+            "kernel_dispatch_seconds": 1.3368692939997828,
+            "validation_export_bytes": 12344,
+            "decision_export_bytes": 1680,
+            "metric_export_bytes": 336
+          },
+          "post_fit_evidence_seconds": [
+            0.21051443199999653,
+            0.2142764949999929,
+            0.21349348200000406,
+            0.21346841199999744
+          ],
+          "last_cpu_prediction_warm_medians_seconds": {
+            "single": 0.003481014000001892,
+            "batch": 0.03381150199999183
+          },
+          "warm_phase_medians_seconds": {
+            "fit_seconds": 2.8380135090000067,
+            "context_seconds": 0.000252763999995409,
+            "host_preparation_seconds": 0.011228964000011388,
+            "training_seconds": 2.8206828590000015,
+            "export_seconds": 0.004802484999999024,
+            "cleanup_seconds": 0.0007045990000023039
+          }
+        },
+        "candidate": {
+          "status": "complete",
+          "completed_fits": 4,
+          "child_seconds": 18.41288504500001,
+          "child_cap_seconds": 30,
+          "first_fit_seconds": 8.057522841999997,
+          "observed_warm_fit_seconds": [
+            2.801901958000002,
+            2.748536971000007,
+            2.7293555599999877
+          ],
+          "complete_warm_median_seconds": 2.748536971000007,
+          "quality": {
+            "half_mse": 0.3372482702512653
+          },
+          "last_state": {
+            "version": 20,
+            "terms": 20,
+            "best_terms": 20
+          },
+          "last_final_metrics": {
+            "upload_bytes": 1110000,
+            "export_bytes": 15564,
+            "device_copy_bytes": 975600,
+            "synchronizations": 6272,
+            "live_bytes": 0,
+            "peak_live_bytes": 1376220,
+            "peak_pool_bytes": 1464320,
+            "kernel_launches": 4531,
+            "kernel_dispatch_seconds": 1.295908561999596,
+            "validation_export_bytes": 12344,
+            "decision_export_bytes": 1680,
+            "metric_export_bytes": 336
+          },
+          "post_fit_evidence_seconds": [
+            0.20884069600000998,
+            0.20759082899999726,
+            0.206895846000009,
+            0.2072389760000135
+          ],
+          "last_cpu_prediction_warm_medians_seconds": {
+            "single": 0.003337832999989132,
+            "batch": 0.033024169000015036
+          },
+          "warm_phase_medians_seconds": {
+            "fit_seconds": 2.748536971000007,
+            "context_seconds": 0.00021165600000472296,
+            "host_preparation_seconds": 0.010824148000011746,
+            "training_seconds": 2.732100371999991,
+            "export_seconds": 0.00467285500000969,
+            "cleanup_seconds": 0.0006040680000012344
+          }
+        },
+        "cpu": {
+          "status": "complete",
+          "completed_fits": 2,
+          "child_seconds": 15.365767648999991,
+          "child_cap_seconds": 25,
+          "first_fit_seconds": 6.6128748710000025,
+          "observed_warm_fit_seconds": [
+            7.8255577620000025
+          ],
+          "complete_warm_median_seconds": 7.8255577620000025,
+          "quality": {
+            "half_mse": 0.33724823350239064
+          },
+          "last_state": {
+            "version": 20,
+            "terms": 20,
+            "best_terms": 20
+          },
+          "last_final_metrics": null,
+          "post_fit_evidence_seconds": [
+            0.2065346920000053,
+            0.2178021980000011
+          ],
+          "last_cpu_prediction_warm_medians_seconds": {
+            "single": 0.004097440000009556,
+            "batch": 0.0339725919999978
+          },
+          "warm_phase_medians_seconds": {
+            "fit_seconds": 7.8255577620000025,
+            "context_seconds": 0.0,
+            "host_preparation_seconds": 0.018385072000000946,
+            "training_seconds": 7.806732251,
+            "export_seconds": 0.0003997889999993731,
+            "cleanup_seconds": 3.39000000053602e-05
+          }
+        }
+      },
+      "judgment": {
+        "measurement_complete": true,
+        "quality_passed": true,
+        "cost_passed": true,
+        "candidate_over_baseline_warm_ratio": 0.9684721239993226,
+        "reasons": [],
+        "cpu_relative_metric_differences": {
+          "half_mse": 1.0896684108288162e-07
+        },
+        "cpu_normalized_prediction_rmse": [
+          1.9468007625720794e-07
+        ]
+      },
+      "cpu_over_candidate_warm_ratio": 2.847172093578501
+    },
+    {
+      "case": "squared-100000",
+      "input_sha256": "04e42bd7e915ebd9ec289cb612c7869358eda5b45c90dbcb0171753cd65247da",
+      "arms": {
+        "baseline": {
+          "status": "complete",
+          "completed_fits": 4,
+          "child_seconds": 67.470510787,
+          "child_cap_seconds": 95,
+          "first_fit_seconds": 18.465455749,
+          "observed_warm_fit_seconds": [
+            13.513933624000003,
+            13.512718377999988,
+            13.49009523800001
+          ],
+          "complete_warm_median_seconds": 13.512718377999988,
+          "quality": {
+            "half_mse": 0.3455258879664433
+          },
+          "last_state": {
+            "version": 20,
+            "terms": 20,
+            "best_terms": 20
+          },
+          "last_final_metrics": {
+            "upload_bytes": 11046000,
+            "export_bytes": 15564,
+            "device_copy_bytes": 9615600,
+            "synchronizations": 6272,
+            "live_bytes": 0,
+            "peak_live_bytes": 13274220,
+            "peak_pool_bytes": 14123008,
+            "kernel_launches": 4531,
+            "kernel_dispatch_seconds": 1.2777660099989703,
+            "validation_export_bytes": 12344,
+            "decision_export_bytes": 1680,
+            "metric_export_bytes": 336
+          },
+          "post_fit_evidence_seconds": [
+            1.5909267670000133,
+            1.5862886150000008,
+            1.5886300640000002,
+            1.5900067430000036
+          ],
+          "last_cpu_prediction_warm_medians_seconds": {
+            "single": 0.0035049899999819445,
+            "batch": 0.3073068320000232
+          },
+          "warm_phase_medians_seconds": {
+            "fit_seconds": 13.512718377999988,
+            "context_seconds": 0.00018820700000787838,
+            "host_preparation_seconds": 0.08143670900000188,
+            "training_seconds": 13.425552858000003,
+            "export_seconds": 0.004730194000018173,
+            "cleanup_seconds": 0.0011161840000113443
+          }
+        },
+        "candidate": {
+          "status": "complete",
+          "completed_fits": 4,
+          "child_seconds": 49.77044382600002,
+          "child_cap_seconds": 95,
+          "first_fit_seconds": 14.230014209999979,
+          "observed_warm_fit_seconds": [
+            8.94862120900001,
+            8.946973807999996,
+            8.932530643000007
+          ],
+          "complete_warm_median_seconds": 8.946973807999996,
+          "quality": {
+            "half_mse": 0.3455258879664433
+          },
+          "last_state": {
+            "version": 20,
+            "terms": 20,
+            "best_terms": 20
+          },
+          "last_final_metrics": {
+            "upload_bytes": 11046000,
+            "export_bytes": 15564,
+            "device_copy_bytes": 9615600,
+            "synchronizations": 6272,
+            "live_bytes": 0,
+            "peak_live_bytes": 13274220,
+            "peak_pool_bytes": 14123008,
+            "kernel_launches": 4531,
+            "kernel_dispatch_seconds": 1.2978468269994892,
+            "validation_export_bytes": 12344,
+            "decision_export_bytes": 1680,
+            "metric_export_bytes": 336
+          },
+          "post_fit_evidence_seconds": [
+            1.604515857999985,
+            1.612373606999995,
+            1.5896529920000262,
+            1.6185906569999702
+          ],
+          "last_cpu_prediction_warm_medians_seconds": {
+            "single": 0.004225910000002386,
+            "batch": 0.31195847999998705
+          },
+          "warm_phase_medians_seconds": {
+            "fit_seconds": 8.946973807999996,
+            "context_seconds": 0.000234213999988242,
+            "host_preparation_seconds": 0.0832976230000213,
+            "training_seconds": 8.857124501999976,
+            "export_seconds": 0.004720557999974062,
+            "cleanup_seconds": 0.0014417050000474774
+          }
+        },
+        "cpu": {
+          "status": "complete",
+          "completed_fits": 2,
+          "child_seconds": 34.46723164100001,
+          "child_cap_seconds": 50,
+          "first_fit_seconds": 14.995855952,
+          "observed_warm_fit_seconds": [
+            14.962025855000007
+          ],
+          "complete_warm_median_seconds": 14.962025855000007,
+          "quality": {
+            "half_mse": 0.34552587574476756
+          },
+          "last_state": {
+            "version": 20,
+            "terms": 20,
+            "best_terms": 20
+          },
+          "last_final_metrics": null,
+          "post_fit_evidence_seconds": [
+            1.598649617999996,
+            1.5863062369999739
+          ],
+          "last_cpu_prediction_warm_medians_seconds": {
+            "single": 0.003325440999986995,
+            "batch": 0.30714645999998424
+          },
+          "warm_phase_medians_seconds": {
+            "fit_seconds": 14.962025855000007,
+            "context_seconds": 0.0,
+            "host_preparation_seconds": 0.1510507769999947,
+            "training_seconds": 14.81054091599998,
+            "export_seconds": 0.00038573800000563097,
+            "cleanup_seconds": 4.011000001469256e-05
+          }
+        }
+      },
+      "judgment": {
+        "measurement_complete": true,
+        "quality_passed": true,
+        "cost_passed": true,
+        "candidate_over_baseline_warm_ratio": 0.662115020658355,
+        "reasons": [],
+        "cpu_relative_metric_differences": {
+          "half_mse": 3.537123146179858e-08
+        },
+        "cpu_normalized_prediction_rmse": [
+          3.45525228193981e-07
+        ]
+      },
+      "cpu_over_candidate_warm_ratio": 1.6723001739003207
+    },
+    {
+      "case": "normal-10000",
+      "input_sha256": "7254d868d017481a5fefc4d5377f8c90440aae7186fbc5bc67530f171ad2d602",
+      "arms": {
+        "baseline": {
+          "status": "complete",
+          "completed_fits": 4,
+          "child_seconds": 41.30880468699996,
+          "child_cap_seconds": 65,
+          "first_fit_seconds": 18.340514346999953,
+          "observed_warm_fit_seconds": [
+            6.534259242000019,
+            6.537783071000035,
+            6.539106445000016
+          ],
+          "complete_warm_median_seconds": 6.537783071000035,
+          "quality": {
+            "nll": 1.2672821370696137,
+            "crps": 0.462791862153324
+          },
+          "last_state": {
+            "version": 20,
+            "terms": 40,
+            "best_terms": 40
+          },
+          "last_final_metrics": {
+            "upload_bytes": 1164000,
+            "export_bytes": 35624,
+            "device_copy_bytes": 4223200,
+            "synchronizations": 12982,
+            "live_bytes": 0,
+            "peak_live_bytes": 1911784,
+            "peak_pool_bytes": 2319872,
+            "kernel_launches": 9417,
+            "kernel_dispatch_seconds": 2.691298862000849,
+            "validation_export_bytes": 27600,
+            "decision_export_bytes": 3360,
+            "metric_export_bytes": 336,
+            "comparison_calls": 60,
+            "comparison_export_bytes": 1920
+          },
+          "post_fit_evidence_seconds": [
+            0.4220542190000174,
+            0.4201788990000068,
+            0.4189281699999583,
+            0.4200843339999665
+          ],
+          "last_cpu_prediction_warm_medians_seconds": {
+            "single": 0.007215346999998928,
+            "batch": 0.06635848100000885
+          },
+          "warm_phase_medians_seconds": {
+            "fit_seconds": 6.537783071000035,
+            "context_seconds": 0.00020806700001685385,
+            "host_preparation_seconds": 0.010852634999992006,
+            "training_seconds": 6.516779741999983,
+            "export_seconds": 0.009112979999997606,
+            "cleanup_seconds": 0.0009182239999745434
+          }
+        },
+        "candidate": {
+          "status": "complete",
+          "completed_fits": 4,
+          "child_seconds": 37.72010832400002,
+          "child_cap_seconds": 65,
+          "first_fit_seconds": 17.44366560499998,
+          "observed_warm_fit_seconds": [
+            5.664666112999953,
+            5.6240860009999665,
+            5.705653745999996
+          ],
+          "complete_warm_median_seconds": 5.664666112999953,
+          "quality": {
+            "nll": 1.2672821370696137,
+            "crps": 0.462791862153324
+          },
+          "last_state": {
+            "version": 20,
+            "terms": 40,
+            "best_terms": 40
+          },
+          "last_final_metrics": {
+            "upload_bytes": 1164000,
+            "export_bytes": 35624,
+            "device_copy_bytes": 4223200,
+            "synchronizations": 12982,
+            "live_bytes": 0,
+            "peak_live_bytes": 1911784,
+            "peak_pool_bytes": 2239488,
+            "kernel_launches": 9417,
+            "kernel_dispatch_seconds": 2.6881652620008936,
+            "validation_export_bytes": 27600,
+            "decision_export_bytes": 3360,
+            "metric_export_bytes": 336,
+            "comparison_calls": 60,
+            "comparison_export_bytes": 1920
+          },
+          "post_fit_evidence_seconds": [
+            0.4134714850000023,
+            0.41129891200000657,
+            0.4102362810000386,
+            0.41198510399999577
+          ],
+          "last_cpu_prediction_warm_medians_seconds": {
+            "single": 0.00664598600002364,
+            "batch": 0.06570965099996329
+          },
+          "warm_phase_medians_seconds": {
+            "fit_seconds": 5.664666112999953,
+            "context_seconds": 0.0002031939999938004,
+            "host_preparation_seconds": 0.010847283000032348,
+            "training_seconds": 5.643802285999982,
+            "export_seconds": 0.008860437999999249,
+            "cleanup_seconds": 0.000877645000002758
+          }
+        }
+      },
+      "judgment": {
+        "measurement_complete": true,
+        "quality_passed": true,
+        "cost_passed": true,
+        "candidate_over_baseline_warm_ratio": 0.8664506074126244,
+        "reasons": []
+      },
+      "cpu_over_candidate_warm_ratio": null
+    }
+  ],
+  "profiles": {
+    "baseline": {
+      "status": "complete",
+      "child_seconds": 3.6048416420000535,
+      "first": {
+        "repeat": 0,
+        "wall_seconds": 1.3436724549999894,
+        "stream_interval_ms": 1343.66748046875
+      },
+      "warm_medians": {
+        "wall_seconds": 0.015196709499974759,
+        "stream_interval_ms": 15.189343929290771
+      },
+      "launches_by_name": {
+        "validate_fields": {
+          "calls": 11,
+          "host_seconds": 1.331803465000064
+        }
+      },
+      "final_metrics": {
+        "upload_bytes": 800000,
+        "export_bytes": 88,
+        "device_copy_bytes": 0,
+        "synchronizations": 25,
+        "live_bytes": 0,
+        "peak_live_bytes": 800008,
+        "peak_pool_bytes": 800768,
+        "kernel_launches": 11,
+        "kernel_dispatch_seconds": 0.7973198449999472,
+        "validation_export_bytes": 88,
+        "decision_export_bytes": 0
+      }
+    },
+    "candidate": {
+      "status": "complete",
+      "child_seconds": 3.3730989679999652,
+      "first": {
+        "repeat": 0,
+        "wall_seconds": 1.273705284000016,
+        "stream_interval_ms": 1273.6995849609375
+      },
+      "warm_medians": {
+        "wall_seconds": 0.0005135235000182092,
+        "stream_interval_ms": 0.5067200064659119
+      },
+      "launches_by_name": {
+        "validate_fields": {
+          "calls": 11,
+          "host_seconds": 1.2764059920000363
+        }
+      },
+      "final_metrics": {
+        "upload_bytes": 800000,
+        "export_bytes": 88,
+        "device_copy_bytes": 0,
+        "synchronizations": 25,
+        "live_bytes": 0,
+        "peak_live_bytes": 800008,
+        "peak_pool_bytes": 800768,
+        "kernel_launches": 11,
+        "kernel_dispatch_seconds": 0.7980398520001017,
+        "validation_export_bytes": 88,
+        "decision_export_bytes": 0
+      }
+    }
+  },
+  "scope": "Exact saved-input/model/score replay and frozen same-algorithm GPU comparison. Synthetic one-seed measurements; operation profile intervals include enqueue/wait gaps. No external-library speed, full Normal conformance or E4 claim."
+}

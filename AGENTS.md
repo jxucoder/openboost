@@ -115,9 +115,16 @@ paired correctness/cost run. New hardware/upload requires that concrete allowanc
 Those construction slices are now complete: 1994 CPU checks pass with one
 Linux-only skip, original installed CPU replay passes, and the
 [88-file / 474-case run-11 packet](v1-sprints/105-validation-run11-request.md)
-collects from an isolated snapshot. Upload and hardware approval remain pending.
-Only field-validation scheduling changes; its real-device correctness and speed
-are unverified. Keep row validation unchanged until the proposed benefit is measured.
+executes once at clean `dd84247`. All 474 T4 checks and three frozen cost gates pass.
+All 28 fits replay exactly from retained input bytes, with original/candidate
+models and predictions unchanged. Large squared warm fit cost falls from 13.513
+to 8.947 seconds (33.79% lower); smaller squared and Normal cases also improve.
+The [raw evidence and offline audit](benchmarks/v1/evidence/parallel-validation-105/README.md)
+verify all sources/packages and seventeen retained JSON artifacts. This is a
+synthetic internal comparison, not full Normal conformance or formal E4. All eleven
+GPU allowances are consumed. Keep the field-validation optimization and stop at
+the completed 105 retrospective. Next construction returns to 080 required
+objective operations and inference metadata; row validation remains unchanged.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen

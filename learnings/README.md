@@ -35,8 +35,8 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 ## Current Entries
 
 - [Parallel validation and exact cost evidence](2026-09-08-v1-parallel-validation.md)
-  — recoverable fits, exact inputs, isolated original/candidate installations and
-  a bounded pending CUDA comparison; device correctness and speed unverified.
+  — exact retained inputs and 28 replayed fits; all 474 T4 checks pass, with a
+  33.79% reduction in the frozen large squared warm fit cost and unchanged models.
 
 - [Public loss comparison](2026-09-07-v1-public-loss-comparison.md) — immutable
   objective-owned loss-change evidence and CPU Normal operation; device and

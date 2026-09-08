@@ -1,9 +1,10 @@
 # Sprint 105: Frozen validation comparison request
 
-Status: the user explicitly approves this exact upload and one invocation after
-reviewing the 88-file request. Only the protocol's two authorization fields change;
-all 87 frozen source hashes remain unchanged. All ten earlier allowances remain
-consumed. This request implements the approved
+Status: approved and executed once at clean `dd84247`; all 474 cases and three
+cost gates pass. The [raw evidence and audit](../benchmarks/v1/evidence/parallel-validation-105/README.md)
+are retained. All eleven allowances are now consumed; the current protocol marks
+this one consumed while the manifest preserves its approved execution bytes.
+All 87 frozen source hashes remain unchanged. This request implements the approved
 [Sprint 105 construction](105-parallel-validation-and-reproducible-cost.md).
 
 ## Exact payload and execution

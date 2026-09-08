@@ -1,9 +1,10 @@
 # Sprint 105: Parallel validation and reproducible cost evidence
 
-Status: construction approved by the user's next "approve" after the Sprint 104
-retrospective. Build the three slices below, committing each verified slice.
-Hardware execution still requires its concrete source and budget freeze; no
-new source upload, external baseline or author/model call has occurred.
+Status: construction and the separately approved run 11 complete. All 474 T4
+checks and all three frozen cost gates pass at clean `dd84247`; all 28 retained
+fits replay from exact input bytes. Keep the optimization and stop at the planned
+retrospective below. All eleven GPU allowances are consumed. No external-library
+baseline or author/model call is part of this sprint.
 Mapping: B12 / F3 / shared CUDA foundation cost; formal E4 remains in Sprint 082.
 
 ## Why this slice
@@ -149,3 +150,62 @@ unknown. Keep row-index validation unchanged until measured benefit justifies it
 After the bounded real-device result, reflect and choose whether to keep this
 optimization or return to required CUDA recipes/train-many and formal cost work.
 Author friendliness remains deferred and every R/C/A family remains required.
+
+## Run 11 result and sprint closure
+
+The user approves the exact packet after `2101fd7`; approval is committed at
+`dd84247`, which executes once. All 474 cases pass, with all 88 source hashes,
+31 installed candidate and 31 original core hashes, eighteen package versions,
+installed D2 and the separate CPU environment verified. All seventeen declared
+JSON artifacts are retained within 64 MiB. The
+[complete evidence](../benchmarks/v1/evidence/parallel-validation-105/README.md)
+preserves raw verdict, models, exact inputs, timings and the offline audit.
+
+Warm original/candidate fit medians are 2.838/2.749 seconds for squared 10,000 rows,
+13.513/8.947 for squared 100,000 rows and 6.538/5.665 for Normal 10,000 rows.
+All GPU models/predictions match exactly across both arms and repetitions. The
+large squared fit takes 33.79% less time, exceeding the frozen 20% target; both
+smaller cases improve and pass their regression limits. Squared CPU controls
+also complete with relative half-MSE differences below 1.1e-7. All 28 completed
+fits replay exactly from retained bytes on macOS; no generator reconstruction is
+used. The standalone validation-operation interval improves about 30x, but its
+host enqueue/wait gaps and separate instrumentation forbid a fit-speed claim.
+
+Worker time is 380.143 seconds, pytest time 377.754 seconds and total dispatch
+765.509 seconds including image construction/setup. All child deadlines pass;
+there is no retry. The raw run-10 failure and all 450 indexed files from the
+previous three archives remain unchanged.
+
+### Retrospective and next construction proposal
+
+The hypothesis is supported within this scope: cooperative boolean validation
+reduces complete large-fit cost without changing mathematical decisions or adding
+launches. Keep it. Exact inputs and per-fit evidence also solve the previous
+reconstruction/partial-record weaknesses for new runs. The first offline analysis
+attempt incorrectly normalized slashes inside parameter IDs; it now normalizes
+only the test module path, matching JUnit. No device result or test was changed.
+
+The remaining large squared cost is 8.947 seconds, with unchanged 4,531 launches
+and 6,272 synchronizations. This is not proof of the next bottleneck. Do not turn
+this successful optimization into an open-ended kernel campaign. The next useful
+foundation test is more required applications through the same components:
+
+1. Resume 080 with binary and exposure-aware Poisson objective operations. Freeze
+   independent base/loss/gradient/curvature expectations first; then compose the
+   resident fields/tree/runtime operations. Check extreme margins, offsets,
+   zero/nonuniform weights, failure ownership and explicit unsupported inputs.
+2. Carry classification/survival inference metadata through the device export
+   boundary, then complete multiclass, fixed-scale event/right-censored AFT and
+   independent/shared multi-output squared cells. Current `DeviceRun.export`
+   exports raw base/terms only; correct output interpretation and fresh CPU
+   persistence are required use-case behavior, not an optional wrapper.
+3. Freeze and execute affected device parity only after each concrete construction
+   packet is reviewable. Then enter 081's actual compatible M=1/8/32 batching,
+   followed by 082's real-data, multi-seed, matched-quality external cost gates.
+
+Acceptance stays intermediate and final E1 parity, same-ID state/ownership,
+specialized inference round trips and explicit fallback rejection. Do not count
+Python loops over GPU fits as batching, these synthetic ratios as E4, or this
+bounded Normal subset as full conformance. All R1–R9/C1–C7/A1–A13 remain required;
+author friendliness stays deferred. Stop here for the planned retrospective;
+no new implementation or hardware allowance follows automatically from this run.

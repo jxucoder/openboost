@@ -136,3 +136,45 @@ authorization fields; preserve all 87 source hashes, case settings, deadlines
 and zero-retry policy. Verify the local freeze guards, commit the approval state,
 then execute once and audit the retained evidence before the planned retrospective.
 The four local source/installation/authorization guards pass in 0.21 seconds.
+
+## Real-device result
+
+Run 11 executes once at clean `dd84247` and passes all 474 cases and three cost
+gates. The [evidence archive](../benchmarks/v1/evidence/parallel-validation-105/README.md)
+retains all seventeen JSON artifacts (33,985,980 bytes), twenty raw artifact
+hashes plus the manifest binding, exact 88-source provenance, both installed
+31-file cores and eighteen package versions. All 28 fits replay exactly on the
+offline macOS host from retained input bytes, with independently verified scores.
+The current allowance is consumed; the archived approved protocol stays immutable.
+
+Warm original/candidate medians: squared 10,000 rows 2.838/2.749 seconds; squared
+100,000 rows 13.513/8.947; Normal 10,000 rows 6.538/5.665. Original/candidate saved
+models and predictions are exact across all repetitions. Large squared fit time
+falls 33.79%, meeting the frozen 20% target. Squared CPU comparisons also complete
+with relative task-score differences below 1.1e-7; Normal has no new CPU pair.
+The separate validation operation's warm event interval falls 15.189 to 0.507 ms.
+These include host enqueue/wait gaps and are not exclusive kernel measurements.
+
+The first offline audit failed because it replaced slashes within parametrized
+case names as well as module paths. Restricting normalization to the module path
+matches the existing JUnit judge and preserves every original case identity. The
+corrected audit verifies all 474 cases, twenty raw hashes and 28 saved fits. Five
+local controls check numeric-summary tolerance, exact Boolean verdicts and
+withholding complete medians from empty partial reports. No raw result changed.
+
+The worker completes in 380.143 seconds and pytest in 377.754 seconds, within all
+frozen caps. Total dispatch is 765.509 seconds including image construction/setup.
+There are no timeouts, missing repetitions or retries. All 450 indexed files in
+the prior 092/103/104 archives verify unchanged.
+The final offline `analyze.py --check` reproduces the archived verdict and all
+28 fit replays. All 45 focused evidence/freeze/checkpoint tests pass in 3.13 seconds.
+Production and analysis Ruff checks pass; MkDocs builds with the unchanged old
+Sprint 090 link warning. The result archive index binds 24 files; its own checksum
+is intentionally not self-referential.
+
+Keep the optimization and close this sprint at its planned reflection. Remaining
+launch/synchronization counts do not identify another dominant kernel. Resume
+required 080 recipe coverage next: objective operations plus persisted output
+metadata, then 081 compatible batching and 082 real matched-quality cost. Public
+composition, broad required applications and numerical/state correctness remain
+the foundation goal; no external speed or adoption claim is established here.
