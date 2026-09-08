@@ -1,0 +1,276 @@
+{
+  "schema": "openboost-v1-development-extensions-v1",
+  "passed": true,
+  "claim": "repository-authored D1/D2/D3/D4 and D5 scheduling development checks only",
+  "commit": "2871f0fd716a5dd57f96f7b968c8b6fc7b44c300",
+  "dirty": true,
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "python": "3.12.12",
+  "machine": "x86_64",
+  "cpu_count": 16,
+  "device": "cpu",
+  "threads": 1,
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--wheel",
+        "--offline",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost"
+    },
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--wheel",
+        "--offline",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost/examples/v1_extensions/cohort_splits"
+    },
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--wheel",
+        "--offline",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost/examples/v1_extensions/penalized_leaves"
+    },
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--wheel",
+        "--offline",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost/examples/v1_extensions/ordered_updates"
+    },
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--wheel",
+        "--offline",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost/examples/v1_extensions/expectile"
+    },
+    {
+      "argv": [
+        "uv",
+        "venv",
+        "--python",
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/env"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh"
+    },
+    {
+      "argv": [
+        "uv",
+        "pip",
+        "install",
+        "--offline",
+        "--python",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/env/bin/python",
+        "numpy==2.3.5",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels/ob_cohort_splits-0.1.0-py3-none-any.whl",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels/ob_expectile-0.1.0-py3-none-any.whl",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels/ob_ordered_updates-0.1.0-py3-none-any.whl",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels/ob_penalized_leaves-0.1.0-py3-none-any.whl",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/wheels/openboost-1.0.0.dev0-py3-none-any.whl"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/env/bin/python",
+        "-I",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/checks.py",
+        "/private/tmp/openboost-v1-sprint065"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh"
+    },
+    {
+      "argv": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "-m",
+        "examples.v1_extensions.ordered_oracle",
+        "/private/tmp/openboost-v1-sprint065/ordered-expected.json"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/env/bin/python",
+        "-I",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/ordered_checks.py",
+        "/private/tmp/openboost-v1-sprint065"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/env/bin/python",
+        "-I",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/scheduler_checks.py",
+        "/private/tmp/openboost-v1-sprint065"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh"
+    },
+    {
+      "argv": [
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "-m",
+        "examples.v1_extensions.expectile_oracle",
+        "/private/tmp/openboost-v1-sprint065/expectile-expected.json"
+      ],
+      "cwd": "/Users/jiaruixu/work_space/openboost"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/env/bin/python",
+        "-I",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/expectile_checks.py",
+        "/private/tmp/openboost-v1-sprint065"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/env/bin/python",
+        "-I",
+        "-c",
+        "import json,importlib.metadata as m; print(json.dumps({n:m.version(n) for n in ['openboost','numpy','ob-cohort-splits','ob-penalized-leaves','ob-ordered-updates','ob-expectile']}))"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh"
+    },
+    {
+      "argv": [
+        "uv",
+        "pip",
+        "uninstall",
+        "--python",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/env/bin/python",
+        "ob-cohort-splits",
+        "ob-penalized-leaves",
+        "ob-ordered-updates",
+        "ob-expectile"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/env/bin/python",
+        "-I",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh/core_inference.py",
+        "/private/tmp/openboost-v1-sprint065"
+      ],
+      "cwd": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-v1-extensions-4skm4rlh"
+    }
+  ],
+  "sources": {
+    "examples/v1_extensions/checks.py": "47556dd3e9b5681d1bddb0ae8e086748fe273ddf39e25ab35b5e6a27d34e985b",
+    "examples/v1_extensions/cohort_splits/pyproject.toml": "d29f65c7783437a6220ec2dcfc6c4497792e804226c2b8f55d33f25560267245",
+    "examples/v1_extensions/cohort_splits/src/ob_cohort_splits/__init__.py": "013730f77db77255d3be58ce16fe4883e55e4dcea80ac757a681fa5444e82178",
+    "examples/v1_extensions/core_inference.py": "dde6ff117d719e711faa4c69a132294906615b6797c277d37841189a9cc17080",
+    "examples/v1_extensions/custom_stopping.py": "7e319a54d2398786a75b00f7c8e38076d7f2c426424764c66b5b81bf02a8aa51",
+    "examples/v1_extensions/expectile/pyproject.toml": "792c06b65fd6426d859c8ca85d5383266e84512798ae04935890fb4b3c004355",
+    "examples/v1_extensions/expectile/src/ob_expectile/__init__.py": "29b4a91bc5b9c17618be0c8373f6a7cb61033ca7fda3bf2bc987ecfa123865f1",
+    "examples/v1_extensions/expectile_checks.py": "91e92d26036009221aa30dffb6c3e4f0973d2384a749397fe6ff8966c752f40b",
+    "examples/v1_extensions/expectile_oracle.py": "d759d43c888fd5233c04a3335cac917ae663aee2f81f6ed0126ed4acdda25006",
+    "examples/v1_extensions/ordered_checks.py": "f431ffcfa1f578ce1ca1d9dece98efcc3ca239d881ac62ff257b53c7e6e265f9",
+    "examples/v1_extensions/ordered_oracle.py": "f225d630f3ec84645557b1ccc99839864393a1b7c1032ce55f346d2ff2641fe1",
+    "examples/v1_extensions/ordered_updates/pyproject.toml": "6e3558622d940f91f6454483b962957d218001575dcce5e46172be7769c2c28e",
+    "examples/v1_extensions/ordered_updates/src/ob_ordered_updates/__init__.py": "4b71fcfba6ccb207f98f10ed765fe0eaa6f8097e678972efd831927ddc8fdcf2",
+    "examples/v1_extensions/penalized_leaves/pyproject.toml": "e00f1e32176ca2f5295e233c2421c39f729babfea0d283228896b53fd914e4fe",
+    "examples/v1_extensions/penalized_leaves/src/ob_penalized_leaves/__init__.py": "54208a6c52fe2acacc539f25428f31e28303a286c50dd5892b403c08e1fa0be2",
+    "examples/v1_extensions/scheduler_checks.py": "364e01fe6a0ef5c53b5ed6bc25f31d8ebb6af9663878509b4950ba7065de4f6f",
+    "examples/v1_extensions/verify.py": "b5ec7cec514b2c90a8f69e7221a0c953fc3f1a1ac574f339e99d81c2e689158c"
+  },
+  "reference_sources": {
+    "tests/v1/reference/__init__.py": "a6b57448d0bd41863e7d88c7f79a0429652b399ffa8a45478b948cd38f7c57c7",
+    "tests/v1/reference/author.py": "155d6b2a02baaed5357a1032227e263a6c53d5ee59e6cd6c700f24b13d487dac",
+    "tests/v1/reference/classification.py": "f3a9cfd5610cef1e2b05cf8e4b2eaf0b77eee5ee12d57d8bdf1c0195613900ad",
+    "tests/v1/reference/coupled.py": "691c9bd8dacc645d824d7c75bd909590095b07844b923a6929ac79bb8f7e5a8b",
+    "tests/v1/reference/data.py": "10e4380b35fa156cc6a1c025bca172733289c032b6c4c06421e11e9d430be072",
+    "tests/v1/reference/integration.py": "62ba6d983b5b457690272d4e28e5b179f6732e0a78ab9faa3ea176fa9119d27e",
+    "tests/v1/reference/mixed.py": "70dfce643f1b4b6e8d6014c642efbae0d10d32b7269706867af2c590ae84641e",
+    "tests/v1/reference/positive.py": "d55c40f5dfd96aa58e4ccdb02cb9f7691352e82966bccb4e13d79e278c6ba190",
+    "tests/v1/reference/quantile.py": "6e05e309c06494cde68d4c11496b7d7aad7f0c4958e0688562fc79451855079a",
+    "tests/v1/reference/ranking.py": "a2d23b4ba1595b8aac90cdc32b0e41fa90fc42e11a999019d53405eb62199a0c",
+    "tests/v1/reference/runs.py": "010c43f3752bd22d4959ec89ea40de8f7705ec116dfb53ccae7a3e85c3c93c20",
+    "tests/v1/reference/scalar.py": "5d78f361abb2bdad2532e322f2b2138ee7c5bd6fed55d6106a63ba707cadb6b1",
+    "tests/v1/reference/survival.py": "1b4d6704edc2b58c2ddb39b6e4f00de9d205c54250c2a95a8a0458cdab01f46a",
+    "tests/v1/reference/tree.py": "d8afa1a3ea9447f2fa420317e972e5b2e42540888ce42106d69ccd61aae21874",
+    "tests/v1/reference/vector.py": "1294d8c452df385c0c31f15c9dd57e11c09ae17bef62d0fa8f5754c4e7efe12f"
+  },
+  "core_sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "dcd61888233544ee2a94ea5d6046277bcf918b01b3b333ae7945714b3cb30ef5",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581"
+  },
+  "wheels": {
+    "ob_cohort_splits-0.1.0-py3-none-any.whl": "2e9ebb56cd551f6ebeb150e866c5107f508d62069c45841ffdf0e51c6305141b",
+    "ob_expectile-0.1.0-py3-none-any.whl": "9b8dd342c496e013c66597107cd1de0fa557d9cd665f5bd3c48e00f81c7dd43f",
+    "ob_ordered_updates-0.1.0-py3-none-any.whl": "9a058e89931a5c820350f6b34ccc541c0be86e0becc06d1c14a7b1f943b6c310",
+    "ob_penalized_leaves-0.1.0-py3-none-any.whl": "e7723fc496bcaf908b52f6ed11483833bbdb1f51da7c5e02eead10d27ed90236",
+    "openboost-1.0.0.dev0-py3-none-any.whl": "557591426602a8e94b25237b6432b1312b17c5ebe13a891b94f9cf3f06b2d956"
+  },
+  "versions": {
+    "openboost": "1.0.0.dev0",
+    "numpy": "2.3.5",
+    "ob-cohort-splits": "0.1.0",
+    "ob-penalized-leaves": "0.1.0",
+    "ob-ordered-updates": "0.1.0",
+    "ob-expectile": "0.1.0"
+  },
+  "custom_policy_source_removed": true,
+  "plugin_free_inference": true,
+  "artifacts": {
+    "checks.json": "184006082086b9b5593ea7a7e18c9fdbd34ecae7beb52fa72ac64b883ffd045c",
+    "d2.json": "facc6da0ae50d74322f4552cf70a11c749f480a7dfb7d102579cec825e88e657",
+    "d3.json": "f701c628ebbf191056b72bb2a1d3b92d33385189423fa53bc609b33107f803f2",
+    "expectile-checks.json": "b7f106e38303f08cf254018cedc065ed37530dc1eed1d810716309289ab8693b",
+    "expectile-expected.json": "2139e426ce228cdd3916889e46226345429a6491dfb3da092836070fda9ab07e",
+    "expectile-model.json": "b729b8297043234f77a1284cdb71c1610407472a5356a3ded499ace5ca73c669",
+    "ordered-0.json": "325017af3b8f819664eff01df2ac49cfeadc7b042bba416cdd378c3b30016a04",
+    "ordered-1.json": "03cc3d28f8adc851a28f9596af22376026d8b81b3cce5a126f3ed1c2ea74576e",
+    "ordered-2.json": "d8b26886a41ee3b194c6983fc2f8b905b741133ef228ffa28fe8f604fd6bba2f",
+    "ordered-3.json": "35a29588374bfb82a559c42c3a91b67b8fed43a1778610c6078b1c1eda2103d9",
+    "ordered-4.json": "7ca0acb133c1c034f67f116b58cd4c836ae8c8e67ba31d9656d15c01d90c9de9",
+    "ordered-5.json": "22067f5ed6ead94e721bf03d652edbe9b3faa3c8c62f08ce85b8f57d12079ac2",
+    "ordered-checks.json": "998b3a0e2df12fa149c26099753687735d1bcbd7060db8f426c4c87cde9659d0",
+    "ordered-expected.json": "68f858fd4edcc561b16c492b146f3f28cc079212797cff6334493893cd499926",
+    "scheduler-checks.json": "52fcfc32bfc8ceb44ac133ff5cda2f10d02fae076a3cde4395b8f9d59cf32f2e",
+    "threshold-inference.json": "1a4819b49e87deda305dda023e7ab0b23aae6f9225174f426014cc73240cac38",
+    "threshold-model.json": "83869b18c97fbc4e06986a2a0153ef85c45fe6d097c04a94fe495055b4a253c5"
+  }
+}

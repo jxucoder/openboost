@@ -1,0 +1,194 @@
+{
+  "timing_scope": "Uninstrumented correctness fixtures; compilation may be warm from earlier tests.",
+  "claim": "No speed ratio, real-data quality, or author/adoption claim.",
+  "measurements": [
+    {
+      "case": "weighted",
+      "repeat": 0,
+      "fit_including_fixture_context_preparation_training_export_seconds": 0.23305896299999063,
+      "cpu_prediction_seconds": 0.0004219639999973879,
+      "fit_metrics": {
+        "upload_bytes": 696,
+        "export_bytes": 2504,
+        "device_copy_bytes": 2792,
+        "synchronizations": 772,
+        "live_bytes": 968,
+        "peak_live_bytes": 1752,
+        "peak_pool_bytes": 22528,
+        "kernel_launches": 479,
+        "kernel_dispatch_seconds": 0.13959843899996827,
+        "validation_export_bytes": 1760,
+        "decision_export_bytes": 72,
+        "metric_export_bytes": 112,
+        "comparison_calls": 15,
+        "comparison_export_bytes": 480
+      },
+      "final_metrics": {
+        "upload_bytes": 696,
+        "export_bytes": 2568,
+        "device_copy_bytes": 2856,
+        "synchronizations": 775,
+        "live_bytes": 0,
+        "peak_live_bytes": 1752,
+        "peak_pool_bytes": 22528,
+        "kernel_launches": 479,
+        "kernel_dispatch_seconds": 0.13959843899996827,
+        "validation_export_bytes": 1760,
+        "decision_export_bytes": 72,
+        "metric_export_bytes": 112,
+        "comparison_calls": 15,
+        "comparison_export_bytes": 480
+      },
+      "model_identity": "b4d51e92856bf98cc98032c93a5fa09f066b7ae919b2eec71ee7dfbc3475664b",
+      "validation_nll_crps": [
+        1.9808267946194953,
+        1.1308271755169135
+      ],
+      "reference_nll_crps": [
+        1.9808267707342033,
+        1.1308271660757607
+      ]
+    },
+    {
+      "case": "weighted",
+      "repeat": 1,
+      "fit_including_fixture_context_preparation_training_export_seconds": 0.22571579099999894,
+      "cpu_prediction_seconds": 0.0004416600000070048,
+      "fit_metrics": {
+        "upload_bytes": 696,
+        "export_bytes": 2504,
+        "device_copy_bytes": 2792,
+        "synchronizations": 772,
+        "live_bytes": 968,
+        "peak_live_bytes": 1752,
+        "peak_pool_bytes": 22528,
+        "kernel_launches": 479,
+        "kernel_dispatch_seconds": 0.13249344400048813,
+        "validation_export_bytes": 1760,
+        "decision_export_bytes": 72,
+        "metric_export_bytes": 112,
+        "comparison_calls": 15,
+        "comparison_export_bytes": 480
+      },
+      "final_metrics": {
+        "upload_bytes": 696,
+        "export_bytes": 2568,
+        "device_copy_bytes": 2856,
+        "synchronizations": 775,
+        "live_bytes": 0,
+        "peak_live_bytes": 1752,
+        "peak_pool_bytes": 22528,
+        "kernel_launches": 479,
+        "kernel_dispatch_seconds": 0.13249344400048813,
+        "validation_export_bytes": 1760,
+        "decision_export_bytes": 72,
+        "metric_export_bytes": 112,
+        "comparison_calls": 15,
+        "comparison_export_bytes": 480
+      },
+      "model_identity": "b4d51e92856bf98cc98032c93a5fa09f066b7ae919b2eec71ee7dfbc3475664b",
+      "validation_nll_crps": [
+        1.9808267946194953,
+        1.1308271755169135
+      ],
+      "reference_nll_crps": [
+        1.9808267707342033,
+        1.1308271660757607
+      ]
+    },
+    {
+      "case": "d2",
+      "repeat": 0,
+      "fit_including_fixture_context_preparation_training_export_seconds": 0.3501678899999945,
+      "cpu_prediction_seconds": 0.0003958780000061779,
+      "fit_metrics": {
+        "upload_bytes": 660,
+        "export_bytes": 3416,
+        "device_copy_bytes": 2328,
+        "synchronizations": 1002,
+        "live_bytes": 884,
+        "peak_live_bytes": 2162,
+        "peak_pool_bytes": 27136,
+        "kernel_launches": 743,
+        "kernel_dispatch_seconds": 0.216358853000429,
+        "validation_export_bytes": 2624,
+        "decision_export_bytes": 120,
+        "metric_export_bytes": 112,
+        "comparison_calls": 15,
+        "comparison_export_bytes": 480
+      },
+      "final_metrics": {
+        "upload_bytes": 660,
+        "export_bytes": 3464,
+        "device_copy_bytes": 2376,
+        "synchronizations": 1007,
+        "live_bytes": 0,
+        "peak_live_bytes": 2162,
+        "peak_pool_bytes": 27136,
+        "kernel_launches": 743,
+        "kernel_dispatch_seconds": 0.216358853000429,
+        "validation_export_bytes": 2624,
+        "decision_export_bytes": 120,
+        "metric_export_bytes": 112,
+        "comparison_calls": 15,
+        "comparison_export_bytes": 480
+      },
+      "model_identity": "c9291c2bf118d59ac106fe472cb701dc34cfd32449a2d8c29eead0f6a1271929",
+      "validation_nll_crps": [
+        2.2627587161723492,
+        1.3471267710575554
+      ],
+      "reference_nll_crps": [
+        2.2627587212427103,
+        1.3471267740789474
+      ]
+    },
+    {
+      "case": "d2",
+      "repeat": 1,
+      "fit_including_fixture_context_preparation_training_export_seconds": 0.34840077199999087,
+      "cpu_prediction_seconds": 0.0004525980000096297,
+      "fit_metrics": {
+        "upload_bytes": 660,
+        "export_bytes": 3416,
+        "device_copy_bytes": 2328,
+        "synchronizations": 1002,
+        "live_bytes": 884,
+        "peak_live_bytes": 2162,
+        "peak_pool_bytes": 27136,
+        "kernel_launches": 743,
+        "kernel_dispatch_seconds": 0.2137630259997536,
+        "validation_export_bytes": 2624,
+        "decision_export_bytes": 120,
+        "metric_export_bytes": 112,
+        "comparison_calls": 15,
+        "comparison_export_bytes": 480
+      },
+      "final_metrics": {
+        "upload_bytes": 660,
+        "export_bytes": 3464,
+        "device_copy_bytes": 2376,
+        "synchronizations": 1007,
+        "live_bytes": 0,
+        "peak_live_bytes": 2162,
+        "peak_pool_bytes": 27136,
+        "kernel_launches": 743,
+        "kernel_dispatch_seconds": 0.2137630259997536,
+        "validation_export_bytes": 2624,
+        "decision_export_bytes": 120,
+        "metric_export_bytes": 112,
+        "comparison_calls": 15,
+        "comparison_export_bytes": 480
+      },
+      "model_identity": "c9291c2bf118d59ac106fe472cb701dc34cfd32449a2d8c29eead0f6a1271929",
+      "validation_nll_crps": [
+        2.2627587161723492,
+        1.3471267710575554
+      ],
+      "reference_nll_crps": [
+        2.2627587212427103,
+        1.3471267740789474
+      ]
+    }
+  ]
+}

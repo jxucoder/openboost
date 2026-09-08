@@ -1,0 +1,7408 @@
+{
+  "plan": {
+    "schema": "openboost-a6-cpu-search-plan-v1",
+    "scope": "A6 CPU configuration search only; not complete R/C/A/E coverage or execution evidence",
+    "search_design_sha256": "90493fcced6fb5bdb262158d172b4175e35c2288b364005f1ae4e64f3e0fe025",
+    "methods": {
+      "openboost-shared": "shared vector topology",
+      "openboost-independent": "independent target models",
+      "xgboost": "shared multi_output_tree",
+      "lightgbm": "independent target models",
+      "catboost": "shared MultiRMSE"
+    },
+    "jobs": [
+      {
+        "id": "openboost-shared:0:00",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:01",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:02",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:03",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:04",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:05",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:06",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:07",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:08",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:09",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:10",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:11",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:12",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:13",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:14",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:0:15",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:00",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:01",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:02",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:03",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:04",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:05",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:06",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:07",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:08",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:09",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:10",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:11",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:12",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:13",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:14",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:1:15",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:00",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:01",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:02",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:03",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:04",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:05",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:06",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:07",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:08",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:09",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:10",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:11",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:12",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:13",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:14",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:2:15",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:00",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:01",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:02",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:03",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:04",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:05",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:06",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:07",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:08",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:09",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:10",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:11",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:12",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:13",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:14",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:3:15",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:00",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:01",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:02",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:03",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:04",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:05",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:06",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:07",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:08",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:09",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:10",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:11",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:12",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:13",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:14",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-shared:4:15",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "shared",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:00",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:01",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:02",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:03",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:04",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:05",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:06",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:07",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:08",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:09",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:10",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:11",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:12",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:13",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:14",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:0:15",
+        "fold": 0,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:00",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:01",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:02",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:03",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:04",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:05",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:06",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:07",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:08",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:09",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:10",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:11",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:12",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:13",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:14",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:1:15",
+        "fold": 1,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:00",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:01",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:02",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:03",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:04",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:05",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:06",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:07",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:08",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:09",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:10",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:11",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:12",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:13",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:14",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:2:15",
+        "fold": 2,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:00",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:01",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:02",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:03",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:04",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:05",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:06",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:07",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:08",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:09",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:10",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:11",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:12",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:13",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:14",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:3:15",
+        "fold": 3,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:00",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:01",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:02",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:03",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:04",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:05",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:06",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:07",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:08",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:09",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:10",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:11",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:12",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:13",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:14",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "openboost-independent:4:15",
+        "fold": 4,
+        "application": "A6",
+        "library": "openboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "mode": "independent",
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:00",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:01",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:02",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:03",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:04",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:05",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:06",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:07",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:08",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:09",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:10",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:11",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:12",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:13",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:14",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:0:15",
+        "fold": 0,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:00",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:01",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:02",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:03",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:04",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:05",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:06",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:07",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:08",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:09",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:10",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:11",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:12",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:13",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:14",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:1:15",
+        "fold": 1,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:00",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:01",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:02",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:03",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:04",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:05",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:06",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:07",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:08",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:09",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:10",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:11",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:12",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:13",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:14",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:2:15",
+        "fold": 2,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:00",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:01",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:02",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:03",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:04",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:05",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:06",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:07",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:08",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:09",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:10",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:11",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:12",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:13",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:14",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:3:15",
+        "fold": 3,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:00",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:01",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:02",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:03",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:04",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:05",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:06",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:07",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.03,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:08",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:09",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:10",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:11",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 4,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:12",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:13",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 0.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:14",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "xgboost:4:15",
+        "fold": 4,
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "learning_rate": 0.1,
+          "max_depth": 6,
+          "reg_lambda": 10.0,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:00",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:01",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:02",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:03",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:04",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:05",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:06",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:07",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:08",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:09",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:10",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:11",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:12",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:13",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:14",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:0:15",
+        "fold": 0,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:00",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:01",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:02",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:03",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:04",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:05",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:06",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:07",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:08",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:09",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:10",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:11",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:12",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:13",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:14",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:1:15",
+        "fold": 1,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:00",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:01",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:02",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:03",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:04",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:05",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:06",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:07",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:08",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:09",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:10",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:11",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:12",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:13",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:14",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:2:15",
+        "fold": 2,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:00",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:01",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:02",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:03",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:04",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:05",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:06",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:07",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:08",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:09",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:10",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:11",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:12",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:13",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:14",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:3:15",
+        "fold": 3,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:00",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:01",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:02",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:03",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:04",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:05",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:06",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:07",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.03,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:08",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:09",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:10",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:11",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 15,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:12",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:13",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 0.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:14",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "lightgbm:4:15",
+        "fold": 4,
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "lambda_l2": 10.0,
+          "learning_rate": 0.1,
+          "num_leaves": 31,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:00",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:01",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:02",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:03",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:04",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:05",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:06",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:07",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:08",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:09",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:10",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:11",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:12",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:13",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:14",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:0:15",
+        "fold": 0,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 0,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:00",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:01",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:02",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:03",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:04",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:05",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:06",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:07",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:08",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:09",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:10",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:11",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:12",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:13",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:14",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:1:15",
+        "fold": 1,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 1,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:00",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:01",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:02",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:03",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:04",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:05",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:06",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:07",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:08",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:09",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:10",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:11",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:12",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:13",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:14",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:2:15",
+        "fold": 2,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 2,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:00",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:01",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:02",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:03",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:04",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:05",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:06",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:07",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:08",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:09",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:10",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:11",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:12",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:13",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:14",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:3:15",
+        "fold": 3,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 3,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:00",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:01",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:02",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:03",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:04",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:05",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:06",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:07",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.03,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:08",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:09",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:10",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:11",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 4,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:12",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:13",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 0.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:14",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 300,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      },
+      {
+        "id": "catboost:4:15",
+        "fold": 4,
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 4,
+        "early_stopping_rounds": 50,
+        "config": {
+          "depth": 6,
+          "l2_leaf_reg": 10.0,
+          "learning_rate": 0.1,
+          "rounds": 1000,
+          "seed_from_fold": true,
+          "bins": 255
+        }
+      }
+    ],
+    "job_count": 400,
+    "trials_per_fold": 80,
+    "maximum_sequential_worker_seconds": 720000,
+    "maximum_reserved_cpu_seconds": 1440000,
+    "policy": {
+      "timeout_s": 1800,
+      "address_limit_bytes": 8589934592,
+      "requested_container_memory_mib": 8192,
+      "reserved_cpus": 2,
+      "worker_threads": 1,
+      "retries": 0,
+      "retention": "summary"
+    },
+    "dispatch_ready": false,
+    "blockers": [
+      "Verify explicit bin translation on installed full-budget comparator workers",
+      "Verify comparator installed fit, stopping, saved-model replay and exact resource policy",
+      "Bind all five verified train/validation packets and evaluator-owned selection protocols",
+      "Qualify deeper/1000-round resource cases, retaining failures without retries or budget shrink",
+      "Bind the complete protocol-derived R/C/A/E ledger before declaring full search readiness"
+    ],
+    "accounting_scope": "Worker timeout ceilings only; excludes image/startup, replay, selection, M=1/8/32 and GPU",
+    "outcome": "not_run"
+  },
+  "input_files": {
+    "search-design.json": "fef3d7c8458c67508e48497a2530a58ccf9660931b116989faa8af9c7b2ad0db",
+    "datasets/parkinsons.json": "334cbda3dbd18849914a0069b6203035280cf5a716838b098a93856c4a2140f3",
+    "datasets/preprocessing.json": "d968104b972ea9f3575db9e2fbf9cd81f67a1deb5f70c65f93724889f159f4a9",
+    "baseline_worker.py": "14d7143d7045e394651f2e39520af134027ed95608805af4d4a6f8b446849133",
+    "requirements-cpu.txt": "9a7e877f05df4d8af50ae7fcb634a8753d2a4ac99f3d47d8f8b7919d5ea3595e",
+    "a6_search_plan.py": "db3f11623669878c15bbc55c710bfaab81eb17f9fc28829d4242173af9e917b5",
+    "a6_preflight_plan.py": "e7a965ee1080a96c6391acd5afe82a309fd874e22f773718de8ae82bad19674d"
+  }
+}

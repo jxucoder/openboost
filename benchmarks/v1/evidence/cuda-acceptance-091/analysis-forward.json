@@ -1,0 +1,176 @@
+{
+  "schema": "openboost-normal-acceptance-analysis-v1",
+  "device_execution": false,
+  "update": "forward",
+  "observed_conformance": {
+    "status": "failure",
+    "assertion": "assert tuple(coefficients) == tuple(a[0] for a in ref[\"attempts\"])",
+    "line": 130,
+    "kind": "known_coefficient_mismatch"
+  },
+  "steps": [
+    {
+      "round": 0,
+      "channels": [
+        0
+      ],
+      "original_float64_trajectory_attempts": [
+        [
+          8.0,
+          2.5053108948702474,
+          "rejected"
+        ],
+        [
+          4.0,
+          2.5053108948702474,
+          "rejected"
+        ],
+        [
+          2.0,
+          2.5053108948702474,
+          "rejected"
+        ],
+        [
+          1.0,
+          2.5053108948702474,
+          "rejected"
+        ],
+        [
+          0.5,
+          2.5053108948702474,
+          "rejected"
+        ],
+        [
+          0.25,
+          2.5053108948702474,
+          "rejected"
+        ]
+      ],
+      "original_float64_trajectory_accepted": false,
+      "gradient_max_abs_error": 9.728373306927551e-08,
+      "fisher_max_abs_error": 2.7834130278403535e-09,
+      "ordinary_direction_max_abs_error": 0.0,
+      "ideal_weighted_gradient_sum": 9.204683543151404e-09,
+      "stored_field_total": [
+        0.0,
+        6.0
+      ],
+      "measured_total_minus_stored_field_total": [
+        4.470348358154297e-08,
+        0.0
+      ],
+      "leaf_from_measured_total": -6.386211940220424e-09,
+      "measured_leaf": -6.38621200366174e-09,
+      "trials": [
+        {
+          "coefficient": 8.0,
+          "accepted": false,
+          "comparison": {
+            "training": {
+              "raw_changed": true,
+              "measured_full_loss_difference": 0.0,
+              "original_row_float64_before": 2.505310894870248,
+              "original_row_float64_after": 2.505310894870248,
+              "original_row_float64_difference": 0.0,
+              "measured_before_minus_original_row": 4.440892098500626e-16,
+              "measured_after_minus_original_row": 4.440892098500626e-16,
+              "high_precision": {
+                "decimal60": "1.150597798185515591902901007727567100356751050E-16",
+                "decimal100": "1.1505977981855155919029010077275671003567510537358656291823103204260063077076454160680E-16",
+                "signs": [
+                  1,
+                  1
+                ],
+                "estimates_agree": true,
+                "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+              }
+            },
+            "validation": {
+              "raw_changed": true,
+              "measured_full_loss_difference": -9.523937194444443e-11,
+              "original_row_float64_before": 2.35297563973723,
+              "original_row_float64_after": 2.3529756396419907,
+              "original_row_float64_difference": -9.523937194444443e-11,
+              "measured_before_minus_original_row": 0.0,
+              "measured_after_minus_original_row": 0.0,
+              "high_precision": {
+                "decimal60": "-9.52392390461890083214018175238681952245182999991697666666667E-11",
+                "decimal100": "-9.5239239046189008321401817523868195224518299999169298351454621539943675271348823714551970170E-11",
+                "signs": [
+                  -1,
+                  -1
+                ],
+                "estimates_agree": true,
+                "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+              }
+            }
+          }
+        },
+        {
+          "coefficient": 4.0,
+          "accepted": true,
+          "comparison": {
+            "training": {
+              "raw_changed": true,
+              "measured_full_loss_difference": -8.881784197001252e-16,
+              "original_row_float64_before": 2.505310894870248,
+              "original_row_float64_after": 2.5053108948702474,
+              "original_row_float64_difference": -4.440892098500626e-16,
+              "measured_before_minus_original_row": 4.440892098500626e-16,
+              "measured_after_minus_original_row": 0.0,
+              "high_precision": {
+                "decimal60": "5.90486622292425173535707418113599115929643383333333333333333E-18",
+                "decimal100": "5.904866222924251735357074181135991159296433773032615137532009664028333200660077129083333333333333333E-18",
+                "signs": [
+                  1,
+                  1
+                ],
+                "estimates_agree": true,
+                "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+              }
+            },
+            "validation": {
+              "raw_changed": true,
+              "measured_full_loss_difference": -4.7620130061432064e-11,
+              "original_row_float64_before": 2.35297563973723,
+              "original_row_float64_after": 2.3529756396896104,
+              "original_row_float64_difference": -4.7619685972222214e-11,
+              "measured_before_minus_original_row": 0.0,
+              "measured_after_minus_original_row": -4.440892098500626e-16,
+              "high_precision": {
+                "decimal60": "-4.761967167759714869543174788083854054572689215637235E-11",
+                "decimal100": "-4.761967167759714869543174788083854054572689215637163689922755959613555380209012870696075407833333333E-11",
+                "signs": [
+                  -1,
+                  -1
+                ],
+                "estimates_agree": true,
+                "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "limitation": "Offline math on retained observations. Diagnostics do not change acceptance or establish full conformance. Precision agreement is not an interval bound.",
+  "trace_sha256": "9f9c6660a6f3d939dcd2e82f93e8caa849adebc3e4632cdf43978fe394c5314f",
+  "analysis_sources": {
+    "benchmarks/v1/normal_acceptance_trace.py": "e9c8e591bbf43519a261c152244fa3a726e2cc56492247b924a999234e43c2d4",
+    "tests/v1/reference/normal_acceptance.py": "5844a028d9246ee53c07b6893e652028698645443c76c1b691ea50a9a4306d36",
+    "tests/v1/reference/device_normal.py": "0a01506665bab43caae6df5c047c4bd1eb6a230bb525389c2e536eaf4bfd51b8",
+    "tests/v1/reference/device_rounds.py": "73861bf4a0f7071c3f739491823440eb2af0dfb60a912a54642890aa955f829d",
+    "tests/v1/reference/device_splits.py": "b081e720691a083bed7a29ae1079ab3698ffe24e0ef282008f67de4e75ec49a9",
+    "tests/v1/reference/device_histogram.py": "6504357268c63c2a35f32620a8c31aa126dd67f9a282ae76e95b4003d7ed4970"
+  },
+  "environment": {
+    "python": "3.12.12",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit"
+  },
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/normal_acceptance_trace.py",
+    "benchmarks/v1/evidence/cuda-acceptance-091/normal/acceptance/forward.json",
+    "/tmp/openboost-091-forward-analysis.json"
+  ]
+}

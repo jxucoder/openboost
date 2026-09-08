@@ -14,10 +14,12 @@ Fixed-scale AFT supports event/right censoring and persisted survival outputs.
 Multi-output squared recipes support independent/shared topology and target scaling.
 Explicit prepared training data can be shared across independent CPU runs.
 Public StopState separates validation patience from model acceptance in all recipes.
-CUDA execution is not implemented yet.
+Experimental CUDA storage/operations have real T4 evidence. Resident scalar training
+in openboost.device_recipes passes the bounded 212-case T4 correctness matrix.
 """
 
+from .comparison import LossChange
 from .data import ClassSchema, MixedData, NumericData, Problem
 from .runtime import RunContext
 
-__all__ = ("ClassSchema", "MixedData", "NumericData", "Problem", "RunContext")
+__all__ = ("ClassSchema", "LossChange", "MixedData", "NumericData", "Problem", "RunContext")

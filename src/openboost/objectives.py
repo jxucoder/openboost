@@ -125,6 +125,18 @@ class Normal:
     def loss(cls, problem, raw):
         return cls.geometry(problem, raw)[0]
 
+    @classmethod
+    def compare(cls, problem, before, after):
+        """Bound the mean NLL change at stored raw snapshots in problem row order.
+
+        Absolute loss and geometry remain separate reporting/learning operations.
+        Unsupported comparison ranges return unresolved; invalid Normal rows raise.
+        """
+        from ._normal_comparison import compare
+
+        cls.validate(problem)
+        return compare(problem, before, after)
+
 
 def diagonal_direction(gradient, metric, *, mode="natural", damping=0.0):
     """Unweighted ordinary/Fisher-diagonal direction, before regression weights."""

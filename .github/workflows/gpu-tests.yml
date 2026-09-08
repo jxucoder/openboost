@@ -1,4 +1,4 @@
-name: v1 GPU Verification Pending
+name: v1 GPU Validation Requires an Approved Packet
 
 on:
   workflow_dispatch:
@@ -12,5 +12,7 @@ jobs:
     steps:
       - name: Explain current v1 boundary
         run: |
-          echo "No v1 CUDA implementation exists. Restore real-device verification at F3; reference tests are not GPU validation."
+          echo "Experimental CUDA components and recipes have committed real-device evidence."
+          echo "This hosted CPU job performs no GPU validation. Use a frozen packet and its separate hardware/upload allowance."
+          echo "See v1-sprints/README.md for the current evidence and execution boundary."
           exit 1

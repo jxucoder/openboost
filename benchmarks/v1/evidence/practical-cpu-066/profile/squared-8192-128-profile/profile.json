@@ -1,0 +1,908 @@
+{
+  "status": "deadline",
+  "soft_limit_s": 60,
+  "wall_s": 60.00726083,
+  "scope": "instrumented diagnostic; cumulative times overlap; not a fit pass or speed comparison",
+  "functions": [
+    {
+      "file": "/opt/cpu_profile_worker.py",
+      "line": 128,
+      "function": "fit",
+      "primitive_calls": 1,
+      "calls": 1,
+      "self_s": 9.924e-06,
+      "cumulative_s": 60.001176422
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/recipes.py",
+      "line": 68,
+      "function": "squared",
+      "primitive_calls": 1,
+      "calls": 1,
+      "self_s": 0.00314583,
+      "cumulative_s": 60.001166498
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/recipes.py",
+      "line": 188,
+      "function": "_trials",
+      "primitive_calls": 85,
+      "calls": 85,
+      "self_s": 0.002219955,
+      "cumulative_s": 48.422972435000005
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/artifacts.py",
+      "line": 101,
+      "function": "predict",
+      "primitive_calls": 511,
+      "calls": 511,
+      "self_s": 1.1176725600000001,
+      "cumulative_s": 46.547521345
+    },
+    {
+      "file": "/opt/cpu_profile_worker.py",
+      "line": 124,
+      "function": "counted",
+      "primitive_calls": 21650,
+      "calls": 21650,
+      "self_s": 0.195754172,
+      "cumulative_s": 45.392554081
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 93,
+      "function": "predict",
+      "primitive_calls": 21650,
+      "calls": 21650,
+      "self_s": 4.453490665,
+      "cumulative_s": 45.177268942000005
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/binning.py",
+      "line": 102,
+      "function": "transform",
+      "primitive_calls": 21651,
+      "calls": 21651,
+      "self_s": 0.035721814000000005,
+      "cumulative_s": 40.476111453
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/binning.py",
+      "line": 114,
+      "function": "__post_init__",
+      "primitive_calls": 21651,
+      "calls": 21651,
+      "self_s": 3.698453068,
+      "cumulative_s": 40.340983278
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/fromnumeric.py",
+      "line": 1446,
+      "function": "searchsorted",
+      "primitive_calls": 173202,
+      "calls": 173202,
+      "self_s": 0.18009918200000002,
+      "cumulative_s": 30.711896546000002
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/fromnumeric.py",
+      "line": 51,
+      "function": "_wrapfunc",
+      "primitive_calls": 179322,
+      "calls": 179322,
+      "self_s": 0.167587754,
+      "cumulative_s": 30.560178669000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'searchsorted' of 'numpy.ndarray' objects>",
+      "primitive_calls": 173202,
+      "calls": 173202,
+      "self_s": 30.312200358000002,
+      "cumulative_s": 30.312200358000002
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/runtime.py",
+      "line": 153,
+      "function": "resolve",
+      "primitive_calls": 84,
+      "calls": 84,
+      "self_s": 0.001103712,
+      "cumulative_s": 18.754705856
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/runtime.py",
+      "line": 52,
+      "function": "__post_init__",
+      "primitive_calls": 86,
+      "calls": 86,
+      "self_s": 0.0024616990000000004,
+      "cumulative_s": 16.644960109
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/runtime.py",
+      "line": 132,
+      "function": "propose_terms",
+      "primitive_calls": 85,
+      "calls": 85,
+      "self_s": 0.001161399,
+      "cumulative_s": 15.921728004
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 265,
+      "function": "depthwise",
+      "primitive_calls": 85,
+      "calls": 85,
+      "self_s": 0.006149655,
+      "cumulative_s": 11.472064571
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 233,
+      "function": "best",
+      "primitive_calls": 595,
+      "calls": 595,
+      "self_s": 0.030333331,
+      "cumulative_s": 10.441630318000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 202,
+      "function": "choose",
+      "primitive_calls": 255,
+      "calls": 255,
+      "self_s": 0.28107186300000003,
+      "cumulative_s": 5.764645514000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/binning.py",
+      "line": 10,
+      "function": "_array",
+      "primitive_calls": 52913,
+      "calls": 52913,
+      "self_s": 0.11773565300000001,
+      "cumulative_s": 4.99726436
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 238,
+      "function": "cached",
+      "primitive_calls": 118344,
+      "calls": 118344,
+      "self_s": 0.167959631,
+      "cumulative_s": 4.705170191000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 230,
+      "function": "options",
+      "primitive_calls": 255,
+      "calls": 255,
+      "self_s": 0.0020905470000000003,
+      "cumulative_s": 4.646593016000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 183,
+      "function": "score",
+      "primitive_calls": 118344,
+      "calls": 118344,
+      "self_s": 0.34688678500000003,
+      "cumulative_s": 4.513499223
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 102,
+      "function": "candidates",
+      "primitive_calls": 255,
+      "calls": 255,
+      "self_s": 1.151687264,
+      "cumulative_s": 4.242393915
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 184,
+      "function": "node",
+      "primitive_calls": 355032,
+      "calls": 355032,
+      "self_s": 0.371189841,
+      "cumulative_s": 3.893497952
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 152,
+      "function": "newton_leaf",
+      "primitive_calls": 355627,
+      "calls": 355627,
+      "self_s": 1.663632307,
+      "cumulative_s": 3.4566149200000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'tobytes' of 'numpy.ndarray' objects>",
+      "primitive_calls": 322625,
+      "calls": 322625,
+      "self_s": 2.552141464,
+      "cumulative_s": 2.552141464
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/data.py",
+      "line": 12,
+      "function": "_owned",
+      "primitive_calls": 269194,
+      "calls": 269194,
+      "self_s": 0.8079667410000001,
+      "cumulative_s": 2.4035092920000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy.asarray>",
+      "primitive_calls": 229095,
+      "calls": 229095,
+      "self_s": 2.3839478880000002,
+      "cumulative_s": 2.3839478880000002
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 146,
+      "function": "_nonnegative",
+      "primitive_calls": 958632,
+      "calls": 958632,
+      "self_s": 1.720747762,
+      "cumulative_s": 2.227743759
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/data.py",
+      "line": 20,
+      "function": "_identity",
+      "primitive_calls": 22420,
+      "calls": 22420,
+      "self_s": 0.17768536000000001,
+      "cumulative_s": 2.01323657
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/artifacts.py",
+      "line": 159,
+      "function": "identity",
+      "primitive_calls": 172,
+      "calls": 172,
+      "self_s": 0.030440212,
+      "cumulative_s": 1.558016521
+    },
+    {
+      "file": "/usr/local/lib/python3.12/json/__init__.py",
+      "line": 183,
+      "function": "dumps",
+      "primitive_calls": 44770,
+      "calls": 44770,
+      "self_s": 0.11450061700000001,
+      "cumulative_s": 1.467138748
+    },
+    {
+      "file": "/usr/local/lib/python3.12/json/encoder.py",
+      "line": 183,
+      "function": "encode",
+      "primitive_calls": 44770,
+      "calls": 44770,
+      "self_s": 0.030226949000000003,
+      "cumulative_s": 1.3397146770000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/json/encoder.py",
+      "line": 205,
+      "function": "iterencode",
+      "primitive_calls": 951,
+      "calls": 951,
+      "self_s": 1.2753667750000002,
+      "cumulative_s": 1.2753667750000002
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 35,
+      "function": "histogram",
+      "primitive_calls": 935,
+      "calls": 935,
+      "self_s": 0.478445473,
+      "cumulative_s": 1.150710193
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'all' of 'numpy.ndarray' objects>",
+      "primitive_calls": 270397,
+      "calls": 270397,
+      "self_s": 0.166233393,
+      "cumulative_s": 0.7925338380000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 164,
+      "function": "feasible",
+      "primitive_calls": 129030,
+      "calls": 129030,
+      "self_s": 0.28933141700000004,
+      "cumulative_s": 0.7774439550000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 246,
+      "function": "split",
+      "primitive_calls": 255,
+      "calls": 255,
+      "self_s": 0.002572977,
+      "cumulative_s": 0.7744335120000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 208,
+      "function": "append",
+      "primitive_calls": 595,
+      "calls": 595,
+      "self_s": 0.006995114,
+      "cumulative_s": 0.736589095
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/lib/_arraysetops_impl.py",
+      "line": 145,
+      "function": "unique",
+      "primitive_calls": 3246,
+      "calls": 3246,
+      "self_s": 0.008711949,
+      "cumulative_s": 0.6770665330000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/lib/_arraysetops_impl.py",
+      "line": 348,
+      "function": "_unique1d",
+      "primitive_calls": 3246,
+      "calls": 3246,
+      "self_s": 0.020070507,
+      "cumulative_s": 0.665226053
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/_methods.py",
+      "line": 66,
+      "function": "_all",
+      "primitive_calls": 270397,
+      "calls": 270397,
+      "self_s": 0.09552229400000001,
+      "cumulative_s": 0.626300445
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'reduce' of 'numpy.ufunc' objects>",
+      "primitive_calls": 285938,
+      "calls": 285938,
+      "self_s": 0.622311394,
+      "cumulative_s": 0.622311394
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy._core._multiarray_umath._unique_hash>",
+      "primitive_calls": 3246,
+      "calls": 3246,
+      "self_s": 0.5703846330000001,
+      "cumulative_s": 0.5703846330000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 12,
+      "function": "_rows",
+      "primitive_calls": 1190,
+      "calls": 1190,
+      "self_s": 0.032716142000000004,
+      "cumulative_s": 0.5566625980000001
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/numeric.py",
+      "line": 1964,
+      "function": "isscalar",
+      "primitive_calls": 958887,
+      "calls": 958887,
+      "self_s": 0.33565927700000003,
+      "cumulative_s": 0.507227812
+    },
+    {
+      "file": "<string>",
+      "line": 2,
+      "function": "__init__",
+      "primitive_calls": 129030,
+      "calls": 129030,
+      "self_s": 0.48910383500000004,
+      "cumulative_s": 0.48910383500000004
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy.frombuffer>",
+      "primitive_calls": 322107,
+      "calls": 322107,
+      "self_s": 0.360446213,
+      "cumulative_s": 0.360446213
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/artifacts.py",
+      "line": 59,
+      "function": "__post_init__",
+      "primitive_calls": 340,
+      "calls": 340,
+      "self_s": 0.167848988,
+      "cumulative_s": 0.253610232
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/runtime.py",
+      "line": 141,
+      "function": "preview",
+      "primitive_calls": 254,
+      "calls": 254,
+      "self_s": 0.001250707,
+      "cumulative_s": 0.24815086700000002
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy.array>",
+      "primitive_calls": 284920,
+      "calls": 284920,
+      "self_s": 0.247766069,
+      "cumulative_s": 0.247766069
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'index' of 'tuple' objects>",
+      "primitive_calls": 1195316,
+      "calls": 1195316,
+      "self_s": 0.245218451,
+      "cumulative_s": 0.245218451
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'reshape' of 'numpy.ndarray' objects>",
+      "primitive_calls": 322710,
+      "calls": 322710,
+      "self_s": 0.240100585,
+      "cumulative_s": 0.240100585
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.isinstance>",
+      "primitive_calls": 1151753,
+      "calls": 1151753,
+      "self_s": 0.229327307,
+      "cumulative_s": 0.23038644000000003
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 167,
+      "function": "__init__",
+      "primitive_calls": 85,
+      "calls": 85,
+      "self_s": 0.000947097,
+      "cumulative_s": 0.228345605
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 218,
+      "function": "partition",
+      "primitive_calls": 255,
+      "calls": 255,
+      "self_s": 0.026536587,
+      "cumulative_s": 0.22210869000000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'update' of '_hashlib.HASH' objects>",
+      "primitive_calls": 89540,
+      "calls": 89540,
+      "self_s": 0.171521412,
+      "cumulative_s": 0.171521412
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/artifacts.py",
+      "line": 135,
+      "function": "record",
+      "primitive_calls": 172,
+      "calls": 172,
+      "self_s": 0.011190559000000001,
+      "cumulative_s": 0.164707711
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'append' of 'list' objects>",
+      "primitive_calls": 536637,
+      "calls": 536637,
+      "self_s": 0.15418499500000002,
+      "cumulative_s": 0.15418499500000002
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 113,
+      "function": "record",
+      "primitive_calls": 7140,
+      "calls": 7140,
+      "self_s": 0.07323600200000001,
+      "cumulative_s": 0.147220233
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.min>",
+      "primitive_calls": 365718,
+      "calls": 365718,
+      "self_s": 0.127835564,
+      "cumulative_s": 0.127835564
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/binning.py",
+      "line": 91,
+      "function": "feature_kinds",
+      "primitive_calls": 21906,
+      "calls": 21906,
+      "self_s": 0.08601407300000001,
+      "cumulative_s": 0.114686941
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy.arange>",
+      "primitive_calls": 21742,
+      "calls": 21742,
+      "self_s": 0.106019608,
+      "cumulative_s": 0.106019608
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.len>",
+      "primitive_calls": 427748,
+      "calls": 427748,
+      "self_s": 0.100469415,
+      "cumulative_s": 0.100469415
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'tolist' of 'numpy.ndarray' objects>",
+      "primitive_calls": 107272,
+      "calls": 107272,
+      "self_s": 0.068819692,
+      "cumulative_s": 0.068819692
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.getattr>",
+      "primitive_calls": 230009,
+      "calls": 230009,
+      "self_s": 0.06860962100000001,
+      "cumulative_s": 0.06860962100000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method _hashlib.openssl_sha256>",
+      "primitive_calls": 22420,
+      "calls": 22420,
+      "self_s": 0.06189014,
+      "cumulative_s": 0.06189014
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/fromnumeric.py",
+      "line": 3052,
+      "function": "max",
+      "primitive_calls": 10965,
+      "calls": 10965,
+      "self_s": 0.011902320000000001,
+      "cumulative_s": 0.059830642
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'sum' of 'numpy.ndarray' objects>",
+      "primitive_calls": 1358,
+      "calls": 1358,
+      "self_s": 0.0020240880000000003,
+      "cumulative_s": 0.057734517000000006
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/objectives.py",
+      "line": 46,
+      "function": "loss",
+      "primitive_calls": 422,
+      "calls": 422,
+      "self_s": 0.017457599,
+      "cumulative_s": 0.057042132
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'sort' of 'numpy.ndarray' objects>",
+      "primitive_calls": 3246,
+      "calls": 3246,
+      "self_s": 0.056878895000000006,
+      "cumulative_s": 0.056878895000000006
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/multiarray.py",
+      "line": 391,
+      "function": "where",
+      "primitive_calls": 245883,
+      "calls": 245883,
+      "self_s": 0.056421325,
+      "cumulative_s": 0.056421325
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/_methods.py",
+      "line": 49,
+      "function": "_sum",
+      "primitive_calls": 1358,
+      "calls": 1358,
+      "self_s": 0.000771657,
+      "cumulative_s": 0.055710429000000006
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'hexdigest' of '_hashlib.HASH' objects>",
+      "primitive_calls": 22420,
+      "calls": 22420,
+      "self_s": 0.051570195000000006,
+      "cumulative_s": 0.051570195000000006
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/lib/_shape_base_impl.py",
+      "line": 628,
+      "function": "column_stack",
+      "primitive_calls": 7565,
+      "calls": 7565,
+      "self_s": 0.037532105,
+      "cumulative_s": 0.051521817000000004
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'pop' of 'list' objects>",
+      "primitive_calls": 152138,
+      "calls": 152138,
+      "self_s": 0.050032428000000004,
+      "cumulative_s": 0.050032428000000004
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/fromnumeric.py",
+      "line": 69,
+      "function": "_wrapreduction",
+      "primitive_calls": 10966,
+      "calls": 10966,
+      "self_s": 0.018735084000000003,
+      "cumulative_s": 0.047939393000000004
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/objectives.py",
+      "line": 42,
+      "function": "fields",
+      "primitive_calls": 85,
+      "calls": 85,
+      "self_s": 0.00049317,
+      "cumulative_s": 0.047735097000000004
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/objectives.py",
+      "line": 36,
+      "function": "gradient",
+      "primitive_calls": 592,
+      "calls": 592,
+      "self_s": 0.009407236000000001,
+      "cumulative_s": 0.044031102
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/stats.py",
+      "line": 69,
+      "function": "newton",
+      "primitive_calls": 85,
+      "calls": 85,
+      "self_s": 0.001759979,
+      "cumulative_s": 0.041710095
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/fromnumeric.py",
+      "line": 1442,
+      "function": "_searchsorted_dispatcher",
+      "primitive_calls": 173202,
+      "calls": 173202,
+      "self_s": 0.036506601,
+      "cumulative_s": 0.036506601
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'encode' of 'str' objects>",
+      "primitive_calls": 44770,
+      "calls": 44770,
+      "self_s": 0.033787051000000005,
+      "cumulative_s": 0.033787051000000005
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/fromnumeric.py",
+      "line": 2879,
+      "function": "cumsum",
+      "primitive_calls": 6120,
+      "calls": 6120,
+      "self_s": 0.005328799,
+      "cumulative_s": 0.033710104000000005
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'items' of 'dict' objects>",
+      "primitive_calls": 132471,
+      "calls": 132471,
+      "self_s": 0.033412474000000005,
+      "cumulative_s": 0.033412474000000005
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/binning.py",
+      "line": 93,
+      "function": "<genexpr>",
+      "primitive_calls": 197154,
+      "calls": 197154,
+      "self_s": 0.028672868,
+      "cumulative_s": 0.028672868
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'extend' of 'list' objects>",
+      "primitive_calls": 65457,
+      "calls": 65457,
+      "self_s": 0.028496888,
+      "cumulative_s": 0.028496888
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy.empty>",
+      "primitive_calls": 21827,
+      "calls": 21827,
+      "self_s": 0.027342309000000002,
+      "cumulative_s": 0.027342309000000002
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/stats.py",
+      "line": 18,
+      "function": "__post_init__",
+      "primitive_calls": 170,
+      "calls": 170,
+      "self_s": 0.001461505,
+      "cumulative_s": 0.026679949
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method _json.encode_basestring_ascii>",
+      "primitive_calls": 43819,
+      "calls": 43819,
+      "self_s": 0.026312433000000003,
+      "cumulative_s": 0.026312433000000003
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/data.py",
+      "line": 72,
+      "function": "feature_kinds",
+      "primitive_calls": 21652,
+      "calls": 21652,
+      "self_s": 0.020039730000000002,
+      "cumulative_s": 0.025541643000000003
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/ops.py",
+      "line": 97,
+      "function": "key",
+      "primitive_calls": 124252,
+      "calls": 124252,
+      "self_s": 0.024771935000000002,
+      "cumulative_s": 0.024771935000000002
+    },
+    {
+      "file": "/usr/local/lib/python3.12/dataclasses.py",
+      "line": 1540,
+      "function": "replace",
+      "primitive_calls": 340,
+      "calls": 340,
+      "self_s": 0.002616002,
+      "cumulative_s": 0.023281379
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/fromnumeric.py",
+      "line": 2477,
+      "function": "any",
+      "primitive_calls": 3161,
+      "calls": 3161,
+      "self_s": 0.004451158,
+      "cumulative_s": 0.023270269000000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'cumsum' of 'numpy.ndarray' objects>",
+      "primitive_calls": 6120,
+      "calls": 6120,
+      "self_s": 0.021842007,
+      "cumulative_s": 0.021842007
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'to_bytes' of 'int' objects>",
+      "primitive_calls": 44770,
+      "calls": 44770,
+      "self_s": 0.021117585,
+      "cumulative_s": 0.021117585
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 261,
+      "function": "finish",
+      "primitive_calls": 85,
+      "calls": 85,
+      "self_s": 0.0005883560000000001,
+      "cumulative_s": 0.020181420000000002
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/stats.py",
+      "line": 48,
+      "function": "apply_weight",
+      "primitive_calls": 85,
+      "calls": 85,
+      "self_s": 0.005283484000000001,
+      "cumulative_s": 0.019714926
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 89,
+      "function": "output_width",
+      "primitive_calls": 32869,
+      "calls": 32869,
+      "self_s": 0.019349951,
+      "cumulative_s": 0.019349951
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "line": 39,
+      "function": "__post_init__",
+      "primitive_calls": 85,
+      "calls": 85,
+      "self_s": 0.0033046620000000003,
+      "cumulative_s": 0.019120026000000002
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/fromnumeric.py",
+      "line": 89,
+      "function": "_wrapreduction_any_all",
+      "primitive_calls": 3161,
+      "calls": 3161,
+      "self_s": 0.007502497,
+      "cumulative_s": 0.018819111
+    },
+    {
+      "file": "/usr/local/lib/python3.12/site-packages/numpy/_core/numeric.py",
+      "line": 98,
+      "function": "zeros_like",
+      "primitive_calls": 4080,
+      "calls": 4080,
+      "self_s": 0.013734290000000001,
+      "cumulative_s": 0.018101436000000002
+    }
+  ]
+}

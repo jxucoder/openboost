@@ -6,6 +6,7 @@ from producer artifacts. This API orders access; it is not an OS sandbox.
 
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 
@@ -210,6 +211,48 @@ def seal(receipt, path):
     return hashlib.sha256(raw).hexdigest()
 
 
+def _replayed_scores(saved, fresh):
+    """Allow at most eight of the smaller binary64 spacings, only in scores."""
+    if isinstance(fresh, dict):
+        return (
+            isinstance(saved, dict)
+            and saved.keys() == fresh.keys()
+            and all(_replayed_scores(saved[k], v) for k, v in fresh.items())
+        )
+    if (
+        not isinstance(saved, (int, float))
+        or isinstance(saved, bool)
+        or not isinstance(fresh, (int, float))
+        or isinstance(fresh, bool)
+    ):
+        return False
+    try:
+        return (
+            math.isfinite(saved)
+            and math.isfinite(fresh)
+            and abs(saved - fresh) <= 8 * min(math.ulp(saved), math.ulp(fresh))
+        )
+    except OverflowError:
+        return False
+
+
+def _same_selection(receipt, fresh, application):
+    if not isinstance(receipt, dict) or receipt.keys() != fresh.keys():
+        return False
+    if digest({k: v for k, v in receipt.items() if k != "scores"}) != digest(
+        {k: v for k, v in fresh.items() if k != "scores"}
+    ):
+        return False
+    if not _replayed_scores(receipt["scores"], fresh["scores"]):
+        return False
+    direction = -1 if application == "A4" else 1
+    # Roundoff never authorizes a different winner, including a near tie.
+    saved_winner = min(
+        receipt["scores"], key=lambda t: (direction * receipt["scores"][t]["selection"], t)
+    )
+    return saved_winner == fresh["selected"]
+
+
 def release_test(
     protocol, records, receipt_path, directory, pinned_protocol_sha256, pinned_receipt_sha256
 ):
@@ -224,7 +267,7 @@ def release_test(
         raise ValueError("changed receipt")
     receipt = read_json(raw)
     fresh = audit(protocol, records, directory, pinned_protocol_sha256)
-    if digest(receipt) != digest(fresh):
+    if not _same_selection(receipt, fresh, protocol["application"]):
         raise ValueError("receipt does not match independent selection")
     root = Path(directory).resolve()
     features = load(root, protocol["test_features"])

@@ -1,0 +1,64 @@
+{
+  "core_sources": {
+    "runtime": {
+      "path": "/usr/local/lib/python3.12/site-packages/openboost/runtime.py",
+      "sha256": "aa51d6ab3678778c2795271ddcedf3718385d6eb2e335e46eaf3d49acd781c9c"
+    },
+    "recipes": {
+      "path": "/usr/local/lib/python3.12/site-packages/openboost/recipes.py",
+      "sha256": "de920ffda40e2ecbd9a56b368515497c9fdb94d30a465be0f9c8ed0e39974082"
+    },
+    "tree": {
+      "path": "/usr/local/lib/python3.12/site-packages/openboost/tree.py",
+      "sha256": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5"
+    }
+  },
+  "status": "pass",
+  "recipe": "squared",
+  "rounds": 32,
+  "train_rows": 8192,
+  "validation_rows": 1024,
+  "parameters": 1,
+  "options": {
+    "rounds": 32,
+    "bins": 32,
+    "max_depth": 2,
+    "learning_rate": 0.1,
+    "reg_lambda": 1.0,
+    "patience": null,
+    "step": "fixed",
+    "retention": "full"
+  },
+  "setup_s": 0.015411975999999328,
+  "fit_s": 2.6913489330000004,
+  "predict_s": 0.11106916700000014,
+  "export_s": 0.007311186000002579,
+  "end_to_end_s": 2.8251412620000025,
+  "instrumented": false,
+  "validation_metric": 0.23202904734778176,
+  "final_raw_exact": true,
+  "tree_terms": 32,
+  "tree_predict_calls": null,
+  "tree_row_visits": null,
+  "trace_array_bytes": 4259840,
+  "trace_steps": 32,
+  "trace_retention": "full",
+  "guest_peak_rss_bytes": 94760960,
+  "address_limit_bytes": [
+    8589934592,
+    8589934592
+  ],
+  "pools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 2,
+      "prefix": "libscipy_openblas",
+      "filepath": "/usr/local/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    }
+  ],
+  "timing_scope": "setup records + full fit including binning/validation + train/validation prediction + export; outer wall also includes imports, input load and verification"
+}

@@ -1,0 +1,69 @@
+{
+  "case": "analytic/scale-cancellation",
+  "inputs": {
+    "before": [
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "after": [
+      [
+        0.0,
+        2.220446049250313e-16
+      ]
+    ],
+    "target": [
+      1.0
+    ],
+    "offset": [
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "weight": [
+      1.0
+    ]
+  },
+  "comparison": {
+    "lower": -3.4512664603419266e-31,
+    "upper": 2.711709361697228e-31,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "contains_zero",
+    "unchanged": false,
+    "status": "unresolved",
+    "estimate": -3.697785493223493e-32,
+    "uncertainty": 3.081487911019578e-31
+  },
+  "cpu": {
+    "lower": -1.0846837446788914e-30,
+    "upper": 6.162975822039156e-31,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "contains_zero",
+    "unchanged": false
+  },
+  "high_precision": {
+    "decimal60": "4.93038065763132305398035336385E-32",
+    "decimal100": "4.930380657631323053980353363841937191526479406208857035882603481344325E-32",
+    "signs": [
+      1,
+      1
+    ],
+    "estimates_agree": false,
+    "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+  },
+  "additional_precision": [
+    "4.930380657631323053980353363841937191526479406208857035882603481344324292461361007162437935797665563524537006546274267421023546775E-32",
+    "4.93038065763132305398035336384193719152647940620885703588260348134432429246136100716243793579766556352453700654627426742102354677374673599949451004129043792144798390970239649723210180925356E-32"
+  ],
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 48,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "validation_export_bytes": 16,
+    "synchronizations": 6
+  }
+}

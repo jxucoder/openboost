@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/usr/local/bin/python",
+    "-c",
+    "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+    "8589934592",
+    "/usr/local/bin/python",
+    "/opt/cpu_profile_worker.py",
+    "/tmp/tmp8gosechb/summary-normal-8192-32.json"
+  ],
+  "timeout_s": 120,
+  "address_limit_bytes": 8589934592,
+  "threads": 2,
+  "status": "pass",
+  "exit_code": 0,
+  "wall_s": 6.173728194999995,
+  "log": ""
+}

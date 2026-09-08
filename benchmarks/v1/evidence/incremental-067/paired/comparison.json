@@ -1,0 +1,77 @@
+{
+  "scope": "Single paired observation per case, baseline first; no statistical or cross-library performance claim",
+  "pairs": [
+    {
+      "case": "squared-8192-4",
+      "baseline_fit_s": 0.31482378399999966,
+      "candidate_fit_s": 0.22082238700000012,
+      "baseline_end_to_end_s": 0.3375630359999997,
+      "candidate_end_to_end_s": 0.24560115800000037,
+      "fit_ratio": 1.4256878040178032,
+      "end_to_end_ratio": 1.3744358485475838,
+      "raw_exact": true,
+      "model_bytes_exact": true,
+      "core_source_hashes_verified": true
+    },
+    {
+      "case": "normal-8192-4",
+      "baseline_fit_s": 0.587818478,
+      "candidate_fit_s": 0.4281028109999996,
+      "baseline_end_to_end_s": 0.6224014470000006,
+      "candidate_end_to_end_s": 0.4655615520000005,
+      "fit_ratio": 1.3730778282602787,
+      "end_to_end_ratio": 1.3368832635045427,
+      "raw_exact": true,
+      "model_bytes_exact": true,
+      "core_source_hashes_verified": true
+    },
+    {
+      "case": "squared-2048-32",
+      "baseline_fit_s": 2.973501712000001,
+      "candidate_fit_s": 1.5435091589999992,
+      "baseline_end_to_end_s": 3.012644774000001,
+      "candidate_end_to_end_s": 1.5830811099999966,
+      "fit_ratio": 1.9264555021665424,
+      "end_to_end_ratio": 1.903026165222834,
+      "raw_exact": true,
+      "model_bytes_exact": true,
+      "core_source_hashes_verified": true
+    },
+    {
+      "case": "normal-2048-32",
+      "baseline_fit_s": 5.863378761999998,
+      "candidate_fit_s": 3.1983264410000025,
+      "baseline_end_to_end_s": 5.932070144999997,
+      "candidate_end_to_end_s": 3.2718257410000042,
+      "fit_ratio": 1.8332646370414676,
+      "end_to_end_ratio": 1.8130764333392992,
+      "raw_exact": true,
+      "model_bytes_exact": true,
+      "core_source_hashes_verified": true
+    },
+    {
+      "case": "squared-8192-32",
+      "baseline_fit_s": 8.135652254,
+      "candidate_fit_s": 1.7833975529999968,
+      "baseline_end_to_end_s": 8.234853416000004,
+      "candidate_end_to_end_s": 1.8864883369999923,
+      "fit_ratio": 4.561883714774848,
+      "end_to_end_ratio": 4.365175895598466,
+      "raw_exact": true,
+      "model_bytes_exact": true,
+      "core_source_hashes_verified": true
+    },
+    {
+      "case": "normal-8192-32",
+      "baseline_fit_s": 11.929192331000003,
+      "candidate_fit_s": 3.6436059350000036,
+      "baseline_end_to_end_s": 12.114370678,
+      "candidate_end_to_end_s": 3.8263144930000053,
+      "fit_ratio": 3.2740072729626815,
+      "end_to_end_ratio": 3.1660676873692575,
+      "raw_exact": true,
+      "model_bytes_exact": true,
+      "core_source_hashes_verified": true
+    }
+  ]
+}

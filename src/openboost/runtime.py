@@ -1,10 +1,12 @@
 """Explicit CPU run identity and immutable B03 proposal transactions."""
 
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field, fields, replace
+from types import MappingProxyType
 
 import numpy as np
 
 from .artifacts import ConstantTerm, Model, TreeTerm
+from .comparison import LossChange
 from .data import Problem, _identity, _owned
 
 
@@ -48,6 +50,7 @@ class AcceptedState:
     train_raw: np.ndarray = field(init=False)
     validation_raw: np.ndarray = field(init=False)
     identity: str = field(init=False)
+    _encodings: object = field(init=False, repr=False)
 
     def __post_init__(self):
         if (
@@ -73,10 +76,14 @@ class AcceptedState:
                 or len(model.base) != self.validation.raw_width
             ):
                 raise ValueError("problem and model output widths differ")
+        object.__setattr__(self, "_encodings", MappingProxyType({}))
         object.__setattr__(self, "train_raw", _owned(self.model.predict(self.train.data), ndim=2))
         object.__setattr__(
             self, "validation_raw", _owned(self.model.predict(self.validation.data), ndim=2)
         )
+        self._identify()
+
+    def _identify(self):
         object.__setattr__(
             self,
             "identity",
@@ -98,6 +105,7 @@ class AcceptedState:
 class Proposal:
     parent_identity: str
     terms: tuple[ConstantTerm | TreeTerm, ...]
+    _evaluation: object = field(init=False, default=None, repr=False, compare=False)
 
     def __post_init__(self):
         terms = tuple(self.terms)
@@ -132,9 +140,7 @@ def propose(state, value, *, coefficient=1.0):
 def propose_terms(state, terms):
     """Propose an atomic tuple of mapped learner/constant updates."""
     proposal = Proposal(state.identity, tuple(terms))
-    candidate = preview(state, proposal)
-    _owned(candidate.predict(state.train.data), ndim=2)
-    _owned(candidate.predict(state.validation.data), ndim=2)
+    _evaluate(state, proposal)
     return proposal
 
 
@@ -142,6 +148,8 @@ def preview(state, proposal):
     """Build a candidate model without changing any accepted or best state."""
     if not isinstance(proposal, Proposal) or proposal.parent_identity != state.identity:
         raise ValueError("stale or foreign proposal parent")
+    if proposal._evaluation is not None:
+        return proposal._evaluation.model
     return Model(
         state.model.feature_names,
         state.model.base,
@@ -150,28 +158,93 @@ def preview(state, proposal):
     )
 
 
-def resolve(state, proposal, *, accept, score):
+@dataclass(frozen=True)
+class _Evaluation:
+    model: Model
+    train_raw: np.ndarray
+    validation_raw: np.ndarray
+    encodings: object
+
+
+def _evaluate(state, proposal):
+    candidate = preview(state, proposal)  # Validate parent even for an evaluated proposal.
+    if proposal._evaluation is not None:
+        return proposal._evaluation
+    encodings = dict(state._encodings)
+    values = []
+    for problem, prior in (
+        (state.train, state.train_raw),
+        (state.validation, state.validation_raw),
+    ):
+        raw = prior.copy()
+        with np.errstate(over="raise", invalid="raise"):
+            # Preserve full replay's term order and individual additions exactly.
+            for term in proposal.terms:
+                if isinstance(term, ConstantTerm):
+                    delta = term.value
+                else:
+                    key = (problem.data.identity, term.learner.binning.identity)
+                    if key not in encodings:
+                        encodings[key] = term.learner.binning.transform(problem.data)
+                    delta = term.learner.predict(problem.data, binned=encodings[key]) @ term.mapping
+                raw += term.coefficient * delta
+        values.append(_owned(raw, ndim=2))
+    evaluation = _Evaluation(candidate, *values, MappingProxyType(encodings))
+    # This memo is derived only from immutable bound inputs, never caller-supplied raw values.
+    object.__setattr__(proposal, "_evaluation", evaluation)
+    return evaluation
+
+
+def preview_raw(state, proposal):
+    """Return owned read-only training/validation candidate raw values, excluding offsets.
+
+    Evaluation adds only the proposed terms to the bound accepted raw values.
+    Full independent replay remains available through preview(...).predict(data).
+    """
+    evaluation = _evaluate(state, proposal)
+    return evaluation.train_raw, evaluation.validation_raw
+
+
+def resolve(state, proposal, *, accept, score, compare=None):
     """Commit atomically or return the identical state on rejection.
 
     Acceptance is decided by caller algorithm code. It need not mean validation
     improvement. Validation chooses an immutable best snapshot independently.
+    With compare(problem, before, after), objective evidence selects best using
+    a replay of best_model as its anchor. Without it, reported scores select best.
     """
     if type(accept) is not bool:
         raise ValueError("explicit boolean acceptance required")
+    if compare is not None and not callable(compare):
+        raise TypeError("callable objective comparison required")
     candidate = preview(state, proposal)
     if not accept:
         return state
-    raw = _owned(candidate.predict(state.validation.data), ndim=2)
-    value = float(score(state.validation, raw))
+    evaluation = _evaluate(state, proposal)
+    value = float(score(state.validation, evaluation.validation_raw))
     if not np.isfinite(value):
         raise ValueError("finite candidate validation score required")
     improved = value < state.best_score
-    return AcceptedState(
-        state.context,
-        state.train,
-        state.validation,
-        candidate,
-        candidate if improved else state.best_model,
-        value if improved else state.best_score,
-        state.version + 1,
-    )
+    if compare is not None:
+        anchor = _owned(state.best_model.predict(state.validation.data), ndim=2)
+        change = compare(state.validation, anchor, evaluation.validation_raw)
+        if not isinstance(change, LossChange):
+            raise TypeError("objective comparison must return LossChange")
+        improved = change.improves()
+    # Public construction always replays. Only this validated transition can carry
+    # internally evaluated raw values forward, without accepting public cache inputs.
+    updated = object.__new__(AcceptedState)
+    for item in fields(AcceptedState):
+        object.__setattr__(updated, item.name, getattr(state, item.name))
+    for name, value_ in dict(
+        model=candidate,
+        best_model=candidate if improved else state.best_model,
+        best_score=value if improved else state.best_score,
+        version=state.version + 1,
+        train_raw=evaluation.train_raw,
+        validation_raw=evaluation.validation_raw,
+        _encodings=evaluation.encodings,
+    ).items():
+        object.__setattr__(updated, name, value_)
+    updated._identify()
+    return updated

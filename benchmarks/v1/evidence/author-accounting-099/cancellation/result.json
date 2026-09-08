@@ -1,0 +1,19 @@
+{
+  "status": "fail",
+  "controller_status": "request_limit",
+  "outcomes": [
+    {
+      "returned": true,
+      "response_status": "completed"
+    }
+  ],
+  "subsequent_request_blocked": true,
+  "cancellation_observed": false,
+  "generated_tokens": 104,
+  "observed_output_tokens": 104,
+  "reserved_output_tokens": 0,
+  "input_bound_ok": true,
+  "returned_service_tiers": [
+    "default"
+  ]
+}

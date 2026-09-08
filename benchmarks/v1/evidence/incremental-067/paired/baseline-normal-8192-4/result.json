@@ -1,0 +1,64 @@
+{
+  "core_sources": {
+    "runtime": {
+      "path": "/tmp/tmpl78n0iw6/baseline/openboost/runtime.py",
+      "sha256": "8962e0204d867a1b700ed15e92b155cd6144927b651a79b8083634a0c315ad2d"
+    },
+    "recipes": {
+      "path": "/tmp/tmpl78n0iw6/baseline/openboost/recipes.py",
+      "sha256": "4fc1cd9971cde4bad95922c0f4e241d169a8a9fa08730070f02033c3405d265c"
+    },
+    "tree": {
+      "path": "/tmp/tmpl78n0iw6/baseline/openboost/tree.py",
+      "sha256": "60dd8cbc56d78913e868a3788bd08c91e858febc4f4c0534831077df640d7581"
+    }
+  },
+  "status": "pass",
+  "recipe": "normal",
+  "rounds": 4,
+  "train_rows": 8192,
+  "validation_rows": 1024,
+  "parameters": 2,
+  "options": {
+    "rounds": 4,
+    "bins": 32,
+    "max_depth": 2,
+    "learning_rate": 0.1,
+    "reg_lambda": 1.0,
+    "patience": null,
+    "step": "fixed",
+    "mode": "natural",
+    "damping": 0.0,
+    "minimum_scale": 1e-06
+  },
+  "setup_s": 0.011474684000000401,
+  "fit_s": 0.587818478,
+  "predict_s": 0.02147560199999976,
+  "export_s": 0.0016326830000004122,
+  "end_to_end_s": 0.6224014470000006,
+  "instrumented": false,
+  "validation_metric": 1.3805635307767095,
+  "final_raw_exact": true,
+  "tree_terms": 8,
+  "tree_predict_calls": null,
+  "tree_row_visits": null,
+  "trace_array_bytes": 2228224,
+  "guest_peak_rss_bytes": 88440832,
+  "address_limit_bytes": [
+    8589934592,
+    8589934592
+  ],
+  "pools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 2,
+      "prefix": "libscipy_openblas",
+      "filepath": "/usr/local/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+      "version": "0.3.30",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ],
+  "timing_scope": "setup records + full fit including binning/validation + train/validation prediction + export; outer wall also includes imports, input load and verification"
+}

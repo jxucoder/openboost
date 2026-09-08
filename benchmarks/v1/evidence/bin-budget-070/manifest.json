@@ -1,0 +1,372 @@
+{
+  "scope": "Six synthetic CPU fits only; no real quality/resource/GPU gate",
+  "revision": "63b485971508446e4ea49c30d5ed462202e4d91f",
+  "dirty": false,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/bin_budget_smoke.py",
+    "/tmp/openboost-bins-clean-070"
+  ],
+  "python": "3.12.12",
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "packages": {
+    "xgboost": "3.4.1",
+    "lightgbm": "4.7.0",
+    "catboost": "1.2.10",
+    "numpy": "2.3.5"
+  },
+  "sources": {
+    "baseline_worker.py": "14d7143d7045e394651f2e39520af134027ed95608805af4d4a6f8b446849133",
+    "bin_budget_smoke.py": "cbeaed21f0dd802d80720d083824bf792687a29edb7a97b73024939f75a411ec",
+    "preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30"
+  },
+  "artifacts": {
+    "xgboost-7.npy": "0907d5b0b3950dc54e3369e34f9cd0abe1b9e9067d4a5cc0c45a5dfab7e99c56",
+    "catboost-255.bin": "0d30ce9863a90d1dd59a4b1cfc6fa51776aad1d98ca38c85520cff3a3568491d",
+    "xgboost-255.npy": "786a35fa5c86b7cac094b619ee01bf76e514e09aa7d10fd59979ae7a04bd7226",
+    "lightgbm-7.npy": "9e5938e6fd7c31fb0ab9c1bac455b033a3ec2d6c6e5afc245dc538bcbe44e419",
+    "catboost-7.npy": "d4d942cea78dce079dbc6b3a1bd6a377b1f157a5c0cd938b28a8899bcf8de6b4",
+    "lightgbm-255.bin": "088cfacf763c810665676ad66dfe86964fefce68e4ddc014e1f050e3ae9fd87c",
+    "catboost-7.bin": "e7f0247bc4a55f3d8cd38e03155294f4e5583b90dc910fcd273e2fff6acd603e",
+    "lightgbm-255.npy": "f063ca46b95d53919adfb9704ba93e9fe01066bceffeb5b10f4af8510c7abc43",
+    "input.npz": "fab3e7d83e6acf11c9105c285dee1ae1361ad82176c07a1f5290ca6278fcc52b",
+    "xgboost-7.bin": "50c34df7339901ad0c9191a09d2fa48f8365bacb96f5b924fcf0bab095f8de2a",
+    "catboost-255.npy": "6241110eda8fd3e678791d2fe308d9894642299ee2bcc8129c7f22402ad976fc",
+    "xgboost-255.bin": "0ef260406d85cfa7566b326d602d2fb262bcca7fa8a8c82e440fd2798eaf093b",
+    "lightgbm-7.bin": "00d945d46cc21895549a12a0d4ab7d3c039ecfb29971570c7ef22ff7728fed63"
+  },
+  "cells": [
+    {
+      "library": "xgboost",
+      "bins": 7,
+      "effective": 7,
+      "replay": "exact",
+      "job": {
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 70,
+        "early_stopping_rounds": 3,
+        "config": {
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 7,
+          "rounds": 8,
+          "learning_rate": 0.1
+        }
+      },
+      "stopping": [
+        {
+          "selected_rounds": 8,
+          "history": {
+            "validation": {
+              "rmse": [
+                0.7859405033851413,
+                0.7399441552776612,
+                0.6970809476143497,
+                0.65954320145611,
+                0.6250142967491384,
+                0.5940728425538888,
+                0.5661316888764606,
+                0.5399095287329385
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "library": "xgboost",
+      "bins": 255,
+      "effective": 255,
+      "replay": "exact",
+      "job": {
+        "application": "A6",
+        "library": "xgboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 70,
+        "early_stopping_rounds": 3,
+        "config": {
+          "max_depth": 2,
+          "reg_lambda": 1,
+          "bins": 255,
+          "rounds": 8,
+          "learning_rate": 0.1
+        }
+      },
+      "stopping": [
+        {
+          "selected_rounds": 8,
+          "history": {
+            "validation": {
+              "rmse": [
+                0.7856674405637938,
+                0.7389487879583224,
+                0.700073768449698,
+                0.6608949636563246,
+                0.6235765074367263,
+                0.5913260620237083,
+                0.5621527092621551,
+                0.5355236046403111
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "library": "lightgbm",
+      "bins": 7,
+      "effective": [
+        7,
+        7,
+        7
+      ],
+      "replay": "exact",
+      "job": {
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 70,
+        "early_stopping_rounds": 3,
+        "config": {
+          "num_leaves": 4,
+          "lambda_l2": 1,
+          "bins": 7,
+          "rounds": 8,
+          "learning_rate": 0.1
+        }
+      },
+      "stopping": [
+        {
+          "selected_rounds": 8,
+          "history": {
+            "validation": {
+              "l2": [
+                0.5871068975076872,
+                0.4955476918653042,
+                0.4193966427542978,
+                0.35721870776221765,
+                0.2934390660565728,
+                0.24289146878951526,
+                0.20880734056853406,
+                0.17378357194761063
+              ]
+            }
+          }
+        },
+        {
+          "selected_rounds": 8,
+          "history": {
+            "validation": {
+              "l2": [
+                1.189104610047387,
+                1.022609036208982,
+                0.8851154671999325,
+                0.7790152588971739,
+                0.6831572280957219,
+                0.609548949088399,
+                0.54232683692142,
+                0.49100364219407205
+              ]
+            }
+          }
+        },
+        {
+          "selected_rounds": 1,
+          "history": {
+            "validation": {
+              "l2": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "library": "lightgbm",
+      "bins": 255,
+      "effective": [
+        255,
+        255,
+        255
+      ],
+      "replay": "exact",
+      "job": {
+        "application": "A6",
+        "library": "lightgbm",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 70,
+        "early_stopping_rounds": 3,
+        "config": {
+          "num_leaves": 4,
+          "lambda_l2": 1,
+          "bins": 255,
+          "rounds": 8,
+          "learning_rate": 0.1
+        }
+      },
+      "stopping": [
+        {
+          "selected_rounds": 8,
+          "history": {
+            "validation": {
+              "l2": [
+                0.5868944820180283,
+                0.4741473533429522,
+                0.3766305113091564,
+                0.2998117704409389,
+                0.2432839030515695,
+                0.1969185765336447,
+                0.1627349465554005,
+                0.12916693535082288
+              ]
+            }
+          }
+        },
+        {
+          "selected_rounds": 8,
+          "history": {
+            "validation": {
+              "l2": [
+                1.1823314044477593,
+                1.0051426022234833,
+                0.8650871164444439,
+                0.7482109439774803,
+                0.6472140207190582,
+                0.5659965322010427,
+                0.49396005975508295,
+                0.4343253656475546
+              ]
+            }
+          }
+        },
+        {
+          "selected_rounds": 1,
+          "history": {
+            "validation": {
+              "l2": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "library": "catboost",
+      "bins": 7,
+      "effective": 6,
+      "replay": "exact",
+      "job": {
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 70,
+        "early_stopping_rounds": 3,
+        "config": {
+          "depth": 2,
+          "l2_leaf_reg": 1,
+          "bins": 7,
+          "rounds": 8,
+          "learning_rate": 0.1
+        }
+      },
+      "stopping": [
+        {
+          "selected_rounds": 8,
+          "history": {
+            "learn": {
+              "MultiRMSE": [
+                1.3264907205082896,
+                1.2530439892569787,
+                1.1792675294221016,
+                1.1154140350321793,
+                1.0668672919175461,
+                1.0196447379872882,
+                0.9933023690848357,
+                0.9529257798617786
+              ]
+            },
+            "validation": {
+              "MultiRMSE": [
+                1.3620991872382675,
+                1.284448466520432,
+                1.2085712380138156,
+                1.1471888113894033,
+                1.1013230541744259,
+                1.0491972480010892,
+                1.0303533388980535,
+                0.9926807227906779
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "library": "catboost",
+      "bins": 255,
+      "effective": 254,
+      "replay": "exact",
+      "job": {
+        "application": "A6",
+        "library": "catboost",
+        "device": "cpu",
+        "threads": 1,
+        "seed": 70,
+        "early_stopping_rounds": 3,
+        "config": {
+          "depth": 2,
+          "l2_leaf_reg": 1,
+          "bins": 255,
+          "rounds": 8,
+          "learning_rate": 0.1
+        }
+      },
+      "stopping": [
+        {
+          "selected_rounds": 8,
+          "history": {
+            "learn": {
+              "MultiRMSE": [
+                1.3261119162900026,
+                1.2496104882583599,
+                1.2044855327429276,
+                1.136548735638031,
+                1.075347729184254,
+                1.035367408643635,
+                1.0066092972480392,
+                0.9579062970210824
+              ]
+            },
+            "validation": {
+              "MultiRMSE": [
+                1.3600529908727315,
+                1.2799812174659508,
+                1.226613568221769,
+                1.1567421227429042,
+                1.0967572566184103,
+                1.0548266036842233,
+                1.0318439141989908,
+                0.9839434575650694
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

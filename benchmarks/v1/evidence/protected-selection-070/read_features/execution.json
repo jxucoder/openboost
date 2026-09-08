@@ -1,0 +1,29 @@
+{
+  "address_limit_bytes": 8589934592,
+  "artifacts": {
+    "worker.log": "9230b2fa8a6bfcdc7a0e012b7f910403bd0c381408c85ea0963aa212da856f5e"
+  },
+  "command": [
+    "/usr/local/bin/python",
+    "-c",
+    "from pathlib import Path; Path('/tmp/selection-evidence/selection/evaluator/test-features.npz').read_bytes()"
+  ],
+  "environment_policy": "minimal_explicit",
+  "exit_code": 1,
+  "launch_command": [
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+    "8589934592",
+    "1",
+    "/usr/local/bin/python",
+    "-c",
+    "from pathlib import Path; Path('/tmp/selection-evidence/selection/evaluator/test-features.npz').read_bytes()"
+  ],
+  "reason": "worker exited nonzero",
+  "status": "error",
+  "threads": 1,
+  "timeout_s": 5,
+  "wall_s": 0.11945094600000061,
+  "worker_identity": "uid_gid_65534_no_new_privs"
+}

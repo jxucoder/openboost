@@ -1,0 +1,44 @@
+{
+  "case": {
+    "id": "binary/tiny-improvement",
+    "family": "binary",
+    "arrays": [
+      [
+        0.0
+      ],
+      [
+        9.999999682655225e-21
+      ],
+      [
+        1.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        1.0
+      ]
+    ],
+    "status": "improvement"
+  },
+  "comparison": {
+    "lower": -4.999999841327613e-21,
+    "upper": -4.999999841327612e-21,
+    "method": "binary-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "improvement",
+  "decimal220": "-4.9999998413276126944714437325369645359667608070332188906089104018599443897729258165381341573490205525511839725218559717954830515024285363325694387903855304917456195465900874915507814672522120616456545E-21",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

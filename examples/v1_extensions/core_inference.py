@@ -28,4 +28,10 @@ numeric = NumericData(expectile["values"], np.arange(6), ("feature",))
 np.testing.assert_array_equal(
     Model.load(root / "expectile-model.json").predict(numeric), expectile["raw"]
 )
-print("Nine models preserve exact predictions without extension imports.")
+assert not Path(__file__).with_name("custom_stopping.py").exists()
+threshold = json.loads((root / "threshold-inference.json").read_text())
+numeric = NumericData(threshold["values"], threshold["row_ids"], tuple(threshold["names"]))
+np.testing.assert_array_equal(
+    Model.load(root / "threshold-model.json").predict(numeric), threshold["predictions"]
+)
+print("Ten models preserve exact predictions without training extensions or custom policy source.")

@@ -1,0 +1,369 @@
+"""One declared 078-A T4 run, with exact case accounting and installed source checks."""
+
+import argparse
+import hashlib
+import json
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
+from pathlib import Path
+
+PROTOCOL = "v1-sprints/078-aggregation-run2.json"
+
+
+def judge_junit(xml, expected):
+    """A zero exit code cannot hide missing, duplicate, skipped or failed cases."""
+    try:
+        cases = list(ET.fromstring(xml).iter("testcase"))
+    except ET.ParseError:
+        return dict(passed=False, reason="missing or invalid JUnit", cases=[])
+    required = [
+        node.split("::")[0][:-3].replace("/", ".") + "::" + node.split("::")[1] for node in expected
+    ]
+    observed = [case.get("classname", "") + "::" + case.get("name", "") for case in cases]
+    result = [
+        dict(
+            case=name,
+            status="fail"
+            if any(case.find(k) is not None for k in ("skipped", "failure", "error"))
+            else "pass",
+        )
+        for name, case in zip(observed, cases, strict=True)
+    ]
+    passed = (
+        bool(required)
+        and len(set(required)) == len(required)
+        and sorted(observed) == sorted(required)
+        and all(r["status"] == "pass" for r in result)
+    )
+    return dict(
+        passed=passed, reason=None if passed else "case matrix or result failure", cases=result
+    )
+
+
+def snapshot_paths(repo, protocol_path, protocol):
+    """Exact upload closure; never upload an entire working tree or hidden task cards."""
+    return sorted((repo / "src/openboost").rglob("*.py")) + [
+        repo / p
+        for p in (
+            "pyproject.toml",
+            "README.md",
+            "LICENSE",
+            protocol_path,
+            "benchmarks/v1/cuda_aggregation_preflight.py",
+            "tests/__init__.py",
+            "tests/v1/__init__.py",
+            "tests/v1/reference/__init__.py",
+            "tests/v1/reference/device_histogram.py",
+            "tests/v1/test_device_histogram_reference.py",
+            *protocol.get("support_files", []),
+            *protocol["test_files"],
+        )
+    ]
+
+
+def snapshot_hashes(repo, paths):
+    if len(set(paths)) != len(paths):
+        raise ValueError("duplicate snapshot paths")
+    return {str(p.relative_to(repo)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+
+
+def check_frozen_sources(protocol_path, protocol, sources):
+    """The protocol's own hash is recorded at dispatch; all other files are prefrozen."""
+    if "frozen_sources" in protocol and protocol["frozen_sources"] != {
+        p: digest for p, digest in sources.items() if p != protocol_path
+    }:
+        raise ValueError("source freeze changed; review and freeze before dispatch")
+
+
+def check_dispatch(repo, output, protocol):
+    if protocol.get("authorization", "approved") != "approved":
+        raise ValueError("new GPU allowance is pending; no remote dispatch")
+    if (
+        protocol.get("require_upload_authorization", False)
+        and protocol.get("upload_authorization") != "approved"
+    ):
+        raise ValueError("private source upload allowance is pending; no remote dispatch")
+    if "output" in protocol and output.resolve() != (repo / protocol["output"]).resolve():
+        raise ValueError("the single-run output location is fixed")
+    if output.exists():
+        raise ValueError("run output already exists; the allowance cannot be reused")
+
+
+def judge_run(result, junit, protocol, sources):
+    verdict = judge_junit(junit, protocol["expected_cases"])
+    expected_sources = {k: v for k, v in sources.items() if k.startswith("src/openboost/")}
+    versions = {p.split("==")[0]: p.split("==")[1] for p in protocol["packages"]}
+    verdict["installed_sources_match"] = result.get("installed_sources") == expected_sources
+    verdict["versions_match"] = result.get("packages") == versions
+    verdict["snapshot_sources_match"] = (
+        result.get("snapshot_sources") == sources if "frozen_sources" in protocol else None
+    )
+    verdict["passed"] = (
+        verdict["passed"]
+        and result.get("exit_code") == 0
+        and verdict["installed_sources_match"]
+        and verdict["versions_match"]
+        and verdict["snapshot_sources_match"] is not False
+    )
+    if "install_projects" in protocol:
+        expected = {
+            project["distribution"]: dict(
+                version=project["version"],
+                sources={
+                    k: v for k, v in sources.items() if k.startswith(project["source_root"] + "/")
+                },
+            )
+            for project in protocol["install_projects"]
+        }
+        verdict["installed_extensions_match"] = result.get("installed_extensions") == expected
+        verdict["passed"] &= verdict["installed_extensions_match"]
+    if protocol.get("normal_cpu_environment"):
+        verdict["cpu_environment_built"] = result.get("cpu_environment", {}).get("passed") is True
+        verdict["retained_artifacts_complete"] = sorted(
+            result.get("retained_artifact_hashes", {})
+        ) == sorted(protocol["retained_artifacts"])
+        verdict["passed"] &= (
+            verdict["cpu_environment_built"] and verdict["retained_artifacts_complete"]
+        )
+    return verdict
+
+
+def retain_artifacts(output, payload, protocol):
+    """Persist only declared bounded JSON artifacts, including partial failed runs."""
+    allowed = set(protocol.get("retained_artifacts", []))
+    if set(payload) - allowed:
+        raise ValueError("undeclared retained artifact")
+    if sum(len(value.encode()) for value in payload.values()) > protocol.get(
+        "retained_artifact_bytes", 0
+    ):
+        raise ValueError("retained artifact byte limit exceeded")
+    hashes = {}
+    for name, value in payload.items():
+        path = Path(name)
+        if path.is_absolute() or ".." in path.parts or path.suffix != ".json":
+            raise ValueError("relative JSON artifact path required")
+        json.loads(value)
+        target = output / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(value)
+        hashes[name] = hashlib.sha256(target.read_bytes()).hexdigest()
+    return hashes
+
+
+def main(output, *, protocol_path=PROTOCOL):
+    repo = Path(__file__).resolve().parents[2]
+    protocol = json.loads((repo / protocol_path).read_text())
+    check_dispatch(repo, output, protocol)
+    if subprocess.check_output(["git", "status", "--porcelain"], cwd=repo):
+        raise ValueError("clean source required")
+    paths = snapshot_paths(repo, protocol_path, protocol)
+    sources = snapshot_hashes(repo, paths)
+    check_frozen_sources(protocol_path, protocol, sources)
+
+    import modal
+
+    output.mkdir(parents=True, exist_ok=False)
+    manifest = dict(
+        revision=subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip(),
+        dirty=False,
+        argv=sys.argv,
+        protocol=protocol,
+        started=datetime.now(timezone.utc).isoformat(),
+        status="running",
+        sources=sources,
+        requested=dict(cpu=2, memory_mib=8192, gpu="T4", timeout_seconds=900, retries=0),
+    )
+
+    def save():
+        (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+
+    save()
+    image = modal.Image.from_registry("nvidia/cuda:12.6.3-devel-ubuntu22.04", add_python="3.12")
+    image = image.uv_pip_install(*protocol["packages"], uv_version="0.12.1")
+    image = image.env({"PYTHONDONTWRITEBYTECODE": "1"})
+    for p in paths:
+        image = image.add_local_file(p, "/snapshot/" + str(p.relative_to(repo)), copy=True)
+    image = image.uv_pip_install(
+        "/snapshot", extra_options="--no-deps --no-build-isolation", uv_version="0.12.1"
+    )
+    for project in protocol.get("install_projects", []):
+        image = image.uv_pip_install(
+            "/snapshot/" + project["path"],
+            extra_options="--no-deps --no-build-isolation",
+            uv_version="0.12.1",
+        )
+    if protocol.get("normal_cpu_environment"):
+        image = image.run_commands("python /snapshot/benchmarks/v1/normal_build_cpu_env.py")
+    app = modal.App(protocol.get("app_name", "openboost-v1-cuda-aggregation"))
+
+    @app.function(
+        image=image,
+        gpu="T4",
+        cpu=2,
+        memory=8192,
+        timeout=900,
+        retries=0,
+        max_containers=1,
+        serialized=True,
+        include_source=False,
+    )
+    def run():
+        import importlib.metadata
+        import importlib.util
+        import os
+        import platform
+        import time
+
+        import cupy as cp
+        from numba import cuda
+
+        import openboost
+
+        started = time.perf_counter()
+        config = json.loads(Path("/snapshot/" + protocol_path).read_text())
+        installed = Path(openboost.__file__).parent
+        versions = {
+            p.split("==")[0]: importlib.metadata.version(p.split("==")[0])
+            for p in config["packages"]
+        }
+        sources = {
+            "src/openboost/" + str(p.relative_to(installed)): hashlib.sha256(
+                p.read_bytes()
+            ).hexdigest()
+            for p in installed.rglob("*.py")
+        }
+        result = dict(
+            python=platform.python_version(),
+            os=platform.platform(),
+            cpu=platform.processor(),
+            visible_cpu_count=os.cpu_count(),
+            packages=versions,
+            installed_path=str(installed),
+            numba_cuda_path=cuda.__file__,
+            installed_sources=sources,
+            gpu=subprocess.check_output(
+                [
+                    "nvidia-smi",
+                    "--query-gpu=name,driver_version,memory.total",
+                    "--format=csv,noheader",
+                ],
+                text=True,
+            ),
+            cuda_runtime=cp.cuda.runtime.runtimeGetVersion(),
+            cuda_driver=cp.cuda.runtime.driverGetVersion(),
+        )
+        if "install_projects" in config:
+            result["installed_extensions"] = {}
+            for project in config["install_projects"]:
+                installed_extension = Path(
+                    importlib.util.find_spec(project["module"]).origin
+                ).parent
+                if "site-packages" not in installed_extension.parts:
+                    raise ValueError("extension must be installed outside snapshot")
+                result["installed_extensions"][project["distribution"]] = dict(
+                    version=importlib.metadata.version(project["distribution"]),
+                    sources={
+                        project["source_root"]
+                        + "/"
+                        + str(p.relative_to(installed_extension)): hashlib.sha256(
+                            p.read_bytes()
+                        ).hexdigest()
+                        for p in installed_extension.rglob("*.py")
+                    },
+                )
+        if config.get("normal_cpu_environment"):
+            result["cpu_environment"] = json.loads(
+                Path("/opt/openboost-normal-cpu/build.json").read_text()
+            )
+        if "frozen_sources" in config:
+            result["snapshot_sources"] = {
+                p: hashlib.sha256(Path("/snapshot", p).read_bytes()).hexdigest()
+                for p in (*config["frozen_sources"], protocol_path)
+            }
+        work = Path("/tmp/openboost-aggregation")
+        work.mkdir()
+        environment = dict(os.environ)
+        if config.get("normal_cpu_environment"):
+            environment.update(
+                OPENBOOST_FRESH_CPU_PYTHON="/opt/openboost-normal-cpu/venv/bin/python",
+                OPENBOOST_NORMAL_ARTIFACTS=str(work / "normal"),
+            )
+        command = [
+            sys.executable,
+            "-m",
+            "pytest",
+            *["/snapshot/" + f for f in config["test_files"]],
+            "--rootdir=/snapshot",
+            "-o",
+            "addopts=",
+            "-q",
+            "-s",
+            "--junitxml=" + str(work / "junit.xml"),
+        ]
+        result["test_argv"] = command
+        try:
+            completed = subprocess.run(
+                command, cwd=work, env=environment, capture_output=True, text=True, timeout=600
+            )
+            result.update(exit_code=completed.returncode, log=completed.stdout + completed.stderr)
+        except subprocess.TimeoutExpired as error:
+
+            def decode(value):
+                return value.decode(errors="replace") if isinstance(value, bytes) else value or ""
+
+            result.update(exit_code="timeout", log=decode(error.stdout) + decode(error.stderr))
+        result["junit"] = (work / "junit.xml").read_text() if (work / "junit.xml").exists() else ""
+        if config.get("normal_cpu_environment"):
+            # Preserve partial outputs after a failed/timed-out test as well.
+            paths = sorted((work / "normal").rglob("*.json"))
+            if sum(p.stat().st_size for p in paths) > config["retained_artifact_bytes"]:
+                result.update(
+                    exit_code="artifact-limit", artifact_error="retained JSON byte limit exceeded"
+                )
+                result["retained_artifacts"] = {}
+            else:
+                result["retained_artifacts"] = {
+                    str(p.relative_to(work)): p.read_text() for p in paths
+                }
+        result["worker_wall_seconds"] = time.perf_counter() - started
+        return result
+
+    try:
+        with modal.enable_output(), app.run():
+            result = run.remote()
+        manifest["result"] = result
+        for name, key in (("pytest.log", "log"), ("junit.xml", "junit")):
+            (output / name).write_text(result.pop(key))
+        if "retained_artifacts" in result:
+            result["retained_artifact_hashes"] = retain_artifacts(
+                output, result.pop("retained_artifacts"), protocol
+            )
+        verdict = judge_run(
+            result, (output / "junit.xml").read_text(), protocol, manifest["sources"]
+        )
+        (output / "verdict.json").write_text(json.dumps(verdict, indent=2) + "\n")
+        manifest.update(
+            status="pass" if verdict["passed"] else "fail",
+            image_id=image.object_id,
+            artifacts={
+                name: hashlib.sha256((output / name).read_bytes()).hexdigest()
+                for name in ("pytest.log", "junit.xml", "verdict.json")
+            },
+        )
+        manifest["artifacts"].update(result.get("retained_artifact_hashes", {}))
+    except Exception as error:
+        manifest.update(status="error", error=str(error))
+        raise
+    finally:
+        manifest["finished"] = datetime.now(timezone.utc).isoformat()
+        save()
+    if manifest["status"] != "pass":
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("output", type=Path)
+    main(parser.parse_args().output.resolve())

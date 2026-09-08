@@ -1,0 +1,44 @@
+{
+  "case": {
+    "id": "poisson/tiny-improvement",
+    "family": "poisson",
+    "arrays": [
+      [
+        0.0
+      ],
+      [
+        9.999999682655225e-21
+      ],
+      [
+        2.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        1.0
+      ]
+    ],
+    "status": "improvement"
+  },
+  "comparison": {
+    "lower": -9.999999682655225e-21,
+    "upper": -9.999999682655224e-21,
+    "method": "poisson-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "improvement",
+  "decimal220": "-9.999999682655225388917887466660652919811589016866509403496719818736892718819243113041605432967072505408543604571807979666366016968490983803303223380544229872684657543806907096299535580893819628700031E-21",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

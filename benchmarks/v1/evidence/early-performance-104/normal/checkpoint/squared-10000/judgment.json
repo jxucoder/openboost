@@ -1,0 +1,12 @@
+{
+  "measurement_complete": true,
+  "quality_comparable": true,
+  "reasons": [],
+  "relative_metric_differences": {
+    "half_mse": 1.0896684108288162e-07
+  },
+  "normalized_prediction_rmse": [
+    1.9468007625720794e-07
+  ],
+  "cpu_over_cuda_warm_fit_ratio": 2.395384784996317
+}

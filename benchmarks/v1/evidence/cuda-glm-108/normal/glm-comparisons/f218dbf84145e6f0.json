@@ -1,0 +1,44 @@
+{
+  "case": {
+    "id": "poisson/worsening",
+    "family": "poisson",
+    "arrays": [
+      [
+        0.0
+      ],
+      [
+        -0.10000000149011612
+      ],
+      [
+        2.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        1.0
+      ]
+    ],
+    "status": "worsening"
+  },
+  "comparison": {
+    "lower": 0.10452418870838563,
+    "upper": 0.10500000163912773,
+    "method": "poisson-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "worsening",
+  "decimal220": "0.104837419667878990900476627714961233883038821012060758108102968026531705313651212944146091696532264853350073760433831170353781634460880421922247202494483617404432375399334016187731734647448064157672032882827779047457089",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

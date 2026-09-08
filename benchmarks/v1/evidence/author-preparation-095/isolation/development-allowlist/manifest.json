@@ -1,0 +1,112 @@
+{
+  "schema": "openboost-local-file-isolation-v1",
+  "passed": false,
+  "dispatch_ready": false,
+  "attempts": [],
+  "scope": "macOS worker file-access and wall-time smoke; not complete agent isolation",
+  "revision": "44d516f9b17932afa38f79969ba69eee380f3fa1",
+  "dirty": true,
+  "os": "macOS-26.3-x86_64-i386-64bit",
+  "python": "3.12.12",
+  "source_sha256": "b0b0e1d866ea5f9f90f4615d907f596f2282dfcbe2349a5292113a9af738734a",
+  "profile_sha256": "2e26970a37ab1b7be9294875cc77400552b62f3790e75cce66c0c0810d2d06a9",
+  "packet_manifest_sha256": "3024c8816ccb711247d9f167b3dbdfdee86027ffac0b6850975021ec22fd7305",
+  "evaluator_manifest_sha256": "32ff475909b5008851270d961dafe2f50d4eb15a199b03746d16341f5b88a755",
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "venv",
+        "--python",
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python",
+        "/private/tmp/openboost-095-isolation-allowlist/runtime"
+      ],
+      "cwd": "/private/tmp/openboost-095-isolation-allowlist",
+      "wall_limit_s": 120,
+      "status": "complete",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Using CPython 3.12.12 interpreter at: /Users/jiaruixu/work_space/openboost/.venv/bin/python\nCreating virtual environment at: runtime\n",
+      "wall_s": 0.014986541995313019
+    },
+    {
+      "argv": [
+        "uv",
+        "pip",
+        "install",
+        "--offline",
+        "--link-mode",
+        "copy",
+        "--python",
+        "/private/tmp/openboost-095-isolation-allowlist/runtime/bin/python",
+        "numpy==2.3.5",
+        "/private/tmp/openboost-095-isolation-allowlist/materials/wheels/openboost-1.0.0.dev0-py3-none-any.whl"
+      ],
+      "cwd": "/private/tmp/openboost-095-isolation-allowlist",
+      "wall_limit_s": 120,
+      "status": "complete",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Using Python 3.12.12 environment at: runtime\nResolved 2 packages in 11ms\nPrepared 1 package in 9ms\nInstalled 2 packages in 230ms\n + numpy==2.3.5\n + openboost==1.0.0.dev0 (from file:///private/tmp/openboost-095-isolation-allowlist/materials/wheels/openboost-1.0.0.dev0-py3-none-any.whl)\n",
+      "wall_s": 0.3220228750142269
+    },
+    {
+      "argv": [
+        "/private/tmp/openboost-095-isolation-allowlist/runtime/bin/python",
+        "-I",
+        "-c",
+        "import openboost; print(openboost.__file__)"
+      ],
+      "cwd": "/private/tmp/openboost-095-isolation-allowlist",
+      "wall_limit_s": 120,
+      "status": "complete",
+      "exit_code": 0,
+      "stdout": "/private/tmp/openboost-095-isolation-allowlist/runtime/lib/python3.12/site-packages/openboost/__init__.py\n",
+      "stderr": "",
+      "wall_s": 1.0682653750118334
+    }
+  ],
+  "cases": {
+    "public_cpu-state": {
+      "argv": [
+        "/usr/bin/sandbox-exec",
+        "-D",
+        "WORK=/private/tmp/openboost-095-isolation-allowlist/work",
+        "-D",
+        "EVALUATOR=/private/tmp/openboost-095-isolation-allowlist/evaluator",
+        "-D",
+        "REPOSITORY=/Users/jiaruixu/work_space/openboost",
+        "-D",
+        "MATERIALS=/private/tmp/openboost-095-isolation-allowlist/materials",
+        "-D",
+        "RUNTIME=/private/tmp/openboost-095-isolation-allowlist/runtime",
+        "-D",
+        "PYTHON_RUNTIME=/Users/jiaruixu/.local/share/uv/python/cpython-3.12.12-macos-x86_64-none",
+        "-f",
+        "/private/tmp/openboost-095-isolation-allowlist/worker.sb",
+        "/private/tmp/openboost-095-isolation-allowlist/runtime/bin/python",
+        "-I",
+        "-B",
+        "-c",
+        "import numpy as np\nfrom openboost import NumericData, Problem, RunContext\nfrom openboost.runtime import initialize, propose, resolve\n\nx = NumericData([[1.0], [2.0]], [10, 20], (\"feature\",))\nproblem = Problem(x, [[5.0], [7.0]], [10, 20],\n                  weight=[1.0, 3.0], offset=[[2.0], [4.0]])\n\ndef score(problem, raw):\n    error = problem.with_offset(raw) - problem.target\n    return float(np.dot(problem.weight, error[:, 0] ** 2) / problem.weight.sum())\n\nstate = initialize(RunContext(\"demo\", seed=7), problem, problem, [0.0], score=score)\ntrial = propose(state, [6.0], coefficient=0.5)\nassert resolve(state, trial, accept=False, score=score) is state\naccepted = resolve(state, trial, accept=True, score=score)\nnp.testing.assert_array_equal(accepted.train_raw, [[3.0], [3.0]])\nnp.testing.assert_array_equal(\n    accepted.model.predict(x, offset=problem.offset), [[5.0], [7.0]]\n)\nassert accepted.best_score == 0.0\n\nprint('public-doc-passed')"
+      ],
+      "cwd": "/private/tmp/openboost-095-isolation-allowlist/work",
+      "wall_limit_s": 15,
+      "status": "complete",
+      "exit_code": -6,
+      "stdout": "",
+      "stderr": "",
+      "wall_s": 0.04147012499743141
+    }
+  },
+  "protected_before": {
+    "evaluator/expected.json": "622d2791ddae956d261da9e9c8291cabcbad91f8077af28701b9cc3036e88d27",
+    "evaluator/inputs.json": "e8ea7c939ec84be1848c0d015c4c33d8d95339a64ad6ae5cb10ab190182426dc",
+    "evaluator/judge.py": "7c00296f6d9526b1b81e5e7ec26faa1ac3e5a4476c54b76c8c8d72dc832beac6",
+    "evaluator/manifest.json": "32ff475909b5008851270d961dafe2f50d4eb15a199b03746d16341f5b88a755",
+    "runtime/lib/python3.12/site-packages/openboost/__init__.py": "c6a404dd122323611ca6c63fecfbc836c7845a271cceca91742c8fcf9d29a5ad",
+    "materials/wheels/openboost-1.0.0.dev0-py3-none-any.whl": "7d36782558723c3c2a6bf8f75b81cc76ad5107089a5ee411a4f4d30dc7da0cee",
+    "unlisted-answers.json": "622d2791ddae956d261da9e9c8291cabcbad91f8077af28701b9cc3036e88d27"
+  },
+  "error": "RuntimeError: public installed-wheel check failed: cpu-state: "
+}

@@ -1,0 +1,66 @@
+{
+  "case": "analytic/outside-exponent-range",
+  "inputs": {
+    "before": [
+      [
+        0.0,
+        33.0
+      ]
+    ],
+    "after": [
+      [
+        1.0,
+        33.0
+      ]
+    ],
+    "target": [
+      0.0
+    ],
+    "offset": [
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "weight": [
+      1.0
+    ]
+  },
+  "comparison": {
+    "lower": null,
+    "upper": null,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "exponent_range",
+    "unchanged": false,
+    "status": "unresolved",
+    "estimate": null,
+    "uncertainty": null
+  },
+  "cpu": {
+    "lower": null,
+    "upper": null,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "exponent_range",
+    "unchanged": false
+  },
+  "high_precision": {
+    "decimal60": "1.08526100565181970599328462978635316445337892287200610985214E-29",
+    "decimal100": "1.085261005651819705993284629786353164453378922872006109852142538144771878725836492040175437917130736E-29",
+    "signs": [
+      1,
+      1
+    ],
+    "estimates_agree": true,
+    "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+  },
+  "additional_precision": [],
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 48,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "validation_export_bytes": 16,
+    "synchronizations": 6
+  }
+}

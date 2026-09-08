@@ -1,0 +1,8 @@
+{
+  "command": "UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.authoring.modal_worker --execute /tmp/openboost-author-linux-097",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "revision": "518eccf07eba9398b66e48910bec185ba4e76151",
+  "dirty": false
+}

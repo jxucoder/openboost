@@ -1,0 +1,108 @@
+# Sprint 107: GLM comparison and scalar recipe integration
+
+Status: construction complete; the subsequent approved
+[108 validation](108-glm-validation-result.md) passes all 153 GLM T4 cases plus
+418 regressions. The construction-time results below retain their original scope.
+Mapping: 080 / B12 /
+R1 binary / R4 Poisson. Local construction can continue; no hardware/upload allowance.
+
+## Purpose
+
+Turn the new objective components into usable scalar recipes without repeating
+Normal's rounded-loss acceptance failure. Preserve shared fields/tree/runtime
+operations, explicit exposure and class-aware CPU inference. Required multiclass,
+AFT, vector topology, R9 compatible M=1/8/32 and formal E4 remain subsequent work.
+
+## Order and acceptance
+
+1. Freeze independent high-precision loss-change cases and a declared resolution
+   contract for binary and Poisson. Cover exact no-ops, resolvable improvement and
+   worsening, unresolved changes, extreme logistic tails, zero counts, offsets,
+   exposure, zero/nonuniform weights and rejected geometry domains. Include changes
+   that rounded reported losses cannot classify. Verify sign/bounds against an
+   independently evaluated objective; never use reporting-loss subtraction as its
+   oracle. Record derivation and support limits before implementing CUDA arithmetic.
+2. Implement objective-owned resident comparison through the existing `LossChange`
+   callback. Use cancellation-aware expressions with justified error bounds; return
+   unresolved where support is insufficient. Retain all-row validation, exactly-once
+   weights/exposure, owned-stream scratch and scalar-only summaries. Add allocation,
+   dispatch and callback-failure recovery tests without changing old Normal evidence.
+3. Add binary/Poisson recipe entry points through the shared scalar grower and
+   transaction runtime. Acceptance, best-validation selection and independent
+   patience must use the declared comparison. Verify fixed and bounded backtracking
+   updates, full/partial rejection, zero rounds, retained best state, retries and
+   release behavior. Export retains class labels and explicit Poisson inference
+   inputs. Use independent trajectories and saved CPU inference, not shape checks.
+4. Reflect, then construct one reviewable hardware request: immutable source and
+   environment inventory, exact collected test IDs, numerical tolerances, bounded
+   timeout/cost/retry policy and durable raw outputs. Include relevant existing
+   storage/objective/runtime/recipe regressions and all new GLM cases. No dispatch
+   or new file upload until that concrete packet has an allowance. Collection and
+   CPU passes cannot substitute for real-device results.
+
+Commit after each verified slice; reflect after three implementation commits or
+any numerical/architectural counterexample. No performance optimization, CPU speed
+campaign, external benchmark or author/model study enters this sprint.
+
+## Exit evidence
+
+- Independent numerical controls and relevant CPU regression pass unchanged limits.
+- Public recipe behavior, ownership, metadata and persistence match documented scope.
+- New real-device cases are enumerated; until they run successfully, the new recipes
+  remain experimental and no R1/R4 device conformance or speed claim is made.
+- A later passing bounded device packet still does not close every required 080
+  recipe, R9, application quality, author/adoption benefit or formal E4.
+
+## Slice A result
+
+The [convex-bound derivation](107-glm-comparison-mathematics.md), 59 frozen cases
+and independent direct 160/220-digit likelihood oracle precede production code.
+All 73 local controls pass in 1.28 seconds, including reversed directions,
+permutations, extreme exponent bounds and invalid zero-weight no-ops. The
+stationary Poisson reporting tie is correctly bounded as worsening. Ruff passes.
+No new device result or tolerance change is claimed.
+
+## Slice B construction
+
+The production scalar factory and resident callbacks implement the declared
+convex intervals, positive-domain guards, ordered weighting and owned scratch.
+Binary/Poisson factories now supply `compare`; old Normal arithmetic and consumers
+remain unchanged. The Python scalar expression passes all 59 independent cases
+plus two range checks; together with the independent study and host configuration,
+160 tests pass in 1.95 seconds. No CPU host computation is used on the device path.
+
+Seventy-seven separate CUDA cases collect: all 59 frozen inputs, invalid geometry
+and identity, allocation/dispatch cleanup, forbidden host/reporting callbacks and
+actual directed-double PTX inspection. Each numerical case will retain inputs,
+enclosure, direct Decimal result and transfer counters when run. Hardware execution
+is pending. Next construction connects distinct acceptance/best/patience consumers.
+
+## Slice C construction and retrospective
+
+`device_recipes.scalar` composes explicit objective fields/comparison with the
+existing grower, try_terms and DeviceRun. Binary/Poisson wrappers configure that
+same public recipe. It requires comparison mode, owns a separate patience anchor,
+observes once per outer round and retains each trial in DeviceScalarStep. Fixed
+steps can accept valid worsening; backtracking requires proved decrease. No old
+squared or Normal recipe behavior changes.
+
+Forty-two local preflight/independent trajectory checks pass in 1.15 seconds.
+Sixteen reference settings include default-grower depth 1/2, both families,
+fixed/backtracking, partial retries and full rejection. Two further reference
+sequences distinguish best from patience anchors. Thirty-two new GPU cases collect,
+including stored-input audits of every comparison, class-aware model round trips,
+fresh CPU inference, zero rounds, five cleanup failure phases, three-anchor and
+equal-reporting-score replacement controls. All 153 GLM cases remain unrun.
+
+Full CPU regression: 2,241 passed, one Linux-only skip, 880 deselected in 77.50 s.
+Production and changed-file Ruff pass; the offline wheel/sdist build succeeds.
+No new GPU upload, invocation or old frozen-source modification occurred.
+
+Reflection after three construction commits: the scalar objective/fields/tree/
+transaction boundary accommodates both applications without another trainer.
+The new comparison resolves the frozen false reporting ties and declares finite-
+step uncertainty explicitly. Cost and actual CUDA arithmetic remain unknown.
+Next is a concrete bounded run-12 request retaining numerical inputs/bounds, actual
+PTX, recipe comparisons/models and relevant prior regressions. Review exact source
+closure and collection locally before seeking its separate allowance. Required
+multiclass, AFT, vector topology, train-many and formal quality/cost remain open.

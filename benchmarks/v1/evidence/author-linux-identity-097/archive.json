@@ -1,0 +1,28 @@
+{
+  "schema": "openboost-linux-isolation-archive-v1",
+  "original_artifacts": {
+    "build.log": "7810095f13140e3a694e0277d5c14be95227c29908182617418512ca82996559",
+    "freeze.json": "c5b9c01f0386d12c5f4e189b98730ee4e413328738cadf99078817b6f098b7d1",
+    "stderr.txt": "e949de6aa19868ceb33e64f90723a91bab68ede668c20bdeb9130946a6076eb6",
+    "stdout.jsonl": "07b6a1f3c08638265c44c28645a2f5e8d858ac63534cee81eb0e4cfaec6711b7",
+    "upload/materials/README.md": "2f40b7dbf5b23f8998396fe3f542d3bd871fa7481bece9c55c6addd55e09a9d9",
+    "upload/materials/docs/v1/cpu-state.md": "9ef67656438e5b9e7ab3fdb349a3ddc0ece6398f55c68fbc4fb52fd7b80d9665",
+    "upload/materials/docs/v1/numeric-ops.md": "e2406db656a906d4229d734dbba639210c4d226772bab94ed47e716374009274",
+    "upload/materials/docs/v1/preparation.md": "3c06d8c210dc87fb3af9aff06f1809db5af39846e37218be5c9dc40863e3711d",
+    "upload/materials/docs/v1/squared.md": "a0a6ad5b30222d855933a5bf22f3ceb7bb9da9be7a18250aa94a244abfd1a73e",
+    "upload/materials/docs/v1/stopping.md": "840ae52999fc6867f9697f39c7d18f5487a840a37562a5b4c136858bab1639f6",
+    "upload/materials/docs/v1/trees.md": "f01a50ecdccbf503cbc4e46702b541b256c260df459aea9068d4f74686d5ab8c",
+    "upload/materials/v1-sprints/069-author-packet/D1.md": "4ab89ba53887bf93c5a61f818e01d52564ae552b6723b71344a3a150cc781282",
+    "upload/materials/v1-sprints/069-author-packet/D2.md": "5e8dcceae218581431f0e4f7929d27114c8ba595470ad815ef98bc4793bd0603",
+    "upload/materials/v1-sprints/069-author-packet/README.md": "0261bc18c8502aa96806ae5c1ef14e2af17e45a9069650f51a5d147024d3e643",
+    "upload/materials/wheels/.gitignore": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1",
+    "upload/materials/wheels/openboost-1.0.0.dev0-py3-none-any.whl": "7d36782558723c3c2a6bf8f75b81cc76ad5107089a5ee411a4f4d30dc7da0cee",
+    "upload/opt/launcher.py": "291cb8637798e72baa963f349595a2a2b470261b478a4e358a73e356cc38f70d",
+    "upload/opt/probe.py": "b243b54353d2283ef55f0316cde804b2b0bec747a0de1dbe46b95bc6490e4026"
+  },
+  "additional_artifacts": {
+    "manifest.json": "ff9ebd5397006e20508b9acaa59adf7e103632f39363241cfe588b7fb3e1b813",
+    "controller-command.json": "c595f5e44e602381eaec23044112782662ec4ee43b3f2363ba43d3cf948666e1",
+    "analysis.json": "0d7c6df258aead0cd80897622f3a930170a71685ec9549cd9ceb3a886e3a52f5"
+  }
+}

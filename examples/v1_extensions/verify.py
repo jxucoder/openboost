@@ -46,6 +46,10 @@ def main(output):
         str(p.relative_to(ROOT)): digest(p)
         for p in sorted((ROOT / "tests/v1/reference").glob("*.py"))
     }
+    report["core_sources"] = {
+        str(p.relative_to(ROOT)): digest(p)
+        for p in sorted((ROOT / "src/openboost").glob("*.py"))
+    }
     env = dict(os.environ, OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1")
 
     def run(command, cwd):
@@ -89,6 +93,8 @@ def main(output):
                 "core_inference.py",
                 "ordered_checks.py",
                 "scheduler_checks.py",
+                "retention_checks.py",
+                "custom_stopping.py",
                 "expectile_checks.py",
             ):
                 shutil.copyfile(SOURCE / name, work / name)
@@ -104,6 +110,7 @@ def main(output):
             )
             run([python, "-I", str(work / "ordered_checks.py"), str(output)], work)
             run([python, "-I", str(work / "scheduler_checks.py"), str(output)], work)
+            run([python, "-I", str(work / "retention_checks.py"), str(output)], work)
             run(
                 [
                     sys.executable,
@@ -140,6 +147,8 @@ def main(output):
                 ],
                 work,
             )
+            (work / "custom_stopping.py").unlink()
+            report["custom_policy_source_removed"] = True
             run([python, "-I", str(work / "core_inference.py"), str(output)], work)
             report["plugin_free_inference"] = True
             report["artifacts"] = {

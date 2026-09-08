@@ -1,0 +1,31 @@
+{
+  "address_limit_bytes": 8589934592,
+  "artifacts": {
+    "worker.log": "e11369ce5e838c9587fb0c60962fcf17020f20687c512ede84d38c003ff7cac5"
+  },
+  "command": [
+    "/usr/local/bin/python",
+    "-c",
+    "from pathlib import Path; import sys; Path(sys.argv[1]).write_bytes(b\"tampered\")",
+    "/tmp/tmp1juzl7j_/evaluator/verifier.py"
+  ],
+  "environment_policy": "minimal_explicit",
+  "exit_code": 1,
+  "launch_command": [
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+    "8589934592",
+    "1",
+    "/usr/local/bin/python",
+    "-c",
+    "from pathlib import Path; import sys; Path(sys.argv[1]).write_bytes(b\"tampered\")",
+    "/tmp/tmp1juzl7j_/evaluator/verifier.py"
+  ],
+  "reason": "worker exited nonzero",
+  "status": "error",
+  "threads": 2,
+  "timeout_s": 5,
+  "wall_s": 0.06537339999999991,
+  "worker_identity": "uid_gid_65534_no_new_privs"
+}

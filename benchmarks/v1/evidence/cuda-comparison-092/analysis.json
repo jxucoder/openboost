@@ -1,0 +1,354 @@
+{
+  "revision": "469ca0ea4fa2ca0af3ea007bfa8c0f02e51e2d95",
+  "manifest_sha256": "e6bc71d475590c841aa2e31b166da17b650e580aa0ccb60451eb091806aff5c0",
+  "raw_artifacts_verified": 416,
+  "dispatch_sources_verified": 86,
+  "recorded_status": "fail",
+  "recorded_verdict_passed": false,
+  "historical_disagreements_match": true,
+  "cohorts": {
+    "historical": {
+      "cases": 385,
+      "passed": 359,
+      "failures": [
+        {
+          "case": "tests.v1.test_device_normal_runtime_cuda::test_frozen_three_round_transactions[False-8.0-forward-ordinary-0-conflict-0-None]",
+          "kind": "failure",
+          "message": "assert (8.0, 4.0) == (8.0, 4.0, 2.....0, 0.5, 0.25)\n  \n  Right contains 4 more items, first extra item: 2.0\n  Use -v to get more diff"
+        },
+        {
+          "case": "tests.v1.test_device_normal_runtime_cuda::test_frozen_three_round_transactions[False-8.0-reverse-ordinary-0-conflict-0-None]",
+          "kind": "failure",
+          "message": "assert (8.0, 4.0) == (8.0, 4.0, 2.....0, 0.5, 0.25)\n  \n  Right contains 4 more items, first extra item: 2.0\n  Use -v to get more diff"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-fixed-ordinary-joint]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-fixed-ordinary-forward]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-fixed-ordinary-reverse]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-fixed-natural-joint]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-fixed-natural-forward]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-fixed-natural-reverse]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-backtracking-ordinary-joint]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-backtracking-ordinary-forward]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-backtracking-ordinary-reverse]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-backtracking-natural-joint]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-backtracking-natural-forward]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[0-backtracking-natural-reverse]",
+          "kind": "failure",
+          "message": "assert 536 == 472"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-fixed-ordinary-joint]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-fixed-ordinary-forward]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-fixed-ordinary-reverse]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-fixed-natural-joint]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-fixed-natural-forward]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-fixed-natural-reverse]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-backtracking-ordinary-joint]",
+          "kind": "failure",
+          "message": "assert 920 == 856"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-backtracking-ordinary-forward]",
+          "kind": "failure",
+          "message": "assert 896 == 832"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-backtracking-ordinary-reverse]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-backtracking-natural-joint]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-backtracking-natural-forward]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        },
+        {
+          "case": "tests.v1.test_device_normal_recipe_cuda::test_recipe_matches_frozen_trajectory_and_retention[3-backtracking-natural-reverse]",
+          "kind": "failure",
+          "message": "assert 968 == 904"
+        }
+      ]
+    },
+    "revised": {
+      "cases": 529,
+      "passed": 528,
+      "failures": [
+        {
+          "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[forward]",
+          "kind": "failure",
+          "message": "AssertionError: assert ('budget' == 'budget'\n  \n    budget and 9 == 10)\n +  where 9 = DeviceState(identity='756d280dae8ca296bd62351561f3bf4f9a7604b61a05600cbee447d0e2809ef6', run_id='three-anchors', versi..., loss=2.704988506168006, validation_score=2.704988506168006, best_score=2.704988506168006, n_terms=10, best_n_terms=9).best_n_terms\n +    where DeviceState(identity='756d280dae8ca296bd62351561f3bf4f9a7604b61a05600cbee447d0e2809ef6', run_id='three-anchors', versi..., loss=2.704988506168006, validation_score=2.704988506168006, best_score=2.704988506168006, n_terms=10, best_n_terms=9) = DeviceFitResult(run=<openboost.device_runtime.DeviceRun object at 0x2a90cfbb3680>, state=DeviceState(identity='756d280...5, min_delta=0.2, reference_score=2.704988506168006, last_score=2.704988506168006, completed_rounds=5, stale_rounds=0)).state"
+        }
+      ]
+    }
+  },
+  "operation_statuses": {
+    "worsening": 59,
+    "improvement": 38,
+    "unresolved": 2,
+    "unchanged": 7
+  },
+  "trajectory_comparison_statuses": {
+    "improvement": 1381,
+    "worsening": 946,
+    "unchanged": 221
+  },
+  "old_false_improvement_cases": [
+    {
+      "case": "run7/forward/channel0/alpha4.0/training",
+      "comparison": {
+        "lower": 5.904800678568961e-18,
+        "upper": 5.904937990550645e-18,
+        "method": "normal-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false,
+        "status": "worsening",
+        "estimate": 5.904869334559803e-18,
+        "uncertainty": 6.865599084190131e-23
+      }
+    },
+    {
+      "case": "run7/reverse/channel0/alpha4.0/training",
+      "comparison": {
+        "lower": 5.904800678568961e-18,
+        "upper": 5.904937990550645e-18,
+        "method": "normal-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false,
+        "status": "worsening",
+        "estimate": 5.904869334559803e-18,
+        "uncertainty": 6.865599084190131e-23
+      }
+    }
+  ],
+  "directed_double_lowering": {
+    "add.rm.f64": true,
+    "add.rp.f64": true,
+    "mul.rm.f64": true,
+    "mul.rp.f64": true,
+    "div.rm.f64": true,
+    "div.rp.f64": true
+  },
+  "cpu_replays": {
+    "historical": 19,
+    "revised": 19
+  },
+  "fixture_prefix_derivation": {
+    "joint": {
+      "boundaries": [
+        {
+          "terms": 2,
+          "mean": 3.0,
+          "best_terms": 0
+        },
+        {
+          "terms": 4,
+          "mean": 1.9500000476837158,
+          "best_terms": 4
+        },
+        {
+          "terms": 6,
+          "mean": 1.9700000286102295,
+          "best_terms": 4
+        },
+        {
+          "terms": 8,
+          "mean": 1.899999976158142,
+          "best_terms": 8
+        },
+        {
+          "terms": 10,
+          "mean": 1.8899999856948853,
+          "best_terms": 10
+        }
+      ],
+      "final_best_terms": 10
+    },
+    "forward": {
+      "boundaries": [
+        {
+          "terms": 1,
+          "mean": 3.0,
+          "best_terms": 0
+        },
+        {
+          "terms": 2,
+          "mean": 3.0,
+          "best_terms": 0
+        },
+        {
+          "terms": 3,
+          "mean": 1.9500000476837158,
+          "best_terms": 3
+        },
+        {
+          "terms": 4,
+          "mean": 1.9500000476837158,
+          "best_terms": 3
+        },
+        {
+          "terms": 5,
+          "mean": 1.9700000286102295,
+          "best_terms": 3
+        },
+        {
+          "terms": 6,
+          "mean": 1.9700000286102295,
+          "best_terms": 3
+        },
+        {
+          "terms": 7,
+          "mean": 1.899999976158142,
+          "best_terms": 7
+        },
+        {
+          "terms": 8,
+          "mean": 1.899999976158142,
+          "best_terms": 7
+        },
+        {
+          "terms": 9,
+          "mean": 1.8899999856948853,
+          "best_terms": 9
+        },
+        {
+          "terms": 10,
+          "mean": 1.8899999856948853,
+          "best_terms": 9
+        }
+      ],
+      "final_best_terms": 9
+    },
+    "reverse": {
+      "boundaries": [
+        {
+          "terms": 1,
+          "mean": 2.0,
+          "best_terms": 0
+        },
+        {
+          "terms": 2,
+          "mean": 3.0,
+          "best_terms": 0
+        },
+        {
+          "terms": 3,
+          "mean": 3.0,
+          "best_terms": 0
+        },
+        {
+          "terms": 4,
+          "mean": 1.9500000476837158,
+          "best_terms": 4
+        },
+        {
+          "terms": 5,
+          "mean": 1.9500000476837158,
+          "best_terms": 4
+        },
+        {
+          "terms": 6,
+          "mean": 1.9700000286102295,
+          "best_terms": 4
+        },
+        {
+          "terms": 7,
+          "mean": 1.9700000286102295,
+          "best_terms": 4
+        },
+        {
+          "terms": 8,
+          "mean": 1.899999976158142,
+          "best_terms": 8
+        },
+        {
+          "terms": 9,
+          "mean": 1.899999976158142,
+          "best_terms": 8
+        },
+        {
+          "terms": 10,
+          "mean": 1.8899999856948853,
+          "best_terms": 10
+        }
+      ],
+      "final_best_terms": 10
+    }
+  },
+  "dispatch_seconds": 633.55021,
+  "worker_seconds": 205.334651824,
+  "scope": "Offline artifact and recorded-enclosure audit; fixture derivation is not a new device execution or a passing revised verdict."
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "openboost-author-request-accounting-v1",
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "medium",
+  "limits": {
+    "generated_tokens": 4096,
+    "request_tokens": 4096,
+    "requests": 1,
+    "wall_s": 5
+  },
+  "transport": "responses_https",
+  "background": true,
+  "dispatch_ready": false,
+  "status": "request_limit",
+  "generated_tokens": 104,
+  "observed_output_tokens": 104,
+  "reserved_output_tokens": 0,
+  "requests": [
+    {
+      "sequence": 1,
+      "status": "completed",
+      "max_output_tokens": 4096,
+      "usage": {
+        "input_tokens": 40,
+        "output_tokens": 104,
+        "reasoning_tokens": 83
+      },
+      "request_sha256": "643ba12fd099a26440619a9c1108935b600e2d186958f1c9e8aeae7310e9c063",
+      "response_sha256": "b02289957a27b93b6810117a6f5f065680bbfa4bddb5ac2238a6e90357fcac6d",
+      "response_id": "resp_0e9d155a7160f87c006a9f8c706d9487d0ac9350e3bdc73721"
+    }
+  ],
+  "elapsed_s": 3.5507759579923004
+}

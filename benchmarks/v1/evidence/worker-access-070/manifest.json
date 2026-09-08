@@ -1,0 +1,349 @@
+{
+  "revision": "26a6797db75195cb406ede5f6f6cca14a13b1603",
+  "dirty": false,
+  "sources": {
+    "access_preflight.py": "b6e7445b71ef0b82d5a050959049b3c55fcb771dc771fbad4cd07b48772915bd",
+    "process_runner.py": "58d5730c89cde083206806495e8f3a7d27821954814b81ecc946a3477c36c776",
+    "resource_preflight.py": "97d344d966826fd97b819d9e3a41dcf5622f8b6e2cc04a60968c232c6d0b61d8"
+  },
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/access_preflight.py",
+    "/tmp/openboost-access-070"
+  ],
+  "requested": {
+    "cpu": [
+      2,
+      2
+    ],
+    "memory_mib": [
+      8192,
+      8192
+    ],
+    "function_seconds": 120,
+    "retries": 0
+  },
+  "status": "complete",
+  "modal_version": "1.3.0.post1",
+  "image_id": "im-n2Th2Eq83onNSgLT1juSGY",
+  "result": {
+    "passed": true,
+    "checks": {
+      "numerical_pass": true,
+      "labels_read_denied": true,
+      "verifier_write_denied": true,
+      "parent_environment_denied": true,
+      "evaluator_files_unchanged": true,
+      "oversized_mapping_rejected": true,
+      "worker_error_rejected": true,
+      "timeout_killed": true,
+      "timeout_partial_log_retained": true,
+      "numerical_exact_8gib_address_limit": true,
+      "numerical_oversized_mapping_rejected": true,
+      "numerical_two_thread_blas": true,
+      "numerical_peak_counter_verified": true
+    },
+    "cases": {
+      "numerical": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes,json,os,resource,runpy\nfrom pathlib import Path\nimport numpy as np\nmeasurement=runpy.run_path('/opt/resource_preflight.py')['worker_measurement']()\nassert os.getresuid()==(65534,65534,65534) and os.getresgid()==(65534,65534,65534)\nassert not os.getgroups()\nassert ctypes.CDLL(None).prctl(39,0,0,0,0)==1\nassert 'OPENBOOST_EVALUATOR_CANARY' not in os.environ\ntry:\n    os.setuid(0)\nexcept PermissionError:\n    pass\nelse:\n    raise AssertionError('worker regained root')\ntry:\n    resource.setrlimit(resource.RLIMIT_AS,(9*1024**3,9*1024**3))\nexcept (ValueError,PermissionError):\n    pass\nelse:\n    raise AssertionError('worker raised hard address limit')\nnp.savez('predictions.npz', prediction=np.array([1.,2.]))\nPath('model.bin').write_bytes(b'permission/resource probe, not a trained model')\nPath('measurement.json').write_text(json.dumps(dict(worker=measurement,uid=os.getresuid(),gid=os.getresgid(),groups=os.getgroups(),no_new_privs=True,root_restore_rejected=True,hard_limit_raise_rejected=True,evaluator_env_absent=True)))\n"
+        ],
+        "launch_command": [
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+          "8589934592",
+          "1",
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes,json,os,resource,runpy\nfrom pathlib import Path\nimport numpy as np\nmeasurement=runpy.run_path('/opt/resource_preflight.py')['worker_measurement']()\nassert os.getresuid()==(65534,65534,65534) and os.getresgid()==(65534,65534,65534)\nassert not os.getgroups()\nassert ctypes.CDLL(None).prctl(39,0,0,0,0)==1\nassert 'OPENBOOST_EVALUATOR_CANARY' not in os.environ\ntry:\n    os.setuid(0)\nexcept PermissionError:\n    pass\nelse:\n    raise AssertionError('worker regained root')\ntry:\n    resource.setrlimit(resource.RLIMIT_AS,(9*1024**3,9*1024**3))\nexcept (ValueError,PermissionError):\n    pass\nelse:\n    raise AssertionError('worker raised hard address limit')\nnp.savez('predictions.npz', prediction=np.array([1.,2.]))\nPath('model.bin').write_bytes(b'permission/resource probe, not a trained model')\nPath('measurement.json').write_text(json.dumps(dict(worker=measurement,uid=os.getresuid(),gid=os.getresgid(),groups=os.getgroups(),no_new_privs=True,root_restore_rejected=True,hard_limit_raise_rejected=True,evaluator_env_absent=True)))\n"
+        ],
+        "address_limit_bytes": 8589934592,
+        "worker_identity": "uid_gid_65534_no_new_privs",
+        "environment_policy": "minimal_explicit",
+        "timeout_s": 1800,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "reason": "",
+        "wall_s": 0.4718490750000002,
+        "artifacts": {
+          "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "predictions.npz": "7ee3bf1fb3b2edc8b1ad6ca8bd471560e8ddf6d11c2e2424c82edd0d6c0d5fad",
+          "model.bin": "0cae55736fab12ea9397d223a1be3ba82c7a9eb810bc3a505d96263d05a85101",
+          "measurement.json": "24c1f9d9efbc430f8f62a5f7f24b6667d1da1234677af198e17d4f7794c4e8d5"
+        }
+      },
+      "read_labels": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "from pathlib import Path; import sys; Path(sys.argv[1]).read_bytes()",
+          "/tmp/tmp1juzl7j_/evaluator/test-labels.json"
+        ],
+        "launch_command": [
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+          "8589934592",
+          "1",
+          "/usr/local/bin/python",
+          "-c",
+          "from pathlib import Path; import sys; Path(sys.argv[1]).read_bytes()",
+          "/tmp/tmp1juzl7j_/evaluator/test-labels.json"
+        ],
+        "address_limit_bytes": 8589934592,
+        "worker_identity": "uid_gid_65534_no_new_privs",
+        "environment_policy": "minimal_explicit",
+        "timeout_s": 5,
+        "threads": 2,
+        "status": "error",
+        "exit_code": 1,
+        "reason": "worker exited nonzero",
+        "wall_s": 0.06889828099999984,
+        "artifacts": {
+          "worker.log": "676933fa157cf77a2eb8f90b63a5f94074f21114dbe6775f9a22b1bfecfefdcf"
+        }
+      },
+      "tamper_verifier": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "from pathlib import Path; import sys; Path(sys.argv[1]).write_bytes(b\"tampered\")",
+          "/tmp/tmp1juzl7j_/evaluator/verifier.py"
+        ],
+        "launch_command": [
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+          "8589934592",
+          "1",
+          "/usr/local/bin/python",
+          "-c",
+          "from pathlib import Path; import sys; Path(sys.argv[1]).write_bytes(b\"tampered\")",
+          "/tmp/tmp1juzl7j_/evaluator/verifier.py"
+        ],
+        "address_limit_bytes": 8589934592,
+        "worker_identity": "uid_gid_65534_no_new_privs",
+        "environment_policy": "minimal_explicit",
+        "timeout_s": 5,
+        "threads": 2,
+        "status": "error",
+        "exit_code": 1,
+        "reason": "worker exited nonzero",
+        "wall_s": 0.06537339999999991,
+        "artifacts": {
+          "worker.log": "e11369ce5e838c9587fb0c60962fcf17020f20687c512ede84d38c003ff7cac5"
+        }
+      },
+      "parent_environment": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "from pathlib import Path; import sys; Path(sys.argv[1]).read_bytes()",
+          "/proc/2/environ"
+        ],
+        "launch_command": [
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+          "8589934592",
+          "1",
+          "/usr/local/bin/python",
+          "-c",
+          "from pathlib import Path; import sys; Path(sys.argv[1]).read_bytes()",
+          "/proc/2/environ"
+        ],
+        "address_limit_bytes": 8589934592,
+        "worker_identity": "uid_gid_65534_no_new_privs",
+        "environment_policy": "minimal_explicit",
+        "timeout_s": 5,
+        "threads": 2,
+        "status": "error",
+        "exit_code": 1,
+        "reason": "worker exited nonzero",
+        "wall_s": 0.08142339500000007,
+        "artifacts": {
+          "worker.log": "2bdadfc6967c15376dce2df11bbacb2ab71b8a00afa0b530236d50c49a1df50e"
+        }
+      },
+      "memory": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import mmap; print(\"allocating\",flush=True); mmap.mmap(-1,9*1024**3)"
+        ],
+        "launch_command": [
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+          "8589934592",
+          "1",
+          "/usr/local/bin/python",
+          "-c",
+          "import mmap; print(\"allocating\",flush=True); mmap.mmap(-1,9*1024**3)"
+        ],
+        "address_limit_bytes": 8589934592,
+        "worker_identity": "uid_gid_65534_no_new_privs",
+        "environment_policy": "minimal_explicit",
+        "timeout_s": 5,
+        "threads": 2,
+        "status": "error",
+        "exit_code": 1,
+        "reason": "worker exited nonzero",
+        "wall_s": 0.06582993299999984,
+        "artifacts": {
+          "worker.log": "81b888119a085e2dc79022caf4d4783b7da896c1031d7d54211a62ad3b421a70"
+        }
+      },
+      "error": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "raise RuntimeError(\"intentional worker failure\")"
+        ],
+        "launch_command": [
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+          "8589934592",
+          "1",
+          "/usr/local/bin/python",
+          "-c",
+          "raise RuntimeError(\"intentional worker failure\")"
+        ],
+        "address_limit_bytes": 8589934592,
+        "worker_identity": "uid_gid_65534_no_new_privs",
+        "environment_policy": "minimal_explicit",
+        "timeout_s": 5,
+        "threads": 2,
+        "status": "error",
+        "exit_code": 1,
+        "reason": "worker exited nonzero",
+        "wall_s": 0.06570011600000036,
+        "artifacts": {
+          "worker.log": "6f1a0877a9fcdeaa02b9074936278a5878e91e4713117b1af85b5a0b05f1eac8"
+        }
+      },
+      "timeout": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import time; print(\"started\",flush=True); time.sleep(10)"
+        ],
+        "launch_command": [
+          "/usr/local/bin/python",
+          "-c",
+          "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+          "8589934592",
+          "1",
+          "/usr/local/bin/python",
+          "-c",
+          "import time; print(\"started\",flush=True); time.sleep(10)"
+        ],
+        "address_limit_bytes": 8589934592,
+        "worker_identity": "uid_gid_65534_no_new_privs",
+        "environment_policy": "minimal_explicit",
+        "timeout_s": 0.25,
+        "threads": 2,
+        "status": "timeout",
+        "exit_code": -9,
+        "reason": "wall budget exceeded; process group killed",
+        "wall_s": 0.25176242700000007,
+        "artifacts": {
+          "worker.log": "eff64b343dcb2b1dc113648e7089b9ce9f8a7f6c7808a03a2cffb4ad7302f606"
+        }
+      }
+    },
+    "measurement": {
+      "worker": {
+        "checks": {
+          "exact_8gib_address_limit": true,
+          "oversized_mapping_rejected": true,
+          "two_thread_blas": true,
+          "peak_counter_verified": true
+        },
+        "address_limit": [
+          8589934592,
+          8589934592
+        ],
+        "mapping_error": "[Errno 12] Cannot allocate memory",
+        "numpy": "2.3.5",
+        "pools": [
+          {
+            "user_api": "blas",
+            "internal_api": "openblas",
+            "num_threads": 2,
+            "prefix": "libscipy_openblas",
+            "filepath": "/usr/local/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+            "version": "0.3.30",
+            "threading_layer": "pthreads",
+            "architecture": "SkylakeX"
+          }
+        ],
+        "touched_bytes": 67108864,
+        "peaks": {
+          "before": {
+            "ru_maxrss_bytes": 84393984,
+            "proc_vmhwm_bytes": null
+          },
+          "during": {
+            "ru_maxrss_bytes": 150982656,
+            "proc_vmhwm_bytes": null
+          },
+          "after": {
+            "ru_maxrss_bytes": 150982656,
+            "proc_vmhwm_bytes": null
+          }
+        },
+        "verified_peak_counters": [
+          "ru_maxrss_bytes"
+        ]
+      },
+      "uid": [
+        65534,
+        65534,
+        65534
+      ],
+      "gid": [
+        65534,
+        65534,
+        65534
+      ],
+      "groups": [],
+      "no_new_privs": true,
+      "root_restore_rejected": true,
+      "hard_limit_raise_rejected": true,
+      "evaluator_env_absent": true
+    },
+    "protected_hashes": {
+      "/tmp/tmp1juzl7j_/evaluator/test-labels.json": "8a780537946b463a6b9c5d8603e9989c92e0cbeeadd9ea3087abbff53019694a",
+      "/tmp/tmp1juzl7j_/evaluator/verifier.py": "4bac9ac43bc690df9fb3f9be6db1a4b72067eae112c483c0d17042c13043c131"
+    },
+    "environment": {
+      "python": "3.12.10",
+      "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36"
+    },
+    "scope": "UID-based file permissions and bounded numerical subprocesses; synthetic protected fixtures, not full search or complete hostile-code isolation"
+  },
+  "artifacts": {
+    "memory/worker.log": "81b888119a085e2dc79022caf4d4783b7da896c1031d7d54211a62ad3b421a70",
+    "memory/execution.json": "22ab23c970aa67cb5901503114f50abcac6117e562e7c321a8f3e593a55e6529",
+    "numerical/model.bin": "0cae55736fab12ea9397d223a1be3ba82c7a9eb810bc3a505d96263d05a85101",
+    "numerical/worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "numerical/measurement.json": "24c1f9d9efbc430f8f62a5f7f24b6667d1da1234677af198e17d4f7794c4e8d5",
+    "numerical/predictions.npz": "7ee3bf1fb3b2edc8b1ad6ca8bd471560e8ddf6d11c2e2424c82edd0d6c0d5fad",
+    "numerical/execution.json": "7b694a6d4f87834b9f02a0a81f7a0ad9c226b600720d2455a07b29b3ce739a15",
+    "timeout/worker.log": "eff64b343dcb2b1dc113648e7089b9ce9f8a7f6c7808a03a2cffb4ad7302f606",
+    "timeout/execution.json": "17a1a82adfb2b69da5a5f2851a5bf46f7b543507d5dd17366ae1304a3286fb54",
+    "tamper_verifier/worker.log": "e11369ce5e838c9587fb0c60962fcf17020f20687c512ede84d38c003ff7cac5",
+    "tamper_verifier/execution.json": "23a60f8e5bc89269e6473a764d06ba49811b73094a8c6b07ed244add38875ac9",
+    "error/worker.log": "6f1a0877a9fcdeaa02b9074936278a5878e91e4713117b1af85b5a0b05f1eac8",
+    "error/execution.json": "036dc9400ccccc03c0cd29ae162e951215449e3ed3d60ecc9aea6414108dfb38",
+    "read_labels/worker.log": "676933fa157cf77a2eb8f90b63a5f94074f21114dbe6775f9a22b1bfecfefdcf",
+    "read_labels/execution.json": "ba42d7940982af74fe88d04ba4951fd2b2b69a9376b0111e9d8eddebb58271ef",
+    "parent_environment/worker.log": "2bdadfc6967c15376dce2df11bbacb2ab71b8a00afa0b530236d50c49a1df50e",
+    "parent_environment/execution.json": "6ec1b7bd8fbb6b4fabb3c162bb2dcde21ec12907442611c1ac79e08fe7187b5f"
+  }
+}

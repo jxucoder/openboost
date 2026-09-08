@@ -1,0 +1,9 @@
+{
+  "complete": true,
+  "verified_fits": 2,
+  "installed_core": true,
+  "generator_disabled": true,
+  "cupy_available": false,
+  "numba_available": false,
+  "input_sha256": "0744f1c2356961b03ca2762ce5908186b86f0aaf11acc5ef2c2a0b7a7889854f"
+}

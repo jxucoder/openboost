@@ -1,0 +1,187 @@
+{
+  "schema": "openboost-normal-neighbor-study-v1",
+  "device_execution": false,
+  "source_revision": "ba46b3a63aa707f549cdb016448340ab5f934c94",
+  "dirty": false,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/analyze_normal_neighbors.py",
+    "/tmp/openboost-normal-neighbors-091.json"
+  ],
+  "environment": {
+    "python": "3.12.12",
+    "numpy": "2.3.5",
+    "os": "macOS-26.3-x86_64-i386-64bit"
+  },
+  "analysis_sources": {
+    "benchmarks/v1/analyze_normal_neighbors.py": "118205d1987a55ef6cd53e7d8c6b01dcd37f91d142784b90b8f82420b11f5b29",
+    "tests/v1/reference/normal_acceptance.py": "5844a028d9246ee53c07b6893e652028698645443c76c1b691ea50a9a4306d36",
+    "tests/v1/reference/device_normal.py": "0a01506665bab43caae6df5c047c4bd1eb6a230bb525389c2e536eaf4bfd51b8",
+    "tests/v1/reference/device_rounds.py": "73861bf4a0f7071c3f739491823440eb2af0dfb60a912a54642890aa955f829d",
+    "tests/v1/reference/device_splits.py": "b081e720691a083bed7a29ae1079ab3698ffe24e0ef282008f67de4e75ec49a9",
+    "tests/v1/reference/device_histogram.py": "6504357268c63c2a35f32620a8c31aa126dd67f9a282ae76e95b4003d7ed4970"
+  },
+  "input_manifest_sha256": "c9a90a6fcd46487d5f4b9e43b997120977b80b5fa3ebbae99211adf4e5c3971d",
+  "input_model": {
+    "path": "normal/d2-ordinary-0-forward-backtracking/model.json",
+    "sha256": "4fc75622a605daa50815b3619caba6591e6f56662630ffc511150852cdcd818e",
+    "dispatch_revision": "4143d188b9635749308ef52382a1562928ae2612"
+  },
+  "fixture": "conflict; training arrays equal d2",
+  "original_inputs": {
+    "target": [
+      5.75,
+      -1.0,
+      -0.75,
+      -1.25,
+      -1.0,
+      -1.75
+    ],
+    "offset": [
+      [
+        -0.25,
+        -0.125
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.25,
+        0.125
+      ],
+      [
+        -0.25,
+        -0.125
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.25,
+        0.125
+      ]
+    ],
+    "weight": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "base": [
+    0.3401637375354767,
+    1.0863723754882812
+  ],
+  "base_float32_bits": [
+    1051601393,
+    1066077760
+  ],
+  "float64_nll": 2.505310894870248,
+  "float64_nll_bits": 4612823877406309854,
+  "neighbors": [
+    {
+      "channel": 0,
+      "direction": "down",
+      "raw": [
+        0.3401637077331543,
+        1.0863723754882812
+      ],
+      "raw_float32_bits": [
+        1051601392,
+        1066077760
+      ],
+      "float64_nll": 2.5053108948702474,
+      "float64_nll_bits": 4612823877406309853,
+      "float64_nll_difference": -4.440892098500626e-16,
+      "high_precision": {
+        "decimal60": "5.90486622292425173535707418113599115929643383333333333333333E-18",
+        "decimal100": "5.904866222924251735357074181135991159296433773032615137532009664028333200660077129083333333333333333E-18",
+        "signs": [
+          1,
+          1
+        ],
+        "estimates_agree": true,
+        "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+      }
+    },
+    {
+      "channel": 0,
+      "direction": "up",
+      "raw": [
+        0.3401637673377991,
+        1.0863723754882812
+      ],
+      "raw_float32_bits": [
+        1051601394,
+        1066077760
+      ],
+      "float64_nll": 2.5053108948702474,
+      "float64_nll_bits": 4612823877406309853,
+      "float64_nll_difference": -4.440892098500626e-16,
+      "high_precision": {
+        "decimal60": "9.73451811497788039842188782293487365577858034166666666666667E-17",
+        "decimal100": "9.734518114977880398421887822934873655778580405448871750563500305051563116878431021948333333333333333E-17",
+        "signs": [
+          1,
+          1
+        ],
+        "estimates_agree": true,
+        "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+      }
+    },
+    {
+      "channel": 1,
+      "direction": "down",
+      "raw": [
+        0.3401637375354767,
+        1.0863722562789917
+      ],
+      "raw_float32_bits": [
+        1051601393,
+        1066077759
+      ],
+      "float64_nll": 2.505310894870259,
+      "float64_nll_bits": 4612823877406309879,
+      "float64_nll_difference": 1.1102230246251565e-14,
+      "high_precision": {
+        "decimal60": "1.091526546188931486211133855809947807664011104325E-14",
+        "decimal100": "1.091526546188931486211133855809947807664011104214624780786398992668815322855553635261148333333333333E-14",
+        "signs": [
+          1,
+          1
+        ],
+        "estimates_agree": true,
+        "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+      }
+    },
+    {
+      "channel": 1,
+      "direction": "up",
+      "raw": [
+        0.3401637375354767,
+        1.0863724946975708
+      ],
+      "raw_float32_bits": [
+        1051601393,
+        1066077761
+      ],
+      "float64_nll": 2.505310894870265,
+      "float64_nll_bits": 4612823877406309893,
+      "float64_nll_difference": 1.7319479184152442e-14,
+      "high_precision": {
+        "decimal60": "1.75064431827849445295706364373945344298271476693333333333333E-14",
+        "decimal100": "1.75064431827849445295706364373945344298271476693138351246668412122007193212936312535433E-14",
+        "signs": [
+          1,
+          1
+        ],
+        "estimates_agree": true,
+        "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+      }
+    }
+  ],
+  "limitation": "A passing D2 base, not a failed GPU state trace. CPU high-precision mathematics, not CUDA execution/emulation or a repaired acceptance policy."
+}

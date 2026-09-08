@@ -1,0 +1,26 @@
+{
+  "scope": "retained reproduction of the weaker development profile counterexample; not an author attempt",
+  "argv": [
+    "/usr/bin/sandbox-exec",
+    "-D",
+    "WORK=/private/tmp/openboost-095-isolation-development/work",
+    "-D",
+    "EVALUATOR=/private/tmp/openboost-095-isolation-development/evaluator",
+    "-D",
+    "REPOSITORY=/Users/jiaruixu/work_space/openboost",
+    "-f",
+    "/private/tmp/openboost-095-isolation-development/worker.sb",
+    "/private/tmp/openboost-095-isolation-development/runtime/bin/python",
+    "-I",
+    "-B",
+    "-c",
+    "import pathlib,sys; pathlib.Path(sys.argv[1]).read_bytes(); print('unlisted-answer-readable')",
+    "/tmp/openboost-095-isolation-development/unlisted-answers.json"
+  ],
+  "cwd": "/tmp/openboost-095-isolation-development/work",
+  "exit_code": 0,
+  "stdout": "unlisted-answer-readable\n",
+  "stderr": "",
+  "profile_sha256": "e3f097fd202f9507edb44f38f52e673d549f7daf3ae8644736631dd821ff6278",
+  "answer_copy_sha256": "622d2791ddae956d261da9e9c8291cabcbad91f8077af28701b9cc3036e88d27"
+}

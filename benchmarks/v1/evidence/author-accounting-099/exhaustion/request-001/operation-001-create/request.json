@@ -1,0 +1,14 @@
+{
+  "model": "gpt-5.6-luna",
+  "reasoning": {
+    "effort": "medium"
+  },
+  "input": "Write the positive integers in order, one per line, starting at 1 and continuing through 10000. Do not add an introduction, explanation, or conclusion.",
+  "max_output_tokens": 128,
+  "tools": [],
+  "parallel_tool_calls": false,
+  "stream": false,
+  "background": true,
+  "store": false,
+  "service_tier": "default"
+}

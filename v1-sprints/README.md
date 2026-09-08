@@ -11,48 +11,244 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-Current review and remaining plan: [Sprint 038](038-goal-progress-and-plan.md).
-Public CPU components now cover twelve recipes, multi-output target scaling and
-shared training preparation. The latest full regression records 923 passes;
-this includes references/evaluation infrastructure and is not a phase gate.
-Independent stopping is delivered in [Sprint 039](039-independent-stopping.md).
-Installed D2/D3 development wheels pass in [Sprint 040](040-installed-extensions.md).
-Ordered updates pass in [Sprint 041](041-ordered-updates.md). Shared result
-interoperability passes in [Sprint 042](042-result-contract.md). D1 expectile passes in [Sprint 043](043-expectile-extension.md). Next: remaining
-D5 author probes and additional real-data adapters. [Sprint 044](044-current-worker.md)
-connects current A1/A11 workers to all five frozen housing folds.
-[Sprint 045](045-multioutput-worker.md) adds scale-bound A6 Parkinsons folds.
-[Sprint 046](046-scale-bound-selection.md) binds A6 selection to training scales
-and runs a current 16-configuration synthetic search with sealed model release.
-[Sprint 047](047-multioutput-quality.md) adds verified-scale A6 standardized
-quality reporting while retaining every per-target gate. Next: remaining
-application adapters, real search integration and D5 checks.
-[Sprint 048](048-classification-workers.md) adds A2/A3 probability adapters and
-five-fold Adult integration. [Sprint 049](049-covertype-worker.md) records all
-five full Covertype folds timing out at 90 seconds. [Sprint 050](050-covertype-profile.md) profiles the full input:
-histogram aggregation and repeated candidate row hashing dominate the sampled
-window. [Sprint 051](051-candidate-row-hash.md) hoists the invariant digest;
-fold zero completes within 90 seconds with exact fresh replay.
-[Sprint 052](052-histogram-gather.md) reuses selected histogram statistics;
-all five full folds pass within the unchanged cap with exact fresh replay.
-[Sprint 053](053-quantile-worker.md) adds current A5 independent quantiles on
-all five Bike origins. [Sprint 054](054-count-worker.md) adds A7 explicit
-count/exposure integration on all five frequency folds.
-[Sprint 055](055-severity-worker.md) adds A8 severity on all five grouped claim
-folds. [Sprint 056](056-aggregate-worker.md) adds direct A9 aggregate integration
-on all five folds. [Sprint 057](057-paid-event-binding.md) verifies matched paid
-event input packets. [Sprint 058](058-composition-worker.md) trains and replays
-all five compositions with independent component selection.
-[Sprint 059](059-survival-worker.md) adds A10 fixed-scale survival on all five folds
-and records the CPU-to-GPU checkpoint. [Sprint 060](060-structured-worker.md)
-adds A12 structured Formula. [Sprint 061](061-ranking-worker.md) adds the A4
-query-aware adapter; real MSLR binding remains open.
-[Sprint 062](062-cpu-exit-and-gpu-entry.md) reviews CPU exit and GPU entry.
-Next: installed D5 run-ID RNG and stale-preparation probes, then source/workflow
-and gate reconciliation. Real searches and joint A9 selection remain open.
-F3 has not started; the review preserves current phase ordering.
-CUDA, formal author comparisons, real application
-acceptance and independent adoption remain open.
+The user's [101 deferral](101-defer-author-evaluation.md) pauses agent-friendliness
+evaluation and its accounting/isolation preparation, including the unapproved
+100 live model test. F2/E5 remains unpassed but no longer gates foundation or
+CUDA construction. Public composability and correctness remain required.
+
+The [102 Normal CUDA run](102-normal-cuda-validation.md) completes at `469ca0e`:
+528/529 revised cases pass and the historical cohort has exactly its 26 expected
+disagreements. All 409 declared JSON artifacts are retained. The lone revised
+failure is a forward fixture's best-prefix expectation after a zero-valued final
+term; independent derivation requires nine, while the test expects ten. Preserve
+the [raw failed verdict](../benchmarks/v1/evidence/cuda-comparison-092/README.md).
+Run 8's allowance is consumed, and agent studies remain paused.
+
+The fixture correction at `6026ebb` has three CPU checks for ordered/joint best
+prefixes and accepted no-ops. [103's real T4 revalidation](103-normal-cuda-revalidation.md)
+then passes all fifteen recipe cases at clean `a7173d9`, including the forward
+case's later assertions. All 46 uploaded sources and eighteen pinned packages
+match. [Combined evidence](../benchmarks/v1/evidence/cuda-recipe-103/README.md)
+verifies 514 earlier passes plus fifteen new passes with identical production.
+Bounded revised coverage is complete across two runs; the historical failed
+verdict and all 420 indexed run-8 files stay intact. The retrospective is complete,
+and all nine GPU allowances are consumed. No further hardware is authorized.
+
+The user subsequently approves [104's early performance checkpoint](104-early-performance-checkpoint.md)
+on the existing squared/Normal paths. Its frozen, bounded same-host CPU/CUDA runs
+precede further recipe ports; compilation/profiling and quality-qualified timing
+remain distinct. No external-library speed or formal E4 claim is implied.
+Automatic approval review blocks its dispatch before process creation because the
+exact private-source payload and Modal destination were not explicitly approved.
+No run occurs or allowance is consumed by that rejected attempt. The user's next
+"approve" explicitly authorizes the requested 46-file, approximately 358 kB Modal
+upload for one T4, two CPUs, 8192 MiB, 900 function seconds, 600 test seconds and
+zero retries. Run 10 then executes once at clean `c8f7ebc`, with all sixteen case
+artifacts and matching sources/packages. Only squared 10,000 rows completes and
+qualifies: 7.044 s CPU versus 2.941 s warm GPU, ratio 2.395. Four other pairs and
+the profile remain incomplete after deadlines; preserve the
+[raw false verdict](../benchmarks/v1/evidence/early-performance-104/README.md).
+No ratio is assigned to partial 100,000-row timings. Exact synthetic input hashes
+also fail to reproduce on the local macOS audit host; same-host CPU/GPU identity
+and the remote quality judge remain valid. Save exact inputs in future evidence.
+All ten GPU allowances are consumed. The approved
+[105 construction](105-parallel-validation-and-reproducible-cost.md) now preserves
+exact input/per-fit evidence, adds cooperative field validation and prepares a
+[frozen 88-file T4 comparison](105-validation-run11-request.md). Full CPU regression
+passes 1994 tests with one Linux-only skip; 474 real-device cases collect from an
+isolated wheel. The user then approves that exact upload and invocation. Run 11
+executes once at clean `dd84247`: all 474 T4 checks and three cost gates pass, all
+28 fits replay exactly from retained inputs, and large squared warm fit cost falls
+13.513 to 8.947 seconds. [Raw evidence and audit](../benchmarks/v1/evidence/parallel-validation-105/README.md)
+retain all artifacts and exact original/candidate models. All eleven allowances
+are consumed. Keep the optimization and stop at the completed 105 retrospective;
+next construction returns to required 080 recipes and inference metadata. These
+synthetic results do not pass formal E4 or full Normal conformance.
+
+[106 binary/Poisson device components](106-binary-poisson-device-components.md)
+completes local construction: independent numerics and complete required scope,
+resident objective operations, class-aware export and two-round composition checks.
+Local regression passed 2,065 CPU tests with one Linux-only skip; forty-four new
+GPU cases collected without execution. [107 loss-change and recipe integration](107-glm-comparison-and-recipes.md)
+then completed local construction of resident comparison and scalar acceptance,
+best-validation and independent patience consumers. Full regression passed 2,241
+CPU tests with one Linux-only skip. All 153 GLM GPU cases were then collected but unrun.
+The [108 run-12 request](108-glm-validation-request.md) now freezes 85 files,
+571 cases and 77 mandatory JSON artifacts. Isolated installed collection agrees;
+45 local packet/retention controls pass. Its approved execution at clean `fe12beb`
+passes all 571 T4 cases with all 77 artifacts and source/package identities intact.
+[The offline audit](../benchmarks/v1/evidence/cuda-glm-108/README.md) verifies all
+246 comparison differences and replays all 32 final/best models from stored input
+bytes. [The 108 retrospective](108-glm-validation-result.md) is complete; all twelve
+allowances are consumed. Stop here, then begin the required multiclass construction
+on the next continuation. AFT/vector topology, train-many and formal E4 remain open.
+
+The user's next request starts the [109 PR integration checkpoint](109-pr-integration.md)
+before further construction: prepare an English PR, verify hosted CI and preserve
+the historical execution commits. Actual merge remains a subsequent action.
+
+After this checkpoint, advance
+[required CUDA recipes](080-cuda-required-recipes.md),
+[train-many](081-cuda-train-many.md) and [real-workload quality/cost](082-end-to-end-cost.md).
+No new model call is needed for
+these engineering checks. Preserve every application family and all past evidence.
+Resume the deferred author study only at the user's direction.
+
+[102's local readiness check](102-normal-cuda-validation.md) passes all 37 run-8
+harness cases and verifies the unchanged source closure. Automatic approval review
+blocked the attempted command before process creation because "finish" did not
+specifically authorize the source upload and paid GPU invocation. Both packet
+authorizations are restored to pending; no run occurred or allowance was consumed.
+The user subsequently replied "approve" to the exact 86-file upload and single
+bounded T4 invocation. Its authorization is recorded in 102; execute the original
+packet once and stop for retrospective. That run is now complete as recorded above;
+earlier pending/approved statements are historical.
+
+## Prior preparation and evidence
+
+The following authoring continuations and 085 priority order are historical and
+superseded by 101. The latest live author-accounting result is
+[099's provider accounting smoke](099-accounting-result.md):
+real cap exhaustion passes and cancellation remains unexercised, leaving the
+frozen overall verdict failed. It follows
+[097's passing corrected Linux worker smoke](097-worker-identity-result.md),
+following [096's failed Linux worker smoke](096-linux-worker-result.md)
+and its [local construction](096-linux-author-worker.md),
+following [095 author packet and failed native isolation](095-author-packet-and-local-isolation.md)
+and [094 standalone author-verifier preparation](094-author-verifier-preparation.md),
+following the [093 checkpoint](093-foundation-progress-and-next-steps.md).
+Standalone D1/D2 development checks and a concrete runner audit advance 069;
+independent dispatch remains blocked on actual accounting/isolation and arm/settings
+freezes. Run 8 is still pending and its frozen inputs are unchanged.
+The separately approved 096 CPU allowance is consumed: 14/19 checks pass, but the
+worker runs as root and modifies core/material files. Timeout is not reached.
+The evaluator remains outside the worker and unchanged. That failure is retained.
+
+The user's subsequent "sure" approved [097's explicit identity correction](097-explicit-worker-identity.md)
+and one separately frozen CPU smoke. At clean `518eccf`, all nineteen original checks,
+both identity guards and actual provider expiry pass. The original thirteen uploads
+are byte-identical; only the trusted launcher is added. Core/material writes and
+root restoration fail as required, and all evaluator hashes remain unchanged.
+That allowance is consumed, with no retry. The retrospective is complete: next
+design actual generated-token/wall-budget enforcement and fair-arm/model/settings
+before any independent attempt. No model or additional remote run is authorized.
+
+[098 request accounting](098-author-request-accounting.md) now constructs the
+trusted text-request boundary locally: durable pre-dispatch reservations, final
+usage validation, no automatic retries and local transport-process deadlines.
+Protocol fixtures are explicitly labeled and do not count as real token evidence.
+Actual provider exhaustion/cancellation, complete worker integration and the
+model/input/spend freeze remain open. No model request or new upload has occurred.
+
+[099 background accounting](099-background-accounting-smoke.md) adds cancellation
+and final retrieval within a fifteen-second cleanup window. Known usage is
+reconciled while stopped answers are withheld; null usage stays unknown. Its
+[concrete live smoke](099-accounting-smoke.json) freezes twelve source files and
+three harmless text prompts, with at most three generations / 4288 output tokens
+and a $0.05 allowance. Fifty-three local checks pass. The user then approved one
+live observation at clean `5c0f31a`: actual cap exhaustion uses 128 then 64 tokens
+and blocks the next request. The cancellation probe completes early with 104
+output tokens, so no cancellation is observed and the overall verdict fails.
+[Raw evidence](../benchmarks/v1/evidence/author-accounting-099/README.md) retains
+all three responses, 296 output tokens total and the unchanged frozen verdict.
+The allowance is consumed without retry. The [retrospective](099-accounting-result.md)
+identifies an explicit active-response cancellation trigger as the next local
+design; no new live allowance or independent author attempt follows.
+
+The next user "continue" starts [100's active-stop construction](100-active-cancellation.md).
+An explicit trusted stop policy now cancels after the first validated in-progress
+observation, withholds stopped answers and separately judges cancellation and
+final usage. Thirteen new local cases plus all 53 earlier cases pass. The
+[new one-request packet](100-cancellation-smoke.json) preserves 099's model,
+prompt, output cap and work window; it proposes a $0.01 allowance without retries.
+Its authorization is pending, and no new model request has run. The active source
+now differs from 099's historical snapshot; its consumed freeze and archived
+evidence remain unchanged and independently verifiable.
+
+The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
+sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
+and bounded [078 scalar CUDA feasibility](078-cuda-scalar-path.md). D1 is the control;
+D2 cohort-feasibility is the deep change carried through the programmable CPU/device
+boundary. This explicitly permits feasibility before formal F2 completion.
+The [086 next execution plan](086-next-execution-plan.md) breaks construction into
+named fields/routed histograms, candidate operations and resident two-round
+training, with explicit acceptance and a retrospective after the remaining run.
+
+Pause the next OpenBoost configuration-05 CPU probe and wider CPU search expansion.
+[070](070-coverage-and-judging.md) remains open and supports correctness/isolation
+requirements for these workstreams. Its [readiness inventory](070-readiness-inventory.md)
+retains the full coverage, selection and source gaps. All R/C/A/E requirements,
+formal E5, required CUDA recipes and P7/E4 remain unchanged.
+
+CPU implementation has twelve recipes; the latest full CPU regression passes
+1949 tests (one Linux-only skip), including author/evaluation support checks.
+Bounded real evaluation and installed extensions exist. All 212 real T4 checks
+pass at clean `af026ef`, including resident scalar training and all earlier
+primitives. The shared score correction resolves run 4's 14 parity failures.
+Independent author benefit, full quality/search and
+adoption remain unverified. The
+[064–084 roadmap](roadmap-after-063.md) retains those obligations; 085 changes their
+near-term priority and the bounded device entry rule. Reflect after each 085 slice
+and every three implementation commits. No independent author attempt has run.
+The two original device runs and the separately approved run 3 are consumed.
+[087 split composition](087-cuda-split-operations.md) passes its 55 new cases plus
+all 33 previous regressions at clean `9ce790e`; see the
+[raw evidence and reflection](../benchmarks/v1/evidence/cuda-splits-078/README.md).
+D2 changes the selected split through public resident scores and feasibility masks.
+[088 resident scalar training](088-resident-scalar-training.md) connects public
+operations to owned transactions, two-round training and saved CPU inference.
+The initial [run-4 failure](../benchmarks/v1/evidence/cuda-resident-078/README.md)
+is retained unchanged. [089 score symmetry](089-cuda-score-symmetry.md) fixes its
+numerical counterexample inside the existing scorer. All 202 original cases and
+ten added diagnostics pass at `af026ef`; the
+[run-5 evidence](../benchmarks/v1/evidence/cuda-score-symmetry-089/README.md) reproduces
+the archived scorer's wrong winner and the corrected scorer's exact tie on the
+same resident inputs, with both PTX outputs retained.
+The later approved [run-6 Normal/D2 package](090-normal-run6-request.md) executes
+at clean `4143d18`: [381/383 pass](../benchmarks/v1/evidence/cuda-normal-090/README.md),
+including all 212 earlier cases, all Normal operation/recipe checks and all twenty
+installed-D2/fresh-inference checks. Two mapped-runtime cases disagree with the
+frozen reference's ordered backtracking decisions near a stationary constant base.
+That run did not retain the failing states. All nineteen saved models replay without CUDA or
+the training extension; the separate split near-tie remains a known limitation.
+
+The separately approved [run 7](091-acceptance-run7-request.md) captures both failing
+states at clean `80740f2`: [383/385 pass](../benchmarks/v1/evidence/cuda-acceptance-091/README.md),
+with all 383 original outcomes unchanged and two successful observations. Both
+fail at round zero's mean update: float64 full-loss rounding reports improvement
+for an actually worsening candidate. Version/best updates and cleanup follow the
+recorded decisions. Full Normal conformance remains open.
+
+All seven allowances are consumed; no retry occurred.
+[091's retrospective](091-normal-acceptance-diagnostics.md) is complete. The user
+approved local [092 construction](092-normal-comparison-design.md). Its independent
+[numerical experiment](092-normal-comparison-mathematics.md) precedes the public
+loss-change operation and three consumers. The
+[106-case evidence](../benchmarks/v1/evidence/normal-comparison-092/README.md) and
+[complete historical mapping](092-comparison-cohorts.md) close 092-A.
+[092-B construction](092-public-comparison-operations.md) adds the public CPU
+comparison and an unverified resident implementation with 117 collected GPU cases.
+[092-C consumer construction](092-comparison-consumers.md) and complete
+[historical bindings](092-cohort-bindings.md) are locally complete. The
+[pending run-8 request](092-comparison-run8-request.md) freezes 86 files with
+385 historical and 529 revised cases, collected from an isolated wheel/snapshot.
+CPU regression passes 1794 checks with one Linux-only skip. No run-8 upload or
+invocation is authorized; the next boundary is its concrete allowance and
+post-run retrospective.
+The [093 checkpoint](093-foundation-progress-and-next-steps.md) explains current
+implementation/evidence and the proposed authoring and workload priorities. It is
+a planning review, with no new execution allowance.
+Original P7/E4, 069 accounting/isolation and full
+R/C/A scope remain open. No additional upload, run or author attempt is authorized.
+
+The [landscape feedback addendum](063-landscape-feedback.md) identifies an external
+stopping-result restriction and refines authoring comparators and development probes.
+
+[Sprint 062](062-cpu-exit-and-gpu-entry.md) retains the preceding CPU/GPU audit.
+[Sprint 038](038-goal-progress-and-plan.md) and Sprints 039–061 record the earlier
+construction, installed extensions and application evidence. The new
+[runtime diagnostic](../benchmarks/v1/evidence/runtime-audit-063/README.md) counts
+quadratic tree replay on tiny fixed-step paths, not wall time or GPU performance.
 
 The chronological entries below record status at each sprint's revision. Their
 historical "next" statements are superseded by the current review.

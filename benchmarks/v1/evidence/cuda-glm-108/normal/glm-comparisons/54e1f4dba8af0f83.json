@@ -1,0 +1,44 @@
+{
+  "case": {
+    "id": "poisson/zero-count",
+    "family": "poisson",
+    "arrays": [
+      [
+        0.0
+      ],
+      [
+        -0.25
+      ],
+      [
+        0.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        2.0
+      ]
+    ],
+    "status": "improvement"
+  },
+  "comparison": {
+    "lower": -0.4513249510580372,
+    "upper": -0.4375,
+    "method": "poisson-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "improvement",
+  "decimal220": "-0.442398433857190263509659466043358705406455419147717051517365267463508775892961510736001969505372358791751325953876354975116711317875689092970693261107171141553812640585303229182206792427860751635940124973455875646958735",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

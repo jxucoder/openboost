@@ -10,8 +10,8 @@ operations and support numeric inference/persistence. The first complete
 [squared-error recipe](squared.md) provides fixed/backtracking CPU boosting.
 [Normal boosting](normal.md) uses the same state and scalar learners for joint
 mean/log-scale updates. [Formula and sequential runs](formula-runs.md) add
-full-metric structured updates and independent heterogeneous execution. CUDA
-execution is not implemented yet. [Categorical support](categorical.md) now uses
+full-metric structured updates and independent heterogeneous execution.
+[Categorical support](categorical.md) now uses
 explicit dictionaries and equality conditions in all three growth policies.
 All R1–R9/C1–C7/A1–A13 remain required. Evaluation preparation continues alongside
 the user-approved B03–B06 construction overlap. No complete quality, speed or
@@ -57,3 +57,18 @@ from model acceptance and strict best-model selection across all CPU recipes.
 
 [Public development extensions](extensions.md) exercise installed cohort split
 constraints and external penalized leaves, with core inference after plugin removal.
+
+
+[Experimental CUDA execution](execution.md) provides context-owned storage,
+named fields, histograms, candidate/feasibility/routing/leaf operations and resident
+scalar boosting. The bounded scalar path passes 212 real T4 checks at `af026ef`.
+Normal joint/ordered updates and an installed cohort-feasibility extension also
+exist. The objective-owned comparison correction rejects both historical false
+improvements on real T4. Run 8 passes 528/529 revised cases; a corrected no-op
+best-prefix fixture then passes with all fifteen recipe cases in run 9.
+Together these establish 514 earlier passes plus fifteen new passes with identical
+production, completing bounded revised coverage across two executions. The
+original failed verdicts remain preserved. These results
+do not establish current full CUDA conformance, speed parity, fused train-many or
+support for every CPU recipe. See the execution page for exact public operations
+and evidence boundaries.

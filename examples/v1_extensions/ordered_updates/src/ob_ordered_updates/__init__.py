@@ -7,6 +7,7 @@ import numpy as np
 
 from openboost.artifacts import TreeTerm
 from openboost.binning import prepare_training
+from openboost.diagnostics import TraceSummary, validate_retention
 from openboost.objectives import Formula, Normal, diagonal_direction, full_direction
 from openboost.runtime import initialize, preview, propose_terms, resolve
 from openboost.stats import least_squares
@@ -100,6 +101,7 @@ def fit(
     *,
     context,
     objective,
+    retention="full",
     direction,
     base,
     order=(0, 1),
@@ -111,6 +113,7 @@ def fit(
     learner=None,
 ):
     """Generic two-parameter ordered loop, with one stop observation per sweep."""
+    retention = validate_retention(retention)
     order = validate_order(order)
     objective.validate(train)
     objective.validate(validation)
@@ -128,6 +131,24 @@ def fit(
             order=order,
             learner=learner,
         )
+        if retention == "summary":
+            substeps = tuple(
+                TraceSummary(
+                    "OrderedSubstep",
+                    (
+                        ("channel", item.channel),
+                        ("before_version", item.before.version),
+                        ("after_version", item.after.version),
+                        ("accepted", item.after.version > item.before.version),
+                        ("loss_before", item.loss_before),
+                        ("loss_after", item.loss_after),
+                        ("coefficients", item.coefficients),
+                        ("failures", item.failures),
+                    ),
+                    ("before", "after"),
+                )
+                for item in substeps
+            )
         steps.append(substeps)
         stop = stop.observe(objective.loss(validation, state.validation_raw))
         if stop.reason is not None:

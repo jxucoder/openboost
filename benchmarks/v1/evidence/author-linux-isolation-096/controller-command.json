@@ -1,0 +1,7 @@
+{
+  "command": "UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.authoring.modal_worker --execute /tmp/openboost-author-linux-096",
+  "exit_code": 1,
+  "combined_output": "Linux isolation gate failed; see retained manifest\n",
+  "application_invocations": 1,
+  "application_retries": 0
+}

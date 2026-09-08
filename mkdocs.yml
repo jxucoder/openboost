@@ -14,6 +14,7 @@ markdown_extensions:
 nav:
   - Current v1 status: index.md
   - CPU state components: cpu-state.md
+  - Experimental CUDA storage: execution.md
   - Numeric operations: numeric-ops.md
   - Tree policies: trees.md
   - Squared boosting: squared.md

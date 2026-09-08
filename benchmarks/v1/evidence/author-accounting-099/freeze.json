@@ -1,0 +1,66 @@
+{
+  "schema": "openboost-accounting-smoke-v1",
+  "authorization": "approved",
+  "scope": "One local-controller provider accounting smoke; no author, worker, GPU or publication",
+  "settings": {
+    "model": "gpt-5.6-luna",
+    "immutable_snapshot": false,
+    "reasoning_effort": "medium",
+    "service_tier": "default",
+    "background": true,
+    "store": false,
+    "tools": [],
+    "exhaustion": {
+      "generated_tokens": 192,
+      "request_tokens": 128,
+      "requests": 3,
+      "wall_s": 60
+    },
+    "cancellation": {
+      "generated_tokens": 4096,
+      "request_tokens": 4096,
+      "requests": 1,
+      "wall_s": 5
+    },
+    "max_generation_requests": 3,
+    "max_generated_tokens": 4288,
+    "max_prompt_bytes": 1024,
+    "input_tokens_per_response_review_bound": 4096,
+    "input_usd_per_million_upper_estimate": 0.25,
+    "output_usd_per_million": 1.2,
+    "authorized_cost_ceiling_usd": 0.05,
+    "max_polls": 60,
+    "poll_interval_s": 1.0,
+    "http_timeout_s": 10.0,
+    "cleanup_s": 15.0,
+    "retries": 0,
+    "output": "/tmp/openboost-author-accounting-099"
+  },
+  "prompts": [
+    "Write the positive integers in order, one per line, starting at 1 and continuing through 10000. Do not add an introduction, explanation, or conclusion.",
+    "List integers one per line from 10001 through 20000. Do not abbreviate or add commentary.",
+    "Write every integer from 1 through 100000, one per line, without abbreviation. Do not add an introduction or commentary. Continue until the entire list is written."
+  ],
+  "prompt_sha256": [
+    "d517d3acca1f0a4b00a0e20e859419ed84f2b910960b7cf22696c5d8e78132ce",
+    "710027d92ec8b4458d8b30ba0a988837e22333b5c1430a119932a1978716d1a0",
+    "05bfdfc65d41b6540686a279d30512c0fca18957528dfa891ffec351eeb54f49"
+  ],
+  "files": {
+    "benchmarks/__init__.py": "60861efe7f6ee96d030396144a9a1646f5ff2b897db25661ab09613be07e4e19",
+    "benchmarks/v1/__init__.py": "7420e86d8f099989c9ed62460143ae554f19518c0121c5146fb166c8b0897654",
+    "benchmarks/v1/authoring/accounting.py": "74ed34c51fc48e51409830dd744e44e8e61d5e08a647472909387a218091b551",
+    "benchmarks/v1/authoring/responses_transport.py": "616c9c8d58ddbb6e144398a8bc3269c5920d22213b211bf90e36b6c1614debe7",
+    "benchmarks/v1/authoring/responses_background.py": "f29865831e438b62c2427cc59a6baaa9c6490c4948f837cede484a2e1057c9e2",
+    "benchmarks/v1/authoring/accounting_smoke.py": "380ede09bc70cdb23ae1890fea318bf64a1223995d1b8595975d47d6d87c62a3",
+    "tests/v1/test_author_accounting.py": "1b6e58c0315aaea9023f323c4f48e57b8193c97e177cfdf3a97d0a5d9bfb9d24",
+    "tests/v1/test_author_background.py": "97cf754b14eb216e664af49e20326d206e827ca53fd7b3d4da836aa7755a4bbf",
+    "tests/v1/test_author_accounting_smoke.py": "c70159580a60d926787422d441026e6c477d3c0dd7830e1667c108f8ecdf586e",
+    "v1-sprints/099-background-accounting-smoke.md": "f00a24bdda7c69f5737a9d206b0e64e00487d7410fbb176821c99254ebe8ea30",
+    "pyproject.toml": "edaa985f032296966037b080def5727413156575cfd5cc0da2d6fa394e94e9fd",
+    "uv.lock": "ceb2dc86b894e4a4083cd2d6b2e916c9dafb51b0b2ccfa4943edde2962695ad2"
+  },
+  "cli": "UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.authoring.accounting_smoke --execute /tmp/openboost-author-accounting-099",
+  "independent_dispatch": false,
+  "generated_tokens": null
+}

@@ -1,0 +1,1336 @@
+{
+  "case": "binary/2/backtracking/0.0",
+  "inputs": {
+    "train": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAAPh/AAAAAAAAGEAAAAAAAAAcQA=="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAAAAABAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAAEAAAAAAAAAAUAAAAAAAAABgAAAAAAAAAHAAAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAAAAAA=="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAwL8AAAAAAAAAAAAAAAAAAMA/AAAAAAAAwL8AAAAAAAAAAAAAAAAAAMA/AAAAAAAAwL8AAAAAAAAAAA=="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAPA/AAAAAAAACEAAAAAAAADwPwAAAAAAAPA/AAAAAAAAAEAAAAAAAADwPw=="
+      }
+    },
+    "validation": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAHEAAAAAAAAAAQAAAAAAAAPh/AAAAAAAAAAAAAAAAAAAYQAAAAAAAAAhAAAAAAAAA8D8AAAAAAAAQQA=="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "ZAAAAAAAAABlAAAAAAAAAGYAAAAAAAAAZwAAAAAAAABoAAAAAAAAAGkAAAAAAAAAagAAAAAAAABrAAAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPwAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPw=="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAACwPwAAAAAAALA/AAAAAAAAsL8AAAAAAACwvwAAAAAAALC/AAAAAAAAAAAAAAAAAAAAAA=="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhAAAAAAAAAEEAAAAAAAAAUQAAAAAAAABhAAAAAAAAAHEAAAAAAAAAgQA=="
+      }
+    }
+  },
+  "model": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.3781388998031616
+    ],
+    "terms": [],
+    "classes": [
+      "no",
+      "yes"
+    ]
+  },
+  "best": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.3781388998031616
+    ],
+    "terms": [],
+    "classes": [
+      "no",
+      "yes"
+    ]
+  },
+  "steps": [
+    {
+      "round_index": 0,
+      "before_version": 0,
+      "after_version": 0,
+      "trials": [
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        }
+      ],
+      "loss": 0.697605187032806,
+      "validation_score": 0.6727485453539723,
+      "best_score": 0.6727485453539723,
+      "validation_change": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      }
+    },
+    {
+      "round_index": 1,
+      "before_version": 0,
+      "after_version": 0,
+      "trials": [
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 0.697605187032806,
+          "validation_score": 0.6727485453539723,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "binary-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        }
+      ],
+      "loss": 0.697605187032806,
+      "validation_score": 0.6727485453539723,
+      "best_score": 0.6727485453539723,
+      "validation_change": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      }
+    }
+  ],
+  "stop": {
+    "rounds": 3,
+    "patience": 2,
+    "min_delta": 0.01,
+    "reference_score": 0.6727485453539723,
+    "last_score": 0.6727485453539723,
+    "completed_rounds": 2,
+    "stale_rounds": 2
+  },
+  "comparisons": [
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          1.0,
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0625,
+          0.0625,
+          -0.0625,
+          -0.0625,
+          -0.0625,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          8.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616,
+          0.3781388998031616
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          1.0,
+          1.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0625,
+          0.0625,
+          -0.0625,
+          -0.0625,
+          -0.0625,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          8.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "binary-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    }
+  ]
+}

@@ -1,0 +1,586 @@
+{
+  "scope": "Synthetic A6/A13 selection integration with UID file permissions; not real quality, cost or complete hostile-code isolation",
+  "revision": "0801c1a1d73a5a3dfbf6e137d1c1e809f132617d",
+  "dirty": false,
+  "argv": [
+    "/usr/local/bin/python",
+    "-m",
+    "benchmarks.v1.current_selection_smoke",
+    "/tmp/selection-evidence/selection",
+    "--protected"
+  ],
+  "sources": {
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/diagnostics.py": "54065428816f7092ebc0f2bb66c0d2006bc3d49a864c8950e3901c68e7b428bf",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "de920ffda40e2ecbd9a56b368515497c9fdb94d30a465be0f9c8ed0e39974082",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "aa51d6ab3678778c2795271ddcedf3718385d6eb2e335e46eaf3d49acd781c9c",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "dcd61888233544ee2a94ea5d6046277bcf918b01b3b333ae7945714b3cb30ef5",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5",
+    "benchmarks/v1/current_selection_smoke.py": "a14be1db2e164e41080c37049fc2daa67d39d700bf61a4bc5f615ebcb647c511",
+    "benchmarks/v1/openboost_worker.py": "b930f800b236f38a8dba20173cff528c88ca966e07bef42ba5bdec141366c28f",
+    "benchmarks/v1/openboost_predict.py": "a02951479b032ebd67376c8c8c91132bbec923f8e4b9438822903d78f557f257",
+    "benchmarks/v1/selection.py": "22aca8f1234b5e13ea71f387fd3acca3b58c501f35264762491dc8220ce64f2e",
+    "benchmarks/v1/preprocessing.py": "62561effccd6856bc404339dddbc8c2daa3a1d0b011be59edd8fd3435802bc30",
+    "benchmarks/v1/quality.py": "6736b97666f73a0c1831fd5c9472a4fd66cc675d2b66884a684cdad92354e827",
+    "benchmarks/v1/quality_report.py": "eb4127b7e92cffa147a9833edf169d3ceedfa1e6a5681628d5981fcd384ab196",
+    "benchmarks/v1/process_runner.py": "58d5730c89cde083206806495e8f3a7d27821954814b81ecc946a3477c36c776"
+  },
+  "environment": {
+    "python": "3.12.10",
+    "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+    "threads": 1,
+    "cpu_count": 2,
+    "gpu": null,
+    "memory_cap": null,
+    "address_limit_bytes": 8589934592,
+    "worker_identity": "uid_gid_65534_no_new_privs",
+    "trial_timeout_s": 1800,
+    "packages": {
+      "openboost": "1.0.0.dev0",
+      "numpy": "2.3.5"
+    }
+  },
+  "protocol_sha256": "d54befefe7a659796df5c13f84a1c0080cec68cfd689f163d45c3090871048fa",
+  "passed": true,
+  "trials": [
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-0.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-0.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.4741715719999995,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "c183bcdcaa26bcb54564904a90f0f0e4fe27ba55a048bbd6765552c791e96ccc",
+        "predictions.npz": "0d48297c6dc68ff839cc0bf9daa1f2b6b07c35d88310478373d57b88836ce76e",
+        "training.json": "98b99f447a866b8ea85344dcc38f74ce52454d517b137aca4bc200cab55b347a"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-1.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-1.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.6285064250000012,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "991dd2c8ce573699c87d93dc8ab10ba87079bafc48293200e34c3a592a9da96f",
+        "predictions.npz": "6aa94d82e2ebd81c2987e8d19097d1bf538d6c11a386745394c049007af43414",
+        "training.json": "6f1bb2cd7deaec08a6a99c49b582040924bd361f5396b79cccc99c5b84e9b0e1"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-2.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-2.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.7810458830000009,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "95fe4e465adead4d4b4cd27063d803820cfb351eed2fc26e07eda120af704267",
+        "predictions.npz": "9a7399c215bdc8b53dd84dca481a934ec37d9ff4c2208080f662fa98d7d46c55",
+        "training.json": "ae8e8b7b8ae917a6412b7f96aef759e1f00ca4e70b647996fedd66b20d1c6a68"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-3.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-3.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.0861179210000032,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "376fea27ad06665a57b0814406341151bc510c814963a1aad516328d3e16abea",
+        "predictions.npz": "dce5afafea701d16d5d6028355dd0dc0d3525f25a7efd9cd49378d6967df4eb3",
+        "training.json": "475dc9ae5d371269601bb9e9d8742a02999f4a631b85d3a08efcafe129dc95b4"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-4.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-4.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.527047134,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "77f8826c52769c5fbed67a95e0ec5106b8de90abef018e1c2177538268e3af4d",
+        "predictions.npz": "0e5b1d72e070f0bf09d8b506e6a791a900e06045094f13730fa964e95981c860",
+        "training.json": "969fc3a1bdf7a7596e624744f2caaa8637966a9a8d1f4a60b28c1aaa3a32e031"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-5.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-5.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.7298279579999978,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "8c75d5c101dca71985bf2a8a6ab8e28efdf04d12c741828b249b55c1f9c029b6",
+        "predictions.npz": "1c6de7db35fafd31179c06dd01a7624f3df2e8b18db02f6a895ce7a2efca2e57",
+        "training.json": "9b843a0aad59235c25be179b1dd42146135e47268f7ecff058036275bf6936e0"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-6.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-6.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.8286009130000025,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "8117fb27f9787110a39fc63644e5d25ed4192caa0f1f203505596046e4ac0756",
+        "predictions.npz": "7dbed58c84d6f3b217364a60144925c8c1e3c9a2cb966bae8af69616ba749ef2",
+        "training.json": "565529cbf5d5b3d042bee581295ccc1e6025a21e4ef8df86d7cf38e743e07908"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-7.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-7.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 1.1354515260000007,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "a785681c8058f9d3fe1f36062580e98343f9cd4d42263e8c90366e0e205470dd",
+        "predictions.npz": "b92b6c179e8841c1fe9f14c4be9a17e9ec2614f1fb95f6a7f94ede9f93f68fdf",
+        "training.json": "83ada20a21a7fc3047c42340e2f8f3c62d31f9b6cc3feb87cb216855a8ca56b4"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-8.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-8.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.525055008999999,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "86e92ad30a93021cd662f196f2fb9bfae66b7bf8c10f1875fee796fb617e92dd",
+        "predictions.npz": "5353337dadadcb3735d9702aad54e246e805570e841aad1a474b532ab99e1912",
+        "training.json": "50a4ee11846b409b728a87cf25062917f21cb7aa308bee9953c25bae4e8582cc"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-9.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-9.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.6300835520000021,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "144837267fe6f77cacc0ccacaa12b87095388300d7e166a3f60fb309074e7baf",
+        "predictions.npz": "d1377727a4cc51b7d278a4e2de52166e8fd411cd10e7e701d3f9bbfaa685a169",
+        "training.json": "a65a3515b42337c0c5f94d6c9fead317f183e03e2a91a22662c2568c46192ce8"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-10.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-10.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.7280250299999977,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "7ec55ed1e5e25b5b5808aa0f36d8f54cbfbec76666ea739f7999221192c2829f",
+        "predictions.npz": "a6ad44fb295eb90ecb9a1a485437833a7abf874e14cbd64b4426e62ce9a565ba",
+        "training.json": "80cbfac46182200511aab3b021cc7a951e8e198fef1003b1fc96d64e7937c3f1"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-11.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-11.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.9329569980000016,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "d55e37e73dbfe60a0802b67749974f68a13fb9182bc9784ad89d98369351a135",
+        "predictions.npz": "aad582ac78650a3875b1248a60eebf80419f133f0f24488297fbc20f911b3a74",
+        "training.json": "8c2e733b99e9eecf62b98726652a73239b1c551562825e8b959f5d65c73307e5"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-12.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-12.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.5255992359999979,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "cf757d5eba93ab8dfbeada6aa220f75c365a0174a6b51015dee0bf5245a58e59",
+        "predictions.npz": "9fc653a5dfddf376905feecb1065b56cad1e7db5af912604196f5f7eb08c8398",
+        "training.json": "5544725140fc87464824f5b1430bdad1beb51ac06926057a31871b3e3e4130d2"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-13.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-13.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.6256249370000013,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "745ce8414f74020f78a2f0583d44abd16944b36324f3864f94e72fe5a09c5670",
+        "predictions.npz": "600e5a681c7bce7b047ff68952614c0759acd1accb03db1d72d6752527915276",
+        "training.json": "3dd7be310f4163f80b36c215da3c279dd31ed920b63d2c93737efb8a8d99ce9c"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-14.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-14.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.7297880200000009,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "fd9f8ba40952897066dbe8729b55d1ef8cd0a87e1451cce3f7c579298dc194d0",
+        "predictions.npz": "9c331ac5dc4710fe14bf273fd15447a89b374819c98a3c9999ef7ba2aed6485e",
+        "training.json": "ec374f38564bd99198ea7ff8718160375bd7a188ee2d291db46add84d32c260c"
+      }
+    },
+    {
+      "command": [
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-15.json"
+      ],
+      "launch_command": [
+        "/usr/local/bin/python",
+        "-c",
+        "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+        "8589934592",
+        "1",
+        "/usr/local/bin/python",
+        "/snapshot/benchmarks/v1/openboost_worker.py",
+        "/tmp/selection-evidence/selection/candidate/job-15.json"
+      ],
+      "address_limit_bytes": 8589934592,
+      "worker_identity": "uid_gid_65534_no_new_privs",
+      "environment_policy": "minimal_explicit",
+      "timeout_s": 1800,
+      "threads": 1,
+      "status": "pass",
+      "exit_code": 0,
+      "reason": "",
+      "wall_s": 0.9285064230000017,
+      "artifacts": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.bin": "ae7ac62b0c51cd7c13596703c9654245cd4d7e7d0522eacd8d30b1cd57517ce1",
+        "predictions.npz": "e0e4f009555742e828529b6e0eada543fcce53c7d09ba89d0d1c61f67814ff37",
+        "training.json": "7eeba6b0ba3c84bee504cdd8c891c3bf1abf2840e8ebd36cf555efff12f325f5"
+      }
+    }
+  ],
+  "selected": "openboost:15",
+  "receipt_sha256": "048bc1895f571e3225810dda7ce0b8eed46c92e6a7fbc81bbc9c439bf5920de4",
+  "inference_command": [
+    "/usr/local/bin/python",
+    "/snapshot/benchmarks/v1/openboost_predict.py",
+    "/tmp/selection-evidence/selection/trial-15/model.bin",
+    "/tmp/selection-evidence/selection/evaluator/released-features.npz",
+    "/tmp/selection-evidence/selection/evaluator/selected-predictions.npz"
+  ],
+  "selected_predictions": {
+    "path": "evaluator/selected-predictions.npz",
+    "sha256": "7d0d8b01149168afc295e1aab0df6bad445b237f9f0fa0bcaa6a1933f7df9f06"
+  }
+}

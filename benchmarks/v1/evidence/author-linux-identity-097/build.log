@@ -1,0 +1,101 @@
+Building image im-lG69A09jFw2KZHbOvvuKNE
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 402.13ms
+
+Built image im-lG69A09jFw2KZHbOvvuKNE in 989.54ms
+
+
+Building image im-T7bvN7VJYCEKYbqo4dqZ4M
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 298.95ms
+
+Built image im-T7bvN7VJYCEKYbqo4dqZ4M in 933.94ms
+
+
+Building image im-TAKiiZFJ2dYLT30Cbfl2RS
+
+=> Step 0: FROM base
+
+=> Step 1: COPY --from=ghcr.io/astral-sh/uv:0.12.1 /uv /.uv/uv
+Getting image source signatures
+Copying blob sha256:7445d66de2378275b55f712aedb693474de22c09b1a32c55e3d3bd46d2f4f4c9
+Copying blob sha256:788dd9aef29e3de18dc5b0e9d3d01eb448d8963d57ce5a0dd33149e2714272d5
+Copying config sha256:17c878e0974e1e0c450b21fa0fd3ad4bfeda10e1d7c599337f85f837d9113555
+Writing manifest to image destination
+Unpacking OCI image
+   • unpacking rootfs ...     
+   • ... done                 
+   • unpacked image rootfs: /tmp/task-data/ta-01M1ZGB1KF97RQ3HXVYA43SPNB/registry-unpackPpPMCX
+
+=> Step 2: RUN /.uv/uv pip install --python $(command -v python) --compile-bytecode --no-deps /materials/wheels/openboost-1.0.0.dev0-py3-none-any.whl numpy==2.3.5 uv==0.12.1
+Using Python 3.12.10 environment at: /usr/local
+Resolved 3 packages in 145ms
+Downloading numpy (15.8MiB)
+Downloading uv (21.3MiB)
+ Downloaded uv
+ Downloaded numpy
+Prepared 3 packages in 653ms
+Uninstalled 1 package in 4ms
+Installed 3 packages in 109ms
+Bytecode compiled 443 files in 394ms
+ + numpy==2.3.5
+ + openboost==1.0.0.dev0 (from file:///materials/wheels/openboost-1.0.0.dev0-py3-none-any.whl)
+ - uv==0.7.19
+ + uv==0.12.1
+Saving image...
+Image saved, took 541.57ms
+
+Built image im-TAKiiZFJ2dYLT30Cbfl2RS in 4.07s
+
+
+Building image im-kimNlgBX2P7BmXnQUiLK9w
+
+=> Step 0: FROM base
+
+=> Step 1: RUN mkdir -p /work && chown 1000:1000 /work
+Saving image...
+Image saved, took 421.99ms
+
+Built image im-kimNlgBX2P7BmXnQUiLK9w in 1.41s
+
+
+Building image im-fggnBBBdwowqeylS6NhbHp
+
+=> Step 0: FROM base
+
+=> Step 1: ENV HOME=/work
+
+=> Step 2: ENV OPENBOOST_BACKEND=cpu
+
+=> Step 3: ENV OMP_NUM_THREADS=1
+
+=> Step 4: ENV OPENBLAS_NUM_THREADS=1
+
+=> Step 5: ENV MKL_NUM_THREADS=1
+
+=> Step 6: ENV PYTHONDONTWRITEBYTECODE=1
+Saving image...
+Image saved, took 490.83ms
+
+Built image im-fggnBBBdwowqeylS6NhbHp in 1.29s
+
+
+Building image im-Xk3rfiAbd9H8tNnBbCuOTU
+
+=> Step 0: FROM base
+
+=> Step 1: WORKDIR /work
+Saving image...
+Image saved, took 292.16ms
+
+Built image im-Xk3rfiAbd9H8tNnBbCuOTU in 1.06s
+
+

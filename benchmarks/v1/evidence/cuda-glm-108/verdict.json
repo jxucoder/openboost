@@ -1,0 +1,2295 @@
+{
+  "passed": true,
+  "reason": null,
+  "cases": [
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_weighted_root_scores_and_archived_kernel_diagnostics",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_direct_swapped_child_scores[0-0-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_direct_swapped_child_scores[0-0-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_direct_swapped_child_scores[1-0-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_direct_swapped_child_scores[1-0-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_direct_swapped_child_scores[2-0.125-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_direct_swapped_child_scores[2-0.125-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_adjacent_ulp_scores_are_strictly_ordered[-10]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_adjacent_ulp_scores_are_strictly_ordered[0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_score_symmetry_cuda::test_adjacent_ulp_scores_are_strictly_ordered[10]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[None-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[None-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[None-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[None-1-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[None-1-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[None-1-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[None-2-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[None-2-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[None-2-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[0-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[0-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[0-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[0-1-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[0-1-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[0-1-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[0-2-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[0-2-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[0-2-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[1-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[1-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[1-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[1-1-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[1-1-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[1-1-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[1-2-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[1-2-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[1-2-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[2-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[2-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[2-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[2-1-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[2-1-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[2-1-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[2-2-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[2-2-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_two_round_resident_transactions_against_oracle[2-2-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_rejection_retry_rng_and_independent_lifetimes",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_explicit_acceptance_and_parent_record_identity[None]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_explicit_acceptance_and_parent_record_identity[1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_explicit_acceptance_and_parent_record_identity[yes]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_explicit_acceptance_and_parent_record_identity[decision3]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_partial_allocation_failure_is_atomic[initialize]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_partial_allocation_failure_is_atomic[propose]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_partial_allocation_failure_is_atomic[resolve]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_invalid_coefficients_preserve_state[bool]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_invalid_coefficients_preserve_state[none]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_invalid_coefficients_preserve_state[string]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_invalid_coefficients_preserve_state[complex]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_invalid_coefficients_preserve_state[nan]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_invalid_coefficients_preserve_state[infinity]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_invalid_coefficients_preserve_state[overflow]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_signed_update_overflow_and_run_close_preserves_caller_buffers",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[0-fixed-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[0-fixed-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[0-fixed-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[0-backtracking-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[0-backtracking-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[0-backtracking-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[2-fixed-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[2-fixed-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[2-fixed-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[2-backtracking-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[2-backtracking-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_composition_and_scalar_retention[2-backtracking-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_recipe_backtracking_patience_and_rejected_rounds",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_long_recipe_retention_and_fresh_cpu_model",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_unrepresentable_preparation_rolls_back[target]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_unrepresentable_preparation_rolls_back[offset]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_unrepresentable_preparation_rolls_back[weight]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_unrepresentable_preparation_rolls_back[base]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_automatic_training_binning_and_owned_stream",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_runtime_cuda::test_retained_prior_state_and_failed_recipe_cleanup",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[None-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[None-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[None-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[None-1-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[None-1-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[None-1-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[None-2-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[None-2-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[None-2-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[0-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[0-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[0-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[0-1-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[0-1-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[0-1-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[0-2-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[0-2-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[0-2-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[1-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[1-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[1-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[1-1-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[1-1-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[1-1-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[1-2-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[1-2-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[1-2-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[2-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[2-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[2-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[2-1-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[2-1-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[2-1-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[2-2-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[2-2-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_resident_objective_tree_and_inference[2-2-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_supplied_policy_leaf_and_scratch_ownership",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_growth_failure_discards_scratch_and_preserves_inputs[callback]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_growth_failure_discards_scratch_and_preserves_inputs[allocation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_growth_failure_discards_scratch_and_preserves_inputs[nonfinite]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_growth_failure_discards_scratch_and_preserves_inputs[shape]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_tree_cuda::test_wrong_binning_forged_records_and_cpu_artifact",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-no_feasible]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-missing_weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-ties]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-zero_gradient]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-zero_curvature]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-missing_only]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-inactive]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-empty]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[0-one_bin]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-no_feasible]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-missing_weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-ties]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-zero_gradient]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-zero_curvature]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-missing_only]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-inactive]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-empty]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[1-one_bin]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-no_feasible]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-missing_weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-ties]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-zero_gradient]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-zero_curvature]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-missing_only]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-inactive]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-empty]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_exhaustive_candidates_scores_masks_routes_leaves[2-one_bin]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_d2_reordered_named_information_and_public_composition[0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_d2_reordered_named_information_and_public_composition[1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_d2_reordered_named_information_and_public_composition[2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_supplied_scores_ignore_padding_and_support_empty_child_routes",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_penalty_regularization_and_curvature_minimum",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_invalid_parameters_fail_without_leaks[negative]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_invalid_parameters_fail_without_leaks[nan]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_invalid_parameters_fail_without_leaks[infinity]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_invalid_parameters_fail_without_leaks[overflow]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_invalid_parameters_fail_without_leaks[huge_integer]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_invalid_parameters_fail_without_leaks[complex]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_invalid_parameters_fail_without_leaks[string]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_invalid_parameters_fail_without_leaks[bool]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_scalar_schema_and_original_row_nonnegativity",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_nonfinite_gains_and_undefined_leaf_denominators",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_supplied_score_and_mask_validation_and_borrowed_lifetimes",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_released_dependencies_reject_choices[histogram]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_released_dependencies_reject_choices[fields]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_released_dependencies_reject_choices[rows]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_released_dependencies_reject_choices[batch]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_released_dependencies_reject_choices[scores]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_released_dependencies_reject_choices[mask]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_wrong_batch_forged_records_and_route_identity",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_candidate_allocation_failure_preserves_sources_and_recovers",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_splits_cuda::test_context_stream_restored_after_split_operations",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows3]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f1_f2_named_weighted_routed_histograms[rows4]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f3_bounded_large_histograms[1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_f3_bounded_large_histograms[3]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_d2_public_append_with_renamed_information",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_bad_rows_rejected_host_and_device[positions0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_bad_rows_rejected_host_and_device[positions1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_bad_rows_rejected_host_and_device[positions2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_resident_rows_borrowed_lifetime_and_empty_view",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_foreign_forged_stale_identity_and_closed_records",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_nonfinite_fields_rejected_without_leak[nan]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_nonfinite_fields_rejected_without_leak[inf]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_nonfinite_fields_rejected_without_leak[-inf]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_field_schema_and_weight_roles",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_allocation_failure_rolls_back_partial_outputs",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_weight_overflow_rejected_and_sources_preserved",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_unequal_bins_have_feature_specific_missing_and_zero_padding",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_aggregation_cuda::test_context_stream_is_preserved_during_device_operations",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_owned_upload_copy_export_and_lifetime",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_foreign_forged_and_released_handles",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_allocation_budget_and_context_recovery",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[float32]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[float64]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[int32]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[int64]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[uint8]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_dtype_and_noncontiguous_copy[bool]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_missing_values_and_zero_values_are_preserved",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_foreign_thread_and_current_stream_restored",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_execution_cuda::test_device_input_and_unsupported_dtype_rejected",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_normal_float32_domain_and_failure_cleanup[origin]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_normal_float32_domain_and_failure_cleanup[positive_log_scale]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_normal_float32_domain_and_failure_cleanup[negative_log_scale]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_normal_float32_domain_and_failure_cleanup[offset_once]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_normal_float32_domain_and_failure_cleanup[precision_overflow]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_normal_float32_domain_and_failure_cleanup[precision_underflow]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_normal_float32_domain_and_failure_cleanup[scale_overflow]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_normal_float32_domain_and_failure_cleanup[gradient_overflow]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_normal_float32_domain_and_failure_cleanup[offset_precision_overflow]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_base_geometry_directions_fields_and_residency[ordinary-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_base_geometry_directions_fields_and_residency[ordinary-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_base_geometry_directions_fields_and_residency[ordinary-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_base_geometry_directions_fields_and_residency[natural-0-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_base_geometry_directions_fields_and_residency[natural-0-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_base_geometry_directions_fields_and_residency[natural-0-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_base_geometry_directions_fields_and_residency[natural-0.25-weighted]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_base_geometry_directions_fields_and_residency[natural-0.25-d2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_base_geometry_directions_fields_and_residency[natural-0.25-conflict]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_nonpositive_metric_rejected_even_with_damping[ordinary-0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_nonpositive_metric_rejected_even_with_damping[natural-0.25]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_problem_identity_shape_and_numeric_initialization",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_actual_sixth_trial_geometry_and_zero_weight_domain",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_cuda::test_initialization_normalizes_weights_before_offset_precision",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/forward/channel0/alpha8.0/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/forward/channel0/alpha8.0/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/forward/channel0/alpha4.0/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/forward/channel0/alpha4.0/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha8.0/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha8.0/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha4.0/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha4.0/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha2.0/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha2.0/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha1.0/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha1.0/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha0.5/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha0.5/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha0.25/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel1/alpha0.25/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel0/alpha8.0/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel0/alpha8.0/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel0/alpha4.0/training]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[run7/reverse/channel0/alpha4.0/validation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[analytic/tiny-improvement]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[analytic/scale-cancellation]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[analytic/unchanged]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[analytic/clear-worsening]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[analytic/outside-exponent-range]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/joint/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/joint/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/joint/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/forward/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/forward/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/forward/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/forward/step1/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/reverse/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/reverse/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/reverse/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/reverse/step0/alpha1.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/reverse/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/ordinary/0/reverse/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/joint/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/joint/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/joint/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/forward/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/forward/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/forward/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/forward/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/forward/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/forward/step1/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/reverse/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/reverse/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/reverse/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/reverse/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/reverse/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/reverse/step1/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0/reverse/step1/alpha1.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/joint/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/joint/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/joint/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/forward/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/forward/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/forward/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/forward/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/reverse/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/reverse/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/reverse/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/reverse/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/reverse/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/weighted/natural/0.25/reverse/step1/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/joint/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/joint/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/joint/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/joint/step0/alpha1.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/forward/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/forward/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/forward/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/forward/step1/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/reverse/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/reverse/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/reverse/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/reverse/step0/alpha1.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/reverse/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/ordinary/0/reverse/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/joint/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/joint/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/joint/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/forward/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/forward/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/forward/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/forward/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/forward/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/reverse/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/reverse/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/reverse/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/reverse/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/reverse/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0/reverse/step1/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/joint/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/joint/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/forward/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/forward/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/forward/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/forward/step1/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/reverse/step0/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/reverse/step0/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/reverse/step0/alpha2.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/reverse/step1/alpha8.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_stored_input_bounds_residency_and_independent_oracle[cpu-reference/d2/natural/0.25/reverse/step1/alpha4.0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_domain_identity_and_failure_leave_every_owner_unchanged[nan]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_domain_identity_and_failure_leave_every_owner_unchanged[scale]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_domain_identity_and_failure_leave_every_owner_unchanged[precision]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_domain_identity_and_failure_leave_every_owner_unchanged[shape]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_domain_identity_and_failure_leave_every_owner_unchanged[released]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_domain_identity_and_failure_leave_every_owner_unchanged[forged]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_domain_identity_and_failure_leave_every_owner_unchanged[foreign]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_comparison_allocation_failure_cleans_scratch_and_keeps_inputs[1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_comparison_allocation_failure_cleans_scratch_and_keeps_inputs[2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_device_comparison_does_not_call_host_objective_or_reporting_callbacks",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_normal_comparison_cuda::test_failure_after_row_kernel_releases_scratch_and_propagates",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_named_policy_distinguishes_equal_reporting_losses_and_owned_best[reported]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_named_policy_distinguishes_equal_reporting_losses_and_owned_best[objective]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_captured_run7_worsening_is_rejected_at_actual_stored_raw[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_captured_run7_worsening_is_rejected_at_actual_stored_raw[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_best_anchor_is_independently_copied_across_retained_states_and_releases",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_failed_best_resolution_restores_ownership_serial_and_rng[comparison]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_failed_best_resolution_restores_ownership_serial_and_rng[copy1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_failed_best_resolution_restores_ownership_serial_and_rng[copy2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_failed_best_resolution_restores_ownership_serial_and_rng[copy3]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_failed_initial_best_copy_and_parent_bound_comparison",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_unresolved_objective_evidence_has_no_reported_loss_fallback[fixed]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_consumers_cuda::test_unresolved_objective_evidence_has_no_reported_loss_fallback[backtracking]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[joint]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_equal_score_improvements_replace_patience_anchor[joint]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_equal_score_improvements_replace_patience_anchor[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_equal_score_improvements_replace_patience_anchor[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_full_rejection_observes_once_per_outer_sweep[joint]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_full_rejection_observes_once_per_outer_sweep[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_full_rejection_observes_once_per_outer_sweep[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[initial_anchor]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[observation_copy]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[comparison]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[result]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[learner]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_zero_round_recipe_releases_temporary_patience_storage",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-False-0-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-False-1-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-False-127-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-False-128-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-False-129-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-False-257-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-False-8193-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-False-100003-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-True-0-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-True-1-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-True-127-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-True-128-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-True-129-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-True-257-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-True-8193-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float32-True-100003-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-False-0-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-False-1-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-False-127-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-False-128-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-False-129-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-False-257-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-False-8193-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-False-100003-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-True-0-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-True-1-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-True-127-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-True-128-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-True-129-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-True-257-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-True-8193-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_all_column_flags_match_independent_any[float64-True-100003-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_public_fields_reject_invalid_tail_even_with_zero_weight[nan]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_public_fields_reject_invalid_tail_even_with_zero_weight[inf]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_public_fields_reject_invalid_tail_even_with_zero_weight[-inf]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_public_independent_nonnegative_tail_and_negative_zero",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_validation_failure_preserves_borrowed_buffer_and_recovers[allocate]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_validation_failure_preserves_borrowed_buffer_and_recovers[before_launch]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_parallel_validation_cuda::test_validation_failure_preserves_borrowed_buffer_and_recovers[after_launch]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_base_geometry_fields_loss_and_owned_stream[binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_base_geometry_fields_loss_and_owned_stream[poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[positive_tail-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[positive_tail-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[negative_tail-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[negative_tail-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[wrong_class_tail-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[wrong_class_tail-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[tail_extinction-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[tail_extinction-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[offset_once-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[offset_once-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[zero_count-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[zero_count-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[offset_exposure-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[offset_exposure-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[mean_underflow-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[mean_underflow-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[mean_overflow-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[mean_overflow-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[lost_count-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[lost_count-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[exact_large_count-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[exact_large_count-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[lost_exposure-False]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_stored_domains_and_atomic_failure[lost_exposure-True]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_family_identity_shape_and_failure_recovery[binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_family_identity_shape_and_failure_recovery[poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_partial_dispatch_failure_rolls_back_new_outputs[base-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_partial_dispatch_failure_rolls_back_new_outputs[base-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_partial_dispatch_failure_rolls_back_new_outputs[gradient-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_partial_dispatch_failure_rolls_back_new_outputs[gradient-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_partial_dispatch_failure_rolls_back_new_outputs[fields-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_partial_dispatch_failure_rolls_back_new_outputs[fields-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_partial_dispatch_failure_rolls_back_new_outputs[loss-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_partial_dispatch_failure_rolls_back_new_outputs[loss-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_initialization_extremes_and_zero_weight_rows[binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_cuda::test_initialization_extremes_and_zero_weight_rows[poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_rounds_cuda::test_prescribed_rounds_route_metrics_and_saved_cpu_inference[0-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_rounds_cuda::test_prescribed_rounds_route_metrics_and_saved_cpu_inference[0-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_rounds_cuda::test_prescribed_rounds_route_metrics_and_saved_cpu_inference[1-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_rounds_cuda::test_prescribed_rounds_route_metrics_and_saved_cpu_inference[1-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_rounds_cuda::test_prescribed_rounds_route_metrics_and_saved_cpu_inference[2-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_rounds_cuda::test_prescribed_rounds_route_metrics_and_saved_cpu_inference[2-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/unchanged]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/tiny-improvement]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/worsening]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/zero-weight-change]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/offset-exposure]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/large-step]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/unchanged]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/tiny-improvement]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/worsening]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/zero-weight-change]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/offset-exposure]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/large-step]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/positive-tail]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/negative-tail]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/equal-loss-different-raw]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/balanced-stationary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/stationary-rounded-tie]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/stationary-tiny]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/zero-count]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-3]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-4]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-5]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-6]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-7]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-8]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-9]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-10]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-11]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-12]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-13]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-14]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-15]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-16]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-18]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[binary/seed107-19]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-0]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-1]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-2]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-3]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-4]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-5]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-6]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-7]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-8]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-9]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-10]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-11]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-12]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-13]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-14]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-15]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-16]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-17]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-18]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_independent_bounds_and_scalar_only_transfers[poisson/seed107-19]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_invalid_snapshot_cannot_be_unchanged_and_cleans_up[shape-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_invalid_snapshot_cannot_be_unchanged_and_cleans_up[shape-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_invalid_snapshot_cannot_be_unchanged_and_cleans_up[nonfinite-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_invalid_snapshot_cannot_be_unchanged_and_cleans_up[nonfinite-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_invalid_snapshot_cannot_be_unchanged_and_cleans_up[zero-weight-domain-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_invalid_snapshot_cannot_be_unchanged_and_cleans_up[zero-weight-domain-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_family_ownership_and_released_snapshots[binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_family_ownership_and_released_snapshots[poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_partial_comparison_failures_are_atomic[allocation1-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_partial_comparison_failures_are_atomic[allocation1-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_partial_comparison_failures_are_atomic[allocation2-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_partial_comparison_failures_are_atomic[allocation2-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_partial_comparison_failures_are_atomic[reduce-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_partial_comparison_failures_are_atomic[reduce-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_comparison_does_not_call_host_or_report_callbacks[binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_comparison_does_not_call_host_or_report_callbacks[poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_actual_comparison_ptx_has_directed_double_operations[binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_comparison_cuda::test_actual_comparison_ptx_has_directed_double_operations[poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[fixed-0.25-1-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[fixed-0.25-1-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[fixed-0.25-2-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[fixed-0.25-2-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-0.25-1-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-0.25-1-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-0.25-2-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-0.25-2-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-8.0-1-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-8.0-1-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-8.0-2-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-8.0-2-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-0.0-1-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-0.0-1-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-0.0-2-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_recipe_trajectories_and_each_actual_comparison[backtracking-0.0-2-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_current_best_and_patience_are_distinct_anchors[binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_current_best_and_patience_are_distinct_anchors[poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_zero_rounds_release_patience_anchor[binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_zero_rounds_release_patience_anchor[poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_equal_reporting_scores_still_replace_patience_anchor[binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_equal_reporting_scores_still_replace_patience_anchor[poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[initial_anchor-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[initial_anchor-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[observation_copy-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[observation_copy-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[comparison-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[comparison-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[result-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[result-poisson]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[learner-binary]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_glm_recipes_cuda::test_failed_recipe_releases_every_owned_object[learner-poisson]",
+      "status": "pass"
+    }
+  ],
+  "installed_sources_match": true,
+  "versions_match": true,
+  "snapshot_sources_match": true,
+  "cpu_environment_built": true,
+  "retained_artifacts_complete": true
+}

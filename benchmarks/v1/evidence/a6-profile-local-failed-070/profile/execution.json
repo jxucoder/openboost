@@ -1,0 +1,32 @@
+{
+  "address_limit_bytes": null,
+  "artifacts": {
+    "profile.json": "44a6f1738b935ccf8c4074e3ca22d254d08f4231c598440767e0e768f05595d2",
+    "profile.pstats": "4f960405a8f8f01783818e9cd15b374e4fac63457cf0ad5ccdb08c43ed6e5231",
+    "profile.txt": "cb55dc0f698144ecd99d6752dba27c9ef895f14dde4dc9b5ebbbdc2ba7916d77",
+    "stacks.txt": "097d37fc19c7a56a92b9831e191e76d35a6b4a1088957b94b349b9bcef2c042e",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py",
+    "/tmp/openboost-a6-profile-local-070/job.json",
+    "--seconds",
+    "60"
+  ],
+  "environment_policy": "inherited",
+  "exit_code": -9,
+  "launch_command": [
+    "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/profile_worker.py",
+    "/tmp/openboost-a6-profile-local-070/job.json",
+    "--seconds",
+    "60"
+  ],
+  "reason": "wall budget exceeded; process group killed",
+  "status": "timeout",
+  "threads": 1,
+  "timeout_s": 90,
+  "wall_s": 90.0177878329996,
+  "worker_identity": "inherited"
+}

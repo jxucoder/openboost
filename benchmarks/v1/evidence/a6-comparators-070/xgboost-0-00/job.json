@@ -1,0 +1,1 @@
+{"application": "A6", "library": "xgboost", "device": "cpu", "threads": 1, "seed": 0, "early_stopping_rounds": 50, "config": {"learning_rate": 0.03, "max_depth": 4, "reg_lambda": 0.0, "rounds": 300, "seed_from_fold": true, "bins": 255}, "input_npz": "/input/worker-input.npz"}

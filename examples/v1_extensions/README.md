@@ -18,6 +18,13 @@ These are exploratory development examples, not independent authors, timed agent
 comparisons, held-out tasks or adoption evidence. All use public imports and
 require no core edits. The historical `examples/extensions/` packages remain separate.
 
+[custom_stopping.py](custom_stopping.py) is a separate public-loop development
+example. It stops half-step squared-error boosting when measured training loss
+crosses its declared threshold, returning its own frozen stopping/result records.
+Source and installed checks independently verify the recurrence and preserve the real reason
+through run_many. Sprint 065 records installed custom-policy checks; this example
+is not another independent author or a statistical stopping-method reproduction.
+
 ## Reproduce
 
 ```sh
@@ -27,10 +34,11 @@ UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python examples/v
 The verifier builds five wheels offline, creates a fresh environment, installs
 the wheels and NumPy 2.3.5, and executes copied checks from outside the repository
 using Python `-I`. Installed module paths must be under site-packages. It then
-uninstalls all four extensions and starts another interpreter to load nine saved
-models and verify exact predictions with none of the extensions importable.
+uninstalls all four extensions, removes the copied custom-policy source and starts
+another interpreter to load ten saved models and verify exact predictions with
+none of the training extensions or the custom policy available.
 The report records source/wheel hashes, revision/dirty state, environment,
-commands, three-round outputs and failures. Offline dependencies must already be
+commands, per-recipe outputs and failures. Offline dependencies must already be
 cached. Nothing is uploaded or published. Run with Python 3.12 for the recorded
 environment; broader platform support has not been checked.
 
@@ -39,6 +47,21 @@ environment; broader platform support has not been checked.
 Pass `CohortLearner(problem, information)` as `squared(..., learner=...)`.
 Information has shape `[N, cohorts]` and is bound to that problem's identity.
 The learner owns tree settings; the recipe rejects conflicting growth settings.
+
+Experimental CUDA construction is available separately as
+`ob_cohort_splits.device.DeviceCohortLearner`. Construct it with `(ops, problem,
+information, binning=...)` before calling `device_recipes.normal(...,
+learner=learner, binning=...)`, and call `learner.close()` after training, before
+closing the execution context. It uploads independent cohort columns once and
+uses public field, feasibility and depthwise operations for every parameter.
+Its buffer lifetime is independent of the run. [Run 6](../../benchmarks/v1/evidence/cuda-normal-090/README.md)
+passes all nineteen installed D2 hardware cases: eighteen combinations cover
+fixed/backtracking, three update orders and ordinary/natural/damped directions;
+another checks identity/failure cleanup. A separate missing-input Normal replay
+also passes in the fresh CPU environment. The full run fails two other Normal
+transaction acceptance cases, so this is bounded D2 evidence and does not establish
+full Normal conformance. This is repository-authored development work, not an
+independent author attempt.
 
 Pass `PenalizedLeaves(q=0.7, penalty=5, anchor=4)` as
 `quantile(..., q=0.7, grower=...)`. Keep the recipe and solver quantile aligned
@@ -70,3 +93,8 @@ ordered recipes in run_many; installed M=1/8/32 checks exercise mixed recipes,
 independent stopping, failure isolation and reorder/regroup/retry equivalence.
 D4 reference traces and installed results are
 recorded separately from the earlier D2/D3 evidence.
+
+The Sprint 065 scheduler report additionally verifies distinct run-ID streams,
+custom-policy metadata/payload, changed feature/row identity rejection, safe
+target/weight preparation reuse, fresh-preparation equivalence and same-ID recovery
+from malformed completion or stale preparation. Original patience checks remain.

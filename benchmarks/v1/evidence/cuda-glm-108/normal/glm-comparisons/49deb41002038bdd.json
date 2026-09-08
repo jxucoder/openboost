@@ -1,0 +1,50 @@
+{
+  "case": {
+    "id": "poisson/large-step",
+    "family": "poisson",
+    "arrays": [
+      [
+        -2.0,
+        1.0
+      ],
+      [
+        2.0,
+        -1.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "status": null
+  },
+  "comparison": {
+    "lower": -0.5383906878679494,
+    "upper": 30.826894962196267,
+    "method": "poisson-convex-taylor18-interval-v1",
+    "reason": "contains_zero",
+    "unchanged": false
+  },
+  "status": "unresolved",
+  "decimal220": "3.451659214203217310785832132205660889730624030987039851079919061920942643684461141116489729204608981168918403710343124598932409508524752886022908186317437460831467353399061397841479035808048859250257267295526065711385230",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

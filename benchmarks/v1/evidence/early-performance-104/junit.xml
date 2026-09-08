@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="6" time="462.376" timestamp="2026-09-08T07:07:36.049591+00:00" hostname="modal"><testcase classname="tests.v1.test_early_performance_cuda" name="test_same_host_performance_and_quality[squared-10000]" time="34.683" /><testcase classname="tests.v1.test_early_performance_cuda" name="test_same_host_performance_and_quality[squared-100000]" time="86.139"><failure message="AssertionError: ['cuda: timeout']&#10;assert False">recipe = 'squared', rows = 100000, cpu_timeout = 60
+
+    @pytest.mark.parametrize("recipe,rows,cpu_timeout", CASES, ids=[f"{r}-{n}" for r, n, _ in CASES])
+    def test_same_host_performance_and_quality(recipe, rows, cpu_timeout):
+        destination = Path(os.environ["OPENBOOST_NORMAL_ARTIFACTS"]) / "checkpoint" / f"{recipe}-{rows}"
+        cpu = child(recipe, rows, "cpu", destination / "cpu.json", cpu_timeout)
+        cuda = child(recipe, rows, "cuda", destination / "cuda.json", 50)
+        protocol = json.loads((ROOT / "v1-sprints/104-performance-run10.json").read_text())
+        sources = {
+            p: h for p, h in protocol["frozen_sources"].items() if p.startswith("src/openboost/")
+        }
+        result = judge(cpu, cuda, expected_sources=sources)
+        (destination / "judgment.json").write_text(json.dumps(result, indent=2) + "\n")
+&gt;       assert result["measurement_complete"], result["reasons"]
+E       AssertionError: ['cuda: timeout']
+E       assert False
+
+/snapshot/tests/v1/test_early_performance_cuda.py:92: AssertionError</failure></testcase><testcase classname="tests.v1.test_early_performance_cuda" name="test_same_host_performance_and_quality[normal-1000]" time="126.430"><failure message="AssertionError: ['cpu: timeout']&#10;assert False">recipe = 'normal', rows = 1000, cpu_timeout = 90
+
+    @pytest.mark.parametrize("recipe,rows,cpu_timeout", CASES, ids=[f"{r}-{n}" for r, n, _ in CASES])
+    def test_same_host_performance_and_quality(recipe, rows, cpu_timeout):
+        destination = Path(os.environ["OPENBOOST_NORMAL_ARTIFACTS"]) / "checkpoint" / f"{recipe}-{rows}"
+        cpu = child(recipe, rows, "cpu", destination / "cpu.json", cpu_timeout)
+        cuda = child(recipe, rows, "cuda", destination / "cuda.json", 50)
+        protocol = json.loads((ROOT / "v1-sprints/104-performance-run10.json").read_text())
+        sources = {
+            p: h for p, h in protocol["frozen_sources"].items() if p.startswith("src/openboost/")
+        }
+        result = judge(cpu, cuda, expected_sources=sources)
+        (destination / "judgment.json").write_text(json.dumps(result, indent=2) + "\n")
+&gt;       assert result["measurement_complete"], result["reasons"]
+E       AssertionError: ['cpu: timeout']
+E       assert False
+
+/snapshot/tests/v1/test_early_performance_cuda.py:92: AssertionError</failure></testcase><testcase classname="tests.v1.test_early_performance_cuda" name="test_same_host_performance_and_quality[normal-10000]" time="74.607"><failure message="AssertionError: ['cpu: timeout']&#10;assert False">recipe = 'normal', rows = 10000, cpu_timeout = 30
+
+    @pytest.mark.parametrize("recipe,rows,cpu_timeout", CASES, ids=[f"{r}-{n}" for r, n, _ in CASES])
+    def test_same_host_performance_and_quality(recipe, rows, cpu_timeout):
+        destination = Path(os.environ["OPENBOOST_NORMAL_ARTIFACTS"]) / "checkpoint" / f"{recipe}-{rows}"
+        cpu = child(recipe, rows, "cpu", destination / "cpu.json", cpu_timeout)
+        cuda = child(recipe, rows, "cuda", destination / "cuda.json", 50)
+        protocol = json.loads((ROOT / "v1-sprints/104-performance-run10.json").read_text())
+        sources = {
+            p: h for p, h in protocol["frozen_sources"].items() if p.startswith("src/openboost/")
+        }
+        result = judge(cpu, cuda, expected_sources=sources)
+        (destination / "judgment.json").write_text(json.dumps(result, indent=2) + "\n")
+&gt;       assert result["measurement_complete"], result["reasons"]
+E       AssertionError: ['cpu: timeout']
+E       assert False
+
+/snapshot/tests/v1/test_early_performance_cuda.py:92: AssertionError</failure></testcase><testcase classname="tests.v1.test_early_performance_cuda" name="test_same_host_performance_and_quality[normal-100000]" time="80.135"><failure message="AssertionError: ['cpu: timeout', 'cuda: timeout']&#10;assert False">recipe = 'normal', rows = 100000, cpu_timeout = 30
+
+    @pytest.mark.parametrize("recipe,rows,cpu_timeout", CASES, ids=[f"{r}-{n}" for r, n, _ in CASES])
+    def test_same_host_performance_and_quality(recipe, rows, cpu_timeout):
+        destination = Path(os.environ["OPENBOOST_NORMAL_ARTIFACTS"]) / "checkpoint" / f"{recipe}-{rows}"
+        cpu = child(recipe, rows, "cpu", destination / "cpu.json", cpu_timeout)
+        cuda = child(recipe, rows, "cuda", destination / "cuda.json", 50)
+        protocol = json.loads((ROOT / "v1-sprints/104-performance-run10.json").read_text())
+        sources = {
+            p: h for p, h in protocol["frozen_sources"].items() if p.startswith("src/openboost/")
+        }
+        result = judge(cpu, cuda, expected_sources=sources)
+        (destination / "judgment.json").write_text(json.dumps(result, indent=2) + "\n")
+&gt;       assert result["measurement_complete"], result["reasons"]
+E       AssertionError: ['cpu: timeout', 'cuda: timeout']
+E       assert False
+
+/snapshot/tests/v1/test_early_performance_cuda.py:92: AssertionError</failure></testcase><testcase classname="tests.v1.test_early_performance_cuda" name="test_separate_cold_and_warm_profile" time="60.126"><failure message="AssertionError: assert 'timeout' == 'complete'&#10;  &#10;  - complete&#10;  + timeout">def test_separate_cold_and_warm_profile():
+        destination = Path(os.environ["OPENBOOST_NORMAL_ARTIFACTS"]) / "checkpoint" / "profile.json"
+        result = child("normal", 100_000, "cuda", destination, 60, profile=True)
+&gt;       assert result["status"] == "complete"
+E       AssertionError: assert 'timeout' == 'complete'
+E         
+E         - complete
+E         + timeout
+
+/snapshot/tests/v1/test_early_performance_cuda.py:99: AssertionError</failure></testcase></testsuite></testsuites>

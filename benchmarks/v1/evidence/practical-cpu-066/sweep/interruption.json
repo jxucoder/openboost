@@ -1,0 +1,43 @@
+{
+  "status": "incomplete",
+  "reason": "Modal reported container preemption during squared-8192-128 and infrastructure restart; app stopped from CLI to prevent a repeated sweep.",
+  "cases": [
+    {
+      "id": "squared-8192-4",
+      "status": "pass"
+    },
+    {
+      "id": "normal-8192-4",
+      "status": "pass"
+    },
+    {
+      "id": "squared-2048-32",
+      "status": "pass"
+    },
+    {
+      "id": "normal-2048-32",
+      "status": "pass"
+    },
+    {
+      "id": "squared-8192-32",
+      "status": "pass"
+    },
+    {
+      "id": "normal-8192-32",
+      "status": "pass"
+    },
+    {
+      "id": "squared-8192-128",
+      "status": "interrupted",
+      "timing": null,
+      "peak_rss": null
+    },
+    {
+      "id": "normal-8192-128",
+      "status": "not_run",
+      "reason": "prior infrastructure interruption"
+    }
+  ],
+  "observed_message": "Container terminated due to preemption. Your Function will be restarted with the same input.",
+  "scope": "Six completed case records preserved. No completed uninstrumented result for either 128-round case; not classified as deadline or memory failure."
+}

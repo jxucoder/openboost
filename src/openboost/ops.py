@@ -1,6 +1,7 @@
 """Composable scalar CPU histogram, candidate, routing and Newton operations."""
 
 from dataclasses import dataclass
+from functools import lru_cache
 
 import numpy as np
 
@@ -59,10 +60,7 @@ def histogram(data, fields, rows=None):
         sums.append(
             _owned(
                 np.column_stack(
-                    [
-                        np.bincount(codes, weights=column, minlength=bins + 1)
-                        for column in columns
-                    ]
+                    [np.bincount(codes, weights=column, minlength=bins + 1) for column in columns]
                 ),
                 ndim=2,
             )
@@ -153,6 +151,10 @@ def newton_leaf(total, names, *, reg_lambda=1.0):
     """Scalar Newton leaf from already-weighted sums, with half-square scoring."""
     g, h = total[names.index("gradient")], total[names.index("curvature")]
     denominator = _nonnegative(h) + _nonnegative(reg_lambda)
+    return _newton_value(g, denominator)
+
+
+def _newton_value(g, denominator):
     if denominator <= 0 or not np.isfinite(denominator) or not np.isfinite(g):
         raise ValueError("positive finite Newton denominator and finite gradient required")
     value = -float(g) / denominator
@@ -233,12 +235,24 @@ def partition(data, rows, candidate):
 
 
 def _vector_indices(names):
+    # Return caller-owned lists: cached mutable indices could poison later trees.
+    key = tuple(names)
+    if not all(isinstance(name, str) for name in key):
+        layout = _vector_layout.__wrapped__(key)
+    else:
+        layout = _vector_layout(key)
+    return list(layout[0]), list(layout[1])
+
+
+@lru_cache(maxsize=128)
+def _vector_layout(names):
+    """Bounded immutable schema metadata; no data, gradients, or run state."""
     width = sum(n.startswith("gradient:") for n in names)
     if width == 0:
         raise ValueError("vector Newton fields required")
     return (
-        [names.index(f"gradient:{k}") for k in range(width)],
-        [names.index(f"curvature:{k}") for k in range(width)],
+        tuple(names.index(f"gradient:{k}") for k in range(width)),
+        tuple(names.index(f"curvature:{k}") for k in range(width)),
     )
 
 
@@ -254,13 +268,21 @@ def vector_leaf(total, names, *, reg_lambda=1.0):
 
 
 def vector_score(candidate, *, reg_lambda=1.0, split_penalty=0.0):
-    g, _h = _vector_indices(candidate.names)
+    g, h = _vector_indices(candidate.names)
+    regularizer = _nonnegative(reg_lambda)
 
     def node(total):
         with np.errstate(over="raise", invalid="raise"):
-            return -0.5 * np.dot(
-                total[g], vector_leaf(total, candidate.names, reg_lambda=reg_lambda)
+            # Scratch values never escape scoring; persisted leaves remain owned.
+            values = np.fromiter(
+                (
+                    _newton_value(total[i], _nonnegative(total[j]) + regularizer)
+                    for i, j in zip(g, h, strict=True)
+                ),
+                dtype=np.float64,
+                count=len(g),
             )
+            return -0.5 * np.dot(total[g], values)
 
     gain = (
         node(candidate.left)

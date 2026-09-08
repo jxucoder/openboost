@@ -1,0 +1,13 @@
+{
+  "measurement_complete": true,
+  "quality_passed": true,
+  "cost_passed": true,
+  "candidate_over_baseline_warm_ratio": 0.9684721239993226,
+  "reasons": [],
+  "cpu_relative_metric_differences": {
+    "half_mse": 1.0896684108288162e-07
+  },
+  "cpu_normalized_prediction_rmse": [
+    1.9468007625720794e-07
+  ]
+}

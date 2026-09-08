@@ -1,0 +1,66 @@
+{
+  "case": "analytic/tiny-improvement",
+  "inputs": {
+    "before": [
+      [
+        9.313225746154785e-10,
+        0.0
+      ]
+    ],
+    "after": [
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "target": [
+      0.0
+    ],
+    "offset": [
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "weight": [
+      1.0
+    ]
+  },
+  "comparison": {
+    "lower": -4.336808689942018e-19,
+    "upper": -4.336808689942018e-19,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false,
+    "status": "improvement",
+    "estimate": -4.336808689942018e-19,
+    "uncertainty": 0.0
+  },
+  "cpu": {
+    "lower": -4.336808689942024e-19,
+    "upper": -4.3368086899420134e-19,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "high_precision": {
+    "decimal60": "-4.336808689942017736029811203479766845703125E-19",
+    "decimal100": "-4.336808689942017736029811203479766845703125E-19",
+    "signs": [
+      -1,
+      -1
+    ],
+    "estimates_agree": true,
+    "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+  },
+  "additional_precision": [],
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 48,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "validation_export_bytes": 16,
+    "synchronizations": 6
+  }
+}

@@ -1,0 +1,1 @@
+{"case": "tests/v1/test_compared_normal_recipe_cuda.py::test_bad_second_learner_fails_before_search_and_cleans_up", "inputs": {}, "comparisons": [], "timing_scope": "instrumented correctness only"}

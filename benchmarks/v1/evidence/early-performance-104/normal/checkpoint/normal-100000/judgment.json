@@ -1,0 +1,9 @@
+{
+  "measurement_complete": false,
+  "quality_comparable": false,
+  "reasons": [
+    "cpu: timeout",
+    "cuda: timeout"
+  ],
+  "cpu_over_cuda_warm_fit_ratio": null
+}

@@ -6,6 +6,15 @@ tasks. Use with the [main plan](agent-boosting-foundation-plan.md). Numbers are 
 criteria, not results. F0 freezes concrete data, implementations and resources before execution.
 Postmeasurement threshold changes require a new protocol version; retain old failures.
 
+Execution amendment: the user's [Sprint 101 deferral](../v1-sprints/101-defer-author-evaluation.md)
+pauses agent-authoring evaluation and its accounting/isolation preparation. E5
+thresholds below are retained and unpassed; F2/E5 is not a prerequisite for current
+foundation/CUDA construction or quality/cost studies. E7 adoption remains
+unestablished. This changes execution order, not measured verdicts or original
+acceptance thresholds. All R/C/A, mathematical correctness and practical execution
+requirements remain. Do not claim completion of every original v1 gate while
+author evidence is deferred.
+
 ## 1. Result states and deliverables
 
 Every case records not_run/pass/fail/unsupported/error/timeout. Any non-pass required cell prevents

@@ -1,0 +1,44 @@
+{
+  "case": {
+    "id": "poisson/stationary-tiny",
+    "family": "poisson",
+    "arrays": [
+      [
+        0.0
+      ],
+      [
+        1.0000000031710769e-30
+      ],
+      [
+        1.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        1.0
+      ]
+    ],
+    "status": "worsening"
+  },
+  "comparison": {
+    "lower": 5.0000000317107686e-61,
+    "upper": 5.00000003171077e-61,
+    "method": "poisson-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "worsening",
+  "decimal220": "5.00000003171076855998915544517671118016425919572804820675860866903258830364374079505627044443072959249396307846688309550309439921050359358331259635674689429495E-61",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

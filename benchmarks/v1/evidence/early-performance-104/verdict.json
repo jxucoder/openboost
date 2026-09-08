@@ -1,0 +1,35 @@
+{
+  "passed": false,
+  "reason": "case matrix or result failure",
+  "cases": [
+    {
+      "case": "tests.v1.test_early_performance_cuda::test_same_host_performance_and_quality[squared-10000]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_early_performance_cuda::test_same_host_performance_and_quality[squared-100000]",
+      "status": "fail"
+    },
+    {
+      "case": "tests.v1.test_early_performance_cuda::test_same_host_performance_and_quality[normal-1000]",
+      "status": "fail"
+    },
+    {
+      "case": "tests.v1.test_early_performance_cuda::test_same_host_performance_and_quality[normal-10000]",
+      "status": "fail"
+    },
+    {
+      "case": "tests.v1.test_early_performance_cuda::test_same_host_performance_and_quality[normal-100000]",
+      "status": "fail"
+    },
+    {
+      "case": "tests.v1.test_early_performance_cuda::test_separate_cold_and_warm_profile",
+      "status": "fail"
+    }
+  ],
+  "installed_sources_match": true,
+  "versions_match": true,
+  "snapshot_sources_match": true,
+  "cpu_environment_built": true,
+  "retained_artifacts_complete": true
+}

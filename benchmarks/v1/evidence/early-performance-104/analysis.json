@@ -1,0 +1,675 @@
+{
+  "manifest_sha256": "f303c1f9fc3a820919b6c6bcd16504878740fbe9d3a198b62d86dac8d67ee3a7",
+  "execution_revision": "c8f7ebc57274399dbe120cd97d7933455e6559e4",
+  "raw_status": "fail",
+  "raw_verdict": false,
+  "cases_passed": 1,
+  "cases_total": 6,
+  "dispatch_sources_verified": 46,
+  "raw_artifacts_verified": 19,
+  "completed_children_replayed": 5,
+  "retained_completed_fits_verified": 22,
+  "local_audit_environment": {
+    "os": "macOS-26.3-x86_64-i386-64bit",
+    "machine": "x86_64",
+    "python": "3.12.12",
+    "numpy": "2.3.5"
+  },
+  "local_regeneration_audit": [
+    {
+      "recipe": "squared",
+      "rows": 10000,
+      "backend": "cpu",
+      "local_train_identity": "84a958f4d7497c3f94c75ed48a7195951ab4d1724210e5024c00c62de45ff6e4",
+      "local_validation_identity": "6681021664981fc45f60d43228368f22db7b150f2b3a327b526fe9092bab1160",
+      "train_identity_exact": false,
+      "validation_identity_exact": false,
+      "prediction_replay_exact": true,
+      "local_metric_absolute_differences": {
+        "half_mse": 1.0303552455681597e-10
+      }
+    },
+    {
+      "recipe": "squared",
+      "rows": 10000,
+      "backend": "cuda",
+      "local_train_identity": "84a958f4d7497c3f94c75ed48a7195951ab4d1724210e5024c00c62de45ff6e4",
+      "local_validation_identity": "6681021664981fc45f60d43228368f22db7b150f2b3a327b526fe9092bab1160",
+      "train_identity_exact": false,
+      "validation_identity_exact": false,
+      "prediction_replay_exact": true,
+      "local_metric_absolute_differences": {
+        "half_mse": 1.0303552455681597e-10
+      }
+    },
+    {
+      "recipe": "squared",
+      "rows": 100000,
+      "backend": "cpu",
+      "local_train_identity": "435c13741bc57219b6eb8eb16892855a0a8286ef4f7a94a4498d670b3a24392d",
+      "local_validation_identity": "555e4a03f77f791df06f54a0c93ef9d226d04b121595ff2c9912c7cef2137277",
+      "train_identity_exact": false,
+      "validation_identity_exact": false,
+      "prediction_replay_exact": true,
+      "local_metric_absolute_differences": {
+        "half_mse": -2.9385116562252733e-10
+      }
+    },
+    {
+      "recipe": "normal",
+      "rows": 1000,
+      "backend": "cuda",
+      "local_train_identity": "835a6c16a404adaaed6552af984ea470346bc2ed8d64081ed0abb23c73b2b90a",
+      "local_validation_identity": "129b35aabc0864c75bd083851a171b705bc8fd51d01d0b7dec7bcc85879c76eb",
+      "train_identity_exact": false,
+      "validation_identity_exact": false,
+      "prediction_replay_exact": true,
+      "local_metric_absolute_differences": {
+        "nll": -4.738208048138404e-09,
+        "crps": -2.9860852679419736e-09
+      }
+    },
+    {
+      "recipe": "normal",
+      "rows": 10000,
+      "backend": "cuda",
+      "local_train_identity": "d5ae8ad230091ee9b03788f594b16d40c0ef3fa98ff95b3d41f1c4a925bb6ae6",
+      "local_validation_identity": "720473fde20e9aceff4f793f7069ef0b1c233bcfc9c1b38e77aca3c2ec5a474d",
+      "train_identity_exact": false,
+      "validation_identity_exact": false,
+      "prediction_replay_exact": true,
+      "local_metric_absolute_differences": {
+        "nll": 1.1965228807753192e-10,
+        "crps": 5.7340798775840085e-12
+      }
+    }
+  ],
+  "local_inputs_match_remote": false,
+  "qualified_pairs": 1,
+  "dispatch_seconds": 547.097599,
+  "worker_seconds": 463.174024267,
+  "junit_seconds": 462.376,
+  "pairs": [
+    {
+      "case": "squared-10000",
+      "cpu": {
+        "status": "complete",
+        "child_wall_seconds": 14.649182492,
+        "child_timeout_seconds": 45,
+        "completed_repetitions": 2,
+        "first_fit_seconds": 7.006174475000001,
+        "warm_fit_seconds": [
+          7.043779103
+        ],
+        "warm_fit_median_seconds": 7.043779103,
+        "quality": {
+          "half_mse": 0.33724823350239064
+        },
+        "first_phases_seconds": {
+          "fit_seconds": 7.006174475000001,
+          "context_seconds": 0.0,
+          "host_preparation_seconds": 0.018903858999999912,
+          "training_seconds": 6.986778040000001,
+          "export_seconds": 0.0004297580000010015,
+          "cleanup_seconds": 5.585000000074558e-05
+        },
+        "last_fit_state": {
+          "version": 20,
+          "terms": 20,
+          "best_terms": 20
+        },
+        "last_fit_metrics": null,
+        "warm_phase_medians_seconds": {
+          "fit_seconds": 7.043779103,
+          "context_seconds": 0.0,
+          "host_preparation_seconds": 0.01909582999999948,
+          "training_seconds": 7.024120053000001,
+          "export_seconds": 0.00047485600000030104,
+          "cleanup_seconds": 7.786699999812186e-05
+        },
+        "construction_seconds": 0.04918458700000006,
+        "model_load_seconds": 0.011698899000002427,
+        "cpu_inference_warm_medians_seconds": {
+          "single": 0.003378958999999071,
+          "batch": 0.03534986299999687
+        }
+      },
+      "cuda": {
+        "status": "complete",
+        "child_wall_seconds": 19.938276123999998,
+        "child_timeout_seconds": 50,
+        "completed_repetitions": 4,
+        "first_fit_seconds": 9.393586187,
+        "warm_fit_seconds": [
+          2.962255658,
+          2.940562680000003,
+          2.918374227000001
+        ],
+        "warm_fit_median_seconds": 2.940562680000003,
+        "quality": {
+          "half_mse": 0.3372482702512653
+        },
+        "first_phases_seconds": {
+          "fit_seconds": 9.393586187,
+          "context_seconds": 0.8627979809999999,
+          "host_preparation_seconds": 0.01272806500000101,
+          "training_seconds": 8.505155775000002,
+          "export_seconds": 0.007450817000002274,
+          "cleanup_seconds": 0.00542366899999891
+        },
+        "last_fit_state": {
+          "version": 20,
+          "terms": 20,
+          "best_terms": 20
+        },
+        "last_fit_metrics": {
+          "upload_bytes": 1110000,
+          "export_bytes": 15564,
+          "device_copy_bytes": 975600,
+          "synchronizations": 6272,
+          "live_bytes": 0,
+          "peak_live_bytes": 1376220,
+          "peak_pool_bytes": 1464320,
+          "kernel_launches": 4531,
+          "kernel_dispatch_seconds": 1.3681083649999692,
+          "validation_export_bytes": 12344,
+          "decision_export_bytes": 1680,
+          "metric_export_bytes": 336
+        },
+        "warm_phase_medians_seconds": {
+          "fit_seconds": 2.940562680000003,
+          "context_seconds": 0.00029442800000012426,
+          "host_preparation_seconds": 0.012229494999999702,
+          "training_seconds": 2.8966894459999963,
+          "export_seconds": 0.005846298999998112,
+          "cleanup_seconds": 0.018599645999998415
+        },
+        "construction_seconds": 0.041354140999999345,
+        "model_load_seconds": 0.01157384700000108,
+        "cpu_inference_warm_medians_seconds": {
+          "single": 0.0034816009999971698,
+          "batch": 0.03557382199999637
+        }
+      },
+      "judgment": {
+        "measurement_complete": true,
+        "quality_comparable": true,
+        "reasons": [],
+        "relative_metric_differences": {
+          "half_mse": 1.0896684108288162e-07
+        },
+        "normalized_prediction_rmse": [
+          1.9468007625720794e-07
+        ],
+        "cpu_over_cuda_warm_fit_ratio": 2.395384784996317
+      }
+    },
+    {
+      "case": "squared-100000",
+      "cpu": {
+        "status": "complete",
+        "child_wall_seconds": 35.935997808,
+        "child_timeout_seconds": 60,
+        "completed_repetitions": 2,
+        "first_fit_seconds": 16.743545449000003,
+        "warm_fit_seconds": [
+          16.928273114000007
+        ],
+        "warm_fit_median_seconds": 16.928273114000007,
+        "quality": {
+          "half_mse": 0.34552587574476756
+        },
+        "first_phases_seconds": {
+          "fit_seconds": 16.743545449000003,
+          "context_seconds": 0.0,
+          "host_preparation_seconds": 0.16644462100000368,
+          "training_seconds": 16.576502721000004,
+          "export_seconds": 0.0005135030000005258,
+          "cleanup_seconds": 7.476300000064384e-05
+        },
+        "last_fit_state": {
+          "version": 20,
+          "terms": 20,
+          "best_terms": 20
+        },
+        "last_fit_metrics": null,
+        "warm_phase_medians_seconds": {
+          "fit_seconds": 16.928273114000007,
+          "context_seconds": 0.0,
+          "host_preparation_seconds": 0.1669428989999986,
+          "training_seconds": 16.760755436999993,
+          "export_seconds": 0.0004941570000056572,
+          "cleanup_seconds": 7.148100000620161e-05
+        },
+        "construction_seconds": 0.1750715710000037,
+        "model_load_seconds": 0.011194045999999958,
+        "cpu_inference_warm_medians_seconds": {
+          "single": 0.0033347130000009884,
+          "batch": 0.33366843999999674
+        }
+      },
+      "cuda": {
+        "status": "timeout",
+        "child_wall_seconds": 50.12340516900001,
+        "child_timeout_seconds": 50,
+        "completed_repetitions": 3,
+        "first_fit_seconds": 20.48645583599999,
+        "warm_fit_seconds": [
+          13.757134472999994,
+          13.74770904399999
+        ],
+        "warm_fit_median_seconds": 13.752421758499992,
+        "quality": null,
+        "first_phases_seconds": {
+          "fit_seconds": 20.48645583599999,
+          "context_seconds": 1.7598970899999955,
+          "host_preparation_seconds": 0.0944648200000131,
+          "training_seconds": 18.59965266399999,
+          "export_seconds": 0.005824075000006701,
+          "cleanup_seconds": 0.026592481999998085
+        },
+        "last_fit_state": {
+          "version": 20,
+          "terms": 20,
+          "best_terms": 20
+        },
+        "last_fit_metrics": {
+          "upload_bytes": 11046000,
+          "export_bytes": 15564,
+          "device_copy_bytes": 9615600,
+          "synchronizations": 6272,
+          "live_bytes": 0,
+          "peak_live_bytes": 13274220,
+          "peak_pool_bytes": 14123008,
+          "kernel_launches": 4531,
+          "kernel_dispatch_seconds": 1.429828249999133,
+          "validation_export_bytes": 12344,
+          "decision_export_bytes": 1680,
+          "metric_export_bytes": 336
+        },
+        "warm_phase_medians_seconds": {
+          "fit_seconds": 13.752421758499992,
+          "context_seconds": 0.0002331974999947306,
+          "host_preparation_seconds": 0.09406860600000044,
+          "training_seconds": 13.602746074499997,
+          "export_seconds": 0.0059081729999945765,
+          "cleanup_seconds": 0.049445091000002606
+        }
+      },
+      "judgment": {
+        "measurement_complete": false,
+        "quality_comparable": false,
+        "reasons": [
+          "cuda: timeout"
+        ],
+        "cpu_over_cuda_warm_fit_ratio": null
+      }
+    },
+    {
+      "case": "normal-1000",
+      "cpu": {
+        "status": "timeout",
+        "child_wall_seconds": 90.007349056,
+        "child_timeout_seconds": 90,
+        "completed_repetitions": 1,
+        "first_fit_seconds": 48.00880434700001,
+        "warm_fit_seconds": [],
+        "warm_fit_median_seconds": null,
+        "quality": null,
+        "first_phases_seconds": {
+          "fit_seconds": 48.00880434700001,
+          "context_seconds": 0.0,
+          "host_preparation_seconds": 0.005087078999991945,
+          "training_seconds": 48.002377306,
+          "export_seconds": 0.0011722349999843118,
+          "cleanup_seconds": 0.00015707899999028996
+        },
+        "last_fit_state": {
+          "version": 20,
+          "terms": 40,
+          "best_terms": 40
+        },
+        "last_fit_metrics": null
+      },
+      "cuda": {
+        "status": "complete",
+        "child_wall_seconds": 36.382899522,
+        "child_timeout_seconds": 50,
+        "completed_repetitions": 4,
+        "first_fit_seconds": 18.86242679099999,
+        "warm_fit_seconds": [
+          5.132155261000008,
+          5.111194764999993,
+          5.108091105999989
+        ],
+        "warm_fit_median_seconds": 5.111194764999993,
+        "quality": {
+          "nll": 1.2929638946603665,
+          "crps": 0.4870656541426803
+        },
+        "first_phases_seconds": {
+          "fit_seconds": 18.86242679099999,
+          "context_seconds": 1.084341887999983,
+          "host_preparation_seconds": 0.005050881000016716,
+          "training_seconds": 17.752943846999983,
+          "export_seconds": 0.015826626999995597,
+          "cleanup_seconds": 0.004223488000008047
+        },
+        "last_fit_state": {
+          "version": 20,
+          "terms": 40,
+          "best_terms": 40
+        },
+        "last_fit_metrics": {
+          "upload_bytes": 127080,
+          "export_bytes": 35408,
+          "device_copy_bytes": 450088,
+          "synchronizations": 12901,
+          "live_bytes": 0,
+          "peak_live_bytes": 246640,
+          "peak_pool_bytes": 297984,
+          "kernel_launches": 9357,
+          "kernel_dispatch_seconds": 2.876221301999834,
+          "validation_export_bytes": 27432,
+          "decision_export_bytes": 3336,
+          "metric_export_bytes": 336,
+          "comparison_calls": 60,
+          "comparison_export_bytes": 1920
+        },
+        "warm_phase_medians_seconds": {
+          "fit_seconds": 5.111194764999993,
+          "context_seconds": 0.0003189349999956903,
+          "host_preparation_seconds": 0.004017140999991398,
+          "training_seconds": 5.090137602999988,
+          "export_seconds": 0.010057705000008355,
+          "cleanup_seconds": 0.009355262000013909
+        },
+        "construction_seconds": 0.03571050299999001,
+        "model_load_seconds": 0.023323546000000306,
+        "cpu_inference_warm_medians_seconds": {
+          "single": 0.006903895000021976,
+          "batch": 0.01646800800000392
+        }
+      },
+      "judgment": {
+        "measurement_complete": false,
+        "quality_comparable": false,
+        "reasons": [
+          "cpu: timeout"
+        ],
+        "cpu_over_cuda_warm_fit_ratio": null
+      }
+    },
+    {
+      "case": "normal-10000",
+      "cpu": {
+        "status": "timeout",
+        "child_wall_seconds": 30.007264520000007,
+        "child_timeout_seconds": 30,
+        "completed_repetitions": 0,
+        "first_fit_seconds": null,
+        "warm_fit_seconds": [],
+        "warm_fit_median_seconds": null,
+        "quality": null
+      },
+      "cuda": {
+        "status": "complete",
+        "child_wall_seconds": 44.553627352000035,
+        "child_timeout_seconds": 50,
+        "completed_repetitions": 4,
+        "first_fit_seconds": 21.53855821799999,
+        "warm_fit_seconds": [
+          6.858290298999975,
+          6.864427905000014,
+          6.843466030999991
+        ],
+        "warm_fit_median_seconds": 6.858290298999975,
+        "quality": {
+          "nll": 1.2672821370696137,
+          "crps": 0.462791862153324
+        },
+        "first_phases_seconds": {
+          "fit_seconds": 21.53855821799999,
+          "context_seconds": 1.8394391269999915,
+          "host_preparation_seconds": 0.013035095000020647,
+          "training_seconds": 19.638156553999977,
+          "export_seconds": 0.011216253999975834,
+          "cleanup_seconds": 0.036683433000007426
+        },
+        "last_fit_state": {
+          "version": 20,
+          "terms": 40,
+          "best_terms": 40
+        },
+        "last_fit_metrics": {
+          "upload_bytes": 1164000,
+          "export_bytes": 35624,
+          "device_copy_bytes": 4223200,
+          "synchronizations": 12982,
+          "live_bytes": 0,
+          "peak_live_bytes": 1911784,
+          "peak_pool_bytes": 2319872,
+          "kernel_launches": 9417,
+          "kernel_dispatch_seconds": 2.851906019000751,
+          "validation_export_bytes": 27600,
+          "decision_export_bytes": 3360,
+          "metric_export_bytes": 336,
+          "comparison_calls": 60,
+          "comparison_export_bytes": 1920
+        },
+        "warm_phase_medians_seconds": {
+          "fit_seconds": 6.858290298999975,
+          "context_seconds": 0.0003069769999797245,
+          "host_preparation_seconds": 0.012384812999982842,
+          "training_seconds": 6.813166451999962,
+          "export_seconds": 0.010663544999999885,
+          "cleanup_seconds": 0.02063130600004115
+        },
+        "construction_seconds": 0.04694285699997636,
+        "model_load_seconds": 0.022910806999959732,
+        "cpu_inference_warm_medians_seconds": {
+          "single": 0.00679454000004398,
+          "batch": 0.07082848299995703
+        }
+      },
+      "judgment": {
+        "measurement_complete": false,
+        "quality_comparable": false,
+        "reasons": [
+          "cpu: timeout"
+        ],
+        "cpu_over_cuda_warm_fit_ratio": null
+      }
+    },
+    {
+      "case": "normal-100000",
+      "cpu": {
+        "status": "timeout",
+        "child_wall_seconds": 30.006845881000004,
+        "child_timeout_seconds": 30,
+        "completed_repetitions": 0,
+        "first_fit_seconds": null,
+        "warm_fit_seconds": [],
+        "warm_fit_median_seconds": null,
+        "quality": null
+      },
+      "cuda": {
+        "status": "timeout",
+        "child_wall_seconds": 50.12484403499997,
+        "child_timeout_seconds": 50,
+        "completed_repetitions": 1,
+        "first_fit_seconds": 49.50285936199998,
+        "warm_fit_seconds": [],
+        "warm_fit_median_seconds": null,
+        "quality": null,
+        "first_phases_seconds": {
+          "fit_seconds": 49.50285936199998,
+          "context_seconds": 1.8927976809999905,
+          "host_preparation_seconds": 0.10066839199998867,
+          "training_seconds": 47.41896304400001,
+          "export_seconds": 0.011497399999996105,
+          "cleanup_seconds": 0.07886194900004284
+        },
+        "last_fit_state": {
+          "version": 20,
+          "terms": 40,
+          "best_terms": 40
+        },
+        "last_fit_metrics": {
+          "upload_bytes": 11532000,
+          "export_bytes": 35624,
+          "device_copy_bytes": 41951200,
+          "synchronizations": 12982,
+          "live_bytes": 0,
+          "peak_live_bytes": 18561784,
+          "peak_pool_bytes": 22923776,
+          "kernel_launches": 9417,
+          "kernel_dispatch_seconds": 14.475621615996943,
+          "validation_export_bytes": 27600,
+          "decision_export_bytes": 3360,
+          "metric_export_bytes": 336,
+          "comparison_calls": 60,
+          "comparison_export_bytes": 1920
+        }
+      },
+      "judgment": {
+        "measurement_complete": false,
+        "quality_comparable": false,
+        "reasons": [
+          "cpu: timeout",
+          "cuda: timeout"
+        ],
+        "cpu_over_cuda_warm_fit_ratio": null
+      }
+    }
+  ],
+  "separate_profile": {
+    "summary": {
+      "status": "timeout",
+      "child_wall_seconds": 60.123896059,
+      "child_timeout_seconds": 60,
+      "completed_repetitions": 1,
+      "first_fit_seconds": 57.95323565699999,
+      "warm_fit_seconds": [],
+      "warm_fit_median_seconds": null,
+      "quality": null,
+      "first_phases_seconds": {
+        "fit_seconds": 57.95323565699999,
+        "context_seconds": 2.4344843760000003,
+        "host_preparation_seconds": 0.10882594400004564,
+        "training_seconds": 55.33821684100002,
+        "export_seconds": 0.027452568000001065,
+        "cleanup_seconds": 0.04420084299999871
+      },
+      "last_fit_state": {
+        "version": 20,
+        "terms": 40,
+        "best_terms": 40
+      },
+      "last_fit_metrics": {
+        "upload_bytes": 11532000,
+        "export_bytes": 35624,
+        "device_copy_bytes": 41951200,
+        "synchronizations": 12982,
+        "live_bytes": 0,
+        "peak_live_bytes": 18561784,
+        "peak_pool_bytes": 22325760,
+        "kernel_launches": 9417,
+        "kernel_dispatch_seconds": 21.728168702999767,
+        "validation_export_bytes": 27600,
+        "decision_export_bytes": 3360,
+        "metric_export_bytes": 336,
+        "comparison_calls": 60,
+        "comparison_export_bytes": 1920
+      }
+    },
+    "calls": [
+      {
+        "repeat": 0,
+        "calls": [
+          {
+            "file": "openboost/execution.py",
+            "line": 132,
+            "function": "export",
+            "calls": 5553,
+            "own_seconds": 0.029122245,
+            "inclusive_seconds": 28.964125349000003
+          },
+          {
+            "file": "openboost/device.py",
+            "line": 245,
+            "function": "_launch",
+            "calls": 9417,
+            "own_seconds": 0.17642120600000002,
+            "inclusive_seconds": 22.766481231
+          },
+          {
+            "file": "numba_cuda/numba/cuda/dispatcher.py",
+            "line": 1878,
+            "function": "compile",
+            "calls": 24,
+            "own_seconds": 0.001028773,
+            "inclusive_seconds": 15.693557062000002
+          },
+          {
+            "file": "openboost/execution.py",
+            "line": 141,
+            "function": "release",
+            "calls": 6533,
+            "own_seconds": 0.016751977,
+            "inclusive_seconds": 1.188593256
+          },
+          {
+            "file": "openboost/execution.py",
+            "line": 99,
+            "function": "synchronize",
+            "calls": 7429,
+            "own_seconds": 1.1573372990000002,
+            "inclusive_seconds": 1.165735156
+          },
+          {
+            "file": "openboost/execution.py",
+            "line": 105,
+            "function": "upload",
+            "calls": 50,
+            "own_seconds": 0.0010476600000000002,
+            "inclusive_seconds": 0.092090585
+          },
+          {
+            "file": "openboost/device_runtime.py",
+            "line": 460,
+            "function": "export",
+            "calls": 1,
+            "own_seconds": 4.7716e-05,
+            "inclusive_seconds": 0.019534283
+          },
+          {
+            "file": "openboost/device_tree.py",
+            "line": 159,
+            "function": "export",
+            "calls": 40,
+            "own_seconds": 0.00010015700000000001,
+            "inclusive_seconds": 0.016413843
+          },
+          {
+            "file": "openboost/device.py",
+            "line": 722,
+            "function": "release",
+            "calls": 640,
+            "own_seconds": 0.00442147,
+            "inclusive_seconds": 0.00973264
+          },
+          {
+            "file": "openboost/device_runtime.py",
+            "line": 472,
+            "function": "release",
+            "calls": 40,
+            "own_seconds": 0.0005885900000000001,
+            "inclusive_seconds": 0.004792478
+          }
+        ]
+      }
+    ]
+  },
+  "scope": "Synthetic one-seed internal checkpoint. Ratios require completed comparable pairs; profile timings are separate and inclusive costs overlap. No external speed or E4 claim."
+}

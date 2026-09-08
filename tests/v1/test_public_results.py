@@ -1,10 +1,11 @@
 """External result interoperability and fail-closed result validation."""
 
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from types import SimpleNamespace
 
 import numpy as np
 import pytest
+from examples.v1_extensions.custom_stopping import squared_until_loss
 
 from openboost import NumericData, Problem, RunContext
 from openboost.binning import Binning, PreparedData
@@ -18,6 +19,103 @@ def problems():
     x = NumericData(np.arange(6)[:, None], np.arange(6), ("x",))
     p = Problem(x, [[0.5], [1], [2], [3], [5], [8]], x.row_ids)
     return p, replace(p, raw_width=2, offset=np.zeros((6, 2)))
+
+
+@dataclass(frozen=True)
+class ExternalStop:
+    rounds: int = 5
+    completed_rounds: int = 2
+    reason: str = "external_rule"
+    diagnostics: tuple = ("author-owned",)
+
+
+def test_structural_stopping_preserves_external_record():
+    p, _ = problems()
+    context = RunContext("external-stop", 7)
+    fit = squared(p, p, context=context, rounds=2)
+    stop = ExternalStop()
+    result = SimpleNamespace(state=fit.state, steps=fit.steps, stop=stop)
+    outcome = run_many([RunSpec(context, p, p, lambda *a, **kw: result)])[0]
+    assert outcome.error_type is None, outcome.error_message
+    assert outcome.result is result
+    assert outcome.result.stop is stop
+    assert outcome.result.stop.diagnostics is stop.diagnostics
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"rounds": True},
+        {"rounds": 5.0},
+        {"rounds": -1},
+        {"completed_rounds": True},
+        {"completed_rounds": 2.0},
+        {"completed_rounds": -1},
+        {"completed_rounds": 6},
+        {"reason": None},
+        {"reason": ""},
+        {"reason": 1},
+        {"reason": "budget"},
+    ],
+)
+def test_malformed_external_completion_is_isolated(change):
+    p, _ = problems()
+    context = RunContext("invalid-external", 7)
+    fit = squared(p, p, context=context, rounds=2)
+    bad = SimpleNamespace(state=fit.state, steps=fit.steps, stop=replace(ExternalStop(), **change))
+    outcomes = run_many(
+        [
+            RunSpec(context, p, p, lambda *a, **kw: bad),
+            RunSpec(RunContext("valid-neighbor", 7), p, p, squared, {"rounds": 0}),
+        ]
+    )
+    assert outcomes[0].error_type == "ValueError"
+    assert outcomes[0].result is None
+    assert outcomes[1].error_type is None
+    assert outcomes[1].result.stop.reason == "budget"
+
+
+@pytest.mark.parametrize("field", ["rounds", "completed_rounds", "reason"])
+def test_missing_external_completion_field(field):
+    p, _ = problems()
+    context = RunContext("missing-stop-field", 7)
+    fit = squared(p, p, context=context, rounds=2)
+    parts = dict(rounds=5, completed_rounds=2, reason="external_rule")
+    del parts[field]
+    result = SimpleNamespace(state=fit.state, steps=fit.steps, stop=SimpleNamespace(**parts))
+    out = run_many([RunSpec(context, p, p, lambda *a, **kw: result)])[0]
+    assert out.error_type == "ValueError" and out.result is None
+
+
+@pytest.mark.parametrize(
+    "rounds,threshold,completed,reason",
+    [
+        (5, 0.05, 2, "loss_threshold"),
+        (1, 0.05, 1, "budget"),
+        (0, 0.05, 0, "budget"),
+        (2, 0.05, 2, "loss_threshold"),
+        (5, 0.2, 1, "loss_threshold"),
+    ],
+)
+def test_real_external_loop_uses_measured_loss(rounds, threshold, completed, reason):
+    x = NumericData([[-1], [1]], [0, 1], ("x",))
+    p = Problem(x, [[-1], [1]], x.row_ids)
+    # Opposite validation targets leave the initial model as validation best.
+    valid = replace(p, target=-p.target)
+    context = RunContext("threshold-loop", 7)
+    out = run_many(
+        [RunSpec(context, p, valid, squared_until_loss, dict(rounds=rounds, threshold=threshold))]
+    )[0]
+    assert out.error_type is None, out.error_message
+    fit = out.result
+    assert fit.stop.reason == reason
+    assert fit.stop.completed_rounds == len(fit.steps) == completed
+    assert fit.stop.losses is fit.steps
+    # Independent recurrence: each pure leaf removes half the residual.
+    np.testing.assert_array_equal(fit.steps, [0.5 * 0.25**i for i in range(1, completed + 1)])
+    np.testing.assert_array_equal(fit.state.train_raw, p.target * (1 - 0.5**completed))
+    assert fit.state.best_model.terms == ()
+    assert fit.state.version == completed
 
 
 def test_external_ordered_result_is_preserved():

@@ -38,6 +38,14 @@ improvement resets it. Stop at patience consecutive stale rounds or the round
 budget. A simultaneous limit reports `patience`; zero rounds reports `budget`.
 Further observations after termination raise an error.
 
+`observe_change(score, change)` explicitly consumes a `LossChange` instead of
+subtracting reporting scores. It resets patience only when
+`change.improves(min_delta)`. The caller owns a snapshot of the last qualifying
+validation raw and must replace it on that decision, including when reporting
+scores are equal. The built-in CPU Normal recipe uses this operation. Other CPU
+recipes retain `observe(score)` until they have their own comparison operations.
+Both operations preserve the same completion metadata and strict threshold.
+
 Backtracking still uses training loss for step acceptance. Individual search
 trials and ordered substeps must not advance the stopping clock. A fully rejected
 outer round observes the unchanged model once and consumes patience. Accepted-state
@@ -60,3 +68,25 @@ Tests cover all twelve recipes, hand-calculated threshold sequences and M=1/8/32
 heterogeneous scalar/Normal runs with different actual validation stop rounds,
 failed runs, retries and regrouping. This establishes CPU state semantics, not
 real model-selection quality, GPU batching, fusion or a speed improvement.
+
+## External policies
+
+External recipes may use `openboost.stopping.StoppingStatus` without inheriting
+StopState. It describes read-only `rounds`, `completed_rounds` and `reason`
+properties; a frozen dataclass with those fields is sufficient. Completed results
+require integer counts within budget, one trace entry per outer round, and a
+nonempty terminal reason. `budget` requires completed_rounds == rounds. Additional
+policy fields are retained unchanged by run_many. See [result validation](results.md).
+
+The public loop in `examples/v1_extensions/custom_stopping.py` fits half-step
+squared-error trees and measures training loss after each update. On targets
+(-1, 1) separated by the feature, the initial loss is 0.5 and successive losses
+are 0.125 and 0.03125. A threshold of 0.05 therefore terminates after two rounds
+of a five-round budget, reporting `loss_threshold` with the measured losses.
+Changing the threshold changes the actual loop's completion; it does not wrap
+a shorter built-in fit and relabel budget exhaustion.
+
+Validation still chooses best_model independently. This rule is a small development
+probe, not ScoreStop, a statistical test or evidence of generalization. Structural
+validation checks completion metadata, not the correctness of arbitrary policy
+mathematics or the immutability of author-owned payloads.

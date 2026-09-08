@@ -1,0 +1,66 @@
+{
+  "case": "analytic/clear-worsening",
+  "inputs": {
+    "before": [
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "after": [
+      [
+        1.0,
+        0.0
+      ]
+    ],
+    "target": [
+      0.0
+    ],
+    "offset": [
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "weight": [
+      1.0
+    ]
+  },
+  "comparison": {
+    "lower": 0.5,
+    "upper": 0.5,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false,
+    "status": "worsening",
+    "estimate": 0.5,
+    "uncertainty": 0.0
+  },
+  "cpu": {
+    "lower": 0.49999999999999994,
+    "upper": 0.5000000000000001,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "high_precision": {
+    "decimal60": "0.5",
+    "decimal100": "0.5",
+    "signs": [
+      1,
+      1
+    ],
+    "estimates_agree": true,
+    "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+  },
+  "additional_precision": [],
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 48,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "validation_export_bytes": 16,
+    "synchronizations": 6
+  }
+}

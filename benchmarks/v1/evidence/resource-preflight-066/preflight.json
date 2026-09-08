@@ -1,0 +1,105 @@
+{
+  "manifest": {
+    "revision": "e2b6c4c0f73286e00faae74f9094794cdce902e3",
+    "dirty": true,
+    "source_sha256": "5a14d51769b820828d071b8ee8d70318e4cdef94d6bc78aa350849774335db52",
+    "argv": [
+      "/Users/jiaruixu/work_space/openboost/benchmarks/v1/resource_preflight.py",
+      "/tmp/openboost-resource-preflight-066.json",
+      "--modal"
+    ],
+    "requested": {
+      "cpu": [
+        2,
+        2
+      ],
+      "memory_mib": [
+        8192,
+        8192
+      ],
+      "timeout_s": 60,
+      "retries": 0
+    },
+    "image_id": "im-nxJ6uQLb0rZGA4a2ivusev",
+    "modal_version": "1.3.0.post1"
+  },
+  "result": {
+    "passed": false,
+    "checks": {
+      "allocation_rejected": true,
+      "timeout_killed": true,
+      "partial_log_retained": true,
+      "valid_child_succeeds": true,
+      "container_8gib_enforced": false,
+      "container_two_cpus_enforced": false
+    },
+    "cgroup_limits": {
+      "/sys/fs/cgroup/memory.max": null,
+      "/sys/fs/cgroup/cpu.max": null
+    },
+    "environment": {
+      "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+      "python": "3.12.10",
+      "cpu": "",
+      "cpu_count": 2,
+      "gpu": null
+    },
+    "cases": {
+      "allocation": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "134217728",
+          "/usr/local/bin/python",
+          "-c",
+          "import resource,sys; print('address_limit',resource.getrlimit(resource.RLIMIT_AS),flush=True);\ntry: data=bytearray(256*1024**2)\nexcept MemoryError: print('expected allocation rejected',flush=True); sys.exit(73)\nprint('ERROR allocation escaped limit',flush=True)"
+        ],
+        "timeout_s": 10,
+        "address_limit_bytes": 134217728,
+        "threads": 2,
+        "status": "error",
+        "exit_code": 73,
+        "wall_s": 0.06724730000000001,
+        "log": "address_limit (134217728, 134217728)\nexpected allocation rejected\n"
+      },
+      "timeout": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "134217728",
+          "/usr/local/bin/python",
+          "-c",
+          "import time; print('started',flush=True); time.sleep(10)"
+        ],
+        "timeout_s": 1,
+        "address_limit_bytes": 134217728,
+        "threads": 2,
+        "status": "timeout",
+        "exit_code": -9,
+        "wall_s": 1.0031059880000002,
+        "log": "started\n"
+      },
+      "success": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "134217728",
+          "/usr/local/bin/python",
+          "-c",
+          "print('success')"
+        ],
+        "timeout_s": 10,
+        "address_limit_bytes": 134217728,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 0.06646293599999975,
+        "log": "success\n"
+      }
+    },
+    "scope": "resource preflight only; RLIMIT_AS probe is not an RSS measurement"
+  }
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "repeat": 0,
+    "fit_including_context_preparation_export_seconds": 0.293945149999999,
+    "cpu_prediction_seconds": 0.0005318760000001532,
+    "fit_metrics": {
+      "upload_bytes": 660,
+      "export_bytes": 2456,
+      "device_copy_bytes": 1368,
+      "synchronizations": 812,
+      "live_bytes": 836,
+      "peak_live_bytes": 2186,
+      "peak_pool_bytes": 27648,
+      "kernel_launches": 647,
+      "kernel_dispatch_seconds": 0.191536622000001,
+      "validation_export_bytes": 2192,
+      "decision_export_bytes": 120,
+      "metric_export_bytes": 64
+    },
+    "final_metrics": {
+      "upload_bytes": 660,
+      "export_bytes": 2504,
+      "device_copy_bytes": 1416,
+      "synchronizations": 817,
+      "live_bytes": 0,
+      "peak_live_bytes": 2186,
+      "peak_pool_bytes": 27648,
+      "kernel_launches": 647,
+      "kernel_dispatch_seconds": 0.191536622000001,
+      "validation_export_bytes": 2192,
+      "decision_export_bytes": 120,
+      "metric_export_bytes": 64
+    },
+    "trials": [
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.441390650567928,
+        "validation_score": 2.3359158920524115,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.3885665062774426,
+        "validation_score": 2.2984545448143416,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.3427920835392584,
+        "validation_score": 2.2645419595113623,
+        "accepted": true,
+        "failure": null
+      }
+    ],
+    "validation_nll_crps": [
+      2.2645419595113623,
+      1.3475152321062416
+    ]
+  },
+  {
+    "repeat": 1,
+    "fit_including_context_preparation_export_seconds": 0.29148309600000033,
+    "cpu_prediction_seconds": 0.0004966720000005864,
+    "fit_metrics": {
+      "upload_bytes": 660,
+      "export_bytes": 2456,
+      "device_copy_bytes": 1368,
+      "synchronizations": 812,
+      "live_bytes": 836,
+      "peak_live_bytes": 2186,
+      "peak_pool_bytes": 27648,
+      "kernel_launches": 647,
+      "kernel_dispatch_seconds": 0.18828077400003096,
+      "validation_export_bytes": 2192,
+      "decision_export_bytes": 120,
+      "metric_export_bytes": 64
+    },
+    "final_metrics": {
+      "upload_bytes": 660,
+      "export_bytes": 2504,
+      "device_copy_bytes": 1416,
+      "synchronizations": 817,
+      "live_bytes": 0,
+      "peak_live_bytes": 2186,
+      "peak_pool_bytes": 27648,
+      "kernel_launches": 647,
+      "kernel_dispatch_seconds": 0.18828077400003096,
+      "validation_export_bytes": 2192,
+      "decision_export_bytes": 120,
+      "metric_export_bytes": 64
+    },
+    "trials": [
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.441390650567928,
+        "validation_score": 2.3359158920524115,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.3885665062774426,
+        "validation_score": 2.2984545448143416,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.3427920835392584,
+        "validation_score": 2.2645419595113623,
+        "accepted": true,
+        "failure": null
+      }
+    ],
+    "validation_nll_crps": [
+      2.2645419595113623,
+      1.3475152321062416
+    ]
+  }
+]

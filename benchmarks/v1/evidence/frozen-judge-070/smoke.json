@@ -1,0 +1,711 @@
+{
+  "scope": "Synthetic fault injection into integrity judge; no real worker/resource/access isolation or quality claim",
+  "revision": "63700dbef15e0bb496dd3c716d83a25b13975ad1",
+  "dirty": false,
+  "environment": {
+    "python": "3.12.12",
+    "os": "macOS-26.3-x86_64-i386-64bit"
+  },
+  "sources": {
+    "benchmarks/v1/frozen_judge_smoke.py": "9aafa62342aeae1f5010815906d18244f8b7b169feb87cc9eb400be8d428d204",
+    "benchmarks/v1/judge.py": "ddf1aa0f703038ad6150f8af1e25000fd73a96e11cd9adcdccd17e4964c4d7f2"
+  },
+  "frozen_manifest": {
+    "schema": "openboost-integrity-v0",
+    "protocol_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "provenance": {
+      "code_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "dirty": false,
+      "environment": {
+        "kind": "synthetic fixture"
+      }
+    },
+    "expected": [
+      {
+        "id": "A1/cpu/0",
+        "application": "A1",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A2/cpu/0",
+        "application": "A2",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A3/cpu/0",
+        "application": "A3",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A4/cpu/0",
+        "application": "A4",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A5/cpu/0",
+        "application": "A5",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A6/cpu/0",
+        "application": "A6",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A7/cpu/0",
+        "application": "A7",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A8/cpu/0",
+        "application": "A8",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A9/cpu/0",
+        "application": "A9",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A10/cpu/0",
+        "application": "A10",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A11/cpu/0",
+        "application": "A11",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A12/cpu/0",
+        "application": "A12",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A13/cpu/0",
+        "application": "A13",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "0"
+      },
+      {
+        "id": "A1/cpu/1",
+        "application": "A1",
+        "required": true,
+        "backend": "cpu",
+        "dataset_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "split_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "preprocessing_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "config": {
+          "depth": 2
+        },
+        "seed": 0,
+        "model": "fixture",
+        "fold": "1"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "attack": "valid",
+      "declared": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": true,
+        "errors": [],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": null,
+        "frozen_manifest_sha256": null,
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      },
+      "frozen": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": true,
+        "errors": [],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": true,
+        "frozen_manifest_sha256": "fcf5d657d29c6d170ea665ff810dbe9ef39c809aab01cf4a796a77bf0e9484ba",
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      }
+    },
+    {
+      "attack": "rehashed_fold_omission",
+      "declared": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": true,
+        "errors": [],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": null,
+        "frozen_manifest_sha256": null,
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      },
+      "frozen": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "manifest: producer manifest differs from evaluator frozen manifest"
+        ],
+        "statuses": {},
+        "gate_results": {},
+        "frozen_manifest_match": false,
+        "frozen_manifest_sha256": "fcf5d657d29c6d170ea665ff810dbe9ef39c809aab01cf4a796a77bf0e9484ba",
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      }
+    },
+    {
+      "attack": "rehashed_code",
+      "declared": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": true,
+        "errors": [],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": null,
+        "frozen_manifest_sha256": null,
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      },
+      "frozen": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "manifest: producer manifest differs from evaluator frozen manifest"
+        ],
+        "statuses": {},
+        "gate_results": {},
+        "frozen_manifest_match": false,
+        "frozen_manifest_sha256": "fcf5d657d29c6d170ea665ff810dbe9ef39c809aab01cf4a796a77bf0e9484ba",
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      }
+    },
+    {
+      "attack": "missing_record",
+      "declared": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "missing case: A1/cpu/1"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": null,
+        "frozen_manifest_sha256": null,
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      },
+      "frozen": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "missing case: A1/cpu/1"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": true,
+        "frozen_manifest_sha256": "fcf5d657d29c6d170ea665ff810dbe9ef39c809aab01cf4a796a77bf0e9484ba",
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      }
+    },
+    {
+      "attack": "duplicate_record",
+      "declared": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: duplicate case: A1/cpu/0"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": null,
+        "frozen_manifest_sha256": null,
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      },
+      "frozen": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: duplicate case: A1/cpu/0"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": true,
+        "frozen_manifest_sha256": "fcf5d657d29c6d170ea665ff810dbe9ef39c809aab01cf4a796a77bf0e9484ba",
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      }
+    },
+    {
+      "attack": "wrong_backend",
+      "declared": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: backend mismatch or fallback"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": null,
+        "frozen_manifest_sha256": null,
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      },
+      "frozen": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: backend mismatch or fallback"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": true,
+        "frozen_manifest_sha256": "fcf5d657d29c6d170ea665ff810dbe9ef39c809aab01cf4a796a77bf0e9484ba",
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      }
+    },
+    {
+      "attack": "worker_failure",
+      "declared": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: worker did not exit successfully"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": null,
+        "frozen_manifest_sha256": null,
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      },
+      "frozen": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: worker did not exit successfully"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": true,
+        "frozen_manifest_sha256": "fcf5d657d29c6d170ea665ff810dbe9ef39c809aab01cf4a796a77bf0e9484ba",
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      }
+    },
+    {
+      "attack": "timeout",
+      "declared": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: required status is timeout"
+        ],
+        "statuses": {
+          "A1/cpu/0": "timeout",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": null,
+        "frozen_manifest_sha256": null,
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      },
+      "frozen": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: required status is timeout"
+        ],
+        "statuses": {
+          "A1/cpu/0": "timeout",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": true,
+        "frozen_manifest_sha256": "fcf5d657d29c6d170ea665ff810dbe9ef39c809aab01cf4a796a77bf0e9484ba",
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      }
+    },
+    {
+      "attack": "nonfinite_metric",
+      "declared": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: non-finite/invalid metric"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": null,
+        "frozen_manifest_sha256": null,
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      },
+      "frozen": {
+        "schema": "openboost-integrity-v0",
+        "integrity_pass": false,
+        "errors": [
+          "case A1/cpu/0: non-finite/invalid metric"
+        ],
+        "statuses": {
+          "A1/cpu/0": "pass",
+          "A2/cpu/0": "pass",
+          "A3/cpu/0": "pass",
+          "A4/cpu/0": "pass",
+          "A5/cpu/0": "pass",
+          "A6/cpu/0": "pass",
+          "A7/cpu/0": "pass",
+          "A8/cpu/0": "pass",
+          "A9/cpu/0": "pass",
+          "A10/cpu/0": "pass",
+          "A11/cpu/0": "pass",
+          "A12/cpu/0": "pass",
+          "A13/cpu/0": "pass",
+          "A1/cpu/1": "pass"
+        },
+        "gate_results": {},
+        "frozen_manifest_match": true,
+        "frozen_manifest_sha256": "fcf5d657d29c6d170ea665ff810dbe9ef39c809aab01cf4a796a77bf0e9484ba",
+        "scope": "artifact integrity only; quality and E0-E7 not evaluated"
+      }
+    }
+  ],
+  "passed": true
+}

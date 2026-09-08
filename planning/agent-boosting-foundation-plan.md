@@ -1,7 +1,16 @@
 # OpenBoost v1: Programmable boosting foundation design, execution and acceptance
 
+Current sequencing amendment: [Sprint 101](../v1-sprints/101-defer-author-evaluation.md)
+adopts the user's request to defer agent-friendliness evaluation. Pause F2/E5,
+author-pilot preparation and its model-accounting infrastructure, including the
+pending 100 live test. These no longer block foundation construction, required
+CUDA recipes, train-many or scoped quality/cost work. Composability, independent
+mathematical checks and all R/C/A scope remain. Original agent/adoption criteria
+remain unpassed; resume that study only at the user's direction. This amendment
+supersedes older sequencing and continuation instructions below, including 085.
+
 Date: 2026-09-05. Version: **the real v1 planning baseline**, explicitly designated by the user.
-Status as of Sprint 038: **F0.1/F0.2 delivered; F0.3 open; broad CPU construction delivered, formal F1 exit and author/quality/cost evaluation incomplete**.
+Status reviewed at merged PR #24 / Sprint 063: **F0.1/F0.2 delivered; F0.3 open; broad CPU construction delivered, formal F1 exit and author/quality/cost evaluation incomplete**.
 v1 denotes this product/architecture goal, not the existing PyPI version or a claim that P0–P7 completed v1.
 Code-review baseline: 3ac1552; branch: codex/gpu-python-foundation-design.
 Execution: [v1-sprints](../v1-sprints/README.md); Sprint 010 completed the
@@ -9,9 +18,21 @@ Execution: [v1-sprints](../v1-sprints/README.md); Sprint 010 completed the
 phase status follows evidence. At the user's request, Sprint 002 retired old production early.
 Reproduce it at `50acfc6`. The package now has shared CPU components, twelve
 recipes and explicit training-preparation reuse. See the
-[current goal/progress review and execution plan](../v1-sprints/038-goal-progress-and-plan.md)
-for delivered boundaries and remaining work. Amended phase dependencies and
+[current retrospective and execution plan](../v1-sprints/063-retrospective-and-next-plan.md)
+for delivered boundaries and remaining work, and the
+[064–084 sprint roadmap](../v1-sprints/roadmap-after-063.md) for bounded execution cards.
+Amended phase dependencies and
 acceptance gates below still apply; implemented recipe count is not a phase exit.
+The user-approved 2026-09-07 amendment adopts bounded scalar CUDA feasibility
+alongside exploratory authoring; see [085](../v1-sprints/085-foundation-focus-amendment.md).
+It supersedes the earlier unadopted-overlap proposal. Formal acceptance remains
+unchanged. Historical checkboxes require current evidence reconciliation.
+The [086 execution plan](../v1-sprints/086-next-execution-plan.md) specifies the
+fields/histogram slice, its frozen fixtures, device allowance and path to resident
+training. [087 split composition](../v1-sprints/087-cuda-split-operations.md) now
+passes 88 real T4 primitive checks at `9ce790e`, including D2's public feasibility
+change. All three approved invocations are consumed; the retrospective checkpoint
+precedes 078-C ownership and resident training. CUDA boosting remains open.
 
 This plan supersedes future investment order in the old GPU checklist and the
 [ScoringBench-first plan](impact-adoption-value-next.md). Old experiments and failures remain valid.
@@ -421,9 +442,35 @@ links and git diff --check, not nonexistent runtime changes. No push, release, m
 
 Starting instructions for the next execution model:
 
-> Read AGENTS.md, this plan, evaluation, release review, application contracts and v1 planning learning.
-> Read F0.1 cards, construction design and Sprint 010 exit. Execute B02/F0.3: freeze actual data/hashes,
-> installed capabilities, budgets/held-outs and manifest/runner/judge in verified commits.
-> Never use production objectives as the sole oracle, maintain old compatibility or rewrite kernels early.
-> Report passes and unverified scope, preserve failures and all required cases. F1 follows B03–B10
-> component connections; cards, oracles or rewrapped old trainers are not an implemented foundation.
+> Read AGENTS.md and Sprint 101. Agent evaluation and its accounting infrastructure
+> are deferred; do not run the pending 100 model test or resume study preparation.
+> The existing 092 Normal CUDA correction is the next engineering checkpoint.
+> Its run-8 source and acceptance freeze is complete; hardware approval is pending.
+> Preserve original failures, verify all revised cases on real hardware, and stop
+> for retrospective after the bounded run. Then advance required CUDA recipes,
+> compatible train-many and scoped real-workload quality/cost evidence.
+> Keep public composition, D2 device behavior, ownership and persistence checks.
+> Preserve all R/C/A scope and P7/E4; E5/E7 remain unpassed and deferred.
+> Wider CPU searches and speculative CPU optimization remain paused. Commit verified
+> slices and reflect every three implementation commits or after a counterexample.
+
+
+### Approved foundation-priority amendment: 2026-09-07
+
+The user approved prioritizing measured algorithm authoring and a bounded GPU
+path over further CPU resource qualification. The controlling execution card is
+[Sprint 085](../v1-sprints/085-foundation-focus-amendment.md). Pause the next A6
+OpenBoost configuration-05 probe and wider CPU search expansion. Existing
+correctness/evidence obligations and all R1–R9/C1–C7/A1–A13/E0–E7 scope remain.
+
+Exploratory 069/F2.1 D1 control and D2 deep-change measurement may now overlap
+bounded 078/B12/F3.1 scalar device construction before formal F2/E5 completion.
+Audit relevant 065/068 ownership on the actual device path. The same D2 composition
+must subsequently exercise the programmable device boundary. This is an explicit
+exception to the default F2→F3 entry sequence, not an F2/F3/E4/E5 exit or permission
+to drop Normal/P7, required device recipes, full quality or held-out evaluation.
+
+CPU is a correct, usable reference/development backend; mature-library CPU speed
+parity is not a standalone objective. Measure author benefit and practical execution
+of useful compositions. The amendment defines acceptance, bounded device budgets,
+reflection points and the conditions for revisiting paused evaluation work.

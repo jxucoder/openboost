@@ -1,0 +1,37 @@
+{
+  "address_limit_bytes": 8589934592,
+  "artifacts": {
+    "model.bin": "936ef431128e275c024778aca362c60ce4e1bf1d5a2dd5f1dd56977947d42af2",
+    "predictions.npz": "77b7850afd7be7566e9f727fe6fbb9245f876258ddbb32d470b5fd36613cfd88",
+    "resources.json": "5076fa59883dbff73583b31cd7288696942fe5b8b4f7a6e76d29154e1ced059c",
+    "training.json": "c7a8d6c80e8af0cee0bd014d2d6f0c4eecc797d50b2b98cd7cc82bff5745c619",
+    "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "command": [
+    "/usr/local/bin/python",
+    "-c",
+    "import json,resource,runpy,sys\nfrom pathlib import Path\nsys.argv=sys.argv[1:]\nsys.path.insert(0,str(Path(sys.argv[0]).parent))\ntry:\n    runpy.run_path(sys.argv[0],run_name='__main__')\nfinally:\n    Path('resources.json').write_text(json.dumps(dict(peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024)))\n",
+    "/snapshot/benchmarks/v1/openboost_worker.py",
+    "/tmp/a6-probe-75pnqdez/job.json"
+  ],
+  "environment_policy": "minimal_explicit",
+  "exit_code": 0,
+  "launch_command": [
+    "/usr/local/bin/python",
+    "-c",
+    "\nimport ctypes, os, resource, sys\nlimit, drop = int(sys.argv[1]), int(sys.argv[2])\nif limit:\n    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))\nif drop:\n    libc = ctypes.CDLL(None, use_errno=True)\n    if libc.prctl(38, 1, 0, 0, 0) != 0:\n        raise OSError(ctypes.get_errno(), \"PR_SET_NO_NEW_PRIVS failed\")\n    os.setgroups([])\n    os.setresgid(65534, 65534, 65534)\n    os.setresuid(65534, 65534, 65534)\nos.execvp(sys.argv[3], sys.argv[3:])\n",
+    "8589934592",
+    "1",
+    "/usr/local/bin/python",
+    "-c",
+    "import json,resource,runpy,sys\nfrom pathlib import Path\nsys.argv=sys.argv[1:]\nsys.path.insert(0,str(Path(sys.argv[0]).parent))\ntry:\n    runpy.run_path(sys.argv[0],run_name='__main__')\nfinally:\n    Path('resources.json').write_text(json.dumps(dict(peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024)))\n",
+    "/snapshot/benchmarks/v1/openboost_worker.py",
+    "/tmp/a6-probe-75pnqdez/job.json"
+  ],
+  "reason": "",
+  "status": "pass",
+  "threads": 1,
+  "timeout_s": 1800,
+  "wall_s": 767.1319667130001,
+  "worker_identity": "uid_gid_65534_no_new_privs"
+}

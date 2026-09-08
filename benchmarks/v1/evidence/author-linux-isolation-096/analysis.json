@@ -1,0 +1,26 @@
+{
+  "schema": "openboost-linux-isolation-analysis-v1",
+  "run_manifest_sha256": "ff12ff4dc0961f3fc31ddc62edfca2a0f0d1203a0a0ddd73a4fd34c222ff4c09",
+  "cases": 19,
+  "passed": 14,
+  "failed": [
+    "nonroot",
+    "core_write",
+    "materials_write",
+    "regain_root",
+    "core_unchanged"
+  ],
+  "runtime_uid": 0,
+  "runtime_gid": 0,
+  "changed_core_files": {
+    "__init__.py": {
+      "before": "c6a404dd122323611ca6c63fecfbc836c7845a271cceca91742c8fcf9d29a5ad",
+      "after": "8a452d1573b7d0ebad5cb04928387a4bf5495027d956d6992f51e966afb50123"
+    }
+  },
+  "tamper_bytes_sha256": "8a452d1573b7d0ebad5cb04928387a4bf5495027d956d6992f51e966afb50123",
+  "protected_evaluator_unchanged": true,
+  "timeout_reached": false,
+  "allowance_consumed": true,
+  "dispatch_ready": false
+}

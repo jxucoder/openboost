@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/usr/bin/sandbox-exec",
+    "-D",
+    "WORK=/private/tmp/openboost-095-isolation-allowlist/work",
+    "-D",
+    "EVALUATOR=/private/tmp/openboost-095-isolation-allowlist/evaluator",
+    "-D",
+    "REPOSITORY=/Users/jiaruixu/work_space/openboost",
+    "-D",
+    "MATERIALS=/private/tmp/openboost-095-isolation-allowlist/materials",
+    "-D",
+    "RUNTIME=/private/tmp/openboost-095-isolation-allowlist/runtime",
+    "-D",
+    "PYTHON_RUNTIME=/Users/jiaruixu/.local/share/uv/python/cpython-3.12.12-macos-x86_64-none",
+    "-f",
+    "/tmp/openboost-095-isolation-allowlist/system-runtime.sb",
+    "/private/tmp/openboost-095-isolation-allowlist/runtime/bin/python",
+    "-I",
+    "-B",
+    "-c",
+    "print('interpreter-started',flush=True); import numpy; print('numpy-imported')"
+  ],
+  "exit_code": -6,
+  "stdout": "",
+  "stderr": ""
+}

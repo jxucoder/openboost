@@ -1,0 +1,62 @@
+{
+  "status": "timeout",
+  "backend": "cpu",
+  "recipe": "normal",
+  "train_rows": 1000,
+  "config": {
+    "features": 16,
+    "bins": 32,
+    "rounds": 20,
+    "max_depth": 3,
+    "learning_rate": 0.1,
+    "reg_lambda": 1.0,
+    "step": "fixed",
+    "seed": 7,
+    "repetitions": 4,
+    "cpu_repetitions": 2,
+    "pool_bytes": 536870912
+  },
+  "measurements": [
+    {
+      "fit_seconds": 48.00880434700001,
+      "context_seconds": 0.0,
+      "host_preparation_seconds": 0.005087078999991945,
+      "training_seconds": 48.002377306,
+      "export_seconds": 0.0011722349999843118,
+      "cleanup_seconds": 0.00015707899999028996,
+      "metrics": null,
+      "final_metrics": null,
+      "live_bytes_after_run_close": null,
+      "state": {
+        "version": 20,
+        "terms": 40,
+        "best_terms": 40
+      },
+      "stop": {
+        "reason": "budget",
+        "completed_rounds": 20
+      },
+      "binning_identity": "01d4b0ae5b5a507bfd84fcda4e49e77c523f90bacba1d5fb05021683934f7787",
+      "repeat": 0,
+      "phase": "first"
+    }
+  ],
+  "profile": false,
+  "profile_calls": [],
+  "child_exit_code": null,
+  "child_wall_seconds": 90.007349056,
+  "child_timeout_seconds": 90,
+  "child_argv": [
+    "/opt/openboost-normal-cpu/venv/bin/python",
+    "/snapshot/benchmarks/v1/performance_checkpoint.py",
+    "--recipe",
+    "normal",
+    "--rows",
+    "1000",
+    "--backend",
+    "cpu",
+    "--output",
+    "/tmp/openboost-aggregation/normal/checkpoint/normal-1000/cpu.json"
+  ],
+  "child_log": ""
+}

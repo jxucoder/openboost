@@ -1,5 +1,9 @@
 # Sprint 038: Goal, progress and remaining execution plan
 
+Current execution is superseded by [Sprint 063](063-retrospective-and-next-plan.md).
+This document retains the earlier review and its subsequent progress notes; its
+body describes historical boundaries unless a later sprint explicitly updates them.
+
 Reviewed revision: `8afce35`, clean branch `codex/gpu-python-foundation-design`.
 Date: 2026-09-06. Status: review complete. M1 is delivered in
 [Sprint 039](039-independent-stopping.md). M2 has installed D2/D3 development

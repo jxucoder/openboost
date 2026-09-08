@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "reason": null,
+  "cases": [
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[joint]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_recipe_current_best_and_patience_have_distinct_validation_anchors[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_equal_score_improvements_replace_patience_anchor[joint]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_equal_score_improvements_replace_patience_anchor[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_equal_score_improvements_replace_patience_anchor[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_full_rejection_observes_once_per_outer_sweep[joint]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_full_rejection_observes_once_per_outer_sweep[forward]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_full_rejection_observes_once_per_outer_sweep[reverse]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[initial_anchor]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[observation_copy]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[comparison]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[result]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_patience_copy_comparison_and_later_failure_release_every_owner[learner]",
+      "status": "pass"
+    },
+    {
+      "case": "tests.v1.test_device_comparison_recipe_cuda::test_zero_round_recipe_releases_temporary_patience_storage",
+      "status": "pass"
+    }
+  ],
+  "installed_sources_match": true,
+  "versions_match": true,
+  "snapshot_sources_match": true
+}

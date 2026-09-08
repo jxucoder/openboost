@@ -1,0 +1,56 @@
+{
+  "case": {
+    "id": "binary/offset-exposure",
+    "family": "binary",
+    "arrays": [
+      [
+        -1.0,
+        2.0,
+        -0.5
+      ],
+      [
+        -0.8999999761581421,
+        1.7999999523162842,
+        -0.75
+      ],
+      [
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        0.5,
+        -0.25,
+        0.125
+      ],
+      [
+        2.0,
+        0.0,
+        3.0
+      ],
+      [
+        0.5,
+        2.0,
+        3.0
+      ]
+    ],
+    "status": null
+  },
+  "comparison": {
+    "lower": 0.10872959746172574,
+    "upper": 0.10900863396691247,
+    "method": "binary-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "worsening",
+  "decimal220": "0.108921759597158274665864964484913635457353715882956706676049413454220308829312738479143701904577190903696933137805323536918888833712845252342189054171561828753893796431325305065917268076561165107489246797713906146102329",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

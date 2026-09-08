@@ -1,0 +1,69 @@
+{
+  "schema": "openboost-accounting-observation-v1",
+  "verdict": "fail",
+  "exhaustion": "pass",
+  "cancellation": "not_exercised",
+  "frozen_cancellation_verdict": "fail",
+  "original_indexed_files": 80,
+  "frozen_sources": 12,
+  "generation_requests": 3,
+  "retrieval_requests": 7,
+  "cancellation_requests": 0,
+  "requests": [
+    {
+      "case": "exhaustion",
+      "sequence": 1,
+      "status": "incomplete",
+      "max_output_tokens": 128,
+      "input_tokens": 39,
+      "output_tokens": 128,
+      "reasoning_tokens": 128,
+      "observed_statuses": [
+        "queued",
+        "in_progress",
+        "in_progress",
+        "incomplete"
+      ]
+    },
+    {
+      "case": "exhaustion",
+      "sequence": 2,
+      "status": "incomplete",
+      "max_output_tokens": 64,
+      "input_tokens": 28,
+      "output_tokens": 64,
+      "reasoning_tokens": 64,
+      "observed_statuses": [
+        "queued",
+        "in_progress",
+        "incomplete"
+      ]
+    },
+    {
+      "case": "cancellation",
+      "sequence": 1,
+      "status": "completed",
+      "max_output_tokens": 4096,
+      "input_tokens": 40,
+      "output_tokens": 104,
+      "reasoning_tokens": 83,
+      "observed_statuses": [
+        "queued",
+        "in_progress",
+        "completed"
+      ]
+    }
+  ],
+  "totals": {
+    "input_tokens": 107,
+    "output_tokens": 296,
+    "reasoning_tokens": 275
+  },
+  "elapsed_s": 12.713916125008836,
+  "conservative_token_cost_estimate_usd": "0.00038195",
+  "invoice_verified": false,
+  "allowance": "consumed",
+  "retries": 0,
+  "independent_author": false,
+  "next_gate": "Observe actual cancellation and reconcile final usage under a new frozen allowance"
+}

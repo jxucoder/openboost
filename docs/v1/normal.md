@@ -34,7 +34,7 @@ damping. No dense per-row metric is needed for Normal's diagonal Fisher.
 unweighted direction. These regression curvatures are distinct from Fisher
 entries. Both parameter trees fit the same accepted snapshot, and one coefficient
 commits or rejects both terms. The default uses six-trial backtracking with strict
-training NLL decrease. `step="fixed"` commits finite candidates. Geometry, trees,
+training NLL decrease proved by `Normal.compare`. `step="fixed"` commits finite candidates. Geometry, trees,
 weights, offsets, best snapshots and persistence use public shared components.
 
 With no offsets, initialization uses training weighted mean and log standard
@@ -51,8 +51,48 @@ offsets, pass them to `Model.predict(..., offset=...)` before converting; object
 loss receives unoffset raw caches and applies Problem offsets once. The model is
 a raw predictor and does not persist a distribution tag or calibrated intervals.
 
-This is a joint-update CPU recipe, not full NGBoost parity. Ordered parameter
-updates, additional distributions and CUDA remain required later work.
+This is a joint-update CPU recipe, not full NGBoost parity. Ordered CPU parameter
+updates and additional distributions remain later work. The experimental
+[CUDA Normal path](execution.md) supports joint and ordered updates, with full
+acceptance conformance still open.
 [Formula](formula-runs.md) now probes full GGN geometry through shared components. No real-dataset quality or speed advantage is claimed.
-Per-round traces retain arrays, and trial validation currently recomputes ensemble
-predictions. Formula and heterogeneous sequential runs now provide the next construction probe.
+Full per-round traces retain arrays; summary retention omits sample arrays.
+CPU best selection replays the current best validation model for its comparison
+anchor. This extra replay is a correctness-first reference cost.
+
+## Comparing stored predictions
+
+`Normal.compare(problem, before_raw, after_raw)` is a separate public CPU operation.
+It returns an immutable `LossChange`, bounding the weighted mean NLL change at the
+exact stored raw values in the problem's row order. It applies offsets and weights
+once and validates both snapshots, including zero-weight rows. It does not call
+the reporting loss or gradient callbacks. Absolute `Normal.loss` values retain
+their existing meaning.
+
+`change.lower` and `change.upper` are authoritative bounds. `estimate` and
+`uncertainty` are derived diagnostics; `method` identifies the numerical method.
+`status` distinguishes improvement, worsening, identical stored raw, and unresolved
+sign. `change.improves(min_delta=0)` requires `upper < -min_delta`. An unchanged
+stored pair has exactly zero bounds; a different pair with equal loss is unresolved.
+Unresolved support carries a `reason` and `None` bounds/diagnostics.
+
+The current method uses bounded Taylor/interval arithmetic with separately rounded
+binary64 operations and gradual underflow. Evaluated exponent intervals must stay
+within `[-64,64]`; finite inputs outside that comparison support are unresolved.
+Invalid Normal domains raise, and there is no clipping or implicit fallback. The
+bound does not rest on an assumed universal error for platform `exp`/`expm1`.
+CPU correctness checks include recorded false improvements and an analytic
+`-2^-61` improvement lost by subtraction of full losses. No speed claim is made.
+
+The CPU joint recipe uses this operation for three separate decisions. Backtracking
+compares each candidate with accepted training raw. Validation best compares with
+the previous best model's predictions at zero threshold. Patience compares with
+its last qualifying validation snapshot using `min_delta`, once per outer round.
+An improvement can advance best and patience even when reporting floats are equal.
+Unresolved or unchanged evidence cannot prove improvement. Fixed acceptance can
+still commit a finite worsening or unresolved candidate.
+
+`NormalStep.comparisons` retains each trial's `LossChange` (or None for a failure
+before comparison); `validation_change` records the patience comparison. These
+scalar records survive summary retention. Absolute losses remain truthful. CUDA
+consumer construction and real hardware verification are separate remaining gates.

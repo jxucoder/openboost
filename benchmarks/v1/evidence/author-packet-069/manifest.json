@@ -1,0 +1,35 @@
+{
+  "revision": "cfca0926f49cc3c121df750b81c1f7b705f7b4d7",
+  "scope": "OpenBoost author-view preparation only",
+  "dispatch_ready": false,
+  "author_files": {
+    "docs/v1/cpu-state.md": "60353403acffea4d6b60a3b9b1cdd6af961aa16e38d77b36bccfcb1335e65e17",
+    "docs/v1/numeric-ops.md": "e2406db656a906d4229d734dbba639210c4d226772bab94ed47e716374009274",
+    "docs/v1/squared.md": "e2bb5af532b57c873f9f74bb5fe1b8c9a14b67e954c6f8b8e71baae9e82bfabe",
+    "docs/v1/trees.md": "d1e6acbb180429fdfed6a9fb59d18813b41426efbe32a9fc795cb2735eb10762",
+    "v1-sprints/069-author-packet/D1.md": "4ab89ba53887bf93c5a61f818e01d52564ae552b6723b71344a3a150cc781282",
+    "v1-sprints/069-author-packet/D2.md": "5e8dcceae218581431f0e4f7929d27114c8ba595470ad815ef98bc4793bd0603",
+    "v1-sprints/069-author-packet/README.md": "0261bc18c8502aa96806ae5c1ef14e2af17e45a9069650f51a5d147024d3e643",
+    "wheels/.gitignore": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1",
+    "wheels/openboost-1.0.0.dev0-py3-none-any.whl": "cb14ebae8c0faace7a2194a68c201cc0c9bb30072e2e7cf4d1042cb91ffcaf23"
+  },
+  "evaluator_inputs": {
+    "planning/foundation-tasks.md": "ac96eafdeab8aa346dc67586c92ae2c367b8b8a94bdecc2353d9c7829c775c63",
+    "examples/v1_extensions/checks.py": "47556dd3e9b5681d1bddb0ae8e086748fe273ddf39e25ab35b5e6a27d34e985b",
+    "examples/v1_extensions/expectile_oracle.py": "d759d43c888fd5233c04a3335cac917ae663aee2f81f6ed0126ed4acdda25006",
+    "examples/v1_extensions/expectile_checks.py": "91e92d26036009221aa30dffb6c3e4f0973d2384a749397fe6ff8966c752f40b",
+    "benchmarks/v1/search-design.json": "fef3d7c8458c67508e48497a2530a58ccf9660931b116989faa8af9c7b2ad0db"
+  },
+  "budget": {
+    "wall_s": 1800,
+    "generated_tokens": 20000
+  },
+  "missing": [
+    "observable token/time enforcement",
+    "actual evaluator isolation test",
+    "independent runner and model/settings freeze",
+    "incumbent path audit and arm freeze",
+    "standalone D1/D2 evaluator invocation and dependency closure"
+  ],
+  "attempts": []
+}

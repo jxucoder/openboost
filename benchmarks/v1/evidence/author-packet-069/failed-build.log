@@ -1,0 +1,23 @@
+Building wheel...
+WARN Retry attempt #0. Sleeping 1.193271138s before the next attempt
+WARN Retry attempt #1. Sleeping 2.442965737s before the next attempt
+WARN Retry attempt #2. Sleeping 6.634566393s before the next attempt
+error: Failed to build `/Users/jiaruixu/work_space/openboost`
+  Caused by: Failed to resolve requirements from `build-system.requires`
+  Caused by: No solution found when resolving: `hatchling`
+  Caused by: Request failed after 3 retries in 10.3s
+  Caused by: Failed to fetch: `https://pypi.org/simple/hatchling/`
+  Caused by: error sending request for url (https://pypi.org/simple/hatchling/)
+  Caused by: client error (Connect)
+  Caused by: dns error
+  Caused by: failed to lookup address information: nodename nor servname provided, or not known
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/prepare_author_packet.py", line 65, in <module>
+    prepare(parser.parse_args().output)
+  File "/Users/jiaruixu/work_space/openboost/benchmarks/v1/prepare_author_packet.py", line 33, in prepare
+    subprocess.run(
+  File "/Users/jiaruixu/.local/share/uv/python/cpython-3.12.12-macos-x86_64-none/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['uv', 'build', '--wheel', '--out-dir', '/private/tmp/openboost-author-packet-069/author/wheels']' returned non-zero exit status 2.

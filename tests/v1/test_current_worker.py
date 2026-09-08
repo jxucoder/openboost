@@ -766,3 +766,27 @@ def test_ranking_invalid_contract(bad):
         a["query_weight_train"] = np.ones(8)
     with pytest.raises(ValueError):
         fit(job, a)
+
+
+@pytest.mark.parametrize(
+    "app,name,count", [("A1", "squared", 1), ("A11", "normal", 1), ("A5", "quantile", 3)]
+)
+def test_evaluation_worker_uses_and_reports_summary_history(app, name, count, monkeypatch):
+    from benchmarks.v1 import openboost_worker as worker
+
+    from openboost.diagnostics import TraceSummary
+
+    job, arrays = fixture(app)
+    original = getattr(worker, name)
+    results = []
+
+    def inspect(*args, **kwargs):
+        result = original(*args, **kwargs)
+        results.append(result)
+        return result
+
+    monkeypatch.setattr(worker, name, inspect)
+    _, _, training = worker.fit(job, arrays)
+    assert len(results) == count
+    assert all(isinstance(step, TraceSummary) for result in results for step in result.steps)
+    assert training["diagnostic_retention"] == "summary"

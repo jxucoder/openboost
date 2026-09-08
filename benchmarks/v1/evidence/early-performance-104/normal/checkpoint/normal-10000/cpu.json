@@ -1,0 +1,19 @@
+{
+  "status": "timeout",
+  "child_exit_code": null,
+  "child_wall_seconds": 30.007264520000007,
+  "child_timeout_seconds": 30,
+  "child_argv": [
+    "/opt/openboost-normal-cpu/venv/bin/python",
+    "/snapshot/benchmarks/v1/performance_checkpoint.py",
+    "--recipe",
+    "normal",
+    "--rows",
+    "10000",
+    "--backend",
+    "cpu",
+    "--output",
+    "/tmp/openboost-aggregation/normal/checkpoint/normal-10000/cpu.json"
+  ],
+  "child_log": ""
+}

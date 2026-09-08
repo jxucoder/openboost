@@ -608,6 +608,26 @@ release. All trials and failures are retained. It scores no test labels and is
 not the frozen real-data quality grid, a speed benchmark or fused train-many.
 A6 final comparative quality reporting and the remaining real searches remain open.
 
+The same smoke accepts `--protected` on Linux with a root evaluator. It places
+protocol, validation/scale records, test features and the selection receipt under
+an evaluator-owned mode-0700 directory. Workers receive read-only train/validation
+packets and job files, run as UID/GID 65534 with an 8-GiB address limit and a
+1800-second deadline, and retain the current worker's one-thread contract. Completed
+trial directories are reclaimed by root before the next trial starts. Installed
+Python/package/source paths and output ancestors must be traversable by that UID.
+Unsupported hosts fail before creating output; there is no privilege fallback.
+
+The [Linux selection integration](evidence/protected-selection-070/README.md) passes
+all three focused tests and a retained 16-trial run. The saved Linux receipt now has a macOS replay regression. Score-only
+recomputation permits at most eight times the smaller binary64 spacing of each
+finite value. All other receipt fields and the selected winner remain exact;
+changes to ordering across a near tie still reject release. The original receipt
+byte pin and every artifact hash remain exact. This bounded rule does not promise
+portability across arbitrary numerical libraries or metric changes.
+It is a synthetic four-round grid, not the full 300/1000-round search. The earlier
+standalone permission probe does not validate this call path. Network/new-session
+restrictions and separate author containers remain outside this mode's guarantee.
+
 ### A6 paired quality reporting
 
 A6 quality cells require all `rmse_k` primary metrics followed by
@@ -648,3 +668,89 @@ remain pending. The smoke accepts explicit A2/A3 selections, with seven classes
 for Covertype. Defaults remain A1/A6/A11 to avoid silently broadening existing
 runs. These four-round probes establish no classification quality/calibration,
 search, CUDA or speed claim.
+
+## Evaluator-owned execution freeze (Sprint 070)
+
+For a pinned execution, provide a manifest independently frozen by the evaluator:
+
+```bash
+uv run --no-sync python -m benchmarks.v1.judge /path/to/producer-run \
+  --frozen-manifest /path/to/evaluator/frozen.json --frozen-sha256 EVALUATOR_PINNED_FILE_SHA256
+```
+
+Both options are required together. The file must be outside the producer run
+directory and match the evaluator-supplied raw-byte hash. Strict JSON parsing and
+manifest validation apply to both inputs. The producer manifest must match the
+entire evaluator manifest, including the expected cells, protocol and provenance.
+Rehashing a producer-shrunken matrix cannot satisfy the independent freeze.
+The Python API accepts `frozen_manifest=` from a trusted caller; its reported
+`frozen_manifest_sha256` hashes canonical JSON and can differ from the CLI raw-file pin.
+
+Without this argument, integrity remains relative to the producer's declared
+matrix and `frozen_manifest_match` is null. A true match does not validate the
+experimental design, authenticate provenance, prove all R/C/A/E obligations or
+establish quality. `gate_results` stays empty. The evaluator must control the pin,
+invocation and reference file. An outside-directory check is not an OS permission
+boundary: process/container isolation remains separate work in Sprint 070.
+
+### Current OpenBoost trial retention
+
+`openboost_worker` explicitly runs its A1–A12 recipe and independent A5 quantile
+paths with `retention="summary"`, reporting `diagnostic_retention` in training
+metadata. This is a worker policy, not a new search hyperparameter or a change to
+the public recipe default. Frozen model configurations, selected-model semantics
+and prediction artifacts are unchanged. It reduces stored round arrays without
+qualifying the full search's resource or quality gate. Other worker families must
+be audited separately before large jobs.
+
+### Explicit Linux worker identity and address limits
+
+`process_runner.execute(..., address_limit_bytes=8 * 1024**3, unprivileged=True)`
+requires a Linux root evaluator. It launches with hard/soft RLIMIT_AS limits,
+UID/GID 65534, no supplementary groups, no_new_privs and a minimal explicit
+environment. The fresh output directory belongs to that worker; its ancestors
+must permit traversal. Evaluator-private inputs need separate root ownership and
+permissions. Unsupported setup is rejected; there is no advisory fallback.
+
+The runner records actual launch commands, configured limits, identity/environment
+policy, logs and errors. It kills remaining same-process-group descendants before
+artifact inspection in this mode. This is not a general hostile-code sandbox:
+new sessions and network are not restricted. Use separate containers for independent
+attempts and never share same-UID outputs across them. RLIMIT_AS limits virtual
+address space, not measured resident memory; enclosing-container policy is separate.
+Default execution keeps the existing inherited-identity/environment behavior.
+
+`python -m benchmarks.v1.access_preflight /tmp/fresh-output` runs a bounded Modal
+CPU probe with synthetic protected fixtures; it uploads no real datasets or sealed
+tasks. Actual permission/resource errors remain distinct from the earlier injected
+judge statuses. Passing this probe does not qualify full-search or author-eval gates.
+
+### Full A6 OpenBoost resource planning
+
+`python -m benchmarks.v1.a6_preflight_plan OUTPUT.json` compiles the frozen
+300/1000-round configurations into 160 OpenBoost jobs (shared/independent topology,
+five folds, sixteen configurations each). It writes once and launches nothing.
+The plan records source-freeze hashes, fit-only upper bounds, first resource probes
+and remaining requirements. It does not represent the full comparator matrix or
+a completed full-search resource check. See `v1-sprints/070-a6-resource-plan.json`.
+
+### Explicit comparator bin budgets
+
+The numeric baseline worker accepts optional `config.bins`, an integer in [2, 256].
+XGBoost and LightGBM receive `max_bin=bins`; CatBoost receives
+`border_count=bins-1`, since that parameter counts split borders rather than
+intervals. This applies to the worker's finite encoded inputs; it does not align
+native quantization algorithms. NGBoost explicitly rejects this setting. Omitted
+bins retain native defaults. `bin_budget_smoke.py` checks installed effective
+parameters, stopping records and fresh-process A6 replay at 7 and 255 bins.
+
+`a6_resource_preflight --comparators` runs only the three frozen fold-zero
+configuration-00 comparator resource probes. It verifies the updated A6 plan's
+input pins, uses the protected worker policy and fresh A6 replay, and stops on
+failure without retries. Profile, paired and comparator modes are mutually
+exclusive. This mode does not execute or certify the 400-job search.
+
+Add `--comparator-config 5` to that mode for the frozen deeper-tree/1000-round
+configuration-05 probes. Only indices 0 and 5 are accepted; early stopping remains
+active, so a 1000-round budget need not produce 1000 completed rounds. These
+comparator probes do not qualify deeper OpenBoost execution or the full search.

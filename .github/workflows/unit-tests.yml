@@ -10,17 +10,21 @@ jobs:
   references:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
         python-version: ["3.10", "3.12"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Historical execution SHAs are part of the committed evidence contract.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - uses: astral-sh/setup-uv@v4
       - run: uv sync --locked --extra test
       - run: uv run --no-sync ruff check src/openboost tests/v1 tests/conftest.py
-      - name: Run current v1 references, not retired production tests
-        run: uv run --no-sync pytest tests/ -n 0 -q
+      - name: Run current CPU correctness and offline evidence checks
+        run: uv run --no-sync pytest tests/ -m "not gpu and not benchmark" -n 0 -q
       - run: uv build

@@ -1,0 +1,990 @@
+{
+  "revision": "ae8c7af43680eae81e41deb35846d6a48aabb47b",
+  "dirty": false,
+  "argv": [
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/practical_cpu_profile.py",
+    "run",
+    "/tmp/openboost-retention-cpu-068",
+    "--paired-retention"
+  ],
+  "sources": {
+    "benchmarks/v1/practical_cpu_profile.py": "624ed96fdf0865900858dfbe4bec89e45f970f8c1d45858a921c1c813108c577",
+    "benchmarks/v1/cpu_profile_worker.py": "e17c3f219730bf74d588e7605ba958dd4a13c57a3f07f6f77d98880514912793",
+    "benchmarks/v1/resource_preflight.py": "97d344d966826fd97b819d9e3a41dcf5622f8b6e2cc04a60968c232c6d0b61d8",
+    "benchmarks/v1/profile_worker.py": "fd070e691537ca093530b81b495792f83b619aa14df073c94bed6656a12d3218",
+    "benchmarks/v1/housing.py": "719881915c8843051648b6911114e662d0c64c5ad860167b7ec701f999c7b28e",
+    "src/openboost/__init__.py": "b0a76b68a1824abef45bf30d3d094dce7de2ec9deef3d5cbe862a6b3f6038788",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/diagnostics.py": "54065428816f7092ebc0f2bb66c0d2006bc3d49a864c8950e3901c68e7b428bf",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "fcf847bda2917354093e03ce42bd22e0fd85e391185d3141318cb7ccecd721f7",
+    "src/openboost/ops.py": "c82134d466e6ebf660582d9895ee268b7c00fa999ec8ccdbc0c70634d429599f",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "de920ffda40e2ecbd9a56b368515497c9fdb94d30a465be0f9c8ed0e39974082",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "aa51d6ab3678778c2795271ddcedf3718385d6eb2e335e46eaf3d49acd781c9c",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "dcd61888233544ee2a94ea5d6046277bcf918b01b3b333ae7945714b3cb30ef5",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5"
+  },
+  "protocol_sha256": "630b6c88fd2a974b9c6af8a5269f11650edc1efd94cf0134510684edf4f05610",
+  "wheel_sha256": "85325f3e7964763e73e8f645a21c8de126d2b47cb7d7e1093ef482436a396da0",
+  "modal_version": "1.3.0.post1",
+  "protocol": {
+    "schema": "practical-cpu-066",
+    "input_sha256": "cbba2b3dde7c088c041be2a260f228c4e1bfd1b71fb4edb462361f93819de06a",
+    "features": [
+      "MedInc",
+      "HouseAge",
+      "AveRooms",
+      "AveBedrms",
+      "Population",
+      "AveOccup",
+      "Latitude",
+      "Longitude"
+    ],
+    "archive_sha256": "aaa5c9a6afe2225cc2aed2723682ae403280c4a3695a2ddda4ffb5d8215ea681",
+    "member_sha256": "a2b44dcc7e1c9091b43c4f458b25cbd1f7e8068d08edd26bc4703108d3fa6214",
+    "source_freeze_sha256": "93a5e050bdf4c3ae0c526fb0a75bd806df404c8ab558e3019bcc0bdcd28448ae",
+    "training_prefix_sha256": "ab0cef4fb55112c7a71b35a3054475408bcbc462d79a8c39f215fb3c269f5e27",
+    "small_training_prefix_sha256": "f5d0f98bd34ec56b96156b0b0b66e2f7fa944104eae472a3f31d549f47b8d8af",
+    "validation_prefix_sha256": "288a5a9387ba9166fa521eaf86f5cf80c3657f76aeca160a211f56bff070ef8f",
+    "cases": [
+      {
+        "id": "squared-8192-4",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 4
+      },
+      {
+        "id": "normal-8192-4",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 4
+      },
+      {
+        "id": "squared-2048-32",
+        "recipe": "squared",
+        "train_rows": 2048,
+        "rounds": 32
+      },
+      {
+        "id": "normal-2048-32",
+        "recipe": "normal",
+        "train_rows": 2048,
+        "rounds": 32
+      },
+      {
+        "id": "squared-8192-32",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 32
+      },
+      {
+        "id": "normal-8192-32",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 32
+      },
+      {
+        "id": "squared-8192-128",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 128
+      },
+      {
+        "id": "normal-8192-128",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 128
+      }
+    ],
+    "seed": 0,
+    "round_options": {
+      "bins": 32,
+      "max_depth": 2,
+      "learning_rate": 0.1,
+      "reg_lambda": 1.0,
+      "patience": null,
+      "step": "fixed"
+    },
+    "budgets": {
+      "worker_seconds": 120,
+      "profile_soft_seconds": 60,
+      "worker_address_bytes": 8589934592,
+      "numerical_threads": 2,
+      "container_memory_mib": [
+        8192,
+        8192
+      ],
+      "function_seconds": 1500,
+      "retries": 0,
+      "max_uninstrumented_fits": 8,
+      "max_instrumented_fits": 2
+    },
+    "profile_policy": "after first failed fit, profile only that case; if all pass, profile the 8192/128 case for each recipe",
+    "stop_policy": "stop remaining uninstrumented fits at first non-pass; retain pending cases as not_run",
+    "scope": "eight original numeric Housing features, raw target units, training/validation only; no exporter imputation/indicator columns; diagnostic not E3/E4"
+  },
+  "profile_only": null,
+  "paired_baseline": null,
+  "retention_comparison": {
+    "max_fits": 16,
+    "profiles": 2,
+    "order": "full then summary per frozen case",
+    "scope": "same-wheel same-container retention amendment; original per-worker caps and aggregate function deadline"
+  },
+  "comparison_policy": null,
+  "status": "complete",
+  "cases": [
+    {
+      "kind": "case",
+      "id": "full-squared-8192-4",
+      "case": {
+        "id": "squared-8192-4",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 4
+      },
+      "variant": "full",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/full-squared-8192-4.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 0.8262141709999997,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "45fef55dae96b62db6d43bbb5560961c27292d772fe8b652b4698c490018dd04",
+        "predictions.npz": "14fe406e485b19ddfdd2b78278e9029b7c764404944349839e7080572b7c3f50",
+        "result.json": "8b2d89dfc9bb4b70c8e6a0dcc1cc8f70141364939da7b72c02aae8d7041ff58c",
+        "execution.json": "9e975753de430ee5f6d81a96cc6d1477eeca096993462e95a34674b8c8a783ad"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "summary-squared-8192-4",
+      "case": {
+        "id": "squared-8192-4",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 4
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-squared-8192-4.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 0.7748643719999997,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "45fef55dae96b62db6d43bbb5560961c27292d772fe8b652b4698c490018dd04",
+        "predictions.npz": "14fe406e485b19ddfdd2b78278e9029b7c764404944349839e7080572b7c3f50",
+        "result.json": "1e69a65c46d00ce40da13dfd3dd919b033ab9d504ded93ec049d3e5032a6c22b",
+        "execution.json": "251ab88dce90e2b45a37137db83f16545ceabbc339337f11ab3535cd72ca861a"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "full-normal-8192-4",
+      "case": {
+        "id": "normal-8192-4",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 4
+      },
+      "variant": "full",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/full-normal-8192-4.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 1.1480072470000007,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "64063bb5a9c71ff17b94356c3ca9aacf367a674117cdae1012f481c60dd3bf07",
+        "predictions.npz": "415a7788806b84e271422235e765d97261960f6462f4e79cea2e02cbfad762fc",
+        "result.json": "09694e9a6e8bc2cde625d32035c03474e25cf849cc573a57aa6b818aa9303f47",
+        "execution.json": "5f2d6c15f9d4b2e81a660e16e8f9d575f7c3704c287e325beade552ac2d22fb8"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "summary-normal-8192-4",
+      "case": {
+        "id": "normal-8192-4",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 4
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-normal-8192-4.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 1.0814232869999998,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "64063bb5a9c71ff17b94356c3ca9aacf367a674117cdae1012f481c60dd3bf07",
+        "predictions.npz": "415a7788806b84e271422235e765d97261960f6462f4e79cea2e02cbfad762fc",
+        "result.json": "1d7df6fe7ea2a49941c1976d08fe08b16ce54cd8463db6bbd78f773778347585",
+        "execution.json": "28cd00a838779dbbf15fc9eed79f96e00527fbb7b560889ca9dbf4370e693a2c"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "full-squared-2048-32",
+      "case": {
+        "id": "squared-2048-32",
+        "recipe": "squared",
+        "train_rows": 2048,
+        "rounds": 32
+      },
+      "variant": "full",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/full-squared-2048-32.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 2.911808873,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "891a548049bbf4ffccbe2817d82814d9e805394d811e385e3e35b36871d655f3",
+        "predictions.npz": "ff74d9d82369ff8c2a385dbc5eec0f4c1cee9e1de9e364acfbb30e7c1f17d8cf",
+        "result.json": "37d2de82d8ebb0dbda9e3d8306a364936bf63864a6ca23221e7c93aa77470fef",
+        "execution.json": "834da452ad0f7f1dd9c9f30089545b7677d6dfbea810823f025645c17c9ec11d"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "summary-squared-2048-32",
+      "case": {
+        "id": "squared-2048-32",
+        "recipe": "squared",
+        "train_rows": 2048,
+        "rounds": 32
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-squared-2048-32.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 2.8785222630000007,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "891a548049bbf4ffccbe2817d82814d9e805394d811e385e3e35b36871d655f3",
+        "predictions.npz": "ff74d9d82369ff8c2a385dbc5eec0f4c1cee9e1de9e364acfbb30e7c1f17d8cf",
+        "result.json": "0ec995a9c05469456433bf92ef75fff9562578160e0aec49cf6fdab76c4cdf3f",
+        "execution.json": "36a8c29ea7f386788e31ed7315b04e02efb9e084e9976c16ffd39e323755ef3e"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "full-normal-2048-32",
+      "case": {
+        "id": "normal-2048-32",
+        "recipe": "normal",
+        "train_rows": 2048,
+        "rounds": 32
+      },
+      "variant": "full",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/full-normal-2048-32.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 5.406295876,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "3ca596954c045f253438562340be0f37428f812df42daa55493c0086dab93a84",
+        "predictions.npz": "0710ad45240af4d11ec18e8c83980c39dbbd6eef446e9cd70e2bfbad27d32bc1",
+        "result.json": "f2c91d99457a687eaf7be061f93dd1c817881b212ea1ce68edc5ea6a2b79f957",
+        "execution.json": "8db8639a753f97010d0510808e786e39e88d2b8b22673861801e8563d4b3f0b8"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "summary-normal-2048-32",
+      "case": {
+        "id": "normal-2048-32",
+        "recipe": "normal",
+        "train_rows": 2048,
+        "rounds": 32
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-normal-2048-32.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 5.377200309999999,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "3ca596954c045f253438562340be0f37428f812df42daa55493c0086dab93a84",
+        "predictions.npz": "0710ad45240af4d11ec18e8c83980c39dbbd6eef446e9cd70e2bfbad27d32bc1",
+        "result.json": "3bcd53513668bf4dfa5283c6f523b7f719688cc7a3f8691c781d928a3ff4f940",
+        "execution.json": "e1e46877d5a72bc7c75929af5a7bcce7a03df73a73adf38bd9c510d554f5c744"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "full-squared-8192-32",
+      "case": {
+        "id": "squared-8192-32",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 32
+      },
+      "variant": "full",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/full-squared-8192-32.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 3.365068653999998,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "ec34792f485fe43187778b2cbdc3a4ab91528facde30bf6ddd78b5a8c65b8a29",
+        "predictions.npz": "adfe7e776c12863b12071b1e3e0259ce50d4d15590af3e294117d8561bd08f34",
+        "result.json": "bc58f0251a8ca5eeeda946e3b785cbd14aed4e9841badd7424f87994227e9d0a",
+        "execution.json": "d6a90224901cf9916e5a91fe019841cf1982194d07cf6f54986f2ad8f472fc44"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "summary-squared-8192-32",
+      "case": {
+        "id": "squared-8192-32",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 32
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-squared-8192-32.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 3.435405615999997,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "ec34792f485fe43187778b2cbdc3a4ab91528facde30bf6ddd78b5a8c65b8a29",
+        "predictions.npz": "adfe7e776c12863b12071b1e3e0259ce50d4d15590af3e294117d8561bd08f34",
+        "result.json": "2a0007782ba3881599a9ee1902ece0ace91162581785596ac725cb580effc21b",
+        "execution.json": "e2605a1fb7f3613f894b46adcd3151275a4fb351b88d3d3c4dc3cf469b59005c"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "full-normal-8192-32",
+      "case": {
+        "id": "normal-8192-32",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 32
+      },
+      "variant": "full",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/full-normal-8192-32.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 6.2138077529999975,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "bfcc7112cb4a10ee2ec018b83f3ab810c216ec9cfeb94d32b9ef132dfa422902",
+        "predictions.npz": "de4415445933d49aa9e2077a61ae15e452985dc0c6250b60d517988e6fd5e3d2",
+        "result.json": "079901333d585cc182c2182a4c594132fc464ea5cdcba5e92a6d3eac5f67a571",
+        "execution.json": "b775cff29e6296895f42f59c2d76ba536925e0274c495eef1260ecaf67998ff9"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "summary-normal-8192-32",
+      "case": {
+        "id": "normal-8192-32",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 32
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-normal-8192-32.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 6.173728194999995,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "bfcc7112cb4a10ee2ec018b83f3ab810c216ec9cfeb94d32b9ef132dfa422902",
+        "predictions.npz": "de4415445933d49aa9e2077a61ae15e452985dc0c6250b60d517988e6fd5e3d2",
+        "result.json": "94eaf584393c22ce9ca0b86809511a7d0baf2ce8677b79e052b74108cfb18cf9",
+        "execution.json": "9efb771bc82e8951f9a5a7301494fd3713d74304920e1417e6ba20f3d0f1d192"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "full-squared-8192-128",
+      "case": {
+        "id": "squared-8192-128",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 128
+      },
+      "variant": "full",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/full-squared-8192-128.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 13.933927398000002,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "d46cf112b565ceb9d18725c5a169245e03db13a9b18c96e8978255d048bbdeb3",
+        "predictions.npz": "98e743d5e7462f436d74bef9f67aba12e220d568d7fdb6dbd8572e54776c7551",
+        "result.json": "7e8130a67387ce3a1aee589013c36324a1dd54af8cfbd75260686fd18b46f8c0",
+        "execution.json": "f8a933865550e30af35c34c92f90b61bea631d7613422c8255c3abdf4507ae22"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "summary-squared-8192-128",
+      "case": {
+        "id": "squared-8192-128",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 128
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-squared-8192-128.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 13.909913346999993,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "d46cf112b565ceb9d18725c5a169245e03db13a9b18c96e8978255d048bbdeb3",
+        "predictions.npz": "98e743d5e7462f436d74bef9f67aba12e220d568d7fdb6dbd8572e54776c7551",
+        "result.json": "52a25cb597f063789e23b6bf3abbe2fce4a9a27322f8e0fbe6850373a4c78b09",
+        "execution.json": "06fef3c622876865246d683802e5379703dac28486308bef6b8458571788bbc1"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "full-normal-8192-128",
+      "case": {
+        "id": "normal-8192-128",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 128
+      },
+      "variant": "full",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/full-normal-8192-128.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 28.163218317000002,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "d00a873647066669d8be379f2f9bc7cf756e79ff23237f48c014a62dc33039e6",
+        "predictions.npz": "65ef65bead60f1037481fe606c5736fdd9da54c8d32a996406d97c5eb0909c35",
+        "result.json": "21428bb25eba624a2c53ef327a03bf1201f439015dc819e70cc130ecd01015f1",
+        "execution.json": "f3f1eddf99c728bf02364b7f1dfd0634e6edfe2c2521ea5ce92b01a4fa43c23e"
+      }
+    },
+    {
+      "kind": "case",
+      "id": "summary-normal-8192-128",
+      "case": {
+        "id": "normal-8192-128",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 128
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-normal-8192-128.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 28.065659660999998,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "model.json": "d00a873647066669d8be379f2f9bc7cf756e79ff23237f48c014a62dc33039e6",
+        "predictions.npz": "65ef65bead60f1037481fe606c5736fdd9da54c8d32a996406d97c5eb0909c35",
+        "result.json": "31baaeed16d9e61ecaae7ba00b26ac6be662285264e82543964cbdd57deec2c1",
+        "execution.json": "fb849a85cd1e5bf0704e37fdade5e500dc6e94e52cbec862bf76458f161d3a98"
+      }
+    }
+  ],
+  "profiles": [
+    {
+      "kind": "profile",
+      "id": "summary-squared-8192-128-profile",
+      "case": {
+        "id": "squared-8192-128",
+        "recipe": "squared",
+        "train_rows": 8192,
+        "rounds": 128
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-squared-8192-128-profile.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 19.600141311,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "profile.pstats": "6439e3388873795e7b28dc96764f12c6c0b8a3763931d785072c2b849619b83d",
+        "profile.txt": "6ee7ad8f9dedfdfe6c698091d192ce13905b69f3edfa46f08a4339c875b05dde",
+        "profile.json": "de983a3741b1601bf588cebd5babfa548b20678e83fdc6f189fdac699f2e9967",
+        "model.json": "d46cf112b565ceb9d18725c5a169245e03db13a9b18c96e8978255d048bbdeb3",
+        "predictions.npz": "98e743d5e7462f436d74bef9f67aba12e220d568d7fdb6dbd8572e54776c7551",
+        "result.json": "5fda241606f0666982680010683a59f1e5565bf642b83e992ea077c4b9ecdcf2",
+        "execution.json": "bfe80a22f43bae67a68905df8a55bfd9dcc7a54615ad539f6282c26253d48ada"
+      }
+    },
+    {
+      "kind": "profile",
+      "id": "summary-normal-8192-128-profile",
+      "case": {
+        "id": "normal-8192-128",
+        "recipe": "normal",
+        "train_rows": 8192,
+        "rounds": 128
+      },
+      "variant": "summary",
+      "execution": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "/opt/cpu_profile_worker.py",
+          "/tmp/tmp8gosechb/summary-normal-8192-128-profile.json"
+        ],
+        "timeout_s": 120,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 39.35044298,
+        "log": ""
+      },
+      "hashes": {
+        "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "profile.pstats": "7849b36a43f787d8dc32fc445536a94554cf2902df20107b42d5eac5c9f608dc",
+        "profile.txt": "2badb4a4ae537a32eaf4b990abc85a7ea305453968c63493a26e96a79d8c5932",
+        "profile.json": "8b12a8e9d83f7471609cace43647a38d516941475ad4c043da4ca5a6df1783a5",
+        "model.json": "d00a873647066669d8be379f2f9bc7cf756e79ff23237f48c014a62dc33039e6",
+        "predictions.npz": "65ef65bead60f1037481fe606c5736fdd9da54c8d32a996406d97c5eb0909c35",
+        "result.json": "d287f0db3e9f190342bb2e87b7649dfd0bbbac4f28714f9b5a8cea6b633076a1",
+        "execution.json": "a3403150fe13fd739bc53d8c633e13e25c96c86701e47fc1ca13311e4475986c"
+      }
+    }
+  ],
+  "preflight": {
+    "kind": "preflight",
+    "result": {
+      "passed": true,
+      "checks": {
+        "allocation_rejected": true,
+        "timeout_killed": true,
+        "partial_log_retained": true,
+        "valid_child_succeeds": true,
+        "numerical_worker_passed": true,
+        "exact_8gib_address_limit": true,
+        "oversized_mapping_rejected": true,
+        "two_thread_blas": true,
+        "peak_counter_verified": true
+      },
+      "cgroup_limits": {
+        "/sys/fs/cgroup/memory.max": null,
+        "/sys/fs/cgroup/cpu.max": null
+      },
+      "environment": {
+        "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+        "python": "3.12.10",
+        "cpu": "",
+        "cpu_count": 2,
+        "gpu": null
+      },
+      "cases": {
+        "allocation": {
+          "command": [
+            "/usr/local/bin/python",
+            "-c",
+            "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+            "134217728",
+            "/usr/local/bin/python",
+            "-c",
+            "import resource,sys; print('address_limit',resource.getrlimit(resource.RLIMIT_AS),flush=True);\ntry: data=bytearray(256*1024**2)\nexcept MemoryError: print('expected allocation rejected',flush=True); sys.exit(73)\nprint('ERROR allocation escaped limit',flush=True)"
+          ],
+          "timeout_s": 10,
+          "address_limit_bytes": 134217728,
+          "threads": 2,
+          "status": "error",
+          "exit_code": 73,
+          "wall_s": 0.06658699200000018,
+          "log": "address_limit (134217728, 134217728)\nexpected allocation rejected\n"
+        },
+        "timeout": {
+          "command": [
+            "/usr/local/bin/python",
+            "-c",
+            "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+            "134217728",
+            "/usr/local/bin/python",
+            "-c",
+            "import time; print('started',flush=True); time.sleep(10)"
+          ],
+          "timeout_s": 1,
+          "address_limit_bytes": 134217728,
+          "threads": 2,
+          "status": "timeout",
+          "exit_code": -9,
+          "wall_s": 1.003168159,
+          "log": "started\n"
+        },
+        "success": {
+          "command": [
+            "/usr/local/bin/python",
+            "-c",
+            "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+            "134217728",
+            "/usr/local/bin/python",
+            "-c",
+            "print('success')"
+          ],
+          "timeout_s": 10,
+          "address_limit_bytes": 134217728,
+          "threads": 2,
+          "status": "pass",
+          "exit_code": 0,
+          "wall_s": 0.06661197899999971,
+          "log": "success\n"
+        }
+      },
+      "scope": "single-process 8-GiB virtual-address ceiling and verified peak counters; host cgroups remain unobservable",
+      "numerical_worker": {
+        "command": [
+          "/usr/local/bin/python",
+          "-c",
+          "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+          "8589934592",
+          "/usr/local/bin/python",
+          "-c",
+          "import runpy,json; print(json.dumps(runpy.run_path('/opt/resource_preflight.py')['worker_measurement']()))"
+        ],
+        "timeout_s": 30,
+        "address_limit_bytes": 8589934592,
+        "threads": 2,
+        "status": "pass",
+        "exit_code": 0,
+        "wall_s": 0.46977131800000027,
+        "log": "{\"checks\": {\"exact_8gib_address_limit\": true, \"oversized_mapping_rejected\": true, \"two_thread_blas\": true, \"peak_counter_verified\": true}, \"address_limit\": [8589934592, 8589934592], \"mapping_error\": \"[Errno 12] Cannot allocate memory\", \"numpy\": \"2.3.5\", \"pools\": [{\"user_api\": \"blas\", \"internal_api\": \"openblas\", \"num_threads\": 2, \"prefix\": \"libscipy_openblas\", \"filepath\": \"/usr/local/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so\", \"version\": \"0.3.30\", \"threading_layer\": \"pthreads\", \"architecture\": \"Haswell\"}], \"touched_bytes\": 67108864, \"peaks\": {\"before\": {\"ru_maxrss_bytes\": 84381696, \"proc_vmhwm_bytes\": null}, \"during\": {\"ru_maxrss_bytes\": 151105536, \"proc_vmhwm_bytes\": null}, \"after\": {\"ru_maxrss_bytes\": 151105536, \"proc_vmhwm_bytes\": null}}, \"verified_peak_counters\": [\"ru_maxrss_bytes\"]}\n"
+      },
+      "measurement": {
+        "checks": {
+          "exact_8gib_address_limit": true,
+          "oversized_mapping_rejected": true,
+          "two_thread_blas": true,
+          "peak_counter_verified": true
+        },
+        "address_limit": [
+          8589934592,
+          8589934592
+        ],
+        "mapping_error": "[Errno 12] Cannot allocate memory",
+        "numpy": "2.3.5",
+        "pools": [
+          {
+            "user_api": "blas",
+            "internal_api": "openblas",
+            "num_threads": 2,
+            "prefix": "libscipy_openblas",
+            "filepath": "/usr/local/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+            "version": "0.3.30",
+            "threading_layer": "pthreads",
+            "architecture": "Haswell"
+          }
+        ],
+        "touched_bytes": 67108864,
+        "peaks": {
+          "before": {
+            "ru_maxrss_bytes": 84381696,
+            "proc_vmhwm_bytes": null
+          },
+          "during": {
+            "ru_maxrss_bytes": 151105536,
+            "proc_vmhwm_bytes": null
+          },
+          "after": {
+            "ru_maxrss_bytes": 151105536,
+            "proc_vmhwm_bytes": null
+          }
+        },
+        "verified_peak_counters": [
+          "ru_maxrss_bytes"
+        ]
+      }
+    },
+    "environment": {
+      "python": "3.12.10",
+      "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+      "packages": {
+        "numpy": "2.3.5",
+        "threadpoolctl": "3.6.0",
+        "openboost": "1.0.0.dev0"
+      }
+    }
+  },
+  "image_id": "im-CKWTcJVS5IPAKlntWtchiC",
+  "fixtures": {
+    "kind": "fixtures",
+    "id": "fixtures",
+    "case": {},
+    "variant": null,
+    "execution": {
+      "command": [
+        "/usr/local/bin/python",
+        "-c",
+        "import os,resource,sys; n=int(sys.argv[1]); resource.setrlimit(resource.RLIMIT_AS,(n,n)); os.execv(sys.argv[2],sys.argv[2:])",
+        "8589934592",
+        "/usr/local/bin/python",
+        "/opt/cpu_profile_worker.py",
+        "--fixtures"
+      ],
+      "timeout_s": 30,
+      "address_limit_bytes": 8589934592,
+      "threads": 2,
+      "status": "pass",
+      "exit_code": 0,
+      "wall_s": 0.47516791699999983,
+      "log": ""
+    },
+    "hashes": {
+      "worker.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fixtures.json": "1611b6c9408698504f0bb6b417cb3f63f75ee1e79a866e06731ebd4c269e62a1",
+      "execution.json": "afce1d62bd948fe7b3f555057ab183f027f3dee1bddec84e6f8fcaaa0660fd14"
+    }
+  }
+}

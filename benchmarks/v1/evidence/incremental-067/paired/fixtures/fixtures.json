@@ -1,0 +1,17 @@
+{
+  "backtracking_coefficients": [
+    16.0,
+    8.0,
+    4.0,
+    2.0
+  ],
+  "scalar_rejection_trials": [
+    6,
+    6
+  ],
+  "joint_rejection_trials": [
+    6,
+    6
+  ],
+  "rejection_state_unchanged": true
+}

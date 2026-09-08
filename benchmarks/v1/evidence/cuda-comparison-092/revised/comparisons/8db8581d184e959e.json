@@ -1,0 +1,66 @@
+{
+  "case": "analytic/unchanged",
+  "inputs": {
+    "before": [
+      [
+        1.0,
+        0.0
+      ]
+    ],
+    "after": [
+      [
+        1.0,
+        0.0
+      ]
+    ],
+    "target": [
+      0.0
+    ],
+    "offset": [
+      [
+        0.0,
+        0.0
+      ]
+    ],
+    "weight": [
+      1.0
+    ]
+  },
+  "comparison": {
+    "lower": 0.0,
+    "upper": 0.0,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "identical_stored_raw",
+    "unchanged": true,
+    "status": "unchanged",
+    "estimate": 0.0,
+    "uncertainty": 0.0
+  },
+  "cpu": {
+    "lower": 0.0,
+    "upper": 0.0,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "identical_stored_raw",
+    "unchanged": true
+  },
+  "high_precision": {
+    "decimal60": "0",
+    "decimal100": "0",
+    "signs": [
+      0,
+      0
+    ],
+    "estimates_agree": true,
+    "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+  },
+  "additional_precision": [],
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 48,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "validation_export_bytes": 16,
+    "synchronizations": 6
+  }
+}
