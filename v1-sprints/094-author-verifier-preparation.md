@@ -1,6 +1,7 @@
 # Sprint 094: Standalone author-verifier preparation
 
-Status: in progress. Local continuation of [093](093-foundation-progress-and-next-steps.md)
+Status: local preparation slice complete; independent dispatch remains open.
+Local continuation of [093](093-foundation-progress-and-next-steps.md)
 and [069](069-authoring-pilot.md). No agent dispatch, device run, upload, budget
 change or independent author claim. The run-8 source freeze stays unchanged.
 
@@ -47,3 +48,22 @@ The author-facing overview now distinguishes implemented scalar/Normal CUDA
 paths from their historical hardware evidence and current pending correction.
 No frozen run-8 source changed. The next hardware action remains the pending
 run-8 request; no hardware allowance is granted by this sprint.
+
+### Closure evidence and next boundary
+
+At clean `0a85320`, the [installed reproduction](../benchmarks/v1/evidence/author-verifiers-094/README.md)
+passes both standalone commands: 2 D1 cases and 9 D2 cases, with eleven saved models
+replayed in an environment where the training plugins and reference package are
+absent. The deliberately changed model fails through the standalone CLI. All 36
+artifact hashes verify after archival. The CPU suite passes 1812 tests with one
+Linux-only skip; focused verifier checks pass 18/18. Ruff and documentation build
+pass, retaining the existing external-evidence documentation link warning.
+
+Reflection: the foundation's public operations already support both development
+changes. This slice needed no production change. It removes evaluator coupling
+but does not test whether an independent author can discover those operations or
+use them with less work. Prioritize the remaining invalid-input/identity and edit
+checks, a new current author packet, fair incumbent paths and real accounting/
+isolation over adding more numerical fixture families. No synthetic runner
+simulation should be counted as progress on actual token enforcement. The next
+device action is unchanged; any independent model smoke needs explicit authority.

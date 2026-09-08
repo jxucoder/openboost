@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "scope": "development numerical and saved-model checks only",
+  "task": "D2",
+  "cases": 9,
+  "models": {
+    "d2-depthwise-ordinary.model.json": "15ee0a927f72c119d33699bf2b2784af9479bf6310e4f69aad6da5fced29438a",
+    "d2-depthwise-zero-weight.model.json": "b7f6787363a69a87627b0b0be015cc9036633062699b8f13d392d829b299ffef",
+    "d2-depthwise-impossible.model.json": "9dc9564a643595452eba6d0c3c686e2fe6f318feebe4bda8a1e4821dfe11c3ad",
+    "d2-best_first-ordinary.model.json": "15ee0a927f72c119d33699bf2b2784af9479bf6310e4f69aad6da5fced29438a",
+    "d2-best_first-zero-weight.model.json": "b7f6787363a69a87627b0b0be015cc9036633062699b8f13d392d829b299ffef",
+    "d2-best_first-impossible.model.json": "9dc9564a643595452eba6d0c3c686e2fe6f318feebe4bda8a1e4821dfe11c3ad",
+    "d2-symmetric-ordinary.model.json": "15ee0a927f72c119d33699bf2b2784af9479bf6310e4f69aad6da5fced29438a",
+    "d2-symmetric-zero-weight.model.json": "b7f6787363a69a87627b0b0be015cc9036633062699b8f13d392d829b299ffef",
+    "d2-symmetric-impossible.model.json": "9dc9564a643595452eba6d0c3c686e2fe6f318feebe4bda8a1e4821dfe11c3ad"
+  },
+  "observations_sha256": "7bc787c30ca55870df8c48c484f898cb5b27762fb625e4f905dc4f8bb11509a9",
+  "verifier_manifest_sha256": "b49a32029c89fa01c9283f18ca6528e234e6513fbfe9284db3c683172f03df0d",
+  "dispatch_ready": false,
+  "attempts": []
+}

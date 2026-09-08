@@ -45,7 +45,11 @@ These are designer development results, not authoring-cost or complete task pass
   documentation tree.
 - Initial offline installed smoke passes all 11 cases with NumPy 2.3.5 and
   OpenBoost 1.0.0.dev0; a standalone command rejects the deliberate changed model.
-  Final committed-source reproduction is recorded below when archived.
+  [Committed-source reproduction](../benchmarks/v1/evidence/author-verifiers-094/README.md)
+  at clean `0a85320` passes all 11 cases, the fresh dependency-absence probe and the
+  standalone wrong-model failure. All 36 retained artifact hashes verify; no files
+  were changed during archive copying. No broader test rerun was needed after the
+  documentation/evidence-only closure.
 - All 85 source digests in the run-8 freeze match; the freeze file itself is
   unchanged. No upload, CUDA run, independent author or CPU search launched.
 
@@ -67,4 +71,5 @@ author-view export in a new cohort; preserve cfca092 and sealed H1/H2.
 
 ## Commits
 
-- Implementation and subsequent committed-source evidence are separate slices.
+- `0a85320` — standalone D1/D2 development verifier, real runner audit, tests and docs.
+- Subsequent evidence commit — clean-source installed reproduction and Sprint 094 reflection.

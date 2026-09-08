@@ -1,0 +1,28 @@
+{
+  "schema": "openboost-d1-d2-development-verifier-v1",
+  "dispatch_ready": false,
+  "attempts": [],
+  "revision": "0a85320ebae7d76faec9f85435bbc41c3f34444a",
+  "dirty": false,
+  "runtime_files": {
+    "expected.json": "c031bbc9342b5a71fd55ef825f612a3321100f7b809bb255c7781911bbbd6cc8",
+    "inputs.json": "e8ea7c939ec84be1848c0d015c4c33d8d95339a64ad6ae5cb10ab190182426dc",
+    "judge.py": "5a81789eebd36a930f8e0feaf89b46d52c1bd7c2b3ac7b208fd879ffec8cec04"
+  },
+  "oracle_sources": {
+    "benchmarks/v1/authoring/export.py": "cc76ea5d074b1ff46a136b21ac9825ae854826d882307e2508812197d43bb572",
+    "tests/v1/reference/__init__.py": "a6b57448d0bd41863e7d88c7f79a0429652b399ffa8a45478b948cd38f7c57c7",
+    "tests/v1/reference/author.py": "155d6b2a02baaed5357a1032227e263a6c53d5ee59e6cd6c700f24b13d487dac",
+    "tests/v1/reference/coupled.py": "691c9bd8dacc645d824d7c75bd909590095b07844b923a6929ac79bb8f7e5a8b",
+    "tests/v1/reference/positive.py": "d55c40f5dfd96aa58e4ccdb02cb9f7691352e82966bccb4e13d79e278c6ba190",
+    "tests/v1/reference/quantile.py": "6e05e309c06494cde68d4c11496b7d7aad7f0c4958e0688562fc79451855079a",
+    "tests/v1/reference/scalar.py": "5d78f361abb2bdad2532e322f2b2138ee7c5bd6fed55d6106a63ba707cadb6b1",
+    "tests/v1/reference/tree.py": "d8afa1a3ea9447f2fa420317e972e5b2e42540888ce42106d69ccd61aae21874"
+  },
+  "dependencies": [
+    "Python",
+    "numpy",
+    "installed openboost wheel"
+  ],
+  "limitation": "development numerical checks; OS isolation and budget accounting unverified"
+}
