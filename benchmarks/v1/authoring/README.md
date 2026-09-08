@@ -115,3 +115,35 @@ Its wall timeout is a worker smoke, not enforcement of the full author budget.
 The next runner decision needs a supported execution environment plus real token
 accounting. Independent dispatch, incumbent/model/settings freeze and the pending
 GPU run remain separate gates.
+
+## Prospective Linux worker
+
+[Sprint 096](../../../v1-sprints/096-linux-author-worker.md) chooses a Modal CPU
+Sandbox for the next bounded isolation smoke. `modal_worker.py` verifies the
+frozen 095 packet and constructs an image from thirteen individually selected
+files: twelve author materials and the generic `linux_probe.py`. The evaluator
+stays on the controller host. No directory mount, author solution, credential or
+model runner is delivered. The worker runs as UID 1000 with a writable workspace,
+root-owned core/materials and outbound networking blocked.
+
+Check the proposed run locally without starting Modal:
+
+```bash
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache \
+  uv run --no-sync python -m benchmarks.v1.authoring.modal_worker
+```
+
+The exact source/upload closure and one 90-second CPU Sandbox are recorded in
+`v1-sprints/096-linux-worker-smoke.json`. Its authorization is pending. Once
+authorized and committed, `--execute /tmp/author-linux-096` runs that single smoke
+and retains raw output, versions, core hashes, controller-side evaluator hashes
+and provider status. Failed checks remain failures; there is no retry. Passing
+requires all six public examples, all thirteen isolation/integrity observations,
+and a provider timeout after a child starts in another process session. A startup
+abort or an empty timed-out worker cannot pass.
+
+Local image construction and classifier tests are not remote isolation evidence.
+One failed external TCP connection is a limited observation, coupled with the
+provider's network policy; it is not a test of every possible network channel.
+The full author time/token boundary, fair arms and independent dispatch remain
+open. This smoke runs no model and makes no author-cost claim.

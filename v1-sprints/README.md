@@ -11,12 +11,15 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-The latest local continuation is [095 author packet and local isolation](095-author-packet-and-local-isolation.md),
-building on [094 standalone author-verifier preparation](094-author-verifier-preparation.md),
+The latest local continuation is [096 Linux author worker](096-linux-author-worker.md),
+following [095 author packet and failed native isolation](095-author-packet-and-local-isolation.md)
+and [094 standalone author-verifier preparation](094-author-verifier-preparation.md),
 following the [093 checkpoint](093-foundation-progress-and-next-steps.md).
 Standalone D1/D2 development checks and a concrete runner audit advance 069;
 independent dispatch remains blocked on actual accounting/isolation and arm/settings
 freezes. Run 8 is still pending and its frozen inputs are unchanged.
+096 constructs the next explicit CPU Sandbox smoke; local checks do not pass the
+remote isolation gate and its separate upload/run authorization is pending.
 
 The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
 sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
