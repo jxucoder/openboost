@@ -1,6 +1,6 @@
 {
   "schema": "openboost-accounting-smoke-v1",
-  "authorization": "pending",
+  "authorization": "approved",
   "scope": "One local-controller provider accounting smoke; no author, worker, GPU or publication",
   "settings": {
     "model": "gpt-5.6-luna",

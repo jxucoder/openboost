@@ -115,3 +115,18 @@ bytes and all twelve sources verified. The focused ten-case smoke suite passes
 again after adding exact prompt-hash and archived-config checks. MkDocs builds
 with its existing `execution.md` evidence-link warning. These checks use no live
 model and do not consume the proposed allowance.
+
+## One live allowance authorized
+
+The user's next "continue" answers the concrete request for this frozen smoke:
+at most three GPT-5.6 Luna requests, 4288 output tokens, a $0.05 allowance and zero
+retries. Change only the packet's authorization field to `approved`; all twelve
+source hashes, settings and exact prompts remain unchanged. No worker, GPU or
+independent author allowance follows from this approval.
+
+Execution plan: verify the packet and fresh one-use output path, commit the
+authorization, execute the exact frozen command once from the clean revision,
+then retain the original result and mark the allowance consumed. Complete the
+retrospective before further construction or another run. The preflight passes
+without network use; the smoke harness's ten local tests pass before this commit.
+This authorization record does not report a live result.
