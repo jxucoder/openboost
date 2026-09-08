@@ -64,8 +64,8 @@
     "build": "wheel from exact snapshot; no system site-packages; pinned GPU image build backend"
   },
   "scope": "092 bounded Normal comparison validation with separately reported original and revised semantic cohorts. No universal boosting, quality, speed or author/adoption claim.",
-  "authorization": "approved",
-  "upload_authorization": "approved",
+  "authorization": "consumed",
+  "upload_authorization": "consumed",
   "require_upload_authorization": true,
   "upload_destination": "Modal",
   "app_name": "openboost-v1-normal-comparison",

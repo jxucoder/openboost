@@ -1,0 +1,136 @@
+{
+  "case": "run7/reverse/channel1/alpha1.0/validation",
+  "inputs": {
+    "before": [
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ]
+    ],
+    "after": [
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ],
+      [
+        0.3401637375354767,
+        1.0863723754882812
+      ]
+    ],
+    "target": [
+      2.125,
+      1.0,
+      0.875,
+      1.125,
+      1.0,
+      -6.125
+    ],
+    "offset": [
+      [
+        0.125,
+        -0.125
+      ],
+      [
+        0.0,
+        0.125
+      ],
+      [
+        -0.125,
+        -0.125
+      ],
+      [
+        0.125,
+        0.125
+      ],
+      [
+        0.0,
+        -0.125
+      ],
+      [
+        -0.125,
+        0.125
+      ]
+    ],
+    "weight": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "comparison": {
+    "lower": 0.0,
+    "upper": 0.0,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "identical_stored_raw",
+    "unchanged": true,
+    "status": "unchanged",
+    "estimate": 0.0,
+    "uncertainty": 0.0
+  },
+  "cpu": {
+    "lower": 0.0,
+    "upper": 0.0,
+    "method": "normal-taylor18-interval-v1",
+    "reason": "identical_stored_raw",
+    "unchanged": true
+  },
+  "high_precision": {
+    "decimal60": "0E-61",
+    "decimal100": "0E-101",
+    "signs": [
+      0,
+      0
+    ],
+    "estimates_agree": true,
+    "interpretation": "Precision agreement is numerical evidence, not an interval error bound."
+  },
+  "additional_precision": [],
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 48,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "validation_export_bytes": 16,
+    "synchronizations": 6
+  }
+}

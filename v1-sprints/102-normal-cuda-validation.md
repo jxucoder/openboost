@@ -1,64 +1,87 @@
-# Sprint 102: Execute the frozen Normal CUDA correction
+# Sprint 102: Normal CUDA validation and prefix-expectation retrospective
 
-Status: the user explicitly replied "approve" to uploading the 86 frozen files
-to Modal and running one T4 with two CPUs, 8 GiB, at most 900 seconds and zero
-retries. The [run-8 request](092-comparison-run8-request.md) is now approved without
-scope changes. The previous automatic-review rejection occurred before any
-dispatch and remains recorded below. Agent evaluation and the Sprint 100 model
-test remain deferred.
+Status: the explicitly approved run executes once at `469ca0e`. All 409 declared
+JSON artifacts return. Revised results are **528 passes, one failure**; historical
+results are **359 passes, 26 failures**, exactly the preregistered disagreements.
+The overall verdict remains false. The GPU/upload allowance is consumed without
+retry. Agent evaluation and the Sprint 100 model test remain deferred.
 
-## Plan
+## Plan and acceptance
 
-1. Verify the frozen source closure and local dispatch/judging checks. Obtain
-   specific approval for the existing upload/compute request, then commit the
-   two authorization fields before dispatch.
-2. Upload the exact 86-file closure to Modal and execute one T4 invocation with
-   two requested CPUs, 8192 MiB requested memory, 900 function seconds, a shared
-   600-second test deadline and zero retries. Use the existing fixed output path.
-3. Preserve all returned logs, literal verdicts and declared artifacts. Reconcile
-   source identity, every historical/revised case, numerical decisions, ownership,
-   fresh CPU inference and recorded costs. Mark the allowance consumed and commit
-   the evidence. Complete the planned retrospective before another hardware run.
+1. Verify the source closure and local dispatch/judging checks, record the exact
+   approval and commit before execution. Complete: all 37 local checks pass and
+   all 85 prefrozen source hashes match the 86-file upload closure.
+2. Execute the original [run-8 request](092-comparison-run8-request.md): one T4,
+   two CPUs, 8192 MiB, 900 function seconds, a shared 600-second test deadline and
+   zero retries. Complete: no resources, cases, tolerances or source hashes changed.
+3. Preserve every raw verdict/artifact, verify provenance and complete the
+   retrospective before further hardware. Complete: 416 raw artifact hashes and
+   86 dispatch source hashes verify, including 409 declared JSON outputs.
 
-The local pre-dispatch check passes all 37 harness cases. All 85 prefrozen source
-hashes match; the 86-file pending packet is 1,459,822 bytes before the two
-authorization values change. Only those values change in the protocol. The
-original isolated collection and earlier failed runs remain unchanged.
+Full acceptance still requires all 529 revised cases, the exact historical
+outcomes and complete artifacts. Classifying a fixture error does not pass the
+failed case or execute its later assertions. The known split near-tie, original
+P7/E4, other required CUDA recipes and all application requirements remain open.
 
-## Acceptance
+## Result
 
-Apply the original [run-8 criteria](092-comparison-run8-request.md): all 529 revised
-cases pass, all 385 historical cases appear with exactly their 26 preregistered
-disagreements, and all 409 declared JSON artifacts are retained. Historical
-failures remain failures. Missing evidence, unexpected outcomes or skipped CUDA
-cases fail this checkpoint. Keep the known split near-tie limitation explicit.
+[Raw evidence and environment](../benchmarks/v1/evidence/cuda-comparison-092/README.md)
+retain both JUnit/logs, source/package identity, comparison traces, PTX and cost.
+The installed core/D2 sources and eighteen pinned package versions match. All
+nineteen models per cohort replay on CPU without CuPy, Numba or the D2 extension.
 
-This is bounded Normal/D2 correctness validation. It does not establish all CUDA
-recipes, matched-quality speed, real-task value, agent benefit or complete v1.
+All 383 revised original requirements, 117 comparison operation checks and twelve
+transaction consumer cases pass. Fourteen of fifteen dedicated recipe cases pass;
+both lowering/cost checks pass. Actual PTX contains the six required directed-double
+operations. All 2,548 recorded trajectory comparisons pass their independent
+stored-input audit, including 1,381 improvements, 946 worsenings and 221 unchanged
+states. The two old false-improvement candidates are now correctly classified as
+worsening, and the complete revised forward/reverse conflict trajectories pass.
 
-## Result and reflection
+The remaining failure is
+`test_recipe_current_best_and_patience_have_distinct_validation_anchors[forward]`:
+observed `best_n_terms=9`, expected `10`. Its stale-round sequence and budget stop
+already pass. Assertions after this prefix check, including its final explicit
+ownership check, do not execute and remain unverified for that particular case.
 
-The subsequent explicit approval resolves the prior authorization block. Both
-protocol authorization fields are approved for the single original invocation.
-Pre-dispatch inspection verifies the unchanged 85 source hashes and absent output
-directory. Hardware results remain pending until this run returns.
+## Root cause and retrospective
 
-### Previous authorization rejection
+The fixture changes only the mean and supplies zero-valued log-scale leaves.
+In forward order, term nine creates the final improvement and term ten is a no-op.
+Best-model selection requires strict improvement, so a no-op must retain the
+existing best prefix. The exact-rational fixture derivation gives joint ten,
+forward nine and reverse ten. Joint commits both terms atomically; reverse places
+the last mean change at term ten. This matches the observed state and existing
+consumer contract. The error is the unconditional ten-term test expectation.
 
-The local checks pass, but no GPU run occurred. Commit `b58b168` recorded the
-interpretation that "finish" authorized the pending checkpoint. Automatic review
-then rejected process creation because that instruction did not specifically
-authorize uploading 86 repository files and launching paid Modal T4 compute under
-the repository's pending-run rule. No workaround or retry was attempted.
+Correct that expectation in a separate source change. Add a CPU semantic check
+for ordered versus joint commits and retention of an earlier best prefix after
+an accepted no-op. Keep the original raw failure and its frozen source revision;
+do not rehash the consumed run-8 packet or replace its verdict. The corrected CUDA
+case still needs actual execution under a new frozen allowance. No production
+numerical policy or tolerance needs to change for this counterexample.
 
-Restore both authorization fields to pending. The fixed output directory is
-absent: no manifest or remote result was produced, and no GPU allowance is
-consumed. The protocol returns byte-for-byte to its preauthorization contents.
-All 85 frozen source hashes still match. Actual CUDA validation is the remaining
-blocked step; it cannot be replaced by local CPU results or skipped tests.
+Uninstrumented tiny-fixture fits take 0.226–0.233 seconds for weighted data and
+0.348–0.350 seconds for D2. Each performs fifteen comparisons with 480 comparison
+bytes exported. Reference NLL/CRPS and repeated model identities match. Full
+dispatch is 633.550 seconds; worker time is 205.335 seconds. Image construction
+and instrumented correctness work are distinct from training cost. These figures
+justify no matched-quality speed or real-workload claim.
 
-The concrete approval request remains one upload of the frozen 86-file closure
-and one T4 invocation with two CPUs, 8192 MiB, 900 function seconds, a shared
-600-second test deadline and zero retries. After that run, preserve its evidence
-and stop for retrospective. Any device failure must be classified before changing
-production code, oracles or tolerances.
+The numerical comparison design now has substantial real-device support. Finish
+the narrow fixture correction and its validation before adding more CUDA recipe
+families. Continue with 080, compatible train-many and measured workload cost
+thereafter; the deferred agent study does not re-enter this sequence.
+
+## Verification and authorization history
+
+The [offline analyzer](../benchmarks/v1/evidence/cuda-comparison-092/analyze.py)
+verifies raw hashes, source identity, recorded enclosures, PTX hashes and CPU replay
+bindings, and derives the prefix independently. Its analysis never changes the
+literal failed verdict. Run it with `--check` to compare against the saved report.
+
+The earlier `finish` instruction was initially interpreted as approval in
+`b58b168`; automatic review blocked process creation, and `dffcfd5` restored the
+pending packet. No upload or allowance was consumed then. The subsequent explicit
+`approve` response authorized the exact 86-file upload and bounded invocation;
+`469ca0e` is the clean execution revision. All eight GPU allowances are now consumed.

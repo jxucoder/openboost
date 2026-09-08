@@ -344,10 +344,11 @@ their float32-rounded reference; float32 reduction cancellation creates a small
 leaf, and rounding of total losses misclassifies its update. Transaction ownership,
 version/best updates and saved inference remain correct for the measured decisions.
 
-Normal backtracking therefore remains experimental: independently rounded total
+At run 7, Normal backtracking remained experimental: independently rounded total
 losses are an unreliable comparison near stationarity. An objective-owned
-loss-change operation with an explicit numerical-resolution contract is now
-implemented as a separate experimental component; consumers have not migrated.
+loss-change operation with an explicit numerical-resolution contract was
+initially implemented as a separate experimental component. The run-8 consumer
+results below supersede that construction-only status.
 The repository archive `benchmarks/v1/evidence/cuda-acceptance-091/`
 retains both failures and the complete traces. No tolerance or original test was
 changed, and successful diagnostics do not pass full Normal conformance.
@@ -366,8 +367,8 @@ finite inputs outside comparison support return unresolved. Both input buffers
 remain caller-owned. Scratch is `32*N + 32` bytes beyond existing validation flags
 and is released on success/failure. Only one 32-byte scalar summary plus validation
 flags is exported. `comparison_calls` and `comparison_export_bytes` supplement
-the existing allocation, launch and transfer counters. These sizes describe the
-implementation; actual device measurements remain pending.
+the existing allocation, launch and transfer counters. The run-8 operation and
+ownership checks verify these transfers on a real T4.
 
 `ObjectiveOperations(..., compare=callback)` exposes the programmable dependency.
 `objective.loss_change(ops, problem, before, after)` validates the result type and
@@ -378,11 +379,12 @@ comparison callback without modifying the grower or runtime.
 
 The separate 117-case GPU operation cohort covers all 106 frozen numerical inputs,
 invalid domains/identities, callback independence and failures during allocation
-or kernel dispatch. It is collected
-locally but has not executed on a GPU. No new device allowance is granted by this
-implementation.
+or kernel dispatch. All 117 pass on a real T4 at `469ca0e`. Actual PTX contains all
+six required directed-double operations, and both stored run-7 false improvements
+are classified as worsening. See the run-8 evidence in
+`benchmarks/v1/evidence/cuda-comparison-092/README.md`.
 
-## Objective comparison consumers: construction awaiting hardware
+## Objective comparison consumers: bounded device evidence
 
 `DeviceRun(..., comparison="objective")` explicitly requests objective comparison;
 missing support fails before data preparation. The default `"reported"` policy
@@ -401,7 +403,7 @@ publishing a new state or incrementing tree references. Each snapshot costs
 anchor. `validation_problem` exposes the prepared validation record for public
 comparison composition. State release and run closure release best storage.
 
-The twelve-case consumer/ownership CUDA cohort is collected, unrun. It covers
+The twelve-case consumer/ownership CUDA cohort passes in run 8. It covers
 equal-score improvements, both stored run-7 false improvements, retained earlier
 states, all three resolve copies, initialization/callback failure cleanup, and
 explicit unresolved policies. Local preflight tests verify missing/invalid policy
@@ -416,7 +418,7 @@ if reporting floats are equal. It releases old anchors, observation scratch and
 the final anchor on completion/failure. During training this adds one retained
 `4*N_validation*K` snapshot, plus a temporary snapshot during observation.
 
-Fifteen separate recipe CUDA tests are collected, unrun: three-anchor sequences,
+Fourteen of fifteen separate recipe CUDA tests pass in run 8: three-anchor sequences,
 equal-score anchor replacement, full rejection across every update order, zero
 rounds, and failures during initial/observation copy, comparison, invalid callback
 result or a later learner. Together with the twelve transaction cases, these
@@ -427,5 +429,13 @@ the historical cohort. All 383 historical requirements now have collected
 counterparts, including 147 revised transaction/recipe/installed-D2 checks.
 They retain original settings and tolerances and audit actual stored-input
 comparisons independently. All ninety float64 reference trajectories retain their
-original summaries. These are local reference and collection results; revised
-CUDA execution and hardware acceptance remain open.
+original summaries. All 383 bound requirements pass in run 8, and all 2,548
+recorded trajectory comparisons pass their independent stored-input audit.
+
+The full revised result is 528/529, not complete acceptance. A forward three-anchor
+fixture expects a best prefix of ten after a zero-valued tenth term; strict
+improvement retains prefix nine. Independent fixture mathematics agrees with the
+observed state. The assertion and its unexecuted follow-up checks need separate
+correction and real-device validation. Historical results retain all 26 expected
+disagreements, and the overall raw verdict remains failed. No full Normal,
+matched-quality speed or broader CUDA recipe claim follows from these results.

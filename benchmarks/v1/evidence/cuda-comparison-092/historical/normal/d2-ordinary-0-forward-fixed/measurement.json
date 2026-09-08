@@ -1,0 +1,172 @@
+[
+  {
+    "repeat": 0,
+    "fit_including_context_preparation_export_seconds": 0.34233077400000056,
+    "cpu_prediction_seconds": 0.00045670300000111297,
+    "fit_metrics": {
+      "upload_bytes": 660,
+      "export_bytes": 3416,
+      "device_copy_bytes": 2328,
+      "synchronizations": 1002,
+      "live_bytes": 884,
+      "peak_live_bytes": 2162,
+      "peak_pool_bytes": 27136,
+      "kernel_launches": 743,
+      "kernel_dispatch_seconds": 0.21259238799999025,
+      "validation_export_bytes": 2624,
+      "decision_export_bytes": 120,
+      "metric_export_bytes": 112,
+      "comparison_calls": 15,
+      "comparison_export_bytes": 480
+    },
+    "final_metrics": {
+      "upload_bytes": 660,
+      "export_bytes": 3464,
+      "device_copy_bytes": 2376,
+      "synchronizations": 1007,
+      "live_bytes": 0,
+      "peak_live_bytes": 2162,
+      "peak_pool_bytes": 27136,
+      "kernel_launches": 743,
+      "kernel_dispatch_seconds": 0.21259238799999025,
+      "validation_export_bytes": 2624,
+      "decision_export_bytes": 120,
+      "metric_export_bytes": 112,
+      "comparison_calls": 15,
+      "comparison_export_bytes": 480
+    },
+    "trials": [
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.50127970827736,
+        "validation_score": 2.3761918373201865,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.4352982240199803,
+        "validation_score": 2.338513852895985,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.431732355619297,
+        "validation_score": 2.3356008759642775,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.387077721142121,
+        "validation_score": 2.308917460277159,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.3835031766303945,
+        "validation_score": 2.305706172458628,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.349409362567595,
+        "validation_score": 2.284585846436824,
+        "accepted": true,
+        "failure": null
+      }
+    ],
+    "validation_nll_crps": [
+      2.2845858464368236,
+      1.4308831236928015
+    ]
+  },
+  {
+    "repeat": 1,
+    "fit_including_context_preparation_export_seconds": 0.3364411359999977,
+    "cpu_prediction_seconds": 0.00045770100000197544,
+    "fit_metrics": {
+      "upload_bytes": 660,
+      "export_bytes": 3416,
+      "device_copy_bytes": 2328,
+      "synchronizations": 1002,
+      "live_bytes": 884,
+      "peak_live_bytes": 2162,
+      "peak_pool_bytes": 27136,
+      "kernel_launches": 743,
+      "kernel_dispatch_seconds": 0.20823676900000976,
+      "validation_export_bytes": 2624,
+      "decision_export_bytes": 120,
+      "metric_export_bytes": 112,
+      "comparison_calls": 15,
+      "comparison_export_bytes": 480
+    },
+    "final_metrics": {
+      "upload_bytes": 660,
+      "export_bytes": 3464,
+      "device_copy_bytes": 2376,
+      "synchronizations": 1007,
+      "live_bytes": 0,
+      "peak_live_bytes": 2162,
+      "peak_pool_bytes": 27136,
+      "kernel_launches": 743,
+      "kernel_dispatch_seconds": 0.20823676900000976,
+      "validation_export_bytes": 2624,
+      "decision_export_bytes": 120,
+      "metric_export_bytes": 112,
+      "comparison_calls": 15,
+      "comparison_export_bytes": 480
+    },
+    "trials": [
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.50127970827736,
+        "validation_score": 2.3761918373201865,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.4352982240199803,
+        "validation_score": 2.338513852895985,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.431732355619297,
+        "validation_score": 2.3356008759642775,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.387077721142121,
+        "validation_score": 2.308917460277159,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.3835031766303945,
+        "validation_score": 2.305706172458628,
+        "accepted": true,
+        "failure": null
+      },
+      {
+        "coefficient": 0.10000000149011612,
+        "loss": 2.349409362567595,
+        "validation_score": 2.284585846436824,
+        "accepted": true,
+        "failure": null
+      }
+    ],
+    "validation_nll_crps": [
+      2.2845858464368236,
+      1.4308831236928015
+    ]
+  }
+]

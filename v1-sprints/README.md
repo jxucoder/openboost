@@ -16,10 +16,18 @@ evaluation and its accounting/isolation preparation, including the unapproved
 100 live model test. F2/E5 remains unpassed but no longer gates foundation or
 CUDA construction. Public composability and correctness remain required.
 
-Next engineering order: validate the existing [Normal CUDA correction](092-comparison-run8-request.md),
-review its result, then advance [required CUDA recipes](080-cuda-required-recipes.md),
+The [102 Normal CUDA run](102-normal-cuda-validation.md) completes at `469ca0e`:
+528/529 revised cases pass and the historical cohort has exactly its 26 expected
+disagreements. All 409 declared JSON artifacts are retained. The lone revised
+failure is a forward fixture's best-prefix expectation after a zero-valued final
+term; independent derivation requires nine, while the test expects ten. Preserve
+the [raw failed verdict](../benchmarks/v1/evidence/cuda-comparison-092/README.md).
+Run 8's allowance is consumed, and agent studies remain paused.
+
+Next engineering order: correct and revalidate that fixture, then advance
+[required CUDA recipes](080-cuda-required-recipes.md),
 [train-many](081-cuda-train-many.md) and [real-workload quality/cost](082-end-to-end-cost.md).
-Run 8's upload/compute allowance is now explicitly approved. No new model call is needed for
+No new model call is needed for
 these engineering checks. Preserve every application family and all past evidence.
 Resume the deferred author study only at the user's direction.
 
@@ -30,7 +38,8 @@ specifically authorize the source upload and paid GPU invocation. Both packet
 authorizations are restored to pending; no run occurred or allowance was consumed.
 The user subsequently replied "approve" to the exact 86-file upload and single
 bounded T4 invocation. Its authorization is recorded in 102; execute the original
-packet once and stop for retrospective. Earlier pending statements are historical.
+packet once and stop for retrospective. That run is now complete as recorded above;
+earlier pending/approved statements are historical.
 
 ## Prior preparation and evidence
 

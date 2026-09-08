@@ -1,8 +1,11 @@
 # Run 8: Validate Normal objective comparisons on real CUDA
 
-Status: **pending upload and compute approval**. Local preparation is committed
-at `dbeff8a`, following the complete bindings at `c881259`. Nothing has been
-uploaded or executed for run 8. All seven prior allowances remain consumed.
+Status: **executed once; allowance consumed** at `469ca0e` after explicit approval.
+The [102 result](102-normal-cuda-validation.md) records 528/529 revised passes,
+the exact 26 historical disagreements and all 409 declared JSON artifacts. The
+overall verdict is false. The original request below remains the execution record;
+it authorizes no retry. Local preparation was committed at `dbeff8a`, following
+the complete bindings at `c881259`.
 
 [Exact protocol and source hashes](092-comparison-run8.json) ·
 [Isolated collection](092-isolated-collection.json) ·

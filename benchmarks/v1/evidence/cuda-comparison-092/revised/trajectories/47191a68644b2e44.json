@@ -1,0 +1,1 @@
+{"case": "tests/v1/test_compared_normal_recipe_cuda.py::test_recipe_matches_frozen_trajectory_and_retention[0-fixed-natural-forward]", "inputs": {}, "comparisons": [], "timing_scope": "instrumented correctness only"}

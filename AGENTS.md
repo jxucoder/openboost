@@ -72,18 +72,24 @@ unpassed but does not block foundation construction, required CUDA recipes,
 train-many or scoped quality/cost work. Public composability, installed-extension
 checks and mathematical/state/persistence correctness remain active requirements.
 
-Next: the existing [Normal CUDA run-8 checkpoint](v1-sprints/092-comparison-run8-request.md),
-then required CUDA recipes (080), compatible train-many (081) and evidence-led
-quality/cost work (082). The user subsequently explicitly approved the concrete
-run-8 request: upload 86 frozen files to Modal and execute one T4 invocation,
-two CPUs, 8192 MiB, 900 function seconds, 600 test seconds and zero retries.
-See [102 execution](v1-sprints/102-normal-cuda-validation.md). Execute once,
-retain the evidence and stop for retrospective. Preserve all frozen sources and
-past results. All R/C/A requirements remain; author/adoption benefit is unverified.
+The approved [Normal CUDA run 8](v1-sprints/102-normal-cuda-validation.md) executes
+once at `469ca0e`: 528/529 revised checks pass, and all 26 expected historical
+disagreements match. All 409 declared JSON artifacts are retained; both old false
+improvements are correctly rejected and all 2,548 trajectory comparison audits
+pass. [Raw evidence](benchmarks/v1/evidence/cuda-comparison-092/README.md) preserves
+the failed verdict. One forward recipe fixture expects best prefix ten after a
+zero-valued tenth term; strict improvement and independent fixture mathematics
+require nine. Correct that expectation separately and validate the changed test
+before claiming full revised acceptance. The run-8 allowance is consumed.
+
+After this correction/retrospective, advance required CUDA recipes (080), compatible
+train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
+sources and past results. All R/C/A requirements remain; author/adoption benefit
+is unverified. No additional GPU run or source upload is currently authorized.
 
 The historical sequence below records prior instructions and evidence. Its
 authoring continuations and limited F2-to-F3 overlap rule are superseded by 101;
-its statements of pending run-8 authorization predate the explicit approval above.
+its statements of pending run-8 authorization predate the completed run above.
 The earlier execution was governed by the user-approved
 [Sprint 085 foundation-focus amendment](v1-sprints/085-foundation-focus-amendment.md).
 The [086 next execution plan](v1-sprints/086-next-execution-plan.md) decomposes

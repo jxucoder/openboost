@@ -1,0 +1,1 @@
+{"case": "tests/v1/test_compared_normal_runtime_cuda.py::test_term_schema_and_map_overflow_are_not_partial_updates", "inputs": {}, "comparisons": [], "timing_scope": "instrumented correctness only"}
