@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "scope": "development numerical and saved-model checks only",
+  "task": "D1",
+  "cases": 2,
+  "models": {
+    "d1-0.5.model.json": "b8f36bf93dac86e2a320bafaca01f5f2c5e4e66cfc6d292a960df860c9d2b353",
+    "d1-0.8.model.json": "0188eccc9f9851a9118e5f4cb5fea61057b863ebed01b89c6af76b674002cda3"
+  },
+  "observations_sha256": "6a91d3e9e5757729e0fd840a2640ee600b4c089aa955d9491cdc3d4c2d3db5cc",
+  "verifier_manifest_sha256": "c3b44d1e1de52a736cd6bfdc719f380373cb649c2074fea4e735c12f10327b9e",
+  "dispatch_ready": false,
+  "attempts": []
+}

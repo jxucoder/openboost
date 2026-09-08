@@ -1,0 +1,156 @@
+{
+  "schema": "openboost-author-view-v2",
+  "revision": "862c4046375ad498f0bb15a4407db8609f4fe18c",
+  "scope": "OpenBoost author-view preparation only",
+  "dispatch_ready": false,
+  "status": "prepared",
+  "evaluator_inputs": {
+    "planning/foundation-tasks.md": "ac96eafdeab8aa346dc67586c92ae2c367b8b8a94bdecc2353d9c7829c775c63",
+    "benchmarks/v1/authoring/export.py": "ef1f06dc1a188e280c1a9183babb80d3492c8bd21bcd8a6cf3f4820cd024bf1d",
+    "benchmarks/v1/authoring/development.py": "a796103d4ab3d34b1f3ca1829919289b0bd183cdf2fec1081d3f2d468762294c",
+    "benchmarks/v1/authoring/judge.py": "7c00296f6d9526b1b81e5e7ec26faa1ac3e5a4476c54b76c8c8d72dc832beac6",
+    "benchmarks/v1/authoring/verify.py": "875ae5c6649fe29e56bc50a89aa4c1cc17ff1acbf80445febbb6350e1a262608",
+    "benchmarks/v1/authoring/isolation.py": "b0b0e1d866ea5f9f90f4615d907f596f2282dfcbe2349a5292113a9af738734a"
+  },
+  "budget": {
+    "wall_s": 1800,
+    "generated_tokens": 20000
+  },
+  "missing": [
+    "observable token/time enforcement",
+    "actual evaluator isolation test",
+    "independent runner and model/settings freeze",
+    "incumbent path audit and arm freeze",
+    "complete author task adapter, invalid-input and edit accounting freeze",
+    "bind the standalone verifier cohort and its installed dependency closure"
+  ],
+  "attempts": [],
+  "original_sources": {
+    "v1-sprints/069-author-packet/README.md": "0261bc18c8502aa96806ae5c1ef14e2af17e45a9069650f51a5d147024d3e643",
+    "v1-sprints/069-author-packet/D1.md": "4ab89ba53887bf93c5a61f818e01d52564ae552b6723b71344a3a150cc781282",
+    "v1-sprints/069-author-packet/D2.md": "5e8dcceae218581431f0e4f7929d27114c8ba595470ad815ef98bc4793bd0603",
+    "docs/v1/cpu-state.md": "7c53631f152b441b67905512c1dbf821bb95055f1d13f08e8163a14cbebf63b1",
+    "docs/v1/numeric-ops.md": "e2406db656a906d4229d734dbba639210c4d226772bab94ed47e716374009274",
+    "docs/v1/trees.md": "d1e6acbb180429fdfed6a9fb59d18813b41426efbe32a9fc795cb2735eb10762",
+    "docs/v1/squared.md": "1dddaacec12e50cac43eb3502f25f63ad44f12084b74608a85462b8348a20c36",
+    "docs/v1/preparation.md": "3c06d8c210dc87fb3af9aff06f1809db5af39846e37218be5c9dc40863e3711d",
+    "docs/v1/stopping.md": "8cadee8e1f9ee98eb556f85218ee87127e3d614daff6e973728f43f0d062c76a"
+  },
+  "omitted_links": [
+    {
+      "source": "docs/v1/cpu-state.md",
+      "target": "categorical.md",
+      "label": "MixedData"
+    },
+    {
+      "source": "docs/v1/cpu-state.md",
+      "target": "aft.md",
+      "label": "AFT"
+    },
+    {
+      "source": "docs/v1/cpu-state.md",
+      "target": "binary.md",
+      "label": "ClassSchema"
+    },
+    {
+      "source": "docs/v1/trees.md",
+      "target": "multiclass.md",
+      "label": "multiclass and vectors"
+    },
+    {
+      "source": "docs/v1/trees.md",
+      "target": "quantile.md",
+      "label": "quantile leaves"
+    },
+    {
+      "source": "docs/v1/trees.md",
+      "target": "normal.md",
+      "label": "Normal"
+    },
+    {
+      "source": "docs/v1/trees.md",
+      "target": "categorical.md",
+      "label": "Categorical support"
+    },
+    {
+      "source": "docs/v1/squared.md",
+      "target": "normal.md",
+      "label": "Normal recipe"
+    },
+    {
+      "source": "docs/v1/squared.md",
+      "target": "binary.md",
+      "label": "Binary classification"
+    },
+    {
+      "source": "docs/v1/squared.md",
+      "target": "categorical.md",
+      "label": "Categorical inputs"
+    },
+    {
+      "source": "docs/v1/stopping.md",
+      "target": "results.md",
+      "label": "result validation"
+    }
+  ],
+  "build_command": [
+    "uv",
+    "build",
+    "--wheel",
+    "--offline",
+    "--out-dir",
+    "/private/tmp/openboost-author-packet-095-clean/author/wheels"
+  ],
+  "build": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "Building wheel...\nSuccessfully built /private/tmp/openboost-author-packet-095-clean/author/wheels/openboost-1.0.0.dev0-py3-none-any.whl\n"
+  },
+  "wheel_sources": {
+    "openboost/__init__.py": "c6a404dd122323611ca6c63fecfbc836c7845a271cceca91742c8fcf9d29a5ad",
+    "openboost/_comparison_math.py": "f547fb12d9a06108c126cdb4e6d1741b18c25ff7532f250f8a01a38f743798e2",
+    "openboost/_device_kernels.py": "0913d998087b1032cdb81bd463ee7391339d2bf1580c36d721dd445a7195ac18",
+    "openboost/_normal_comparison.py": "1fc5bacdf95defd99ab46f0ca1ca1773e20b19bc542a993f26409709c3783f4e",
+    "openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "openboost/comparison.py": "87692af240e9836be5a1d95742316fb8282840e606febdb6086b2de90092c7bb",
+    "openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "openboost/device.py": "9f43d34ed5f9d1d81aa0ca04df186616bf63f13fb0bdbc80ea4617d3c2e8ae3a",
+    "openboost/device_normal.py": "4f1e631e6eff5127b5298c5ac461e6bd4f5dc21a509a3322762d3e05146317bb",
+    "openboost/device_objectives.py": "c1bf4717fa1ce19ddb5310c6a66f5e163e42f42f7fd96aff703beafbc89bed24",
+    "openboost/device_recipes.py": "c4760fa4a92bfb18e748799afd7cb4ee3ac4f9dd0217f04992ec2b821e962e51",
+    "openboost/device_runtime.py": "94c946b5c904355255cea5c4f557ffad3255eb6b555f20683bfa9a045474d1cb",
+    "openboost/device_tree.py": "4f4916b195da9221f607ab27e6968ee38669e95b09cb60d742740a674d6e4dd1",
+    "openboost/diagnostics.py": "83b616f6158228ff097e2bd34c608f68e6f2a9ad147c07b46c43d374bb8ec80b",
+    "openboost/execution.py": "817841600572c8062b36bf886a8a01d406195c508c856d2f4c4c90dd094411fe",
+    "openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "openboost/objectives.py": "3d717a736af6ea6d5ade063639fedc51f1d60c62a2663e8ecb6b0a4ee4dffd71",
+    "openboost/ops.py": "fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30",
+    "openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "openboost/recipes.py": "9b6c4f340953df93528529a6d80ef04dd21ad3d92396ecd1a0c160253f27198e",
+    "openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "openboost/runtime.py": "365a534c2413ab3f548f8d34c4ff2df6ee41852dddaa445378da84ff6b7d7d6a",
+    "openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "openboost/stopping.py": "ad488ddb867992d1a61b758c577a06c7f6e2a2bcd1f30fbf20a752d476305264",
+    "openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5"
+  },
+  "author_files": {
+    "README.md": "2f40b7dbf5b23f8998396fe3f542d3bd871fa7481bece9c55c6addd55e09a9d9",
+    "docs/v1/cpu-state.md": "9ef67656438e5b9e7ab3fdb349a3ddc0ece6398f55c68fbc4fb52fd7b80d9665",
+    "docs/v1/numeric-ops.md": "e2406db656a906d4229d734dbba639210c4d226772bab94ed47e716374009274",
+    "docs/v1/preparation.md": "3c06d8c210dc87fb3af9aff06f1809db5af39846e37218be5c9dc40863e3711d",
+    "docs/v1/squared.md": "a0a6ad5b30222d855933a5bf22f3ceb7bb9da9be7a18250aa94a244abfd1a73e",
+    "docs/v1/stopping.md": "840ae52999fc6867f9697f39c7d18f5487a840a37562a5b4c136858bab1639f6",
+    "docs/v1/trees.md": "f01a50ecdccbf503cbc4e46702b541b256c260df459aea9068d4f74686d5ab8c",
+    "v1-sprints/069-author-packet/D1.md": "4ab89ba53887bf93c5a61f818e01d52564ae552b6723b71344a3a150cc781282",
+    "v1-sprints/069-author-packet/D2.md": "5e8dcceae218581431f0e4f7929d27114c8ba595470ad815ef98bc4793bd0603",
+    "v1-sprints/069-author-packet/README.md": "0261bc18c8502aa96806ae5c1ef14e2af17e45a9069650f51a5d147024d3e643",
+    "wheels/.gitignore": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1",
+    "wheels/openboost-1.0.0.dev0-py3-none-any.whl": "7d36782558723c3c2a6bf8f75b81cc76ad5107089a5ee411a4f4d30dc7da0cee"
+  }
+}

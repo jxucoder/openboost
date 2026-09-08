@@ -1,6 +1,7 @@
 # Sprint 095: Current author packet and local file isolation
 
-Status: in progress after approval to continue [094](094-author-verifier-preparation.md).
+Status: packet/verifier slices complete; native-isolation gate failed and retained.
+Retrospective boundary after approval to continue [094](094-author-verifier-preparation.md).
 No GPU run, upload, independent model attempt or change to formal budgets.
 
 ## Plan and acceptance
@@ -53,3 +54,26 @@ Stop native policy expansion at this counterexample. Finish clean-source packet
 and verifier reproduction, retain failed isolation commands/profiles, then decide
 a supported worker environment and real generated-token accounting. Model/settings
 and fair incumbent paths remain unfrozen. No independent attempt or run-8 action.
+
+## Clean-source closure and retrospective
+
+At `862c404`, the [archived preparation](../benchmarks/v1/evidence/author-preparation-095/README.md)
+contains twelve author files, eleven explicitly omitted links, thirty-one verified
+Python wheel modules and the exact typing marker. Installed verifier v2 passes its
+two D1/nine D2 cases and rejects the deliberate model mutation. The native policy
+reproduces exit -6 before any positive example; it remains a failed gate. All eighty
+archived files are hashed. Earlier dirty narrow-profile observations and their
+unlisted-copy counterexample remain separate.
+
+Final CPU regression: 1828 pass, one Linux-only skip. Ruff passes and MkDocs builds
+with the known external-evidence link warning. The corrected marker checker passes
+eleven focused packet tests; the initial overstrict marker rejection is recorded
+as a separate failed implementation, not erased by rewriting its commit.
+
+Reflection: actual probes changed the decision. A location-denial policy and many
+green unit tests did not establish a usable isolated author environment. The packet
+and task rejection work is useful; additional native-policy guesses are not the
+next product step. Before more author execution, specify a supported worker
+environment, enforce/observe the real generated-token definition, and freeze fair
+incumbent paths/model/tools. No standalone packet or development adapter counts as
+an independent author result. GPU run 8 and all R/C/A/E obligations are unchanged.

@@ -49,6 +49,10 @@ Stop speculative policy widening and retain the failure. No author was dispatche
   at closure. Original author/device archives and the run-8 freeze stay unchanged.
 - Marker correction: all 11 packet tests pass; the existing installed wheel's
   31 Python modules and exact source marker pass the corrected audit. Ruff passes.
+- At clean `862c404`, the [new packet and installed verifier](../benchmarks/v1/evidence/author-preparation-095/README.md)
+  pass; the stronger native startup failure reproduces with exit -6. Eighty
+  retained files cover the clean outcomes and distinct dirty development probes.
+  Final CPU regression passes 1828 tests with one Linux-only skip in 14.33 seconds.
 
 ## Failed Attempts
 
@@ -75,3 +79,5 @@ upload, independent author result or cost advantage was produced.
 
 - `40dd684` — packet/rejection/probe construction; the subsequent marker correction
   is required before the clean packet export can pass.
+- `862c404` — source-verified typing marker and positive/missing/changed marker tests.
+- Subsequent evidence commit — clean author/verifier results and failed native isolation.
