@@ -95,6 +95,10 @@ numerical evidence and higher precision where convergence is insufficient.
 
 ## Best-model and stopping ownership
 
+The [092-C consumer design](092-comparison-consumers.md) now records the initial
+ownership choice, explicit policies and distinguishing tests before runtime edits.
+It does not claim the consumers are implemented or device-tested.
+
 Changing training acceptance alone does not make all loss-based decisions reliable.
 Validation-best compares against the retained best model, while patience compares
 against its own last qualifying observation and `min_delta`. These anchors can

@@ -71,8 +71,13 @@ binary64 assumptions. CUDA construction follows as its own unverified slice.
 - Current backtracking, best-model selection and stopping are not fixed by this
   component alone. Keep distinct anchors and 065/068 ownership in 092-C; retain
   all historical outcomes and explicitly map revised consumers before hardware.
+- [092-C's written ownership decision](../v1-sprints/092-comparison-consumers.md)
+  uses temporary immutable best-model replay on CPU, independent owned best
+  snapshots per objective-mode device state, and a separate recipe-owned patience
+  snapshot. Equal reported scores cannot determine anchor replacement. Consumer
+  implementation and its concrete verifier bindings remain next.
 
 ## Commits
 
 - `51b8a96` — verified public CPU loss-change operation and immutable record.
-- Device construction is a separate commit with explicitly pending GPU evidence.
+- `cf8d189` — resident comparison construction and 117 unrun GPU operation cases.
