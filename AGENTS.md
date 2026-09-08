@@ -125,8 +125,10 @@ production changes and adds no device allowance. Its
 is constructed: the CPU operation passes the 106-case numerical study, and the
 resident CUDA operation has a separate 117-case cohort collected but unrun.
 092-C's CPU Normal consumers now use separate acceptance/best/stopping comparisons;
-1646 CPU checks pass with one Linux-only skip. Resident consumers and ownership
-integration remain next and still use reported-loss comparisons. Preserve the old full-loss predicate cases and failed runs; any revised
+1652 CPU checks pass with one Linux-only skip. Resident runs now offer explicit
+objective comparison and owned best anchors; twelve new ownership/consumer CUDA
+tests collect but remain unrun. The Normal device recipe and patience integration
+remain next. Preserve the old full-loss predicate cases and failed runs; any revised
 semantic cohort must be explicit before hardware. No blanket epsilon, hidden metric
 adjustment or aggregation-only fix establishes reliable comparison. Original P7/E4
 and [069 accounting/isolation](v1-sprints/069-authoring-pilot.md) remain required.
@@ -143,7 +145,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1646 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1652 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

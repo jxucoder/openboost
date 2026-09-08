@@ -135,3 +135,22 @@ incremental runtime and retention tests. Full regression results are recorded in
 the linked learning entry. No frozen oracle, case, archive or tolerance changed.
 This completes construction step 1 only; device consumers and conformance remain
 open. The extra CPU best replay is deliberate and has no speed claim.
+
+## Resident transaction slice
+
+The generic run now offers named reported/objective policies, a public
+parent-bound compare operation, prepared validation access and independently
+owned best validation snapshots. All comparison/copy work precedes serial/term
+publication. Public raw copies, release and close include best storage. The
+shared try_terms operation retains comparisons and uses the selected policy.
+Normal recipe selection and separate patience ownership remain step 3.
+
+Six new CPU policy-preflight checks failed before implementation and now pass;
+41 comparison/Normal API checks pass. Twelve real-CUDA cases are collected but
+unrun, including both captured false improvements, hidden true improvements,
+independent best copies across retained states, each resolve-copy failure,
+callback scratch failure, parent binding, initialization cleanup and unresolved
+fixed/backtracking behavior. Their source is
+`tests/v1/test_device_comparison_consumers_cuda.py`. No GPU execution is claimed.
+The 383-case requirement mapping still needs its complete trajectory/recipe/D2
+bindings; these twelve added distinctions do not substitute for that coverage.

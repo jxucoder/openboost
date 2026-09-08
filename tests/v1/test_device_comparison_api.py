@@ -7,6 +7,7 @@ import pytest
 from openboost import LossChange
 from openboost import device_normal as normal
 from openboost.device_objectives import SQUARED
+from openboost.device_runtime import DeviceRun
 
 
 def test_missing_operation_is_explicit_and_cannot_read_reporting_loss():
@@ -36,3 +37,36 @@ def test_bad_comparison_dependency_or_result_is_a_structural_error():
         replace(SQUARED, compare="total-loss-subtraction")
     with pytest.raises(TypeError, match="LossChange"):
         replace(SQUARED, compare=lambda *args: -1.0).loss_change(None, None, None, None)
+
+
+@pytest.mark.parametrize("policy", [None, True, "typo", [], {}])
+def test_invalid_run_comparison_policy_fails_before_preparation(policy):
+    def forbidden(*args):
+        raise AssertionError("policy validation must precede preparation")
+
+    with pytest.raises(ValueError, match="comparison"):
+        DeviceRun(
+            None,
+            None,
+            None,
+            run_id="invalid",
+            seed=1,
+            objective=replace(SQUARED, validate=forbidden, prepare=forbidden),
+            comparison=policy,
+        )
+
+
+def test_missing_run_operation_fails_before_preparation_without_fallback():
+    def forbidden(*args):
+        raise AssertionError("missing comparison must precede preparation")
+
+    with pytest.raises(NotImplementedError, match="loss-change"):
+        DeviceRun(
+            None,
+            None,
+            None,
+            run_id="missing",
+            seed=1,
+            objective=replace(SQUARED, validate=forbidden, prepare=forbidden),
+            comparison="objective",
+        )

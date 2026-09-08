@@ -49,4 +49,24 @@ allowances are consumed; no hardware execution is authorized by this local slice
 
 ## Commits
 
-- This entry accompanies the CPU consumer implementation commit.
+- `5b11828` — CPU Normal comparison consumers and 1646 passing CPU checks.
+
+## Resident transaction construction
+
+The next slice adds named run policies, parent-bound comparison and one owned
+best validation raw per accepted objective-mode state. The reported policy keeps
+the old low-level/scalar behavior and storage. Every fallible comparison/copy
+precedes serial advancement and term-reference publication. Copies also isolate
+unchanged best anchors; sharing is deliberately deferred. Public raw(best=True,
+validation=True) returns a copy. Release/close account for the new storage.
+
+Six CPU policy-preflight cases failed before editing; all 41 comparison/Normal
+API checks then pass. Twelve CUDA consumer cases collect, but no device execution
+has occurred. They target copied-anchor lifetimes, failure cleanup, parent/RNG
+invariants, captured false improvements, hidden true improvements and unresolved
+policies. The full CPU regression command above passes 1652 checks with one
+Linux-only skip; Ruff passes production and the two changed comparison test files.
+
+The shared try_terms consumer uses the named policy and retains each comparison.
+Normal recipe policy selection, patience ownership and complete historical-case
+bindings are still open. This is construction evidence, not a CUDA acceptance gate.

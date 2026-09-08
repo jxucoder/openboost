@@ -7,6 +7,7 @@ import numpy as np
 from . import device_normal as normal_operations
 from . import device_objectives as objectives
 from . import device_tree as trees
+from .comparison import LossChange
 from .device import _parameter, _workspace
 from .device_runtime import DeviceRun, DeviceState, DeviceTerm
 from .stopping import StopState
@@ -30,6 +31,7 @@ class DeviceTrial:
     validation_score: float | None
     accepted: bool
     failure: str | None
+    comparison: LossChange | None = None
 
 
 @dataclass(frozen=True)
@@ -203,19 +205,28 @@ def try_terms(run, state, terms, *, learning_rate=0.1, step="backtracking", max_
     for j in range(1 if step == "fixed" else max_trials):
         coefficient = rate * 0.5**j
         proposal = None
+        change = None
         try:
             proposal = run.propose_terms(state, terms, coefficient=coefficient)
-            accepted = step == "fixed" or proposal.loss < state.loss
+            if run.comparison == "objective":
+                change = run.compare(state, proposal)
+            improved = proposal.loss < state.loss if change is None else change.improves()
+            accepted = step == "fixed" or improved
             updated = run.resolve(state, proposal, accept=accepted)
             item = DeviceTrial(
-                coefficient, proposal.loss, proposal.validation_score, accepted, None
+                coefficient, proposal.loss, proposal.validation_score, accepted, None, change
             )
         except (ValueError, FloatingPointError, OverflowError) as error:
             if step == "fixed":
                 raise
             trials.append(
                 DeviceTrial(
-                    coefficient, None, None, False, type(error).__name__ + ": " + str(error)
+                    coefficient,
+                    None if proposal is None else proposal.loss,
+                    None if proposal is None else proposal.validation_score,
+                    False,
+                    type(error).__name__ + ": " + str(error),
+                    change,
                 )
             )
             continue

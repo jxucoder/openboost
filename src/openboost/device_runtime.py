@@ -147,6 +147,7 @@ class _Term:
 class _StateStorage:
     raw: tuple
     terms: tuple[_Term, ...]
+    best_raw: object = None
 
 
 @dataclass(frozen=True)
@@ -175,9 +176,14 @@ class DeviceRun:
         binning=None,
         bins=254,
         objective=objectives.SQUARED,
+        comparison="reported",
     ):
         if not isinstance(objective, objectives.ObjectiveOperations):
             raise ValueError("explicit ObjectiveOperations required")
+        if not isinstance(comparison, str) or comparison not in ("reported", "objective"):
+            raise ValueError("comparison must be 'reported' or 'objective'")
+        if comparison == "objective" and objective.compare is None:
+            raise NotImplementedError("objective has no loss-change operation")
         objective.validate(train)
         objective.validate(validation)
         if train.raw_width != validation.raw_width:
@@ -195,6 +201,7 @@ class DeviceRun:
             raise ValueError("fitted Binning required")
         self.ops, self.execution, self.binning = ops, ops.execution, binning
         self.objective = objective
+        self._comparison = comparison
         self._closed, self._serial = False, 0
         self._states, self._proposals = {}, {}
         with _workspace(ops) as retained:
@@ -220,6 +227,11 @@ class DeviceRun:
         return self._keys.seed
 
     @property
+    def comparison(self):
+        """Explicit best/search policy; objective mode owns a best validation anchor."""
+        return self._comparison
+
+    @property
     def data(self):
         self._check()
         return self._train.data
@@ -234,6 +246,12 @@ class DeviceRun:
         """Prepared training record for public geometry operations; raw remains private."""
         self._check()
         return self._train
+
+    @property
+    def validation_problem(self):
+        """Prepared validation record for separately anchored public comparisons."""
+        self._check()
+        return self._validation
 
     @property
     def raw_width(self):
@@ -261,6 +279,8 @@ class DeviceRun:
             raise ValueError("foreign, forged or released run record")
         for handle in storage.raw:
             self.execution._array(handle)
+        if isinstance(storage, _StateStorage) and storage.best_raw is not None:
+            self.execution._array(storage.best_raw)
         for term in terms:
             self.ops._get(term.tree, trees.DeviceTree)
         return storage
@@ -294,16 +314,36 @@ class DeviceRun:
             loss, score = (
                 self._loss(p, r) for p, r in zip((self._train, self._validation), raw, strict=True)
             )
+            best_raw = self.execution.copy(raw[1]) if self.comparison == "objective" else None
             retained.update(raw)
+            if best_raw is not None:
+                retained.add(best_raw)
         state = DeviceState(self._identity("state"), self.run_id, 0, loss, score, score, 0, 0)
-        self._states[state] = _StateStorage(raw, ())
+        self._states[state] = _StateStorage(raw, (), best_raw)
         return state
 
-    def raw(self, record, *, validation=False):
-        """Independent resident snapshot; releasing it cannot affect the run record."""
-        if type(validation) is not bool:
-            raise ValueError("explicit boolean validation selector required")
-        return self.execution.copy(self._get(record).raw[int(validation)])
+    def raw(self, record, *, validation=False, best=False):
+        """Independent resident snapshot; best is validation-only in objective mode."""
+        if type(validation) is not bool or type(best) is not bool:
+            raise ValueError("explicit boolean validation/best selectors required")
+        if best and (not validation or self.comparison != "objective"):
+            raise ValueError("best raw requires validation=True and objective comparison")
+        storage = self._get(record, DeviceState if best else None)
+        return self.execution.copy(storage.best_raw if best else storage.raw[int(validation)])
+
+    def compare(self, state, proposal):
+        """Objective evidence at the exact parent-bound training snapshots.
+
+        This explicit operation is available independently of the run's policy.
+        It never infers a change from diagnostic losses or exports raw arrays.
+        Callback scratch is call-owned on success and failure.
+        """
+        prior = self._get(state, DeviceState)
+        candidate = self._get(proposal, DeviceProposal)
+        if candidate.parent is not state:
+            raise ValueError("stale or foreign proposal parent")
+        with _workspace(self.ops):
+            return self.objective.loss_change(self.ops, self._train, prior.raw[0], candidate.raw[0])
 
     def gradient(self, state):
         if self.objective.gradient is None:
@@ -374,7 +414,11 @@ class DeviceRun:
         return proposal
 
     def resolve(self, state, proposal, *, accept):
-        """Caller acceptance; strict validation improvement selects best independently."""
+        """Caller acceptance; the run's explicit validation policy selects best.
+
+        Objective mode compares against and independently copies the best anchor.
+        All fallible device work precedes identity and shared-term publication.
+        """
         if type(accept) is not bool:
             raise ValueError("explicit boolean acceptance required")
         prior = self._get(state, DeviceState)
@@ -384,10 +428,19 @@ class DeviceRun:
         if not accept:
             return state
         with _workspace(self.ops) as retained:
+            improved = proposal.validation_score < state.best_score
+            if self.comparison == "objective":
+                change = self.objective.loss_change(
+                    self.ops, self._validation, prior.best_raw, candidate.raw[1]
+                )
+                improved = change.improves()
             raw = tuple(self.execution.copy(handle) for handle in candidate.raw)
+            best_raw = None
+            if self.comparison == "objective":
+                best_raw = self.execution.copy(candidate.raw[1] if improved else prior.best_raw)
+                retained.add(best_raw)
             retained.update(raw)
         terms = (*prior.terms, *candidate.terms)
-        improved = proposal.validation_score < state.best_score
         updated = DeviceState(
             self._identity("state"),
             self.run_id,
@@ -401,7 +454,7 @@ class DeviceRun:
         # All fallible CUDA work has finished before shared ownership changes.
         for term in terms:
             term.references += 1
-        self._states[updated] = _StateStorage(raw, terms)
+        self._states[updated] = _StateStorage(raw, terms, best_raw)
         return updated
 
     def export(self, state, *, best=False):
@@ -421,6 +474,8 @@ class DeviceRun:
         storage = self._get(record)
         for handle in storage.raw:
             self.execution.release(handle)
+        if isinstance(storage, _StateStorage) and storage.best_raw is not None:
+            self.execution.release(storage.best_raw)
         terms = storage.terms
         for term in terms:
             term.references -= 1
@@ -438,6 +493,8 @@ class DeviceRun:
         handles, records = {self._base}, set(self._prepared)
         for storage in (*self._states.values(), *self._proposals.values()):
             handles.update(storage.raw)
+            if isinstance(storage, _StateStorage) and storage.best_raw is not None:
+                handles.add(storage.best_raw)
             terms = storage.terms
             records.update(term.tree for term in terms)
         for record in records:

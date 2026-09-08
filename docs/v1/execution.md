@@ -379,6 +379,31 @@ comparison callback without modifying the grower or runtime.
 The separate 117-case GPU operation cohort covers all 106 frozen numerical inputs,
 invalid domains/identities, callback independence and failures during allocation
 or kernel dispatch. It is collected
-locally but has not executed on a GPU. Best-model anchors, backtracking and patience
-still require the separate 092-C consumer work. No new device allowance is granted
-by this implementation.
+locally but has not executed on a GPU. No new device allowance is granted by this
+implementation.
+
+## Objective comparison consumers: construction awaiting hardware
+
+`DeviceRun(..., comparison="objective")` explicitly requests objective comparison;
+missing support fails before data preparation. The default `"reported"` policy
+keeps historical low-level/scalar callers identifiable. `run.compare(state, proposal)`
+obtains the objective change at the exact bound parent/candidate training raw.
+It rejects stale, foreign, forged and released records before callback execution.
+`try_terms` uses this evidence in objective mode, retains it in each finite
+`DeviceTrial.comparison`, and accepts backtracking only on proved improvement.
+Fixed steps can still commit finite worsening/unresolved candidates.
+
+In objective mode, every accepted state owns an independent best validation raw
+snapshot. Resolve compares with the old best and copies the selected anchor before
+publishing a new state or incrementing tree references. Each snapshot costs
+`4*N_validation*K` bytes. Rejection creates none; reported mode creates none.
+`raw(state, validation=True, best=True)` returns an independent copy of that
+anchor. `validation_problem` exposes the prepared validation record for public
+comparison composition. State release and run closure release best storage.
+
+The twelve-case consumer/ownership CUDA cohort is collected, unrun. It covers
+equal-score improvements, both stored run-7 false improvements, retained earlier
+states, all three resolve copies, initialization/callback failure cleanup, and
+explicit unresolved policies. Local preflight tests verify missing/invalid policy
+rejection without CUDA. Normal recipe selection and its separate patience anchor
+remain the next construction slice; full conformance is open.
