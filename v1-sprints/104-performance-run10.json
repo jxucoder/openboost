@@ -1,7 +1,7 @@
 {
   "scope": "104 early synthetic performance checkpoint; CPU timeouts and quality mismatches remain failures. No formal E4 or external-library speed claim.",
   "authorization": "approved",
-  "upload_authorization": "approved",
+  "upload_authorization": "pending",
   "require_upload_authorization": true,
   "upload_destination": "Modal",
   "app_name": "openboost-v1-early-performance",

@@ -96,13 +96,16 @@ The user then approves an [early performance checkpoint](v1-sprints/104-early-pe
 before further recipe ports. Measure existing squared/Normal CPU and CUDA paths
 on the frozen synthetic workloads, retain incomplete/quality-failing outcomes,
 and profile separately. Its new 46-file source closure and one T4 invocation are
-bounded in the run-10 protocol; preserve all previous freezes. Execute once and
-reflect before choosing an optimization. This checkpoint does not pass formal E4.
+bounded in the run-10 protocol; preserve all previous freezes. Automatic approval
+review blocks its private-source upload before process creation: the study is
+approved, but the exact 46-file Modal payload requires explicit upload approval.
+No run-10 allowance is consumed. Keep upload authorization pending and do not
+retry indirectly. This checkpoint does not pass formal E4.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
 sources and past results. All R/C/A requirements remain; author/adoption benefit
-is unverified. No GPU run or upload beyond this checkpoint is authorized.
+is unverified. No source upload is currently authorized for run 10 or beyond it.
 
 The historical sequence below records prior instructions and evidence. Its
 authoring continuations and limited F2-to-F3 overlap rule are superseded by 101;

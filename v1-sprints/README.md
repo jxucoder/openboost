@@ -38,6 +38,10 @@ The user subsequently approves [104's early performance checkpoint](104-early-pe
 on the existing squared/Normal paths. Its frozen, bounded same-host CPU/CUDA runs
 precede further recipe ports; compilation/profiling and quality-qualified timing
 remain distinct. No external-library speed or formal E4 claim is implied.
+Automatic approval review blocks its dispatch before process creation because the
+exact private-source payload and Modal destination were not explicitly approved.
+The 46-file freeze is unchanged, upload authorization is pending, and no run occurs
+or allowance is consumed. See 104 for the concrete remaining upload request.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

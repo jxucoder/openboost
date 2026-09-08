@@ -72,3 +72,19 @@ and internal CPU/CUDA quality are not real-task or external-library evidence.
 
 - `c84d566` closes the preceding bounded CUDA comparison coverage.
 - This slice freezes the user-approved early performance checkpoint for one run.
+
+## Automatic approval review after the freeze
+
+`8677bba` commits the locally verified packet. The attempted dispatch is rejected
+before process creation by automatic approval review. Its reason distinguishes
+approval of the performance study from authorization to upload the exact private
+repository payload to Modal. No output directory or remote execution exists and
+the tenth allowance is not consumed. No alternate upload or indirect retry occurs.
+
+Restore only upload authorization to pending; the study/compute approval remains.
+Preserve all 45 frozen source hashes, cases, budgets and the original local
+collection report. The next user approval must explicitly cover the 46-file,
+approximately 358 kB Modal upload for the bounded single T4 invocation. This is an
+automatic-review requirement, not a new mathematical or benchmark gate.
+The local recheck confirms all 45 prefrozen hashes remain unchanged, the output
+is absent and the dispatch guard rejects pending upload authorization.
