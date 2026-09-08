@@ -1,0 +1,51 @@
+# Sprint 107: GLM comparison and scalar recipe integration
+
+Status: planned after the 106 construction retrospective. Mapping: 080 / B12 /
+R1 binary / R4 Poisson. Local construction can continue; no hardware/upload allowance.
+
+## Purpose
+
+Turn the new objective components into usable scalar recipes without repeating
+Normal's rounded-loss acceptance failure. Preserve shared fields/tree/runtime
+operations, explicit exposure and class-aware CPU inference. Required multiclass,
+AFT, vector topology, R9 compatible M=1/8/32 and formal E4 remain subsequent work.
+
+## Order and acceptance
+
+1. Freeze independent high-precision loss-change cases and a declared resolution
+   contract for binary and Poisson. Cover exact no-ops, resolvable improvement and
+   worsening, unresolved changes, extreme logistic tails, zero counts, offsets,
+   exposure, zero/nonuniform weights and rejected geometry domains. Include changes
+   that rounded reported losses cannot classify. Verify sign/bounds against an
+   independently evaluated objective; never use reporting-loss subtraction as its
+   oracle. Record derivation and support limits before implementing CUDA arithmetic.
+2. Implement objective-owned resident comparison through the existing `LossChange`
+   callback. Use cancellation-aware expressions with justified error bounds; return
+   unresolved where support is insufficient. Retain all-row validation, exactly-once
+   weights/exposure, owned-stream scratch and scalar-only summaries. Add allocation,
+   dispatch and callback-failure recovery tests without changing old Normal evidence.
+3. Add binary/Poisson recipe entry points through the shared scalar grower and
+   transaction runtime. Acceptance, best-validation selection and independent
+   patience must use the declared comparison. Verify fixed and bounded backtracking
+   updates, full/partial rejection, zero rounds, retained best state, retries and
+   release behavior. Export retains class labels and explicit Poisson inference
+   inputs. Use independent trajectories and saved CPU inference, not shape checks.
+4. Reflect, then construct one reviewable hardware request: immutable source and
+   environment inventory, exact collected test IDs, numerical tolerances, bounded
+   timeout/cost/retry policy and durable raw outputs. Include relevant existing
+   storage/objective/runtime/recipe regressions and all new GLM cases. No dispatch
+   or new file upload until that concrete packet has an allowance. Collection and
+   CPU passes cannot substitute for real-device results.
+
+Commit after each verified slice; reflect after three implementation commits or
+any numerical/architectural counterexample. No performance optimization, CPU speed
+campaign, external benchmark or author/model study enters this sprint.
+
+## Exit evidence
+
+- Independent numerical controls and relevant CPU regression pass unchanged limits.
+- Public recipe behavior, ownership, metadata and persistence match documented scope.
+- New real-device cases are enumerated; until they run successfully, the new recipes
+  remain experimental and no R1/R4 device conformance or speed claim is made.
+- A later passing bounded device packet still does not close every required 080
+  recipe, R9, application quality, author/adoption benefit or formal E4.

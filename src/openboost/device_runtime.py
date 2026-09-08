@@ -188,6 +188,8 @@ class DeviceRun:
         objective.validate(validation)
         if train.raw_width != validation.raw_width:
             raise ValueError("training/validation raw widths differ")
+        if train.classes != validation.classes:
+            raise ValueError("training/validation class schemas differ")
         if not isinstance(ops, DeviceOperations):
             raise ValueError("DeviceOperations required")
         self._keys = RunContext(run_id, seed)  # Identity/RNG metadata only; no CPU training.
@@ -201,6 +203,7 @@ class DeviceRun:
             raise ValueError("fitted Binning required")
         self.ops, self.execution, self.binning = ops, ops.execution, binning
         self.objective = objective
+        self._classes = train.classes
         self._comparison = comparison
         self._closed, self._serial = False, 0
         self._states, self._proposals = {}, {}
@@ -467,7 +470,10 @@ class DeviceRun:
             TreeTerm(trees.export(self.ops, term.tree), term.mapping, term.coefficient)
             for term in storage.terms[:n_terms]
         )
-        return Model(self.binning.feature_names, self.execution.export(self._base), terms)
+        return Model(
+            self.binning.feature_names, self.execution.export(self._base), terms,
+            classes=self._classes,
+        )
 
     def release(self, record):
         """Release one state's/proposal's storage without invalidating other records."""

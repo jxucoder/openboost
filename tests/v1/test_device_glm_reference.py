@@ -1,6 +1,7 @@
 """106 GLM oracle/domain and complete-scope controls; no GPU emulation."""
 
 import copy
+from dataclasses import replace
 
 import numpy as np
 import pytest
@@ -15,7 +16,9 @@ from .reference.device_glm import (
     base,
     complete_cells,
     geometry,
+    rounds,
 )
+from .reference.device_splits import enumerate_candidates
 
 
 def fixture(family, *, validation=False):
@@ -36,6 +39,61 @@ def fixture(family, *, validation=False):
         if family == "poisson"
         else None,
     )
+
+
+def paired_fixture(family):
+    train, original = fixture(family), fixture(family, validation=True)
+    train = replace(train, weight=np.maximum(train.weight, 1))
+    # Different row order, offsets, weights and exposure test training-only binning
+    # and objective metadata. Keep targets aligned with the permuted feature rows.
+    order = np.array([7, 2, 5, 0, 6, 3, 1, 4])
+    validation = Problem(
+        NumericData(original.data.values[order], original.row_ids, ("x",)),
+        original.target[order],
+        original.row_ids,
+        weight=np.arange(1, 9),
+        offset=original.offset[order] / 2,
+        classes=original.classes,
+        structure={"exposure": original.structure["exposure"][order] * 2}
+        if family == "poisson"
+        else None,
+    )
+    return train, validation
+
+
+def original_rows(problem):
+    result = dict(
+        x=problem.data.values,
+        target=problem.target[:, 0],
+        offset=problem.offset[:, 0],
+        weight=problem.weight,
+    )
+    if problem.structure:
+        result["exposure"] = problem.structure["exposure"][:, 0]
+    return result
+
+
+@pytest.mark.parametrize("family", ["binary", "poisson"])
+@pytest.mark.parametrize("depth", [0, 1, 2])
+def test_two_prescribed_rounds_have_supported_geometry_and_unique_root(family, depth):
+    train, validation = paired_fixture(family)
+    initial, steps = rounds(family, original_rows(train), original_rows(validation), depth=depth)
+    assert np.isfinite(initial) and len(steps) == 2
+    objective = Binary if family == "binary" else Poisson()
+    for step in steps:
+        assert step["loss"] == pytest.approx(
+            objective.loss(train, step["raw"][:, None]), rel=1e-6, abs=1e-8
+        )
+        assert step["score"] == pytest.approx(
+            objective.loss(validation, step["validation_raw"][:, None]), rel=1e-6, abs=1e-8
+        )
+        if depth:
+            candidates, _ = enumerate_candidates(train.data.values, step["fields"], range(8))
+            gains = sorted((c["gain"] for c in candidates if c["legal"]), reverse=True)
+            assert gains[0] - gains[1] > 1e-3
+            assert step["nodes"][0]["key"] is not None
+    if depth:
+        assert not np.array_equal(steps[0]["gradient"], steps[1]["gradient"])
 
 
 @pytest.mark.parametrize("family", ["binary", "poisson"])

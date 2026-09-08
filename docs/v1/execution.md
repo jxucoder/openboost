@@ -505,3 +505,16 @@ independent mathematical contracts; collected GPU cases cover resident numerics,
 ownership, failure recovery and transfer boundaries. No binary/Poisson recipe
 adapter or objective loss-change callback is supplied yet. Stable acceptance,
 best-model and stopping decisions remain a separate integration requirement.
+
+`DeviceRun` now rejects different training/validation class schemas before device
+preparation and includes the training schema when exporting a CPU `Model`. The
+existing model format retains labels for `predict_proba` and `predict_label` after
+CUDA closes. Poisson exports a raw log-rate model; observation offset and exposure
+remain explicit inference inputs (`exp(raw + offset) * exposure`).
+
+Six additional collected CUDA cases compose binary/Poisson objectives through
+two prescribed rounds at depths zero, one and two. Their independent oracle checks
+every root candidate, routed rows, leaves, train/validation state and task metrics.
+Saved models replay in a new CPU process with CUDA and training-module imports
+blocked. These cases have not run on hardware; manual acceptance does not establish
+reliable automatic acceptance, best-model selection or stopping.

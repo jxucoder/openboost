@@ -1,6 +1,6 @@
 # Sprint 106: Binary and Poisson device components
 
-Status: active after the user's "continue" following the completed 105 retrospective.
+Status: construction complete; new CUDA execution and full recipe integration pending.
 Mapping: 080 / B12 / R1 binary / R4 Poisson / E1. Construction only; all eleven
 hardware allowances are consumed. No new upload, model call or device run is included.
 
@@ -97,3 +97,36 @@ new host configuration/upload controls. Thirty-eight new GPU cases collect only;
 they cover domains with positive/zero weight, initialization, fields, transfer
 accounting, family/identity checks and dispatch-failure cleanup. Production and
 changed-test Ruff pass. Real device lowering and execution remain unverified.
+
+## Slice C construction and retrospective
+
+DeviceRun rejects different class schemas before device preparation and exports
+the schema through the existing Model format. Six prescribed-round CUDA cases
+cover both families at depth 0/1/2, every root candidate, unique root selection,
+exact routing, leaves, two-round gradients/raw state, different validation inputs,
+task scores, proposal rejection/acceptance, owned external-stream restoration and
+fresh CPU-only saved-model replay. Forty-four new CUDA cases collect in total;
+none has run. No automatic acceptance/best/stopping claim is added.
+
+The first local class-schema counterexample failed before the production fix.
+Six local trajectory controls pass after removing a zero-weight ambiguity from
+the composition fixture. The original fixture retains zero-weight domain coverage.
+Poisson's depth-zero update can be stationary at its initialized intercept; the
+gradient-recomputation control therefore belongs to nontrivial trees, not no-ops.
+
+Focused regression: 85 passed in 8.28 seconds. Production and changed-test Ruff
+pass. Full CPU regression passes 2,065 tests with one Linux-only skip and 771 GPU/
+benchmark cases deselected in 75.18 seconds. Documentation builds with the existing historical Normal evidence-link
+warning. Offline isolated wheel/sdist build passes; the wheel contains exact bytes
+of the two new objective modules and updated runtime. A first no-isolation build
+failed because Hatchling is absent from the development environment; the normal
+isolated build succeeds from cache without changing dependencies.
+
+Reflection after slices A/B/C: both objectives use the existing fields, grower,
+proposal and ownership abstractions without an objective-specific trainer. Explicit
+prepared family identity, separate exposure and class-aware export were necessary
+semantic boundaries. Component construction and prescribed rounds do not settle
+numerical model-selection decisions. The next bounded construction is
+[107 comparison and recipe integration](107-glm-comparison-and-recipes.md), before
+requesting another exact hardware packet. All old freezes/artifacts remain intact;
+all required application/device families remain open at their declared boundaries.

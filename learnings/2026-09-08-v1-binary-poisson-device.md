@@ -78,3 +78,42 @@ Next: class-aware export, prescribed two-round composition, independent split/le
 and task-metric checks. Recipe acceptance/best/stopping integration remains later;
 the absence of a comparison callback fails explicitly when objective comparison
 is requested. All old frozen source files and raw archives remain untouched.
+
+## Slice C result and reflection
+
+`bed9605` commits the resident component construction. The next class-schema test
+fails first because DeviceRun reaches its device requirement without rejecting
+different labels. Validation now precedes device work; exported Model records keep
+the immutable training schema in the existing serialization format.
+
+The two-round independent oracle enumerates original-row splits and sums in
+float64, with explicit float32 state/geometry boundaries. An initial count fixture
+had equal-gain root splits around a zero-weight row. Positive weights remove that
+ambiguity from composition checks; the earlier domain cohort keeps zero weights.
+Poisson's intercept can make a depth-zero step stationary, so required gradient
+change is tested on nontrivial trees. Both are local fixture corrections before
+any device run, not tolerance adjustments in response to hardware.
+
+The six new device composition cases check numeric/missing routing, leaves, two
+rounds, different validation order/offset/weights/exposure, task metrics, immutable
+prior states, explicit rejection, stream restoration, cleanup and saved CPU-only
+inference. Forty-four total GLM GPU cases collect, without execution. Independent
+oracle/configuration/comparison/archive tests pass: 85 in 8.28 seconds. Ruff passes;
+documentation builds with its existing historical link warning. Wheel/sdist build
+passes offline with normal build isolation, and the wheel's new modules/runtime
+match source bytes. The initial no-isolation attempt lacked Hatchling; no dependency
+or environment mutation was necessary.
+
+Full regression using `OPENBOOST_BACKEND=cpu uv run --no-sync pytest tests/ -m
+"not gpu and not benchmark" --tb=short -n 0` passes 2,065 tests with one Linux-only
+skip and 771 deselected cases in 75.18 seconds. Environment remains macOS 26.3,
+Python 3.12.12 and NumPy 2.3.5, with `UV_CACHE_DIR=/tmp/openboost-research-uv-cache`.
+The skip and deselections are not device evidence. Consumed packet checks read
+their frozen execution revision; no old archive or freeze file changed.
+
+This third construction slice supports the foundation's abstraction boundaries,
+not a device quality/speed or adoption claim. Automatic decisions still require
+objective comparison. Sprint 107 records exact next construction/acceptance order:
+independent sign/bound counterexamples, resident comparison, full recipe consumers,
+then a bounded hardware request. No extra GPU/model call, upload, push or external
+evaluation occurred. Preserve all R/C/A scope and existing evidence.

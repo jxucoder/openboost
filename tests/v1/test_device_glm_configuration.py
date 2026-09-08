@@ -5,7 +5,9 @@ from dataclasses import replace
 import numpy as np
 import pytest
 
+from openboost import ClassSchema
 from openboost import device_glm as glm
+from openboost.device_runtime import DeviceRun
 
 from .test_device_glm_reference import fixture
 
@@ -62,3 +64,10 @@ def test_exact_large_counts_allowed_and_wrong_family_rejected():
     for family, wrong in (("poisson", fixture("binary")), ("binary", p)):
         with pytest.raises(ValueError):
             glm._host_arrays(wrong, family)
+
+
+def test_different_class_labels_fail_before_device_work():
+    train = fixture("binary")
+    validation = replace(fixture("binary", validation=True), classes=ClassSchema(("a", "b")))
+    with pytest.raises(ValueError, match="class schemas differ"):
+        DeviceRun(None, train, validation, run_id="schema", seed=7, objective=glm.binary())

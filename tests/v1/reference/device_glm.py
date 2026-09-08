@@ -6,6 +6,7 @@ import numpy as np
 
 from .classification import binary as binary_reference
 from .classification import binary_base
+from .device_rounds import predict, tree
 from .positive import poisson as poisson_reference
 
 RTOL, ATOL = 1e-4, 1e-5
@@ -101,6 +102,45 @@ def base(family, target, offset, weight, exposure=None, *, parameter=1e-6):
             return float(stored(np.log(parameter)))
         denominator = sum(c * d * b.exp() for a, b, c, d in terms if c > 0)
         return float(stored(float(numerator.ln() - denominator.ln())))
+
+
+def rounds(family, train, validation, *, depth=1, count=2, rate=0.25):
+    """Prescribed updates using exhaustive original-row splits and float64 sums.
+
+    Input mappings hold x, target, offset, weight and optional exposure. Stored
+    state/geometry boundaries are explicit; no histogram algorithm is reproduced.
+    There is no acceptance, best-model or stopping oracle in this operation test.
+    """
+
+    def value(data, raw):
+        return geometry(
+            family, raw, data["target"], data["offset"], data["weight"], data.get("exposure")
+        )
+
+    initial = base(family, train["target"], train["offset"], train["weight"], train.get("exposure"))
+    raw = np.full(len(train["target"]), initial)
+    validation_raw = np.full(len(validation["target"]), initial)
+    steps = []
+    for _ in range(count):
+        _, g, h = value(train, raw)
+        fields = stored(np.column_stack((g, h)) * stored(train["weight"])[:, None])
+        nodes = tree(train["x"], fields, depth)
+        raw = stored(raw + stored(rate * stored(predict(nodes, train["x"]))))
+        validation_raw = stored(
+            validation_raw + stored(rate * stored(predict(nodes, validation["x"])))
+        )
+        steps.append(
+            dict(
+                gradient=g,
+                fields=fields,
+                nodes=nodes,
+                raw=raw.copy(),
+                validation_raw=validation_raw.copy(),
+                loss=value(train, raw)[0],
+                score=value(validation, validation_raw)[0],
+            )
+        )
+    return initial, steps
 
 
 DOMAIN_CASES = (

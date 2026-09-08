@@ -65,11 +65,14 @@ are consumed. Keep the optimization and stop at the completed 105 retrospective;
 next construction returns to required 080 recipes and inference metadata. These
 synthetic results do not pass formal E4 or full Normal conformance.
 
-The user's next "continue" starts [106 binary/Poisson device components](106-binary-poisson-device-components.md).
-It freezes independent numerics and complete required scope, constructs resident
-objective operations, and carries class metadata through two-round composition
-and export. Full scalar recipe decision semantics follow separately. All eleven
-hardware allowances remain consumed; no new upload or execution is authorized.
+[106 binary/Poisson device components](106-binary-poisson-device-components.md)
+completes local construction: independent numerics and complete required scope,
+resident objective operations, class-aware export and two-round composition checks.
+Local regression passes 2,065 CPU tests with one Linux-only skip; forty-four new
+GPU cases collect without execution. Next is
+[107 loss-change and recipe integration](107-glm-comparison-and-recipes.md), including
+acceptance, best-validation selection and independent patience before a new hardware
+packet. All eleven allowances remain consumed; no upload or execution is authorized.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),
