@@ -38,6 +38,14 @@ improvement resets it. Stop at patience consecutive stale rounds or the round
 budget. A simultaneous limit reports `patience`; zero rounds reports `budget`.
 Further observations after termination raise an error.
 
+`observe_change(score, change)` explicitly consumes a `LossChange` instead of
+subtracting reporting scores. It resets patience only when
+`change.improves(min_delta)`. The caller owns a snapshot of the last qualifying
+validation raw and must replace it on that decision, including when reporting
+scores are equal. The built-in CPU Normal recipe uses this operation. Other CPU
+recipes retain `observe(score)` until they have their own comparison operations.
+Both operations preserve the same completion metadata and strict threshold.
+
 Backtracking still uses training loss for step acceptance. Individual search
 trials and ordered substeps must not advance the stopping clock. A fully rejected
 outer round observes the unchanged model once and consumes patience. Accepted-state

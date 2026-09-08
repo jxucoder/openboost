@@ -34,7 +34,7 @@ damping. No dense per-row metric is needed for Normal's diagonal Fisher.
 unweighted direction. These regression curvatures are distinct from Fisher
 entries. Both parameter trees fit the same accepted snapshot, and one coefficient
 commits or rejects both terms. The default uses six-trial backtracking with strict
-training NLL decrease. `step="fixed"` commits finite candidates. Geometry, trees,
+training NLL decrease proved by `Normal.compare`. `step="fixed"` commits finite candidates. Geometry, trees,
 weights, offsets, best snapshots and persistence use public shared components.
 
 With no offsets, initialization uses training weighted mean and log standard
@@ -56,8 +56,9 @@ updates and additional distributions remain later work. The experimental
 [CUDA Normal path](execution.md) supports joint and ordered updates, with full
 acceptance conformance still open.
 [Formula](formula-runs.md) now probes full GGN geometry through shared components. No real-dataset quality or speed advantage is claimed.
-Per-round traces retain arrays, and trial validation currently recomputes ensemble
-predictions. Formula and heterogeneous sequential runs now provide the next construction probe.
+Full per-round traces retain arrays; summary retention omits sample arrays.
+CPU best selection replays the current best validation model for its comparison
+anchor. This extra replay is a correctness-first reference cost.
 
 ## Comparing stored predictions
 
@@ -83,7 +84,15 @@ bound does not rest on an assumed universal error for platform `exp`/`expm1`.
 CPU correctness checks include recorded false improvements and an analytic
 `-2^-61` improvement lost by subtraction of full losses. No speed claim is made.
 
-This operation is available for explicit algorithm composition. Current recipe
-backtracking, best-model selection and patience still compare reported losses;
-their migration is the separate Sprint 092-C work. A comparison component alone
-does not establish corrected boosting conformance.
+The CPU joint recipe uses this operation for three separate decisions. Backtracking
+compares each candidate with accepted training raw. Validation best compares with
+the previous best model's predictions at zero threshold. Patience compares with
+its last qualifying validation snapshot using `min_delta`, once per outer round.
+An improvement can advance best and patience even when reporting floats are equal.
+Unresolved or unchanged evidence cannot prove improvement. Fixed acceptance can
+still commit a finite worsening or unresolved candidate.
+
+`NormalStep.comparisons` retains each trial's `LossChange` (or None for a failure
+before comparison); `validation_change` records the patience comparison. These
+scalar records survive summary retention. Absolute losses remain truthful. CUDA
+consumer construction and real hardware verification are separate remaining gates.

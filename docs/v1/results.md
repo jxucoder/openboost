@@ -50,6 +50,8 @@ All twelve built-in recipes accept `retention="full"` (the default) or
 `TraceSummary` with `kind`, immutable named scalar `values`, and `omitted` field
 names. Losses, acceptance, coefficients and failure outcomes present in the full
 record remain available. Multi-output MSE vectors become per-output scalar tuples.
+Normal trial/patience `LossChange` records are explicitly supported scalar evidence;
+arbitrary author objects are not traversed or silently retained.
 Gradients, geometry, directions and per-sample raw snapshots are omitted. Inspect
 named values with `dict(step.values)`; array fields remain available in full mode.
 

@@ -5,6 +5,8 @@ from math import isfinite
 from numbers import Real
 from typing import Protocol, runtime_checkable
 
+from .comparison import LossChange
+
 
 @runtime_checkable
 class StoppingStatus(Protocol):
@@ -83,6 +85,24 @@ class StopState:
             raise ValueError("cannot observe a finished stop state")
         score = _finite(score)
         improved = self.reference_score - score > self.min_delta
+        return self._observed(score, improved)
+
+    def observe_change(self, score, change):
+        """Observe objective evidence relative to the last qualifying snapshot.
+
+        The caller owns that raw snapshot and replaces it exactly when
+        change.improves(min_delta), even if the reporting score stays equal.
+        Unchanged/unresolved evidence consumes a stale round. Reporting scores
+        remain finite and truthful; they do not determine this decision.
+        """
+        if self.reason is not None:
+            raise ValueError("cannot observe a finished stop state")
+        score = _finite(score)
+        if not isinstance(change, LossChange):
+            raise TypeError("objective comparison must return LossChange")
+        return self._observed(score, change.improves(self.min_delta))
+
+    def _observed(self, score, improved):
         return replace(
             self,
             reference_score=score if improved else self.reference_score,

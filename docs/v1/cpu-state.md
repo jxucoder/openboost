@@ -30,6 +30,13 @@ assert accepted.best_score == 0.0
 The example deliberately uses the same problem for train and validation to expose
 state arithmetic; real evaluation must use the prescribed separate partitions.
 
+`resolve(..., compare=callback)` explicitly chooses objective-based validation
+best selection. The callback receives `(problem, before_raw, after_raw)` and must
+return `LossChange`; only proved improvement replaces best. The before snapshot
+is an owned read-only replay of the current best model. Current acceptance remains
+the caller's explicit boolean. Omitting compare retains reported-score selection.
+Comparison errors leave the immutable parent unchanged.
+
 `NumericData` owns float64 CPU features and unique integer row IDs. Feature names
 are ordered. NaN represents numeric missingness; infinity is rejected. No binning
 is fitted by this record; use Binning separately. Use [MixedData](categorical.md)

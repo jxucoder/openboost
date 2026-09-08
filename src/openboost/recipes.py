@@ -9,6 +9,7 @@ import numpy as np
 
 from .artifacts import Model, TreeTerm
 from .binning import prepare_training
+from .comparison import LossChange
 from .diagnostics import TraceSummary, validate_retention
 from .objectives import (
     Binary,
@@ -142,7 +143,7 @@ def squared(
         gradient = Squared.gradient(train, before)
         loss_before = Squared.loss(train, before)
         tree = learner(binned, Squared.fields(train, before))
-        state, coefficients, accepted, _failures = _trials(
+        state, coefficients, accepted, _failures, _changes = _trials(
             state, (TreeTerm(tree, [[1]]),), Squared.loss, loss_before, rate, step, max_trials
         )
         steps.append(
@@ -211,7 +212,9 @@ def _configuration(
     return rate, learner
 
 
-def _trials(state, terms, loss, loss_before, rate, policy, max_trials):
+def _trials(state, terms, loss, loss_before, rate, policy, max_trials, *, compare=None):
+    if compare is not None and not callable(compare):
+        raise TypeError("callable objective comparison required")
     # Structural errors are configuration failures, never rejected search trials.
     Model(
         state.model.feature_names,
@@ -219,25 +222,33 @@ def _trials(state, terms, loss, loss_before, rate, policy, max_trials):
         tuple(replace(t, coefficient=0.0) for t in terms),
         state.model.classes,
     )
-    coefficients, failures = [], []
+    coefficients, failures, changes = [], [], []
     for trial in range(1 if policy == "fixed" else max_trials):
         alpha = rate * 0.5**trial
         coefficients.append(alpha)
+        change = None
         try:
             proposal = propose_terms(state, tuple(replace(t, coefficient=alpha) for t in terms))
             candidate_raw, _ = preview_raw(state, proposal)
             candidate_loss = loss(state.train, candidate_raw)
-            accepted = policy == "fixed" or candidate_loss < loss_before
-            updated = resolve(state, proposal, accept=accepted, score=loss)
+            if compare is not None:
+                change = compare(state.train, state.train_raw, candidate_raw)
+                if not isinstance(change, LossChange):
+                    raise TypeError("objective comparison must return LossChange")
+            improved = candidate_loss < loss_before if change is None else change.improves()
+            accepted = policy == "fixed" or improved
+            updated = resolve(state, proposal, accept=accepted, score=loss, compare=compare)
         except (ValueError, FloatingPointError, OverflowError) as error:
             if policy == "fixed":
                 raise
             failures.append(type(error).__name__)
+            changes.append(change)
             continue
         failures.append(None)
+        changes.append(change)
         if accepted:
-            return updated, tuple(coefficients), True, tuple(failures)
-    return state, tuple(coefficients), False, tuple(failures)
+            return updated, tuple(coefficients), True, tuple(failures), tuple(changes)
+    return state, tuple(coefficients), False, tuple(failures), tuple(changes)
 
 
 @dataclass(frozen=True, eq=False)
@@ -252,6 +263,8 @@ class NormalStep:
     coefficients: tuple[float, ...]
     accepted: bool
     failures: tuple[str | None, ...]
+    comparisons: tuple[LossChange | None, ...] = ()
+    validation_change: LossChange | None = None
 
 
 def normal(
@@ -283,6 +296,8 @@ def normal(
     Geometry is computed from the accepted snapshot; both channel trees are fit
     once and committed/rejected together. Natural mode uses the diagonal Fisher,
     ordinary mode uses negative likelihood gradients. No ordered update is implied.
+    Objective loss-change evidence controls backtracking, validation best and
+    patience separately. Absolute losses are reporting values only.
     """
     Normal.validate(train)
     Normal.validate(validation)
@@ -304,6 +319,7 @@ def normal(
     binned = prepare_training(train.data, bins=bins, prepared=prepared)
     state = initialize(context, train, validation, base, score=Normal.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
+    patience_raw = state.validation_raw
     steps = _Trace(retention)
     for _ in range(rounds):
         before = state.train_raw
@@ -313,9 +329,13 @@ def normal(
             TreeTerm(learner(binned, least_squares(train, direction[:, k])), np.eye(2)[k : k + 1])
             for k in range(2)
         )
-        state, coefficients, accepted, failures = _trials(
-            state, terms, Normal.loss, loss_before, rate, step, max_trials
+        state, coefficients, accepted, failures, comparisons = _trials(
+            state, terms, Normal.loss, loss_before, rate, step, max_trials, compare=Normal.compare
         )
+        validation_change = Normal.compare(validation, patience_raw, state.validation_raw)
+        stop = stop.observe_change(Normal.loss(validation, state.validation_raw), validation_change)
+        if validation_change.improves(stop.min_delta):
+            patience_raw = state.validation_raw
         steps.append(
             NormalStep(
                 gradient,
@@ -328,9 +348,10 @@ def normal(
                 coefficients,
                 accepted,
                 failures,
+                comparisons,
+                validation_change,
             )
         )
-        stop = stop.observe(Normal.loss(validation, state.validation_raw))
         if stop.reason is not None:
             break
     return FitResult(state, tuple(steps), stop)
@@ -401,7 +422,7 @@ def formula(
             TreeTerm(learner(binned, least_squares(train, direction[:, k])), np.eye(2)[k : k + 1])
             for k in range(2)
         )
-        state, coefficients, accepted, failures = _trials(
+        state, coefficients, accepted, failures, _changes = _trials(
             state, terms, Formula.loss, loss_before, rate, step, max_trials
         )
         steps.append(
@@ -483,7 +504,7 @@ def binary(
         before = state.train_raw
         loss_before, gradient, curvature = Binary.geometry(train, before)
         tree = learner(binned, newton(train, gradient, curvature))
-        state, coefficients, accepted, failures = _trials(
+        state, coefficients, accepted, failures, _changes = _trials(
             state, (TreeTerm(tree, [[1]]),), Binary.loss, loss_before, rate, step, max_trials
         )
         steps.append(
@@ -573,7 +594,7 @@ def multiclass(
         before = state.train_raw
         loss_before, gradient, bound = Multiclass.geometry(train, before)
         tree = learner(binned, vector_newton(train, gradient, bound))
-        state, coefficients, accepted, failures = _trials(
+        state, coefficients, accepted, failures, _changes = _trials(
             state,
             (TreeTerm(tree, np.eye(train.raw_width)),),
             Multiclass.loss,
@@ -761,7 +782,7 @@ def quantile(
             row_leaf=solver,
             leaf_context=ResidualContext(train, objective.residuals(train, before)),
         )
-        state, coefficients, accepted, failures = _trials(
+        state, coefficients, accepted, failures, _changes = _trials(
             state,
             (TreeTerm(tree, [[1]]),),
             objective.loss,
@@ -848,7 +869,7 @@ def poisson(
         before = state.train_raw
         loss_before, gradient, curvature = objective.geometry(train, before)
         tree = learner(binned, newton(train, gradient, curvature))
-        state, coefficients, accepted, failures = _trials(
+        state, coefficients, accepted, failures, _changes = _trials(
             state,
             (TreeTerm(tree, [[1]]),),
             objective.loss,
@@ -936,7 +957,7 @@ def gamma(
         before = state.train_raw
         loss_before, gradient, curvature = objective.geometry(train, before)
         tree = learner(binned, newton(train, gradient, curvature))
-        state, coefficients, accepted, failures = _trials(
+        state, coefficients, accepted, failures, _changes = _trials(
             state,
             (TreeTerm(tree, [[1]]),),
             objective.loss,
@@ -1026,7 +1047,7 @@ def tweedie(
         before = state.train_raw
         loss_before, gradient, curvature = objective.geometry(train, before)
         tree = learner(binned, newton(train, gradient, curvature))
-        state, coefficients, accepted, failures = _trials(
+        state, coefficients, accepted, failures, _changes = _trials(
             state,
             (TreeTerm(tree, [[1]]),),
             objective.loss,
@@ -1115,7 +1136,7 @@ def aft(
         before = state.train_raw
         loss_before, gradient, curvature = objective.geometry(train, before)
         tree = learner(binned, newton(train, gradient, curvature))
-        state, coefficients, accepted, failures = _trials(
+        state, coefficients, accepted, failures, _changes = _trials(
             state,
             (TreeTerm(tree, [[1]]),),
             objective.loss,
@@ -1254,7 +1275,7 @@ def multi_squared(
                 )
                 for k in range(train.raw_width)
             )
-        state, coefficients, accepted, failures = _trials(
+        state, coefficients, accepted, failures, _changes = _trials(
             state,
             terms,
             objective.loss,

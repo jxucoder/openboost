@@ -1,9 +1,9 @@
 # Sprint 092-C: Separate comparison consumers and their anchors
 
-Status: next locally approved slice after 092-B construction. This design records
-the ownership decision before runtime/recipe edits. None of these consumer changes
-is implemented by this record. Actual CUDA verification still requires the later
-092-D freeze and a new allowance.
+Status: CPU consumers implemented and locally verified; resident consumers and
+revised hardware-cohort bindings remain open. This design recorded the ownership
+decision before runtime/recipe edits. Actual CUDA verification still requires the
+later 092-D freeze and a new allowance.
 
 ## Explicit policies
 
@@ -112,3 +112,26 @@ verification/limitations and is committed independently. 092-C cannot close with
 only a new comparison record or training acceptance: all three consumers and their
 ownership contracts must be represented. 092-D then freezes sources, both test
 cohorts, retained raw observations, lowering checks and end-to-end cost evidence.
+
+## CPU consumer slice
+
+Ten new consumer cases failed before editing: missing public comparison arguments,
+missing stopping operation, and actual equal-score recipe rejection/early stopping.
+They now exercise all three anchors. The two stored run-7 false improvements are
+rejected by the CPU trial consumer; tiny genuine improvements advance acceptance,
+best and patience while reported NLLs stay equal. The prescribed five-transition
+anchor sequence preserves distinct current/best/last-qualifying observations.
+Fixed/unresolved policy, stale parents, structural/dispatch failures and RNG
+preservation are covered. Full and summary recipe traces retain comparison evidence.
+
+The generic CPU runtime accepts an explicit comparison callback; other recipes
+keep their score policy. StopState adds observe_change without changing completion
+metadata. The private shared trial helper now returns comparison records alongside
+the existing four results. TraceSummary explicitly accepts the bounded LossChange
+scalar record; it still rejects arbitrary objects, states and arrays.
+
+Focused verification: 100 tests pass across the new consumers, Normal, stopping,
+incremental runtime and retention tests. Full regression results are recorded in
+the linked learning entry. No frozen oracle, case, archive or tolerance changed.
+This completes construction step 1 only; device consumers and conformance remain
+open. The extra CPU best replay is deliberate and has no speed claim.

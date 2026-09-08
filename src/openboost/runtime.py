@@ -6,6 +6,7 @@ from types import MappingProxyType
 import numpy as np
 
 from .artifacts import ConstantTerm, Model, TreeTerm
+from .comparison import LossChange
 from .data import Problem, _identity, _owned
 
 
@@ -204,14 +205,18 @@ def preview_raw(state, proposal):
     return evaluation.train_raw, evaluation.validation_raw
 
 
-def resolve(state, proposal, *, accept, score):
+def resolve(state, proposal, *, accept, score, compare=None):
     """Commit atomically or return the identical state on rejection.
 
     Acceptance is decided by caller algorithm code. It need not mean validation
     improvement. Validation chooses an immutable best snapshot independently.
+    With compare(problem, before, after), objective evidence selects best using
+    a replay of best_model as its anchor. Without it, reported scores select best.
     """
     if type(accept) is not bool:
         raise ValueError("explicit boolean acceptance required")
+    if compare is not None and not callable(compare):
+        raise TypeError("callable objective comparison required")
     candidate = preview(state, proposal)
     if not accept:
         return state
@@ -219,6 +224,13 @@ def resolve(state, proposal, *, accept, score):
     value = float(score(state.validation, evaluation.validation_raw))
     if not np.isfinite(value):
         raise ValueError("finite candidate validation score required")
+    improved = value < state.best_score
+    if compare is not None:
+        anchor = _owned(state.best_model.predict(state.validation.data), ndim=2)
+        change = compare(state.validation, anchor, evaluation.validation_raw)
+        if not isinstance(change, LossChange):
+            raise TypeError("objective comparison must return LossChange")
+        improved = change.improves()
     # Public construction always replays. Only this validated transition can carry
     # internally evaluated raw values forward, without accepting public cache inputs.
     updated = object.__new__(AcceptedState)
@@ -226,8 +238,8 @@ def resolve(state, proposal, *, accept, score):
         object.__setattr__(updated, item.name, getattr(state, item.name))
     for name, value_ in dict(
         model=candidate,
-        best_model=candidate if value < state.best_score else state.best_model,
-        best_score=value if value < state.best_score else state.best_score,
+        best_model=candidate if improved else state.best_model,
+        best_score=value if improved else state.best_score,
         version=state.version + 1,
         train_raw=evaluation.train_raw,
         validation_raw=evaluation.validation_raw,
