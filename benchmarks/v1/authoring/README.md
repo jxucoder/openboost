@@ -208,14 +208,14 @@ worker commands are exposed by this text-only slice.
 Local tests verify the protocol and actually kill a sleeping transport process.
 The default transport also fails before HTTP when its test environment has no
 credential. Injected transports are labeled `injected_protocol_test`; their counts
-are fixtures, not model evidence. No live model request or generation has occurred.
+are fixtures, not model evidence. The original 098 slice used no live model.
 Client termination does not confirm provider cancellation or final usage. On an
 interruption without final usage, the full reservation remains, generated usage is
 unknown and continuation is blocked. A future authority must prevent reissuing the
 same attempt under another directory and supervise worker lifetime independently.
 
-Next: freeze and authorize a real cap/exhaustion and cancellation/usage smoke,
-then integrate the verified worker command boundary and fair D1/D2 arms. Neither
+The later 099 observation below tests real cap/exhaustion; cancellation remains
+open before integrating the verified worker boundary and fair D1/D2 arms. Neither
 this controller nor passing local tests closes 069 preparation or formal E5.
 
 [099](../../../v1-sprints/099-background-accounting-smoke.md) adds optional
@@ -231,12 +231,13 @@ answer is returned, including a completion racing cancellation. Unknown response
 identity or final usage leaves its reservation unresolved and closes the
 controller. A cancel acknowledgement alone does not prove final usage; current
 provider documentation includes a cancelled response with null usage. Abrupt
-controller loss can still prevent cleanup. Real behavior and complete author
-integration remain unverified.
+controller loss can still prevent cleanup. Actual cancellation and complete
+author integration remain unverified.
 
 The [099 live packet](../../../v1-sprints/099-accounting-smoke.json) now fixes
 three integer-list prompts, the model alias/settings, twelve source hashes and
-all request/token/time bounds. It is pending approval. Run a no-network preflight:
+all request/token/time bounds. Its allowance is now consumed. A no-network preflight
+still verifies the frozen inputs and reports that consumed state:
 
 ```bash
 UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.authoring.accounting_smoke
@@ -249,3 +250,13 @@ runner rejects pending/consumed authorization, dirty or changed sources and outp
 reuse. Exhaustion must pass before the cancellation case starts. A different
 returned service tier or excess reported input stops further generation. No
 author code, evaluator, repository source or dataset enters these model requests.
+
+The [actual 099 result](../evidence/author-accounting-099/README.md) at clean
+`5c0f31a` passes cap exhaustion: 128 then 64 actual reasoning tokens, reconciled
+usage and further dispatch blocked. The cancellation probe finishes before the
+deadline with 104 output tokens, so cancellation is unexercised and the frozen
+overall verdict fails. All three responses are retained, totaling 296 output
+tokens. There is no retry or new allowance. The
+[retrospective](../../../v1-sprints/099-accounting-result.md) calls for an explicit
+stop trigger after observing an active response, followed by a separately frozen
+live test. Full author-budget enforcement and independent author benefit remain open.

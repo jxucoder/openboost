@@ -1,0 +1,115 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openboost"
+version = "1.0.0.dev0"
+description = "Programmable boosting foundation for researchers and AI agents (under construction)"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    { name = "J. Xu" }
+]
+keywords = [
+    "distributional-regression",
+    "varying-coefficient",
+    "gamlss",
+    "natural-gradient",
+    "probabilistic",
+    "survival",
+    "gbdt",
+    "gpu",
+    "cuda",
+    "machine-learning",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+# Experimental CUDA storage/operations; GPU training remains unimplemented.
+cuda = [
+    "numba-cuda>=0.23",
+    "cupy-cuda12x>=13.0",
+]
+# Independent reference tests, without retired production/autodiff dependencies.
+test = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-xdist>=3.0",
+]
+# Benchmarking
+bench = [
+    "modal>=0.73",
+    "scikit-learn>=1.0",
+    "xgboost>=2.0",
+]
+# Development
+dev = [
+    "openboost[test,bench]",
+    "ruff>=0.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/jxucoder/openboost"
+Repository = "https://github.com/jxucoder/openboost"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/openboost"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/openboost"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = [
+    "E501",   # Line length handled separately
+    "E402",   # Imports organized by section in __init__.py
+    "F821",   # DeviceNDArray type hints for optional CUDA (not available at lint time)
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/v1"]
+addopts = "-v --tb=short -n auto --dist loadfile"
+markers = [
+    "slow: marks tests that take >10s (deselect with '-m \"not slow\"')",
+    "gpu: marks tests requiring CUDA GPU",
+    "xgboost: marks tests requiring xgboost package",
+    "lightgbm: marks tests requiring lightgbm package",
+    "numerical: marks numerical agreement tests against reference implementations",
+    "parity: marks CPU/GPU parity tests",
+    "benchmark: marks performance benchmark tests (not run in CI)",
+]
+
+[dependency-groups]
+dev = [
+    "mkdocs-gen-files>=0.6.0",
+    "mkdocs-literate-nav>=0.6.2",
+    "mkdocs-material>=9.7.1",
+    "mkdocs-section-index>=0.3.10",
+    "mkdocstrings[python]>=1.0.1",
+    "mypy>=1.19.1",
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-xdist>=3.0",
+    "ruff>=0.4",
+    "xgboost>=2.0",
+]

@@ -1,0 +1,23 @@
+{
+  "schema": "openboost-background-operations-v1",
+  "transport": "responses_https",
+  "response_id": "resp_0e9d155a7160f87c006a9f8c706d9487d0ac9350e3bdc73721",
+  "operations": [
+    {
+      "operation": "create",
+      "response_id": null,
+      "status": "received"
+    },
+    {
+      "operation": "retrieve",
+      "response_id": "resp_0e9d155a7160f87c006a9f8c706d9487d0ac9350e3bdc73721",
+      "status": "received"
+    },
+    {
+      "operation": "retrieve",
+      "response_id": "resp_0e9d155a7160f87c006a9f8c706d9487d0ac9350e3bdc73721",
+      "status": "received"
+    }
+  ],
+  "stopped": false
+}

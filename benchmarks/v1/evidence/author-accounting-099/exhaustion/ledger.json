@@ -1,0 +1,47 @@
+{
+  "schema": "openboost-author-request-accounting-v1",
+  "model": "gpt-5.6-luna",
+  "reasoning_effort": "medium",
+  "limits": {
+    "generated_tokens": 192,
+    "request_tokens": 128,
+    "requests": 3,
+    "wall_s": 60
+  },
+  "transport": "responses_https",
+  "background": true,
+  "dispatch_ready": false,
+  "status": "token_limit",
+  "generated_tokens": 192,
+  "observed_output_tokens": 192,
+  "reserved_output_tokens": 0,
+  "requests": [
+    {
+      "sequence": 1,
+      "status": "incomplete",
+      "max_output_tokens": 128,
+      "usage": {
+        "input_tokens": 39,
+        "output_tokens": 128,
+        "reasoning_tokens": 128
+      },
+      "request_sha256": "93702daa86adf325b9796eb7b6c23ba9914d1d5f32c82073ef48168cbb7e6269",
+      "response_sha256": "ec9ead959c43a48248d3f18965ffc64678a3a31f89e1809f8220c3f135897e82",
+      "response_id": "resp_02765ccfa84529d8006a9f8c6837dc87d09b7a74e8b3a18627"
+    },
+    {
+      "sequence": 2,
+      "status": "incomplete",
+      "max_output_tokens": 64,
+      "usage": {
+        "input_tokens": 28,
+        "output_tokens": 64,
+        "reasoning_tokens": 64
+      },
+      "request_sha256": "f9e7ab97f215053a59be4571526111c5914de8d6af644a045c4f336821b35669",
+      "response_sha256": "bad76b33a2be7b184b5961b4824cd259fc9a9fbd41dc1a8dac5df4bb2859f2a7",
+      "response_id": "resp_0aa5a7ee13f5b365006a9f8c6d1c8887d09c1c4af646c72b13"
+    }
+  ],
+  "elapsed_s": 9.07087291701464
+}

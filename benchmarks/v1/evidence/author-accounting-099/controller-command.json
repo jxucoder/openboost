@@ -1,0 +1,10 @@
+{
+  "command": "UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.authoring.accounting_smoke --execute /tmp/openboost-author-accounting-099",
+  "revision": "5c0f31ab1ec1c93936396bd40a2f5be6e02f5d77",
+  "dirty": false,
+  "exit_code": 1,
+  "executions": 1,
+  "application_retries": 0,
+  "output_directory": "/tmp/openboost-author-accounting-099",
+  "stdout_note": "The printed result object is retained in the original run.json; this is post-run command metadata, not a separate raw stdout capture."
+}

@@ -1,0 +1,24 @@
+{
+  "status": "pass",
+  "controller_status": "token_limit",
+  "outcomes": [
+    {
+      "returned": true,
+      "response_status": "incomplete"
+    },
+    {
+      "returned": true,
+      "response_status": "incomplete"
+    }
+  ],
+  "subsequent_request_blocked": true,
+  "cancellation_observed": null,
+  "generated_tokens": 192,
+  "observed_output_tokens": 192,
+  "reserved_output_tokens": 0,
+  "input_bound_ok": true,
+  "returned_service_tiers": [
+    "default",
+    "default"
+  ]
+}

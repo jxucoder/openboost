@@ -1,0 +1,62 @@
+{
+  "schema": "openboost-accounting-smoke-result-v1",
+  "status": "fail",
+  "cases": {
+    "exhaustion": {
+      "status": "pass",
+      "controller_status": "token_limit",
+      "outcomes": [
+        {
+          "returned": true,
+          "response_status": "incomplete"
+        },
+        {
+          "returned": true,
+          "response_status": "incomplete"
+        }
+      ],
+      "subsequent_request_blocked": true,
+      "cancellation_observed": null,
+      "generated_tokens": 192,
+      "observed_output_tokens": 192,
+      "reserved_output_tokens": 0,
+      "input_bound_ok": true,
+      "returned_service_tiers": [
+        "default",
+        "default"
+      ]
+    },
+    "cancellation": {
+      "status": "fail",
+      "controller_status": "request_limit",
+      "outcomes": [
+        {
+          "returned": true,
+          "response_status": "completed"
+        }
+      ],
+      "subsequent_request_blocked": true,
+      "cancellation_observed": false,
+      "generated_tokens": 104,
+      "observed_output_tokens": 104,
+      "reserved_output_tokens": 0,
+      "input_bound_ok": true,
+      "returned_service_tiers": [
+        "default"
+      ]
+    }
+  },
+  "revision": "5c0f31ab1ec1c93936396bd40a2f5be6e02f5d77",
+  "dirty": false,
+  "freeze_sha256": "23cfc54ed85c5e588ff44dae7b459f1da964c2f50e6b72f3493797225e02a3bc",
+  "started_utc": "2026-09-08T04:17:43.139220+00:00",
+  "python": "3.12.12 (main, Dec  9 2025, 20:38:45) [Clang 21.1.4 ]",
+  "platform": "macOS-26.3-x86_64-i386-64bit",
+  "openssl": "OpenSSL 3.5.4 30 Sep 2025",
+  "cpu_count": 16,
+  "gpu": null,
+  "independent_author": false,
+  "cli": "/Users/jiaruixu/work_space/openboost/benchmarks/v1/authoring/accounting_smoke.py --execute /tmp/openboost-author-accounting-099",
+  "generated_tokens": 296,
+  "elapsed_s": 12.713916125008836
+}

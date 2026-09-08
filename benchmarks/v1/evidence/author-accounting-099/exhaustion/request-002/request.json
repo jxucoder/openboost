@@ -1,0 +1,14 @@
+{
+  "model": "gpt-5.6-luna",
+  "reasoning": {
+    "effort": "medium"
+  },
+  "input": "List integers one per line from 10001 through 20000. Do not abbreviate or add commentary.",
+  "max_output_tokens": 64,
+  "tools": [],
+  "parallel_tool_calls": false,
+  "stream": false,
+  "background": true,
+  "store": false,
+  "service_tier": "default"
+}

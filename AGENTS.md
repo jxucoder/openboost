@@ -105,12 +105,16 @@ included; injected protocol tests cannot pass the real accounting gate.
 
 [099 background accounting](v1-sprints/099-background-accounting-smoke.md) now adds
 bounded cancellation/retrieval and withholding of stopped answers. Its concrete
-[model smoke](v1-sprints/099-accounting-smoke.json) is pending: at most three
-generation requests, 4288 output tokens and a proposed $0.05 allowance. Local
-preflight uses no network. Fifty-three accounting/transport/harness checks pass;
-these are protocol fixtures, not real token evidence. Obtain the concrete model
-allowance before dispatch, execute once and stop for retrospective. Null cancelled
-usage remains unknown. No worker, independent author or GPU allowance is included.
+[model smoke](v1-sprints/099-accounting-smoke.json) was then approved and executed
+at clean `5c0f31a`: [cap exhaustion passes, cancellation is unexercised](v1-sprints/099-accounting-result.md).
+Actual output is 128 then 64 reasoning tokens and further dispatch is blocked.
+The cancellation probe completes early with 104 output tokens; no cancel occurs,
+so the frozen overall verdict is failure. Three creates and seven retrievals
+produce 296 output tokens, including 275 reasoning tokens. All original artifacts
+are retained and the one allowance is consumed, with no retry. Stop at the recorded
+retrospective. Next local design should trigger cancellation on an observed active
+response; it still requires a new concrete live allowance. Full accounting, worker
+integration, independent authors and GPU run 8 remain open.
 
 The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
 completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant

@@ -11,7 +11,10 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-The latest result is [097's passing corrected Linux worker smoke](097-worker-identity-result.md),
+The latest result is [099's provider accounting smoke](099-accounting-result.md):
+real cap exhaustion passes and cancellation remains unexercised, leaving the
+frozen overall verdict failed. It follows
+[097's passing corrected Linux worker smoke](097-worker-identity-result.md),
 following [096's failed Linux worker smoke](096-linux-worker-result.md)
 and its [local construction](096-linux-author-worker.md),
 following [095 author packet and failed native isolation](095-author-packet-and-local-isolation.md)
@@ -45,9 +48,15 @@ and final retrieval within a fifteen-second cleanup window. Known usage is
 reconciled while stopped answers are withheld; null usage stays unknown. Its
 [concrete live smoke](099-accounting-smoke.json) freezes twelve source files and
 three harmless text prompts, with at most three generations / 4288 output tokens
-and a proposed $0.05 allowance. Fifty-three local checks pass. No model request
-has run: the no-network preflight is ready and live authorization is pending.
-After the one approved observation, stop for retrospective regardless of outcome.
+and a $0.05 allowance. Fifty-three local checks pass. The user then approved one
+live observation at clean `5c0f31a`: actual cap exhaustion uses 128 then 64 tokens
+and blocks the next request. The cancellation probe completes early with 104
+output tokens, so no cancellation is observed and the overall verdict fails.
+[Raw evidence](../benchmarks/v1/evidence/author-accounting-099/README.md) retains
+all three responses, 296 output tokens total and the unchanged frozen verdict.
+The allowance is consumed without retry. The [retrospective](099-accounting-result.md)
+identifies an explicit active-response cancellation trigger as the next local
+design; no new live allowance or independent author attempt follows.
 
 The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
 sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
