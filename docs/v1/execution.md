@@ -503,8 +503,8 @@ nonfinite loss/geometry, even on zero-weight rows. They do not clip raw state.
 These components await real CUDA validation. Local tests check configuration and
 independent mathematical contracts; collected GPU cases cover resident numerics,
 ownership, failure recovery and transfer boundaries. Both factories now supply
-`device_glm.compare` through their objective loss-change callback. Recipe consumer
-integration and real-device comparison validation remain pending.
+`device_glm.compare` through their objective loss-change callback. The new scalar
+recipe consumers are constructed; real-device comparison/recipe validation is pending.
 
 `DeviceRun` now rejects different training/validation class schemas before device
 preparation and includes the training schema when exporting a CPU `Model`. The
@@ -534,3 +534,21 @@ existing validation flags. No host/reporting callback is used. The independent
 160/220-digit oracle and Python execution of the shared scalar expressions pass;
 77 new CUDA comparison/ownership/lowering cases are collected but unrun. This
 does not yet establish compiler correctness, GPU cost or recipe conformance.
+
+`device_recipes.scalar(..., objective=..., run_id=..., seed=...)` now composes any
+scalar objective with explicit fields and comparison dependencies. Binary and
+Poisson convenience entry points configure it. The default is at most six
+backtracking trials; fixed steps explicitly accept valid finite candidates.
+The existing DeviceRun owns the accepted and best validation states, while the
+recipe owns a distinct last-qualifying patience snapshot. Reporting scores do not
+control any of these three decisions. Equal-score proved improvements replace
+anchors; unresolved trials reject and unresolved observations consume patience.
+
+Each DeviceScalarStep retains every trial, before/after versions and one patience
+comparison. Working trees, fields, old states, proposals and the patience anchor
+are released; the returned run/state remains caller-owned. A custom learner owns
+its tree configuration, and missing fields/comparison or unknown options fail
+explicitly. Thirty-two collected CUDA recipe cases cover independent trajectories,
+partial/full rejection, three anchors, equal-score improvements, zero rounds,
+failure cleanup and saved CPU inference. Together with 106 and the comparison
+cases, 153 GLM CUDA cases are collected and unrun. These APIs remain experimental.

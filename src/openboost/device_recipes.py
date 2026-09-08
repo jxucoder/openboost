@@ -4,6 +4,7 @@ from dataclasses import dataclass, replace
 
 import numpy as np
 
+from . import device_glm as glm_operations
 from . import device_normal as normal_operations
 from . import device_objectives as objectives
 from . import device_tree as trees
@@ -65,8 +66,26 @@ class DeviceFitResult:
 
     run: DeviceRun
     state: DeviceState
-    steps: tuple[DeviceStep | DeviceNormalStep, ...]
+    steps: "tuple[DeviceStep | DeviceNormalStep | DeviceScalarStep, ...]"
     stop: StopState
+
+
+@dataclass(frozen=True)
+class DeviceScalarStep:
+    """One scalar outer round with every trial and its separate patience comparison."""
+
+    round_index: int
+    before_version: int
+    after_version: int
+    trials: tuple[DeviceTrial, ...]
+    loss: float
+    validation_score: float
+    best_score: float
+    validation_change: LossChange
+
+    @property
+    def accepted(self):
+        return self.after_version > self.before_version
 
 
 def squared(
@@ -382,3 +401,154 @@ def normal(
     finally:
         if patience_raw is not None:
             run.execution.release(patience_raw)
+
+
+def scalar(
+    ops,
+    train,
+    validation,
+    *,
+    objective,
+    run_id,
+    seed,
+    rounds=2,
+    learning_rate=0.1,
+    max_depth=2,
+    reg_lambda=1.0,
+    min_child_h=0.0,
+    split_penalty=0.0,
+    binning=None,
+    bins=254,
+    learner=None,
+    step="backtracking",
+    max_trials=6,
+    patience=None,
+    min_delta=0.0,
+):
+    """Compose scalar fields, tree operations and three objective-comparison anchors.
+
+    ObjectiveOperations owns preparation, fields, loss and comparison. Optional
+    learner(ops, data, fields) owns its tree policy. Final run/state are caller-owned;
+    all working fields, trees, old states, proposals and patience snapshots are freed.
+    New binary/Poisson device recipe validation is pending.
+    """
+    policy = StopState.start(0, rounds=rounds, patience=patience, min_delta=min_delta)
+    rate = _search_configuration(step, max_trials, learning_rate)
+    regularization, minimum, penalty = map(_parameter, (reg_lambda, min_child_h, split_penalty))
+    if type(max_depth) is not int or max_depth < 0:
+        raise ValueError("nonnegative integer max_depth required")
+    if learner is not None and (
+        not callable(learner) or (max_depth, reg_lambda, min_child_h, split_penalty) != (2, 1, 0, 0)
+    ):
+        raise ValueError("supplied learner owns its tree configuration")
+    if not isinstance(objective, objectives.ObjectiveOperations):
+        raise ValueError("explicit ObjectiveOperations required")
+    if objective.compare is None or objective.fields is None:
+        raise NotImplementedError("scalar recipe requires objective fields and loss-change")
+    objective.validate(train)
+    objective.validate(validation)
+    if train.raw_width != 1 or validation.raw_width != 1:
+        raise ValueError("scalar recipe requires raw_width=1")
+    run = DeviceRun(
+        ops,
+        train,
+        validation,
+        run_id=run_id,
+        seed=seed,
+        binning=binning,
+        bins=bins,
+        objective=objective,
+        comparison="objective",
+    )
+    patience_raw = None
+    try:
+        state = run.initialize()
+        policy = StopState.start(
+            state.validation_score, rounds=rounds, patience=patience, min_delta=min_delta
+        )
+        patience_raw = run.raw(state, validation=True)
+        history = []
+        while policy.reason is None:
+            before_version = state.version
+            with _workspace(ops) as retained:
+                fields = run.fields(state)
+                tree = (
+                    learner(ops, run.data, fields)
+                    if learner is not None
+                    else trees.depthwise(
+                        ops,
+                        run.data,
+                        fields,
+                        binning=run.binning,
+                        max_depth=max_depth,
+                        reg_lambda=regularization,
+                        min_child_h=minimum,
+                        split_penalty=penalty,
+                    )
+                )
+                tree = trees.copy(ops, tree)
+                retained.add(tree)
+            try:
+                updated, trials = try_terms(
+                    run,
+                    state,
+                    (DeviceTerm(tree, [[1]]),),
+                    learning_rate=rate,
+                    step=step,
+                    max_trials=max_trials,
+                )
+                if updated is not state:
+                    run.release(state)
+                    state = updated
+            finally:
+                ops.release(tree)
+            with _workspace(ops) as retained:
+                current = run.raw(state, validation=True)
+                change = run.objective.loss_change(
+                    ops, run.validation_problem, patience_raw, current
+                )
+                observed = policy.observe_change(state.validation_score, change)
+                improved = change.improves(policy.min_delta)
+                if improved:
+                    retained.add(current)
+            if improved:
+                previous, patience_raw = patience_raw, current
+                run.execution.release(previous)
+            history.append(
+                DeviceScalarStep(
+                    policy.completed_rounds,
+                    before_version,
+                    state.version,
+                    trials,
+                    state.loss,
+                    state.validation_score,
+                    state.best_score,
+                    change,
+                )
+            )
+            policy = observed
+        return DeviceFitResult(run, state, tuple(history), policy)
+    except BaseException:
+        run.close()
+        raise
+    finally:
+        if patience_raw is not None:
+            run.execution.release(patience_raw)
+
+
+def binary(ops, train, validation, *, clip=1e-6, **configuration):
+    """Experimental binary scalar recipe; see scalar() for execution configuration."""
+    return scalar(
+        ops, train, validation, objective=glm_operations.binary(clip=clip), **configuration
+    )
+
+
+def poisson(ops, train, validation, *, minimum_rate=1e-6, **configuration):
+    """Experimental exposure-aware count recipe, exporting a raw log-rate Model."""
+    return scalar(
+        ops,
+        train,
+        validation,
+        objective=glm_operations.poisson(minimum_rate=minimum_rate),
+        **configuration,
+    )

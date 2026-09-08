@@ -131,10 +131,13 @@ The user's subsequent "continue" completes local construction of
 independent numerical/scope contracts, public objective operations, then class-aware
 export and two-round composition checks. Forty-four new GPU cases collect but have
 not run. Local regression passes 2,065 CPU tests with one Linux-only skip.
-Next is [107 comparison and recipe integration](v1-sprints/107-glm-comparison-and-recipes.md):
-independent loss-change controls, resident comparison, then acceptance/best/patience
-consumers. No new upload or hardware allowance is included. Preserve consumed run
-sources by revision when the current implementation changes.
+[107 comparison and recipe integration](v1-sprints/107-glm-comparison-and-recipes.md)
+now completes local construction: independent convex loss-change controls, resident
+comparison and scalar acceptance/best/patience consumers. Regression passes 2,241
+CPU tests with one Linux-only skip; all 153 GLM GPU cases collect but remain unrun.
+Next freeze one concrete run-12 artifact/regression packet. No new upload or hardware
+allowance is included. Preserve consumed run sources by revision when current
+implementation changes.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen

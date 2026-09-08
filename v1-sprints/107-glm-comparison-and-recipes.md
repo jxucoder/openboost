@@ -1,6 +1,7 @@
 # Sprint 107: GLM comparison and scalar recipe integration
 
-Status: active after the user's "continue" following 106. Mapping: 080 / B12 /
+Status: local construction complete; hardware request preparation follows the retrospective.
+Mapping: 080 / B12 /
 R1 binary / R4 Poisson. Local construction can continue; no hardware/upload allowance.
 
 ## Purpose
@@ -73,3 +74,33 @@ and identity, allocation/dispatch cleanup, forbidden host/reporting callbacks an
 actual directed-double PTX inspection. Each numerical case will retain inputs,
 enclosure, direct Decimal result and transfer counters when run. Hardware execution
 is pending. Next construction connects distinct acceptance/best/patience consumers.
+
+## Slice C construction and retrospective
+
+`device_recipes.scalar` composes explicit objective fields/comparison with the
+existing grower, try_terms and DeviceRun. Binary/Poisson wrappers configure that
+same public recipe. It requires comparison mode, owns a separate patience anchor,
+observes once per outer round and retains each trial in DeviceScalarStep. Fixed
+steps can accept valid worsening; backtracking requires proved decrease. No old
+squared or Normal recipe behavior changes.
+
+Forty-two local preflight/independent trajectory checks pass in 1.15 seconds.
+Sixteen reference settings include default-grower depth 1/2, both families,
+fixed/backtracking, partial retries and full rejection. Two further reference
+sequences distinguish best from patience anchors. Thirty-two new GPU cases collect,
+including stored-input audits of every comparison, class-aware model round trips,
+fresh CPU inference, zero rounds, five cleanup failure phases, three-anchor and
+equal-reporting-score replacement controls. All 153 GLM cases remain unrun.
+
+Full CPU regression: 2,241 passed, one Linux-only skip, 880 deselected in 77.50 s.
+Production and changed-file Ruff pass; the offline wheel/sdist build succeeds.
+No new GPU upload, invocation or old frozen-source modification occurred.
+
+Reflection after three construction commits: the scalar objective/fields/tree/
+transaction boundary accommodates both applications without another trainer.
+The new comparison resolves the frozen false reporting ties and declares finite-
+step uncertainty explicitly. Cost and actual CUDA arithmetic remain unknown.
+Next is a concrete bounded run-12 request retaining numerical inputs/bounds, actual
+PTX, recipe comparisons/models and relevant prior regressions. Review exact source
+closure and collection locally before seeking its separate allowance. Required
+multiclass, AFT, vector topology, train-many and formal quality/cost remain open.

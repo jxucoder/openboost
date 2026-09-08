@@ -69,10 +69,11 @@ synthetic results do not pass formal E4 or full Normal conformance.
 completes local construction: independent numerics and complete required scope,
 resident objective operations, class-aware export and two-round composition checks.
 Local regression passes 2,065 CPU tests with one Linux-only skip; forty-four new
-GPU cases collect without execution. Next is
-[107 loss-change and recipe integration](107-glm-comparison-and-recipes.md), including
-acceptance, best-validation selection and independent patience before a new hardware
-packet. All eleven allowances remain consumed; no upload or execution is authorized.
+GPU cases collect without execution. [107 loss-change and recipe integration](107-glm-comparison-and-recipes.md)
+then completes local construction of resident comparison and scalar acceptance,
+best-validation and independent patience consumers. Full regression passes 2,241
+CPU tests with one Linux-only skip. All 153 GLM GPU cases collect but remain unrun.
+Next freeze the concrete run-12 request; all eleven allowances remain consumed.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

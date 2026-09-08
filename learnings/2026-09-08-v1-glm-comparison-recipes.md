@@ -67,3 +67,28 @@ row computation, no host/reporting fallback and PTX directed-double checks. None
 has executed. The future numerical case artifacts include exact float32 inputs,
 bounds, high-precision value and transfer counters. No old Normal file or archive
 was modified; recipe consumers and their actual device validation remain next.
+
+## Slice C result and reflection
+
+`67788ba` commits the resident comparisons. The scalar recipe now uses the same
+grower and transaction/search operations, requiring explicit fields/comparison
+callbacks. Accepted raw, best validation raw and last-qualifying patience raw have
+separate owners. Temporary fields/trees, superseded states, proposals and patience
+storage are released on success and tested failure paths. Result history retains
+scalar trials/comparisons only. Binary/Poisson wrappers add no separate trainer.
+
+The initial forward union annotation used a quoted member inside an evaluated
+union, which fails at module import. Quoting the complete deferred annotation
+fixes import without changing old record behavior. Focused preflight and independent
+trajectory controls pass: 42 in 1.15 seconds. Sixteen reference settings include
+fixed steps, backtracking retries and full rejection; two additional sequences
+exercise distinct best/patience anchors. Thirty-two new GPU cases collect,
+including actual-comparison Decimal audits, equal-score anchor replacement,
+default grower use, saved CPU inference and five failure/cleanup phases.
+
+All 153 GLM device cases are unexecuted. Full CPU regression passes 2,241 tests
+with one Linux-only skip and 880 deselections in 77.50 seconds. Production and
+changed-file Ruff pass; offline wheel/sdist construction succeeds. CPU/native
+device-result parity, PTX and execution cost remain unverified. The next slice
+must freeze one exact retained-artifact/regression request before any new upload
+or device allowance. No application family or formal quality/cost gate is closed.
