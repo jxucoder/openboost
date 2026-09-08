@@ -2,143 +2,177 @@
 
 **A programmable boosting foundation for researchers and AI agents.**
 
-OpenBoost v1 is being rebuilt around composable algorithm components, ordinary
-Python recipes and explicit CPU/CUDA execution. The goal is to reduce the cost
-of making a correct, reproducible algorithm change.
+Build boosting algorithms in Python by composing objectives, statistics, split
+rules, weak learners and update policies. OpenBoost provides a NumPy CPU reference
+and experimental CUDA execution with Python-authored kernels.
 
-## Current state
+## Vision
 
-This checkout is **under construction**. The retired implementation is not restored.
-Initial public CPU components now provide owned numeric inputs, explicit problems,
-run identity, immutable proposal/accept/reject state and mapped tree/constant ensemble
-artifacts. See [B03 usage and boundaries](docs/v1/cpu-state.md).
+An algorithm change can require more than a new loss function. It may need extra
+statistics, a different split constraint, a custom leaf solver, coupled outputs,
+or a different acceptance rule. OpenBoost aims to make each of those decisions
+accessible through public components and ordinary Python training loops.
 
-[Categorical input and equality splits](docs/v1/categorical.md) support typed
-train-only dictionaries and explicit missing/unseen routing.
+The design takes inspiration from PyTorch's composable building blocks and explicit
+execution. Here the building blocks are boosting operations: objective geometry,
+named row fields, histograms, candidate scoring, feasibility, routing, leaf solving,
+and immutable training transactions. A recipe is a working composition that a
+researcher or agent can inspect, modify and reuse.
 
-Public [numeric operations](docs/v1/numeric-ops.md) now add quantile binning,
-weighted row fields, histograms, split callbacks, routing and scalar/vector leaves.
-Public [depthwise, best-first and symmetric growers](docs/v1/trees.md) compose
-these operations and persist validated numeric/categorical trees. The first complete [squared-error recipe](docs/v1/squared.md)
-and [Normal recipe](docs/v1/normal.md) support weights, offsets and
-fixed/backtracking steps on CPU. Normal exposes ordinary/Fisher directions and
-joint mean/log-scale updates. [Formula and sequential runs](docs/v1/formula-runs.md)
-add structured full-metric updates and independent heterogeneous jobs. Experimental
-resident scalar CUDA training passes all 212 bounded T4 checks, including
-weighted/missing parity, transactions and saved CPU inference. The shared scoring
-correction resolves the previous 14 failures without changing tolerances. See the
-[recorded result and scope](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
-The first [Normal K=2 and installed D2 T4 run](benchmarks/v1/evidence/cuda-normal-090/README.md)
-passes 381/383 checks, including all earlier scalar cases and nineteen saved-model
-CPU replays. Two ordered acceptance decisions fail the frozen reference; full
-Normal conformance remains open. The [follow-up diagnostic run](benchmarks/v1/evidence/cuda-acceptance-091/README.md)
-preserves both failures and identifies rounding-induced false improvement at
-near-stationary loss. The subsequent objective-owned comparison correction and
-[bounded revalidation](benchmarks/v1/evidence/cuda-recipe-103/README.md) establish
-514 earlier passes plus fifteen new recipe passes with identical production.
-All 529 revised requirements have passing evidence across two executions;
-the original failed verdicts remain preserved. This is not full Normal conformance.
-[Binary classification](docs/v1/binary.md) now
-persists typed class order and exposes probability/label inference.
-[Multiclass and vector leaves](docs/v1/multiclass.md) add joint softmax updates
-and separate split/leaf statistics with arbitrary output mappings.
+Standard GBDT, NaturalBoost/NGBoost-style distributional methods, FormulaBoost-style
+structured models and training many models guide the abstraction boundaries.
+Applications matter equally: classification, regression, ranking, quantiles,
+multi-output prediction, counts, positive and aggregate targets, survival,
+distributional modeling and model selection all remain required v1 scope.
 
-Independent references and comparator/data checks remain evaluation preparation.
-F0.3 is still open; the user approved overlapping B03–B06 construction without
-removing any v1 scope or acceptance requirements. No real quality, competitive GPU performance
-or agent/adoption advantage has been established for the new foundation.
+Success means making a correct algorithm change easier, then demonstrating useful
+quality and execution cost on real workloads. CPU is the semantic reference and
+usable development path; CUDA is the route toward efficient execution. Comparative
+agent-authoring studies are currently deferred while foundation construction and
+validation continue. Author productivity and adoption benefits remain hypotheses.
 
-The [early same-host performance checkpoint](benchmarks/v1/evidence/early-performance-104/README.md)
-measures squared-error boosting at 10,000 rows in 7.04 s on CPU and 2.94 s on a
-warm T4, with comparable quality. The four other timing pairs and the separate
-profile are incomplete after deadlines. This synthetic internal result establishes
-neither external-library speed parity nor practical performance across all recipes.
+## What works today
 
-- [Execution and reflections](v1-sprints/README.md)
-- [Construction design](planning/foundation-construction-design.md)
-- [v1 plan](planning/agent-boosting-foundation-plan.md)
-- [Required tasks](planning/foundation-tasks.md)
-- [Acceptance and evaluation](planning/openboost-v1-evaluation.md)
+**Experimental v1, under construction.** The current foundation is merged through
+[PR #25](https://github.com/jxucoder/openboost/pull/25). It is not a drop-in
+replacement for XGBoost, LightGBM or CatBoost, and full v1 acceptance remains open.
 
-All R1–R9 / C1–C7 / A1–A13 remain required. Classification, regression, ranking,
-quantiles, multi-output, count/positive/aggregate targets, survival, distributional
-and formula models, and train-many each need their own implementation and evidence.
+Public CPU components include typed numeric/categorical data, fitted preparation,
+weights and offsets, named statistics, composable split/routing/leaf operations,
+and depthwise, best-first and symmetric growers. Scalar/vector leaves and mapped
+outputs share explicit proposal/accept/reject state. All twelve CPU recipes support
+independent validation patience; saved models retain their required inference metadata.
 
-## Development
+The CUDA implementation uses CuPy-owned storage and streams with Python kernels
+compiled by `numba-cuda`. Public operations expose storage, fields, histograms,
+scores, feasibility masks, routing, scalar leaves, depthwise trees and resident
+transactions. Training uses explicit device interfaces; the CPU recipe API does
+not automatically dispatch to CUDA. Current CUDA tree growth covers numeric and
+missing features, with scalar trees and mapped multi-parameter updates.
+
+| Use case | CPU implementation | Verified CUDA scope |
+| --- | --- | --- |
+| Regression | [Squared error](docs/v1/squared.md) | Resident squared recipe |
+| Classification | [Binary](docs/v1/binary.md), [multiclass](docs/v1/multiclass.md) | Binary recipe; multiclass pending |
+| Counts and positive/aggregate targets | [Poisson with exposure](docs/v1/poisson.md), [Gamma](docs/v1/gamma.md), [fixed-power Tweedie](docs/v1/tweedie.md), [frequency–severity composition](docs/v1/frequency-severity.md) | Poisson recipe; other cells pending |
+| Ranking and quantiles | [Query-local pairwise/lambda ranking](docs/v1/ranking.md), [quantile and penalized leaves](docs/v1/quantile.md) | Pending |
+| Survival | [Fixed-scale log-normal AFT with events/right censoring](docs/v1/aft.md) | Pending |
+| Distributional and structured models | [Normal ordinary/Fisher updates](docs/v1/normal.md), [saturation Formula/full-GGN updates](docs/v1/formula-runs.md) | Bounded Normal joint/ordered recipes; Formula pending |
+| Multi-output regression | [Independent/shared trees, projected splits and target scaling](docs/v1/multioutput.md) | Vector topology pending |
+| Train-many | [Shared preparation and independent sequential runs](docs/v1/preparation.md), verified at M=1/8/32 | Compatible resident execution pending |
+
+CUDA entries describe bounded correctness evidence, not complete feature coverage
+or a speed guarantee. Categorical CUDA growth, broader vector learners and fused
+train-many remain unverified. See the [CPU component guide](docs/v1/numeric-ops.md),
+[tree contracts](docs/v1/trees.md), [stopping semantics](docs/v1/stopping.md) and
+[explicit CUDA interfaces](docs/v1/execution.md) for supported inputs and limits.
+
+## Evidence and performance
+
+- **Latest CUDA validation:** [run 12](benchmarks/v1/evidence/cuda-glm-108/README.md)
+  passes 571/571 real T4 cases: 153 binary/Poisson checks and 418 regressions. All
+  77 JSON artifacts are retained. The offline audit verifies 246 numerical
+  loss-change comparisons and replays 32 final/best models from saved input bytes.
+- **Reliable Normal decisions:** [comparison and revalidation evidence](benchmarks/v1/evidence/cuda-recipe-103/README.md)
+  covers all 529 revised requirements across two executions. Earlier failed
+  verdicts remain preserved. This is bounded coverage, not full Normal conformance.
+- **Measured internal improvement:** [run 11](benchmarks/v1/evidence/parallel-validation-105/README.md)
+  passes 474 T4 checks and three cost gates. Parallel field validation reduces
+  median warm fit time for synthetic squared boosting at 100,000 rows from
+  13.513 to 8.947 seconds, with unchanged model/prediction bytes. That workload
+  uses 16 features, depth three and 20 rounds; the reduction is 33.79% against the
+  earlier OpenBoost implementation on the same T4.
+- **CPU and packaging:** the merged checkpoint has 2,292 local CPU tests passing.
+  [Hosted CI](https://github.com/jxucoder/openboost/actions/runs/34241939802) passes
+  Linux/macOS on Python 3.10/3.12, including offline audits and package builds;
+  [strict documentation checks](https://github.com/jxucoder/openboost/actions/runs/34241939812)
+  also pass. Historical tests are explicitly separated from current conformance.
+
+These results do not establish competitive speed or predictive quality against
+mature boosting libraries. Real application evaluations and the formal end-to-end
+quality/cost gate remain open. The [earlier incomplete performance checkpoint](benchmarks/v1/evidence/early-performance-104/README.md)
+is retained alongside the later complete measurements.
+
+## Try the CPU foundation
+
+Use Python 3.10+ and install from this checkout:
 
 ```bash
 uv sync --extra test
+```
+
+This example supplies a custom learner through the public growth and feasibility
+operations, fits a squared-error recipe, and saves its best validation model.
+
+```python
+from functools import partial
+
+from openboost import NumericData, Problem, RunContext
+from openboost.artifacts import Model
+from openboost.ops import feasible
+from openboost.recipes import squared
+from openboost.tree import depthwise
+
+train_x = NumericData([[0], [1], [2], [3]], [10, 11, 12, 13], ("x",))
+valid_x = NumericData([[0.5], [2.5]], [20, 21], ("x",))
+train = Problem(train_x, [[-3], [-1], [1], [3]], train_x.row_ids)
+valid = Problem(valid_x, [[-2], [2]], valid_x.row_ids)
+
+
+def learner(binned, fields):
+    return depthwise(
+        binned, fields, max_depth=1,
+        legality=partial(feasible, min_child_h=2),
+    )
+
+
+fit = squared(
+    train, valid, context=RunContext("example", seed=7),
+    learner=learner, rounds=3, learning_rate=0.5, bins=4,
+)
+model = fit.state.best_model
+prediction = model.predict(valid_x)  # Shape: (2, 1)
+model.save("model.json")
+restored = Model.load("model.json")
+```
+
+For deeper changes, compose [objective/statistics operations](docs/v1/numeric-ops.md)
+and [run transactions](docs/v1/cpu-state.md) directly. CUDA users need real NVIDIA
+hardware and the optional dependencies (`uv sync --extra cuda`); start with the
+[separate device execution guide](docs/v1/execution.md).
+
+## Next milestones
+
+1. Complete the [required CUDA recipes](v1-sprints/080-cuda-required-recipes.md),
+   starting with multiclass, then AFT and vector topology, with independent
+   mathematics, CPU/CUDA checks and persisted inference for each declared scope.
+2. Establish [compatible train-many execution](v1-sprints/081-cuda-train-many.md),
+   preserving independent state while reusing preparation and device resources.
+3. Measure [real-workload quality and complete execution cost](v1-sprints/082-end-to-end-cost.md)
+   with fair baselines, then stabilize the public contracts supported by that evidence.
+
+All [R1–R9 / C1–C7 / A1–A13 requirements](planning/openboost-v1-evaluation.md)
+remain in scope. Each [application family](planning/foundation-application-contracts.md)
+needs its own implementation and evaluation. Multi-GPU, Ray and out-of-core
+expansion are outside the active plan.
+
+- [Construction design](planning/foundation-construction-design.md)
+- [v1 plan](planning/agent-boosting-foundation-plan.md)
+- [Execution, evidence and reflections](v1-sprints/README.md)
+
+## Development and history
+
+```bash
 uv run pytest tests/ -m "not gpu and not benchmark" -n 0 -q
 uv run ruff check src/openboost tests/v1 tests/conftest.py
+uv run mkdocs build --strict
 uv build
 ```
 
-Python 3.10+. Current tests cover CPU implementation, independent references and
-evaluation infrastructure. Experimental CUDA storage, named fields and histograms
-and bounded resident squared training have real T4 evidence. The full required
-device recipe, quality and cost gates remain open. Run GPU-marked tests only on
-real hardware; publishing remains separate.
+Default discovery runs `tests/v1/`; see [test scope](tests/README.md). Run GPU-marked
+tests only on real hardware. The current documentation lives in `docs/v1/`.
 
-## Historical implementation and evidence
-
-Revision `50acfc6` is the last revision containing the old production code plus
-Sprint 001 references. Use that revision in a separate checkout to reproduce
-old APIs, examples and experiments; no compatibility layer remains here.
-
-Historical tests, examples, documentation and benchmark artifacts are retained
-as evidence and sources of mathematical counterexamples. Default test discovery
-runs `tests/v1/` only. Old tests are not counted as v1 passes or skips.
-The current documentation build uses `docs/v1/`; other documentation describes
-the retired implementation. Published packages and historical results do not
-establish the new architecture's quality, speed or adoption.
-
-[Query-local ranking](docs/v1/ranking.md) adds pairwise/lambda CPU geometry and
-fixed-step recipes with validation NDCG selection. Real A4 evaluation remains open.
-
-[Quantile and penalized leaves](docs/v1/quantile.md) expose routed residuals/original
-weights and compose all three CPU growth policies. Real A5 evaluation remains open.
-
-[Poisson counts and exposure](docs/v1/poisson.md) add a CPU count recipe with explicit
-rate/count outputs. Real A7 evaluation remains open.
-
-[Gamma positive-target means](docs/v1/gamma.md) add weighted CPU mean regression.
-Real A8 quality and distributional calibration remain unverified.
-
-[Tweedie nonnegative means](docs/v1/tweedie.md) support fixed-power CPU fitting and
-explicit annualized-loss weight semantics. Real A9 evaluation remains open.
-
-[Frequency–severity composition](docs/v1/frequency-severity.md) binds matched paid-loss aggregates
-and persists two-model inference with explicit output units. Real A9 evaluation remains open.
-
-[Log-normal AFT](docs/v1/aft.md) adds event/right-censored CPU training and
-persisted scale-aware survival outputs. Real A10 evaluation remains open.
-
-[Current execution and reflections](v1-sprints/README.md)
-separates implemented CPU coverage from remaining authoring, practical execution,
-real selection and GPU evidence.
-
-[Multi-output squared regression](docs/v1/multioutput.md) supports independent/shared trees,
-projected splits and persisted training-only target scaling. Real A6 evaluation remains open.
-
-[Shared training preparation](docs/v1/preparation.md) reuses fitted CPU binning/codes
-across independent jobs, verified at M=1/8/32.
-[Independent stopping](docs/v1/stopping.md) adds validation patience to every CPU
-recipe while keeping model acceptance and best-model selection independent.
-
-
-[Experimental CUDA operations](docs/v1/execution.md) provide context-owned buffers,
-named fields, once-only weighting, routed histograms, candidate scores, composable
-feasibility masks, routing and scalar leaves, with
-[88 passing real T4 checks](benchmarks/v1/evidence/cuda-splits-078/README.md).
-Independent cohort constraints change split selection through the public device
-operations. Separate experimental resident squared geometry, scalar trees and
-accepted/proposal training now pass the separate
-[212-case T4 matrix](benchmarks/v1/evidence/cuda-score-symmetry-089/README.md).
-Shared mapped transactions, Normal geometry and joint/ordered recipes now have
-[bounded passing comparison and recipe evidence](benchmarks/v1/evidence/cuda-recipe-103/README.md),
-with the historical numerical failures preserved in the earlier archives.
-The installed D2 learner uses the same public field/feasibility/tree operations.
-Binary/Poisson objectives, numerical loss-change comparisons and the shared scalar
-recipe now pass [153 GLM T4 checks plus 418 regressions](benchmarks/v1/evidence/cuda-glm-108/README.md),
-with retained input bytes, class-aware inference and 32 audited final/best models.
-Other required CUDA recipes and full phase acceptance remain open.
+The retired implementation remains at revision `50acfc6` for reproducing old APIs,
+examples and experiments. There is no compatibility layer in v1. Historical
+packages and benchmarks describe their recorded revisions; all new claims must
+link to reproducible evidence for the current foundation.

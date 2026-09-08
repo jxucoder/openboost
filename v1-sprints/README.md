@@ -83,9 +83,10 @@ bytes. [The 108 retrospective](108-glm-validation-result.md) is complete; all tw
 allowances are consumed. Stop here, then begin the required multiclass construction
 on the next continuation. AFT/vector topology, train-many and formal E4 remain open.
 
-The user's next request starts the [109 PR integration checkpoint](109-pr-integration.md)
-before further construction: prepare an English PR, verify hosted CI and preserve
-the historical execution commits. Actual merge remains a subsequent action.
+The [109 PR integration checkpoint](109-pr-integration.md) is complete: all five
+hosted checks pass at `bbd69ea`, and the user's subsequent request merges PR 25
+as `167ed53`, preserving the historical execution commits. The README follow-up
+updates the public vision, capability matrix and evidence without new construction.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

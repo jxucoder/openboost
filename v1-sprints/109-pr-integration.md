@@ -1,8 +1,8 @@
 # Sprint 109: PR integration checkpoint
 
-Status: local integration checks complete; publish and inspect the PR for branch
-`codex/v1-retrospective-plan`. Live hosted-check and merge status belong to that PR;
-merge is not yet requested.
+Status: complete. All five hosted checks pass at `bbd69ea`; the user's subsequent
+merge instruction completes [PR 25](https://github.com/jxucoder/openboost/pull/25)
+with merge commit `167ed53`. Original execution commits remain in main's history.
 This delivery checkpoint follows the completed 108 retrospective and precedes
 further multiclass construction. No GPU upload, model study or release is included.
 
@@ -121,3 +121,23 @@ Final local regression passes 2,292 tests with one platform skip in 18.23 second
 using the configured parallel CPU suite. Full lint passes. Commit the correction
 and let the PR record the next complete hosted matrix; leave the actual merge to
 the user's next instruction.
+
+## README follow-up
+
+The user now requests the latest state and vision in the README. This is a local
+documentation update from merged main, with no new construction or evaluation run.
+
+1. Check public recipes, component boundaries, run-11/run-12 evidence and remaining
+   requirements against the implementation and tests.
+2. Replace the accumulated checkpoint narrative with the vision, current CPU/CUDA
+   coverage, scoped evidence, a runnable public composition example and next work.
+3. Execute the README Python example, check relative links, build strict docs and
+   packages, and commit the verified update. The smallest executable check is the
+   exact quickstart, including the custom learner and saved-model round trip.
+
+The rewritten README passes that quickstart: three accepted rounds, custom
+three-node learners, reduced loss, finite predictions and exact persisted replay.
+All 34 relative links resolve; strict docs, wheel/sdist builds and production/
+example Ruff pass. Wheel metadata contains the exact new README. The update
+clarifies the current capability/evidence boundary without changing production or
+launching another evaluation. See the [documentation learning](../learnings/2026-09-08-v1-readme-state-vision.md).
