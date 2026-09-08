@@ -1,0 +1,96 @@
+{
+  "revision": "840cc4183906c54d3d9b26c24055b9c7540f97b1",
+  "dirty": true,
+  "sources": {
+    "src/openboost/__init__.py": "c6a404dd122323611ca6c63fecfbc836c7845a271cceca91742c8fcf9d29a5ad",
+    "src/openboost/_comparison_math.py": "f547fb12d9a06108c126cdb4e6d1741b18c25ff7532f250f8a01a38f743798e2",
+    "src/openboost/_device_kernels.py": "0913d998087b1032cdb81bd463ee7391339d2bf1580c36d721dd445a7195ac18",
+    "src/openboost/_normal_comparison.py": "1fc5bacdf95defd99ab46f0ca1ca1773e20b19bc542a993f26409709c3783f4e",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/comparison.py": "87692af240e9836be5a1d95742316fb8282840e606febdb6086b2de90092c7bb",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/device.py": "9f43d34ed5f9d1d81aa0ca04df186616bf63f13fb0bdbc80ea4617d3c2e8ae3a",
+    "src/openboost/device_normal.py": "4f1e631e6eff5127b5298c5ac461e6bd4f5dc21a509a3322762d3e05146317bb",
+    "src/openboost/device_objectives.py": "c1bf4717fa1ce19ddb5310c6a66f5e163e42f42f7fd96aff703beafbc89bed24",
+    "src/openboost/device_recipes.py": "c4760fa4a92bfb18e748799afd7cb4ee3ac4f9dd0217f04992ec2b821e962e51",
+    "src/openboost/device_runtime.py": "94c946b5c904355255cea5c4f557ffad3255eb6b555f20683bfa9a045474d1cb",
+    "src/openboost/device_tree.py": "4f4916b195da9221f607ab27e6968ee38669e95b09cb60d742740a674d6e4dd1",
+    "src/openboost/diagnostics.py": "83b616f6158228ff097e2bd34c608f68e6f2a9ad147c07b46c43d374bb8ec80b",
+    "src/openboost/execution.py": "817841600572c8062b36bf886a8a01d406195c508c856d2f4c4c90dd094411fe",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "3d717a736af6ea6d5ade063639fedc51f1d60c62a2663e8ecb6b0a4ee4dffd71",
+    "src/openboost/ops.py": "fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "9b6c4f340953df93528529a6d80ef04dd21ad3d92396ecd1a0c160253f27198e",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "365a534c2413ab3f548f8d34c4ff2df6ee41852dddaa445378da84ff6b7d7d6a",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "ad488ddb867992d1a61b758c577a06c7f6e2a2bcd1f30fbf20a752d476305264",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5",
+    "benchmarks/v1/performance_checkpoint.py": "e7c29228e8f777d538df6199c2c25ff52493275a3fce7786e74dc27ac3a3422b",
+    "benchmarks/v1/performance_evidence.py": "8f480da98f9a54eb5ee489052cc7d5ec4daf99f5deaceaea21ecb524b0660984",
+    "benchmarks/v1/check_performance_install.py": "3681ab63d82b57b6613afde795eac485fb93ad78411588027faff94bc59e7377"
+  },
+  "scope": "Local isolated CPU evidence-format verification; not a performance or CUDA result.",
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--offline",
+        "--wheel",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/wheels",
+        "/Users/jiaruixu/work_space/openboost"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Building wheel...\nSuccessfully built /var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/wheels/openboost-1.0.0.dev0-py3-none-any.whl\n"
+    },
+    {
+      "argv": [
+        "uv",
+        "venv",
+        "--python",
+        "/Users/jiaruixu/work_space/openboost/.venv/bin/python3",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/venv"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Using CPython 3.12.12 interpreter at: /Users/jiaruixu/work_space/openboost/.venv/bin/python3\nCreating virtual environment at: /var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/venv\nActivate with: source /var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/venv/bin/activate\n"
+    },
+    {
+      "argv": [
+        "uv",
+        "pip",
+        "install",
+        "--offline",
+        "--no-deps",
+        "--python",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/venv/bin/python",
+        "numpy==2.3.5",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/wheels/openboost-1.0.0.dev0-py3-none-any.whl"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Using Python 3.12.12 environment at: /var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/venv\nResolved 2 packages in 2ms\nPrepared 1 package in 7ms\nInstalled 2 packages in 9ms\n + numpy==2.3.5\n + openboost==1.0.0.dev0 (from file:///var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/wheels/openboost-1.0.0.dev0-py3-none-any.whl)\n"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-replay-8esv0xa5/venv/bin/python",
+        "-c",
+        "import importlib.util, json, pathlib, sys, openboost\nfrom benchmarks.v1.performance_evidence import run, verify_report, write_json\nimport benchmarks.v1.performance_checkpoint as old\ndef forbidden(*args, **kwargs): raise AssertionError(\"generator called\")\nold.workload = forbidden\nassert \"site-packages\" in openboost.__file__\nassert importlib.util.find_spec(\"cupy\") is None and importlib.util.find_spec(\"numba\") is None\nroot = pathlib.Path(sys.argv[1])\ninputs = json.loads((root / \"inputs.json\").read_text())\nreport = run(inputs, \"cpu\", root / \"result.json\", repetitions=2)\nverified = verify_report(report, inputs, inputs[\"sha256\"], expected_repetitions=2)\nwrite_json(root / \"verification.json\", dict(**verified, installed_core=True,\n    generator_disabled=True, cupy_available=False, numba_available=False,\n    input_sha256=inputs[\"sha256\"]))\nprint(json.dumps(verified))\n",
+        "/Users/jiaruixu/work_space/openboost/v1-sprints/105-input-replay-local"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"complete\": true, \"verified_fits\": 2}\n",
+      "stderr": ""
+    }
+  ]
+}

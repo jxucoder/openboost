@@ -53,7 +53,8 @@ also fail to reproduce on the local macOS audit host; same-host CPU/GPU identity
 and the remote quality judge remain valid. Save exact inputs in future evidence.
 All ten GPU allowances are consumed. Stop for the planned retrospective; the
 [105 proposal](105-parallel-validation-and-reproducible-cost.md) targets parallel
-validation and complete reproducible timing before further breadth.
+validation and complete reproducible timing before further breadth. The user's
+next "approve" starts those construction slices; no new hardware has run.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

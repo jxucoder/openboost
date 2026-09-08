@@ -1,7 +1,9 @@
 # Sprint 105 proposal: Parallel validation and reproducible cost evidence
 
-Status: proposed at the Sprint 104 retrospective boundary. No new hardware,
-source upload, external baseline or author/model call is authorized by this card.
+Status: construction approved by the user's next "approve" after the Sprint 104
+retrospective. Build the three slices below, committing each verified slice.
+Hardware execution still requires its concrete source and budget freeze; no
+new source upload, external baseline or author/model call has occurred.
 Mapping: B12 / F3 / shared CUDA foundation cost; formal E4 remains in Sprint 082.
 
 ## Why this slice
@@ -56,7 +58,7 @@ do not expand into an unbounded CPU speed contest.
   accepted or best-state decisions; no tolerance relaxation.
 - Same-host first and three-warm measurements. A provisional engineering target
   is at least 20% lower complete warm fit cost on the selected 100,000-row case,
-  with at most 10% regression on its 10,000-row counterpart. This is a proposed
+  with at most 10% regression on its 10,000-row counterpart. This is the approved
   optimization gate, not a replacement for E4's external/real-data requirements.
 - If deadlines or CPU reference cost prevent a required quality comparison,
   report the unresolved pair explicitly. Retain failed runs and profile overlap;
@@ -65,3 +67,27 @@ do not expand into an unbounded CPU speed contest.
 After this bounded cost response, return to required recipe construction in 080,
 compatible train-many in 081 and real matched-quality evidence in 082. Author
 friendliness remains deferred. All R1–R9/C1–C7/A1–A13 stay required.
+
+## Slice A: exact inputs and recoverable fit evidence
+
+`benchmarks/v1/performance_evidence.py` stores owned input arrays as lossless
+compressed bytes, with array checksums, complete Problem identities and one
+snapshot binding. Loading never calls the generator. Unsupported structured or
+categorical problems are rejected explicitly; this format serves the frozen
+squared/Normal cost probes, not general model persistence.
+
+Each finished fit records its model, exact predictions, independent scores,
+state/ownership counters and CPU inference before the next fit starts. Fit timers
+exclude this post-fit audit/serialization work; child wall time includes it.
+All saved fits are verifiable after timeout, while an unfinished required repeat
+set stays incomplete. Neither this new format nor these CPU tests rewrite run 10.
+
+Ten new tests and sixteen existing checkpoint tests pass (26 total, 1.24 s).
+The new tests include actual child termination after one completed fit, changed
+targets despite identical predictions, forged array/problem hashes, and invalid
+complete-report counts. The
+[isolated CPU check](105-input-replay-local/verification.json) replays two Normal
+fits with the generator disabled, installed core/NumPy only and no CuPy/Numba.
+Its commands and exact source hashes are retained in the neighboring installation
+record. No GPU execution or performance claim is made. Next: parallel field
+validation, keeping public errors and existing allocation/launch contracts.

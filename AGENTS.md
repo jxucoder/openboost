@@ -106,11 +106,12 @@ All ten allowances are consumed. Exact generated inputs do not reproduce across
 the audited macOS/Linux hosts, despite matching same-host CPU/GPU identities;
 the next packet must retain lossless input snapshots. Formal E4 remains unpassed.
 
-Stop at the 104 retrospective boundary. The
-[105 proposal](v1-sprints/105-parallel-validation-and-reproducible-cost.md) targets
+The user's next "approve" starts
+[105 construction](v1-sprints/105-parallel-validation-and-reproducible-cost.md), targeting
 parallel boolean/domain validation and complete reproducible cost evidence,
-preserving numerical decisions and all public checks. No further hardware or
-upload is authorized; a new concrete freeze and allowance are required.
+preserving numerical decisions and all public checks. Implement exact input and
+per-fit evidence first, parallel field validation second, then freeze a feasible
+paired correctness/cost run. New hardware/upload requires that concrete allowance.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
