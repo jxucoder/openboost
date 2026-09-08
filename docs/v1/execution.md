@@ -346,7 +346,39 @@ version/best updates and saved inference remain correct for the measured decisio
 
 Normal backtracking therefore remains experimental: independently rounded total
 losses are an unreliable comparison near stationarity. An objective-owned
-loss-change operation with an explicit numerical-resolution contract is proposed,
-not implemented. The repository archive `benchmarks/v1/evidence/cuda-acceptance-091/`
+loss-change operation with an explicit numerical-resolution contract is now
+implemented as a separate experimental component; consumers have not migrated.
+The repository archive `benchmarks/v1/evidence/cuda-acceptance-091/`
 retains both failures and the complete traces. No tolerance or original test was
 changed, and successful diagnostics do not pass full Normal conformance.
+
+`device_normal.compare(ops, problem, before, after)` compares two resident float32
+`[N,2]` raw buffers in the prepared problem's row order. It returns the public
+`LossChange` record: bounds, declared numerical method/reason, derived status and
+an explicit `improves(min_delta)` query. The private Normal expression is shared
+with CPU and uses directed double arithmetic on CUDA for its bounded Taylor and
+interval evaluation. There is no host computation fallback. CPU passes do not
+verify the device lowering or arithmetic.
+
+The operation checks the same float32 scale/gradient/Fisher domain as Normal's
+existing geometry on every row, including zero weights. Invalid domains raise;
+finite inputs outside comparison support return unresolved. Both input buffers
+remain caller-owned. Scratch is `32*N + 32` bytes beyond existing validation flags
+and is released on success/failure. Only one 32-byte scalar summary plus validation
+flags is exported. `comparison_calls` and `comparison_export_bytes` supplement
+the existing allocation, launch and transfer counters. These sizes describe the
+implementation; actual device measurements remain pending.
+
+`ObjectiveOperations(..., compare=callback)` exposes the programmable dependency.
+`objective.loss_change(ops, problem, before, after)` validates the result type and
+raises `NotImplementedError` when no callback is supplied; it never substitutes
+subtracted reporting losses. The Normal factory supplies this operation, while
+the scalar objective retains its existing contract. Agents can supply another
+comparison callback without modifying the grower or runtime.
+
+The separate 117-case GPU operation cohort covers all 106 frozen numerical inputs,
+invalid domains/identities, callback independence and failures during allocation
+or kernel dispatch. It is collected
+locally but has not executed on a GPU. Best-model anchors, backtracking and patience
+still require the separate 092-C consumer work. No new device allowance is granted
+by this implementation.

@@ -4,8 +4,9 @@ Status: local construction approved after 092-A. All seven hardware allowances
 remain consumed. The independent study and complete historical mapping precede
 these production changes. No new upload, execution or author attempt is included.
 The public CPU record and Normal operation are implemented and pass 127 focused
-tests; the full CPU regression is 1633 passed, one Linux-only skip. Device
-construction and its separate verifier cohort follow before 092-B reflection.
+tests; the full CPU regression at that slice is 1633 passed, one Linux-only skip.
+The device operation and objective callback are now constructed. Its separate
+117-case GPU verifier cohort collects locally; device execution remains pending.
 
 ## Implementation order and acceptance
 
@@ -58,3 +59,31 @@ with ownership specified before edits. A missing objective comparison callback
 must raise when comparison is requested. Existing scalar contracts do not silently
 inherit a Normal policy. All 383 old cases and failed archives remain identifiable;
 the new operation cohort cannot count as full boosting conformance.
+
+## Construction reflection
+
+The public CPU operation passes the full independent numerical study, and the
+device path now expresses the same bounded algebra using directed double
+intrinsics. Its two kernels produce row intervals and an ordered weighted
+reduction, with a separate all-row float32-domain check. Eleven additional GPU
+cases cover domain/identity/rollback and callback independence beyond the 106
+stored-input cases. All 117 are collected, not run.
+
+The device API's planned cost is `32*N + 32` bytes of scratch, a 32-byte summary
+export plus existing validation flags, and four launches including validation.
+The counters expose those costs, but no actual device measurement or lowering
+verification is available. This may be expensive; the next conformance run must
+retain the cost, compilation and real end-to-end evidence. Do not describe shared
+source as CPU/CUDA parity.
+
+Local verification: 1636 CPU tests pass with one Linux-only skip; production and
+changed support lint pass. Documentation builds with the existing external-tree
+run-6 evidence link warning. Offline source/wheel build succeeds, and an isolated
+wheel import with CUDA modules blocked exercises the public tiny-improvement
+comparison. Historical source snapshots, verifiers, tolerances and raw run
+artifacts remain unchanged.
+
+092-B construction is complete; device verification remains part of the future
+hardware gate. Continue with 092-C ownership/design and explicit consumers under
+the existing local approval. The public operation alone has not fixed training,
+validation-best or stopping decisions.

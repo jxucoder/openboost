@@ -5,6 +5,7 @@ from functools import partial
 import numpy as np
 
 from . import device_objectives as operations
+from .comparison import _normal_result
 from .device import _atomic, _parameter, _workspace
 from .objectives import Normal
 
@@ -22,7 +23,7 @@ def objective(*, minimum_scale=1e-6):
     """Explicit Normal dependencies for the shared device transaction runtime."""
     floor = _floor(minimum_scale)
     return operations.ObjectiveOperations(
-        Normal.validate, prepare, partial(base, minimum_scale=floor), loss
+        Normal.validate, prepare, partial(base, minimum_scale=floor), loss, compare=compare
     )
 
 
@@ -95,3 +96,41 @@ def loss(ops, problem, raw):
     if not np.isfinite(result):
         raise ValueError("Normal geometry outside float32 support")
     return result
+
+
+@_atomic
+def compare(ops, problem, before, after):
+    """Resident stored-input NLL change with scalar bounds; CUDA validation pending.
+
+    Domain/shape checks include every row. Both inputs remain owned by the caller.
+    No raw/gradient transfer or CPU comparison occurs. Only a 32-byte summary and
+    existing validation flags leave the device; all local scratch is released.
+    """
+    target, offset = operations._arrays(ops, problem, widths=(1, 2))
+    shape = (problem.data.n_rows, 2)
+    old, new = ops._float(before, shape), ops._float(after, shape)
+    ops._validate(old)
+    ops._validate(new)
+    context = ops.execution
+    with _workspace(ops):
+        rows = context._empty((shape[0], 4), np.float64)
+        output = context._empty((4,), np.float64)
+        context._counts.setdefault("comparison_calls", 0)
+        context._counts["comparison_calls"] += 1
+        ops._launch("normal_compare_rows", shape[0], target, offset, old, new, context._array(rows))
+        ops._launch(
+            "normal_compare_reduce",
+            1,
+            context._array(rows),
+            context._array(problem.data.weight),
+            context._array(output),
+        )
+        summary = context.export(output)
+        context._counts.setdefault("comparison_export_bytes", 0)
+        context._counts["comparison_export_bytes"] += output.nbytes
+        lower, upper, code, unchanged = (float(value) for value in summary)
+        if code == 3:
+            raise ValueError("Normal geometry outside float32 support")
+        if code not in (0, 1, 2) or unchanged not in (0, 1):
+            raise RuntimeError("invalid device comparison summary")
+        return _normal_result(lower, upper, int(code), bool(unchanged))

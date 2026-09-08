@@ -3,8 +3,9 @@
 Status: local execution approved by the user after
 [091's measured retrospective](091-normal-acceptance-diagnostics.md).
 092-A's independent mathematics, complete historical mapping and clean-source
-evidence are complete. The slice's reflection is recorded below. Public implementation
-and consumer changes remain pending. No new hardware allowance is included. All seven
+evidence are complete. [092-B public operations](092-public-comparison-operations.md)
+are constructed; CPU validation passes and CUDA execution remains pending. Consumer
+changes are next. Both slice reflections are recorded. No new hardware allowance is included. All seven
 device invocations are consumed. This is the next bounded correctness slice of
 079/B12/R6, not a new private trainer or a change to the required R/C/A scope.
 

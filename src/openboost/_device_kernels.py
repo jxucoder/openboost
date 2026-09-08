@@ -5,6 +5,13 @@ import math
 from numba import cuda, float32, float64
 from numba.cuda import libdevice
 
+from ._comparison_math import make_normal_math
+
+_compare_add, _compare_mul, _compare_div, _normal_change = make_normal_math(
+    cuda.jit(device=True), libdevice.dadd_rd, libdevice.dadd_ru,
+    libdevice.dmul_rd, libdevice.dmul_ru, libdevice.ddiv_rd, libdevice.ddiv_ru,
+)
+
 
 @cuda.jit
 def validate_fields(values, nonnegative, flags):
@@ -381,6 +388,42 @@ def normal_loss(target, offset, weight, raw, output):
             total += float64(weight[r]) * value
             mass += float64(weight[r])
         output[0] = total / mass
+
+
+@cuda.jit
+def normal_compare_rows(target, offset, before, after, output):
+    r = cuda.grid(1)
+    if r < before.shape[0]:
+        m0, l0 = float64(before[r, 0]), float64(before[r, 1])
+        m1, l1 = float64(after[r, 0]), float64(after[r, 1])
+        y, mo, lo = float64(target[r, 0]), float64(offset[r, 0]), float64(offset[r, 1])
+        # Retain the objective's actual float32 scale/gradient/Fisher domain.
+        # Domain checks run for every row, independently of comparison support.
+        old_loss, _, _, _ = normal_row(m0 + mo, l0 + lo, y)
+        new_loss, _, _, _ = normal_row(m1 + mo, l1 + lo, y)
+        lower, upper, code = float64(0), float64(0), 3
+        if math.isfinite(old_loss) and math.isfinite(new_loss):
+            lower, upper, code = _normal_change(m0, l0, m1, l1, y, mo, lo)
+        output[r, 0], output[r, 1], output[r, 2] = lower, upper, code
+        output[r, 3] = 1 if m0 == m1 and l0 == l1 else 0
+
+
+@cuda.jit
+def normal_compare_reduce(rows, weight, output):
+    if cuda.grid(1) == 0:
+        total, mass = (float64(0), float64(0)), (float64(0), float64(0))
+        code, unchanged = 0, 1
+        for r in range(rows.shape[0]):
+            code = max(code, int(rows[r, 2]))
+            if rows[r, 3] == 0:
+                unchanged = 0
+            w = float64(weight[r]), float64(weight[r])
+            total = _compare_add(total, _compare_mul((rows[r, 0], rows[r, 1]), w))
+            mass = _compare_add(mass, w)
+        lower, upper = _compare_div(total, mass)
+        if not math.isfinite(lower) or not math.isfinite(upper):
+            code = max(code, 2)
+        output[0], output[1], output[2], output[3] = lower, upper, code, unchanged
 
 
 @cuda.jit

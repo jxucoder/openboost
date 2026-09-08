@@ -51,8 +51,10 @@ offsets, pass them to `Model.predict(..., offset=...)` before converting; object
 loss receives unoffset raw caches and applies Problem offsets once. The model is
 a raw predictor and does not persist a distribution tag or calibrated intervals.
 
-This is a joint-update CPU recipe, not full NGBoost parity. Ordered parameter
-updates, additional distributions and CUDA remain required later work.
+This is a joint-update CPU recipe, not full NGBoost parity. Ordered CPU parameter
+updates and additional distributions remain later work. The experimental
+[CUDA Normal path](execution.md) supports joint and ordered updates, with full
+acceptance conformance still open.
 [Formula](formula-runs.md) now probes full GGN geometry through shared components. No real-dataset quality or speed advantage is claimed.
 Per-round traces retain arrays, and trial validation currently recomputes ensemble
 predictions. Formula and heterogeneous sequential runs now provide the next construction probe.

@@ -29,6 +29,10 @@ binary64 assumptions. CUDA construction follows as its own unverified slice.
   metrics, persistence and recipe decisions.
 - Private bounded row algebra with explicit arithmetic dependencies; CPU domain
   validation and ordered weighted reduction.
+- Resident row/reduction kernels instantiate the algebra with directed double
+  intrinsics; a public device operation validates all rows, releases scratch,
+  exports a 32-byte summary and accounts for comparisons/transfers. Explicit
+  objective callback dispatch rejects missing support or an invalid result type.
 - [092-B plan](../v1-sprints/092-public-comparison-operations.md), public Normal
   documentation and tests across the frozen study and validation/immutability cases.
 
@@ -43,6 +47,14 @@ binary64 assumptions. CUDA construction follows as its own unverified slice.
   with one Linux-only skip**. Production/changed support lint passes. MkDocs builds
   with its pre-existing run-6 evidence link warning.
 - No real CUDA execution, emulator, independent author attempt or upload.
+- Device callback/configuration checks: **35 passed**. The new GPU operation file
+  collects **117 distinct cases**, including 106 stored-input comparisons and
+  eleven domain/identity/failure/callback cases. Collection is not execution or
+  parity evidence.
+- Full CPU regression after device construction: **1636 passed, one Linux-only
+  skip**. Lint passes; documentation builds with its existing warning. Offline
+  source/wheel build passes. An isolated wheel import with CUDA modules blocked
+  successfully evaluates the public tiny-improvement comparison.
 
 ## Failed Attempts
 
@@ -62,4 +74,5 @@ binary64 assumptions. CUDA construction follows as its own unverified slice.
 
 ## Commits
 
-- The verified public CPU slice is committed first; device construction follows.
+- `51b8a96` — verified public CPU loss-change operation and immutable record.
+- Device construction is a separate commit with explicitly pending GPU evidence.

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from .comparison import LossChange
 from .device import DeviceData, _atomic, _parameter, _workspace
 from .objectives import Squared
 
@@ -146,12 +147,24 @@ class ObjectiveOperations:
     loss: object
     gradient: object = None
     fields: object = None
+    compare: object = None
 
     def __post_init__(self):
         if any(not callable(f) for f in (self.validate, self.prepare, self.base, self.loss)):
             raise ValueError("callable validation/preparation/base/loss operations required")
-        if any(f is not None and not callable(f) for f in (self.gradient, self.fields)):
-            raise ValueError("optional gradient/fields operations must be callable")
+        if any(
+            f is not None and not callable(f) for f in (self.gradient, self.fields, self.compare)
+        ):
+            raise ValueError("optional gradient/fields/comparison operations must be callable")
+
+    def loss_change(self, ops, problem, before, after):
+        """Request the objective's explicit comparison; never subtract reported losses."""
+        if self.compare is None:
+            raise NotImplementedError("objective does not supply a loss-change operation")
+        result = self.compare(ops, problem, before, after)
+        if not isinstance(result, LossChange):
+            raise TypeError("objective comparison must return LossChange")
+        return result
 
 
 SQUARED = ObjectiveOperations(Squared.validate, prepare, base, loss, gradient, fields)
