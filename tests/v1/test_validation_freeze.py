@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -17,6 +18,22 @@ from benchmarks.v1.freeze_validation_run11 import budget_seconds
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def packet_sources(protocol):
+    if protocol["authorization"] != "consumed":
+        return snapshot_hashes(ROOT, snapshot_paths(ROOT, PROTOCOL, protocol))
+    # A consumed packet describes its execution revision, not today's production.
+    manifest = json.loads((ROOT / protocol["output"] / "manifest.json").read_text())
+    assert manifest["protocol"]["frozen_sources"] == protocol["frozen_sources"]
+    sources = {
+        name: hashlib.sha256(
+            subprocess.check_output(["git", "show", manifest["revision"] + ":" + name], cwd=ROOT)
+        ).hexdigest()
+        for name in manifest["sources"]
+    }
+    assert sources == manifest["sources"]
+    return sources
+
+
 def test_local_baseline_install_matches_original_and_replays_saved_models():
     protocol = json.loads((ROOT / PROTOCOL).read_text())
     report = json.loads((ROOT / "v1-sprints/105-baseline-install-local.json").read_text())
@@ -29,7 +46,7 @@ def test_local_baseline_install_matches_original_and_replays_saved_models():
 
 def test_frozen_payload_baseline_and_isolated_collection_agree():
     protocol = json.loads((ROOT / PROTOCOL).read_text())
-    sources = snapshot_hashes(ROOT, snapshot_paths(ROOT, PROTOCOL, protocol))
+    sources = packet_sources(protocol)
     check_frozen_sources(PROTOCOL, protocol, sources)
     assert len(sources) == protocol["upload_file_count"] == 88
     collected = json.loads((ROOT / "v1-sprints/105-isolated-collection.json").read_text())
@@ -60,7 +77,18 @@ def test_unapproved_packet_cannot_dispatch(tmp_path):
 
 def test_post_freeze_edit_cannot_dispatch():
     protocol = json.loads((ROOT / PROTOCOL).read_text())
-    sources = snapshot_hashes(ROOT, snapshot_paths(ROOT, PROTOCOL, protocol))
+    sources = packet_sources(protocol)
     sources["src/openboost/device.py"] = "changed"
     with pytest.raises(ValueError, match="source freeze changed"):
         check_frozen_sources(PROTOCOL, protocol, sources)
+
+
+def test_consumed_packet_never_reads_current_source_tree(monkeypatch):
+    protocol = json.loads((ROOT / PROTOCOL).read_text())
+    assert protocol["authorization"] == "consumed"
+
+    def forbidden(*args):
+        raise AssertionError("consumed evidence must not bind later source files")
+
+    monkeypatch.setattr("tests.v1.test_validation_freeze.snapshot_paths", forbidden)
+    assert len(packet_sources(protocol)) == 88

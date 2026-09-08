@@ -126,6 +126,13 @@ GPU allowances are consumed. Keep the field-validation optimization and stop at
 the completed 105 retrospective. Next construction returns to 080 required
 objective operations and inference metadata; row validation remains unchanged.
 
+The user's subsequent "continue" starts
+[106 resident binary/Poisson components](v1-sprints/106-binary-poisson-device-components.md):
+independent numerical/scope contracts, public objective operations, then class-aware
+export and two-round composition checks. Full recipe decision semantics remain the
+next integration slice. No new upload or hardware allowance is included. Preserve
+consumed run sources by revision when the current implementation changes.
+
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
 sources and past results. All R/C/A requirements remain; author/adoption benefit

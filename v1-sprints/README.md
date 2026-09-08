@@ -65,6 +65,12 @@ are consumed. Keep the optimization and stop at the completed 105 retrospective;
 next construction returns to required 080 recipes and inference metadata. These
 synthetic results do not pass formal E4 or full Normal conformance.
 
+The user's next "continue" starts [106 binary/Poisson device components](106-binary-poisson-device-components.md).
+It freezes independent numerics and complete required scope, constructs resident
+objective operations, and carries class metadata through two-round composition
+and export. Full scalar recipe decision semantics follow separately. All eleven
+hardware allowances remain consumed; no new upload or execution is authorized.
+
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),
 [train-many](081-cuda-train-many.md) and [real-workload quality/cost](082-end-to-end-cost.md).
