@@ -59,3 +59,13 @@ The pending freeze changes no required application scope or formal gate status.
 - `95b5232`: independent convex comparison mathematics and counterexamples.
 - `67788ba`: bounded resident binary/Poisson comparisons.
 - `703d9bd`: compared scalar recipes and independent trajectory controls.
+
+## Run-12 authorization
+
+The user's subsequent "continue", followed by explicit "approve", authorizes
+the exact 85-file Modal upload and one bounded T4 invocation described in the
+request. Only the two protocol authorization fields change; all 84 frozen
+non-protocol source hashes remain unchanged. The 25 focused freeze checks pass
+in 0.30 seconds before recording approval. Commit the authorization before
+dispatch so the manifest records a clean execution revision. No retry or extra
+invocation is authorized; preserve the result and stop after its retrospective.

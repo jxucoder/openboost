@@ -138,8 +138,8 @@ CPU tests with one Linux-only skip; all 153 GLM GPU cases collect but remain unr
 The [108 run-12 request](v1-sprints/108-glm-validation-request.md) now freezes 85
 files, 571 cases (153 GLM plus 418 regressions) and 77 mandatory JSON artifacts.
 Isolated installed collection matches; 45 local packet/retention checks pass.
-Both upload and hardware allowances remain pending. Obtain that concrete allowance
-before one bounded T4 invocation, then retain results and stop for retrospective.
+The user now explicitly approves this exact upload and hardware allowance.
+Execute one bounded T4 invocation, then retain results and stop for retrospective.
 Preserve consumed run sources by revision when current implementation changes.
 
 After this checkpoint, advance required CUDA recipes (080), compatible

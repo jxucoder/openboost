@@ -1,6 +1,7 @@
 # Sprint 108: Frozen binary/Poisson validation request
 
-Status: pending upload and hardware allowance. No remote invocation has occurred.
+Status: the user explicitly approves this exact upload and hardware packet after
+reviewing the 85-file / single-T4 request. No remote invocation has occurred yet.
 All eleven previous GPU allowances remain consumed. This is the concrete device
 gate following the [107 construction retrospective](107-glm-comparison-and-recipes.md).
 
