@@ -6,6 +6,7 @@ from functools import partial
 import numpy as np
 
 from . import device_objectives as operations
+from .comparison import _glm_result
 from .device import DeviceData, _atomic, _parameter, _workspace
 from .objectives import Binary, Poisson
 
@@ -33,8 +34,8 @@ def _configuration(family, value):
 def binary(*, clip=1e-6):
     """Binary callbacks with an offset-centred prior and stable logistic tails.
 
-    No loss-change callback is supplied. Prescribed updates are supported; stable
-    acceptance, best-model selection and stopping require separate integration.
+    The convex loss-change callback has local arithmetic checks; real-device
+    comparison and recipe validation remain pending.
     """
     return _objective("binary", clip)
 
@@ -53,6 +54,7 @@ def _objective(family, parameter):
         partial(loss, family=family),
         partial(gradient, family=family),
         partial(fields, family=family),
+        partial(compare, family=family),
     )
 
 
@@ -191,3 +193,41 @@ def loss(ops, problem, raw, *, family):
         if not np.isfinite(result):
             raise ValueError("GLM geometry outside float32 support")
         return result
+
+
+@_atomic
+def compare(ops, problem, before, after, *, family):
+    """Resident convex loss-change bounds, with independent caller-owned snapshots.
+
+    Validate every row before unchanged/zero-weight shortcuts. No reporting-loss
+    subtraction or CPU computation occurs; only a 32-byte summary and validation
+    flags leave CUDA. Finite but unresolvable changes retain explicit reasons.
+    """
+    arrays = _arrays(ops, problem, family)
+    shape = (problem.data.n_rows, 1)
+    old, new = ops._float(before, shape), ops._float(after, shape)
+    ops._validate(old)
+    ops._validate(new)
+    context = ops.execution
+    with _workspace(ops):
+        rows = context._empty((shape[0], 4), np.float64)
+        output = context._empty((4,), np.float64)
+        context._counts.setdefault("comparison_calls", 0)
+        context._counts["comparison_calls"] += 1
+        ops._launch(family + "_compare_rows", shape[0], *arrays, old, new, context._array(rows))
+        ops._launch(
+            "glm_compare_reduce",
+            1,
+            context._array(rows),
+            context._array(problem.data.weight),
+            context._array(output),
+        )
+        summary = context.export(output)
+        context._counts.setdefault("comparison_export_bytes", 0)
+        context._counts["comparison_export_bytes"] += output.nbytes
+        lower, upper, code, unchanged = (float(value) for value in summary)
+        if code == 3:
+            raise ValueError("GLM geometry outside float32 support")
+        if code not in (0, 1, 2) or unchanged not in (0, 1):
+            raise RuntimeError("invalid device comparison summary")
+        return _glm_result(family, lower, upper, int(code), bool(unchanged))

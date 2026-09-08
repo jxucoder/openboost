@@ -27,13 +27,13 @@ def test_binary_probability_clip_is_representable(clip):
 
 
 @pytest.mark.parametrize("family", ["binary", "poisson"])
-def test_upload_snapshot_and_explicit_missing_comparison(family):
+def test_upload_snapshot_and_explicit_comparison_dependency(family):
     p = fixture(family)
     objective = getattr(glm, family)()
     objective.validate(p)
-    assert objective.compare is None
+    assert objective.compare.func is glm.compare
     with pytest.raises(NotImplementedError, match="loss-change"):
-        objective.loss_change(None, None, None, None)
+        replace(objective, compare=None).loss_change(None, None, None, None)
     arrays = glm._host_arrays(p, family)
     assert len(arrays) == (3 if family == "poisson" else 2)
     for snapshot, original in zip(arrays, (p.target, p.offset, *p.structure.values()), strict=True):

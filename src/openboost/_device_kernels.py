@@ -6,6 +6,9 @@ from numba import cuda, float32, float64
 from numba.cuda import libdevice
 
 from ._comparison_math import make_normal_math
+from ._device_glm_comparison import binary_compare_rows as binary_compare_rows
+from ._device_glm_comparison import glm_compare_reduce as glm_compare_reduce
+from ._device_glm_comparison import poisson_compare_rows as poisson_compare_rows
 from ._device_glm_kernels import (
     binary_base as binary_base,
 )

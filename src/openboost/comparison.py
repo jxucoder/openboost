@@ -81,3 +81,13 @@ def _normal_result(lower, upper, code, unchanged):
         return LossChange(0.0, 0.0, method, "identical_stored_raw", unchanged=True)
     reason = "contains_zero" if lower <= 0 <= upper else "bounded_sign"
     return LossChange(lower, upper, method, reason)
+
+
+def _glm_result(family, lower, upper, code, unchanged):
+    method = family + "-convex-taylor18-interval-v1"
+    if code:
+        return LossChange(None, None, method, {1: "exponent_range", 2: "arithmetic_range"}[code])
+    if unchanged:
+        return LossChange(0.0, 0.0, method, "identical_stored_raw", unchanged=True)
+    return LossChange(lower, upper, method,
+                      "contains_zero" if lower <= 0 <= upper else "bounded_sign")

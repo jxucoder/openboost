@@ -49,3 +49,21 @@ hardware request follow local construction. No speed/adoption claim is made.
 ## Commits
 
 - `5943f4f`: preceding class-aware export and prescribed-round construction.
+
+## Slice B result
+
+`95b5232` freezes the numerical contract before production. The private scalar
+factory reuses the established enclosing +/*/division operations and constructs
+the full-range exponential directly. CUDA supplies directed-double primitives;
+its row kernels reuse the 106 geometry-domain helpers and its reduction validates
+every row before any weight-zero or unchanged shortcut. Public callbacks return
+LossChange, retaining separate resident snapshots and releasing all local scratch.
+
+All 59 shared-expression cases contain the independent 220-digit likelihood
+difference and retain required signs; two private range controls also pass. Combined
+with the independent study and configuration checks: 160 passed in 1.95 seconds.
+Seventy-seven GPU tests collect, including both allocation failures, dispatch after
+row computation, no host/reporting fallback and PTX directed-double checks. None
+has executed. The future numerical case artifacts include exact float32 inputs,
+bounds, high-precision value and transfer counters. No old Normal file or archive
+was modified; recipe consumers and their actual device validation remain next.

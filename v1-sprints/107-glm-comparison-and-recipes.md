@@ -58,3 +58,18 @@ All 73 local controls pass in 1.28 seconds, including reversed directions,
 permutations, extreme exponent bounds and invalid zero-weight no-ops. The
 stationary Poisson reporting tie is correctly bounded as worsening. Ruff passes.
 No new device result or tolerance change is claimed.
+
+## Slice B construction
+
+The production scalar factory and resident callbacks implement the declared
+convex intervals, positive-domain guards, ordered weighting and owned scratch.
+Binary/Poisson factories now supply `compare`; old Normal arithmetic and consumers
+remain unchanged. The Python scalar expression passes all 59 independent cases
+plus two range checks; together with the independent study and host configuration,
+160 tests pass in 1.95 seconds. No CPU host computation is used on the device path.
+
+Seventy-seven separate CUDA cases collect: all 59 frozen inputs, invalid geometry
+and identity, allocation/dispatch cleanup, forbidden host/reporting callbacks and
+actual directed-double PTX inspection. Each numerical case will retain inputs,
+enclosure, direct Decimal result and transfer counters when run. Hardware execution
+is pending. Next construction connects distinct acceptance/best/patience consumers.

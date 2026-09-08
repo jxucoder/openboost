@@ -502,9 +502,9 @@ nonfinite loss/geometry, even on zero-weight rows. They do not clip raw state.
 
 These components await real CUDA validation. Local tests check configuration and
 independent mathematical contracts; collected GPU cases cover resident numerics,
-ownership, failure recovery and transfer boundaries. No binary/Poisson recipe
-adapter or objective loss-change callback is supplied yet. Stable acceptance,
-best-model and stopping decisions remain a separate integration requirement.
+ownership, failure recovery and transfer boundaries. Both factories now supply
+`device_glm.compare` through their objective loss-change callback. Recipe consumer
+integration and real-device comparison validation remain pending.
 
 `DeviceRun` now rejects different training/validation class schemas before device
 preparation and includes the training schema when exporting a CPU `Model`. The
@@ -518,3 +518,19 @@ every root candidate, routed rows, leaves, train/validation state and task metri
 Saved models replay in a new CPU process with CUDA and training-module imports
 blocked. These cases have not run on hardware; manual acceptance does not establish
 reliable automatic acceptance, best-model selection or stopping.
+
+The GLM comparison uses convex Taylor bounds: gradient at the old raw times the
+step, plus half the squared step times bounds on curvature over the whole segment.
+Binary uses signed-margin sigmoid and Poisson keeps exposure explicit. An enclosed
+18-term range-reduced exponential and directed double basic operations avoid a
+platform-libm accuracy assumption. The result is `LossChange` with proved sign or
+an explicit unresolved reason. Wide or nearly cancelling changes may remain
+unresolved; no epsilon turns them into improvements.
+
+Comparison checks both complete float32 geometry domains on every row, including
+zero weights, before unchanged shortcuts. The two snapshots remain caller-owned.
+It allocates `32*N + 32` scratch bytes and exports only a 32-byte summary plus
+existing validation flags. No host/reporting callback is used. The independent
+160/220-digit oracle and Python execution of the shared scalar expressions pass;
+77 new CUDA comparison/ownership/lowering cases are collected but unrun. This
+does not yet establish compiler correctness, GPU cost or recipe conformance.
