@@ -3,12 +3,34 @@
 import http.client
 import json
 import os
+import re
 import subprocess
 import sys
 import time
 from pathlib import Path
 
 MAX_RESPONSE_BYTES = 4 * 2**20
+
+
+class TransportStopped(RuntimeError):
+    """Retain a reconciliation response without releasing it as author work."""
+
+    def __init__(self, response):
+        super().__init__("background work stopped; see retained operations")
+        self.response = response
+
+
+def route(operation, response_id):
+    if operation == "create" and response_id is None:
+        return "POST", "/v1/responses"
+    if (
+        operation not in ("retrieve", "cancel")
+        or not isinstance(response_id, str)
+        or re.fullmatch(r"resp_[A-Za-z0-9_-]{1,256}", response_id) is None
+    ):
+        raise ValueError("unsupported Responses operation or response ID")
+    suffix = "/cancel" if operation == "cancel" else ""
+    return ("POST" if operation == "cancel" else "GET"), f"/v1/responses/{response_id}{suffix}"
 
 
 def supervise(command, directory, deadline):
@@ -50,6 +72,11 @@ def send(request, directory, deadline):
     raw = (directory / "request.json").read_bytes()
     if decode(raw) != request:
         raise ValueError("persisted request differs from the reserved request")
+    return call("create", directory, deadline)
+
+
+def call(operation, directory, deadline, response_id=None):
+    route(operation, response_id)
     supervise(
         [
             sys.executable,
@@ -58,6 +85,8 @@ def send(request, directory, deadline):
             str(Path(__file__).resolve()),
             str(directory.resolve()),
             str(max(0.001, deadline - time.monotonic())),
+            operation,
+            response_id or "",
         ],
         directory,
         deadline,
@@ -70,18 +99,19 @@ def send(request, directory, deadline):
     return decode((directory / "response.bin").read_bytes())
 
 
-def exchange(directory, socket_timeout):
+def exchange(directory, socket_timeout, operation="create", response_id=None):
     """Only this trusted child reads the key; headers never enter the archive."""
     connection = None
     try:
+        method, path = route(operation, response_id)
         key = os.environ.get("OPENAI_API_KEY")
         if not key:
             raise RuntimeError("API credential unavailable")
         connection = http.client.HTTPSConnection("api.openai.com", timeout=socket_timeout)
         connection.request(
-            "POST",
-            "/v1/responses",
-            body=(directory / "request.json").read_bytes(),
+            method,
+            path,
+            body=(directory / "request.json").read_bytes() if operation == "create" else None,
             headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
         )
         response = connection.getresponse()
@@ -114,4 +144,6 @@ def exchange(directory, socket_timeout):
 
 
 if __name__ == "__main__":
-    raise SystemExit(exchange(Path(sys.argv[1]), float(sys.argv[2])))
+    raise SystemExit(
+        exchange(Path(sys.argv[1]), float(sys.argv[2]), sys.argv[3], sys.argv[4] or None)
+    )

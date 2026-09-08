@@ -217,3 +217,19 @@ same attempt under another directory and supervise worker lifetime independently
 Next: freeze and authorize a real cap/exhaustion and cancellation/usage smoke,
 then integrate the verified worker command boundary and fair D1/D2 arms. Neither
 this controller nor passing local tests closes 069 preparation or formal E5.
+
+[099](../../../v1-sprints/099-background-accounting-smoke.md) adds optional
+`background=True` to `Controller`. The trusted transport retains each create,
+retrieve and cancel operation. It polls at most sixty times, with one-second
+intervals and the original work deadline. On interruption, a known response ID
+permits one cancel and one final GET within fifteen additional seconds reserved
+for cleanup. Each HTTP child is limited to ten seconds or the remaining relevant
+deadline, whichever is smaller. No retry creates another response.
+
+Terminal usage after cancellation can reconcile the ledger, but no stopped
+answer is returned, including a completion racing cancellation. Unknown response
+identity or final usage leaves its reservation unresolved and closes the
+controller. A cancel acknowledgement alone does not prove final usage; current
+provider documentation includes a cancelled response with null usage. Abrupt
+controller loss can still prevent cleanup. Real behavior and complete author
+integration remain unverified.

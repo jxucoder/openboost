@@ -9,7 +9,7 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from benchmarks.v1.authoring.responses_transport import send
+from benchmarks.v1.authoring.responses_transport import TransportStopped, send
 
 
 @dataclass(frozen=True)
@@ -87,13 +87,16 @@ class Controller:
     Injected transports support protocol tests, not measured provider evidence.
     """
 
-    def __init__(self, directory, *, model, reasoning_effort, limits, transport=None):
+    def __init__(
+        self, directory, *, model, reasoning_effort, limits, transport=None, background=False
+    ):
         if (
             not isinstance(model, str)
             or not model.strip()
             or not isinstance(reasoning_effort, str)
             or not reasoning_effort.strip()
             or not isinstance(limits, Limits)
+            or type(background) is not bool
         ):
             raise ValueError("explicit model, reasoning setting and limits required")
         self.started = time.monotonic()
@@ -101,7 +104,13 @@ class Controller:
         self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=False)
         self.limits = limits
-        self.transport = send if transport is None else transport
+        self.background = background
+        if transport is None and background:
+            from benchmarks.v1.authoring.responses_background import Background
+
+            self.transport = Background()
+        else:
+            self.transport = send if transport is None else transport
         self.lock = threading.Lock()
         self.record = dict(
             schema="openboost-author-request-accounting-v1",
@@ -109,6 +118,7 @@ class Controller:
             reasoning_effort=reasoning_effort,
             limits=asdict(limits),
             transport="responses_https" if transport is None else "injected_protocol_test",
+            background=background,
             dispatch_ready=False,
             status="ready",
             generated_tokens=None,
@@ -145,7 +155,7 @@ class Controller:
                 tools=[],
                 parallel_tool_calls=False,
                 stream=False,
-                background=False,
+                background=self.background,
                 store=False,
             )
             entry = dict(
@@ -170,7 +180,12 @@ class Controller:
                 if time.monotonic() >= self.deadline:
                     self._stop("wall_limit")
                     raise TimeoutError("attempt deadline reached while persisting request")
-                response = self.transport(request, directory, self.deadline)
+                stopped = False
+                try:
+                    response = self.transport(request, directory, self.deadline)
+                except TransportStopped as interruption:
+                    response = interruption.response
+                    stopped = True
                 persist(directory / "response.json", response)
                 entry["response_sha256"] = hashlib.sha256(
                     (directory / "response.json").read_bytes()
@@ -191,6 +206,9 @@ class Controller:
                 if time.monotonic() >= self.deadline:
                     self._stop("wall_limit")
                     raise TimeoutError("response arrived after the deadline")
+                if stopped:
+                    self._stop("transport_stopped")
+                    raise RuntimeError("background transport stopped; answer withheld")
                 if not terminal:
                     self._stop("response_failure")
                     raise RuntimeError("response did not complete or reach its output cap")
@@ -202,7 +220,11 @@ class Controller:
                     self._stop("ready")
                 return response
             except BaseException as error:
-                if self.record["status"] not in ("wall_limit", "response_failure"):
+                if self.record["status"] not in (
+                    "wall_limit",
+                    "response_failure",
+                    "transport_stopped",
+                ):
                     if entry["usage"] is None:
                         self.record.update(status="usage_unknown", generated_tokens=None)
                         entry["status"] = "usage_unknown"
