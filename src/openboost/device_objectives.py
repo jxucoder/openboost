@@ -37,6 +37,8 @@ def prepare(ops, data, problem, *, validate=Squared.validate):
 
 def _arrays(ops, problem, *, widths=(1, 1)):
     ops._get(problem, DeviceProblem)
+    if type(problem) is not DeviceProblem:
+        raise ValueError("prepared objective family differs")
     if (problem.target_width, problem.raw_width) != widths:
         raise ValueError("prepared target/raw widths differ from objective")
     return tuple(ops.execution._array(h) for h in ops._records[problem][0])

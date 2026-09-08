@@ -82,3 +82,18 @@ cell's removal/skip/fallback counterexample. Five run-11 freeze checks also pass
 consumed packets now read their committed execution source bytes, preserving the
 archive while allowing current production to evolve. Total: 43 passed in 7.83 s;
 changed-file Ruff passes. No new production kernel or CUDA case has run.
+
+## Slice B construction
+
+Resident binary/Poisson callbacks now implement explicit uploads, initialization,
+geometry, gradient, weighted fields and scalar loss. Poisson retains exposure in
+its owned prepared record; scalar family tags reject same-width reinterpretation.
+Row formulas preserve logistic complements and validate positive float32 curvature
+on every row. Float64 ordered reductions and log-sum-exp implement the frozen base
+and reporting contracts. No raw/target/gradient download or CPU fallback is added.
+
+Local configuration/oracle/archive checks: 68 passed in 9.80 seconds, including 25
+new host configuration/upload controls. Thirty-eight new GPU cases collect only;
+they cover domains with positive/zero weight, initialization, fields, transfer
+accounting, family/identity checks and dispatch-failure cleanup. Production and
+changed-test Ruff pass. Real device lowering and execution remain unverified.

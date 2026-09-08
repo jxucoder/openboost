@@ -6,6 +6,27 @@ from numba import cuda, float32, float64
 from numba.cuda import libdevice
 
 from ._comparison_math import make_normal_math
+from ._device_glm_kernels import (
+    binary_base as binary_base,
+)
+from ._device_glm_kernels import (
+    binary_geometry as binary_geometry,
+)
+from ._device_glm_kernels import (
+    binary_loss as binary_loss,
+)
+from ._device_glm_kernels import (
+    glm_gradient as glm_gradient,
+)
+from ._device_glm_kernels import (
+    poisson_base as poisson_base,
+)
+from ._device_glm_kernels import (
+    poisson_geometry as poisson_geometry,
+)
+from ._device_glm_kernels import (
+    poisson_loss as poisson_loss,
+)
 
 _compare_add, _compare_mul, _compare_div, _normal_change = make_normal_math(
     cuda.jit(device=True), libdevice.dadd_rd, libdevice.dadd_ru,

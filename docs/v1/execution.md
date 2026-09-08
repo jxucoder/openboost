@@ -472,5 +472,36 @@ Sprint 105 changes only the scheduling of finite/nonnegative field checks: one
 All rows, including zero-weight rows and tail lanes, remain checked. Flag buffer
 sizes, error messages, launch counts and public ownership remain unchanged;
 histogram/loss sums and comparison decisions retain their existing arithmetic.
-The candidate has local collection and CPU regression checks only until the next
-frozen real-device run. No speed improvement or CUDA validation is claimed yet.
+The candidate passes all 474 run-11 T4 cases. Warm squared fits fall from 2.8380 s
+to 2.7485 s at 10,000 rows and from 13.5127 s to 8.9470 s at 100,000 rows; warm
+Normal 10,000-row fits fall from 6.5378 s to 5.6647 s. These compare original and
+candidate OpenBoost on the frozen synthetic cases, with exact saved predictions
+and models. They do not establish external-library speed or formal E4. See
+`benchmarks/v1/evidence/parallel-validation-105/README.md` for raw artifacts,
+first-fit costs, environment/source bindings and all gates.
+
+## Binary and Poisson objective construction
+
+Sprint 106 adds `device_glm.binary(clip=1e-6)` and
+`device_glm.poisson(minimum_rate=1e-6)`, returning explicit `ObjectiveOperations`.
+Preparation uploads aligned targets/offsets once; Poisson exposure stays separately
+owned. The prepared record binds its family, so same-width squared, binary and
+Poisson data cannot be interchanged. Callbacks supply resident initialization,
+unweighted gradient, once-weighted named fields and scalar weighted likelihood.
+`device_glm.geometry(ops, problem, raw, family=...)` returns an independent float32
+`[N,2]` gradient/curvature buffer. No training-time target/raw/gradient download or
+CPU objective fallback occurs; validation flags and the float64 loss leave CUDA.
+
+All objective inputs use float32 storage and row math uses float64 at those stored
+values. Binary preserves signed-margin tails and initializes the clipped weighted
+class prior minus weighted offset; both observed classes are required. Poisson
+requires exactly representable counts and positive stored exposure, initializes
+with log-sum-exp, and uses minimum rate only for zero positively weighted counts.
+Loss includes log-factorial. Both families reject nonpositive stored curvature or
+nonfinite loss/geometry, even on zero-weight rows. They do not clip raw state.
+
+These components await real CUDA validation. Local tests check configuration and
+independent mathematical contracts; collected GPU cases cover resident numerics,
+ownership, failure recovery and transfer boundaries. No binary/Poisson recipe
+adapter or objective loss-change callback is supplied yet. Stable acceptance,
+best-model and stopping decisions remain a separate integration requirement.
