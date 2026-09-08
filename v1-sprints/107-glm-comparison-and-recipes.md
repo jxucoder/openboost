@@ -1,6 +1,6 @@
 # Sprint 107: GLM comparison and scalar recipe integration
 
-Status: planned after the 106 construction retrospective. Mapping: 080 / B12 /
+Status: active after the user's "continue" following 106. Mapping: 080 / B12 /
 R1 binary / R4 Poisson. Local construction can continue; no hardware/upload allowance.
 
 ## Purpose
@@ -49,3 +49,12 @@ campaign, external benchmark or author/model study enters this sprint.
   remain experimental and no R1/R4 device conformance or speed claim is made.
 - A later passing bounded device packet still does not close every required 080
   recipe, R9, application quality, author/adoption benefit or formal E4.
+
+## Slice A result
+
+The [convex-bound derivation](107-glm-comparison-mathematics.md), 59 frozen cases
+and independent direct 160/220-digit likelihood oracle precede production code.
+All 73 local controls pass in 1.28 seconds, including reversed directions,
+permutations, extreme exponent bounds and invalid zero-weight no-ops. The
+stationary Poisson reporting tie is correctly bounded as worsening. Ruff passes.
+No new device result or tolerance change is claimed.
