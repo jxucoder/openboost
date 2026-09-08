@@ -1,7 +1,7 @@
 {
   "scope": "105 parallel field validation: unchanged-algorithm original/candidate GPU cost with exact input bytes, bounded scalar/Normal/D2 regression. Synthetic engineering gate only; no full Normal, E4, external-library or adoption claim.",
-  "authorization": "pending",
-  "upload_authorization": "pending",
+  "authorization": "approved",
+  "upload_authorization": "approved",
   "require_upload_authorization": true,
   "upload_destination": "Modal",
   "app_name": "openboost-v1-parallel-validation",

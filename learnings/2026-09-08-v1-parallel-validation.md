@@ -127,3 +127,12 @@ acceptance. No new upload, remote invocation or speed claim has occurred.
 Row-index validation is intentionally unchanged. The next result must decide
 whether this small foundation optimization earns its complexity before further
 optimization; it cannot substitute for required 080/081/082 or formal E4 scope.
+
+## Run-11 authorization
+
+The user explicitly approves the concrete 88-file Modal upload and one bounded
+T4 invocation after construction commit `2101fd7`. Change only the protocol's two
+authorization fields; preserve all 87 source hashes, case settings, deadlines
+and zero-retry policy. Verify the local freeze guards, commit the approval state,
+then execute once and audit the retained evidence before the planned retrospective.
+The four local source/installation/authorization guards pass in 0.21 seconds.

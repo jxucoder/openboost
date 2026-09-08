@@ -1,7 +1,8 @@
 # Sprint 105: Frozen validation comparison request
 
-Status: construction complete; exact source upload and one new invocation pending.
-No run-11 upload or CUDA execution has occurred. All ten earlier allowances remain
+Status: the user explicitly approves this exact upload and one invocation after
+reviewing the 88-file request. Only the protocol's two authorization fields change;
+all 87 frozen source hashes remain unchanged. All ten earlier allowances remain
 consumed. This request implements the approved
 [Sprint 105 construction](105-parallel-validation-and-reproducible-cost.md).
 
@@ -110,3 +111,10 @@ profile evidence before choosing another optimization or returning to 080/081/08
 After exact approval, update the two pending authorization fields, commit that
 approval state, dispatch once from clean Git, preserve every raw result and mark
 the allowance consumed. No push, release or external leaderboard update is included.
+
+## Approved execution plan
+
+1. Check the unchanged source freeze and local guards, then commit approval.
+2. Dispatch the fixed packet once within the declared limits; retain all failures.
+3. Audit exact inputs/models/quality and timing eligibility, commit raw evidence
+   and the retrospective, and stop at the planned decision boundary.
