@@ -11,6 +11,12 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
+The latest local continuation is [094 standalone author-verifier preparation](094-author-verifier-preparation.md),
+following the [093 checkpoint](093-foundation-progress-and-next-steps.md).
+Standalone D1/D2 development checks and a concrete runner audit advance 069;
+independent dispatch remains blocked on actual accounting/isolation and arm/settings
+freezes. Run 8 is still pending and its frozen inputs are unchanged.
+
 The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
 sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
 and bounded [078 scalar CUDA feasibility](078-cuda-scalar-path.md). D1 is the control;

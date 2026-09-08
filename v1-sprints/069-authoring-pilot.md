@@ -82,3 +82,13 @@ input hashes and twenty wheel source modules verify. Existing solutions/evaluato
 code are absent from the author directory. The initial DNS build failure is retained.
 The author view is not an OS sandbox; accounting, arm/model freeze and standalone
 verifier invocation remain missing. No independent attempt or measured benefit.
+
+### Standalone numerical preparation after checkpoint 093
+
+[Sprint 094](094-author-verifier-preparation.md) adds separate D1/D2 numerical
+judging without D3/D4 or candidate imports in the judge. Installed designer
+extensions supply development controls; this is not complete task acceptance.
+The [runner audit](../benchmarks/v1/evidence/author-runner-audit-094/README.md) retains
+real CLI/schema observations and the unresolved generated-token enforcement and
+OS isolation requirements. Dispatch remains false. The original author-view
+export is unchanged; a current revision/arm/settings freeze is still needed.

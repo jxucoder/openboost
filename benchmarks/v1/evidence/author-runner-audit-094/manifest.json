@@ -1,0 +1,72 @@
+{
+  "schema": "openboost-author-runner-readiness-audit-v1",
+  "status": "blocked",
+  "dispatch_ready": false,
+  "attempts": [],
+  "os": "macOS-26.3-arm64-arm-64bit",
+  "commands": [
+    {
+      "argv": [
+        "codex",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Operation not permitted (os error 1)\n"
+    },
+    {
+      "argv": [
+        "codex",
+        "exec",
+        "--help"
+      ],
+      "exit_code": 0,
+      "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Operation not permitted (os error 1)\n"
+    },
+    {
+      "argv": [
+        "codex",
+        "app-server",
+        "generate-json-schema",
+        "--experimental",
+        "--out",
+        "/tmp/openboost-069-codex-schema"
+      ],
+      "exit_code": 0,
+      "scope": "offline schema generation only; app server was not started"
+    }
+  ],
+  "available": {
+    "codex": "/usr/local/bin/codex",
+    "uv": "/Users/jiaruixu/.local/bin/uv",
+    "docker": null,
+    "podman": null
+  },
+  "declared_budget": {
+    "wall_s": 1800,
+    "generated_tokens": 20000
+  },
+  "observations": [
+    "Installed exec CLI advertises JSON events and wall-clock supervision is available through an outer process runner.",
+    "Installed app-server schema reports outputTokens and reasoningOutputTokens at thread/turn scope.",
+    "Installed goal schema contains tokenBudget but does not specify equivalence to the frozen generated-token budget."
+  ],
+  "unverified": [
+    "Generated-token definition: whether reasoningOutputTokens is included within outputTokens.",
+    "Usage-event cadence, loss on interruption and attribution to one isolated attempt.",
+    "Enforcement of the exact generated-token ceiling, including in-flight overshoot and forced exhaustion.",
+    "Actual author inability to read or modify evaluator files and expected answers.",
+    "Model/settings, tools and appropriate incumbent arms are not frozen."
+  ],
+  "sources": [
+    "https://learn.chatgpt.com/docs/non-interactive-mode",
+    "https://learn.chatgpt.com/docs/app-server"
+  ],
+  "files": {
+    "ThreadGoalSetParams.json": "93162f095e9b3b5a051ceb24318b8922c663edefc1f8c67bd378085c0d6c01d2",
+    "ThreadGoalSetResponse.json": "b1c61b6068b3b73dd3d97b38f8a269593f8f7added4643bfdb2016315b71ad8e",
+    "ThreadTokenUsageUpdatedNotification.json": "aba4f6c7e4a19b2b842c08ee793b57000c07dafd57b922ad0d8e7c76609108c2",
+    "version.txt": "0d1b0070eb5888be7b5ebc63673834c53e5e62263e8127e12096705671459015",
+    "exec-help.json": "b701e01d8da345d0aa7bdb441a49bfe1a66a253d7fb09573400d6da9f092d7af"
+  },
+  "exec_help_encoding": "JSON stdout string preserves the complete original help output, including whitespace"
+}
