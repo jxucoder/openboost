@@ -116,6 +116,17 @@ retrospective. Next local design should trigger cancellation on an observed acti
 response; it still requires a new concrete live allowance. Full accounting, worker
 integration, independent authors and GPU run 8 remain open.
 
+The user's next "continue" starts [100 active cancellation](v1-sprints/100-active-cancellation.md).
+The trusted controller now supports stop on the first validated in-progress
+response before the deadline. The recorded 099 prefix exercises that path with
+synthetic cancellation replies; all 66 focused checks pass. Its separate
+[one-request live packet](v1-sprints/100-cancellation-smoke.json) is pending:
+same model/prompt/cap/window as 099's cancellation probe, 4096 output tokens,
+$0.01 proposed allowance and zero retries. No new live call has occurred. Preserve
+the consumed 099 freeze and archived sources as the active implementation advances;
+use its archive verifier for historical evidence. Obtain the concrete allowance
+before the new live observation, then stop for retrospective.
+
 The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
 completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant
 065/068 ownership on the actual device path. Experimental CUDA storage, named
@@ -195,7 +206,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1933 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1946 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test

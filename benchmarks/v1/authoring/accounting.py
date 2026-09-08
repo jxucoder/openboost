@@ -88,7 +88,15 @@ class Controller:
     """
 
     def __init__(
-        self, directory, *, model, reasoning_effort, limits, transport=None, background=False
+        self,
+        directory,
+        *,
+        model,
+        reasoning_effort,
+        limits,
+        transport=None,
+        background=False,
+        stop_on_in_progress=False,
     ):
         if (
             not isinstance(model, str)
@@ -97,6 +105,8 @@ class Controller:
             or not reasoning_effort.strip()
             or not isinstance(limits, Limits)
             or type(background) is not bool
+            or type(stop_on_in_progress) is not bool
+            or (stop_on_in_progress and not background)
         ):
             raise ValueError("explicit model, reasoning setting and limits required")
         self.started = time.monotonic()
@@ -108,7 +118,7 @@ class Controller:
         if transport is None and background:
             from benchmarks.v1.authoring.responses_background import Background
 
-            self.transport = Background()
+            self.transport = Background(stop_on_in_progress=stop_on_in_progress)
         else:
             self.transport = send if transport is None else transport
         self.lock = threading.Lock()
@@ -119,6 +129,7 @@ class Controller:
             limits=asdict(limits),
             transport="responses_https" if transport is None else "injected_protocol_test",
             background=background,
+            stop_on_in_progress=stop_on_in_progress,
             dispatch_ready=False,
             status="ready",
             generated_tokens=None,

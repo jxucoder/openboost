@@ -236,11 +236,12 @@ author integration remain unverified.
 
 The [099 live packet](../../../v1-sprints/099-accounting-smoke.json) now fixes
 three integer-list prompts, the model alias/settings, twelve source hashes and
-all request/token/time bounds. Its allowance is now consumed. A no-network preflight
-still verifies the frozen inputs and reports that consumed state:
+all request/token/time bounds. Its allowance is consumed and its frozen hashes
+identify the historical execution revision. The active controller advances in
+100; verify 099's unchanged archived evidence without network use:
 
 ```bash
-UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.authoring.accounting_smoke
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python benchmarks/v1/evidence/author-accounting-099/verify.py --check
 ```
 
 The [run request and acceptance](../../../v1-sprints/099-background-accounting-smoke.md)
@@ -260,3 +261,30 @@ tokens. There is no retry or new allowance. The
 [retrospective](../../../v1-sprints/099-accounting-result.md) calls for an explicit
 stop trigger after observing an active response, followed by a separately frozen
 live test. Full author-budget enforcement and independent author benefit remain open.
+
+[100](../../../v1-sprints/100-active-cancellation.md) adds
+`Controller(..., background=True, stop_on_in_progress=True)`. After a valid
+in-progress observation arrives before the work deadline, the trusted transport
+persists its source operation/response ID and timing, then calls cancel and a
+final retrieval without another polling interval. Cleanup uses the same bounded
+fifteen seconds. This policy is rejected for synchronous requests; the default
+background policy is unchanged.
+
+Cancelled status, a recorded active trigger and known final usage are separate
+observations. Stopped answers are withheld even if completion races cancellation.
+An expired observation cannot satisfy the active trigger. Unknown cancelled
+usage retains its reservation. This direct stop does not establish full author
+wall-budget enforcement.
+
+The [pending packet](../../../v1-sprints/100-cancellation-smoke.json) proposes one
+request with 099's exact third prompt, model, 4096-output-token cap and five-second
+window, under a $0.01 allowance. Current no-network preflight:
+
+```bash
+UV_CACHE_DIR=/tmp/openboost-research-uv-cache uv run --no-sync python -m benchmarks.v1.authoring.cancellation_smoke
+```
+
+The [run request](../../../v1-sprints/100-active-cancellation.md) fixes acceptance,
+seventeen source files, cleanup and the one-use directory. No new model call or
+allowance is implied by the local protocol results. Retain 099's unexercised
+cancellation failure and stop after the next separately approved observation.

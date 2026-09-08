@@ -12,6 +12,10 @@ HTTP_TIMEOUT_S = 10.0
 CLEANUP_S = 15.0
 
 
+class ActiveResponseStop(RuntimeError):
+    """The trusted caller requested stop on a validated active observation."""
+
+
 class Background:
     """Trusted transport, not an independent runner or proof of provider expiry.
 
@@ -20,20 +24,26 @@ class Background:
     An injected call is only a local protocol test.
     """
 
-    def __init__(self, *, call=None):
+    def __init__(self, *, call=None, stop_on_in_progress=False):
+        if type(stop_on_in_progress) is not bool:
+            raise ValueError("stop_on_in_progress must be a boolean")
         self.call = wire.call if call is None else call
+        self.stop_on_in_progress = stop_on_in_progress
 
     def __call__(self, request, directory, deadline):
         if request.get("background") is not True or request.get("store") is not False:
             raise ValueError("background=true and store=false required")
         if wire.decode((directory / "request.json").read_bytes()) != request:
             raise ValueError("persisted request differs from reserved background request")
+        started = time.monotonic()
         record = dict(
             schema="openboost-background-operations-v1",
             transport="responses_https" if self.call is wire.call else "injected_protocol_test",
             response_id=None,
             operations=[],
             stopped=False,
+            stop_on_in_progress=self.stop_on_in_progress,
+            stop_trigger=None,
         )
         response_id = None
         last = None
@@ -88,6 +98,19 @@ class Background:
             last = validate(first)
             polls = 0
             while last["status"] not in TERMINAL:
+                if self.stop_on_in_progress and last["status"] == "in_progress":
+                    now = time.monotonic()
+                    if now >= deadline:
+                        raise TimeoutError("active observation arrived after the work deadline")
+                    record["stop_trigger"] = dict(
+                        kind="observed_in_progress",
+                        response_id=response_id,
+                        operation=len(record["operations"]),
+                        elapsed_s=now - started,
+                        remaining_work_s=deadline - now,
+                    )
+                    save()
+                    raise ActiveResponseStop("active response stop requested")
                 if polls >= MAX_POLLS:
                     raise TimeoutError("background polling allowance exhausted")
                 time.sleep(max(0, min(POLL_INTERVAL_S, deadline - time.monotonic())))

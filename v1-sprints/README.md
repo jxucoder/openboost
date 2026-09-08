@@ -58,6 +58,16 @@ The allowance is consumed without retry. The [retrospective](099-accounting-resu
 identifies an explicit active-response cancellation trigger as the next local
 design; no new live allowance or independent author attempt follows.
 
+The next user "continue" starts [100's active-stop construction](100-active-cancellation.md).
+An explicit trusted stop policy now cancels after the first validated in-progress
+observation, withholds stopped answers and separately judges cancellation and
+final usage. Thirteen new local cases plus all 53 earlier cases pass. The
+[new one-request packet](100-cancellation-smoke.json) preserves 099's model,
+prompt, output cap and work window; it proposes a $0.01 allowance without retries.
+Its authorization is pending, and no new model request has run. The active source
+now differs from 099's historical snapshot; its consumed freeze and archived
+evidence remain unchanged and independently verifiable.
+
 The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
 sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
 and bounded [078 scalar CUDA feasibility](078-cuda-scalar-path.md). D1 is the control;
@@ -74,7 +84,7 @@ retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
 CPU implementation has twelve recipes; the latest full CPU regression passes
-1933 tests (one Linux-only skip), including author/evaluation support checks.
+1946 tests (one Linux-only skip), including author/evaluation support checks.
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.
