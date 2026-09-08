@@ -19,7 +19,7 @@ CUDA construction. Public composability and correctness remain required.
 Next engineering order: validate the existing [Normal CUDA correction](092-comparison-run8-request.md),
 review its result, then advance [required CUDA recipes](080-cuda-required-recipes.md),
 [train-many](081-cuda-train-many.md) and [real-workload quality/cost](082-end-to-end-cost.md).
-Run 8's upload/compute allowance remains pending. No new model call is needed for
+Run 8's upload/compute allowance is now explicitly approved. No new model call is needed for
 these engineering checks. Preserve every application family and all past evidence.
 Resume the deferred author study only at the user's direction.
 
@@ -28,6 +28,9 @@ harness cases and verifies the unchanged source closure. Automatic approval revi
 blocked the attempted command before process creation because "finish" did not
 specifically authorize the source upload and paid GPU invocation. Both packet
 authorizations are restored to pending; no run occurred or allowance was consumed.
+The user subsequently replied "approve" to the exact 86-file upload and single
+bounded T4 invocation. Its authorization is recorded in 102; execute the original
+packet once and stop for retrospective. Earlier pending statements are historical.
 
 ## Prior preparation and evidence
 

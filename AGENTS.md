@@ -74,12 +74,16 @@ checks and mathematical/state/persistence correctness remain active requirements
 
 Next: the existing [Normal CUDA run-8 checkpoint](v1-sprints/092-comparison-run8-request.md),
 then required CUDA recipes (080), compatible train-many (081) and evidence-led
-quality/cost work (082). Run 8 still needs its concrete upload/compute allowance;
-this priority change authorizes no remote run. Preserve all frozen packets and
+quality/cost work (082). The user subsequently explicitly approved the concrete
+run-8 request: upload 86 frozen files to Modal and execute one T4 invocation,
+two CPUs, 8192 MiB, 900 function seconds, 600 test seconds and zero retries.
+See [102 execution](v1-sprints/102-normal-cuda-validation.md). Execute once,
+retain the evidence and stop for retrospective. Preserve all frozen sources and
 past results. All R/C/A requirements remain; author/adoption benefit is unverified.
 
 The historical sequence below records prior instructions and evidence. Its
-authoring continuations and limited F2-to-F3 overlap rule are superseded by 101.
+authoring continuations and limited F2-to-F3 overlap rule are superseded by 101;
+its statements of pending run-8 authorization predate the explicit approval above.
 The earlier execution was governed by the user-approved
 [Sprint 085 foundation-focus amendment](v1-sprints/085-foundation-focus-amendment.md).
 The [086 next execution plan](v1-sprints/086-next-execution-plan.md) decomposes

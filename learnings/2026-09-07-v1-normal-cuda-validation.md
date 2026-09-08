@@ -8,6 +8,12 @@ Its source and acceptance packet was frozen before the intervening authoring wor
 
 ## Decision or Result
 
+The user subsequently explicitly approved the 86-file Modal upload and one T4
+invocation with two CPUs, 8 GiB, at most 900 seconds and zero retries. This resolves
+the earlier review block and authorizes the existing packet without scope changes.
+The unchanged source closure and absent output directory are verified again before
+committing approval. The single hardware result remains pending at this point.
+
 Prepare that one bounded GPU validation under the existing run-8 request. The
 initial interpretation of "finish" as external execution authorization was
 rejected by automatic approval review before process creation. Specific approval
@@ -59,4 +65,5 @@ recipes, train-many and practical quality/cost remain subsequent engineering wor
 
 - `f7f3c60` — defer author evaluation and prioritize foundation execution.
 - `b58b168` — initial interpretation of the execution instruction and authorization.
-- The follow-up commit restores pending authorization and records the review block.
+- `dffcfd5` — restore pending authorization and record the review block.
+- This commit records the subsequent explicit approval for the original packet.

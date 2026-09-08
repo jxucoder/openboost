@@ -1,11 +1,11 @@
 # Sprint 102: Execute the frozen Normal CUDA correction
 
-Status: local readiness verified; external dispatch blocked by automatic approval
-review before process creation. The user's "finish" was interpreted as directing
-the next foundation checkpoint, but review requires specific authorization for
-the source transfer and paid GPU invocation. The
-[run-8 request](092-comparison-run8-request.md) remains pending and unchanged in
-scope. Agent evaluation and the Sprint 100 model test remain deferred.
+Status: the user explicitly replied "approve" to uploading the 86 frozen files
+to Modal and running one T4 with two CPUs, 8 GiB, at most 900 seconds and zero
+retries. The [run-8 request](092-comparison-run8-request.md) is now approved without
+scope changes. The previous automatic-review rejection occurred before any
+dispatch and remains recorded below. Agent evaluation and the Sprint 100 model
+test remain deferred.
 
 ## Plan
 
@@ -37,6 +37,13 @@ This is bounded Normal/D2 correctness validation. It does not establish all CUDA
 recipes, matched-quality speed, real-task value, agent benefit or complete v1.
 
 ## Result and reflection
+
+The subsequent explicit approval resolves the prior authorization block. Both
+protocol authorization fields are approved for the single original invocation.
+Pre-dispatch inspection verifies the unchanged 85 source hashes and absent output
+directory. Hardware results remain pending until this run returns.
+
+### Previous authorization rejection
 
 The local checks pass, but no GPU run occurred. Commit `b58b168` recorded the
 interpretation that "finish" authorized the pending checkpoint. Automatic review
