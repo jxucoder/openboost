@@ -1,6 +1,7 @@
 # Sprint 107: GLM comparison and scalar recipe integration
 
-Status: local construction complete; hardware request preparation follows the retrospective.
+Status: local construction complete; the [108 request](108-glm-validation-request.md)
+completes local hardware preparation and awaits its separate allowance.
 Mapping: 080 / B12 /
 R1 binary / R4 Poisson. Local construction can continue; no hardware/upload allowance.
 

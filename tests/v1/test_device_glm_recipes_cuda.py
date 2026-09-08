@@ -7,7 +7,6 @@ import subprocess
 import sys
 from dataclasses import asdict, replace
 from decimal import Decimal
-from pathlib import Path
 
 import numpy as np
 import pytest
@@ -23,6 +22,7 @@ from openboost.device_runtime import DeviceRun
 from openboost.execution import ExecutionContext
 from openboost.stopping import StopState
 
+from .glm_artifacts import directory, input_snapshot
 from .reference.glm_comparison import direct_difference
 from .reference.glm_recipe import SETTINGS, fit
 from .test_device_comparison_consumers_cuda import owned_bytes, snapshot
@@ -144,13 +144,14 @@ np.save(sys.argv[3], m.predict(NumericData(x, np.arange(len(x)), m.feature_names
 """
     inputs, output = tmp_path / "x.npy", tmp_path / "prediction.npy"
     np.save(inputs, validation.data.values)
-    subprocess.run([sys.executable, "-c", script, str(path), str(inputs), str(output)], check=True)
+    python = os.environ.get("OPENBOOST_FRESH_CPU_PYTHON", sys.executable)
+    subprocess.run([python, "-c", script, str(path), str(inputs), str(output)], check=True)
     close(np.load(output)[:, 0], expected["val"])
-    folder = Path(os.environ.get("OPENBOOST_GLM_RECIPE_ARTIFACTS", tmp_path))
-    folder.mkdir(parents=True, exist_ok=True)
+    folder = directory("recipes", tmp_path)
     identifier = f"{family}/{depth}/{step}/{rate}"
     report = dict(
         case=identifier,
+        inputs=dict(train=input_snapshot(train), validation=input_snapshot(validation)),
         model=model.record(),
         best=best.record(),
         steps=[asdict(s) for s in result.steps],

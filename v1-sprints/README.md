@@ -73,7 +73,11 @@ GPU cases collect without execution. [107 loss-change and recipe integration](10
 then completes local construction of resident comparison and scalar acceptance,
 best-validation and independent patience consumers. Full regression passes 2,241
 CPU tests with one Linux-only skip. All 153 GLM GPU cases collect but remain unrun.
-Next freeze the concrete run-12 request; all eleven allowances remain consumed.
+The [108 run-12 request](108-glm-validation-request.md) now freezes 85 files,
+571 cases and 77 mandatory JSON artifacts. Isolated installed collection agrees;
+45 local packet/retention controls pass. Its concrete upload/hardware allowance
+is pending; all eleven previous allowances remain consumed. Execute only after
+that allowance, preserve the raw verdict and stop for retrospective.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

@@ -135,9 +135,12 @@ not run. Local regression passes 2,065 CPU tests with one Linux-only skip.
 now completes local construction: independent convex loss-change controls, resident
 comparison and scalar acceptance/best/patience consumers. Regression passes 2,241
 CPU tests with one Linux-only skip; all 153 GLM GPU cases collect but remain unrun.
-Next freeze one concrete run-12 artifact/regression packet. No new upload or hardware
-allowance is included. Preserve consumed run sources by revision when current
-implementation changes.
+The [108 run-12 request](v1-sprints/108-glm-validation-request.md) now freezes 85
+files, 571 cases (153 GLM plus 418 regressions) and 77 mandatory JSON artifacts.
+Isolated installed collection matches; 45 local packet/retention checks pass.
+Both upload and hardware allowances remain pending. Obtain that concrete allowance
+before one bounded T4 invocation, then retain results and stop for retrospective.
+Preserve consumed run sources by revision when current implementation changes.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen

@@ -2,10 +2,8 @@
 
 import hashlib
 import json
-import os
 from dataclasses import asdict, replace
 from decimal import Decimal
-from pathlib import Path
 
 import numpy as np
 import pytest
@@ -17,6 +15,7 @@ from openboost.device import DeviceOperations
 from openboost.execution import ExecutionContext
 from openboost.objectives import Binary, Poisson
 
+from .glm_artifacts import directory
 from .reference.glm_comparison import CASES, direct_difference
 from .test_device_glm_cuda import snapshot
 
@@ -53,21 +52,7 @@ def test_independent_bounds_and_scalar_only_transfers(case, tmp_path):
         owned, start = snapshot(ops), dict(context.metrics)
         result = getattr(glm, case["family"])().loss_change(ops, problem, old, new)
         finish = dict(context.metrics)
-        assert snapshot(ops) == owned
-        assert finish["upload_bytes"] == start["upload_bytes"]
-        assert finish["comparison_export_bytes"] - start.get("comparison_export_bytes", 0) == 32
-        assert finish["export_bytes"] - start["export_bytes"] == 32 + (
-            finish["validation_export_bytes"] - start["validation_export_bytes"]
-        )
-        assert finish["comparison_calls"] - start.get("comparison_calls", 0) == 1
-        assert Decimal(result.lower) <= exact <= Decimal(result.upper)
-        if case["status"]:
-            assert result.status == case["status"]
-        assert result.unchanged == (case["arrays"][0] == case["arrays"][1])
-        np.testing.assert_array_equal(context.export(old)[:, 0], case["arrays"][0])
-        np.testing.assert_array_equal(context.export(new)[:, 0], case["arrays"][1])
-        folder = Path(os.environ.get("OPENBOOST_GLM_COMPARISON_ARTIFACTS", tmp_path))
-        folder.mkdir(parents=True, exist_ok=True)
+        folder = directory("comparisons", tmp_path)
         report = dict(
             case=case,
             comparison=asdict(result),
@@ -87,6 +72,19 @@ def test_independent_bounds_and_scalar_only_transfers(case, tmp_path):
         )
         name = hashlib.sha256(case["id"].encode()).hexdigest()[:16] + ".json"
         (folder / name).write_text(json.dumps(report, indent=2, allow_nan=False) + "\n")
+        assert snapshot(ops) == owned
+        assert finish["upload_bytes"] == start["upload_bytes"]
+        assert finish["comparison_export_bytes"] - start.get("comparison_export_bytes", 0) == 32
+        assert finish["export_bytes"] - start["export_bytes"] == 32 + (
+            finish["validation_export_bytes"] - start["validation_export_bytes"]
+        )
+        assert finish["comparison_calls"] - start.get("comparison_calls", 0) == 1
+        assert Decimal(result.lower) <= exact <= Decimal(result.upper)
+        if case["status"]:
+            assert result.status == case["status"]
+        assert result.unchanged == (case["arrays"][0] == case["arrays"][1])
+        np.testing.assert_array_equal(context.export(old)[:, 0], case["arrays"][0])
+        np.testing.assert_array_equal(context.export(new)[:, 0], case["arrays"][1])
 
 
 @pytest.mark.parametrize("family", ["binary", "poisson"])
@@ -187,15 +185,16 @@ def test_actual_comparison_ptx_has_directed_double_operations(family, tmp_path):
         glm.compare(ops, p, old, new, family=family)
         kernel = getattr(kernels, family + "_compare_rows")
         ptx = "\n".join(kernel.inspect_asm().values())
-        for instruction in (
+        instructions = (
             "add.rm.f64",
             "add.rp.f64",
             "mul.rm.f64",
             "mul.rp.f64",
             "div.rm.f64",
             "div.rp.f64",
-        ):
+        )
+        report = dict(family=family, required_instructions=instructions, ptx=ptx)
+        folder = directory("comparisons", tmp_path)
+        (folder / (family + "-ptx.json")).write_text(json.dumps(report, indent=2) + "\n")
+        for instruction in instructions:
             assert instruction in ptx
-        folder = Path(os.environ.get("OPENBOOST_GLM_COMPARISON_ARTIFACTS", tmp_path))
-        folder.mkdir(parents=True, exist_ok=True)
-        (folder / (family + ".ptx")).write_text(ptx)
