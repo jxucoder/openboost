@@ -70,3 +70,16 @@ No push, model request or additional invocation is authorized by this preparatio
 - `c36f96a` preserves run 8's raw failure and analysis.
 - `6026ebb` corrects the fixture and adds CPU no-op semantic coverage.
 - This commit prepares the independent run-9 packet; no hardware result is claimed.
+
+## Explicit approval after preparation
+
+The user replies "approve" to the concrete request after `7fe4937`. This authorizes
+the 46-file Modal upload and one T4 invocation with two CPUs, 8192 MiB, a 900-second
+function cap, 600-second test cap and zero retries. Only the protocol's two pending
+authorization fields become approved; all prefrozen sources and case/resource
+constraints remain identical. The original isolated collection report is preserved.
+Verify the dispatch guard and source closure locally, commit a clean execution
+revision, then execute once and retain failures or success before retrospective.
+The local approved dispatch guard passes with all 45 prefrozen source hashes
+unchanged and the fixed output absent. The same 57 harness checks pass in 0.36
+seconds before the authorization commit.

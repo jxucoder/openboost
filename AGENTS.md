@@ -87,13 +87,14 @@ changed test before claiming full revised acceptance. The run-8 allowance is con
 [Sprint 103](v1-sprints/103-normal-cuda-revalidation.md) prepares its narrow
 revalidation: 46 frozen uploads, fifteen unchanged recipe IDs, identical production
 sources and a separate single T4 allowance. The installed local snapshot collects
-all fifteen cases and 57 harness checks pass. Both upload and compute authorizations
-remain pending; no run 9 has executed. Use its concrete packet for the next approval.
+all fifteen cases and 57 harness checks pass. The user explicitly approves the
+46-file Modal upload and one bounded T4 invocation after `7fe4937`. Execute this
+unchanged packet once, retain every result and stop for its retrospective.
 
 After this correction/retrospective, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
 sources and past results. All R/C/A requirements remain; author/adoption benefit
-is unverified. No additional GPU run or source upload is currently authorized.
+is unverified. No GPU run or source upload beyond this run-9 packet is authorized.
 
 The historical sequence below records prior instructions and evidence. Its
 authoring continuations and limited F2-to-F3 overlap rule are superseded by 101;

@@ -1,7 +1,8 @@
 # Sprint 103: Revalidate the corrected Normal CUDA recipe fixture
 
-Status: local preparation; upload and compute authorization pending. No new
-hardware run has executed. Run 8's allowance is consumed.
+Status: explicitly approved for one execution. The user replied "approve" to the
+46-file Modal upload and single bounded T4 request after preparation commit
+`7fe4937`. Run 8's allowance remains consumed; this is the separate run-9 allowance.
 
 ## Purpose and plan
 
@@ -107,3 +108,13 @@ then [081 compatible train-many](081-cuda-train-many.md) and
 [082 workload quality/cost](082-end-to-end-cost.md). This narrow correction neither
 passes all R/C/A requirements nor resolves the known split near-tie limitation.
 The [101 author-study deferral](101-defer-author-evaluation.md) remains in effect.
+
+## Execution authorization
+
+The explicit approval covers exactly the 46-file upload, one T4, two CPUs,
+8192 MiB, 900 function seconds, 600 test seconds and zero retries described above.
+Only the two authorization fields change in the protocol; all 45 prefrozen source
+hashes, cases, resources and package versions remain unchanged from `7fe4937`.
+The local collection report retains the original pending protocol hash and remains
+collection-only evidence. Record the approved protocol hash and clean execution
+revision in the new run manifest. Execute once and stop for the planned retrospective.

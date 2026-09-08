@@ -32,7 +32,8 @@ consumed run-8 protocol and all archived evidence stay byte-identical.
 [103's revalidation packet](103-normal-cuda-revalidation.md) freezes 46 uploads
 for the fifteen-case recipe group under a separate proposed T4 allowance. Its
 installed local snapshot collects all fifteen cases, production matches run 8,
-and 57 harness checks pass. Upload and compute authorization remain pending.
+and 57 harness checks pass. The user explicitly approves its exact upload and
+single T4 invocation after `7fe4937`; execute once and retain the raw result.
 Future combined coverage must report 514 earlier passes plus the new recipe result;
 the historical failed verdict stays intact.
 
