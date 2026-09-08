@@ -280,7 +280,7 @@ caller-owned. Release buffers with the context and field records with operations
 `device_normal.objective(minimum_scale=...)` constructs an explicit
 `ObjectiveOperations` bundle (validation/preparation/base/loss). Pass it as
 `DeviceRun(..., objective=device_normal.objective())` to use the shared runtime.
-The bundle does not itself train a model. [Run 6](../../benchmarks/v1/evidence/cuda-normal-090/README.md)
+The bundle does not itself train a model. [Run 6](https://github.com/jxucoder/openboost/blob/abd5b1aee0ef7a981056419d8a797e65d60833ed/benchmarks/v1/evidence/cuda-normal-090/README.md)
 passes all 23 Normal geometry checks and reruns all 212 scalar cases successfully
 at `4143d18`. The overall 383-case run fails two ordered acceptance checks, so it
 does not establish full Normal conformance or quality/cost parity.
