@@ -112,6 +112,12 @@ parallel boolean/domain validation and complete reproducible cost evidence,
 preserving numerical decisions and all public checks. Implement exact input and
 per-fit evidence first, parallel field validation second, then freeze a feasible
 paired correctness/cost run. New hardware/upload requires that concrete allowance.
+Those construction slices are now complete: 1994 CPU checks pass with one
+Linux-only skip, original installed CPU replay passes, and the
+[88-file / 474-case run-11 packet](v1-sprints/105-validation-run11-request.md)
+collects from an isolated snapshot. Upload and hardware approval remain pending.
+Only field-validation scheduling changes; its real-device correctness and speed
+are unverified. Keep row validation unchanged until the proposed benefit is measured.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen

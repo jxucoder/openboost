@@ -34,6 +34,10 @@ URLs, or copied raw logs. Link the relevant commit after it exists.
 
 ## Current Entries
 
+- [Parallel validation and exact cost evidence](2026-09-08-v1-parallel-validation.md)
+  — recoverable fits, exact inputs, isolated original/candidate installations and
+  a bounded pending CUDA comparison; device correctness and speed unverified.
+
 - [Public loss comparison](2026-09-07-v1-public-loss-comparison.md) — immutable
   objective-owned loss-change evidence and CPU Normal operation; device and
   consumer validation remain separate gates.

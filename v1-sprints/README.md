@@ -51,10 +51,13 @@ the profile remain incomplete after deadlines; preserve the
 No ratio is assigned to partial 100,000-row timings. Exact synthetic input hashes
 also fail to reproduce on the local macOS audit host; same-host CPU/GPU identity
 and the remote quality judge remain valid. Save exact inputs in future evidence.
-All ten GPU allowances are consumed. Stop for the planned retrospective; the
-[105 proposal](105-parallel-validation-and-reproducible-cost.md) targets parallel
-validation and complete reproducible timing before further breadth. The user's
-next "approve" starts those construction slices; no new hardware has run.
+All ten GPU allowances are consumed. The approved
+[105 construction](105-parallel-validation-and-reproducible-cost.md) now preserves
+exact input/per-fit evidence, adds cooperative field validation and prepares a
+[frozen 88-file T4 comparison](105-validation-run11-request.md). Full CPU regression
+passes 1994 tests with one Linux-only skip; 474 real-device cases collect from an
+isolated wheel. Upload and the next invocation are pending. The CUDA candidate's
+correctness and speed remain unverified; no new hardware has run.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

@@ -1,0 +1,175 @@
+{
+  "passed": true,
+  "python": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv/bin/python",
+  "sources": {
+    "src/openboost/__init__.py": "c6a404dd122323611ca6c63fecfbc836c7845a271cceca91742c8fcf9d29a5ad",
+    "src/openboost/_comparison_math.py": "f547fb12d9a06108c126cdb4e6d1741b18c25ff7532f250f8a01a38f743798e2",
+    "src/openboost/_device_kernels.py": "0913d998087b1032cdb81bd463ee7391339d2bf1580c36d721dd445a7195ac18",
+    "src/openboost/_normal_comparison.py": "1fc5bacdf95defd99ab46f0ca1ca1773e20b19bc542a993f26409709c3783f4e",
+    "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+    "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+    "src/openboost/comparison.py": "87692af240e9836be5a1d95742316fb8282840e606febdb6086b2de90092c7bb",
+    "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+    "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+    "src/openboost/device.py": "9f43d34ed5f9d1d81aa0ca04df186616bf63f13fb0bdbc80ea4617d3c2e8ae3a",
+    "src/openboost/device_normal.py": "4f1e631e6eff5127b5298c5ac461e6bd4f5dc21a509a3322762d3e05146317bb",
+    "src/openboost/device_objectives.py": "c1bf4717fa1ce19ddb5310c6a66f5e163e42f42f7fd96aff703beafbc89bed24",
+    "src/openboost/device_recipes.py": "c4760fa4a92bfb18e748799afd7cb4ee3ac4f9dd0217f04992ec2b821e962e51",
+    "src/openboost/device_runtime.py": "94c946b5c904355255cea5c4f557ffad3255eb6b555f20683bfa9a045474d1cb",
+    "src/openboost/device_tree.py": "4f4916b195da9221f607ab27e6968ee38669e95b09cb60d742740a674d6e4dd1",
+    "src/openboost/diagnostics.py": "83b616f6158228ff097e2bd34c608f68e6f2a9ad147c07b46c43d374bb8ec80b",
+    "src/openboost/execution.py": "817841600572c8062b36bf886a8a01d406195c508c856d2f4c4c90dd094411fe",
+    "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+    "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+    "src/openboost/objectives.py": "3d717a736af6ea6d5ade063639fedc51f1d60c62a2663e8ecb6b0a4ee4dffd71",
+    "src/openboost/ops.py": "fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30",
+    "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+    "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+    "src/openboost/recipes.py": "9b6c4f340953df93528529a6d80ef04dd21ad3d92396ecd1a0c160253f27198e",
+    "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+    "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+    "src/openboost/runtime.py": "365a534c2413ab3f548f8d34c4ff2df6ee41852dddaa445378da84ff6b7d7d6a",
+    "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+    "src/openboost/stopping.py": "ad488ddb867992d1a61b758c577a06c7f6e2a2bcd1f30fbf20a752d476305264",
+    "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+    "src/openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5"
+  },
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "build",
+        "--python",
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmpNGXCKO/bin/python",
+        "--wheel",
+        "--no-build-isolation",
+        "--out-dir",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/wheels",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/source"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Building wheel...\nSuccessfully built /var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/wheels/openboost-1.0.0.dev0-py3-none-any.whl\n"
+    },
+    {
+      "argv": [
+        "uv",
+        "venv",
+        "--system-site-packages",
+        "--python",
+        "/tmp/openboost-research-uv-cache/builds-v0/.tmpNGXCKO/bin/python",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Using CPython 3.12.12 interpreter at: /tmp/openboost-research-uv-cache/builds-v0/.tmpNGXCKO/bin/python\nCreating virtual environment at: /var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv\nActivate with: source /var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv/bin/activate\n"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv/bin/python",
+        "-c",
+        "import sysconfig; print(sysconfig.get_path('purelib'))"
+      ],
+      "exit_code": 0,
+      "stdout": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv/lib/python3.12/site-packages\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "uv",
+        "pip",
+        "install",
+        "--python",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv/bin/python",
+        "--no-deps",
+        "--reinstall",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/wheels/openboost-1.0.0.dev0-py3-none-any.whl"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Using Python 3.12.12 environment at: /var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv\nResolved 1 package in 0.65ms\nPrepared 1 package in 6ms\nInstalled 1 package in 1ms\n + openboost==1.0.0.dev0 (from file:///var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/wheels/openboost-1.0.0.dev0-py3-none-any.whl)\n"
+    },
+    {
+      "argv": [
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv/bin/python",
+        "-c",
+        "import hashlib,importlib.metadata,json,pathlib,openboost,sys\ncore=pathlib.Path(openboost.__file__).parent\nassert str(core).startswith(sys.argv[1]) and 'site-packages' in core.parts\nprint(json.dumps(dict(installed_path=str(core),sources={'src/openboost/'+p.name:\n    hashlib.sha256(p.read_bytes()).hexdigest() for p in core.glob('*.py')},\n    packages={name:importlib.metadata.version(name) for name in json.loads(sys.argv[2])})))\n",
+        "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi",
+        "[\"numpy\", \"hatchling\"]"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"installed_path\": \"/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv/lib/python3.12/site-packages/openboost\", \"sources\": {\"src/openboost/binning.py\": \"e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d\", \"src/openboost/tree.py\": \"ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5\", \"src/openboost/device_runtime.py\": \"94c946b5c904355255cea5c4f557ffad3255eb6b555f20683bfa9a045474d1cb\", \"src/openboost/device_objectives.py\": \"c1bf4717fa1ce19ddb5310c6a66f5e163e42f42f7fd96aff703beafbc89bed24\", \"src/openboost/execution.py\": \"817841600572c8062b36bf886a8a01d406195c508c856d2f4c4c90dd094411fe\", \"src/openboost/survival.py\": \"cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9\", \"src/openboost/device_normal.py\": \"4f1e631e6eff5127b5298c5ac461e6bd4f5dc21a509a3322762d3e05146317bb\", \"src/openboost/results.py\": \"dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb\", \"src/openboost/device.py\": \"9f43d34ed5f9d1d81aa0ca04df186616bf63f13fb0bdbc80ea4617d3c2e8ae3a\", \"src/openboost/diagnostics.py\": \"83b616f6158228ff097e2bd34c608f68e6f2a9ad147c07b46c43d374bb8ec80b\", \"src/openboost/multioutput.py\": \"98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d\", \"src/openboost/__init__.py\": \"c6a404dd122323611ca6c63fecfbc836c7845a271cceca91742c8fcf9d29a5ad\", \"src/openboost/_comparison_math.py\": \"f547fb12d9a06108c126cdb4e6d1741b18c25ff7532f250f8a01a38f743798e2\", \"src/openboost/runtime.py\": \"365a534c2413ab3f548f8d34c4ff2df6ee41852dddaa445378da84ff6b7d7d6a\", \"src/openboost/_normal_comparison.py\": \"1fc5bacdf95defd99ab46f0ca1ca1773e20b19bc542a993f26409709c3783f4e\", \"src/openboost/comparison.py\": \"87692af240e9836be5a1d95742316fb8282840e606febdb6086b2de90092c7bb\", \"src/openboost/ops.py\": \"fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30\", \"src/openboost/stopping.py\": \"ad488ddb867992d1a61b758c577a06c7f6e2a2bcd1f30fbf20a752d476305264\", \"src/openboost/objectives.py\": \"3d717a736af6ea6d5ade063639fedc51f1d60c62a2663e8ecb6b0a4ee4dffd71\", \"src/openboost/stats.py\": \"4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9\", \"src/openboost/leaves.py\": \"3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75\", \"src/openboost/recipes.py\": \"9b6c4f340953df93528529a6d80ef04dd21ad3d92396ecd1a0c160253f27198e\", \"src/openboost/ranking.py\": \"beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3\", \"src/openboost/artifacts.py\": \"fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817\", \"src/openboost/composition.py\": \"a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec\", \"src/openboost/device_recipes.py\": \"c4760fa4a92bfb18e748799afd7cb4ee3ac4f9dd0217f04992ec2b821e962e51\", \"src/openboost/runs.py\": \"5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4\", \"src/openboost/device_tree.py\": \"4f4916b195da9221f607ab27e6968ee38669e95b09cb60d742740a674d6e4dd1\", \"src/openboost/data.py\": \"93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343\", \"src/openboost/_device_kernels.py\": \"0913d998087b1032cdb81bd463ee7391339d2bf1580c36d721dd445a7195ac18\", \"src/openboost/outputs.py\": \"f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115\"}, \"packages\": {\"numpy\": \"2.3.5\", \"hatchling\": \"1.32.0\"}}\n",
+      "stderr": ""
+    }
+  ],
+  "dependency_paths": [
+    "/tmp/openboost-research-uv-cache/builds-v0/.tmpNGXCKO/lib/python3.12/site-packages",
+    "/private/tmp/openboost-research-uv-cache/archive-v0/yFTBDoFf_w6Kc7Xg/lib/python3.12/site-packages",
+    "/tmp/openboost-research-uv-cache/builds-v0/.tmpAocv2c/lib/python3.12/site-packages"
+  ],
+  "installed": {
+    "installed_path": "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv/lib/python3.12/site-packages/openboost",
+    "sources": {
+      "src/openboost/binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+      "src/openboost/tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5",
+      "src/openboost/device_runtime.py": "94c946b5c904355255cea5c4f557ffad3255eb6b555f20683bfa9a045474d1cb",
+      "src/openboost/device_objectives.py": "c1bf4717fa1ce19ddb5310c6a66f5e163e42f42f7fd96aff703beafbc89bed24",
+      "src/openboost/execution.py": "817841600572c8062b36bf886a8a01d406195c508c856d2f4c4c90dd094411fe",
+      "src/openboost/survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+      "src/openboost/device_normal.py": "4f1e631e6eff5127b5298c5ac461e6bd4f5dc21a509a3322762d3e05146317bb",
+      "src/openboost/results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+      "src/openboost/device.py": "9f43d34ed5f9d1d81aa0ca04df186616bf63f13fb0bdbc80ea4617d3c2e8ae3a",
+      "src/openboost/diagnostics.py": "83b616f6158228ff097e2bd34c608f68e6f2a9ad147c07b46c43d374bb8ec80b",
+      "src/openboost/multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+      "src/openboost/__init__.py": "c6a404dd122323611ca6c63fecfbc836c7845a271cceca91742c8fcf9d29a5ad",
+      "src/openboost/_comparison_math.py": "f547fb12d9a06108c126cdb4e6d1741b18c25ff7532f250f8a01a38f743798e2",
+      "src/openboost/runtime.py": "365a534c2413ab3f548f8d34c4ff2df6ee41852dddaa445378da84ff6b7d7d6a",
+      "src/openboost/_normal_comparison.py": "1fc5bacdf95defd99ab46f0ca1ca1773e20b19bc542a993f26409709c3783f4e",
+      "src/openboost/comparison.py": "87692af240e9836be5a1d95742316fb8282840e606febdb6086b2de90092c7bb",
+      "src/openboost/ops.py": "fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30",
+      "src/openboost/stopping.py": "ad488ddb867992d1a61b758c577a06c7f6e2a2bcd1f30fbf20a752d476305264",
+      "src/openboost/objectives.py": "3d717a736af6ea6d5ade063639fedc51f1d60c62a2663e8ecb6b0a4ee4dffd71",
+      "src/openboost/stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+      "src/openboost/leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+      "src/openboost/recipes.py": "9b6c4f340953df93528529a6d80ef04dd21ad3d92396ecd1a0c160253f27198e",
+      "src/openboost/ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+      "src/openboost/artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+      "src/openboost/composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+      "src/openboost/device_recipes.py": "c4760fa4a92bfb18e748799afd7cb4ee3ac4f9dd0217f04992ec2b821e962e51",
+      "src/openboost/runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+      "src/openboost/device_tree.py": "4f4916b195da9221f607ab27e6968ee38669e95b09cb60d742740a674d6e4dd1",
+      "src/openboost/data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+      "src/openboost/_device_kernels.py": "0913d998087b1032cdb81bd463ee7391339d2bf1580c36d721dd445a7195ac18",
+      "src/openboost/outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115"
+    },
+    "packages": {
+      "numpy": "2.3.5",
+      "hatchling": "1.32.0"
+    }
+  },
+  "wheel_sha256": "5f5ab1811131c1c01cd4c5db958dd7c247a9c901623bcd4a345e6fd02ea74ee9",
+  "scope": "Local baseline builder/install and saved CPU replay only. Two local packages checked; the eighteen Linux/CUDA package identities and real device execution remain unverified.",
+  "replay": {
+    "complete": true,
+    "verified_fits": 2
+  },
+  "replay_argv": [
+    "/var/folders/4r/kxlh5m6j0f16tcx91xd5sgv40000gn/T/openboost-105-baseline-install-rj5xpcbi/venv/bin/python",
+    "-I",
+    "-c",
+    "import json, pathlib, sys\nsys.path.insert(0,sys.argv[1])\nfrom benchmarks.v1.performance_evidence import verify_report\nroot=pathlib.Path(sys.argv[1]); folder=root/'v1-sprints/105-input-replay-local'\ninputs=json.loads((folder/'inputs.json').read_text())\nreport=json.loads((folder/'result.json').read_text())\nprint(json.dumps(verify_report(report,inputs,inputs['sha256'],expected_repetitions=2)))\n",
+    "/Users/jiaruixu/work_space/openboost"
+  ],
+  "invocation": [
+    "/Users/jiaruixu/work_space/openboost/benchmarks/v1/check_validation_install.py",
+    "v1-sprints/105-baseline-install-local.json"
+  ],
+  "revision": "8db2aef1babf15118beded4fdfc22341694fbaba",
+  "dirty": true,
+  "support_sources": {
+    "check_validation_install.py": "1700e4b876fdc2f61821449df4165860faa346f244a2db775d595f27602b9edb",
+    "build_validation_baseline.py": "d189de64389d49c82a2212ad7a1a53d51303e7d975f0b95c701a63837a01bb53",
+    "performance_evidence.py": "8f480da98f9a54eb5ee489052cc7d5ec4daf99f5deaceaea21ecb524b0660984",
+    "performance_checkpoint.py": "e7c29228e8f777d538df6199c2c25ff52493275a3fce7786e74dc27ac3a3422b"
+  }
+}

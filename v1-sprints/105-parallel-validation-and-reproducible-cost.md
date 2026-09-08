@@ -1,4 +1,4 @@
-# Sprint 105 proposal: Parallel validation and reproducible cost evidence
+# Sprint 105: Parallel validation and reproducible cost evidence
 
 Status: construction approved by the user's next "approve" after the Sprint 104
 retrospective. Build the three slices below, committing each verified slice.
@@ -112,3 +112,40 @@ consumer checks, per-kernel instrumentation and feasible cost deadlines.
 Full local CPU regression: 1975 passed, one Linux-only skip, 14.98 seconds.
 Production and new test lint pass. This remains an unvalidated CUDA candidate
 until the next real-device result; no performance gate has passed.
+
+## Slice C: bounded original/candidate comparison
+
+The [concrete request](105-validation-run11-request.md) freezes 88 source files,
+474 collected cases, seventeen retained artifacts and one T4 invocation with
+900-second function / 600-second pytest caps and no retry. Upload and invocation
+are pending. Three cost cases use exact saved inputs, complete per-fit evidence
+and verified original/candidate installations. Squared CPU controls remain
+mandatory; Normal is scoped to same-algorithm GPU equivalence and cost.
+
+The test selection uses prior observed durations: the omitted 96-case Normal
+runtime matrix consumed 51.9 seconds by itself, while selected existing cases
+used about 69 seconds. The 485-second child budget and thirty-second installation
+cap leave 85 seconds for correctness, setup and audit. This corrects run 10's
+inadequate per-case deadlines without altering its consumed freeze or verdict.
+
+The actual local baseline builder initially failed because a nested environment's
+`--system-site-packages` does not inherit its parent's virtual dependencies.
+Appending the parent's resolved installed-package paths after the baseline core
+fixes the issue; exact source and version checks still apply. The
+[local result](105-baseline-install-local.json) proves the 31 original source
+hashes and two saved CPU replays, with no CUDA/package-18 claim. The isolated
+candidate snapshot collects all 474 frozen cases. Full CPU regression passes
+1994 tests with one Linux-only skip in 12.95 seconds.
+
+## Reflection after three construction slices
+
+Slices A (`680bf84`) and B (`8db2aef`) are committed. This third slice completes
+the measurement harness and concrete request. The only production change remains
+the field-validation scheduling; no numeric algorithm or tolerance changed.
+The hypothesis is now falsifiable by exact models, complete repetitions and
+separate validation-operation measurements. Local correctness of the evidence
+format is established; CUDA correctness, bottleneck significance and speed remain
+unknown. Keep row-index validation unchanged until measured benefit justifies it.
+After the bounded real-device result, reflect and choose whether to keep this
+optimization or return to required CUDA recipes/train-many and formal cost work.
+Author friendliness remains deferred and every R/C/A family remains required.

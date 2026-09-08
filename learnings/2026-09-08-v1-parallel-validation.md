@@ -83,3 +83,47 @@ Slice B local verification: full CPU regression passes 1975 tests with one
 Linux-only skip in 14.98 seconds. Production/new-test Ruff passes and the new
 39-case device collection succeeds. This verifies CPU regression and collection,
 not CUDA correctness or acceleration. Slice A is committed at `680bf84`.
+
+## Slice C result and reflection
+
+Slice B is committed at `8db2aef`. The [run-11 request](../v1-sprints/105-validation-run11-request.md)
+now freezes 88 files and 474 cases. The comparison verifies both installed cores,
+exact stored input/model/prediction/quality evidence, all required repetitions,
+cleanup and unchanged launch/flag exports before computing a warm ratio. Squared
+CPU controls must complete and satisfy their frozen quality checks. Normal's
+new case is explicitly original-versus-candidate GPU scope, not a new CPU pair.
+
+The old full revised suite took 123.5 seconds, including 51.9 seconds for the
+96-case compared runtime matrix. Repeating it with 485 seconds of child caps and
+thirty seconds for baseline installation would be inconsistent with the planned
+600-second test window. The frozen selection retains 431 existing cases (about
+69 prior seconds), 39 new validation cases and four cost/profile cases, reserving
+85 seconds for correctness/setup/audit. A hard deadline is still a cap, not a
+promise that all work completes. One failure remains a failed invocation.
+
+Actual local installation found that `uv venv --system-site-packages` sees the
+base interpreter's packages, not the parent virtual environment's dependencies.
+Merely adding the parent's directory also misses uv's resolved dependency paths.
+The builder now appends resolved parent site directories after its own installed
+core, then verifies every core file and declared dependency version. Its
+[local check](../v1-sprints/105-baseline-install-local.json) verifies all 31 original
+files and two saved CPU fits from a separate installation. The exact remote
+Hatchling 1.27.0 is not cached locally; the offline check uses recorded 1.32.0 and
+NumPy 2.3.5. All eighteen pinned Linux/CUDA versions remain a real-run requirement.
+
+Full CPU regression: 1994 passed, one Linux-only skip, 12.95 seconds. The new local
+judge/supervisor controls reject profile timings, actual child timeout, missing
+repeats, source/model/metric mismatches, leaks and changed launch counts; a real
+different CPU model fails the quality gate. Source/authorization guards and an
+isolated 474-case collection pass. Separate instrumentation is never eligible for
+fit ratios. All seventeen artifacts are bounded to 64 MiB; local lossless input
+sizes total about 16 MB, leaving room for every repeated saved fit.
+The final focused evidence/freeze/checkpoint suite passes 45 tests in 2.81 seconds.
+Production and changed support/test Ruff checks pass. MkDocs builds successfully
+with the pre-existing Sprint 090 evidence-link warning; no new warning is introduced.
+
+This completes construction and a concrete reviewable packet, not hardware
+acceptance. No new upload, remote invocation or speed claim has occurred.
+Row-index validation is intentionally unchanged. The next result must decide
+whether this small foundation optimization earns its complexity before further
+optimization; it cannot substitute for required 080/081/082 or formal E4 scope.
