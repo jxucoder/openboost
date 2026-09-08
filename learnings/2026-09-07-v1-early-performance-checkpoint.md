@@ -88,3 +88,17 @@ approximately 358 kB Modal upload for the bounded single T4 invocation. This is 
 automatic-review requirement, not a new mathematical or benchmark gate.
 The local recheck confirms all 45 prefrozen hashes remain unchanged, the output
 is absent and the dispatch guard rejects pending upload authorization.
+
+## Explicit authorization on September 8
+
+The user replies "approve" to the exact 46-file, approximately 358 kB Modal
+upload and one T4 invocation with two CPUs, 8192 MiB, 900 function seconds,
+600 test seconds and zero retries. Restore only upload authorization to approved;
+retain the unchanged source freeze and historical collection report. This resolves
+the automatic review's stated missing authorization without an alternate transfer
+mechanism. Record a clean execution revision before the single invocation.
+
+Verification: 73 focused performance/aggregation/Normal/comparison manifest tests
+pass in 2.12 seconds. All 45 prefrozen hashes match; the exact upload contains
+46 files and 357,936 bytes. The fixed output is absent and the approved dispatch
+guard passes. No production or benchmark source changes accompany authorization.

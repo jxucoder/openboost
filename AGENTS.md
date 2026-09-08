@@ -99,13 +99,17 @@ and profile separately. Its new 46-file source closure and one T4 invocation are
 bounded in the run-10 protocol; preserve all previous freezes. Automatic approval
 review blocks its private-source upload before process creation: the study is
 approved, but the exact 46-file Modal payload requires explicit upload approval.
-No run-10 allowance is consumed. Keep upload authorization pending and do not
-retry indirectly. This checkpoint does not pass formal E4.
+No run-10 allowance is consumed by that rejected attempt. The user subsequently
+replies "approve" to the exact 46-file, approximately 358 kB upload to Modal for
+one T4 invocation: two CPUs, 8192 MiB, 900 function seconds, 600 test seconds and
+zero retries. Both authorizations are now approved; execute the unchanged freeze
+once, retain failures and stop for retrospective. This checkpoint does not pass
+formal E4.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
 sources and past results. All R/C/A requirements remain; author/adoption benefit
-is unverified. No source upload is currently authorized for run 10 or beyond it.
+is unverified. No source upload beyond this single run-10 packet is authorized.
 
 The historical sequence below records prior instructions and evidence. Its
 authoring continuations and limited F2-to-F3 overlap rule are superseded by 101;

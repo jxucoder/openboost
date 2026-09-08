@@ -40,8 +40,10 @@ precede further recipe ports; compilation/profiling and quality-qualified timing
 remain distinct. No external-library speed or formal E4 claim is implied.
 Automatic approval review blocks its dispatch before process creation because the
 exact private-source payload and Modal destination were not explicitly approved.
-The 46-file freeze is unchanged, upload authorization is pending, and no run occurs
-or allowance is consumed. See 104 for the concrete remaining upload request.
+No run occurs or allowance is consumed by that rejected attempt. The user's next
+"approve" explicitly authorizes the requested 46-file, approximately 358 kB Modal
+upload for one T4, two CPUs, 8192 MiB, 900 function seconds, 600 test seconds and
+zero retries. The source freeze is unchanged; execute once and retain its outcome.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

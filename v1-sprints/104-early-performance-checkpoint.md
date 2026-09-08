@@ -1,7 +1,7 @@
 # Sprint 104: Early squared/Normal performance checkpoint
 
-Status: frozen; study approved, exact source upload pending after automatic
-approval review blocked process creation. No remote run has executed. The user's
+Status: frozen; study and exact source upload approved after the user resolves
+the automatic approval review block. No remote run has executed. The user's
 approval of an early GPU performance checkpoint after Sprint 103 moves this bounded measurement ahead
 of further 080 recipe ports; it does not replace or relax formal 082/E4.
 
@@ -135,3 +135,14 @@ upload to Modal** for this one T4 invocation: two CPUs, 8192 MiB, 900 function
 seconds, 600 test seconds and zero retries. The protocol lists every file and hash.
 Image construction is additional to the function cap. No other external action
 or broader repository upload is included.
+
+## Explicit upload authorization
+
+The user replies "approve" to the concrete request above on September 8, 2026.
+This authorizes the exact 46-file, approximately 358 kB source upload to Modal and
+one T4 invocation with two CPUs, 8192 MiB, 900 function seconds, 600 test seconds
+and zero retries. Change only the protocol's upload authorization to approved;
+all 45 prefrozen source hashes, cases, thresholds and deadlines remain unchanged.
+The original local collection report remains historical. Commit this authorization
+before dispatch, execute once, preserve any failed measurements and stop for
+retrospective. No additional invocation or upload is authorized.
