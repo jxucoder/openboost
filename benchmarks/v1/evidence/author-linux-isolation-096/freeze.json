@@ -1,6 +1,6 @@
 {
   "schema": "openboost-linux-worker-smoke-v1",
-  "authorization": "consumed",
+  "authorization": "approved",
   "scope": "One CPU worker-isolation smoke; no model or independent author attempt",
   "modal_version": "1.3.0.post1",
   "packet_revision": "862c4046375ad498f0bb15a4407db8609f4fe18c",

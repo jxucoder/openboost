@@ -1,0 +1,319 @@
+{
+  "schema": "openboost-linux-author-isolation-v1",
+  "passed": false,
+  "dispatch_ready": false,
+  "attempts": [],
+  "generated_tokens": null,
+  "freeze_sha256": "e3dd4d120c40c7f360247265eae68d7dc178d82c695c31a93e642bac05a24dba",
+  "modal_version": "1.3.0.post1",
+  "revision": "7985645ce4d1c7346e250a77113525b43f12bb12",
+  "dirty": false,
+  "status": "complete",
+  "resources": {
+    "sandboxes": 1,
+    "cpu": 2,
+    "memory_mib": 2048,
+    "timeout_s": 90,
+    "gpu": null,
+    "application_retries": 0,
+    "max_output_bytes": 1048576
+  },
+  "protected_before": {
+    "benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/expected.json": "622d2791ddae956d261da9e9c8291cabcbad91f8077af28701b9cc3036e88d27",
+    "benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/inputs.json": "e8ea7c939ec84be1848c0d015c4c33d8d95339a64ad6ae5cb10ab190182426dc",
+    "benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/judge.py": "7c00296f6d9526b1b81e5e7ec26faa1ac3e5a4476c54b76c8c8d72dc832beac6",
+    "benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/manifest.json": "c3b44d1e1de52a736cd6bfdc719f380373cb649c2074fea4e735c12f10327b9e"
+  },
+  "command": [
+    "python",
+    "-I",
+    "-B",
+    "/opt/probe.py",
+    "/materials",
+    "[\"/Users/jiaruixu/work_space/openboost/benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/expected.json\", \"/Users/jiaruixu/work_space/openboost/benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/inputs.json\", \"/Users/jiaruixu/work_space/openboost/benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/judge.py\", \"/Users/jiaruixu/work_space/openboost/benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/manifest.json\", \"/Users/jiaruixu/work_space/openboost/benchmarks/v1/evidence/author-preparation-095/isolation/development-narrow/unlisted-counterexample.json\"]"
+  ],
+  "sandbox_id": "sb-2T3kg5NfgqYAQiCmc8vKuW",
+  "image_id": "im-k6jaJrB1DUMQvke600ffzI",
+  "create_wall_s": 63.73358695799834,
+  "wait_wall_s": 2.8082134580181446,
+  "provider_timeout": false,
+  "returncode": 1,
+  "records": [
+    {
+      "kind": "runtime",
+      "python": "3.12.10 (main, May 21 2025, 23:34:56) [GCC 12.2.0]",
+      "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+      "machine": "x86_64",
+      "uid": 0,
+      "gid": 0,
+      "cpu_count": 2,
+      "packages": {
+        "openboost": "1.0.0.dev0",
+        "numpy": "2.3.5",
+        "uv": "0.12.1"
+      },
+      "core_files": {
+        "__init__.py": "c6a404dd122323611ca6c63fecfbc836c7845a271cceca91742c8fcf9d29a5ad",
+        "_comparison_math.py": "f547fb12d9a06108c126cdb4e6d1741b18c25ff7532f250f8a01a38f743798e2",
+        "_device_kernels.py": "0913d998087b1032cdb81bd463ee7391339d2bf1580c36d721dd445a7195ac18",
+        "_normal_comparison.py": "1fc5bacdf95defd99ab46f0ca1ca1773e20b19bc542a993f26409709c3783f4e",
+        "artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+        "binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+        "comparison.py": "87692af240e9836be5a1d95742316fb8282840e606febdb6086b2de90092c7bb",
+        "composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+        "data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+        "device.py": "9f43d34ed5f9d1d81aa0ca04df186616bf63f13fb0bdbc80ea4617d3c2e8ae3a",
+        "device_normal.py": "4f1e631e6eff5127b5298c5ac461e6bd4f5dc21a509a3322762d3e05146317bb",
+        "device_objectives.py": "c1bf4717fa1ce19ddb5310c6a66f5e163e42f42f7fd96aff703beafbc89bed24",
+        "device_recipes.py": "c4760fa4a92bfb18e748799afd7cb4ee3ac4f9dd0217f04992ec2b821e962e51",
+        "device_runtime.py": "94c946b5c904355255cea5c4f557ffad3255eb6b555f20683bfa9a045474d1cb",
+        "device_tree.py": "4f4916b195da9221f607ab27e6968ee38669e95b09cb60d742740a674d6e4dd1",
+        "diagnostics.py": "83b616f6158228ff097e2bd34c608f68e6f2a9ad147c07b46c43d374bb8ec80b",
+        "execution.py": "817841600572c8062b36bf886a8a01d406195c508c856d2f4c4c90dd094411fe",
+        "leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+        "multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+        "objectives.py": "3d717a736af6ea6d5ade063639fedc51f1d60c62a2663e8ecb6b0a4ee4dffd71",
+        "ops.py": "fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30",
+        "outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+        "py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+        "recipes.py": "9b6c4f340953df93528529a6d80ef04dd21ad3d92396ecd1a0c160253f27198e",
+        "results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+        "runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+        "runtime.py": "365a534c2413ab3f548f8d34c4ff2df6ee41852dddaa445378da84ff6b7d7d6a",
+        "stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+        "stopping.py": "ad488ddb867992d1a61b758c577a06c7f6e2a2bcd1f30fbf20a752d476305264",
+        "survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+        "tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5"
+      }
+    },
+    {
+      "kind": "case",
+      "name": "doc:cpu-state",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "case",
+      "name": "doc:numeric-ops",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "case",
+      "name": "doc:preparation",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "case",
+      "name": "doc:squared",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "case",
+      "name": "doc:stopping",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "case",
+      "name": "doc:trees",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "case",
+      "name": "nonroot",
+      "passed": false
+    },
+    {
+      "kind": "case",
+      "name": "work_write",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "author workspace is writable\n",
+      "stderr": ""
+    },
+    {
+      "kind": "case",
+      "name": "private_read",
+      "passed": true,
+      "paths": [
+        {
+          "passed": true,
+          "errno": 2
+        },
+        {
+          "passed": true,
+          "errno": 2
+        },
+        {
+          "passed": true,
+          "errno": 2
+        },
+        {
+          "passed": true,
+          "errno": 2
+        },
+        {
+          "passed": true,
+          "errno": 2
+        }
+      ]
+    },
+    {
+      "kind": "case",
+      "name": "private_write",
+      "passed": true,
+      "paths": [
+        {
+          "passed": true,
+          "errno": 2
+        },
+        {
+          "passed": true,
+          "errno": 2
+        },
+        {
+          "passed": true,
+          "errno": 2
+        },
+        {
+          "passed": true,
+          "errno": 2
+        },
+        {
+          "passed": true,
+          "errno": 2
+        }
+      ]
+    },
+    {
+      "kind": "case",
+      "name": "child_read",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "kind": "case",
+      "name": "symlink_read",
+      "passed": true,
+      "errno": 2
+    },
+    {
+      "kind": "case",
+      "name": "core_write",
+      "passed": false,
+      "reason": "operation unexpectedly succeeded"
+    },
+    {
+      "kind": "case",
+      "name": "materials_write",
+      "passed": false,
+      "reason": "operation unexpectedly succeeded"
+    },
+    {
+      "kind": "case",
+      "name": "regain_root",
+      "passed": false,
+      "reason": "operation unexpectedly succeeded"
+    },
+    {
+      "kind": "case",
+      "name": "credentials_absent",
+      "passed": true
+    },
+    {
+      "kind": "case",
+      "name": "loopback_usable",
+      "passed": true
+    },
+    {
+      "kind": "case",
+      "name": "outbound_unavailable",
+      "passed": true,
+      "error": "OSError",
+      "errno": 101
+    },
+    {
+      "kind": "case",
+      "name": "core_unchanged",
+      "passed": false,
+      "core_files": {
+        "__init__.py": "8a452d1573b7d0ebad5cb04928387a4bf5495027d956d6992f51e966afb50123",
+        "_comparison_math.py": "f547fb12d9a06108c126cdb4e6d1741b18c25ff7532f250f8a01a38f743798e2",
+        "_device_kernels.py": "0913d998087b1032cdb81bd463ee7391339d2bf1580c36d721dd445a7195ac18",
+        "_normal_comparison.py": "1fc5bacdf95defd99ab46f0ca1ca1773e20b19bc542a993f26409709c3783f4e",
+        "artifacts.py": "fc5232f29d2b9d55676035bbd5bb9fe726babba5fcdfbd84ff18133de3e9a817",
+        "binning.py": "e77bdbaf42121ba5dde8ec681371bd0c7d1e31fada19618d796279cc0b322a7d",
+        "comparison.py": "87692af240e9836be5a1d95742316fb8282840e606febdb6086b2de90092c7bb",
+        "composition.py": "a52dc4d09582031441dbf2c4a3ed889851783a2f4fece50506fa5e0e0501ccec",
+        "data.py": "93b4eb6487e7fb21c960d19906c7a49b3df9fa28b2a2bacdc8ea6437889f2343",
+        "device.py": "9f43d34ed5f9d1d81aa0ca04df186616bf63f13fb0bdbc80ea4617d3c2e8ae3a",
+        "device_normal.py": "4f1e631e6eff5127b5298c5ac461e6bd4f5dc21a509a3322762d3e05146317bb",
+        "device_objectives.py": "c1bf4717fa1ce19ddb5310c6a66f5e163e42f42f7fd96aff703beafbc89bed24",
+        "device_recipes.py": "c4760fa4a92bfb18e748799afd7cb4ee3ac4f9dd0217f04992ec2b821e962e51",
+        "device_runtime.py": "94c946b5c904355255cea5c4f557ffad3255eb6b555f20683bfa9a045474d1cb",
+        "device_tree.py": "4f4916b195da9221f607ab27e6968ee38669e95b09cb60d742740a674d6e4dd1",
+        "diagnostics.py": "83b616f6158228ff097e2bd34c608f68e6f2a9ad147c07b46c43d374bb8ec80b",
+        "execution.py": "817841600572c8062b36bf886a8a01d406195c508c856d2f4c4c90dd094411fe",
+        "leaves.py": "3bff04ff4b1eff1a1d58f6ce5e29f15391e8b2e9a80a696c6fee988d1be95b75",
+        "multioutput.py": "98c192719bb9ee787ec385a2d219a2f52aacebc161cc9fc1275006f49daad76d",
+        "objectives.py": "3d717a736af6ea6d5ade063639fedc51f1d60c62a2663e8ecb6b0a4ee4dffd71",
+        "ops.py": "fedddf881819a2f35c30b97989eb7e88818975980f4fd928f8b14864ad873f30",
+        "outputs.py": "f10f3a68b4513cb93c222cd1e39ca238c686c903daa8c8035c417b5916365115",
+        "py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "ranking.py": "beddf8fb6eeecbed54acdb55147bc251392a6f9fb7b46304e5d80d1d0ee642b3",
+        "recipes.py": "9b6c4f340953df93528529a6d80ef04dd21ad3d92396ecd1a0c160253f27198e",
+        "results.py": "dca9e297fc9220991488aa569dd2f7e807f51633a5bf34089a21247a0c9961fb",
+        "runs.py": "5a00eead8d6d4d6ddc99a646a0131f04918c619c5061b647ec4fc3c386459dc4",
+        "runtime.py": "365a534c2413ab3f548f8d34c4ff2df6ee41852dddaa445378da84ff6b7d7d6a",
+        "stats.py": "4edbeba39e727f60213f04b5d3592bc82fb02cb1ebd9603ca9f8cee66b932cc9",
+        "stopping.py": "ad488ddb867992d1a61b758c577a06c7f6e2a2bcd1f30fbf20a752d476305264",
+        "survival.py": "cb168551a5aa026d6c501f4370c7ddc998d3cc7269ce6f17d93258ceadef89e9",
+        "tree.py": "ccccc49c6ddc49e751545b143945cd8ea46740fe25c16accd4bff09a9338a1b5"
+      }
+    }
+  ],
+  "protected_after": {
+    "benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/expected.json": "622d2791ddae956d261da9e9c8291cabcbad91f8077af28701b9cc3036e88d27",
+    "benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/inputs.json": "e8ea7c939ec84be1848c0d015c4c33d8d95339a64ad6ae5cb10ab190182426dc",
+    "benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/judge.py": "7c00296f6d9526b1b81e5e7ec26faa1ac3e5a4476c54b76c8c8d72dc832beac6",
+    "benchmarks/v1/evidence/author-preparation-095/verifiers/evaluator/manifest.json": "c3b44d1e1de52a736cd6bfdc719f380373cb649c2074fea4e735c12f10327b9e"
+  },
+  "artifacts": {
+    "build.log": "0d32d48abf4240e000741e6f9ef483b56e6be0f8f5baee600236fb878f74bacf",
+    "freeze.json": "e3dd4d120c40c7f360247265eae68d7dc178d82c695c31a93e642bac05a24dba",
+    "stderr.txt": "6f62389e4c22191a0c7e94c40d97325e8dbce1082406305e676acb028e9072b6",
+    "stdout.jsonl": "99de69196f4432370307e6d8b2f69e83eda3cb4b2891de72c38934754a34581a",
+    "upload/materials/README.md": "2f40b7dbf5b23f8998396fe3f542d3bd871fa7481bece9c55c6addd55e09a9d9",
+    "upload/materials/docs/v1/cpu-state.md": "9ef67656438e5b9e7ab3fdb349a3ddc0ece6398f55c68fbc4fb52fd7b80d9665",
+    "upload/materials/docs/v1/numeric-ops.md": "e2406db656a906d4229d734dbba639210c4d226772bab94ed47e716374009274",
+    "upload/materials/docs/v1/preparation.md": "3c06d8c210dc87fb3af9aff06f1809db5af39846e37218be5c9dc40863e3711d",
+    "upload/materials/docs/v1/squared.md": "a0a6ad5b30222d855933a5bf22f3ceb7bb9da9be7a18250aa94a244abfd1a73e",
+    "upload/materials/docs/v1/stopping.md": "840ae52999fc6867f9697f39c7d18f5487a840a37562a5b4c136858bab1639f6",
+    "upload/materials/docs/v1/trees.md": "f01a50ecdccbf503cbc4e46702b541b256c260df459aea9068d4f74686d5ab8c",
+    "upload/materials/v1-sprints/069-author-packet/D1.md": "4ab89ba53887bf93c5a61f818e01d52564ae552b6723b71344a3a150cc781282",
+    "upload/materials/v1-sprints/069-author-packet/D2.md": "5e8dcceae218581431f0e4f7929d27114c8ba595470ad815ef98bc4793bd0603",
+    "upload/materials/v1-sprints/069-author-packet/README.md": "0261bc18c8502aa96806ae5c1ef14e2af17e45a9069650f51a5d147024d3e643",
+    "upload/materials/wheels/.gitignore": "684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1",
+    "upload/materials/wheels/openboost-1.0.0.dev0-py3-none-any.whl": "7d36782558723c3c2a6bf8f75b81cc76ad5107089a5ee411a4f4d30dc7da0cee",
+    "upload/opt/probe.py": "b243b54353d2283ef55f0316cde804b2b0bec747a0de1dbe46b95bc6490e4026"
+  }
+}

@@ -1,0 +1,225 @@
+Building image im-S1G41rZLHz1um7SfoBD3t8
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 451.25ms
+
+Built image im-S1G41rZLHz1um7SfoBD3t8 in 1.13s
+
+
+Building image im-K9MnP03OTTN0HE5oE6WybC
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 364.04ms
+
+Built image im-K9MnP03OTTN0HE5oE6WybC in 1.18s
+
+
+Building image im-mFVW3Av6pcma9YKPiVXhqc
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 543.59ms
+
+Built image im-mFVW3Av6pcma9YKPiVXhqc in 1.39s
+
+
+Building image im-RUT28fo107IWxm9yTUcWyW
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 418.89ms
+
+Built image im-RUT28fo107IWxm9yTUcWyW in 1.13s
+
+
+Building image im-XxyINUN2XmDCZDBwYz9Izl
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 520.02ms
+
+Built image im-XxyINUN2XmDCZDBwYz9Izl in 1.41s
+
+
+Building image im-dE58hOsD8Hp77CfKJMtpQu
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 1.69s
+
+Built image im-dE58hOsD8Hp77CfKJMtpQu in 3.09s
+
+
+Building image im-DGoZnD7vcCIFhAyf3VYOiL
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 540.25ms
+
+Built image im-DGoZnD7vcCIFhAyf3VYOiL in 1.66s
+
+
+Building image im-i2unvfRyjcETV1XmCSFRRe
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 433.74ms
+
+Built image im-i2unvfRyjcETV1XmCSFRRe in 1.51s
+
+
+Building image im-6x7TivprJQjle86kTzOnRR
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 1.43s
+
+Built image im-6x7TivprJQjle86kTzOnRR in 2.30s
+
+
+Building image im-GOgNIZzq8UwbiPC7ebY6hL
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 361.59ms
+
+Built image im-GOgNIZzq8UwbiPC7ebY6hL in 1.17s
+
+
+Building image im-KOiPrSMgJt4FhVwxrtx4yZ
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 438.27ms
+
+Built image im-KOiPrSMgJt4FhVwxrtx4yZ in 987.82ms
+
+
+Building image im-YALkLfBqZDfvak3Izilz1L
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 338.32ms
+
+Built image im-YALkLfBqZDfvak3Izilz1L in 1.02s
+
+
+Building image im-12U51EbM2lksCCdkZzZF13
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 702.12ms
+
+Built image im-12U51EbM2lksCCdkZzZF13 in 1.75s
+
+
+Building image im-6TRyLvPLz4V6qKza8R0uJk
+
+=> Step 0: FROM base
+
+=> Step 1: COPY --from=ghcr.io/astral-sh/uv:0.12.1 /uv /.uv/uv
+Getting image source signatures
+Copying blob sha256:7445d66de2378275b55f712aedb693474de22c09b1a32c55e3d3bd46d2f4f4c9
+Copying blob sha256:788dd9aef29e3de18dc5b0e9d3d01eb448d8963d57ce5a0dd33149e2714272d5
+Copying config sha256:17c878e0974e1e0c450b21fa0fd3ad4bfeda10e1d7c599337f85f837d9113555
+Writing manifest to image destination
+Unpacking OCI image
+   • unpacking rootfs ...     
+   • ... done                 
+   • unpacked image rootfs: /tmp/task-data/ta-01M1ZE0AD5T7TYG51ST8YEWQAB/registry-unpackw3mjsh
+
+=> Step 2: RUN /.uv/uv pip install --python $(command -v python) --compile-bytecode --no-deps /materials/wheels/openboost-1.0.0.dev0-py3-none-any.whl numpy==2.3.5 uv==0.12.1
+Using Python 3.12.10 environment at: /usr/local
+Resolved 3 packages in 81ms
+Downloading numpy (15.8MiB)
+Downloading uv (21.3MiB)
+ Downloaded uv
+ Downloaded numpy
+Prepared 3 packages in 604ms
+Uninstalled 1 package in 3ms
+Installed 3 packages in 93ms
+Bytecode compiled 443 files in 248ms
+ + numpy==2.3.5
+ + openboost==1.0.0.dev0 (from file:///materials/wheels/openboost-1.0.0.dev0-py3-none-any.whl)
+ - uv==0.7.19
+ + uv==0.12.1
+Saving image...
+Image saved, took 687.39ms
+
+Built image im-6TRyLvPLz4V6qKza8R0uJk in 3.79s
+
+
+Building image im-dlqsRheqGNGed47e22RWSe
+
+=> Step 0: FROM base
+
+=> Step 1: RUN mkdir -p /work && chown 1000:1000 /work
+
+=> Step 2: USER 1000:1000
+Skipping USER instruction, it is unsupported by Modal container images.
+Saving image...
+Image saved, took 412.13ms
+
+Built image im-dlqsRheqGNGed47e22RWSe in 1.43s
+
+
+Building image im-lQ5sPnrhEXgS4OTguasDXq
+
+=> Step 0: FROM base
+
+=> Step 1: ENV HOME=/work
+
+=> Step 2: ENV OPENBOOST_BACKEND=cpu
+
+=> Step 3: ENV OMP_NUM_THREADS=1
+
+=> Step 4: ENV OPENBLAS_NUM_THREADS=1
+
+=> Step 5: ENV MKL_NUM_THREADS=1
+
+=> Step 6: ENV PYTHONDONTWRITEBYTECODE=1
+Saving image...
+Image saved, took 520.64ms
+
+Built image im-lQ5sPnrhEXgS4OTguasDXq in 1.42s
+
+
+Building image im-k6jaJrB1DUMQvke600ffzI
+
+=> Step 0: FROM base
+
+=> Step 1: WORKDIR /work
+Saving image...
+Image saved, took 662.99ms
+
+Built image im-k6jaJrB1DUMQvke600ffzI in 1.97s
+
+

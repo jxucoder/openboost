@@ -66,7 +66,8 @@ secret source. No host environment or credentials are copied into the image.
 After the one frozen smoke, reflect on its result; do not expand the probe catalog
 as a substitute for independent authoring. Actual generated-token exhaustion,
 model/settings, fair incumbent paths and edit accounting remain the next author
-gates. No model call, remote upload, GPU run, independent attempt or push occurred.
+gates. During local preparation, no model call, remote upload, GPU run, independent
+attempt or push occurred. The subsequent separately approved smoke is recorded below.
 
 ## Commits
 
@@ -82,3 +83,41 @@ authorization value changes; the GPU run-8 allowance remains pending. The local
 CLI check passes, comparison against `251edb4` confirms that sole change, and
 all 22 CPU smoke / 85 GPU run-8 source hashes match before dispatch. The declared
 temporary output does not already exist. `git diff --check` passes.
+
+## Real Linux result and reflection
+
+At clean `7985645`, the [single approved smoke](../benchmarks/v1/evidence/author-linux-isolation-096/README.md)
+runs once: 14/19 checks pass. All six public examples work. Five failures share
+the incorrect worker identity: UID/GID 0, writable core/materials, successful root
+restoration and a changed core file. The changed `__init__.py` hash matches the
+probe's deliberate `b"tamper"` write. The controller's four evaluator hashes are
+unchanged; expected-answer paths and child/symlink reads are unavailable.
+
+The build log explicitly skips `USER`. The [provider's documented contract](https://modal.com/docs/guide/existing-images#user)
+requires process-level privilege reduction. Relying on a Dockerfile directive
+was our harness mistake; the earlier SDK-construction check never verified that
+behavior. Check command semantics, not just accepted method parameters, before
+spending a remote allowance. Preserve this failure rather than remove its gates.
+
+The worker exits 1 before the timeout marker, so lifetime enforcement and child
+cleanup remain unverified. The application creates one Sandbox and does not retry.
+All seventeen raw artifacts match their manifest hashes; the exact approved
+freeze is retained. Active authorization becomes `consumed`, with no payload
+changes. All 22 original CPU source hashes and 85 run-8 hashes still match.
+
+The [retrospective](../v1-sprints/096-linux-worker-result.md) specifies explicit
+supplementary-group/UID/GID reduction and `no_new_privs` before every author command.
+Stop at this checkpoint: no patched worker or additional remote attempt is claimed.
+The latest CPU regression remains 1853 passed/one Linux-only skip; this turn changes
+authorization, evidence and documentation only. Artifact replay and documentation
+checks pass at closure: all twenty indexed files match; replay rejects the actual
+failure both with its real non-timeout status and with a deliberately false timeout
+claim. Comparing the approved and consumed freezes confirms no payload change.
+The consumed CLI exits locally before creating output or accessing Modal. MkDocs
+builds with the existing external-evidence link warning. Authored-file whitespace
+checks pass. The exact provider `build.log` retains two trailing-space lines and
+its final blank line; those raw-byte whitespace warnings are intentional and the
+staged log hash matches the original. All twenty indexed artifacts are present
+in the staged Git blobs with their original hashes, including the ignored log,
+wheel and wheel-directory `.gitignore`, which required explicit staging.
+No model, independent author, GPU or push occurred.

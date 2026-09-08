@@ -24,3 +24,12 @@ evidence retain their original pending status as historical records.
 Smallest failing check: compare the reviewed and approved freeze after removing
 the authorization field; they must be identical. The normal local input checker
 must still pass before any network action.
+
+## Outcome
+
+The single invocation executed at clean `7985645`. It passed 14/19 declared checks
+and failed worker identity/core protection; no timeout marker was reached. The
+allowance is consumed, with no retry. The [result](096-linux-worker-result.md)
+retains the exact approved freeze; the active freeze now uses `consumed` solely
+to prevent normal execution reuse. A corrected workload needs a separate freeze
+and allowance.

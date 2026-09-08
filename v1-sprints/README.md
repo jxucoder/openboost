@@ -11,15 +11,18 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-The latest local continuation is [096 Linux author worker](096-linux-author-worker.md),
+The latest result is [096's failed Linux worker smoke](096-linux-worker-result.md),
+following its [local construction](096-linux-author-worker.md),
 following [095 author packet and failed native isolation](095-author-packet-and-local-isolation.md)
 and [094 standalone author-verifier preparation](094-author-verifier-preparation.md),
 following the [093 checkpoint](093-foundation-progress-and-next-steps.md).
 Standalone D1/D2 development checks and a concrete runner audit advance 069;
 independent dispatch remains blocked on actual accounting/isolation and arm/settings
 freezes. Run 8 is still pending and its frozen inputs are unchanged.
-096 constructs the next explicit CPU Sandbox smoke; local checks do not pass the
-remote isolation gate and its separate upload/run authorization is pending.
+The separately approved 096 CPU allowance is consumed: 14/19 checks pass, but the
+worker runs as root and modifies core/material files. Timeout is not reached.
+The evaluator remains outside the worker and unchanged. Explicit process privilege
+reduction is the next local correction; a repeat needs a new freeze/allowance.
 
 The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
 sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)
@@ -36,7 +39,8 @@ requirements for these workstreams. Its [readiness inventory](070-readiness-inve
 retains the full coverage, selection and source gaps. All R/C/A/E requirements,
 formal E5, required CUDA recipes and P7/E4 remain unchanged.
 
-CPU implementation has twelve recipes and 1636 passing tests (one Linux-only skip).
+CPU implementation has twelve recipes; the latest full CPU regression passes
+1853 tests (one Linux-only skip), including author/evaluation support checks.
 Bounded real evaluation and installed extensions exist. All 212 real T4 checks
 pass at clean `af026ef`, including resident scalar training and all earlier
 primitives. The shared score correction resolves run 4's 14 parity failures.

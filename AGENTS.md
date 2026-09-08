@@ -75,6 +75,16 @@ the same programmable device boundary. No new agents are authorized by this card
 Actual independent accounting/isolation must precede author attempts; never count
 designer work as independent author evidence or inspect sealed H1/H2 contents.
 
+The separately approved [096 CPU worker smoke](v1-sprints/096-linux-worker-result.md)
+has consumed its one allowance: 14/19 checks pass at clean `7985645`, but the
+worker runs as root because Modal ignores Dockerfile `USER`. Core/material writes
+succeed, so isolation fails; timeout is not reached. The real evaluator stays
+outside the worker and unchanged. Preserve the failed evidence and consumed
+freeze. Next local correction is explicit process privilege reduction before
+every author command, followed by a separate concrete freeze/allowance. No retry,
+model attempt or additional CPU upload is authorized by this result. Independent
+token enforcement, fair arms/model/settings and GPU run 8 remain open.
+
 The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
 completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant
 065/068 ownership on the actual device path. Experimental CUDA storage, named
@@ -154,7 +164,7 @@ Resume wider evaluation only for a specific product correctness/quality/cost
 question recorded at reflection, without altering formal budgets.
 
 Current evidence: twelve CPU recipes, installed D1–D5 development checks,
-sequential M=1/8/32 semantics and 1794 passing CPU tests (one Linux-only skip).
+sequential M=1/8/32 semantics and 1853 passing CPU tests (one Linux-only skip).
 The paired shared A6 fit improved from 992 to 757 seconds with exact artifacts;
 six real comparator probes passed in seconds. These separate observations expose
 a practical CPU runtime concern, not a matched-quality speed ratio. Neither test
