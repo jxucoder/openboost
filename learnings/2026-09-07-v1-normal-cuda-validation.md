@@ -8,17 +8,20 @@ Its source and acceptance packet was frozen before the intervening authoring wor
 
 ## Decision or Result
 
-Execute that one bounded GPU validation under the existing run-8 request. Agent
-studies remain paused. The instruction is applied to this concrete checkpoint,
-without expanding the upload, resources, tests or retry allowance.
+Prepare that one bounded GPU validation under the existing run-8 request. The
+initial interpretation of "finish" as external execution authorization was
+rejected by automatic approval review before process creation. Specific approval
+for the source upload and paid GPU compute is still required. Agent studies remain
+paused. No upload, invocation, retry or device result occurred.
 
 ## Changes
 
 - [Sprint 102](../v1-sprints/102-normal-cuda-validation.md) records execution,
   acceptance and the required retrospective.
-- Only `authorization` and `upload_authorization` change to approved in the
-  run-8 protocol. Every prefrozen source, case, tolerance and resource bound stays
-  unchanged. The resulting protocol hash will be captured at clean dispatch.
+- `b58b168` changed only `authorization` and `upload_authorization` to approved.
+  The follow-up restores both to pending after rejection, preserving the original
+  packet byte-for-byte. Every prefrozen source, case, tolerance and resource bound
+  stays unchanged. No dispatch manifest exists.
 
 ## Verification
 
@@ -27,20 +30,33 @@ without expanding the upload, resources, tests or retry allowance.
 - Source closure check passes: 86 files, 85 unchanged prefrozen source hashes,
   385 historical and 529 revised cases, 409 declared JSON artifacts. Fixed output
   directory does not exist before dispatch. Local Modal package is 1.3.0.post1.
-- Real CUDA results are pending. Local harness checks are not device validation.
+- After the rejected tool call, the fixed output directory is still absent and
+  all 85 source hashes match. The packet matches its original pending contents
+  at `f7f3c60`. Real CUDA results remain pending; local harness checks are not
+  device validation.
+- Markdown links and `git diff --check` pass. `uv run --no-sync mkdocs build`
+  passes with the existing `execution.md` link warning for the 090 evidence page.
 
 ## Failed Attempts
 
-None in this slice before dispatch. Earlier runs and their failures stay intact.
+The command to upload and run the fixed Modal packet was rejected by automatic
+approval review before process creation. Its stated reason was that trusted
+repository guidance still requires concrete run-8 authorization and "finish"
+does not specifically approve the external data transfer and paid invocation.
+Do not bypass that rejection or record it as a CUDA failure. Restore the packet,
+retain the local readiness results and ask for the concrete approval. Earlier
+device runs and their failures stay intact.
 
 ## Risks and Follow-ups
 
 Actual CUDA lowering and revised comparison decisions remain unverified until
-the run returns complete evidence. Preserve partial output on failure and stop
-at retrospective without retry. Other required CUDA recipes, train-many and
-practical quality/cost remain subsequent engineering work.
+the separately approved run returns complete evidence. No allowance is consumed
+by this process-creation rejection. Preserve partial output on any eventual
+device failure and stop at retrospective without retry. Other required CUDA
+recipes, train-many and practical quality/cost remain subsequent engineering work.
 
 ## Commits
 
 - `f7f3c60` — defer author evaluation and prioritize foundation execution.
-- This commit records the execution instruction and bounded run-8 authorization.
+- `b58b168` — initial interpretation of the execution instruction and authorization.
+- The follow-up commit restores pending authorization and records the review block.

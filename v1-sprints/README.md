@@ -23,6 +23,12 @@ Run 8's upload/compute allowance remains pending. No new model call is needed fo
 these engineering checks. Preserve every application family and all past evidence.
 Resume the deferred author study only at the user's direction.
 
+[102's local readiness check](102-normal-cuda-validation.md) passes all 37 run-8
+harness cases and verifies the unchanged source closure. Automatic approval review
+blocked the attempted command before process creation because "finish" did not
+specifically authorize the source upload and paid GPU invocation. Both packet
+authorizations are restored to pending; no run occurred or allowance was consumed.
+
 ## Prior preparation and evidence
 
 The following authoring continuations and 085 priority order are historical and
