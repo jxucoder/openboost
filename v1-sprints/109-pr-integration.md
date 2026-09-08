@@ -61,3 +61,41 @@ All source changes in this slice are workflow/documentation changes, with no
 alteration to production or frozen numerical/persistence evidence. Changed text
 contains no CJK prose or credential-shaped literals. Hosted Linux/macOS and Python
 3.10/3.12 checks remain required observations on the published PR.
+
+## Hosted numerical counterexample and follow-up
+
+[PR 25](https://github.com/jxucoder/openboost/pull/25) is open. The first Linux
+3.12 job reports nine failures, 2,266 passes and three platform/privilege skips;
+matrix fail-fast cancels its siblings. Documentation passes. Two consumer tests
+assume that re-evaluating captured inputs reproduces a rounded loss decrease on
+every host; Linux reports equal losses. Seven trajectory failures use the obsolete
+`full_loss_after < full_loss_before` rule in the test itself, although the current
+Normal recipe explicitly uses `Normal.compare`.
+
+1. Replace the consumer's host-specific reporting assumption with controlled
+   lower/equal/higher reports plus native reporting. Keep the captured input bytes,
+   independent high-precision worsening and actual comparison rejection checks.
+2. Add a separate revised CPU trajectory cohort and exercise objective
+   comparisons against the existing independent revised oracle for all ninety
+   settings. Preserve gradient, split, leaf, prediction and metric assertions.
+   Keep the original module byte-identical: default collection deselects its ninety
+   historical full-loss trajectories, with `--include-historical-normal` available
+   for explicit historical study. A collection check proves all ninety parameter
+   settings have active replacements. No frozen source, oracle, raw verdict or
+   production code changes.
+3. Re-run focused tests, archival audits and CPU regression, then push the cohesive
+   fix. Disable matrix fail-fast so each supported host/version yields a result.
+   Do not call the PR ready until the hosted matrix passes.
+
+An initial in-place test revision passed the new trajectory assertions but failed
+the offline run-12 source-identity guard. That attempt was reverted. The final
+layout keeps the full consumed module intact and puts the revised CPU cohort in
+`tests/v1/test_compared_normal_transactions.py`. No historical result is rejudged
+as a current pass, and no tolerance or comparison policy is weakened.
+
+Final local verification passes 121 focused comparison/collection/archive checks
+in 26.13 seconds, followed by 2,284 CPU regression checks with one platform skip
+and 970 deselections in 102.11 seconds. The deselections comprise 880 GPU/benchmark
+cases and ninety historical full-loss trajectories, each with an active revised
+counterpart. Full production/test Ruff, strict docs and whitespace checks pass.
+Hosted checks must now verify the pushed correction on all four matrix cells.

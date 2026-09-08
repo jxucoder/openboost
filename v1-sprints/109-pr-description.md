@@ -11,8 +11,10 @@ files are evidence rather than production code.
 
 ## Validation and evidence
 
-- Local CPU regression: 2,277 passed, one Linux-only skip, 880 GPU/benchmark
-  deselections. Full production/test Ruff, strict MkDocs and wheel/sdist builds pass.
+- Local CPU regression: 2,284 passed, one platform skip, 880 GPU/benchmark and
+  ninety explicitly historical full-loss deselections. All ninety settings have
+  active objective-comparison replacements, verified by collection and execution.
+  Full production/test Ruff, strict MkDocs and wheel/sdist builds pass.
 - [Run 12](https://github.com/jxucoder/openboost/blob/c965cb6/benchmarks/v1/evidence/cuda-glm-108/README.md):
   571/571 real T4 cases pass, including 153 new GLM cases and 418 regressions.
   All 77 artifacts are retained; offline audit verifies 246 loss-change bounds and
@@ -28,6 +30,11 @@ files are evidence rather than production code.
 - CI now fetches full history for source-provenance replay, selects CPU checks on
   hosted CPU runners and builds documentation strictly. The manual GPU workflow
   remains non-executing; no new paid GPU/model invocation is part of this PR.
+- The [first hosted CPU run](https://github.com/jxucoder/openboost/actions/runs/34240154310)
+  exposed nine platform-sensitive legacy reporting/decision assertions. Current
+  tests now exercise objective comparisons under native and controlled reporting;
+  original full-loss sources and hardware evidence remain unchanged. The matrix
+  retains all host/version outcomes with fail-fast disabled.
 
 ## Scope and remaining work
 

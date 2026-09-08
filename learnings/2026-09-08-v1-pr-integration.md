@@ -43,6 +43,46 @@ The branch-protection API reports main is unprotected; this is repository state,
 not an authorization or test failure. It does not remove the validation/review
 requirements. Existing PR 19 is unrelated and remains untouched.
 
+The first [hosted CPU run](https://github.com/jxucoder/openboost/actions/runs/34240154310)
+at `7b18667` fails on Linux/Python 3.12: nine failures, 2,266 passes, three skips and
+880 deselections. Two consumer cases incorrectly require the original host's
+rounded loss dip; this host reports a tie. Seven old trajectory cases directly
+use full-loss subtraction, bypassing the current recipe's objective comparison.
+Documentation passes, while matrix fail-fast cancels the three sibling jobs.
+
+Changing the old CPU trajectory test in place passes the current comparison
+assertions but trips the run-12 replay source guard. Restore that source exactly;
+archive identity is not relaxed to permit the change.
+
+## Hosted counterexample correction
+
+- Keep the original full-loss module and all frozen sources byte-identical. Add
+  the current comparison cohort in a separate file, reusing the independent 092
+  oracle and retaining all ninety gradient/split/leaf/prediction/metric settings.
+- Default collection explicitly deselects those ninety historical full-loss
+  trajectories; `--include-historical-normal` remains an opt-in historical probe.
+  A real collection test checks the exact one-to-one parameter mapping and proves
+  the original cases still collect with the flag. These are not hidden passes or
+  expected failures; the active suite tests the current public contract.
+- Run captured worsening through native reporting and injected lower/equal/higher
+  scores, requiring real objective rejection and containment of the independent
+  high-precision value. Reporting is a controlled test seam, never production code.
+- Disable matrix fail-fast so failures retain independent observations from all
+  supported host/version combinations. Document the historical/current distinction
+  in `tests/README.md`.
+
+The final focused command runs `test_comparison_consumers.py`,
+`test_compared_normal_transactions.py`, `test_normal_cohort_collection.py` and
+`test_glm_evidence.py` with `-n 0 -q --tb=short`: **121 pass in 26.13 seconds**.
+This includes the unchanged run-12 source/retained-artifact replay and its tamper
+controls. Full production/test Ruff and `git diff --check` pass.
+
+Final serial regression (`pytest tests/ -m 'not gpu and not benchmark' -n 0 -q
+--tb=short`) passes **2,284 checks**, with one platform skip and 970 deselections,
+in 102.11 seconds. Ninety deselections are explicitly historical full-loss cases;
+all ninety replacement settings pass. Strict docs also pass. The first failed
+hosted run is preserved; the correction still needs a complete hosted matrix.
+
 ## Risks and Follow-ups
 
 Use a merge commit: squash/rebase would replace execution SHAs needed by audits.

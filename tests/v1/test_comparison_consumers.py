@@ -1,6 +1,7 @@
 """CPU consumers distinguish objective evidence from rounded reporting scores."""
 
 from dataclasses import replace
+from decimal import Decimal
 
 import numpy as np
 import pytest
@@ -38,7 +39,8 @@ def test_equal_reported_loss_can_advance_best_and_patience():
 
 
 @pytest.mark.parametrize("order", ["forward", "reverse"])
-def test_captured_false_improvement_is_rejected_by_trial_consumer(order):
+@pytest.mark.parametrize("reporting", ["native", "lower", "equal", "higher"])
+def test_captured_worsening_is_rejected_independently_of_reporting(order, reporting):
     case = next(c for c in CASES if c["id"] == f"run7/{order}/channel0/alpha4.0/training")
     arrays = {key: np.array(value["values"]) for key, value in case["inputs"].items()}
     p = problem_for(arrays["target"], arrays["offset"], arrays["weight"])
@@ -48,14 +50,41 @@ def test_captured_false_improvement_is_rejected_by_trial_consumer(order):
     term = ConstantTerm(after[0] - before[0])
     candidate = propose(state, term.value)
     np.testing.assert_array_equal(preview_raw(state, candidate)[0], after)
-    assert Normal.loss(p, after) < Normal.loss(p, before)
+    # The original host reported an improvement. Other NumPy/libm combinations
+    # can report a tie; the stored-input mathematical change remains positive.
+    assert case["original_accepted"]
+    mathematical_change = Decimal(case["high_precision"]["decimal100"])
+    assert mathematical_change > 0
+    initial_score = Normal.loss(p, before)
+    observed = []
+
+    def reported_loss(problem, raw):
+        assert problem is p
+        np.testing.assert_array_equal(raw, after)
+        native = Normal.loss(problem, raw)
+        value = {
+            "native": native,
+            "lower": np.nextafter(initial_score, -np.inf),
+            "equal": initial_score,
+            "higher": np.nextafter(initial_score, np.inf),
+        }[reporting]
+        observed.append(value)
+        return value
+
     updated, coefficients, accepted, failures, changes = recipes._trials(
-        state, (term,), Normal.loss, Normal.loss(p, before), 1, "backtracking", 1,
+        state, (term,), reported_loss, initial_score, 1, "backtracking", 1,
         compare=Normal.compare,
     )
     assert updated is state and not accepted
     assert coefficients == (1,) and failures == (None,)
     assert changes[0].status == "worsening"
+    assert Decimal.from_float(changes[0].lower) <= mathematical_change
+    assert mathematical_change <= Decimal.from_float(changes[0].upper)
+    assert len(observed) == 1
+    if reporting != "native":
+        assert np.sign(observed[0] - initial_score) == {
+            "lower": -1, "equal": 0, "higher": 1,
+        }[reporting]
 
 
 def test_current_best_and_patience_use_three_distinct_anchors():
