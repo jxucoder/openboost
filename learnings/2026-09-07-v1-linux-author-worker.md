@@ -72,3 +72,13 @@ gates. No model call, remote upload, GPU run, independent attempt or push occurr
 
 - `cda1947` — verified Linux worker preparation and pending CPU smoke freeze.
 - Subsequent evidence commit — clean-source local audit; no remote result.
+
+## Subsequent bounded execution approval
+
+The user replied "continue" to the explicit thirteen-file/90-second CPU smoke
+request. [Authorization record](../v1-sprints/096-linux-worker-authorization.md)
+binds this to the original payload and one invocation. Only the freeze's
+authorization value changes; the GPU run-8 allowance remains pending. The local
+CLI check passes, comparison against `251edb4` confirms that sole change, and
+all 22 CPU smoke / 85 GPU run-8 source hashes match before dispatch. The declared
+temporary output does not already exist. `git diff --check` passes.
