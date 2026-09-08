@@ -84,6 +84,12 @@ checks; production code and the consumed run's frozen sources/verdict remain
 unchanged. The revised CUDA test has collected but has not rerun. Validate that
 changed test before claiming full revised acceptance. The run-8 allowance is consumed.
 
+[Sprint 103](v1-sprints/103-normal-cuda-revalidation.md) prepares its narrow
+revalidation: 46 frozen uploads, fifteen unchanged recipe IDs, identical production
+sources and a separate single T4 allowance. The installed local snapshot collects
+all fifteen cases and 57 harness checks pass. Both upload and compute authorizations
+remain pending; no run 9 has executed. Use its concrete packet for the next approval.
+
 After this correction/retrospective, advance required CUDA recipes (080), compatible
 train-many (081) and evidence-led quality/cost work (082). Preserve all frozen
 sources and past results. All R/C/A requirements remain; author/adoption benefit

@@ -161,12 +161,12 @@ def build_protocol():
     return protocol
 
 
-def collect_snapshot(protocol):
+def collect_snapshot(protocol, *, protocol_path=PROTOCOL):
     """Wheel extraction is local only; no environment mutation or CUDA execution."""
     with tempfile.TemporaryDirectory(prefix="openboost-run8-collection-") as directory:
         work = Path(directory).resolve()
         snapshot, installed = work / "snapshot", work / "site-packages"
-        paths = snapshot_paths(ROOT, PROTOCOL, protocol)
+        paths = snapshot_paths(ROOT, protocol_path, protocol)
         for source in paths:
             target = snapshot / source.relative_to(ROOT)
             target.parent.mkdir(parents=True, exist_ok=True)

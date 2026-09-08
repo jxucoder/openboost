@@ -29,6 +29,13 @@ prefixes at each ordered/joint commit boundary and accepted no-ops. The fifteen
 CUDA recipe cases collect, but the changed test has not rerun on hardware. The
 consumed run-8 protocol and all archived evidence stay byte-identical.
 
+[103's revalidation packet](103-normal-cuda-revalidation.md) freezes 46 uploads
+for the fifteen-case recipe group under a separate proposed T4 allowance. Its
+installed local snapshot collects all fifteen cases, production matches run 8,
+and 57 harness checks pass. Upload and compute authorization remain pending.
+Future combined coverage must report 514 earlier passes plus the new recipe result;
+the historical failed verdict stays intact.
+
 Next engineering order: revalidate the corrected fixture, then advance
 [required CUDA recipes](080-cuda-required-recipes.md),
 [train-many](081-cuda-train-many.md) and [real-workload quality/cost](082-end-to-end-cost.md).
