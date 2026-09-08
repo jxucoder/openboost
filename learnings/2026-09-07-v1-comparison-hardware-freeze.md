@@ -72,4 +72,5 @@ and application gates remain open.
 ## Commits
 
 - `c881259` — complete collected bindings and independent reference trajectories.
-- This entry accompanies the run-8 harness and exact pending freeze.
+- `dbeff8a` — run-8 harness and exact pending freeze.
+- The subsequent documentation commit adds the [concrete request](../v1-sprints/092-comparison-run8-request.md) and synchronizes current guidance. Its focused manifest checks and documentation build pass; no frozen source or authorization changes.

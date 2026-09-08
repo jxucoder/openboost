@@ -1,7 +1,8 @@
 # Sprint 092-C/D: Bind revised cases and freeze hardware validation
 
-Status: locally approved construction after `2c5927c`. No upload or eighth device
-invocation is authorized. The concrete run request is the final deliverable.
+Status: local construction complete at `dbeff8a`; the
+[concrete run request](092-comparison-run8-request.md) is ready for review.
+No upload or eighth device invocation is authorized.
 
 ## Execution plan
 

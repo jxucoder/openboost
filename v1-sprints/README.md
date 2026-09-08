@@ -73,7 +73,13 @@ loss-change operation and three consumers. The
 [complete historical mapping](092-comparison-cohorts.md) close 092-A.
 [092-B construction](092-public-comparison-operations.md) adds the public CPU
 comparison and an unverified resident implementation with 117 collected GPU cases.
-092-C's ownership and consumer work is next under the existing local approval.
+[092-C consumer construction](092-comparison-consumers.md) and complete
+[historical bindings](092-cohort-bindings.md) are locally complete. The
+[pending run-8 request](092-comparison-run8-request.md) freezes 86 files with
+385 historical and 529 revised cases, collected from an isolated wheel/snapshot.
+CPU regression passes 1794 checks with one Linux-only skip. No run-8 upload or
+invocation is authorized; the next boundary is its concrete allowance and
+post-run retrospective.
 Original P7/E4, 069 accounting/isolation and full
 R/C/A scope remain open. No additional upload, run or author attempt is authorized.
 
