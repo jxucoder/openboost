@@ -405,5 +405,22 @@ The twelve-case consumer/ownership CUDA cohort is collected, unrun. It covers
 equal-score improvements, both stored run-7 false improvements, retained earlier
 states, all three resolve copies, initialization/callback failure cleanup, and
 explicit unresolved policies. Local preflight tests verify missing/invalid policy
-rejection without CUDA. Normal recipe selection and its separate patience anchor
-remain the next construction slice; full conformance is open.
+rejection without CUDA.
+
+The resident Normal recipe now selects objective comparison explicitly for joint,
+forward and reverse updates. It owns a separate last-qualifying validation raw
+snapshot for patience, and observes once per completed outer sweep. The last
+substep in each sweep records `validation_change`; other substeps leave it None.
+The recipe replaces its patience anchor on proved `min_delta` improvement even
+if reporting floats are equal. It releases old anchors, observation scratch and
+the final anchor on completion/failure. During training this adds one retained
+`4*N_validation*K` snapshot, plus a temporary snapshot during observation.
+
+Fifteen separate recipe CUDA tests are collected, unrun: three-anchor sequences,
+equal-score anchor replacement, full rejection across every update order, zero
+rounds, and failures during initial/observation copy, comparison, invalid callback
+result or a later learner. Together with the twelve transaction cases, these
+distinguish the new consumers; they do not replace the original 383 requirements.
+Historical Normal recipe byte assertions exclude the new best snapshot and will
+disagree by `4*N_validation*K`; that planned semantic difference is retained in
+the historical cohort. Full revised trajectory/D2 bindings and hardware remain open.

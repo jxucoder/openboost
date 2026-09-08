@@ -50,6 +50,8 @@ allowances are consumed; no hardware execution is authorized by this local slice
 ## Commits
 
 - `5b11828` — CPU Normal comparison consumers and 1646 passing CPU checks.
+- `b016b24` — Named resident comparison policy, owned best anchors and twelve
+  collected/unrun CUDA ownership distinctions.
 
 ## Resident transaction construction
 
@@ -70,3 +72,30 @@ Linux-only skip; Ruff passes production and the two changed comparison test file
 The shared try_terms consumer uses the named policy and retains each comparison.
 Normal recipe policy selection, patience ownership and complete historical-case
 bindings are still open. This is construction evidence, not a CUDA acceptance gate.
+
+## Resident recipe construction and reflection
+
+Normal now explicitly selects objective comparison and independently owns its
+patience validation anchor. It observes only complete outer sweeps, replaces an
+anchor on proved improvement even when reported scores remain equal, and retains
+the scalar comparison on the last substep. Its anchor and temporary observation
+copy are released on success/failure; best storage remains owned by the run.
+
+The missing-comparison recipe preflight failed before editing, then passed.
+Fifteen real-CUDA recipe cases collect but are unrun. The prescribed means sequence
+distinguishes all three anchors; a second tiny improvement must have the exact
+change from the replaced anchor, so stale-anchor reuse cannot pass by producing
+another negative sign. Failure tests target validation-view copies by their public
+selector, avoiding brittle counts of unrelated tree-copy internals.
+
+After three implementation commits, the foundation exposes objective comparison
+at each required decision. This remains a correctness construction, without CPU
+speed/author-benefit claims. Hardware, complete historical-requirement bindings,
+installed D2 and fresh inference under the new semantics remain open. Historical
+recipe memory expectations exclude the new best snapshot and must retain their
+old meaning; revised tests explicitly include its `4*N_validation*K` bytes.
+
+Full CPU regression passes 1653 checks with one Linux-only skip. Ruff passes
+production and changed support tests. MkDocs builds with the same existing
+external-evidence link warning, and `uv build --offline` builds both wheel and
+source archive. These checks do not execute CUDA kernels.

@@ -4,8 +4,11 @@ Status: local execution approved by the user after
 [091's measured retrospective](091-normal-acceptance-diagnostics.md).
 092-A's independent mathematics, complete historical mapping and clean-source
 evidence are complete. [092-B public operations](092-public-comparison-operations.md)
-are constructed; CPU validation passes and CUDA execution remains pending. Consumer
-changes are next. Both slice reflections are recorded. No new hardware allowance is included. All seven
+are constructed; CPU validation passes and CUDA execution remains pending.
+[092-C consumers](092-comparison-consumers.md) are constructed on CPU and resident
+paths, with 1653 passing CPU checks and 27 new consumer CUDA cases collected but
+unrun. Complete historical-requirement bindings remain open. Slice reflections
+are recorded. No new hardware allowance is included. All seven
 device invocations are consumed. This is the next bounded correctness slice of
 079/B12/R6, not a new private trainer or a change to the required R/C/A scope.
 
@@ -97,7 +100,8 @@ numerical evidence and higher precision where convergence is insufficient.
 
 The [092-C consumer design](092-comparison-consumers.md) now records the initial
 ownership choice, explicit policies and distinguishing tests before runtime edits.
-It does not claim the consumers are implemented or device-tested.
+The linked record tracks subsequent construction and separates CPU verification
+from the still-unrun device cases.
 
 Changing training acceptance alone does not make all loss-based decisions reliable.
 Validation-best compares against the retained best model, while patience compares

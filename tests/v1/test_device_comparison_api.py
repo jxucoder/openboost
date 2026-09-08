@@ -70,3 +70,15 @@ def test_missing_run_operation_fails_before_preparation_without_fallback():
             objective=replace(SQUARED, validate=forbidden, prepare=forbidden),
             comparison="objective",
         )
+
+
+def test_normal_recipe_explicitly_requires_objective_comparison(monkeypatch):
+    from openboost import device_recipes
+
+    def forbidden(*args):
+        raise AssertionError("Normal must select objective policy before preparation")
+
+    configured = replace(normal.objective(), compare=None, validate=forbidden)
+    monkeypatch.setattr(normal, "objective", lambda **kwargs: configured)
+    with pytest.raises(NotImplementedError, match="loss-change"):
+        device_recipes.normal(None, None, None, run_id="required", seed=7, rounds=0)

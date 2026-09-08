@@ -1,7 +1,7 @@
 # Sprint 092-C: Separate comparison consumers and their anchors
 
-Status: CPU consumers implemented and locally verified; resident consumers and
-revised hardware-cohort bindings remain open. This design recorded the ownership
+Status: CPU and resident consumers constructed; CPU verification passes and
+resident execution/revised hardware-cohort bindings remain open. This design recorded the ownership
 decision before runtime/recipe edits. Actual CUDA verification still requires the
 later 092-D freeze and a new allowance.
 
@@ -154,3 +154,28 @@ fixed/backtracking behavior. Their source is
 `tests/v1/test_device_comparison_consumers_cuda.py`. No GPU execution is claimed.
 The 383-case requirement mapping still needs its complete trajectory/recipe/D2
 bindings; these twelve added distinctions do not substitute for that coverage.
+
+## Resident recipe slice and three-commit reflection
+
+Normal joint/forward/reverse recipes select objective comparison and own a separate
+patience validation snapshot. Each completed sweep compares once and records its
+change on the final substep. A qualifying comparison replaces the anchor even
+when reporting scores are equal. Temporary/current/patience snapshots are released
+on rejection, replacement, normal completion and numeric/infrastructure exceptions.
+
+One CPU preflight test failed before recipe selection was implemented and then
+passed: Normal cannot prepare data if its required comparison operation is missing.
+Fifteen separate CUDA recipe cases collect but remain unrun. They cover the exact
+five-transition sequence, equal-score second-anchor evidence, each update order,
+full rejection/outer clocks, zero rounds and copy/callback/later-learner cleanup.
+
+Reflection after the third implementation commit: all three consumers are now
+represented through public objective operations, without a Normal-specific runtime
+branch. CPU cases prove the intended distinctions; CUDA construction and collected
+tests do not establish actual kernel lowering, ownership or trajectory correctness.
+The extra best copy deliberately changes historical Normal recipe memory assertions
+by `4*N_validation*K`; the recipe's active patience copy is released before return.
+Keep those original assertions/outcomes and bind revised memory requirements
+explicitly. The 90 trajectory settings, six transaction failure requirements,
+31 recipe and twenty installed-D2/inference requirements still need their complete
+new-cohort bindings. No C closure or device-run request is justified yet.

@@ -1,6 +1,6 @@
 """Experimental resident scalar recipe assembled from public device operations."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import numpy as np
 
@@ -44,6 +44,7 @@ class DeviceNormalStep:
     loss: float
     validation_score: float
     best_score: float
+    validation_change: LossChange | None = None
 
     @property
     def accepted(self):
@@ -270,7 +271,8 @@ def normal(
     only the latest accepted state; StopState observes once per outer sweep.
     Optional learner(ops, data, fields) owns its tree configuration. Summary
     diagnostics retain every trial and substep, never sample arrays or old states.
-    Real Normal CUDA validation is pending.
+    Backtracking, best and patience use distinct objective-comparison anchors.
+    Revised Normal CUDA consumer validation is pending.
     """
     policy = StopState.start(0, rounds=rounds, patience=patience, min_delta=min_delta)
     mode, damping = objectives.direction_configuration(mode, damping)
@@ -295,12 +297,15 @@ def normal(
         binning=binning,
         bins=bins,
         objective=objective,
+        comparison="objective",
     )
+    patience_raw = None
     try:
         state = run.initialize()
         policy = StopState.start(
             state.validation_score, rounds=rounds, patience=patience, min_delta=min_delta
         )
+        patience_raw = run.raw(state, validation=True)
         history = []
         while policy.reason is None:
             for channels in groups:
@@ -353,8 +358,27 @@ def normal(
                         state.best_score,
                     )
                 )
-            policy = policy.observe(state.validation_score)
+            with _workspace(ops) as retained:
+                current = run.raw(state, validation=True)
+                change = run.objective.loss_change(
+                    ops, run.validation_problem, patience_raw, current
+                )
+                observed = policy.observe_change(state.validation_score, change)
+                improved = change.improves(policy.min_delta)
+                if improved:
+                    retained.add(current)
+            if improved:
+                previous, patience_raw = patience_raw, current
+                run.execution.release(previous)
+            policy = observed
+            # One observation per complete outer sweep, attached to its last substep.
+            history[-1] = replace(history[-1], validation_change=change)
+        run.execution.release(patience_raw)
+        patience_raw = None
         return DeviceFitResult(run, state, tuple(history), policy)
     except BaseException:
         run.close()
         raise
+    finally:
+        if patience_raw is not None:
+            run.execution.release(patience_raw)
