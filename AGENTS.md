@@ -85,11 +85,15 @@ every author command, followed by a separate concrete freeze/allowance. No retry
 model attempt or additional CPU upload is authorized by this result. Independent
 token enforcement, fair arms/model/settings and GPU run 8 remain open.
 
-The user subsequently approved [097's identity correction](v1-sprints/097-explicit-worker-identity.md)
-and one separate corrected CPU smoke under the same resource bounds. The new
-freeze adds only a trusted privilege launcher to the thirteen original uploads.
-Commit exact inputs, execute once and stop for retrospective; no application retry,
-model dispatch or GPU invocation is included. All nineteen original cases remain.
+The separately approved [097 corrected smoke](v1-sprints/097-worker-identity-result.md)
+passes at clean `518eccf`: all nineteen original checks, both real/effective/saved
+UID/GID guards and actual provider expiry. All thirteen original uploaded files
+are unchanged; only the trusted launcher is added. Core/material writes and root
+restoration are denied; evaluator hashes remain unchanged. Its one CPU allowance
+is consumed with no retry. Stop at the recorded retrospective, then return to
+actual generated-token/wall-budget enforcement and fair-arm/model/settings design.
+No model dispatch, further remote invocation or GPU allowance follows from this
+known-code isolation result. The raw failure and correction are both retained.
 
 The user explicitly approved bounded B12/F3.1 feasibility before formal F2/E5
 completion. This supersedes the earlier unadopted-overlap proposal. Audit relevant

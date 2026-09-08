@@ -11,8 +11,9 @@ folder manages execution, not a competing roadmap. R1–R9/C1–C7/A1–A13 all 
 
 ## Current execution position
 
-The latest result is [096's failed Linux worker smoke](096-linux-worker-result.md),
-following its [local construction](096-linux-author-worker.md),
+The latest result is [097's passing corrected Linux worker smoke](097-worker-identity-result.md),
+following [096's failed Linux worker smoke](096-linux-worker-result.md)
+and its [local construction](096-linux-author-worker.md),
 following [095 author packet and failed native isolation](095-author-packet-and-local-isolation.md)
 and [094 standalone author-verifier preparation](094-author-verifier-preparation.md),
 following the [093 checkpoint](093-foundation-progress-and-next-steps.md).
@@ -21,14 +22,16 @@ independent dispatch remains blocked on actual accounting/isolation and arm/sett
 freezes. Run 8 is still pending and its frozen inputs are unchanged.
 The separately approved 096 CPU allowance is consumed: 14/19 checks pass, but the
 worker runs as root and modifies core/material files. Timeout is not reached.
-The evaluator remains outside the worker and unchanged. Explicit process privilege
-reduction is the next local correction; a repeat needs a new freeze/allowance.
+The evaluator remains outside the worker and unchanged. That failure is retained.
 
-The user's subsequent "sure" approves [097's explicit identity correction](097-explicit-worker-identity.md)
-and one separately frozen CPU smoke. It adds only a trusted launcher, preserving
-all nineteen original checks. Two identity records must verify real/effective/saved
-UID/GID, empty supplementary groups and inherited `no_new_privs` before work.
-Execute once from a clean commit, retain every outcome and stop for reflection.
+The user's subsequent "sure" approved [097's explicit identity correction](097-explicit-worker-identity.md)
+and one separately frozen CPU smoke. At clean `518eccf`, all nineteen original checks,
+both identity guards and actual provider expiry pass. The original thirteen uploads
+are byte-identical; only the trusted launcher is added. Core/material writes and
+root restoration fail as required, and all evaluator hashes remain unchanged.
+That allowance is consumed, with no retry. The retrospective is complete: next
+design actual generated-token/wall-budget enforcement and fair-arm/model/settings
+before any independent attempt. No model or additional remote run is authorized.
 
 The user-approved [085 foundation-focus amendment](085-foundation-focus-amendment.md)
 sets the current order: [069 authoring/accounting preparation](069-authoring-pilot.md)

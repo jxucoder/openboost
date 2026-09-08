@@ -120,7 +120,7 @@ GPU run remain separate gates.
 
 [Sprint 096](../../../v1-sprints/096-linux-author-worker.md) chooses a Modal CPU
 Sandbox for the next bounded isolation smoke. Its original controller verified the
-frozen 095 packet and constructs an image from thirteen individually selected
+frozen 095 packet and constructed an image from thirteen individually selected
 files: twelve author materials and the generic `linux_probe.py`. The evaluator
 stays on the controller host. No directory mount, author solution, credential or
 model runner is delivered. The image requested UID 1000 with a writable workspace,
@@ -168,3 +168,13 @@ The user's "sure" approves one corrected 90-second / 2-CPU / 2048-MiB smoke, wit
 no retries, GPU or model calls. Exact inputs are frozen and committed before
 service access. Local syscall-order and classifier tests do not establish actual
 Linux enforcement; retain the remote outcome separately from the original failure.
+
+The [real 097 result](../evidence/author-linux-identity-097/README.md) now passes all
+nineteen original checks, both identity guards and actual provider expiry at clean
+`518eccf`. The one allowance is consumed; `--execute` reuse is blocked. All original
+thirteen uploads are unchanged, and the five originally failed checks now pass.
+Core/material writes and root restoration are denied; evaluator hashes stay intact.
+This removes the observed worker-identity blocker. The
+[retrospective](../../../v1-sprints/097-worker-identity-result.md) returns to actual
+token-budget enforcement and the fair-arm/model/settings packet. No model or
+independent author attempt ran, and no broader isolation or author-cost claim follows.

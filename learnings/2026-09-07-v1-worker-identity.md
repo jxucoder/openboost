@@ -61,3 +61,37 @@ the foundation's author-benefit question.
 
 - Parent `3eb37f6` retains the failed 096 smoke and retrospective.
 - This implementation commit contains the correction and approved 097 freeze.
+
+## Actual Linux result and reflection
+
+The corrected smoke executes once at clean `518eccf`: all nineteen original checks,
+both identity guards and actual provider expiry pass. Real/effective/saved UID/GID
+are all 1000, supplementary groups are empty, and `no_new_privs=1` survives exec.
+Core/material writes return `EACCES`, root restoration returns `EPERM`, and the
+core plus four controller evaluator hashes remain unchanged. All public examples
+work. Every original delivery byte and case is preserved; only the launcher was
+added. [Raw evidence](../benchmarks/v1/evidence/author-linux-identity-097/README.md)
+retains all eighteen artifacts and the exact approved freeze.
+
+The provider timeout occurs after the separate-session child marker; return code
+124 and final-parent-sleep `KeyboardInterrupt` are retained. Creation including
+image work takes 22.540 seconds; the wait phase takes 90.949 seconds. Cleanup returns
+without error. No independent post-expiry child-PID observation or full author
+time/token enforcement is claimed. The active freeze changes only authorization
+to `consumed`; no retry, model generation or GPU invocation occurs.
+
+Local replay accepts the actual result only with timeout, while the original 096
+failure still fails. All 21 indexed archive hashes and all 24 execution-source
+hashes match; the 85 pending GPU run-8 source hashes remain unchanged. This measured
+correction closes the declared worker smoke. It does not measure algorithm-change
+cost or pass independent-author gates. The [retrospective](../v1-sprints/097-worker-identity-result.md)
+stops further sandbox expansion and returns to a real token/time controller and
+fair-arm/model/settings design before an authorized author attempt.
+
+Closure verification also confirms that the consumed CLI rejects locally before
+creating output. MkDocs builds with the same existing evidence-link warning;
+authored-file whitespace checks pass. The raw builder log deliberately retains
+its original trailing spaces and final blank lines. Stage those exact bytes and
+the ignored wheel explicitly. All 21 indexed hashes were verified against staged
+Git blobs, and all 23 archive files are staged. No production source changes
+after `518eccf`.

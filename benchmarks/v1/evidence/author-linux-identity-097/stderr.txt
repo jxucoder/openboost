@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/opt/probe.py", line 206, in <module>
+    run(Path(sys.argv[1]), [Path(p) for p in json.loads(sys.argv[2])])
+  File "/opt/probe.py", line 202, in run
+    time.sleep(1)
+KeyboardInterrupt

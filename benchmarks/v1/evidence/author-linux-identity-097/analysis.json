@@ -1,0 +1,77 @@
+{
+  "source_revision": "518eccf07eba9398b66e48910bec185ba4e76151",
+  "previous_revision": "7985645ce4d1c7346e250a77113525b43f12bb12",
+  "passed_cases": 19,
+  "total_cases": 19,
+  "previously_failing_now_passing": [
+    "nonroot",
+    "core_write",
+    "materials_write",
+    "regain_root",
+    "core_unchanged"
+  ],
+  "identities": [
+    {
+      "kind": "identity",
+      "phase": "before_exec",
+      "uids": [
+        1000,
+        1000,
+        1000
+      ],
+      "gids": [
+        1000,
+        1000,
+        1000
+      ],
+      "groups": [],
+      "no_new_privs": 1
+    },
+    {
+      "kind": "identity",
+      "phase": "after_exec",
+      "uids": [
+        1000,
+        1000,
+        1000
+      ],
+      "gids": [
+        1000,
+        1000,
+        1000
+      ],
+      "groups": [],
+      "no_new_privs": 1
+    }
+  ],
+  "runtime": {
+    "kind": "runtime",
+    "python": "3.12.10 (main, May 21 2025, 23:34:56) [GCC 12.2.0]",
+    "os": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+    "machine": "x86_64",
+    "uid": 1000,
+    "gid": 1000,
+    "cpu_count": 2,
+    "packages": {
+      "openboost": "1.0.0.dev0",
+      "numpy": "2.3.5",
+      "uv": "0.12.1"
+    }
+  },
+  "core_unchanged": true,
+  "evaluator_unchanged": true,
+  "original_uploads_identical": 13,
+  "original_cases_identical": true,
+  "timeout_marker": {
+    "kind": "ready_for_timeout",
+    "child_pid": 19,
+    "child_session": 19
+  },
+  "provider_timeout": true,
+  "returncode": 124,
+  "timing": {
+    "create_including_image_s": 22.540315915975953,
+    "wait_phase_s": 90.94897404199583
+  },
+  "scope": "Known-code CPU isolation smoke; no independent author or generated-token enforcement"
+}
