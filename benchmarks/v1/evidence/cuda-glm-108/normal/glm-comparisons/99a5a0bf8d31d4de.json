@@ -1,0 +1,44 @@
+{
+  "case": {
+    "id": "binary/negative-tail",
+    "family": "binary",
+    "arrays": [
+      [
+        -80.0
+      ],
+      [
+        -80.01000213623047
+      ],
+      [
+        0.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        1.0
+      ]
+    ],
+    "status": "improvement"
+  },
+  "comparison": {
+    "lower": -1.7962986830880714e-37,
+    "upper": -1.7962088327678485e-37,
+    "method": "binary-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "improvement",
+  "decimal220": "-1.7962388577908378929471039918146983602275281864435071786902721775919772090025432052746745206376838677673122354963558254119306016658797808467746620800607915491022188689812796857471242896263529867129472202208336682254580E-37",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

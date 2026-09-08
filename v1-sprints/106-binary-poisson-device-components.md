@@ -1,6 +1,8 @@
 # Sprint 106: Binary and Poisson device components
 
-Status: construction complete; new CUDA execution and full recipe integration pending.
+Status: construction complete; subsequent 107 recipe integration and the bounded
+[108 T4 validation](108-glm-validation-result.md) now pass. The following records
+preserve construction-time evidence and its original unexecuted boundary.
 Mapping: 080 / B12 / R1 binary / R4 Poisson / E1. Construction only; all eleven
 hardware allowances are consumed. No new upload, model call or device run is included.
 

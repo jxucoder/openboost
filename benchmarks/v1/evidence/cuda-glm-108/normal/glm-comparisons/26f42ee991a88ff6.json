@@ -1,0 +1,50 @@
+{
+  "case": {
+    "id": "binary/equal-loss-different-raw",
+    "family": "binary",
+    "arrays": [
+      [
+        -1.0,
+        1.0
+      ],
+      [
+        1.0,
+        -1.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "status": "unresolved"
+  },
+  "comparison": {
+    "lower": -0.06889329077704892,
+    "upper": 0.037882842739991984,
+    "method": "binary-convex-taylor18-interval-v1",
+    "reason": "contains_zero",
+    "unchanged": false
+  },
+  "status": "unresolved",
+  "decimal220": "0E-219",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

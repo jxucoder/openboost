@@ -480,7 +480,7 @@ and models. They do not establish external-library speed or formal E4. See
 `benchmarks/v1/evidence/parallel-validation-105/README.md` for raw artifacts,
 first-fit costs, environment/source bindings and all gates.
 
-## Binary and Poisson objective construction
+## Binary and Poisson device objectives and recipes
 
 Sprint 106 adds `device_glm.binary(clip=1e-6)` and
 `device_glm.poisson(minimum_rate=1e-6)`, returning explicit `ObjectiveOperations`.
@@ -500,11 +500,11 @@ with log-sum-exp, and uses minimum rate only for zero positively weighted counts
 Loss includes log-factorial. Both families reject nonpositive stored curvature or
 nonfinite loss/geometry, even on zero-weight rows. They do not clip raw state.
 
-These components await real CUDA validation. Local tests check configuration and
-independent mathematical contracts; collected GPU cases cover resident numerics,
-ownership, failure recovery and transfer boundaries. Both factories now supply
-`device_glm.compare` through their objective loss-change callback. The new scalar
-recipe consumers are constructed; real-device comparison/recipe validation is pending.
+These experimental components pass the bounded run-12 T4 matrix at `fe12beb`.
+Local tests check configuration and independent mathematical contracts; real GPU
+cases verify resident numerics, ownership, failure recovery and transfer boundaries.
+Both factories supply `device_glm.compare` through their objective loss-change
+callback, used by the shared scalar recipe consumers.
 
 `DeviceRun` now rejects different training/validation class schemas before device
 preparation and includes the training schema when exporting a CPU `Model`. The
@@ -512,12 +512,12 @@ existing model format retains labels for `predict_proba` and `predict_label` aft
 CUDA closes. Poisson exports a raw log-rate model; observation offset and exposure
 remain explicit inference inputs (`exp(raw + offset) * exposure`).
 
-Six additional collected CUDA cases compose binary/Poisson objectives through
+Six passing CUDA cases compose binary/Poisson objectives through
 two prescribed rounds at depths zero, one and two. Their independent oracle checks
 every root candidate, routed rows, leaves, train/validation state and task metrics.
 Saved models replay in a new CPU process with CUDA and training-module imports
-blocked. These cases have not run on hardware; manual acceptance does not establish
-reliable automatic acceptance, best-model selection or stopping.
+blocked. These prescribed updates verify composition; automatic acceptance,
+best-model selection and stopping have the separate recipe controls below.
 
 The GLM comparison uses convex Taylor bounds: gradient at the old raw times the
 step, plus half the squared step times bounds on curvature over the whole segment.
@@ -532,8 +532,9 @@ zero weights, before unchanged shortcuts. The two snapshots remain caller-owned.
 It allocates `32*N + 32` scratch bytes and exports only a 32-byte summary plus
 existing validation flags. No host/reporting callback is used. The independent
 160/220-digit oracle and Python execution of the shared scalar expressions pass;
-77 new CUDA comparison/ownership/lowering cases are collected but unrun. This
-does not yet establish compiler correctness, GPU cost or recipe conformance.
+77 CUDA comparison/ownership/lowering cases pass on T4, including the observed
+directed-double PTX. This does not establish other compilers/architectures or GPU
+fit cost. Recipe conformance has separate tests.
 
 `device_recipes.scalar(..., objective=..., run_id=..., seed=...)` now composes any
 scalar objective with explicit fields and comparison dependencies. Binary and
@@ -548,7 +549,12 @@ Each DeviceScalarStep retains every trial, before/after versions and one patienc
 comparison. Working trees, fields, old states, proposals and the patience anchor
 are released; the returned run/state remains caller-owned. A custom learner owns
 its tree configuration, and missing fields/comparison or unknown options fail
-explicitly. Thirty-two collected CUDA recipe cases cover independent trajectories,
+explicitly. Thirty-two passing CUDA recipe cases cover independent trajectories,
 partial/full rejection, three anchors, equal-score improvements, zero rounds,
 failure cleanup and saved CPU inference. Together with 106 and the comparison
-cases, 153 GLM CUDA cases are collected and unrun. These APIs remain experimental.
+cases, all 153 GLM CUDA cases pass, along with 418 existing regressions. All 77
+declared artifacts are retained; the offline audit verifies 246 stored-input
+loss-change enclosures and replays 32 final/best models from lossless fixture bytes.
+See `benchmarks/v1/evidence/cuda-glm-108/README.md` for raw results and scope.
+These APIs remain experimental; full R1/R4, remaining required CUDA recipes,
+train-many, real-data quality and formal E4 are not closed by this matrix.

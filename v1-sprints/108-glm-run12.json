@@ -1,7 +1,7 @@
 {
   "scope": "108 bounded resident binary/Poisson objective, comparison and recipe validation with relevant scalar/Normal/field regressions. No full R1/R4, Normal, E4, external quality/speed or adoption claim.",
-  "authorization": "approved",
-  "upload_authorization": "approved",
+  "authorization": "consumed",
+  "upload_authorization": "consumed",
   "require_upload_authorization": true,
   "upload_destination": "Modal",
   "app_name": "openboost-v1-glm-validation",

@@ -1,0 +1,44 @@
+{
+  "case": {
+    "id": "poisson/stationary-rounded-tie",
+    "family": "poisson",
+    "arrays": [
+      [
+        0.0
+      ],
+      [
+        1.000000013351432e-10
+      ],
+      [
+        1.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        1.0
+      ]
+    ],
+    "status": "worsening"
+  },
+  "comparison": {
+    "lower": 5.0000001335143205e-21,
+    "upper": 5.000000134014321e-21,
+    "method": "poisson-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "worsening",
+  "decimal220": "5.000000133680987164831123713715644932297287376630663219154633518264915148653137435681255638184814778516222709767489260859879450084649091244252127758069706672109706663047185584132796628801065283233606E-21",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

@@ -1,9 +1,11 @@
 # Sprint 108: Frozen binary/Poisson validation request
 
-Status: the user explicitly approves this exact upload and hardware packet after
-reviewing the 85-file / single-T4 request. No remote invocation has occurred yet.
-All eleven previous GPU allowances remain consumed. This is the concrete device
-gate following the [107 construction retrospective](107-glm-comparison-and-recipes.md).
+Status: approved and executed once at clean `fe12beb`. All 571 T4 cases pass;
+all 77 declared JSON artifacts and source/package identities match. The
+[raw evidence](../benchmarks/v1/evidence/cuda-glm-108/README.md) and
+[result/retrospective](108-glm-validation-result.md) are retained. All twelve GPU
+allowances are consumed. This is the concrete device gate following the
+[107 construction retrospective](107-glm-comparison-and-recipes.md).
 
 ## Exact payload and execution
 

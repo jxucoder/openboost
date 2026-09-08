@@ -68,16 +68,20 @@ synthetic results do not pass formal E4 or full Normal conformance.
 [106 binary/Poisson device components](106-binary-poisson-device-components.md)
 completes local construction: independent numerics and complete required scope,
 resident objective operations, class-aware export and two-round composition checks.
-Local regression passes 2,065 CPU tests with one Linux-only skip; forty-four new
-GPU cases collect without execution. [107 loss-change and recipe integration](107-glm-comparison-and-recipes.md)
-then completes local construction of resident comparison and scalar acceptance,
-best-validation and independent patience consumers. Full regression passes 2,241
-CPU tests with one Linux-only skip. All 153 GLM GPU cases collect but remain unrun.
+Local regression passed 2,065 CPU tests with one Linux-only skip; forty-four new
+GPU cases collected without execution. [107 loss-change and recipe integration](107-glm-comparison-and-recipes.md)
+then completed local construction of resident comparison and scalar acceptance,
+best-validation and independent patience consumers. Full regression passed 2,241
+CPU tests with one Linux-only skip. All 153 GLM GPU cases were then collected but unrun.
 The [108 run-12 request](108-glm-validation-request.md) now freezes 85 files,
 571 cases and 77 mandatory JSON artifacts. Isolated installed collection agrees;
-45 local packet/retention controls pass. The user now explicitly approves its
-concrete upload/hardware allowance; all eleven previous allowances remain consumed.
-Execute once, preserve the raw verdict and stop for retrospective.
+45 local packet/retention controls pass. Its approved execution at clean `fe12beb`
+passes all 571 T4 cases with all 77 artifacts and source/package identities intact.
+[The offline audit](../benchmarks/v1/evidence/cuda-glm-108/README.md) verifies all
+246 comparison differences and replays all 32 final/best models from stored input
+bytes. [The 108 retrospective](108-glm-validation-result.md) is complete; all twelve
+allowances are consumed. Stop here, then begin the required multiclass construction
+on the next continuation. AFT/vector topology, train-many and formal E4 remain open.
 
 After this checkpoint, advance
 [required CUDA recipes](080-cuda-required-recipes.md),

@@ -1,6 +1,8 @@
 # Sprint 080: Complete required CUDA recipe correctness
 
-Status: planned. Mapping: B12 / F3 / required R1/R4/R5/R6/R8 CUDA subsets / E1.
+Status: in progress; bounded squared/Normal and binary/Poisson evidence retained,
+with remaining required cells open. Mapping: B12 / F3 / required
+R1/R4/R5/R6/R8 CUDA subsets / E1.
 Depends on: [079](079-cuda-distribution-and-extension.md).
 Shared evidence/closure rules: [roadmap](roadmap-after-063.md).
 
@@ -38,4 +40,11 @@ public device table from actual results, then enter 081.
 
 ## Results
 
-Not run. All required device cells remain open at this planning baseline.
+At the original planning baseline this sprint had no results. Subsequent scalar,
+Normal and comparison runs retain their individual boundaries and failures.
+[108](108-glm-validation-result.md) now passes all 153 binary/Poisson objective,
+comparison and recipe cases on T4, alongside 418 regressions. This is bounded
+device evidence, not full R1/R4 or complete 080 acceptance. Multiclass, fixed-scale
+event/right-censored AFT and independent/shared squared vector topology remain
+required; start multiclass construction next. All formal quality/cost and R9 gates
+remain separate. No further hardware allowance follows automatically.

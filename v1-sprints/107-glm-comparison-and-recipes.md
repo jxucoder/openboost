@@ -1,7 +1,8 @@
 # Sprint 107: GLM comparison and scalar recipe integration
 
-Status: local construction complete; the [108 request](108-glm-validation-request.md)
-completes local hardware preparation and awaits its separate allowance.
+Status: construction complete; the subsequent approved
+[108 validation](108-glm-validation-result.md) passes all 153 GLM T4 cases plus
+418 regressions. The construction-time results below retain their original scope.
 Mapping: 080 / B12 /
 R1 binary / R4 Poisson. Local construction can continue; no hardware/upload allowance.
 

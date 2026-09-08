@@ -1,0 +1,50 @@
+{
+  "case": {
+    "id": "binary/balanced-stationary",
+    "family": "binary",
+    "arrays": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        9.999999682655225e-21,
+        9.999999682655225e-21
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "status": "unresolved"
+  },
+  "comparison": {
+    "lower": -0.0,
+    "upper": 7.52316384526264e-37,
+    "method": "binary-convex-taylor18-interval-v1",
+    "reason": "contains_zero",
+    "unchanged": false
+  },
+  "status": "unresolved",
+  "decimal220": "1.24999992066380760608829652745644746407233872025556102270741834618658426509794474488160274781440282045169484975714636674305612096144695082543804534099125084492185327477879383543455E-41",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

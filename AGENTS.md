@@ -129,17 +129,23 @@ objective operations and inference metadata; row validation remains unchanged.
 The user's subsequent "continue" completes local construction of
 [106 resident binary/Poisson components](v1-sprints/106-binary-poisson-device-components.md):
 independent numerical/scope contracts, public objective operations, then class-aware
-export and two-round composition checks. Forty-four new GPU cases collect but have
-not run. Local regression passes 2,065 CPU tests with one Linux-only skip.
+export and two-round composition checks. At that closure, forty-four new GPU cases
+collected without execution; local regression passed 2,065 CPU tests with one Linux-only skip.
 [107 comparison and recipe integration](v1-sprints/107-glm-comparison-and-recipes.md)
-now completes local construction: independent convex loss-change controls, resident
-comparison and scalar acceptance/best/patience consumers. Regression passes 2,241
-CPU tests with one Linux-only skip; all 153 GLM GPU cases collect but remain unrun.
+then completed local construction: independent convex loss-change controls, resident
+comparison and scalar acceptance/best/patience consumers. Regression passed 2,241
+CPU tests with one Linux-only skip; all 153 GLM GPU cases were then collected but unrun.
 The [108 run-12 request](v1-sprints/108-glm-validation-request.md) now freezes 85
 files, 571 cases (153 GLM plus 418 regressions) and 77 mandatory JSON artifacts.
 Isolated installed collection matches; 45 local packet/retention checks pass.
-The user now explicitly approves this exact upload and hardware allowance.
-Execute one bounded T4 invocation, then retain results and stop for retrospective.
+The approved run executes once at clean `fe12beb`: all 571 T4 cases pass, including
+all 153 GLM cases and 418 regressions. All 77 JSON artifacts and source/package
+identities match. The [offline audit and raw evidence](benchmarks/v1/evidence/cuda-glm-108/README.md)
+verify all 246 retained comparison differences and replay all 32 final/best models
+from lossless input bytes. The [108 retrospective](v1-sprints/108-glm-validation-result.md)
+is complete. All twelve GPU allowances are consumed. Stop at this checkpoint;
+next construction is required multiclass geometry/comparison/recipe integration
+under 080, then AFT and vector topology. No speed ratio or formal E4 pass follows.
 Preserve consumed run sources by revision when current implementation changes.
 
 After this checkpoint, advance required CUDA recipes (080), compatible
@@ -352,8 +358,10 @@ parity, owned transactions and saved CPU inference. Normal K=2 device operations
 mapped runtime and joint/ordered recipes execute in the bounded run-6 matrix,
 which passes 381/383 checks with two acceptance failures. Run 7 repeats both
 failures and captures the false-improvement mechanism; its two diagnostics pass.
-Installed D2 and nineteen CPU replays pass; full Normal conformance remains open. Other
-required CUDA recipes remain unimplemented.
+Installed D2 and nineteen CPU replays pass; full Normal conformance remains open.
+Binary/Poisson objectives, loss-change comparisons and shared scalar recipes now
+pass the bounded 153-case T4 matrix at `fe12beb`, with 418 regressions and retained
+CPU inference evidence. Required multiclass, AFT and vector topology remain open.
 All A1–A13 real evaluations and formal author/quality/cost gates remain open.
 
 The user approved B03–B06 construction overlapping unfinished F0.3; see Sprint 018

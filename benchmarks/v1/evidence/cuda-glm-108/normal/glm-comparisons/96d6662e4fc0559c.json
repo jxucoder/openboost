@@ -1,0 +1,50 @@
+{
+  "case": {
+    "id": "binary/large-step",
+    "family": "binary",
+    "arrays": [
+      [
+        -2.0,
+        1.0
+      ],
+      [
+        2.0,
+        -1.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "status": null
+  },
+  "comparison": {
+    "lower": 1.1239335402697328,
+    "upper": 1.7573472654142333,
+    "method": "binary-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "worsening",
+  "decimal220": "1.500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

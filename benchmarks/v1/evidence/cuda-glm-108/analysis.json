@@ -1,0 +1,192 @@
+{
+  "manifest_sha256": "b13708e5fc53ae87a9d08e7e0d380040bee672a1c405b82913c1759be116c5b8",
+  "execution_revision": "fe12bebcb8cd1ee7928c270793762e29091df684",
+  "raw_verdict": true,
+  "dispatch_sources_verified": 85,
+  "installed_core_files": 35,
+  "packages_verified": 18,
+  "raw_artifacts_verified": 80,
+  "retained_artifacts": 77,
+  "retained_bytes": 1013949,
+  "missing_artifacts": [],
+  "groups": {
+    "scalar": {
+      "pass": 212
+    },
+    "normal": {
+      "pass": 167
+    },
+    "validation": {
+      "pass": 39
+    },
+    "glm": {
+      "pass": 153
+    }
+  },
+  "failures": [],
+  "numerical_cases": 59,
+  "numerical_failures": [],
+  "comparison_audits": 246,
+  "models_replayed": 32,
+  "recipes": [
+    {
+      "case": "poisson/1/backtracking/0.25",
+      "comparisons": 9,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    },
+    {
+      "case": "binary/2/fixed/0.25",
+      "comparisons": 9,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    },
+    {
+      "case": "poisson/2/fixed/0.25",
+      "comparisons": 9,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    },
+    {
+      "case": "poisson/2/backtracking/0.25",
+      "comparisons": 9,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    },
+    {
+      "case": "binary/2/backtracking/0.25",
+      "comparisons": 9,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    },
+    {
+      "case": "binary/1/backtracking/0.0",
+      "comparisons": 14,
+      "models_replayed": 2,
+      "terms": 0,
+      "best_terms": 0,
+      "rounds": 2,
+      "stop": "patience"
+    },
+    {
+      "case": "poisson/1/backtracking/0.0",
+      "comparisons": 14,
+      "models_replayed": 2,
+      "terms": 0,
+      "best_terms": 0,
+      "rounds": 2,
+      "stop": "patience"
+    },
+    {
+      "case": "binary/2/backtracking/8.0",
+      "comparisons": 12,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    },
+    {
+      "case": "poisson/2/backtracking/8.0",
+      "comparisons": 18,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 1,
+      "rounds": 3,
+      "stop": "patience"
+    },
+    {
+      "case": "binary/2/backtracking/0.0",
+      "comparisons": 14,
+      "models_replayed": 2,
+      "terms": 0,
+      "best_terms": 0,
+      "rounds": 2,
+      "stop": "patience"
+    },
+    {
+      "case": "binary/1/fixed/0.25",
+      "comparisons": 9,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    },
+    {
+      "case": "binary/1/backtracking/8.0",
+      "comparisons": 13,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    },
+    {
+      "case": "poisson/2/backtracking/0.0",
+      "comparisons": 14,
+      "models_replayed": 2,
+      "terms": 0,
+      "best_terms": 0,
+      "rounds": 2,
+      "stop": "patience"
+    },
+    {
+      "case": "poisson/1/fixed/0.25",
+      "comparisons": 9,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    },
+    {
+      "case": "poisson/1/backtracking/8.0",
+      "comparisons": 16,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 2,
+      "rounds": 3,
+      "stop": "patience"
+    },
+    {
+      "case": "binary/1/backtracking/0.25",
+      "comparisons": 9,
+      "models_replayed": 2,
+      "terms": 3,
+      "best_terms": 3,
+      "rounds": 3,
+      "stop": "budget"
+    }
+  ],
+  "ptx": [
+    {
+      "family": "binary",
+      "instructions_present": true,
+      "bytes": 195071
+    },
+    {
+      "family": "poisson",
+      "instructions_present": true,
+      "bytes": 195851
+    }
+  ],
+  "worker_seconds": 55.323517573000004,
+  "dispatch_seconds": 382.976977,
+  "scope": "Bounded correctness and stored-input replay. No full R1/R4, Normal, quality, speed, E4 or adoption claim."
+}

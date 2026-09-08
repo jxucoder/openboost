@@ -1,0 +1,50 @@
+{
+  "case": {
+    "id": "binary/unchanged",
+    "family": "binary",
+    "arrays": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "status": "unchanged"
+  },
+  "comparison": {
+    "lower": 0.0,
+    "upper": 0.0,
+    "method": "binary-convex-taylor18-interval-v1",
+    "reason": "identical_stored_raw",
+    "unchanged": true
+  },
+  "status": "unchanged",
+  "decimal220": "0E-219",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}

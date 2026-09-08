@@ -138,4 +138,7 @@ Shared mapped transactions, Normal geometry and joint/ordered recipes now have
 [bounded passing comparison and recipe evidence](benchmarks/v1/evidence/cuda-recipe-103/README.md),
 with the historical numerical failures preserved in the earlier archives.
 The installed D2 learner uses the same public field/feasibility/tree operations.
+Binary/Poisson objectives, numerical loss-change comparisons and the shared scalar
+recipe now pass [153 GLM T4 checks plus 418 regressions](benchmarks/v1/evidence/cuda-glm-108/README.md),
+with retained input bytes, class-aware inference and 32 audited final/best models.
 Other required CUDA recipes and full phase acceptance remain open.

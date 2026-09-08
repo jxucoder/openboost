@@ -1,0 +1,44 @@
+{
+  "case": {
+    "id": "binary/worsening",
+    "family": "binary",
+    "arrays": [
+      [
+        0.0
+      ],
+      [
+        -0.10000000149011612
+      ],
+      [
+        1.0
+      ],
+      [
+        0.0
+      ],
+      [
+        1.0
+      ],
+      [
+        1.0
+      ]
+    ],
+    "status": "worsening"
+  },
+  "comparison": {
+    "lower": 0.05124688098308962,
+    "upper": 0.05125000078231096,
+    "method": "binary-convex-taylor18-interval-v1",
+    "reason": "bounded_sign",
+    "unchanged": false
+  },
+  "status": "worsening",
+  "decimal220": "0.0512494802959055352936153999649785692845600540306074568312754674759163788157608065903530669602089315756244464875980945367672535933942135435654671070578975725937050638866279086287017608979340957355713930755083299121697200",
+  "counters": {
+    "comparison_calls": 1,
+    "comparison_export_bytes": 32,
+    "export_bytes": 40,
+    "upload_bytes": 0,
+    "kernel_launches": 4,
+    "synchronizations": 6
+  }
+}
