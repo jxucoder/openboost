@@ -1,0 +1,12 @@
+{
+  "stage": "complete",
+  "fault": "launch_later",
+  "selected_key": [
+    0,
+    3,
+    false
+  ],
+  "before_bytes": 21400,
+  "after_bytes": 21400,
+  "caller_records_preserved": true
+}

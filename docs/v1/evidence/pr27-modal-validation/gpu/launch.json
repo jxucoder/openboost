@@ -1,0 +1,13 @@
+{
+  "protocol_sha256": "024edbb10e1bd75f5f3f8a0771d03e46dee7aa871a3e98a4ed0504c3efbee654",
+  "canonical_protocol_sha256": "c78ecff3959f2b1ce1a80f807c921856e6276b796324adbf7918275f563b664e",
+  "runner_sha256": "1dfd7cd1d779748d2da90d58c6508604fdebc8da6e95260dde63598dd7b1fba5",
+  "status": "pass",
+  "serialized_function_bytes": 38994,
+  "runtime_policy": {
+    "controller": "3.12",
+    "child": "3.12",
+    "managed_install": null
+  },
+  "controller_python": "3.12.14"
+}

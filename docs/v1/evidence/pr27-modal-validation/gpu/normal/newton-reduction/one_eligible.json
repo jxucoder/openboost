@@ -1,0 +1,85 @@
+{
+  "case": "one_eligible",
+  "stage": "complete",
+  "pairs": [
+    [
+      "0x1",
+      "0x2"
+    ],
+    [
+      "0x2",
+      "0x3"
+    ],
+    [
+      "0x3",
+      "0x4"
+    ],
+    [
+      "0x4",
+      "0x5"
+    ],
+    [
+      "0x5",
+      "0x6"
+    ],
+    [
+      "0x6",
+      "0x7"
+    ],
+    [
+      "0x7",
+      "0x8"
+    ],
+    [
+      "0x8",
+      "0x9"
+    ],
+    [
+      "0x9",
+      "0xa"
+    ]
+  ],
+  "eligible": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+  ],
+  "extra": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "levels": [
+    [
+      -1,
+      -1,
+      -1,
+      6,
+      -1
+    ],
+    [
+      -1,
+      6,
+      -1
+    ],
+    [
+      6,
+      -1
+    ],
+    [
+      6
+    ]
+  ]
+}

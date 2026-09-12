@@ -1,0 +1,2 @@
+Using CPython 3.12.10 interpreter at: /tmp/pr27-environment/bin/python
+Creating virtual environment at: /tmp/pr27-fresh

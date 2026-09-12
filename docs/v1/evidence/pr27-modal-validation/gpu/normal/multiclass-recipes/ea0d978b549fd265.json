@@ -1,0 +1,3137 @@
+{
+  "case": "3/2/backtracking/0.25",
+  "inputs": {
+    "train": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAABRAAAAAAAAAGEAAAAAAAAD4fwAAAAAAACBA"
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          9
+        ],
+        "data_base64": "AAAAAAAAAAABAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAAEAAAAAAAAAAUAAAAAAAAABgAAAAAAAAAHAAAAAAAAAAgAAAAAAAAA"
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAAAEAAAAAAAAAAQAAAAAAAAABA"
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          3
+        ],
+        "data_base64": "AAAAAAAA1L8AAAAAAADAPwAAAAAAAMC/AAAAAAAA1D8AAAAAAACwPwAAAAAAAMi/AAAAAAAA0D8AAAAAAAAAAAAAAAAAANC/AAAAAAAAyD8AAAAAAACwvwAAAAAAANS/AAAAAAAAwD8AAAAAAADAvwAAAAAAANQ/AAAAAAAAsD8AAAAAAADIvwAAAAAAANA/AAAAAAAAAAAAAAAAAADQvwAAAAAAAMg/AAAAAAAAsL8AAAAAAADUvwAAAAAAAMA/AAAAAAAAwL8AAAAAAADUPwAAAAAAALA/"
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          9
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhAAAAAAAAAEEAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAAPA/"
+      }
+    },
+    "validation": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAAAAAAAAAACBAAAAAAAAA+H8AAAAAAAAYQAAAAAAAABRAAAAAAAAAEEAAAAAAAAAIQAAAAAAAAABA"
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          9
+        ],
+        "data_base64": "ZAAAAAAAAABlAAAAAAAAAGYAAAAAAAAAZwAAAAAAAABoAAAAAAAAAGkAAAAAAAAAagAAAAAAAABrAAAAAAAAAGwAAAAAAAAA"
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAAAA"
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          3
+        ],
+        "data_base64": "AAAAAAAAxD8AAAAAAACgPwAAAAAAALi/AAAAAAAAxL8AAAAAAACwPwAAAAAAALC/AAAAAAAAsL8AAAAAAADEPwAAAAAAAKA/AAAAAAAAoL8AAAAAAADEvwAAAAAAALA/AAAAAAAAAAAAAAAAAADAvwAAAAAAALg/AAAAAAAAoD8AAAAAAAC4vwAAAAAAAMA/AAAAAAAAsD8AAAAAAACwvwAAAAAAAMQ/AAAAAAAAuD8AAAAAAACgvwAAAAAAAMS/AAAAAAAAwD8AAAAAAAAAAAAAAAAAAMC/"
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          9
+        ],
+        "data_base64": "AAAAAAAAAEAAAAAAAAAQQAAAAAAAABhAAAAAAAAAIEAAAAAAAAAAQAAAAAAAABBAAAAAAAAAGEAAAAAAAAAgQAAAAAAAAABA"
+      }
+    }
+  },
+  "model": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "terms": [
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.15591131150722504
+            ],
+            [
+              0.9508597254753113
+            ],
+            [
+              -0.6791368722915649
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            3,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            4,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.06414342671632767
+            ],
+            [
+              -0.5909639000892639
+            ],
+            [
+              0.6686310768127441
+            ],
+            [
+              1.254112720489502
+            ],
+            [
+              -0.4524304270744324
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.1017821803689003
+            ],
+            [
+              -0.6072385311126709
+            ],
+            [
+              1.0089058876037598
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.1299300491809845
+            ],
+            [
+              0.7781599760055542
+            ],
+            [
+              -0.6121386289596558
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            3,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            4,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.05293169617652893
+            ],
+            [
+              -0.5413153767585754
+            ],
+            [
+              0.5319945216178894
+            ],
+            [
+              0.9554916620254517
+            ],
+            [
+              -0.4146592319011688
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.08213219791650772
+            ],
+            [
+              -0.5622101426124573
+            ],
+            [
+              0.8144747614860535
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.1112576499581337
+            ],
+            [
+              0.6642892360687256
+            ],
+            [
+              -0.5604656338691711
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            3,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            4,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.04401977360248566
+            ],
+            [
+              -0.49921491742134094
+            ],
+            [
+              0.4441792666912079
+            ],
+            [
+              0.7810554504394531
+            ],
+            [
+              -0.3797471821308136
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.0695110559463501
+            ],
+            [
+              -0.5225526690483093
+            ],
+            [
+              0.6926156282424927
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      }
+    ],
+    "classes": [
+      "class-0",
+      "class-1",
+      "class-2"
+    ]
+  },
+  "best": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "terms": [
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.15591131150722504
+            ],
+            [
+              0.9508597254753113
+            ],
+            [
+              -0.6791368722915649
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            3,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            4,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.06414342671632767
+            ],
+            [
+              -0.5909639000892639
+            ],
+            [
+              0.6686310768127441
+            ],
+            [
+              1.254112720489502
+            ],
+            [
+              -0.4524304270744324
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.1017821803689003
+            ],
+            [
+              -0.6072385311126709
+            ],
+            [
+              1.0089058876037598
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.1299300491809845
+            ],
+            [
+              0.7781599760055542
+            ],
+            [
+              -0.6121386289596558
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            3,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            4,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.05293169617652893
+            ],
+            [
+              -0.5413153767585754
+            ],
+            [
+              0.5319945216178894
+            ],
+            [
+              0.9554916620254517
+            ],
+            [
+              -0.4146592319011688
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.08213219791650772
+            ],
+            [
+              -0.5622101426124573
+            ],
+            [
+              0.8144747614860535
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.1112576499581337
+            ],
+            [
+              0.6642892360687256
+            ],
+            [
+              -0.5604656338691711
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            3,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            4,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.04401977360248566
+            ],
+            [
+              -0.49921491742134094
+            ],
+            [
+              0.4441792666912079
+            ],
+            [
+              0.7810554504394531
+            ],
+            [
+              -0.3797471821308136
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.0695110559463501
+            ],
+            [
+              -0.5225526690483093
+            ],
+            [
+              0.6926156282424927
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      }
+    ],
+    "classes": [
+      "class-0",
+      "class-1",
+      "class-2"
+    ]
+  },
+  "steps": [
+    {
+      "round_index": 0,
+      "channels": [
+        0,
+        1,
+        2
+      ],
+      "before_version": 0,
+      "after_version": 1,
+      "trials": [
+        {
+          "coefficient": 0.25,
+          "loss": 0.7809567667550171,
+          "validation_score": 0.8387200415306749,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -0.2628436820812905,
+            "upper": -0.24771415061059365,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 0.7809567667550171,
+      "validation_score": 0.8387200415306749,
+      "best_score": 0.8387200415306749,
+      "validation_change": {
+        "lower": -0.2792825514018354,
+        "upper": -0.26311667945224515,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    },
+    {
+      "round_index": 1,
+      "channels": [
+        0,
+        1,
+        2
+      ],
+      "before_version": 1,
+      "after_version": 2,
+      "trials": [
+        {
+          "coefficient": 0.25,
+          "loss": 0.6055013726969263,
+          "validation_score": 0.6517535163245295,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -0.18348814641893785,
+            "upper": -0.17444147763588644,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 0.6055013726969263,
+      "validation_score": 0.6517535163245295,
+      "best_score": 0.6517535163245295,
+      "validation_change": {
+        "lower": -0.19538041767172226,
+        "upper": -0.18594574032908334,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    },
+    {
+      "round_index": 2,
+      "channels": [
+        0,
+        1,
+        2
+      ],
+      "before_version": 2,
+      "after_version": 3,
+      "trials": [
+        {
+          "coefficient": 0.25,
+          "loss": 0.4776842517336397,
+          "validation_score": 0.5151794171340455,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -0.13314270090449992,
+            "upper": -0.12681530493128645,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 0.4776842517336397,
+      "validation_score": 0.5151794171340455,
+      "best_score": 0.5151794171340455,
+      "validation_change": {
+        "lower": -0.14218896836744294,
+        "upper": -0.1357509851528264,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    }
+  ],
+  "stop": {
+    "rounds": 3,
+    "patience": 2,
+    "min_delta": 0.01,
+    "reference_score": 0.5151794171340455,
+    "last_score": 0.5151794171340455,
+    "completed_rounds": 3,
+    "stale_rounds": 0
+  },
+  "comparisons": [
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.14774097502231598,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.2628436820812905,
+        "upper": -0.24771415061059365,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.25029813841041535837366143348290219881534288174058825568262141798645087559876404939649628594753272085430064070488410594456944559242925630961957042118098698713499151230800878972098857225038780958870260968009884653599268830127804025754711140946219992701007126238"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.14774097502231598,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.2792825514018354,
+        "upper": -0.26311667945224515,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.26622242727540363508036724785273637384388189363282610653192392037810705945629545186338569133073012821989976172881506328350113909105908292612292979886815829398398214998186099805376549023051551651655008049313249497748840256897068696622587139596512803319751395064"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.14774097502231598,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.2792825514018354,
+        "upper": -0.26311667945224515,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.26622242727540363508036724785273637384388189363282610653192392037810705945629545186338569133073012821989976172881506328350113909105908292612292979886815829398398214998186099805376549023051551651655008049313249497748840256897068696622587139596512803319751395064"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.14774097502231598,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ]
+        ],
+        [
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.28306981921195984,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.18348814641893785,
+        "upper": -0.17444147763588644,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.17545539405809088404372446377682361433271044591663764625458155462041086494131585823802691737776641472079310421466836768761842211044032166474906075333654420683814483052593896750964239565302059374988573847753484102052284034063216613509901561536863473941835747981"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.14774097502231598,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ]
+        ],
+        [
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.28306981921195984,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.19538041767172226,
+        "upper": -0.18594574032908334,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.18696652520614552784764754543410519562225457192003815724105785190764873527002658544041481928639460243921971562121639519314396733085720819112307853268931102717588414890108887482564788265417987549081947507043462173937759425743806339910680884316054544538782378838"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.14774097502231598,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            -0.1131076067686081,
+            0.25222647190093994
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            -0.16978421807289124,
+            0.3135281801223755,
+            -0.15180963277816772
+          ],
+          [
+            0.23771493136882782,
+            -0.14774097502231598,
+            -0.15180963277816772
+          ]
+        ],
+        [
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.28306981921195984,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.19538041767172226,
+        "upper": -0.18594574032908334,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.18696652520614552784764754543410519562225457192003815724105785190764873527002658544041481928639460243921971562121639519314396733085720819112307853268931102717588414890108887482564788265417987549081947507043462173937759425743806339910680884316054544538782378838"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.28306981921195984,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ]
+        ],
+        [
+          [
+            0.5983272194862366,
+            -0.4078735411167145,
+            -0.4230003356933594
+          ],
+          [
+            0.5983272194862366,
+            -0.4078735411167145,
+            -0.4230003356933594
+          ],
+          [
+            0.5983272194862366,
+            -0.4078735411167145,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            0.7476649284362793,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            0.7476649284362793,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            0.7476649284362793,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            -0.3117091953754425,
+            0.6289991140365601
+          ],
+          [
+            -0.46293526887893677,
+            -0.4078735411167145,
+            0.6289991140365601
+          ],
+          [
+            -0.46293526887893677,
+            -0.3117091953754425,
+            0.6289991140365601
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.13314270090449992,
+        "upper": -0.12681530493128645,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.127817120963286643884771050924948719535298740606476785580215470877679162986174791016705058337179522023593760837166974854359786686672659452835804645265491405844598178734009363273256028949954895590223685694489836608488338736525273787892793662306654262569204100"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.28306981921195984,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ]
+        ],
+        [
+          [
+            0.5983272194862366,
+            -0.4078735411167145,
+            -0.4230003356933594
+          ],
+          [
+            0.5983272194862366,
+            -0.4078735411167145,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            -0.3117091953754425,
+            0.6289991140365601
+          ],
+          [
+            -0.46293526887893677,
+            -0.4078735411167145,
+            0.6289991140365601
+          ],
+          [
+            -0.46293526887893677,
+            -0.3117091953754425,
+            0.6289991140365601
+          ],
+          [
+            -0.46293526887893677,
+            0.7476649284362793,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            0.7476649284362793,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            0.7476649284362793,
+            -0.4230003356933594
+          ],
+          [
+            0.5983272194862366,
+            -0.4078735411167145,
+            -0.4230003356933594
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.14218896836744294,
+        "upper": -0.1357509851528264,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.13657409919048395305020808947339336604900668808713834868580866454079359724202105905586877601784904367970159081468881618600688148307078545113322538236991005213218232419867965621534084368661937460324919950407352624448347063872053700133486220788182669876505080469"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.28306981921195984,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            -0.2167724072933197,
+            0.4558451771736145
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            -0.3228188753128052,
+            0.552401065826416,
+            -0.29236215353012085
+          ],
+          [
+            0.4322549104690552,
+            -0.28306981921195984,
+            -0.29236215353012085
+          ]
+        ],
+        [
+          [
+            0.5983272194862366,
+            -0.4078735411167145,
+            -0.4230003356933594
+          ],
+          [
+            0.5983272194862366,
+            -0.4078735411167145,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            -0.3117091953754425,
+            0.6289991140365601
+          ],
+          [
+            -0.46293526887893677,
+            -0.4078735411167145,
+            0.6289991140365601
+          ],
+          [
+            -0.46293526887893677,
+            -0.3117091953754425,
+            0.6289991140365601
+          ],
+          [
+            -0.46293526887893677,
+            0.7476649284362793,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            0.7476649284362793,
+            -0.4230003356933594
+          ],
+          [
+            -0.46293526887893677,
+            0.7476649284362793,
+            -0.4230003356933594
+          ],
+          [
+            0.5983272194862366,
+            -0.4078735411167145,
+            -0.4230003356933594
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.14218896836744294,
+        "upper": -0.1357509851528264,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.13657409919048395305020808947339336604900668808713834868580866454079359724202105905586877601784904367970159081468881618600688148307078545113322538236991005213218232419867965621534084368661937460324919950407352624448347063872053700133486220788182669876505080469"
+    }
+  ]
+}

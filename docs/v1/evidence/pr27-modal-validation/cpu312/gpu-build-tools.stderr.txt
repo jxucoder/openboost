@@ -1,0 +1,8 @@
+Using Python 3.12.10 environment at: /tmp/pr27-environment
+Resolved 3 packages in 4ms
+Uninstalled 1 package in 1ms
+Installed 3 packages in 5ms
+ + hatchling==1.27.0
+ - pathspec==1.0.3
+ + pathspec==1.1.1
+ + trove-classifiers==2026.6.1.19

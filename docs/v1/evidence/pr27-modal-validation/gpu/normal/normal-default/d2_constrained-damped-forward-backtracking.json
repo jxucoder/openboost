@@ -1,0 +1,3027 @@
+{
+  "kind": "installed",
+  "name": "d2_constrained-damped-forward-backtracking",
+  "stage": "complete",
+  "configuration": {
+    "case": "d2",
+    "depth": 2,
+    "minimum": 1,
+    "mode": "natural",
+    "damping": 0.25,
+    "update": "forward",
+    "fixed": false,
+    "rate": 8.0
+  },
+  "prior_sha256": "aeeb78d7befd7a9e70d6497f0be7bc0d41f4433f2555b501a4f671d10e5ea77c",
+  "extension_sha256": "b9b2764da065970d71f04541aaaa6e3b991735915d61300e63880e72466a1d7b",
+  "repeats": [
+    {
+      "model": {
+        "format": "openboost-ensemble-v2",
+        "feature_names": [
+          "f0"
+        ],
+        "base": [
+          0.3401637375354767,
+          1.0863723754882812
+        ],
+        "terms": [
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.029768649488687515
+                ],
+                [
+                  0.5563926100730896
+                ],
+                [
+                  -0.37551167607307434
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 8.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.061131302267313004
+                ],
+                [
+                  0.3011152744293213
+                ],
+                [
+                  -0.2662529945373535
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  0.3798505663871765
+                ],
+                [
+                  -0.17185062170028687
+                ],
+                [
+                  0.6349011659622192
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 4.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                -1
+              ],
+              "threshold": [
+                -1
+              ],
+              "missing_left": [
+                false
+              ],
+              "left": [
+                -1
+              ],
+              "right": [
+                -1
+              ],
+              "value": [
+                [
+                  -0.20775842666625977
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.5660538673400879
+                ],
+                [
+                  -0.22467349469661713
+                ],
+                [
+                  -0.657671332359314
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.19770541787147522
+                ],
+                [
+                  0.03729899227619171
+                ],
+                [
+                  -0.2991669774055481
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 4.0
+          }
+        ],
+        "classes": null
+      },
+      "best_model": {
+        "format": "openboost-ensemble-v2",
+        "feature_names": [
+          "f0"
+        ],
+        "base": [
+          0.3401637375354767,
+          1.0863723754882812
+        ],
+        "terms": [
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.029768649488687515
+                ],
+                [
+                  0.5563926100730896
+                ],
+                [
+                  -0.37551167607307434
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 8.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.061131302267313004
+                ],
+                [
+                  0.3011152744293213
+                ],
+                [
+                  -0.2662529945373535
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  0.3798505663871765
+                ],
+                [
+                  -0.17185062170028687
+                ],
+                [
+                  0.6349011659622192
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 4.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                -1
+              ],
+              "threshold": [
+                -1
+              ],
+              "missing_left": [
+                false
+              ],
+              "left": [
+                -1
+              ],
+              "right": [
+                -1
+              ],
+              "value": [
+                [
+                  -0.20775842666625977
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.5660538673400879
+                ],
+                [
+                  -0.22467349469661713
+                ],
+                [
+                  -0.657671332359314
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.19770541787147522
+                ],
+                [
+                  0.03729899227619171
+                ],
+                [
+                  -0.2991669774055481
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 4.0
+          }
+        ],
+        "classes": null
+      },
+      "raw": [
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ]
+      ],
+      "validation": [
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ]
+      ],
+      "best": [
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ]
+      ],
+      "steps": [
+        {
+          "round_index": 0,
+          "channels": [
+            0
+          ],
+          "before_version": 0,
+          "after_version": 1,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 2.425076070748071,
+              "validation_score": 2.5047638816442817,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.08023482412218348,
+                "upper": -0.0802348241221712,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 2.425076070748071,
+          "validation_score": 2.5047638816442817,
+          "best_score": 2.379067209761525,
+          "validation_change": null
+        },
+        {
+          "round_index": 0,
+          "channels": [
+            1
+          ],
+          "before_version": 1,
+          "after_version": 2,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 7.319563216428115,
+              "validation_score": 7.058372364175773,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 4.894487145679933,
+                "upper": 4.894487145680198,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 2.431523631862707,
+              "validation_score": 2.4079024481237163,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 0.006447561114622838,
+                "upper": 0.006447561114652353,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 2.0,
+              "loss": 2.1946789163446616,
+              "validation_score": 2.2089551232637596,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.2303971544034144,
+                "upper": -0.23039715440340358,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 2.1946789163446616,
+          "validation_score": 2.2089551232637596,
+          "best_score": 2.2089551232637596,
+          "validation_change": {
+            "lower": -0.17011208649777543,
+            "upper": -0.17011208649775528,
+            "method": "normal-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        },
+        {
+          "round_index": 1,
+          "channels": [
+            0
+          ],
+          "before_version": 2,
+          "after_version": 3,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 3.3321962060391876,
+              "validation_score": 3.5384507622993304,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 1.1375172896945196,
+                "upper": 1.1375172896945325,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 2.07836750844555,
+              "validation_score": 2.138507590078872,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.11631140789911293,
+                "upper": -0.11631140789911001,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 2.07836750844555,
+          "validation_score": 2.138507590078872,
+          "best_score": 2.138507590078872,
+          "validation_change": null
+        },
+        {
+          "round_index": 1,
+          "channels": [
+            1
+          ],
+          "before_version": 3,
+          "after_version": 4,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 6.502705283346244,
+              "validation_score": 8.173093530318594,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 4.4243377749006205,
+                "upper": 4.424337774900783,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 2.21802210328888,
+              "validation_score": 2.5349720765216577,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 0.13965459484332052,
+                "upper": 0.13965459484334133,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 2.0,
+              "loss": 1.9573832504909665,
+              "validation_score": 2.0954462696666254,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.12098425795458638,
+                "upper": -0.12098425795458062,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 1.9573832504909665,
+          "validation_score": 2.0954462696666254,
+          "best_score": 2.0954462696666254,
+          "validation_change": {
+            "lower": -0.1135088535971399,
+            "upper": -0.11350885359712853,
+            "method": "normal-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        },
+        {
+          "round_index": 2,
+          "channels": [
+            0
+          ],
+          "before_version": 4,
+          "after_version": 5,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 5.9081036084685055,
+              "validation_score": 5.980475134135278,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 3.9507203579775316,
+                "upper": 3.95072035797755,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 2.2407193459181505,
+              "validation_score": 2.22289687876995,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 0.28333609542718174,
+                "upper": 0.2833360954271861,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 2.0,
+              "loss": 1.6760452167898592,
+              "validation_score": 1.7054055551224776,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.28133803370110866,
+                "upper": -0.28133803370110627,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 1.6760452167898592,
+          "validation_score": 1.7054055551224776,
+          "best_score": 1.7054055551224776,
+          "validation_change": null
+        },
+        {
+          "round_index": 2,
+          "channels": [
+            1
+          ],
+          "before_version": 5,
+          "after_version": 6,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 6.381269445754193,
+              "validation_score": 7.271282781929442,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 4.705224228964275,
+                "upper": 4.7052242289644415,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 1.4055851145214096,
+              "validation_score": 1.502109960715513,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.2704601022684532,
+                "upper": -0.2704601022684434,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 1.4055851145214096,
+          "validation_score": 1.502109960715513,
+          "best_score": 1.502109960715513,
+          "validation_change": {
+            "lower": -0.5933363089511892,
+            "upper": -0.5933363089510404,
+            "method": "normal-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "stop": {
+        "rounds": 3,
+        "patience": null,
+        "min_delta": 0.0,
+        "reference_score": 1.502109960715513,
+        "last_score": 1.502109960715513,
+        "completed_rounds": 3,
+        "stale_rounds": 0,
+        "reason": "budget"
+      },
+      "state": {
+        "version": 6,
+        "n_terms": 6,
+        "best_n_terms": 6
+      },
+      "metrics": {
+        "upload_bytes": 876,
+        "export_bytes": 5112,
+        "device_copy_bytes": 2848,
+        "synchronizations": 1295,
+        "live_bytes": 836,
+        "peak_live_bytes": 17392,
+        "peak_pool_bytes": 41472,
+        "kernel_launches": 739,
+        "kernel_dispatch_seconds": 0.31781915699980345,
+        "validation_export_bytes": 3744,
+        "decision_export_bytes": 104,
+        "metric_export_bytes": 240,
+        "comparison_calls": 23,
+        "comparison_export_bytes": 736
+      },
+      "repeat": 0,
+      "observed": [
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 300,
+            "export_bytes": 168,
+            "device_copy_bytes": 144,
+            "synchronizations": 58,
+            "live_bytes": 740,
+            "peak_live_bytes": 796,
+            "peak_pool_bytes": 12288,
+            "kernel_launches": 30,
+            "kernel_dispatch_seconds": 0.01135003799970491,
+            "validation_export_bytes": 152,
+            "decision_export_bytes": 0,
+            "metric_export_bytes": 16
+          },
+          "after": {
+            "upload_bytes": 408,
+            "export_bytes": 556,
+            "device_copy_bytes": 156,
+            "synchronizations": 156,
+            "live_bytes": 812,
+            "peak_live_bytes": 17080,
+            "peak_pool_bytes": 36352,
+            "kernel_launches": 91,
+            "kernel_dispatch_seconds": 0.04066892399981725,
+            "validation_export_bytes": 520,
+            "decision_export_bytes": 20,
+            "metric_export_bytes": 16
+          }
+        },
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 408,
+            "export_bytes": 804,
+            "device_copy_bytes": 492,
+            "synchronizations": 222,
+            "live_bytes": 812,
+            "peak_live_bytes": 17080,
+            "peak_pool_bytes": 36352,
+            "kernel_launches": 128,
+            "kernel_dispatch_seconds": 0.05496691699983103,
+            "validation_export_bytes": 688,
+            "decision_export_bytes": 20,
+            "metric_export_bytes": 32,
+            "comparison_calls": 2,
+            "comparison_export_bytes": 64
+          },
+          "after": {
+            "upload_bytes": 516,
+            "export_bytes": 1192,
+            "device_copy_bytes": 504,
+            "synchronizations": 320,
+            "live_bytes": 884,
+            "peak_live_bytes": 17152,
+            "peak_pool_bytes": 37376,
+            "kernel_launches": 189,
+            "kernel_dispatch_seconds": 0.08488309699998808,
+            "validation_export_bytes": 1056,
+            "decision_export_bytes": 40,
+            "metric_export_bytes": 32,
+            "comparison_calls": 2,
+            "comparison_export_bytes": 64
+          }
+        },
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 516,
+            "export_bytes": 1744,
+            "device_copy_bytes": 1032,
+            "synchronizations": 466,
+            "live_bytes": 884,
+            "peak_live_bytes": 17152,
+            "peak_pool_bytes": 37376,
+            "kernel_launches": 270,
+            "kernel_dispatch_seconds": 0.11961371500018458,
+            "validation_export_bytes": 1400,
+            "decision_export_bytes": 40,
+            "metric_export_bytes": 80,
+            "comparison_calls": 7,
+            "comparison_export_bytes": 224
+          },
+          "after": {
+            "upload_bytes": 624,
+            "export_bytes": 2132,
+            "device_copy_bytes": 1044,
+            "synchronizations": 564,
+            "live_bytes": 956,
+            "peak_live_bytes": 17224,
+            "peak_pool_bytes": 38400,
+            "kernel_launches": 331,
+            "kernel_dispatch_seconds": 0.150431190000063,
+            "validation_export_bytes": 1768,
+            "decision_export_bytes": 60,
+            "metric_export_bytes": 80,
+            "comparison_calls": 7,
+            "comparison_export_bytes": 224
+          }
+        },
+        {
+          "topology": [
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 624,
+            "export_bytes": 2508,
+            "device_copy_bytes": 1452,
+            "synchronizations": 666,
+            "live_bytes": 956,
+            "peak_live_bytes": 17224,
+            "peak_pool_bytes": 38400,
+            "kernel_launches": 388,
+            "kernel_dispatch_seconds": 0.17289019200035227,
+            "validation_export_bytes": 2016,
+            "decision_export_bytes": 60,
+            "metric_export_bytes": 112,
+            "comparison_calls": 10,
+            "comparison_export_bytes": 320
+          },
+          "after": {
+            "upload_bytes": 660,
+            "export_bytes": 2640,
+            "device_copy_bytes": 1456,
+            "synchronizations": 703,
+            "live_bytes": 980,
+            "peak_live_bytes": 17292,
+            "peak_pool_bytes": 38400,
+            "kernel_launches": 411,
+            "kernel_dispatch_seconds": 0.18260667400011243,
+            "validation_export_bytes": 2144,
+            "decision_export_bytes": 64,
+            "metric_export_bytes": 112,
+            "comparison_calls": 10,
+            "comparison_export_bytes": 320
+          }
+        },
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 660,
+            "export_bytes": 3192,
+            "device_copy_bytes": 1792,
+            "synchronizations": 849,
+            "live_bytes": 980,
+            "peak_live_bytes": 17292,
+            "peak_pool_bytes": 38400,
+            "kernel_launches": 492,
+            "kernel_dispatch_seconds": 0.21502396200014573,
+            "validation_export_bytes": 2488,
+            "decision_export_bytes": 64,
+            "metric_export_bytes": 160,
+            "comparison_calls": 15,
+            "comparison_export_bytes": 480
+          },
+          "after": {
+            "upload_bytes": 768,
+            "export_bytes": 3580,
+            "device_copy_bytes": 1804,
+            "synchronizations": 947,
+            "live_bytes": 1052,
+            "peak_live_bytes": 17320,
+            "peak_pool_bytes": 40448,
+            "kernel_launches": 553,
+            "kernel_dispatch_seconds": 0.2410972050001874,
+            "validation_export_bytes": 2856,
+            "decision_export_bytes": 84,
+            "metric_export_bytes": 160,
+            "comparison_calls": 15,
+            "comparison_export_bytes": 480
+          }
+        },
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 768,
+            "export_bytes": 4084,
+            "device_copy_bytes": 2284,
+            "synchronizations": 1085,
+            "live_bytes": 1052,
+            "peak_live_bytes": 17320,
+            "peak_pool_bytes": 40448,
+            "kernel_launches": 630,
+            "kernel_dispatch_seconds": 0.2694741880001743,
+            "validation_export_bytes": 3184,
+            "decision_export_bytes": 84,
+            "metric_export_bytes": 208,
+            "comparison_calls": 19,
+            "comparison_export_bytes": 608
+          },
+          "after": {
+            "upload_bytes": 876,
+            "export_bytes": 4472,
+            "device_copy_bytes": 2296,
+            "synchronizations": 1183,
+            "live_bytes": 1124,
+            "peak_live_bytes": 17392,
+            "peak_pool_bytes": 41472,
+            "kernel_launches": 691,
+            "kernel_dispatch_seconds": 0.29799355200015043,
+            "validation_export_bytes": 3552,
+            "decision_export_bytes": 104,
+            "metric_export_bytes": 208,
+            "comparison_calls": 19,
+            "comparison_export_bytes": 608
+          }
+        }
+      ],
+      "cohort_bytes": 48,
+      "stage": "complete",
+      "closed_bytes": 0,
+      "closed_records": 0
+    },
+    {
+      "model": {
+        "format": "openboost-ensemble-v2",
+        "feature_names": [
+          "f0"
+        ],
+        "base": [
+          0.3401637375354767,
+          1.0863723754882812
+        ],
+        "terms": [
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.029768649488687515
+                ],
+                [
+                  0.5563926100730896
+                ],
+                [
+                  -0.37551167607307434
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 8.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.061131302267313004
+                ],
+                [
+                  0.3011152744293213
+                ],
+                [
+                  -0.2662529945373535
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  0.3798505663871765
+                ],
+                [
+                  -0.17185062170028687
+                ],
+                [
+                  0.6349011659622192
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 4.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                -1
+              ],
+              "threshold": [
+                -1
+              ],
+              "missing_left": [
+                false
+              ],
+              "left": [
+                -1
+              ],
+              "right": [
+                -1
+              ],
+              "value": [
+                [
+                  -0.20775842666625977
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.5660538673400879
+                ],
+                [
+                  -0.22467349469661713
+                ],
+                [
+                  -0.657671332359314
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.19770541787147522
+                ],
+                [
+                  0.03729899227619171
+                ],
+                [
+                  -0.2991669774055481
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 4.0
+          }
+        ],
+        "classes": null
+      },
+      "best_model": {
+        "format": "openboost-ensemble-v2",
+        "feature_names": [
+          "f0"
+        ],
+        "base": [
+          0.3401637375354767,
+          1.0863723754882812
+        ],
+        "terms": [
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.029768649488687515
+                ],
+                [
+                  0.5563926100730896
+                ],
+                [
+                  -0.37551167607307434
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 8.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.061131302267313004
+                ],
+                [
+                  0.3011152744293213
+                ],
+                [
+                  -0.2662529945373535
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  0.3798505663871765
+                ],
+                [
+                  -0.17185062170028687
+                ],
+                [
+                  0.6349011659622192
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 4.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                -1
+              ],
+              "threshold": [
+                -1
+              ],
+              "missing_left": [
+                false
+              ],
+              "left": [
+                -1
+              ],
+              "right": [
+                -1
+              ],
+              "value": [
+                [
+                  -0.20775842666625977
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.5660538673400879
+                ],
+                [
+                  -0.22467349469661713
+                ],
+                [
+                  -0.657671332359314
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0,
+                0.0
+              ]
+            ],
+            "coefficient": 2.0
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5,
+                  3.5,
+                  4.5
+                ]
+              ],
+              "categories": [
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                false,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  -0.19770541787147522
+                ],
+                [
+                  0.03729899227619171
+                ],
+                [
+                  -0.2991669774055481
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "coefficient": 4.0
+          }
+        ],
+        "classes": null
+      },
+      "raw": [
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ]
+      ],
+      "validation": [
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ]
+      ],
+      "best": [
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          -1.4396677017211914,
+          -1.0583183765411377
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ],
+        [
+          3.654554843902588,
+          1.4222819805145264
+        ]
+      ],
+      "steps": [
+        {
+          "round_index": 0,
+          "channels": [
+            0
+          ],
+          "before_version": 0,
+          "after_version": 1,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 2.425076070748071,
+              "validation_score": 2.5047638816442817,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.08023482412218348,
+                "upper": -0.0802348241221712,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 2.425076070748071,
+          "validation_score": 2.5047638816442817,
+          "best_score": 2.379067209761525,
+          "validation_change": null
+        },
+        {
+          "round_index": 0,
+          "channels": [
+            1
+          ],
+          "before_version": 1,
+          "after_version": 2,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 7.319563216428115,
+              "validation_score": 7.058372364175773,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 4.894487145679933,
+                "upper": 4.894487145680198,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 2.431523631862707,
+              "validation_score": 2.4079024481237163,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 0.006447561114622838,
+                "upper": 0.006447561114652353,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 2.0,
+              "loss": 2.1946789163446616,
+              "validation_score": 2.2089551232637596,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.2303971544034144,
+                "upper": -0.23039715440340358,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 2.1946789163446616,
+          "validation_score": 2.2089551232637596,
+          "best_score": 2.2089551232637596,
+          "validation_change": {
+            "lower": -0.17011208649777543,
+            "upper": -0.17011208649775528,
+            "method": "normal-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        },
+        {
+          "round_index": 1,
+          "channels": [
+            0
+          ],
+          "before_version": 2,
+          "after_version": 3,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 3.3321962060391876,
+              "validation_score": 3.5384507622993304,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 1.1375172896945196,
+                "upper": 1.1375172896945325,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 2.07836750844555,
+              "validation_score": 2.138507590078872,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.11631140789911293,
+                "upper": -0.11631140789911001,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 2.07836750844555,
+          "validation_score": 2.138507590078872,
+          "best_score": 2.138507590078872,
+          "validation_change": null
+        },
+        {
+          "round_index": 1,
+          "channels": [
+            1
+          ],
+          "before_version": 3,
+          "after_version": 4,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 6.502705283346244,
+              "validation_score": 8.173093530318594,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 4.4243377749006205,
+                "upper": 4.424337774900783,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 2.21802210328888,
+              "validation_score": 2.5349720765216577,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 0.13965459484332052,
+                "upper": 0.13965459484334133,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 2.0,
+              "loss": 1.9573832504909665,
+              "validation_score": 2.0954462696666254,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.12098425795458638,
+                "upper": -0.12098425795458062,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 1.9573832504909665,
+          "validation_score": 2.0954462696666254,
+          "best_score": 2.0954462696666254,
+          "validation_change": {
+            "lower": -0.1135088535971399,
+            "upper": -0.11350885359712853,
+            "method": "normal-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        },
+        {
+          "round_index": 2,
+          "channels": [
+            0
+          ],
+          "before_version": 4,
+          "after_version": 5,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 5.9081036084685055,
+              "validation_score": 5.980475134135278,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 3.9507203579775316,
+                "upper": 3.95072035797755,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 2.2407193459181505,
+              "validation_score": 2.22289687876995,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 0.28333609542718174,
+                "upper": 0.2833360954271861,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 2.0,
+              "loss": 1.6760452167898592,
+              "validation_score": 1.7054055551224776,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.28133803370110866,
+                "upper": -0.28133803370110627,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 1.6760452167898592,
+          "validation_score": 1.7054055551224776,
+          "best_score": 1.7054055551224776,
+          "validation_change": null
+        },
+        {
+          "round_index": 2,
+          "channels": [
+            1
+          ],
+          "before_version": 5,
+          "after_version": 6,
+          "trials": [
+            {
+              "coefficient": 8.0,
+              "loss": 6.381269445754193,
+              "validation_score": 7.271282781929442,
+              "accepted": false,
+              "failure": null,
+              "comparison": {
+                "lower": 4.705224228964275,
+                "upper": 4.7052242289644415,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            },
+            {
+              "coefficient": 4.0,
+              "loss": 1.4055851145214096,
+              "validation_score": 1.502109960715513,
+              "accepted": true,
+              "failure": null,
+              "comparison": {
+                "lower": -0.2704601022684532,
+                "upper": -0.2704601022684434,
+                "method": "normal-taylor18-interval-v1",
+                "reason": "bounded_sign",
+                "unchanged": false
+              }
+            }
+          ],
+          "loss": 1.4055851145214096,
+          "validation_score": 1.502109960715513,
+          "best_score": 1.502109960715513,
+          "validation_change": {
+            "lower": -0.5933363089511892,
+            "upper": -0.5933363089510404,
+            "method": "normal-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "stop": {
+        "rounds": 3,
+        "patience": null,
+        "min_delta": 0.0,
+        "reference_score": 1.502109960715513,
+        "last_score": 1.502109960715513,
+        "completed_rounds": 3,
+        "stale_rounds": 0,
+        "reason": "budget"
+      },
+      "state": {
+        "version": 6,
+        "n_terms": 6,
+        "best_n_terms": 6
+      },
+      "metrics": {
+        "upload_bytes": 876,
+        "export_bytes": 5112,
+        "device_copy_bytes": 2848,
+        "synchronizations": 1295,
+        "live_bytes": 836,
+        "peak_live_bytes": 17392,
+        "peak_pool_bytes": 41472,
+        "kernel_launches": 739,
+        "kernel_dispatch_seconds": 0.31437422099998,
+        "validation_export_bytes": 3744,
+        "decision_export_bytes": 104,
+        "metric_export_bytes": 240,
+        "comparison_calls": 23,
+        "comparison_export_bytes": 736
+      },
+      "repeat": 1,
+      "observed": [
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 300,
+            "export_bytes": 168,
+            "device_copy_bytes": 144,
+            "synchronizations": 58,
+            "live_bytes": 740,
+            "peak_live_bytes": 796,
+            "peak_pool_bytes": 12288,
+            "kernel_launches": 30,
+            "kernel_dispatch_seconds": 0.010420700000167926,
+            "validation_export_bytes": 152,
+            "decision_export_bytes": 0,
+            "metric_export_bytes": 16
+          },
+          "after": {
+            "upload_bytes": 408,
+            "export_bytes": 556,
+            "device_copy_bytes": 156,
+            "synchronizations": 156,
+            "live_bytes": 812,
+            "peak_live_bytes": 17080,
+            "peak_pool_bytes": 36352,
+            "kernel_launches": 91,
+            "kernel_dispatch_seconds": 0.03712206100010462,
+            "validation_export_bytes": 520,
+            "decision_export_bytes": 20,
+            "metric_export_bytes": 16
+          }
+        },
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 408,
+            "export_bytes": 804,
+            "device_copy_bytes": 492,
+            "synchronizations": 222,
+            "live_bytes": 812,
+            "peak_live_bytes": 17080,
+            "peak_pool_bytes": 36352,
+            "kernel_launches": 128,
+            "kernel_dispatch_seconds": 0.052678428999911375,
+            "validation_export_bytes": 688,
+            "decision_export_bytes": 20,
+            "metric_export_bytes": 32,
+            "comparison_calls": 2,
+            "comparison_export_bytes": 64
+          },
+          "after": {
+            "upload_bytes": 516,
+            "export_bytes": 1192,
+            "device_copy_bytes": 504,
+            "synchronizations": 320,
+            "live_bytes": 884,
+            "peak_live_bytes": 17152,
+            "peak_pool_bytes": 37376,
+            "kernel_launches": 189,
+            "kernel_dispatch_seconds": 0.08544381999996631,
+            "validation_export_bytes": 1056,
+            "decision_export_bytes": 40,
+            "metric_export_bytes": 32,
+            "comparison_calls": 2,
+            "comparison_export_bytes": 64
+          }
+        },
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 516,
+            "export_bytes": 1744,
+            "device_copy_bytes": 1032,
+            "synchronizations": 466,
+            "live_bytes": 884,
+            "peak_live_bytes": 17152,
+            "peak_pool_bytes": 37376,
+            "kernel_launches": 270,
+            "kernel_dispatch_seconds": 0.11994007399999873,
+            "validation_export_bytes": 1400,
+            "decision_export_bytes": 40,
+            "metric_export_bytes": 80,
+            "comparison_calls": 7,
+            "comparison_export_bytes": 224
+          },
+          "after": {
+            "upload_bytes": 624,
+            "export_bytes": 2132,
+            "device_copy_bytes": 1044,
+            "synchronizations": 564,
+            "live_bytes": 956,
+            "peak_live_bytes": 17224,
+            "peak_pool_bytes": 38400,
+            "kernel_launches": 331,
+            "kernel_dispatch_seconds": 0.14652722699958076,
+            "validation_export_bytes": 1768,
+            "decision_export_bytes": 60,
+            "metric_export_bytes": 80,
+            "comparison_calls": 7,
+            "comparison_export_bytes": 224
+          }
+        },
+        {
+          "topology": [
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 624,
+            "export_bytes": 2508,
+            "device_copy_bytes": 1452,
+            "synchronizations": 666,
+            "live_bytes": 956,
+            "peak_live_bytes": 17224,
+            "peak_pool_bytes": 38400,
+            "kernel_launches": 388,
+            "kernel_dispatch_seconds": 0.16866314199961607,
+            "validation_export_bytes": 2016,
+            "decision_export_bytes": 60,
+            "metric_export_bytes": 112,
+            "comparison_calls": 10,
+            "comparison_export_bytes": 320
+          },
+          "after": {
+            "upload_bytes": 660,
+            "export_bytes": 2640,
+            "device_copy_bytes": 1456,
+            "synchronizations": 703,
+            "live_bytes": 980,
+            "peak_live_bytes": 17292,
+            "peak_pool_bytes": 38400,
+            "kernel_launches": 411,
+            "kernel_dispatch_seconds": 0.18345307699974,
+            "validation_export_bytes": 2144,
+            "decision_export_bytes": 64,
+            "metric_export_bytes": 112,
+            "comparison_calls": 10,
+            "comparison_export_bytes": 320
+          }
+        },
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 660,
+            "export_bytes": 3192,
+            "device_copy_bytes": 1792,
+            "synchronizations": 849,
+            "live_bytes": 980,
+            "peak_live_bytes": 17292,
+            "peak_pool_bytes": 38400,
+            "kernel_launches": 492,
+            "kernel_dispatch_seconds": 0.216373754999438,
+            "validation_export_bytes": 2488,
+            "decision_export_bytes": 64,
+            "metric_export_bytes": 160,
+            "comparison_calls": 15,
+            "comparison_export_bytes": 480
+          },
+          "after": {
+            "upload_bytes": 768,
+            "export_bytes": 3580,
+            "device_copy_bytes": 1804,
+            "synchronizations": 947,
+            "live_bytes": 1052,
+            "peak_live_bytes": 17320,
+            "peak_pool_bytes": 40448,
+            "kernel_launches": 553,
+            "kernel_dispatch_seconds": 0.2447424179997597,
+            "validation_export_bytes": 2856,
+            "decision_export_bytes": 84,
+            "metric_export_bytes": 160,
+            "comparison_calls": 15,
+            "comparison_export_bytes": 480
+          }
+        },
+        {
+          "topology": [
+            [
+              0,
+              1,
+              false,
+              1,
+              2
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              -1,
+              false,
+              -1,
+              -1
+            ]
+          ],
+          "before": {
+            "upload_bytes": 768,
+            "export_bytes": 4084,
+            "device_copy_bytes": 2284,
+            "synchronizations": 1085,
+            "live_bytes": 1052,
+            "peak_live_bytes": 17320,
+            "peak_pool_bytes": 40448,
+            "kernel_launches": 630,
+            "kernel_dispatch_seconds": 0.2721960169997715,
+            "validation_export_bytes": 3184,
+            "decision_export_bytes": 84,
+            "metric_export_bytes": 208,
+            "comparison_calls": 19,
+            "comparison_export_bytes": 608
+          },
+          "after": {
+            "upload_bytes": 876,
+            "export_bytes": 4472,
+            "device_copy_bytes": 2296,
+            "synchronizations": 1183,
+            "live_bytes": 1124,
+            "peak_live_bytes": 17392,
+            "peak_pool_bytes": 41472,
+            "kernel_launches": 691,
+            "kernel_dispatch_seconds": 0.29715151200014134,
+            "validation_export_bytes": 3552,
+            "decision_export_bytes": 104,
+            "metric_export_bytes": 208,
+            "comparison_calls": 19,
+            "comparison_export_bytes": 608
+          }
+        }
+      ],
+      "cohort_bytes": 48,
+      "stage": "complete",
+      "closed_bytes": 0,
+      "closed_records": 0
+    }
+  ]
+}

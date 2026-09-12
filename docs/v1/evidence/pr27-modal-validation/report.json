@@ -1,4 +1,19 @@
 {
-  "status": "pending",
-  "reason": "Frozen candidate runtime validation has not run."
+  "schema": "openboost-pr27-modal-validation-index-v1",
+  "source_commit": "312d8213900c0e4b35e7bdcac3d92d74ca5dbb81",
+  "inventory_sha256": "18b6f82353d7c504bf8c9fc58b1a74a4075b7f3b8495648351ec041ae73ac651",
+  "phases": {
+    "cpu310": {
+      "sha256": "49bdce86b4a842b5c411f309f99ab884e2aabf5dc99267205e05b6ef75226e6c",
+      "bytes": 662734
+    },
+    "cpu312": {
+      "sha256": "dd0dcdc0b7332dd43082c7ee5a6fc18d091da9025fee508c4ed3fdfaab4f9909",
+      "bytes": 679620
+    },
+    "gpu": {
+      "sha256": "e39d0a9fc45295def2803a3fab72e1470d7c0e4af377c6f265908c4ec86533c6",
+      "bytes": 836871
+    }
+  }
 }
