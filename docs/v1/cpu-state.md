@@ -3,6 +3,14 @@
 B03 provides public numeric inputs, run identity, immutable state transitions and
 ensemble artifacts. The [squared recipe](squared.md) now composes these components.
 
+Built-in immutable models memoize their canonical identity. Shared immutable terms
+reuse canonical JSON fragments across model prefixes, at the cost of one retained
+serialized fragment per unique term. Records and saved files keep their existing
+bytes and return fresh copies; identity includes the complete ordered ensemble.
+Cache values are private derived state, unavailable as constructor inputs.
+Subclass extensions retain uncached record-based identities. All public model
+validation, including finite ensemble bounds, still runs on construction.
+
 ```python
 import numpy as np
 from openboost import NumericData, Problem, RunContext

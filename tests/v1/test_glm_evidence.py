@@ -1,10 +1,12 @@
 """Offline result integrity and numerical-audit counterexamples; no CUDA work."""
 
-import copy
 import importlib.util
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
+from benchmarks.v1.replay_glm_run12 import snapshot
 
 ROOT = Path(__file__).resolve().parents[2]
 PATH = ROOT / "benchmarks/v1/evidence/cuda-glm-108/analyze.py"
@@ -13,39 +15,49 @@ audit = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(audit)
 
 
-def test_raw_verdict_and_retained_evidence_reproduce_offline_analysis():
-    assert audit.analyze() == audit.read(audit.ROOT / "analysis.json")
-
-
-@pytest.mark.parametrize("fault", ["dirty", "approval", "source", "package", "artifact-index"])
-def test_mutated_provenance_cannot_pass_audit(fault, monkeypatch):
-    read = audit.read
-    manifest = copy.deepcopy(read(audit.ROOT / "manifest.json"))
-    if fault == "dirty":
-        manifest["dirty"] = True
-    elif fault == "approval":
-        manifest["protocol"]["authorization"] = "pending"
-    elif fault == "source":
-        manifest["sources"]["src/openboost/device_glm.py"] = "changed"
-    elif fault == "package":
-        manifest["result"]["packages"]["numpy"] = "0.0"
-    else:
-        manifest["artifacts"].pop("pytest.log")
-    monkeypatch.setattr(
-        audit, "read", lambda path: manifest if path.name == "manifest.json" else read(path)
+def test_frozen_audit_and_all_original_counterexamples(tmp_path):
+    archive = snapshot(tmp_path / "run12")
+    # Run all eleven original audit controls with the actual executed core/oracles.
+    # The old source-equality guard and every negative control remain unchanged.
+    source = subprocess.check_output(
+        ["git", "show", "31303e3:tests/v1/test_glm_evidence.py"], cwd=ROOT
     )
-    with pytest.raises(ValueError):
-        audit.analyze()
-
-
-def test_raw_artifact_tampering_is_rejected(monkeypatch):
-    original = (audit.ROOT / "pytest.log").read_bytes()
-    digest = audit.digest
-    monkeypatch.setattr(
-        audit, "digest", lambda value: "changed" if value == original else digest(value)
+    (archive / "tests/v1/test_glm_evidence.py").write_bytes(source)
+    script = """
+import pathlib, sys
+root = pathlib.Path(sys.argv[1])
+sys.path[:0] = [str(root / 'src'), str(root)]
+import openboost.objectives
+assert pathlib.Path(openboost.objectives.__file__).resolve().is_relative_to(root)
+import pytest
+raise SystemExit(pytest.main(['-c', '/dev/null', '-n', '0', '-q',
+    str(root / 'tests/v1/test_glm_evidence.py')]))
+"""
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", script, str(archive)],
+        cwd=archive,
+        capture_output=True,
+        text=True,
+        timeout=60,
     )
-    with pytest.raises(ValueError, match="raw artifact changed"):
-        audit.analyze()
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "11 passed" in result.stdout
+
+
+def test_archive_rejects_changed_executed_source(tmp_path, monkeypatch):
+    from benchmarks.v1 import replay_glm_run12
+
+    check_output = subprocess.check_output
+
+    def changed(command, **kwargs):
+        result = check_output(command, **kwargs)
+        if command[:2] == ["git", "show"] and command[2].endswith(":src/openboost/objectives.py"):
+            return result + b"\n# changed\n"
+        return result
+
+    monkeypatch.setattr(replay_glm_run12.subprocess, "check_output", changed)
+    with pytest.raises(ValueError, match="dispatch source differs"):
+        snapshot(tmp_path / "run12")
 
 
 @pytest.mark.parametrize("fault", [None, "bounds", "identity", "method"])

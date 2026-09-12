@@ -227,3 +227,66 @@ def least_squares(ops, data, direction, channel):
         weighted = ops.apply_weight(unweighted)
         retained.add(weighted)
         return weighted
+
+
+def _projection(value, width):
+    if value is None:
+        return None
+    if np.iscomplexobj(value):
+        raise ValueError("real float32 projection required")
+    try:
+        with np.errstate(over="raise", invalid="raise", under="ignore"):
+            values = np.asarray(value, dtype=np.float32)
+    except (ValueError, TypeError, FloatingPointError, OverflowError) as error:
+        raise ValueError("finite float32 [K,S] projection required") from error
+    if (values.ndim != 2 or values.shape[0] != width or not values.shape[1]
+            or not np.isfinite(values).all() or np.any(np.max(np.abs(values), axis=0) == 0)):
+        raise ValueError("finite float32 [K,S] projection with nonzero columns required")
+    return np.frombuffer(values.tobytes(), dtype=np.float32).reshape(values.shape)
+
+
+def _diagonal_arrays(ops, data, gradient, curvature):
+    ops._get(data, DeviceData)
+    g = ops.execution._array(gradient)
+    if g.ndim != 2 or g.shape[0] != data.n_rows or not g.shape[1]:
+        raise ValueError("aligned nonempty diagonal geometry required")
+    g, h = ops._float(gradient, g.shape), ops._float(curvature, g.shape)
+    ops._validate(g)
+    ops._validate(h, nonnegative=True)
+    return g, h
+
+
+@_atomic
+def vector_fields(ops, data, gradient, curvature, *, projection=None):
+    """Weight [N,L] diagonal geometry once; optional [L,S] projection changes split fields only."""
+    g, h = _diagonal_arrays(ops, data, gradient, curvature)
+    projection = _projection(projection, g.shape[1])
+    width = g.shape[1] if projection is None else projection.shape[1]
+    with _workspace(ops) as retained:
+        output = ops.execution._empty((data.n_rows, width * 2), np.float32)
+        if projection is None:
+            ops._launch("diagonal_fields", data.n_rows, g, h, ops.execution._array(output))
+        else:
+            ops._launch("projected_diagonal_fields", data.n_rows, g, h,
+                        tuple(projection.ravel()), ops.execution._array(output))
+        names = tuple(f"{name}:{k}" for name in ("gradient", "curvature") for k in range(width))
+        fields = ops.fields(data, output, names=names, roles=("unweighted",) * (width * 2))
+        weighted = ops.apply_weight(fields)
+        retained.add(weighted)
+        return weighted
+
+
+@_atomic
+def channel_fields(ops, data, gradient, curvature, *, channel):
+    """Select one diagonal channel into once-weighted scalar fields; keep inputs caller-owned."""
+    g, h = _diagonal_arrays(ops, data, gradient, curvature)
+    if type(channel) is not int or not 0 <= channel < g.shape[1]:
+        raise ValueError("valid integer diagonal channel required")
+    with _workspace(ops) as retained:
+        output = ops.execution._empty((data.n_rows, 2), np.float32)
+        ops._launch("multiclass_fields", data.n_rows, g, h, channel, ops.execution._array(output))
+        fields = ops.fields(data, output, names=("gradient", "curvature"),
+                            roles=("unweighted", "unweighted"))
+        weighted = ops.apply_weight(fields)
+        retained.add(weighted)
+        return weighted

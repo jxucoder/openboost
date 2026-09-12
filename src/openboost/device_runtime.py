@@ -4,12 +4,14 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from . import device_inputs as inputs
 from . import device_objectives as objectives
 from . import device_tree as trees
 from .artifacts import Model, TreeTerm
 from .binning import Binning
 from .data import _identity
 from .device import DeviceOperations, _atomic, _workspace
+from .device_group_tree import DevicePrediction
 from .runtime import RunContext
 
 
@@ -53,24 +55,26 @@ def add_raw(ops, raw, delta, coefficient):
 
 
 def _mapping(value):
+    if np.iscomplexobj(value):
+        raise ValueError("finite real float32 [L,K] mapping required")
     try:
         with np.errstate(over="raise", invalid="raise"):
             values = np.asarray(value, dtype=np.float32)
     except (ValueError, TypeError, OverflowError, FloatingPointError) as error:
-        raise ValueError("finite float32 [1,K] mapping required") from error
+        raise ValueError("finite float32 [L,K] mapping required") from error
     if (
         values.ndim != 2
-        or values.shape[0] != 1
+        or not values.shape[0]
         or not values.shape[1]
         or not np.isfinite(values).all()
     ):
-        raise ValueError("finite float32 [1,K] mapping required")
+        raise ValueError("finite float32 [L,K] mapping required")
     return np.frombuffer(values.tobytes(), dtype=np.float32).reshape(values.shape)
 
 
 @dataclass(frozen=True, eq=False)
 class DeviceTerm:
-    """Scalar tree and owned immutable [1,K] output map; run validates tree ownership."""
+    """Tree and owned immutable [L,K] output map; run validates tree ownership."""
 
     tree: trees.DeviceTree
     mapping: object
@@ -79,11 +83,34 @@ class DeviceTerm:
         if not isinstance(self.tree, trees.DeviceTree):
             raise ValueError("DeviceTree required")
         object.__setattr__(self, "mapping", _mapping(self.mapping))
+        if self.tree.output_width != self.mapping.shape[0]:
+            raise ValueError("tree output width and mapping differ")
+
+
+@dataclass(frozen=True, eq=False)
+class PredictedTerm:
+    """Mapped tree with borrowed, registered train/validation prediction snapshots.
+
+    Construction checks metadata only. A run must validate registry ownership,
+    live source trees and exact problem bindings before using the values.
+    """
+
+    term: DeviceTerm
+    train: DevicePrediction
+    validation: DevicePrediction
+
+    def __post_init__(self):
+        if not isinstance(self.term, DeviceTerm) or any(
+            not isinstance(p, DevicePrediction) for p in (self.train, self.validation)
+        ):
+            raise ValueError("DeviceTerm and explicit training/validation DevicePrediction required")
+        if any(p.tree is not self.term.tree for p in (self.train, self.validation)):
+            raise ValueError("predictions must belong to the exact term tree")
 
 
 @_atomic
 def map_update(ops, raw, prediction, mapping, coefficient=1.0):
-    """Map a resident scalar prediction into K raw columns with independent output.
+    """Map a resident [N,L] prediction into K raw columns with independent output.
 
     Mapping is small host metadata passed as kernel scalar arguments, not a bulk
     array upload. Stored term order and separate product rounding define replay.
@@ -93,18 +120,18 @@ def map_update(ops, raw, prediction, mapping, coefficient=1.0):
     if source.ndim != 2 or not source.shape[0] or source.shape[1] != mapping.shape[1]:
         raise ValueError("raw width and mapping differ")
     source = ops._float(raw, source.shape)
-    scalar = ops._float(prediction, (source.shape[0], 1))
-    if source.shape[1] == 1 and mapping[0, 0] == 1:
+    values = ops._float(prediction, (source.shape[0], mapping.shape[0]))
+    if mapping.shape == (1, 1) and mapping[0, 0] == 1:
         return add_raw(ops, raw, prediction, coefficient)
     ops._validate(source)
-    ops._validate(scalar)
+    ops._validate(values)
     output = ops.execution._empty(source.shape, np.float32)
     ops._launch(
-        "mapped_add_raw",
+        "mapped_add_raw" if mapping.shape[0] == 1 else "vector_mapped_add_raw",
         source.shape[0],
         source,
-        scalar,
-        tuple(mapping[0]),
+        values,
+        tuple(mapping.ravel()),
         coefficient,
         ops.execution._array(output),
     )
@@ -162,6 +189,8 @@ class DeviceRun:
 
     Retained states own raw snapshots; release them explicitly. Immutable tree
     terms are reference-counted across states/proposals. Public raw() always copies.
+    An optional prepared feature pair is borrowed; its caller owns its lifetime.
+    Binding still owns per-run weights, targets/offsets, base and mutable state.
     ExecutionContext remains caller-owned. This is not a CPU RunContext backend.
     """
 
@@ -177,6 +206,7 @@ class DeviceRun:
         bins=254,
         objective=objectives.SQUARED,
         comparison="reported",
+        prepared=None,
     ):
         if not isinstance(objective, objectives.ObjectiveOperations):
             raise ValueError("explicit ObjectiveOperations required")
@@ -195,6 +225,10 @@ class DeviceRun:
         self._keys = RunContext(run_id, seed)  # Identity/RNG metadata only; no CPU training.
         if train.data.feature_names != validation.data.feature_names:
             raise ValueError("training/validation feature schemas differ")
+        if prepared is not None:
+            binning = inputs.check_pair(prepared, train, validation, binning=binning, bins=bins)
+            for features in prepared:
+                ops._get(features, inputs.DeviceFeatures)
         if binning is not None and bins != 254:
             raise ValueError("explicit binning owns its bin configuration")
         if binning is None:
@@ -207,9 +241,14 @@ class DeviceRun:
         self._comparison = comparison
         self._closed, self._serial = False, 0
         self._states, self._proposals = {}, {}
+        self._prepared_features = prepared
         with _workspace(ops) as retained:
-            train_data = ops.prepare(binning.transform(train.data), train)
-            validation_data = ops.prepare(binning.transform(validation.data), validation)
+            if prepared is None:
+                train_data = ops.prepare(binning.transform(train.data), train)
+                validation_data = ops.prepare(binning.transform(validation.data), validation)
+            else:
+                train_data = inputs.bind(ops, prepared[0], train)
+                validation_data = inputs.bind(ops, prepared[1], validation)
             self._train = objective.prepare(ops, train_data, train)
             self._validation = objective.prepare(ops, validation_data, validation)
             for p, expected in ((self._train, train_data), (self._validation, validation_data)):
@@ -233,6 +272,11 @@ class DeviceRun:
     def comparison(self):
         """Explicit best/search policy; objective mode owns a best validation anchor."""
         return self._comparison
+
+    @property
+    def prepared_features(self):
+        """Explicit borrowed feature pair, or None for independently prepared inputs."""
+        return self._prepared_features
 
     @property
     def data(self):
@@ -372,7 +416,7 @@ class DeviceRun:
             raise ValueError("nonempty DeviceTerm tuple required")
         for term in terms:
             self.ops._get(term.tree, trees.DeviceTree)
-            if term.mapping.shape != (1, self.raw_width):
+            if term.mapping.shape != (term.tree.output_width, self.raw_width):
                 raise ValueError("term mapping width differs from run")
             if term.tree.binning.identity != self.binning.identity:
                 raise ValueError("term fitted binning identity differs from run")
@@ -403,6 +447,54 @@ class DeviceRun:
                     prediction = trees.predict(self.ops, term.tree, p.data)
                     candidate = map_update(
                         self.ops, candidate, prediction, term.mapping, coefficient
+                    )
+                raw.append(candidate)
+            raw = tuple(raw)
+            loss, score = (
+                self._loss(p, r) for p, r in zip((self._train, self._validation), raw, strict=True)
+            )
+            retained.update((*raw, *(t.tree for t in snapshots)))
+        proposal = DeviceProposal(
+            self._identity("proposal"), state.identity, float(coefficient), loss, score
+        )
+        self._proposals[proposal] = _ProposalStorage(state, raw, snapshots)
+        return proposal
+
+    def propose_predicted(self, state, predicted, *, coefficient=1.0):
+        """Apply registered grouped predictions without repeating tree traversal.
+
+        All inputs remain caller-owned, reusable for another coefficient or
+        parent. Exact live tree/data/registry checks precede any allocation.
+        The proposal owns independent tree and raw copies; failures publish no
+        record or identity. Each call's workspace ends before another run acts.
+        Acceptance and best selection use the ordinary resolve operation.
+        """
+        prior = self._get(state, DeviceState)
+        coefficient = _coefficient(coefficient)
+        if not isinstance(predicted, tuple) or not predicted or any(
+            not isinstance(p, PredictedTerm) for p in predicted
+        ):
+            raise ValueError("nonempty explicit tuple of PredictedTerm required")
+        terms = self.validate_terms(tuple(p.term for p in predicted))
+        for item, term in zip(predicted, terms, strict=True):
+            for prediction, problem in zip(
+                (item.train, item.validation), (self._train, self._validation), strict=True
+            ):
+                self.ops._get(prediction, DevicePrediction)
+                if prediction.tree is not term.tree or prediction.data is not problem.data:
+                    raise ValueError("prediction requires exact live term tree and run data")
+                self.ops._float(prediction.values, (problem.data.n_rows, term.tree.output_width))
+        with _workspace(self.ops) as retained:
+            snapshots = tuple(
+                _Term(trees.copy(self.ops, t.tree), t.mapping, float(coefficient)) for t in terms
+            )
+            raw = []
+            for split, previous in enumerate(prior.raw):
+                candidate = previous
+                for item, term in zip(predicted, terms, strict=True):
+                    prediction = item.validation if split else item.train
+                    candidate = map_update(
+                        self.ops, candidate, prediction.values, term.mapping, coefficient
                     )
                 raw.append(candidate)
             raw = tuple(raw)

@@ -33,9 +33,10 @@ validation continue. Author productivity and adoption benefits remain hypotheses
 
 ## What works today
 
-**Experimental v1, under construction.** The current foundation is merged through
-[PR #25](https://github.com/jxucoder/openboost/pull/25). It is not a drop-in
-replacement for XGBoost, LightGBM or CatBoost, and full v1 acceptance remains open.
+**Experimental v1, under construction.** This branch curates a later foundation
+snapshot for review; the [checkpoint guide](docs/v1/checkpoint.md) records its source,
+available evidence and pending candidate validation. It is not a drop-in replacement
+for XGBoost, LightGBM or CatBoost, and full v1 acceptance remains open.
 
 Public CPU components include typed numeric/categorical data, fitted preparation,
 weights and offsets, named statistics, composable split/routing/leaf operations,
@@ -50,26 +51,32 @@ transactions. Training uses explicit device interfaces; the CPU recipe API does
 not automatically dispatch to CUDA. Current CUDA tree growth covers numeric and
 missing features, with scalar trees and mapped multi-parameter updates.
 
-| Use case | CPU implementation | Verified CUDA scope |
+| Use case | CPU implementation | Experimental CUDA implementation |
 | --- | --- | --- |
 | Regression | [Squared error](docs/v1/squared.md) | Resident squared recipe |
-| Classification | [Binary](docs/v1/binary.md), [multiclass](docs/v1/multiclass.md) | Binary recipe; multiclass pending |
+| Classification | [Binary](docs/v1/binary.md), [multiclass](docs/v1/multiclass.md) | Binary and independent-tree multiclass recipes |
 | Counts and positive/aggregate targets | [Poisson with exposure](docs/v1/poisson.md), [Gamma](docs/v1/gamma.md), [fixed-power Tweedie](docs/v1/tweedie.md), [frequency–severity composition](docs/v1/frequency-severity.md) | Poisson recipe; other cells pending |
 | Ranking and quantiles | [Query-local pairwise/lambda ranking](docs/v1/ranking.md), [quantile and penalized leaves](docs/v1/quantile.md) | Pending |
-| Survival | [Fixed-scale log-normal AFT with events/right censoring](docs/v1/aft.md) | Pending |
-| Distributional and structured models | [Normal ordinary/Fisher updates](docs/v1/normal.md), [saturation Formula/full-GGN updates](docs/v1/formula-runs.md) | Bounded Normal joint/ordered recipes; Formula pending |
-| Multi-output regression | [Independent/shared trees, projected splits and target scaling](docs/v1/multioutput.md) | Vector topology pending |
-| Train-many | [Shared preparation and independent sequential runs](docs/v1/preparation.md), verified at M=1/8/32 | Compatible resident execution pending |
+| Survival | [Fixed-scale log-normal AFT with events/right censoring](docs/v1/aft.md) | Fixed-scale event/right-censored AFT recipe |
+| Distributional and structured models | [Normal ordinary/Fisher updates](docs/v1/normal.md), [saturation Formula/full-GGN updates](docs/v1/formula-runs.md) | Exact-policy Normal joint/ordered recipes; Formula pending |
+| Multi-output regression | [Independent/shared trees, projected splits and target scaling](docs/v1/multioutput.md) | Independent/shared multi-output squared recipes |
+| Train-many | [Shared preparation and independent sequential runs](docs/v1/preparation.md), explicit run ownership | Compatible scalar squared scheduling |
 
-CUDA entries describe bounded correctness evidence, not complete feature coverage
-or a speed guarantee. Categorical CUDA growth, broader vector learners and fused
-train-many remain unverified. See the [CPU component guide](docs/v1/numeric-ops.md),
+CUDA entries describe implemented interfaces. Validation for the curated candidate
+remains pending; historical checks do not establish complete feature coverage or a
+speed guarantee. Categorical CUDA growth and arbitrary grouped recipes remain open. See the [CPU component guide](docs/v1/numeric-ops.md),
 [tree contracts](docs/v1/trees.md), [stopping semantics](docs/v1/stopping.md) and
 [explicit CUDA interfaces](docs/v1/execution.md) for supported inputs and limits.
 
 ## Evidence and performance
 
-- **Latest CUDA validation:** [run 12](benchmarks/v1/evidence/cuda-glm-108/README.md)
+The [checkpoint guide](docs/v1/checkpoint.md) links the compact historical audit of
+the real two-round Housing train-many diagnostic and explains the omitted replay
+archives. Full-budget feasibility, performance and complete v1 remain open.
+The results below are earlier observations retained on public main, tied to their
+original source revisions; they are not results for this curated candidate.
+
+- **Earlier CUDA validation:** [run 12](benchmarks/v1/evidence/cuda-glm-108/README.md)
   passes 571/571 real T4 cases: 153 binary/Poisson checks and 418 regressions. All
   77 JSON artifacts are retained. The offline audit verifies 246 numerical
   loss-change comparisons and replays 32 final/best models from saved input bytes.
@@ -82,15 +89,15 @@ train-many remain unverified. See the [CPU component guide](docs/v1/numeric-ops.
   13.513 to 8.947 seconds, with unchanged model/prediction bytes. That workload
   uses 16 features, depth three and 20 rounds; the reduction is 33.79% against the
   earlier OpenBoost implementation on the same T4.
-- **CPU and packaging:** the merged checkpoint has 2,292 local CPU tests passing.
+- **Earlier CPU and packaging:** the public-main checkpoint has 2,292 local CPU tests passing.
   [Hosted CI](https://github.com/jxucoder/openboost/actions/runs/34241939802) passes
   Linux/macOS on Python 3.10/3.12, including offline audits and package builds;
   [strict documentation checks](https://github.com/jxucoder/openboost/actions/runs/34241939812)
   also pass. Historical tests are explicitly separated from current conformance.
 
 These results do not establish competitive speed or predictive quality against
-mature boosting libraries. Real application evaluations and the formal end-to-end
-quality/cost gate remain open. The [earlier incomplete performance checkpoint](benchmarks/v1/evidence/early-performance-104/README.md)
+mature boosting libraries. Complete application evaluation and formal end-to-end
+quality/cost acceptance remain open for the current foundation. The [earlier incomplete performance checkpoint](benchmarks/v1/evidence/early-performance-104/README.md)
 is retained alongside the later complete measurements.
 
 ## Try the CPU foundation
@@ -143,13 +150,12 @@ hardware and the optional dependencies (`uv sync --extra cuda`); start with the
 
 ## Next milestones
 
-1. Complete the [required CUDA recipes](v1-sprints/080-cuda-required-recipes.md),
-   starting with multiclass, then AFT and vector topology, with independent
-   mathematics, CPU/CUDA checks and persisted inference for each declared scope.
-2. Establish [compatible train-many execution](v1-sprints/081-cuda-train-many.md),
-   preserving independent state while reusing preparation and device resources.
-3. Measure [real-workload quality and complete execution cost](v1-sprints/082-end-to-end-cost.md)
-   with fair baselines, then stabilize the public contracts supported by that evidence.
+1. Validate the exact curated package, installed consumers, CPU/CUDA behavior,
+   persistence and documentation in bounded Modal execution.
+2. Reconcile the omitted archive-dependent tests and complete full-budget
+   train-many resource and correctness evaluation.
+3. Complete real-workload quality and execution-cost evidence for every required
+   application, then stabilize the contracts supported by that evidence.
 
 All [R1–R9 / C1–C7 / A1–A13 requirements](planning/openboost-v1-evaluation.md)
 remain in scope. Each [application family](planning/foundation-application-contracts.md)
@@ -158,7 +164,8 @@ expansion are outside the active plan.
 
 - [Construction design](planning/foundation-construction-design.md)
 - [v1 plan](planning/agent-boosting-foundation-plan.md)
-- [Execution, evidence and reflections](v1-sprints/README.md)
+- [Current checkpoint and evidence scope](docs/v1/checkpoint.md)
+- [Retained earlier execution history](v1-sprints/README.md)
 
 ## Development and history
 

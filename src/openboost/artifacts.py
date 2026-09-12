@@ -1,11 +1,13 @@
 """Immutable numeric ensembles with explicit term coefficients and output maps."""
 
+import hashlib
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
 
+from .binning import Binning
 from .data import ClassSchema, MixedData, NumericData, _identity, _owned
 from .tree import Tree
 
@@ -14,6 +16,7 @@ from .tree import Tree
 class ConstantTerm:
     value: np.ndarray
     coefficient: float = 1.0
+    _record_bytes_cache: bytes | None = field(init=False, default=None, repr=False)
 
     def __post_init__(self):
         object.__setattr__(self, "value", _owned(self.value, ndim=1))
@@ -31,6 +34,7 @@ class TreeTerm:
     learner: Tree
     mapping: np.ndarray
     coefficient: float = 1.0
+    _record_bytes_cache: bytes | None = field(init=False, default=None, repr=False)
 
     def __post_init__(self):
         if not isinstance(self.learner, Tree):
@@ -41,6 +45,27 @@ class TreeTerm:
         coefficient = ConstantTerm([0], self.coefficient).coefficient
         object.__setattr__(self, "mapping", mapping)
         object.__setattr__(self, "coefficient", coefficient)
+
+
+def _canonical_term_bytes(term):
+    """Memoize owned built-in terms only; callers establish exact type safety."""
+    if term._record_bytes_cache is None:
+        record = (
+            dict(kind="constant", value=term.value.tolist(), coefficient=term.coefficient)
+            if type(term) is ConstantTerm
+            else dict(
+                kind="tree",
+                learner=term.learner.record(),
+                mapping=term.mapping.tolist(),
+                coefficient=term.coefficient,
+            )
+        )
+        object.__setattr__(
+            term,
+            "_record_bytes_cache",
+            json.dumps(record, sort_keys=True, allow_nan=False).encode(),
+        )
+    return term._record_bytes_cache
 
 
 @dataclass(frozen=True, eq=False)
@@ -55,6 +80,7 @@ class Model:
     base: np.ndarray
     terms: tuple[ConstantTerm | TreeTerm, ...] = ()
     classes: ClassSchema | None = None
+    _identity_cache: str | None = field(init=False, default=None, repr=False)
 
     def __post_init__(self):
         names = tuple(self.feature_names)
@@ -158,7 +184,45 @@ class Model:
 
     @property
     def identity(self):
-        return _identity(self.record())
+        # Extension subclasses may override record/attributes. Preserve their
+        # original uncached behavior instead of assuming built-in immutability.
+        if (
+            type(self) is not Model
+            or (self.classes is not None and type(self.classes) is not ClassSchema)
+            or any(
+                type(term) is not ConstantTerm
+                and not (
+                    type(term) is TreeTerm
+                    and type(term.learner) is Tree
+                    and type(term.learner.binning) is Binning
+                )
+                for term in self.terms
+            )
+        ):
+            return _identity(self.record())
+        if self._identity_cache is None:
+            header = dict(
+                format="openboost-ensemble-v2",
+                feature_names=list(self.feature_names),
+                base=self.base.tolist(),
+                terms=[],
+                classes=None if self.classes is None else list(self.classes.values),
+            )
+            # Sorted terms is the last key. Replace only the empty array's end;
+            # retain exactly json.dumps' spaces, escaping and float rendering.
+            prefix = json.dumps(header, sort_keys=True, allow_nan=False).encode()[:-2]
+            terms = tuple(_canonical_term_bytes(term) for term in self.terms)
+            size = len(prefix) + 2 + sum(map(len, terms)) + 2 * max(0, len(terms) - 1)
+            digest = hashlib.sha256()
+            digest.update(size.to_bytes(8, "big"))
+            digest.update(prefix)
+            for i, raw in enumerate(terms):
+                if i:
+                    digest.update(b", ")
+                digest.update(raw)
+            digest.update(b"]}")
+            object.__setattr__(self, "_identity_cache", digest.hexdigest())
+        return self._identity_cache
 
     def save(self, path):
         Path(path).write_text(json.dumps(self.record(), allow_nan=False) + "\n")

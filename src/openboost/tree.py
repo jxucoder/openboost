@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-from . import ops
+from . import newton_order, ops
 from .binning import BinnedData, Binning, _array
 from .data import MixedData, NumericData, _identity, _owned
 from .leaves import ResidualContext
@@ -184,6 +184,9 @@ class _Growth:
         leaf_fields,
         row_leaf,
         leaf_context,
+        ordering,
+        field_leaf,
+        selection=None,
     ):
         if type(max_depth) is not int or max_depth < 0:
             raise ValueError("nonnegative integer max_depth required")
@@ -191,6 +194,24 @@ class _Growth:
             max_leaves = len(data.data.values)
         if type(max_leaves) is not int or not 1 <= max_leaves <= 2**30:
             raise ValueError("positive bounded integer max_leaves required")
+        if ordering is not None and (
+            not callable(ordering) or scoring is not ops.score or legality is not ops.feasible
+        ):
+            raise ValueError("ordering requires a callable and default scoring/legality")
+        self.ordering, self.ordering_configuration = ordering, None
+        if selection is not None and (
+            not callable(selection)
+            or ordering is not None
+            or scoring is not ops.score
+            or legality is not ops.feasible
+        ):
+            raise ValueError("selection requires a callable and default ordering/scoring/legality")
+        self.selection = selection
+        if field_leaf is not None and (
+            not callable(field_leaf) or leaf is not ops.newton_leaf or row_leaf is not None
+        ):
+            raise ValueError("field_leaf requires a callable and default additive/residual leaf")
+        self.field_leaf = field_leaf
         if (row_leaf is None) != (leaf_context is None):
             raise ValueError("routed leaf solver and context must be supplied together")
         if row_leaf is not None and (
@@ -208,39 +229,72 @@ class _Growth:
         if self.leaf_fields.problem_identity != fields.problem_identity:
             raise ValueError("split and leaf fields must belong to the same problem")
         ops.histogram(data, fields, [])  # Validate split identity even for a root-only tree.
+        if field_leaf is not None:
+            ops.histogram(data, self.leaf_fields, [])  # Validate without a floating reduction.
         self.max_depth, self.max_leaves = max_depth, max_leaves
         self.scoring, self.legality, self.leaf = scoring, legality, leaf
         self.nodes, self.memberships, self.depths = [], [], []
         self.append(None, 0)
 
     def append(self, rows, depth):
-        hist = ops.histogram(self.data, self.leaf_fields, rows)
-        value = np.atleast_1d(
-            np.asarray(
+        if self.field_leaf is not None:
+            selected = ops._rows(rows, len(self.data.data.values))
+            result = self.field_leaf(self.leaf_fields, selected)
+        else:
+            hist = ops.histogram(self.data, self.leaf_fields, rows)
+            selected = hist.rows
+            result = (
                 self.leaf(hist.total, self.leaf_fields.names)
                 if self.row_leaf is None
                 else self.row_leaf(
                     self.leaf_context.view(hist.rows), hist.total, self.leaf_fields.names
-                ),
-                dtype=float,
+                )
             )
-        )
+        value = np.atleast_1d(np.asarray(result, dtype=float))
         if value.ndim != 1 or not value.size or not np.isfinite(value).all():
             raise ValueError("nonfinite or invalid custom leaf")
         value = _owned(value, ndim=1)
         if self.nodes and value.shape != self.nodes[0][-1].shape:
             raise ValueError("inconsistent learner output width")
         self.nodes.append([-1, -1, False, -1, -1, value])
-        self.memberships.append(hist.rows)
+        self.memberships.append(selected)
         self.depths.append(depth)
         return len(self.nodes) - 1
 
     def options(self, node):
         return ops.candidates(ops.histogram(self.data, self.fields, self.memberships[node]))
 
+    def ranked(self, node):
+        rows = self.memberships[node]
+        ranked = tuple(self.ordering(self.data, self.fields, rows))
+        newton_order.choose(ranked)  # Validate every record, including signed/filterable gains.
+        expected = newton_order._input_identity(self.data, self.fields, rows)
+        rows_identity = _identity(rows)
+        for record in ranked:
+            candidate = record.candidate
+            if (
+                record.input_identity != expected
+                or candidate.data_identity != self.data.identity
+                or candidate.rows_identity != rows_identity
+                or candidate.names != self.fields.names
+                or candidate.roles != self.fields.roles
+            ):
+                raise ValueError("ordering records must bind the actual node and split fields")
+            if self.ordering_configuration is None:
+                self.ordering_configuration = record.configuration_identity
+            elif self.ordering_configuration != record.configuration_identity:
+                raise ValueError("ordering configuration must remain fixed across nodes")
+        return ranked
+
     def best(self, node):
         if self.depths[node] >= self.max_depth:
             return None
+        if self.ordering is not None:
+            best = newton_order.choose(self.ranked(node))
+            return None if best is None else (best.candidate, best.gain)
+        if self.selection is not None:
+            hist = ops.histogram(self.data, self.fields, self.memberships[node])
+            return ops._bound_choice(hist, self.selection(hist))
         gains = {}
 
         def cached(candidate):
@@ -282,6 +336,9 @@ def depthwise(
     leaf_fields=None,
     row_leaf=None,
     leaf_context=None,
+    ordering=None,
+    field_leaf=None,
+    selection=None,
 ):
     """Layer growth; highest-gain splits win a binding within-layer leaf budget."""
     work = _Growth(
@@ -295,6 +352,9 @@ def depthwise(
         leaf_fields,
         row_leaf,
         leaf_context,
+        ordering,
+        field_leaf,
+        selection,
     )
     frontier, leaves = [0], 1
     while frontier and leaves < work.max_leaves:
@@ -324,6 +384,8 @@ def best_first(
     leaf_fields=None,
     row_leaf=None,
     leaf_context=None,
+    ordering=None,
+    field_leaf=None,
 ):
     """Heap of leaf gains; unchanged leaves retain their evaluated candidates.
 
@@ -341,6 +403,8 @@ def best_first(
         leaf_fields,
         row_leaf,
         leaf_context,
+        ordering,
+        field_leaf,
     )
     pending = []
 
@@ -375,6 +439,8 @@ def symmetric(
     leaf_fields=None,
     row_leaf=None,
     leaf_context=None,
+    ordering=None,
+    field_leaf=None,
 ):
     """One common condition per complete layer, legal in every active leaf.
 
@@ -392,6 +458,8 @@ def symmetric(
         leaf_fields,
         row_leaf,
         leaf_context,
+        ordering,
+        field_leaf,
     )
     frontier = [0]
     for _ in range(max_depth):
@@ -399,6 +467,9 @@ def symmetric(
             break
         by_node = []
         for node in frontier:
+            if ordering is not None:
+                by_node.append({r.candidate.key: (r.candidate, r.gain) for r in work.ranked(node)})
+                continue
             candidates = {}
             for candidate in work.options(node):
                 if legality(candidate):
@@ -411,7 +482,7 @@ def symmetric(
         if not common:
             break
         totals = {key: sum(options[key][1] for options in by_node) for key in common}
-        if not all(np.isfinite(value) for value in totals.values()):
+        if ordering is None and not all(np.isfinite(value) for value in totals.values()):
             raise ValueError("nonfinite symmetric layer score")
         key = min(common, key=lambda k: (-totals[k], k))
         if totals[key] <= 0:

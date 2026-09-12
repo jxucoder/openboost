@@ -29,7 +29,9 @@ assert len(fit.state.model.terms) == 3
 
 Multiclass.geometry exposes weighted mean softmax loss and unweighted gradient
 and diagonal bound arrays [N, K]. The bound is 2p(1-p), a diagonal upper bound
-on the exact softmax Hessian, not the exact Hessian itself. The row-field adapter
+on the exact softmax Hessian, not the exact Hessian itself. Geometry
+preserves representable dominant-class loss, gradients and curvature using explicit
+softmax complements, even when the reported probability rounds to one. The adapter
 applies original weights once. Initialization uses zero logits (uniform probabilities
 before offsets), and every declared class must occur in training. Offsets enter
 geometry once and remain outside accepted raw caches; supply inference offsets
@@ -58,3 +60,46 @@ leaves, three softmax rounds, offsets, rejected updates and fresh-process
 probability/label persistence. These are correctness checks, not real classification
 quality evidence. Full A6 multi-output workflows, specialized leaves, CUDA and
 external-library quality/performance comparisons remain required work.
+
+## Experimental device components
+
+`openboost.device_multiclass` provides `objective()`, owned `prepare`/`base`,
+`geometry` and `loss` operations. `channel_fields(ops, data, gradient, bound,
+channel=k)` selects weighted scalar fields from one shared geometry snapshot.
+Fit K scalar trees and map them to K raw columns with `DeviceTerm`; submit them
+together through `DeviceRun.propose_terms`. This follows the separate-topology
+construction contract, while the CPU convenience recipe above uses vector trees.
+
+The device boundary stores float32 inputs/geometry and computes row likelihoods
+in float64. Every class curvature must remain positive finite in float32, including
+weight-zero rows; unsupported tails are rejected. Class metadata uses the existing
+saved Model format. Native categorical CUDA inputs remain unsupported.
+
+`objective().loss_change(ops, problem, before, after)` now returns explicit
+`LossChange` bounds from resident softmax path-variance calculations. It validates
+every class/row of both snapshots and exports a scalar summary. Strict negative
+upper bounds prove improvement; zero-containing or unavailable bounds remain
+unresolved. No subtraction of reporting losses supplies the decision.
+
+`openboost.device_recipes.multiclass` composes these operations into one joint
+K-tree proposal per round. `step="backtracking"` requires proved training improvement;
+`step="fixed"` accepts a valid proposal. Best-model selection compares validation
+against the owned best snapshot. Patience observes once per complete round against
+a separate snapshot and replaces it only when improvement exceeds `min_delta`.
+A zero-rate rejected round still consumes patience. The returned `DeviceFitResult`
+owns its run/state; export final/best models and close the run when finished.
+
+Tree configuration (`max_depth`, `reg_lambda`, `min_child_h`, `split_penalty`, fitted
+`binning` or `bins`) applies to every class. An optional `learner(ops, data, fields)`
+callback owns its tree settings and returns a scalar device tree; each returned
+tree is copied before the next class is fitted. Geometry always comes from the
+same accepted parent, and all K terms commit or reject together.
+
+Independent stored-float32 trajectories and public CPU transaction composition
+exercise fixed/backtracking steps, search, rejection and saved probability/label
+inference. Historically, two controlled CUDA fixtures failed on unsorted class
+labels before reaching their assertions; a separate corrected fixture run reached
+both original consumers with unchanged production. The first failed verdict
+remains in development history. The newer raw archives are outside this PR; see
+the [checkpoint](checkpoint.md) for pending candidate validation. These APIs remain
+experimental, and full R1 and real classification quality remain open.

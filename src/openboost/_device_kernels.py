@@ -6,6 +6,10 @@ from numba import cuda, float32, float64
 from numba.cuda import libdevice
 
 from ._comparison_math import make_normal_math
+from ._device_aft_comparison import aft_compare_rows as aft_compare_rows
+from ._device_aft_kernels import aft_base as aft_base
+from ._device_aft_kernels import aft_geometry as aft_geometry
+from ._device_aft_kernels import aft_loss as aft_loss
 from ._device_glm_comparison import binary_compare_rows as binary_compare_rows
 from ._device_glm_comparison import glm_compare_reduce as glm_compare_reduce
 from ._device_glm_comparison import poisson_compare_rows as poisson_compare_rows
@@ -30,6 +34,21 @@ from ._device_glm_kernels import (
 from ._device_glm_kernels import (
     poisson_loss as poisson_loss,
 )
+from ._device_multi_squared_kernels import diagonal_fields as diagonal_fields
+from ._device_multi_squared_kernels import multi_squared_base as multi_squared_base
+from ._device_multi_squared_kernels import multi_squared_compare_rows as multi_squared_compare_rows
+from ._device_multi_squared_kernels import multi_squared_geometry as multi_squared_geometry
+from ._device_multi_squared_kernels import multi_squared_loss as multi_squared_loss
+from ._device_multi_squared_kernels import projected_diagonal_fields as projected_diagonal_fields
+from ._device_multiclass_comparison import multiclass_compare_rows as multiclass_compare_rows
+from ._device_multiclass_kernels import multiclass_base as multiclass_base
+from ._device_multiclass_kernels import multiclass_fields as multiclass_fields
+from ._device_multiclass_kernels import multiclass_geometry as multiclass_geometry
+from ._device_multiclass_kernels import multiclass_loss as multiclass_loss
+from ._device_newton_kernels import exact_newton_choose as exact_newton_choose
+from ._device_newton_kernels import exact_newton_rank as exact_newton_rank
+from ._device_newton_kernels import exact_newton_reduce as exact_newton_reduce
+from ._device_newton_leaf_kernels import exact_newton_leaf as exact_newton_leaf
 
 _compare_add, _compare_mul, _compare_div, _normal_change = make_normal_math(
     cuda.jit(device=True), libdevice.dadd_rd, libdevice.dadd_ru,
@@ -186,6 +205,60 @@ def scalar_feasible(values, counts, active, h, minimum, output):
 
 
 @cuda.jit
+def vector_scores(values, counts, active, parent, gradients, curvatures,
+                  regularization, penalty, output):
+    c = cuda.grid(1)
+    if c < output.size:
+        positive = active[c] and counts[c, 0] > 0 and counts[c, 1] > 0
+        for k in range(len(curvatures)):
+            h = curvatures[k]
+            positive = positive and values[c, 0, h] > 0 and values[c, 1, h] > 0
+        gain = float32(0)
+        if positive:
+            left_score, right_score, parent_score = float32(0), float32(0), float32(0)
+            for k in range(len(gradients)):
+                g, h = gradients[k], curvatures[k]
+                dl = values[c, 0, h] + regularization
+                dr = values[c, 1, h] + regularization
+                dp = parent[h] + regularization
+                if not math.isfinite(dl) or not math.isfinite(dr) or not math.isfinite(dp) or dp <= 0:
+                    left_score = float32(math.nan)
+                else:
+                    gl, gr, gp = values[c, 0, g], values[c, 1, g], parent[g]
+                    # Independent products preserve the scalar swapped-child symmetry.
+                    left_score = float32(left_score + libdevice.fmul_rn(float32(0.5) * gl, gl / dl))
+                    right_score = float32(right_score + libdevice.fmul_rn(float32(0.5) * gr, gr / dr))
+                    parent_score = float32(parent_score + libdevice.fmul_rn(float32(0.5) * gp, gp / dp))
+            gain = (left_score + right_score) - parent_score - penalty
+        output[c] = gain
+
+
+@cuda.jit
+def vector_feasible(values, counts, active, curvatures, minimum, output):
+    c = cuda.grid(1)
+    if c < output.size:
+        legal = active[c] and counts[c, 0] > 0 and counts[c, 1] > 0
+        for k in range(len(curvatures)):
+            h = curvatures[k]
+            hl, hr = values[c, 0, h], values[c, 1, h]
+            legal = legal and hl > 0 and hr > 0 and hl >= minimum and hr >= minimum
+        output[c] = legal
+
+
+@cuda.jit
+def vector_leaf(total, gradients, curvatures, regularization, output):
+    k = cuda.grid(1)
+    if k < output.size:
+        g, h = gradients[k], curvatures[k]
+        denominator = total[h] + regularization
+        output[k] = (
+            -total[g] / denominator
+            if total[h] >= 0 and denominator > 0 and math.isfinite(denominator)
+            else float32(math.nan)
+        )
+
+
+@cuda.jit
 def information_minimum(values, active, q, minimum, output):
     c = cuda.grid(1)
     if c < output.size:
@@ -321,6 +394,26 @@ def scalar_tree_predict(codes, missing, topology, values, output):
             left = topology[i, 2] != 0 if missing[f, r] else codes[f, r] <= t
             i = topology[i, 3] if left else topology[i, 4]
         output[r, 0] = values[i]
+
+
+@cuda.jit
+def pack_vector_leaf(value, index, output):
+    k = cuda.grid(1)
+    if k < value.size:
+        output[index, k] = value[k]
+
+
+@cuda.jit
+def vector_tree_predict(codes, missing, topology, values, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        i = 0
+        while topology[i, 0] != -1:
+            f, t = topology[i, 0], topology[i, 1]
+            left = topology[i, 2] != 0 if missing[f, r] else codes[f, r] <= t
+            i = topology[i, 3] if left else topology[i, 4]
+        for k in range(output.shape[1]):
+            output[r, k] = values[i, k]
 
 
 @cuda.jit
@@ -489,3 +582,15 @@ def mapped_add_raw(raw, scalar, mapping, coefficient, output):
         for k in range(output.shape[1]):
             delta = libdevice.fmul_rn(scalar[r, 0], mapping[k])
             output[r, k] = raw[r, k] + libdevice.fmul_rn(coefficient, delta)
+
+
+@cuda.jit
+def vector_mapped_add_raw(raw, prediction, mapping, coefficient, output):
+    r = cuda.grid(1)
+    if r < output.shape[0]:
+        for k in range(output.shape[1]):
+            delta = float32(0)
+            for channel in range(prediction.shape[1]):
+                product = libdevice.fmul_rn(prediction[r, channel], mapping[channel * output.shape[1] + k])
+                delta = libdevice.fadd_rn(delta, product)
+            output[r, k] = libdevice.fadd_rn(raw[r, k], libdevice.fmul_rn(coefficient, delta))

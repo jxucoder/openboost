@@ -4,6 +4,18 @@ This is the canonical repository guidance for coding agents and automated
 contributors. Tool-specific instruction files should point here instead of
 duplicating policy.
 
+## Checkpoint review branch
+
+This branch prepares a focused foundation PR. Read
+[v1-sprints/foundation-checkpoint-pr.md](v1-sprints/foundation-checkpoint-pr.md)
+and the [public checkpoint scope](docs/v1/checkpoint.md) before using older
+execution pointers below. The complete development history and its raw archives
+remain in the original development checkout; omitted tests and pending candidate
+validation are listed in the checkpoint manifest. Keep this PR a draft until
+those gaps are resolved. Heavy CPU tests, builds, numerical audits and CUDA run
+on bounded Modal resources; local work is source/metadata inspection only.
+Creating the PR does not authorize a merge or release.
+
 ## Mission
 
 OpenBoost is a **programmable boosting foundation for researchers and agents**.

@@ -7,6 +7,7 @@ from functools import partial
 
 import numpy as np
 
+from . import newton_order
 from .artifacts import Model, TreeTerm
 from .binning import prepare_training
 from .comparison import LossChange
@@ -23,6 +24,7 @@ from .objectives import (
 from .ops import (
     _nonnegative,
     feasible,
+    newton_choice,
     newton_leaf,
     score,
     vector_feasible,
@@ -52,6 +54,7 @@ class FitResult:
     steps: tuple[
         SquaredStep
         | NormalStep
+        | tuple[NormalStep | TraceSummary, ...]
         | FormulaStep
         | BinaryStep
         | MulticlassStep
@@ -174,6 +177,8 @@ def _configuration(
     step,
     max_trials,
     learner,
+    *,
+    exact_newton=False,
 ):
     if type(rounds) is not int or rounds < 0:
         raise ValueError("nonnegative integer rounds required")
@@ -200,13 +205,30 @@ def _configuration(
             0.0,
         ):
             raise ValueError("custom learner owns growth options")
+    elif exact_newton:
+        learner = partial(
+            depthwise,
+            max_depth=max_depth,
+            max_leaves=max_leaves,
+            ordering=partial(
+                newton_order.rank,
+                reg_lambda=regularizer,
+                split_penalty=penalty,
+                min_child_h=minimum,
+            ),
+            field_leaf=partial(newton_order.leaf, reg_lambda=regularizer),
+        )
     else:
         learner = partial(
             depthwise,
             max_depth=max_depth,
             max_leaves=max_leaves,
-            scoring=partial(score, reg_lambda=regularizer, split_penalty=penalty),
-            legality=partial(feasible, min_child_h=minimum),
+            selection=partial(
+                newton_choice,
+                reg_lambda=regularizer,
+                split_penalty=penalty,
+                min_child_h=minimum,
+            ),
             leaf=partial(newton_leaf, reg_lambda=regularizer),
         )
     return rate, learner
@@ -265,6 +287,10 @@ class NormalStep:
     failures: tuple[str | None, ...]
     comparisons: tuple[LossChange | None, ...] = ()
     validation_change: LossChange | None = None
+    round_index: int = 0
+    channels: tuple[int, ...] = (0, 1)
+    before_version: int = 0
+    after_version: int = 0
 
 
 def normal(
@@ -289,18 +315,26 @@ def normal(
     learner=None,
     mode="natural",
     damping=0.0,
+    update="joint",
     minimum_scale=1e-6,
 ):
-    """Joint mean/log-scale Normal updates using shared scalar learners and state.
+    """Joint or ordered Normal updates using shared scalar learners and state.
 
     Geometry is computed from the accepted snapshot; both channel trees are fit
-    once and committed/rejected together. Natural mode uses the diagonal Fisher,
-    ordinary mode uses negative likelihood gradients. No ordered update is implied.
+    once per substep and committed/rejected together. Forward updates mean then
+    scale; reverse updates scale then mean. Ordered geometry reads the latest
+    accepted state. Natural mode uses the diagonal Fisher; ordinary uses negative
+    likelihood gradients. The default CPU learner uses exact Newton ordering/leaves.
     Objective loss-change evidence controls backtracking, validation best and
-    patience separately. Absolute losses are reporting values only.
+    patience separately, observing patience once per complete outer sweep.
+    Ordered outer-round records contain two substeps; joint rounds retain one
+    NormalStep. Absolute losses are reporting values only.
     """
     Normal.validate(train)
     Normal.validate(validation)
+    if update not in ("joint", "forward", "reverse"):
+        raise ValueError("joint/forward/reverse update required")
+    groups = {"joint": ((0, 1),), "forward": ((0,), (1,)), "reverse": ((1,), (0,))}[update]
     rate, learner = _configuration(
         rounds,
         learning_rate,
@@ -312,6 +346,7 @@ def normal(
         step,
         max_trials,
         learner,
+        exact_newton=True,
     )
     # Validate mode/damping even for zero rounds.
     diagonal_direction([[0, 0]], [[1, 2]], mode=mode, damping=damping)
@@ -320,38 +355,59 @@ def normal(
     state = initialize(context, train, validation, base, score=Normal.loss)
     stop = StopState.start(state.best_score, rounds=rounds, patience=patience, min_delta=min_delta)
     patience_raw = state.validation_raw
-    steps = _Trace(retention)
-    for _ in range(rounds):
-        before = state.train_raw
-        loss_before, gradient, metric = Normal.geometry(train, before)
-        direction = diagonal_direction(gradient, metric, mode=mode, damping=damping)
-        terms = tuple(
-            TreeTerm(learner(binned, least_squares(train, direction[:, k])), np.eye(2)[k : k + 1])
-            for k in range(2)
-        )
-        state, coefficients, accepted, failures, comparisons = _trials(
-            state, terms, Normal.loss, loss_before, rate, step, max_trials, compare=Normal.compare
-        )
-        validation_change = Normal.compare(validation, patience_raw, state.validation_raw)
-        stop = stop.observe_change(Normal.loss(validation, state.validation_raw), validation_change)
-        if validation_change.improves(stop.min_delta):
-            patience_raw = state.validation_raw
-        steps.append(
-            NormalStep(
-                gradient,
-                metric,
-                direction,
-                before,
-                state.train_raw,
-                loss_before,
-                Normal.loss(train, state.train_raw),
-                coefficients,
-                accepted,
-                failures,
-                comparisons,
-                validation_change,
+    validate_retention(retention)
+    steps = []
+    for round_index in range(rounds):
+        substeps = _Trace(retention)
+        for group_index, channels in enumerate(groups):
+            before, before_version = state.train_raw, state.version
+            loss_before, gradient, metric = Normal.geometry(train, before)
+            direction = diagonal_direction(gradient, metric, mode=mode, damping=damping)
+            terms = tuple(
+                TreeTerm(
+                    learner(binned, least_squares(train, direction[:, k])), np.eye(2)[k : k + 1]
+                )
+                for k in channels
             )
-        )
+            state, coefficients, accepted, failures, comparisons = _trials(
+                state,
+                terms,
+                Normal.loss,
+                loss_before,
+                rate,
+                step,
+                max_trials,
+                compare=Normal.compare,
+            )
+            validation_change = None
+            if group_index == len(groups) - 1:
+                validation_change = Normal.compare(validation, patience_raw, state.validation_raw)
+                stop = stop.observe_change(
+                    Normal.loss(validation, state.validation_raw), validation_change
+                )
+                if validation_change.improves(stop.min_delta):
+                    patience_raw = state.validation_raw
+            substeps.append(
+                NormalStep(
+                    gradient,
+                    metric,
+                    direction,
+                    before,
+                    state.train_raw,
+                    loss_before,
+                    Normal.loss(train, state.train_raw),
+                    coefficients,
+                    accepted,
+                    failures,
+                    comparisons,
+                    validation_change,
+                    round_index,
+                    channels,
+                    before_version,
+                    state.version,
+                )
+            )
+        steps.append(substeps[0] if update == "joint" else tuple(substeps))
         if stop.reason is not None:
             break
     return FitResult(state, tuple(steps), stop)

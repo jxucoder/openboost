@@ -2,8 +2,10 @@
 
 import numpy as np
 
+from openboost import device_newton_order as exact_newton
 from openboost.binning import Binning
 from openboost.device import DeviceOperations
+from openboost.device_newton_leaf import leaf
 from openboost.device_tree import depthwise
 
 
@@ -56,6 +58,13 @@ class DeviceCohortLearner:
             mask = ops.mask_and(mask, ops.child_minimum(candidates, name, 1))
         return mask
 
+    def ordering(self, ops, candidates):
+        ranked = exact_newton.rank(
+            ops, candidates, reg_lambda=self.reg_lambda,
+            min_information={name: 1 for name in self.names},
+        )
+        return exact_newton.choose(ops, ranked)
+
     def __call__(self, ops, data, fields):
         if self.closed:
             raise ValueError("cohort learner is closed")
@@ -76,8 +85,8 @@ class DeviceCohortLearner:
                 current,
                 binning=self.binning,
                 max_depth=self.max_depth,
-                reg_lambda=self.reg_lambda,
-                legality=self.legal,
+                ordering=self.ordering,
+                field_leaf=lambda o, f, r: leaf(o, f, r, reg_lambda=self.reg_lambda),
             )
         finally:
             if current is not fields:
