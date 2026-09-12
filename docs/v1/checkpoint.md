@@ -48,11 +48,24 @@ continues to describe its recorded source revision.
 ## Candidate validation and remaining work
 
 Exact source, syntax, import, lint and link checks are metadata checks. Test
-collection does not execute the tests. Installed CPU, CUDA, serialization,
-packaging and strict documentation validation for the exact curated candidate
-remain pending bounded Modal execution. Omitted archive-dependent and mixed-test
-obligations must be reconciled before readiness; a skipped draft CI job is not a
-passing result.
+collection does not execute the tests. The current validation status and original
+receipts are recorded in [the Modal result index](evidence/pr27-modal-validation/report.json).
+Read its status and source binding before claiming a pass. The merge gate requires
+installed CPU regression on Python 3.10 and 3.12, wheel and source builds, strict
+documentation, and 441 selected current CUDA cases on real T4 hardware, including
+fresh CPU serialization consumers and eighteen installed D2 extension cases.
+
+The D2 extension cases compare against the same run's ninety independently checked
+current Normal trajectories. Thirty-six older extension trajectories retain their
+original pre-exact-policy expectations and are explicitly historical; their two
+nontrajectory guards remain current. The manifest lists the archive-linked tests
+omitted from this checkpoint. They remain source-specific obligations in the
+development history and are not counted as passing candidate checks.
+
+GitHub performs a lightweight check of committed Modal receipts, JUnit results,
+raw artifact hashes and the candidate's tracked-file inventory. Any tracked input
+change requires refreshed validation; only the result directory is excluded from
+the binding. This check performs no training, numerical tests or builds itself.
 
 The two-round diagnostic does not establish full-budget train-many feasibility,
 an end-to-end speed improvement, formal E4 cost acceptance, or complete v1.

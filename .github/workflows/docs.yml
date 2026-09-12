@@ -1,12 +1,12 @@
-name: Build v1 Documentation
+name: v1 Documentation Modal Gate
 
 on:
   push:
     branches: [main]
-    paths: ['docs/v1/**', 'mkdocs.yml']
+    paths: ['docs/v1/**', 'mkdocs.yml', '.github/**']
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    paths: ['docs/v1/**', 'mkdocs.yml']
+    paths: ['docs/v1/**', 'mkdocs.yml', '.github/**']
   workflow_dispatch:
 
 permissions:
@@ -14,11 +14,11 @@ permissions:
 
 jobs:
   build:
-    # Draft checkpoint review does not launch heavy validation. Skips are not passes.
-    if: ${{ github.event_name != 'pull_request' || !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v4
-      - run: uv sync --locked
-      - run: uv run --no-sync mkdocs build --strict
+        with:
+          fetch-depth: 0
+      - name: Verify exact-candidate Modal documentation and prerequisite results
+        run: python3 .github/scripts/check_modal_validation.py

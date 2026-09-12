@@ -43,5 +43,6 @@
     "absent_plain_evidence_paths": 0,
     "strict_build": "not_run"
   },
-  "static_review": "No missing source/import dependency found. The original GLM source guard is handled by its exact historical-source wrapper; no additional concrete default-test source-guard blocker found. This is not a runtime result."
+  "static_review": "No missing source/import dependency found. The original GLM source guard is handled by its exact historical-source wrapper; no additional concrete default-test source-guard blocker found. This is not a runtime result.",
+  "inspection_scope": "Historical metadata-only inspection of initial public draft f143eb2; current validation is in docs/v1/evidence/pr27-modal-validation/report.json."
 }

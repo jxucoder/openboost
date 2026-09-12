@@ -24,3 +24,14 @@ mathematically worsening decision. See Sprint 109 for the hosted counterexample.
 
 Test counts do not establish production parity, full v1 coverage, GPU execution,
 predictive quality or adoption. See `v1-sprints/` for progress.
+
+
+The eighteen trajectory cases in each of `test_device_normal_extension_cuda.py`
+and `test_compared_normal_extension_cuda.py` are also historical under
+`--include-historical-normal`. Their topology-only transfer expectations predate
+exact node ordering. Their original assertions remain intact; the current
+`test_checkpoint_normal_extension_cuda.py` replaces them with eighteen settings
+and two repeated fits per setting, exact model/step equality, and explicit policy
+transfer accounting. Run `test_current_normal_cuda.py` first in the same installed
+gate with a new `OPENBOOST_NORMAL_ARTIFACTS` directory. The two nontrajectory
+compared-extension guards remain current. Historical exclusions are not passes.

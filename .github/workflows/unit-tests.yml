@@ -1,4 +1,4 @@
-name: v1 Reference Checks
+name: v1 Modal Validation Gate
 
 on:
   push:
@@ -6,28 +6,18 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   references:
-    # Draft checkpoint review does not launch heavy validation. Skips are not passes.
-    if: ${{ github.event_name != 'pull_request' || !github.event.pull_request.draft }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        python-version: ["3.10", "3.12"]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
-          # Historical execution SHAs are part of the committed evidence contract.
           fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - uses: astral-sh/setup-uv@v4
-      - run: uv sync --locked --extra test
-      - run: uv run --no-sync ruff check src/openboost tests/v1 tests/conftest.py
-      - name: Run current CPU correctness and offline evidence checks
-        run: uv run --no-sync pytest tests/ -m "not gpu and not benchmark" -n 0 -q
-      - run: uv build
+      - name: Verify committed Modal results for this exact candidate
+        run: python3 .github/scripts/check_modal_validation.py

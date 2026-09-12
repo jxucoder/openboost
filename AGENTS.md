@@ -11,10 +11,13 @@ This branch prepares a focused foundation PR. Read
 and the [public checkpoint scope](docs/v1/checkpoint.md) before using older
 execution pointers below. The complete development history and its raw archives
 remain in the original development checkout; omitted tests and pending candidate
-validation are listed in the checkpoint manifest. Keep this PR a draft until
-those gaps are resolved. Heavy CPU tests, builds, numerical audits and CUDA run
-on bounded Modal resources; local work is source/metadata inspection only.
-Creating the PR does not authorize a merge or release.
+validation are listed in the checkpoint manifest. The user explicitly requests
+merging PR 27 after its declared candidate checks pass. Read the
+[merge validation record](v1-sprints/checkpoint-merge-validation.md) for the frozen
+commands and result location. Heavy CPU tests, builds, numerical audits and CUDA
+run on bounded Modal resources; GitHub only verifies committed result bindings.
+Local work is source/metadata inspection only. This merge is not a release or
+engineering-v1 completion.
 
 ## Mission
 

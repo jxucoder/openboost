@@ -44,3 +44,12 @@ Reconcile omitted-test coverage and the retained tests' historical source/artifa
 dependencies. Reconcile source-specific historical observations with the final
 candidate. Full-budget train-many, formal E4, remaining applications and deferred
 E5 remain open. No merge, release or artifact archive publication is included.
+
+
+## User-requested merge follow-up
+
+The user subsequently requested merging PR 27. The
+[merge validation record](checkpoint-merge-validation.md) now governs candidate
+readiness, including the reconciled historical/current test selection. Automatic
+hosted jobs verify source-bound Modal receipts instead of running heavy work.
+The preceding draft metadata observations remain historical, not new runtime passes.

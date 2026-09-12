@@ -255,5 +255,21 @@
       "collected": 80,
       "executed": 0
     }
-  ]
+  ],
+  "merge_followup": {
+    "baseline_public_commit": "f143eb2ee97ff9c8f3ae1e130e49fbf4937b12a3",
+    "production_unchanged": true,
+    "modified_copied_test_helpers": {
+      "tests/conftest.py": "78f962a28914ab5609da9b3b14b0025caf2dd06da2b89048edb1e13e7e19cb05"
+    },
+    "additional_derived_test": {
+      "path": "tests/v1/test_checkpoint_normal_extension_cuda.py",
+      "sha256": "8ae7f997a73dd8433f03ac3b38346193a9a486ac6ab095e707cb341811b6e77c",
+      "cases": 18,
+      "original_test_body_unchanged": true
+    },
+    "historical_extension_cases_deselected": 36,
+    "original_hash_maps_describe": "Initial curated checkpoint; this follow-up records the intentional test-selection changes separately.",
+    "current_validation": "docs/v1/evidence/pr27-modal-validation/report.json"
+  }
 }

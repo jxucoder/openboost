@@ -40,7 +40,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Experimental CUDA storage/operations; GPU training remains unimplemented.
+# Experimental explicit CUDA component and resident recipe interfaces.
 cuda = [
     "numba-cuda>=0.23",
     "cupy-cuda12x>=13.0",

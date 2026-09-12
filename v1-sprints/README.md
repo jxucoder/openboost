@@ -1,7 +1,8 @@
 # OpenBoost v1 execution and reflection
 
 This curated review branch is governed by the
-[foundation checkpoint PR](foundation-checkpoint-pr.md). The older execution
+[foundation checkpoint PR](foundation-checkpoint-pr.md) and its
+[merge validation](checkpoint-merge-validation.md). The older execution
 pointers below describe the retained main history, not the current development
 checkout or a passing v1 completion verdict.
 
