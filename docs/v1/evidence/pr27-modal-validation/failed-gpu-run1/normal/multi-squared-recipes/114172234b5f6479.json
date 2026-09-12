@@ -1,0 +1,1202 @@
+{
+  "case": "1/independent/1/fixed/0.5",
+  "inputs": {
+    "train": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAEEAAAAAAAIAQQAAAAAAAAOi/AAAAAAAA5L8AAAAAAAAEwAAAAAAAAAPAAAAAAAAAE0AAAAAAAAABwA=="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAADAPwAAAAAAANA/AAAAAAAA2D8AAAAAAADgPwAAAAAAAOQ/AAAAAAAA6D8AAAAAAADsPw=="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAPA/AAAAAAAAAAAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA8D8AAAAAAADgPw=="
+      }
+    },
+    "validation": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAAAEAAAAAAAAD4fwAAAAAAAPh/AAAAAAAAAAAAAAAAAAAAQAAAAAAAAPA/AAAAAAAAAEAAAAAAAAAAAAAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAAAAAAAAAAAAAAAAAAAAAADwPwAAAAAAAAAAAAAAAAAAAAA="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "9QEAAAAAAAD8AQAAAAAAAAMCAAAAAAAACgIAAAAAAAARAgAAAAAAABgCAAAAAAAAHwIAAAAAAAAmAgAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAACABMAAAAAAAIARQAAAAAAAgAXAAAAAAAAABsAAAAAAAADqvwAAAAAAAOy/AAAAAABAEEAAAAAAAAAQQA=="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAA3D8AAAAAAADYPwAAAAAAANQ/AAAAAAAA0D8AAAAAAADIPwAAAAAAAMA/AAAAAAAAsD8AAAAAAAAAAA=="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+      }
+    }
+  },
+  "model": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "a",
+      "b"
+    ],
+    "base": [
+      0.529411792755127
+    ],
+    "terms": [
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "a",
+            "b"
+          ],
+          "cuts": [
+            [
+              0.5,
+              1.5
+            ],
+            [
+              0.5
+            ]
+          ],
+          "categories": [
+            null,
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            0,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -2.509669272399151e-08
+            ],
+            [
+              2.77647066116333
+            ],
+            [
+              -2.524064064025879
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0
+          ]
+        ],
+        "coefficient": 0.5
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "a",
+            "b"
+          ],
+          "cuts": [
+            [
+              0.5,
+              1.5
+            ],
+            [
+              0.5
+            ]
+          ],
+          "categories": [
+            null,
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            0,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.01328450720757246
+            ],
+            [
+              1.6658823490142822
+            ],
+            [
+              -1.491492509841919
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0
+          ]
+        ],
+        "coefficient": 0.5
+      }
+    ],
+    "classes": null
+  },
+  "best": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "a",
+      "b"
+    ],
+    "base": [
+      0.529411792755127
+    ],
+    "terms": [
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "a",
+            "b"
+          ],
+          "cuts": [
+            [
+              0.5,
+              1.5
+            ],
+            [
+              0.5
+            ]
+          ],
+          "categories": [
+            null,
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            0,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -2.509669272399151e-08
+            ],
+            [
+              2.77647066116333
+            ],
+            [
+              -2.524064064025879
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0
+          ]
+        ],
+        "coefficient": 0.5
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "a",
+            "b"
+          ],
+          "cuts": [
+            [
+              0.5,
+              1.5
+            ],
+            [
+              0.5
+            ]
+          ],
+          "categories": [
+            null,
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            0,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.01328450720757246
+            ],
+            [
+              1.6658823490142822
+            ],
+            [
+              -1.491492509841919
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0
+          ]
+        ],
+        "coefficient": 0.5
+      }
+    ],
+    "classes": null
+  },
+  "comparisons": [
+    {
+      "arrays": [
+        [
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ]
+        ],
+        [
+          [
+            1.917647123336792
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            -0.7326202392578125
+          ]
+        ],
+        [
+          [
+            4.0
+          ],
+          [
+            4.125
+          ],
+          [
+            -0.75
+          ],
+          [
+            -0.625
+          ],
+          [
+            -2.5
+          ],
+          [
+            -2.375
+          ],
+          [
+            4.75
+          ],
+          [
+            -2.125
+          ]
+        ],
+        [
+          [
+            0.0
+          ],
+          [
+            0.125
+          ],
+          [
+            0.25
+          ],
+          [
+            0.375
+          ],
+          [
+            0.5
+          ],
+          [
+            0.625
+          ],
+          [
+            0.75
+          ],
+          [
+            0.875
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          0.0,
+          2.0,
+          1.0,
+          1.0,
+          0.5
+        ]
+      ],
+      "result": {
+        "lower": -3.453402510741017,
+        "upper": -3.4534025107410167,
+        "method": "multi-squared-polynomial-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "exact": "-516399645369279/149533581377536"
+    },
+    {
+      "arrays": [
+        [
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ]
+        ],
+        [
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            1.917647123336792
+          ]
+        ],
+        [
+          [
+            -2.5625
+          ],
+          [
+            4.375
+          ],
+          [
+            -2.6875
+          ],
+          [
+            -2.75
+          ],
+          [
+            -0.8125
+          ],
+          [
+            -0.875
+          ],
+          [
+            4.0625
+          ],
+          [
+            4.0
+          ]
+        ],
+        [
+          [
+            0.4375
+          ],
+          [
+            0.375
+          ],
+          [
+            0.3125
+          ],
+          [
+            0.25
+          ],
+          [
+            0.1875
+          ],
+          [
+            0.125
+          ],
+          [
+            0.0625
+          ],
+          [
+            0.0
+          ]
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -3.1005496165583573,
+        "upper": -3.1005496165583573,
+        "method": "multi-squared-polynomial-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "exact": "-872727131110997/281474976710656"
+    },
+    {
+      "arrays": [
+        [
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ],
+          [
+            0.529411792755127
+          ]
+        ],
+        [
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            1.917647123336792
+          ]
+        ],
+        [
+          [
+            -2.5625
+          ],
+          [
+            4.375
+          ],
+          [
+            -2.6875
+          ],
+          [
+            -2.75
+          ],
+          [
+            -0.8125
+          ],
+          [
+            -0.875
+          ],
+          [
+            4.0625
+          ],
+          [
+            4.0
+          ]
+        ],
+        [
+          [
+            0.4375
+          ],
+          [
+            0.375
+          ],
+          [
+            0.3125
+          ],
+          [
+            0.25
+          ],
+          [
+            0.1875
+          ],
+          [
+            0.125
+          ],
+          [
+            0.0625
+          ],
+          [
+            0.0
+          ]
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -3.1005496165583573,
+        "upper": -3.1005496165583573,
+        "method": "multi-squared-polynomial-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "exact": "-872727131110997/281474976710656"
+    },
+    {
+      "arrays": [
+        [
+          [
+            1.917647123336792
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            -0.7326202392578125
+          ]
+        ],
+        [
+          [
+            2.7505884170532227
+          ],
+          [
+            2.7505884170532227
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            2.7505884170532227
+          ],
+          [
+            -1.478366494178772
+          ]
+        ],
+        [
+          [
+            4.0
+          ],
+          [
+            4.125
+          ],
+          [
+            -0.75
+          ],
+          [
+            -0.625
+          ],
+          [
+            -2.5
+          ],
+          [
+            -2.375
+          ],
+          [
+            4.75
+          ],
+          [
+            -2.125
+          ]
+        ],
+        [
+          [
+            0.0
+          ],
+          [
+            0.125
+          ],
+          [
+            0.25
+          ],
+          [
+            0.375
+          ],
+          [
+            0.5
+          ],
+          [
+            0.625
+          ],
+          [
+            0.75
+          ],
+          [
+            0.875
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          0.0,
+          2.0,
+          1.0,
+          1.0,
+          0.5
+        ]
+      ],
+      "result": {
+        "lower": -1.2254742834079275,
+        "upper": -1.2254742834079273,
+        "method": "multi-squared-polynomial-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "exact": "-2931992935744911/2392537302040576"
+    },
+    {
+      "arrays": [
+        [
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            1.917647123336792
+          ]
+        ],
+        [
+          [
+            -1.478366494178772
+          ],
+          [
+            2.7505884170532227
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            2.7505884170532227
+          ],
+          [
+            2.7505884170532227
+          ]
+        ],
+        [
+          [
+            -2.5625
+          ],
+          [
+            4.375
+          ],
+          [
+            -2.6875
+          ],
+          [
+            -2.75
+          ],
+          [
+            -0.8125
+          ],
+          [
+            -0.875
+          ],
+          [
+            4.0625
+          ],
+          [
+            4.0
+          ]
+        ],
+        [
+          [
+            0.4375
+          ],
+          [
+            0.375
+          ],
+          [
+            0.3125
+          ],
+          [
+            0.25
+          ],
+          [
+            0.1875
+          ],
+          [
+            0.125
+          ],
+          [
+            0.0625
+          ],
+          [
+            0.0
+          ]
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -1.030483426599857,
+        "upper": -1.030483426599857,
+        "method": "multi-squared-polynomial-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "exact": "-1160221194011647/1125899906842624"
+    },
+    {
+      "arrays": [
+        [
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            -0.7326202392578125
+          ],
+          [
+            1.917647123336792
+          ],
+          [
+            1.917647123336792
+          ]
+        ],
+        [
+          [
+            -1.478366494178772
+          ],
+          [
+            2.7505884170532227
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            -1.478366494178772
+          ],
+          [
+            2.7505884170532227
+          ],
+          [
+            2.7505884170532227
+          ]
+        ],
+        [
+          [
+            -2.5625
+          ],
+          [
+            4.375
+          ],
+          [
+            -2.6875
+          ],
+          [
+            -2.75
+          ],
+          [
+            -0.8125
+          ],
+          [
+            -0.875
+          ],
+          [
+            4.0625
+          ],
+          [
+            4.0
+          ]
+        ],
+        [
+          [
+            0.4375
+          ],
+          [
+            0.375
+          ],
+          [
+            0.3125
+          ],
+          [
+            0.25
+          ],
+          [
+            0.1875
+          ],
+          [
+            0.125
+          ],
+          [
+            0.0625
+          ],
+          [
+            0.0
+          ]
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -1.030483426599857,
+        "upper": -1.030483426599857,
+        "method": "multi-squared-polynomial-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "exact": "-1160221194011647/1125899906842624"
+    }
+  ],
+  "steps": [
+    {
+      "round_index": 0,
+      "before_version": 0,
+      "after_version": 1,
+      "trials": [
+        {
+          "coefficient": 0.5,
+          "loss": 2.082929669189779,
+          "validation_score": 1.7859123325013506,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -3.453402510741017,
+            "upper": -3.4534025107410167,
+            "method": "multi-squared-polynomial-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 2.082929669189779,
+      "validation_score": 1.7859123325013506,
+      "best_score": 1.7859123325013506,
+      "validation_change": {
+        "lower": -3.1005496165583573,
+        "upper": -3.1005496165583573,
+        "method": "multi-squared-polynomial-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    },
+    {
+      "round_index": 1,
+      "before_version": 1,
+      "after_version": 2,
+      "trials": [
+        {
+          "coefficient": 0.5,
+          "loss": 0.8574553857818518,
+          "validation_score": 0.7554289059014936,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -1.2254742834079275,
+            "upper": -1.2254742834079273,
+            "method": "multi-squared-polynomial-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 0.8574553857818518,
+      "validation_score": 0.7554289059014936,
+      "best_score": 0.7554289059014936,
+      "validation_change": {
+        "lower": -1.030483426599857,
+        "upper": -1.030483426599857,
+        "method": "multi-squared-polynomial-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    }
+  ],
+  "stop": {
+    "rounds": 2,
+    "patience": null,
+    "min_delta": 0.0,
+    "reference_score": 0.7554289059014936,
+    "last_score": 0.7554289059014936,
+    "completed_rounds": 2,
+    "stale_rounds": 0
+  }
+}

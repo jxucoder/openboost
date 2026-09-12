@@ -18,6 +18,7 @@ BUILD_PACKAGES = ["hatchling==1.27.0", "pathspec==1.1.1", "trove-classifiers==20
 RETURN_LIMIT = 64 * 1024**2
 CONTROLLER_PYTHON = "3.12"
 MANAGED_PYTHON_DIRECTORY = "/opt/pr27-python"
+VALIDATION_ENVIRONMENT = "/tmp/pr27-environment"
 CPU_SKIPS = [
     dict(id="tests.v1.test_author_linux_worker::test_real_packet_is_staged_file_by_file_and_sdk_can_construct_image",
          reason="could not import 'modal': No module named 'modal'"),
@@ -147,9 +148,11 @@ def remote_phase(p):
     started = time.monotonic()
     deadline = started + p["resources"]["work_seconds"]
     out, repo = Path("/tmp/pr27-results"), Path("/tmp/pr27-source")
+    environment = Path(VALIDATION_ENVIRONMENT)
     out.mkdir()
     env = dict(os.environ, GIT_TERMINAL_PROMPT="0", GIT_CONFIG_GLOBAL="/dev/null", GIT_CONFIG_SYSTEM="/dev/null",
                UV_PYTHON_DOWNLOADS="never", UV_PYTHON_INSTALL_DIR=MANAGED_PYTHON_DIRECTORY,
+               UV_PROJECT_ENVIRONMENT=str(environment),
                UV_NO_PROGRESS="1", PYTHONDONTWRITEBYTECODE="1",
                OPENBLAS_CORETYPE="HASWELL",
                NPY_DISABLE_CPU_FEATURES="AVX512F,AVX512CD,AVX512_KNL,AVX512_KNM,AVX512_SKX,AVX512_CLX,AVX512_CNL,AVX512_ICL,AVX512_SPR")
@@ -266,21 +269,21 @@ def remote_phase(p):
         # Only add repository benchmark/test namespaces, never repo/src. The
         # current core stays installed; explicit historical snapshots are separate.
         code = "import pathlib,sys;sys.path.insert(0,sys.argv.pop(1));import openboost;assert 'site-packages' in pathlib.Path(openboost.__file__).parts;import pytest;raise SystemExit(pytest.main(sys.argv[1:]))"
-        return [str(repo / ".venv/bin/python"), "-I", "-c", code, str(repo), *targets,
+        return [str(environment / "bin/python"), "-I", "-c", code, str(repo), *targets,
                 "-o", "addopts=", "-n", "0", "-q", *extra]
 
     def installed_check(name):
         code = """
 import hashlib,importlib.metadata,json,pathlib,platform,sys
 import openboost
-root=pathlib.Path(openboost.__file__).parent
-assert 'site-packages' in root.parts and not root.is_relative_to(pathlib.Path(sys.argv[1])/'src')
+root=pathlib.Path(openboost.__file__).resolve().parent
+assert 'site-packages' in root.parts and not root.is_relative_to(pathlib.Path(sys.argv[1]).resolve())
 actual={'src/openboost/'+str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in root.rglob('*.py')}
 expected={'src/openboost/'+str(p.relative_to(pathlib.Path(sys.argv[1])/'src/openboost')):hashlib.sha256(p.read_bytes()).hexdigest() for p in (pathlib.Path(sys.argv[1])/'src/openboost').rglob('*.py')}
 assert actual == expected and len(actual)==63
 print(json.dumps({'installed_sources':actual,'packages':{d.metadata['Name']:d.version for d in importlib.metadata.distributions()},'installed_path':str(root),'worker_python':platform.python_version()}))
 """
-        value = json.loads(command(name, [str(repo / ".venv/bin/python"), "-I", "-c", code, str(repo)], cwd=repo))
+        value = json.loads(command(name, [str(environment / "bin/python"), "-I", "-c", code, str(repo)], cwd=repo))
         actual_python = validate_child_version(p["phase"], value.pop("worker_python"))
         if report["platform"]["python"] not in (None, actual_python):
             raise ValueError("installed child interpreter changed during validation")
@@ -302,9 +305,13 @@ import importlib.metadata,json,pathlib,sys
 import openboost
 import ob_cohort_splits.device as extension
 assert hasattr(extension,'DeviceCohortLearner')
-assert 'site-packages' in pathlib.Path(extension.__file__).parts
+checkout=pathlib.Path(sys.argv[1]).resolve()
+extension_path=pathlib.Path(extension.__file__).resolve()
+core_path=pathlib.Path(openboost.__file__).resolve()
+assert 'site-packages' in extension_path.parts and not extension_path.is_relative_to(checkout)
+assert 'site-packages' in core_path.parts and not core_path.is_relative_to(checkout)
 source=pathlib.Path(sys.argv[1])/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
-assert pathlib.Path(extension.__file__).read_bytes()==source.read_bytes()
+assert extension_path.read_bytes()==source.read_bytes()
 assert importlib.metadata.version('ob-cohort-splits')=='0.1.0'
 print(json.dumps({'public_core':openboost.__file__,'installed_extension':extension.__file__}))
 """
@@ -344,7 +351,7 @@ print(json.dumps({'packages':actual,'installed_core':openboost.__file__}))
         if command("clean-before", ["git", "status", "--porcelain"], cwd=repo).strip():
             raise ValueError("clone unexpectedly dirty")
         command("sync", ["uv", "sync", "--locked", "--extra", "test", "--no-install-project", "--python", child_selector], cwd=repo)
-        python = str(repo / ".venv/bin/python")
+        python = str(environment / "bin/python")
         child_version = command("child-interpreter", [python, "-I", "-c", "import platform;print(platform.python_version())"], cwd=repo).decode().strip()
         report["platform"]["python"] = validate_child_version(p["phase"], child_version)
         command("build-tools", ["uv", "pip", "install", "--python", python, "--no-deps", *p["build_packages"]], cwd=repo)
@@ -357,10 +364,10 @@ print(json.dumps({'packages':actual,'installed_core':openboost.__file__}))
         installed_check("installed-before")
         command("pip-freeze", ["uv", "pip", "freeze", "--python", python], cwd=repo)
         if p["phase"] != "gpu":
-            job("lint", [str(repo / ".venv/bin/ruff"), "check", "src/openboost", "tests/v1", "tests/conftest.py"])
+            job("lint", [str(environment / "bin/ruff"), "check", "src/openboost", "tests/v1", "tests/conftest.py"])
             job(p["phase"], pytest_command(["tests/"], ["-m", "not gpu and not benchmark", "--junitxml=" + str(out / "cpu.xml")]), junit="cpu.xml")
             if p["phase"] == "cpu312":
-                job("docs", [str(repo / ".venv/bin/mkdocs"), "build", "--strict", "--site-dir", "/tmp/pr27-site"])
+                job("docs", [str(environment / "bin/mkdocs"), "build", "--strict", "--site-dir", "/tmp/pr27-site"])
                 site = Path("/tmp/pr27-site")
                 write("docs-files.json", {str(path.relative_to(site)):hashlib.sha256(path.read_bytes()).hexdigest() for path in site.rglob("*") if path.is_file()})
                 # This changes only optional packages, then reinstalls the same

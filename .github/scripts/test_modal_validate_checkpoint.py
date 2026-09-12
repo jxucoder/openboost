@@ -2,6 +2,7 @@
 
 import ast
 import copy
+import io
 import json
 import os
 import runpy
@@ -9,7 +10,9 @@ import sys
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
+from contextlib import redirect_stdout
 from pathlib import Path
+from types import ModuleType
 from unittest.mock import patch
 
 PATH = Path(__file__).with_name("modal_validate_checkpoint.py")
@@ -166,6 +169,78 @@ class ExactSkipTests(unittest.TestCase):
         value = MODULE["allowed_job_skips"]("cpu312")
         value[0]["reason"] = "changed"
         self.assertNotEqual(MODULE["CPU_SKIPS"][0]["reason"], "changed")
+
+
+class InstalledLocationTests(unittest.TestCase):
+    def test_actual_sync_environment_overrides_inherited_project_environment(self):
+        tree = ast.parse(PATH.read_text())
+        remote = next(node for node in tree.body
+                      if isinstance(node, ast.FunctionDef) and node.name == "remote_phase")
+        assignment = next(node for node in remote.body if isinstance(node, ast.Assign)
+                          and any(isinstance(target, ast.Name) and target.id == "env"
+                                  for target in node.targets))
+        environment = Path(MODULE["VALIDATION_ENVIRONMENT"])
+        with patch.dict(os.environ, UV_PROJECT_ENVIRONMENT="/tmp/pr27-source/.venv"):
+            actual = eval(compile(ast.Expression(assignment.value), "worker-environment", "eval"),
+                          dict(os=os, environment=environment,
+                               MANAGED_PYTHON_DIRECTORY=MODULE["MANAGED_PYTHON_DIRECTORY"]))
+        self.assertEqual(actual["UV_PROJECT_ENVIRONMENT"], "/tmp/pr27-environment")
+        self.assertFalse(environment.is_relative_to("/tmp/pr27-source"))
+
+    def readiness(self, *, core_inside=False, extension_inside=False, extension_link=False):
+        tree = ast.parse(PATH.read_text())
+        prepare = next(node for node in ast.walk(tree)
+                       if isinstance(node, ast.FunctionDef) and node.name == "prepare_gpu_consumers")
+        ready = next(ast.literal_eval(node.value) for node in ast.walk(prepare)
+                     if isinstance(node, ast.Assign) and any(isinstance(target, ast.Name)
+                     and target.id == "ready" for target in node.targets))
+        with tempfile.TemporaryDirectory(prefix="pr27-location-metadata-") as directory:
+            root = Path(directory)
+            checkout, external = root / "source", root / "environment"
+            source = checkout / "examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py"
+            source.parent.mkdir(parents=True)
+            source.write_text("# prescribed fixture bytes\n")
+            core_root = checkout / ".venv" if core_inside else external
+            extension_root = checkout / ".venv" if extension_inside or extension_link else external
+            core = core_root / "lib/python3.12/site-packages/openboost/__init__.py"
+            extension = extension_root / "lib/python3.12/site-packages/ob_cohort_splits/device.py"
+            core.parent.mkdir(parents=True, exist_ok=True)
+            core.write_text("# metadata fixture only\n")
+            extension.parent.mkdir(parents=True, exist_ok=True)
+            extension.write_bytes(source.read_bytes())
+            if extension_link:
+                link = external / "lib/python3.12/site-packages/ob_cohort_splits/device.py"
+                link.parent.mkdir(parents=True, exist_ok=True)
+                link.symlink_to(extension)
+                extension = link
+            public = ModuleType("openboost")
+            public.__file__ = str(core)
+            package = ModuleType("ob_cohort_splits")
+            package.__path__ = []
+            device = ModuleType("ob_cohort_splits.device")
+            device.__file__ = str(extension)
+            device.DeviceCohortLearner = object()
+            package.device = device
+            modules = {"openboost": public, "ob_cohort_splits": package,
+                       "ob_cohort_splits.device": device}
+            with patch.dict(sys.modules, modules), patch.object(sys, "argv", ["-c", str(checkout)]), \
+                    patch("importlib.metadata.version", return_value="0.1.0"), redirect_stdout(io.StringIO()):
+                exec(compile(ready, "installed-entrypoints", "exec"), {})
+
+    def test_actual_readiness_accepts_external_installed_modules(self):
+        self.readiness()
+
+    def test_actual_readiness_rejects_original_extension_inside_checkout(self):
+        with self.assertRaises(AssertionError):
+            self.readiness(extension_inside=True)
+
+    def test_actual_readiness_rejects_core_inside_checkout(self):
+        with self.assertRaises(AssertionError):
+            self.readiness(core_inside=True)
+
+    def test_actual_readiness_resolves_extension_symlink_before_custody_check(self):
+        with self.assertRaises(AssertionError):
+            self.readiness(extension_link=True)
 
 
 if __name__ == "__main__":

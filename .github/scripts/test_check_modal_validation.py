@@ -1,5 +1,6 @@
 """Tiny stdlib-only receipt controls: no validation jobs or numerical imports."""
 
+import ast
 import copy
 import hashlib
 import importlib.util
@@ -133,6 +134,28 @@ class Check(unittest.TestCase):
         expected = [value.split("=", 1)[0] + "=" for value in argv
                     if value.startswith(("--basetemp=", "--junitxml="))]
         self.assertEqual(observed, expected)
+
+    def test_all_pinned_executables_are_outside_checkout(self):
+        for name in set().union(*gate.PHASES.values()):
+            with self.subTest(name=name):
+                argv = gate.expected_command(name, self.actual_policy)
+                executable = argv[argv.index("--python") + 1] if "--python" in argv else argv[0]
+                self.assertTrue(executable.startswith("/tmp/pr27-environment/bin/"))
+                self.assertFalse(Path(executable).is_relative_to("/tmp/pr27-source"))
+
+    def test_actual_runner_pytest_commands_match_checked_external_environment(self):
+        runner = Path(__file__).with_name("modal_validate_checkpoint.py")
+        node = next(node for node in ast.walk(ast.parse(runner.read_text()))
+                    if isinstance(node, ast.FunctionDef) and node.name == "pytest_command")
+        namespace = dict(repo=Path("/tmp/pr27-source"), environment=Path("/tmp/pr27-environment"))
+        exec(compile(ast.Module(body=[node], type_ignores=[]), "actual-pytest-command", "exec"), namespace)
+        for name in ("cpu310", "cpu312", "gpu", "gpu-prerequisites"):
+            with self.subTest(name=name):
+                expected = gate.expected_command(name, self.actual_policy)
+                start = expected.index("-o")
+                targets = expected[5:start]
+                extra = expected[start + 5:]
+                self.assertEqual(namespace["pytest_command"](targets, extra), expected)
 
     def test_changed_source_fails(self):
         self.publish()

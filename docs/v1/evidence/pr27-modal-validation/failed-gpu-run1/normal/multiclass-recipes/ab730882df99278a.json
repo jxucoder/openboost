@@ -1,0 +1,4553 @@
+{
+  "case": "3/1/backtracking/8.0",
+  "inputs": {
+    "train": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAABRAAAAAAAAAGEAAAAAAAAD4fwAAAAAAACBA"
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          9
+        ],
+        "data_base64": "AAAAAAAAAAABAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAAEAAAAAAAAAAUAAAAAAAAABgAAAAAAAAAHAAAAAAAAAAgAAAAAAAAA"
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAAAEAAAAAAAAAAQAAAAAAAAABA"
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          3
+        ],
+        "data_base64": "AAAAAAAA1L8AAAAAAADAPwAAAAAAAMC/AAAAAAAA1D8AAAAAAACwPwAAAAAAAMi/AAAAAAAA0D8AAAAAAAAAAAAAAAAAANC/AAAAAAAAyD8AAAAAAACwvwAAAAAAANS/AAAAAAAAwD8AAAAAAADAvwAAAAAAANQ/AAAAAAAAsD8AAAAAAADIvwAAAAAAANA/AAAAAAAAAAAAAAAAAADQvwAAAAAAAMg/AAAAAAAAsL8AAAAAAADUvwAAAAAAAMA/AAAAAAAAwL8AAAAAAADUPwAAAAAAALA/"
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          9
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhAAAAAAAAAEEAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAAPA/"
+      }
+    },
+    "validation": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAAAAAAAAAACBAAAAAAAAA+H8AAAAAAAAYQAAAAAAAABRAAAAAAAAAEEAAAAAAAAAIQAAAAAAAAABA"
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          9
+        ],
+        "data_base64": "ZAAAAAAAAABlAAAAAAAAAGYAAAAAAAAAZwAAAAAAAABoAAAAAAAAAGkAAAAAAAAAagAAAAAAAABrAAAAAAAAAGwAAAAAAAAA"
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAAAA"
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          3
+        ],
+        "data_base64": "AAAAAAAAxD8AAAAAAACgPwAAAAAAALi/AAAAAAAAxL8AAAAAAACwPwAAAAAAALC/AAAAAAAAsL8AAAAAAADEPwAAAAAAAKA/AAAAAAAAoL8AAAAAAADEvwAAAAAAALA/AAAAAAAAAAAAAAAAAADAvwAAAAAAALg/AAAAAAAAoD8AAAAAAAC4vwAAAAAAAMA/AAAAAAAAsD8AAAAAAACwvwAAAAAAAMQ/AAAAAAAAuD8AAAAAAACgvwAAAAAAAMS/AAAAAAAAwD8AAAAAAAAAAAAAAAAAAMC/"
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          9
+        ],
+        "data_base64": "AAAAAAAAAEAAAAAAAAAQQAAAAAAAABhAAAAAAAAAIEAAAAAAAAAAQAAAAAAAABBAAAAAAAAAGEAAAAAAAAAgQAAAAAAAAABA"
+      }
+    }
+  },
+  "model": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "terms": [
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.15591131150722504
+            ],
+            [
+              0.9508597254753113
+            ],
+            [
+              -0.6791368722915649
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 2.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.06414342671632767
+            ],
+            [
+              -0.5909639000892639
+            ],
+            [
+              0.6686310768127441
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 2.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.1017821803689003
+            ],
+            [
+              -0.6072385311126709
+            ],
+            [
+              1.0089058876037598
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 2.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.09747173637151718
+            ],
+            [
+              0.2313004583120346
+            ],
+            [
+              -0.30323556065559387
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.08319784700870514
+            ],
+            [
+              0.2500923275947571
+            ],
+            [
+              -0.4375220239162445
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.16513611376285553
+            ],
+            [
+              -0.30098822712898254
+            ],
+            [
+              0.4605579078197479
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.02960324101150036
+            ],
+            [
+              0.20818452537059784
+            ],
+            [
+              -0.23034481704235077
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.055885009467601776
+            ],
+            [
+              0.15153837203979492
+            ],
+            [
+              -0.29475414752960205
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.09189794957637787
+            ],
+            [
+              -0.23242124915122986
+            ],
+            [
+              0.31673911213874817
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 1.0
+      }
+    ],
+    "classes": [
+      "class-0",
+      "class-1",
+      "class-2"
+    ]
+  },
+  "best": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "terms": [
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.15591131150722504
+            ],
+            [
+              0.9508597254753113
+            ],
+            [
+              -0.6791368722915649
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 2.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.06414342671632767
+            ],
+            [
+              -0.5909639000892639
+            ],
+            [
+              0.6686310768127441
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 2.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.1017821803689003
+            ],
+            [
+              -0.6072385311126709
+            ],
+            [
+              1.0089058876037598
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 2.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.09747173637151718
+            ],
+            [
+              0.2313004583120346
+            ],
+            [
+              -0.30323556065559387
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.08319784700870514
+            ],
+            [
+              0.2500923275947571
+            ],
+            [
+              -0.4375220239162445
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.16513611376285553
+            ],
+            [
+              -0.30098822712898254
+            ],
+            [
+              0.4605579078197479
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.02960324101150036
+            ],
+            [
+              0.20818452537059784
+            ],
+            [
+              -0.23034481704235077
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.055885009467601776
+            ],
+            [
+              0.15153837203979492
+            ],
+            [
+              -0.29475414752960205
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 1.0
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.09189794957637787
+            ],
+            [
+              -0.23242124915122986
+            ],
+            [
+              0.31673911213874817
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 1.0
+      }
+    ],
+    "classes": [
+      "class-0",
+      "class-1",
+      "class-2"
+    ]
+  },
+  "steps": [
+    {
+      "round_index": 0,
+      "channels": [
+        0,
+        1,
+        2
+      ],
+      "before_version": 0,
+      "after_version": 1,
+      "trials": [
+        {
+          "coefficient": 8.0,
+          "loss": 0.009821121848584228,
+          "validation_score": 0.012743213596943848,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": -7.077247477095877,
+            "upper": 11.999810444733564,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "contains_zero",
+            "unchanged": false
+          }
+        },
+        {
+          "coefficient": 4.0,
+          "loss": 0.04108277332680604,
+          "validation_score": 0.05174987320186322,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": -3.538596262442293,
+            "upper": 1.2306407414710556,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "contains_zero",
+            "unchanged": false
+          }
+        },
+        {
+          "coefficient": 2.0,
+          "loss": 0.15136607038967456,
+          "validation_score": 0.17705059518761243,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -1.7670503158136435,
+            "upper": -0.576995749488403,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 0.15136607038967456,
+      "validation_score": 0.17705059518761243,
+      "best_score": 0.17705059518761243,
+      "validation_change": {
+        "lower": -1.8032401594635343,
+        "upper": -0.6423817688796344,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    },
+    {
+      "round_index": 1,
+      "channels": [
+        0,
+        1,
+        2
+      ],
+      "before_version": 1,
+      "after_version": 2,
+      "trials": [
+        {
+          "coefficient": 8.0,
+          "loss": 0.014343521750250752,
+          "validation_score": 0.011524519184972578,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": -0.7187681217651288,
+            "upper": 3.2498182626855168,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "contains_zero",
+            "unchanged": false
+          }
+        },
+        {
+          "coefficient": 4.0,
+          "loss": 0.022548069858999303,
+          "validation_score": 0.021638652915521826,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": -0.3577546960437241,
+            "upper": 0.6327451279968699,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "contains_zero",
+            "unchanged": false
+          }
+        },
+        {
+          "coefficient": 2.0,
+          "loss": 0.04906398539102698,
+          "validation_score": 0.053829652746270315,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": -0.17436696830698145,
+            "upper": 0.062460513496096465,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "contains_zero",
+            "unchanged": false
+          }
+        },
+        {
+          "coefficient": 1.0,
+          "loss": 0.08412129101245312,
+          "validation_score": 0.09635953415807023,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -0.08427038999477901,
+            "upper": -0.0352502831627632,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 0.08412129101245312,
+      "validation_score": 0.09635953415807023,
+      "best_score": 0.09635953415807023,
+      "validation_change": {
+        "lower": -0.10046822007828506,
+        "upper": -0.04907684170997586,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    },
+    {
+      "round_index": 2,
+      "channels": [
+        0,
+        1,
+        2
+      ],
+      "before_version": 2,
+      "after_version": 3,
+      "trials": [
+        {
+          "coefficient": 8.0,
+          "loss": 0.00959025417329438,
+          "validation_score": 0.008294379117760063,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": -0.27381687368045127,
+            "upper": 1.7023070295944998,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "contains_zero",
+            "unchanged": false
+          }
+        },
+        {
+          "coefficient": 4.0,
+          "loss": 0.020893346574791083,
+          "validation_score": 0.021025859956206854,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": -0.13473738033092866,
+            "upper": 0.3570423530626481,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "contains_zero",
+            "unchanged": false
+          }
+        },
+        {
+          "coefficient": 2.0,
+          "loss": 0.039056683693878824,
+          "validation_score": 0.04246703438309461,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": -0.06469413717438842,
+            "upper": 0.036259594404578724,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "contains_zero",
+            "unchanged": false
+          }
+        },
+        {
+          "coefficient": 1.0,
+          "loss": 0.056534602369000965,
+          "validation_score": 0.06334417437942136,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -0.03162282278901601,
+            "upper": -0.01742435764914047,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 0.056534602369000965,
+      "validation_score": 0.06334417437942136,
+      "best_score": 0.06334417437942136,
+      "validation_change": {
+        "lower": -0.03784714575868911,
+        "upper": -0.02294838852520081,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    }
+  ],
+  "stop": {
+    "rounds": 3,
+    "patience": 2,
+    "min_delta": 0.01,
+    "reference_score": 0.06334417437942136,
+    "last_score": 0.06334417437942136,
+    "completed_rounds": 3,
+    "stale_rounds": 0
+  },
+  "comparisons": [
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            7.60687780380249,
+            -4.727711200714111,
+            -4.857908248901367
+          ],
+          [
+            7.60687780380249,
+            -4.727711200714111,
+            -4.857908248901367
+          ],
+          [
+            7.60687780380249,
+            -4.727711200714111,
+            -4.857908248901367
+          ],
+          [
+            -5.4330949783325195,
+            5.349048614501953,
+            -4.857908248901367
+          ],
+          [
+            -5.4330949783325195,
+            5.349048614501953,
+            -4.857908248901367
+          ],
+          [
+            -5.4330949783325195,
+            5.349048614501953,
+            -4.857908248901367
+          ],
+          [
+            -5.4330949783325195,
+            5.349048614501953,
+            8.071247100830078
+          ],
+          [
+            -5.4330949783325195,
+            -4.727711200714111,
+            8.071247100830078
+          ],
+          [
+            -5.4330949783325195,
+            5.349048614501953,
+            8.071247100830078
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -7.077247477095877,
+        "upper": 11.999810444733564,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "contains_zero",
+        "unchanged": false
+      },
+      "decimal260": "-1.0214337833168482961408406134600983243424384563476309491268943943239668730924325587709496344698626252897420977589513628006079190400617809832220953388929304395816649512922090648502023968008041036834167032921199529622691766463087714274387518551324273684072132865"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            3.803438901901245,
+            -2.3638556003570557,
+            -2.4289541244506836
+          ],
+          [
+            3.803438901901245,
+            -2.3638556003570557,
+            -2.4289541244506836
+          ],
+          [
+            3.803438901901245,
+            -2.3638556003570557,
+            -2.4289541244506836
+          ],
+          [
+            -2.7165474891662598,
+            2.6745243072509766,
+            -2.4289541244506836
+          ],
+          [
+            -2.7165474891662598,
+            2.6745243072509766,
+            -2.4289541244506836
+          ],
+          [
+            -2.7165474891662598,
+            2.6745243072509766,
+            -2.4289541244506836
+          ],
+          [
+            -2.7165474891662598,
+            2.6745243072509766,
+            4.035623550415039
+          ],
+          [
+            -2.7165474891662598,
+            -2.3638556003570557,
+            4.035623550415039
+          ],
+          [
+            -2.7165474891662598,
+            2.6745243072509766,
+            4.035623550415039
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -3.538596262442293,
+        "upper": 1.2306407414710556,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "contains_zero",
+        "unchanged": false
+      },
+      "decimal260": "-0.99017213183862649131303904112873446963424613431776846206307070615009213309428585893989349151583678802649189969334565057714352425887093654873712293325142641358838600961394496162856042717727531742651705627793015915319590699529259500444207183360256660997119511952"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            -1.1819278001785278,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -1.7670503158136435,
+        "upper": -0.576995749488403,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.87988883477575798167669003322850310106289287936793003554455532289514018356834581968578123826194800174044749166116059813874757791665984109123681742991097050729798494914138094391881215364700172235502300023998286352412988868372900948868470769052566504449128501819"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            -1.1819278001785278,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -1.8032401594635343,
+        "upper": -0.6423817688796344,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.92789187361846625965036617361491438631652236201625952604969601654094889386097559592648024911324490314074222684931872053394384445334683791248024052987658333835107200563925648179862414894108751885448317669100848612454405210472031392710720511720801148318331078760"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            -1.1819278001785278,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -1.8032401594635343,
+        "upper": -0.6423817688796344,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.92789187361846625965036617361491438631652236201625952604969601654094889386097559592648024911324490314074222684931872053394384445334683791248024052987658333835107200563925648179862414894108751885448317669100848612454405210472031392710720511720801148318331078760"
+    },
+    {
+      "inputs": [
+        [
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            -1.1819278001785278,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ]
+        ],
+        [
+          [
+            3.7521231174468994,
+            0.8188108205795288,
+            -3.622382879257202
+          ],
+          [
+            3.7521231174468994,
+            0.8188108205795288,
+            -3.622382879257202
+          ],
+          [
+            3.7521231174468994,
+            0.8188108205795288,
+            -3.622382879257202
+          ],
+          [
+            -3.784158229827881,
+            3.338000774383545,
+            -3.622382879257202
+          ],
+          [
+            -3.784158229827881,
+            3.338000774383545,
+            -3.622382879257202
+          ],
+          [
+            -3.784158229827881,
+            3.338000774383545,
+            -3.622382879257202
+          ],
+          [
+            -3.784158229827881,
+            -2.1629140377044678,
+            5.702275276184082
+          ],
+          [
+            -3.784158229827881,
+            -4.682104110717773,
+            5.702275276184082
+          ],
+          [
+            -3.784158229827881,
+            -2.1629140377044678,
+            5.702275276184082
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.7187681217651288,
+        "upper": 3.2498182626855168,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "contains_zero",
+        "unchanged": false
+      },
+      "decimal260": "-0.13702254863942379262070460562710471078879022545984671377209540679869152543485290304673577752802989615449322371453308517100670383535534322877991764325763407410716479864817727482149192823655774424947003749531843687221588921943800008476558436438507903575265576708"
+    },
+    {
+      "inputs": [
+        [
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            -1.1819278001785278,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ]
+        ],
+        [
+          [
+            2.826921224594116,
+            -0.1815584897994995,
+            -2.4184298515319824
+          ],
+          [
+            2.826921224594116,
+            -0.1815584897994995,
+            -2.4184298515319824
+          ],
+          [
+            2.826921224594116,
+            -0.1815584897994995,
+            -2.4184298515319824
+          ],
+          [
+            -2.571216106414795,
+            2.3376314640045166,
+            -2.4184298515319824
+          ],
+          [
+            -2.571216106414795,
+            2.3376314640045166,
+            -2.4184298515319824
+          ],
+          [
+            -2.571216106414795,
+            2.3376314640045166,
+            -2.4184298515319824
+          ],
+          [
+            -2.571216106414795,
+            -0.41282594203948975,
+            3.860043525695801
+          ],
+          [
+            -2.571216106414795,
+            -2.932015895843506,
+            3.860043525695801
+          ],
+          [
+            -2.571216106414795,
+            -0.41282594203948975,
+            3.860043525695801
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.3577546960437241,
+        "upper": 0.6327451279968699,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "contains_zero",
+        "unchanged": false
+      },
+      "decimal260": "-0.12881800053067523789665847531186351836667338015384225598920676985900814976235925650132971996338378736020978066990935106197660622416371471023117795487519845622010327875986814000390405956011869919273283770812315382192777959582197543783032360252116419278013850019"
+    },
+    {
+      "inputs": [
+        [
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            -1.1819278001785278,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ]
+        ],
+        [
+          [
+            2.3643202781677246,
+            -0.6817431449890137,
+            -1.816453456878662
+          ],
+          [
+            2.3643202781677246,
+            -0.6817431449890137,
+            -1.816453456878662
+          ],
+          [
+            2.3643202781677246,
+            -0.6817431449890137,
+            -1.816453456878662
+          ],
+          [
+            -1.9647448062896729,
+            1.8374468088150024,
+            -1.816453456878662
+          ],
+          [
+            -1.9647448062896729,
+            1.8374468088150024,
+            -1.816453456878662
+          ],
+          [
+            -1.9647448062896729,
+            1.8374468088150024,
+            -1.816453456878662
+          ],
+          [
+            -1.9647448062896729,
+            0.46221810579299927,
+            2.93892765045166
+          ],
+          [
+            -1.9647448062896729,
+            -2.056971788406372,
+            2.93892765045166
+          ],
+          [
+            -1.9647448062896729,
+            0.46221810579299927,
+            2.93892765045166
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.17436696830698145,
+        "upper": 0.062460513496096465,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "contains_zero",
+        "unchanged": false
+      },
+      "decimal260": "-0.10230208499864756695299930899196395707432298507952639523390284037313387830985210870257163488517428086630523063207338058131769452494442010804207166885362132781014326226584714568901872333218355753848926576865494596533868990626267476397957073176503851876985151922"
+    },
+    {
+      "inputs": [
+        [
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            -1.1819278001785278,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ]
+        ],
+        [
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            -1.6194498538970947,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.08427038999477901,
+        "upper": -0.0352502831627632,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.0672447793772214241130782071051614993681825702927527091047201053401467518563401035712757185118303832125069812904402332195824795288299598680975372677011552858558953827719084148674185991683887093677463056058461188627493475359834634070398135525756655058794422598"
+    },
+    {
+      "inputs": [
+        [
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            -1.1819278001785278,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ]
+        ],
+        [
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            -1.6194498538970947,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.10046822007828506,
+        "upper": -0.04907684170997586,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.080691061029542157097755408259114032034188763132352947084166229071294596258021584358030640785491008075978302763253100829654023592532122840449167493308822990389815708627247599278336494050972948608359406109505016800953936885474514373961501996499915882074308219498"
+    },
+    {
+      "inputs": [
+        [
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            -1.1819278001785278,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            2.0178117752075195
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            -1.3582737445831299,
+            1.3372621536254883,
+            -1.2144770622253418
+          ],
+          [
+            1.9017194509506226,
+            -1.1819278001785278,
+            -1.2144770622253418
+          ]
+        ],
+        [
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            -1.6194498538970947,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.10046822007828506,
+        "upper": -0.04907684170997586,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.080691061029542157097755408259114032034188763132352947084166229071294596258021584358030640785491008075978302763253100829654023592532122840449167493308822990389815708627247599278336494050972948608359406109505016800953936885474514373961501996499915882074308219498"
+    },
+    {
+      "inputs": [
+        [
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            -1.6194498538970947,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ]
+        ],
+        [
+          [
+            3.7984962463378906,
+            0.2804715037345886,
+            -3.374835252761841
+          ],
+          [
+            3.7984962463378906,
+            0.2804715037345886,
+            -3.374835252761841
+          ],
+          [
+            3.7984962463378906,
+            0.2804715037345886,
+            -3.374835252761841
+          ],
+          [
+            -3.504267692565918,
+            2.79966139793396,
+            -3.374835252761841
+          ],
+          [
+            -3.504267692565918,
+            2.79966139793396,
+            -3.374835252761841
+          ],
+          [
+            -3.504267692565918,
+            2.79966139793396,
+            -3.374835252761841
+          ],
+          [
+            -3.504267692565918,
+            -1.458293080329895,
+            5.012282371520996
+          ],
+          [
+            -3.504267692565918,
+            -3.977483034133911,
+            5.012282371520996
+          ],
+          [
+            -3.504267692565918,
+            -1.458293080329895,
+            5.012282371520996
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.27381687368045127,
+        "upper": 1.7023070295944998,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "contains_zero",
+        "unchanged": false
+      },
+      "decimal260": "-0.074531036839158736646590673923936626341072551739153446682591965920891155312832689812157229433889699782453574016128956844289242420538087992299736255557609953370308946522322253941551789645975931102405854287558098650420758132776929877776552491922611580216076760605"
+    },
+    {
+      "inputs": [
+        [
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            -1.6194498538970947,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ]
+        ],
+        [
+          [
+            2.9657580852508545,
+            -0.32568198442459106,
+            -2.445150375366211
+          ],
+          [
+            2.9657580852508545,
+            -0.32568198442459106,
+            -2.445150375366211
+          ],
+          [
+            2.9657580852508545,
+            -0.32568198442459106,
+            -2.445150375366211
+          ],
+          [
+            -2.582888603210449,
+            2.1935079097747803,
+            -2.445150375366211
+          ],
+          [
+            -2.582888603210449,
+            2.1935079097747803,
+            -2.445150375366211
+          ],
+          [
+            -2.582888603210449,
+            2.1935079097747803,
+            -2.445150375366211
+          ],
+          [
+            -2.582888603210449,
+            -0.2792764902114868,
+            3.745326042175293
+          ],
+          [
+            -2.582888603210449,
+            -2.798466444015503,
+            3.745326042175293
+          ],
+          [
+            -2.582888603210449,
+            -0.2792764902114868,
+            3.745326042175293
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.13473738033092866,
+        "upper": 0.3570423530626481,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "contains_zero",
+        "unchanged": false
+      },
+      "decimal260": "-0.063227944437662033628947496522586721718796792569035710939065641403556083769730054208281071874877578893661091103132591627629509706712870524465041175785837459043323524221643700691718041148515938951707426674405338310291831509966982356587827853684508831096653246038"
+    },
+    {
+      "inputs": [
+        [
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            -1.6194498538970947,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ]
+        ],
+        [
+          [
+            2.549388885498047,
+            -0.6287587285041809,
+            -1.9803078174591064
+          ],
+          [
+            2.549388885498047,
+            -0.6287587285041809,
+            -1.9803078174591064
+          ],
+          [
+            2.549388885498047,
+            -0.6287587285041809,
+            -1.9803078174591064
+          ],
+          [
+            -2.1221988201141357,
+            1.8904311656951904,
+            -1.9803078174591064
+          ],
+          [
+            -2.1221988201141357,
+            1.8904311656951904,
+            -1.9803078174591064
+          ],
+          [
+            -2.1221988201141357,
+            1.8904311656951904,
+            -1.9803078174591064
+          ],
+          [
+            -2.1221988201141357,
+            0.3102318048477173,
+            3.1118478775024414
+          ],
+          [
+            -2.1221988201141357,
+            -2.208958148956299,
+            3.1118478775024414
+          ],
+          [
+            -2.1221988201141357,
+            0.3102318048477173,
+            3.1118478775024414
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.06469413717438842,
+        "upper": 0.036259594404578724,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "contains_zero",
+        "unchanged": false
+      },
+      "decimal260": "-0.045064607318574289607391838475928070581811857702534808602367453532158471713535391902253315437427361170157649260074168001974477654560676659211461451492879865658118541941082423654649748142165675445303229224285757293825453287424879148159194369441678054474569240121"
+    },
+    {
+      "inputs": [
+        [
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            -1.6194498538970947,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ]
+        ],
+        [
+          [
+            2.3412044048309326,
+            -0.7802971005439758,
+            -1.7478865385055542
+          ],
+          [
+            2.3412044048309326,
+            -0.7802971005439758,
+            -1.7478865385055542
+          ],
+          [
+            2.3412044048309326,
+            -0.7802971005439758,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            1.7388927936553955,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            1.7388927936553955,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            1.7388927936553955,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            0.6049859523773193,
+            2.7951087951660156
+          ],
+          [
+            -1.8918540477752686,
+            -1.9142040014266968,
+            2.7951087951660156
+          ],
+          [
+            -1.8918540477752686,
+            0.6049859523773193,
+            2.7951087951660156
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": -0.03162282278901601,
+        "upper": -0.01742435764914047,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.027586688643452160300278650563793166919533783852599412512628726758228817507161454729843781371101015401706665851548743742918507006178523627230150222248393365588173188934775514197481603848843412345118955003632213844659903742656788289555096531944416841823405268443"
+    },
+    {
+      "inputs": [
+        [
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            -1.6194498538970947,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ]
+        ],
+        [
+          [
+            2.3412044048309326,
+            -0.7802971005439758,
+            -1.7478865385055542
+          ],
+          [
+            2.3412044048309326,
+            -0.7802971005439758,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            0.6049859523773193,
+            2.7951087951660156
+          ],
+          [
+            -1.8918540477752686,
+            -1.9142040014266968,
+            2.7951087951660156
+          ],
+          [
+            -1.8918540477752686,
+            0.6049859523773193,
+            2.7951087951660156
+          ],
+          [
+            -1.8918540477752686,
+            1.7388927936553955,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            1.7388927936553955,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            1.7388927936553955,
+            -1.7478865385055542
+          ],
+          [
+            2.3412044048309326,
+            -0.7802971005439758,
+            -1.7478865385055542
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.03784714575868911,
+        "upper": -0.02294838852520081,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.033015359778648885684829570303699129324400341203799254416797974436502703722271279502904102887803927892905803583589888808713880681615251412434926634288526767850076957657191067413326906557978151199753126881201578224544818067525108110274131527088418356147161040529"
+    },
+    {
+      "inputs": [
+        [
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            -1.6194498538970947,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            0.8997400999069214,
+            2.47836971282959
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            -1.6615092754364014,
+            1.5873544216156006,
+            -1.515465259552002
+          ],
+          [
+            2.1330199241638184,
+            -0.9318354725837708,
+            -1.515465259552002
+          ]
+        ],
+        [
+          [
+            2.3412044048309326,
+            -0.7802971005439758,
+            -1.7478865385055542
+          ],
+          [
+            2.3412044048309326,
+            -0.7802971005439758,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            0.6049859523773193,
+            2.7951087951660156
+          ],
+          [
+            -1.8918540477752686,
+            -1.9142040014266968,
+            2.7951087951660156
+          ],
+          [
+            -1.8918540477752686,
+            0.6049859523773193,
+            2.7951087951660156
+          ],
+          [
+            -1.8918540477752686,
+            1.7388927936553955,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            1.7388927936553955,
+            -1.7478865385055542
+          ],
+          [
+            -1.8918540477752686,
+            1.7388927936553955,
+            -1.7478865385055542
+          ],
+          [
+            2.3412044048309326,
+            -0.7802971005439758,
+            -1.7478865385055542
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": -0.03784714575868911,
+        "upper": -0.02294838852520081,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.033015359778648885684829570303699129324400341203799254416797974436502703722271279502904102887803927892905803583589888808713880681615251412434926634288526767850076957657191067413326906557978151199753126881201578224544818067525108110274131527088418356147161040529"
+    }
+  ]
+}

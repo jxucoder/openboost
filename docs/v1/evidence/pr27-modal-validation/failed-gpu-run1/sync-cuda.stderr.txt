@@ -1,0 +1,29 @@
+Resolved 96 packages in 1ms
+Downloading llvmlite (53.7MiB)
+Downloading numba-cuda (1.8MiB)
+Downloading cuda-bindings (15.4MiB)
+Downloading cuda-core (20.9MiB)
+Downloading numba (3.6MiB)
+Downloading cupy-cuda12x (107.7MiB)
+ Downloaded numba-cuda
+ Downloaded cuda-bindings
+ Downloaded cuda-core
+ Downloaded numba
+ Downloaded llvmlite
+ Downloaded cupy-cuda12x
+Prepared 8 packages in 4.24s
+Uninstalled 4 packages in 7ms
+Installed 9 packages in 136ms
+ + cuda-bindings==13.1.1
+ + cuda-core==0.6.0
+ + cuda-pathfinder==1.4.0
+ + cupy-cuda12x==13.6.0
+ + fastrlock==0.8.3
+ - hatchling==1.27.0
+ + llvmlite==0.46.0
+ + numba==0.63.1
+ + numba-cuda==0.27.0
+ - openboost==1.0.0.dev0 (from file:///tmp/pr27-results/dist/openboost-1.0.0.dev0-py3-none-any.whl)
+ - pathspec==1.1.1
+ + pathspec==1.0.3
+ - trove-classifiers==2026.6.1.19

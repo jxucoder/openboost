@@ -151,13 +151,13 @@ def junit(raw, *, allowed_skips, gpu, nodeids):
 
 
 def expected_command(name, protocol):
-    python = "/tmp/pr27-source/.venv/bin/python"
+    python = "/tmp/pr27-environment/bin/python"
     if name == "build" or name.endswith("-build"):
         return ["uv", "build", "--python", python, "--no-build-isolation", "--out-dir", "/tmp/pr27-results/dist"]
     if name == "docs":
-        return ["/tmp/pr27-source/.venv/bin/mkdocs", "build", "--strict", "--site-dir", "/tmp/pr27-site"]
+        return ["/tmp/pr27-environment/bin/mkdocs", "build", "--strict", "--site-dir", "/tmp/pr27-site"]
     if name == "lint":
-        return ["/tmp/pr27-source/.venv/bin/ruff", "check", "src/openboost", "tests/v1", "tests/conftest.py"]
+        return ["/tmp/pr27-environment/bin/ruff", "check", "src/openboost", "tests/v1", "tests/conftest.py"]
     targets = protocol["gpu_tests"] if name == "gpu" else ["tests/v1/test_model_identity_cache.py"] if name == "gpu-prerequisites" else ["tests/"]
     extra = ["-m", "gpu"] if name == "gpu" else [] if name == "gpu-prerequisites" else ["-m", "not gpu and not benchmark"]
     if name == "gpu":

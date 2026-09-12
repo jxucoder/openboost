@@ -1,0 +1,3390 @@
+{
+  "execution": "sequential-feature-reuse",
+  "count": 8,
+  "resident_bytes": 160,
+  "context_metrics": {
+    "upload_bytes": 10944,
+    "export_bytes": 13984,
+    "device_copy_bytes": 11808,
+    "synchronizations": 5998,
+    "live_bytes": 160,
+    "peak_live_bytes": 1412,
+    "peak_pool_bytes": 15360,
+    "kernel_launches": 3600,
+    "kernel_dispatch_seconds": 1.2347697410006049,
+    "validation_export_bytes": 9728,
+    "decision_export_bytes": 672,
+    "metric_export_bytes": 1408,
+    "feature_prepare_calls": 2,
+    "feature_upload_bytes": 160,
+    "feature_bind_calls": 48,
+    "feature_bind_upload_bytes": 1536
+  },
+  "final_live_bytes": 0,
+  "outcomes": [
+    {
+      "run_id": "job-0",
+      "seed": 17,
+      "options": {
+        "rounds": 2,
+        "learning_rate": 0.5,
+        "max_depth": 1,
+        "step": "fixed",
+        "max_trials": 1,
+        "patience": null,
+        "min_delta": 0.0
+      },
+      "binning_identity": "62b3ded73a714f51659a2e494e887c7a0426d419083e0902eaae4c06ec7055bb",
+      "result": {
+        "model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -1.1111111640930176
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    4.7683716530855236e-08
+                  ],
+                  [
+                    1.074074149131775
+                  ],
+                  [
+                    -0.4027777314186096
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            },
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    0.03356480598449707
+                  ],
+                  [
+                    0.5142746567726135
+                  ],
+                  [
+                    -0.550000011920929
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            }
+          ],
+          "classes": null
+        },
+        "best_model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -1.1111111640930176
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    4.7683716530855236e-08
+                  ],
+                  [
+                    1.074074149131775
+                  ],
+                  [
+                    -0.4027777314186096
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            },
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    0.03356480598449707
+                  ],
+                  [
+                    0.5142746567726135
+                  ],
+                  [
+                    -0.550000011920929
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            }
+          ],
+          "classes": null
+        },
+        "state": {
+          "identity": "250148850aad883c72313f504fa8a2816c84e80aee6a4d1e9b0da705ac27a905",
+          "run_id": "job-0",
+          "version": 2,
+          "loss": 0.3624773060116049,
+          "validation_score": 2.901878762899992,
+          "best_score": 2.901878762899992,
+          "n_terms": 2,
+          "best_n_terms": 2
+        },
+        "steps": [
+          {
+            "round_index": 0,
+            "coefficients": [
+              0.5
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 0.4994924471992815,
+            "validation_score": 3.2040001052611893,
+            "best_score": 3.2040001052611893
+          },
+          {
+            "round_index": 1,
+            "coefficients": [
+              0.5
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 0.3624773060116049,
+            "validation_score": 2.901878762899992,
+            "best_score": 2.901878762899992
+          }
+        ],
+        "stop": {
+          "rounds": 2,
+          "patience": null,
+          "min_delta": 0.0,
+          "reference_score": 2.901878762899992,
+          "last_score": 2.901878762899992,
+          "completed_rounds": 2,
+          "stale_rounds": 0
+        },
+        "reason": "budget"
+      },
+      "rng": [
+        2438964324,
+        2117253194,
+        1558270295,
+        2959109338,
+        2882549717,
+        4150843524,
+        4121397000,
+        2258840418
+      ],
+      "inputs": {
+        "train": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAAAIQAAAAAAAAPh/AAAAAAAAAEAAAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8AAAAAAAAAQAAAAAAAAABAAAAAAAAA+H8AAAAAAADwPwAAAAAAAAhAAAAAAAAAAAA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAF0AAAAAAAADwvwAAAAAAAOi/AAAAAAAA9L8AAAAAAADwvwAAAAAAAPy/AAAAAAAA/D8AAAAAAAAAwA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAA=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAA8D8AAAAAAAAAAAAAAAAAAAhAAAAAAAAA8D8AAAAAAADwPw=="
+          }
+        },
+        "validation": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAACEAAAAAAAAAAAAAAAAAAAPh/AAAAAAAA8D8AAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAD4fwAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPwAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAQAAAAAAAAAAAAAAAAAAACEA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "LQEAAAAAAAA4AQAAAAAAAEMBAAAAAAAATgEAAAAAAABZAQAAAAAAAGQBAAAAAAAAbwEAAAAAAAB6AQAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAMAAAAAAAAD+PwAAAAAAAP6/AAAAAAAA8L8AAAAAAADyvwAAAAAAAOy/AAAAAAAA8L8AAAAAAIAXQA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvw=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+          }
+        }
+      },
+      "predictions": {
+        "model": {
+          "train": [
+            [
+              -0.5669367611408234
+            ],
+            [
+              -0.31693676114082336
+            ],
+            [
+              -0.8053627014160156
+            ],
+            [
+              -1.3053627014160156
+            ],
+            [
+              -1.5875000357627869
+            ],
+            [
+              -1.3375000357627869
+            ],
+            [
+              -0.5669367611408234
+            ],
+            [
+              -1.5875000357627869
+            ]
+          ],
+          "validation": [
+            [
+              -1.5875000357627869
+            ],
+            [
+              -0.44193676114082336
+            ],
+            [
+              -1.4625000357627869
+            ],
+            [
+              -1.5875000357627869
+            ],
+            [
+              -1.1803627014160156
+            ],
+            [
+              -0.9303627014160156
+            ],
+            [
+              -0.31693676114082336
+            ],
+            [
+              -0.44193676114082336
+            ]
+          ]
+        },
+        "best_model": {
+          "train": [
+            [
+              -0.5669367611408234
+            ],
+            [
+              -0.31693676114082336
+            ],
+            [
+              -0.8053627014160156
+            ],
+            [
+              -1.3053627014160156
+            ],
+            [
+              -1.5875000357627869
+            ],
+            [
+              -1.3375000357627869
+            ],
+            [
+              -0.5669367611408234
+            ],
+            [
+              -1.5875000357627869
+            ]
+          ],
+          "validation": [
+            [
+              -1.5875000357627869
+            ],
+            [
+              -0.44193676114082336
+            ],
+            [
+              -1.4625000357627869
+            ],
+            [
+              -1.5875000357627869
+            ],
+            [
+              -1.1803627014160156
+            ],
+            [
+              -0.9303627014160156
+            ],
+            [
+              -0.31693676114082336
+            ],
+            [
+              -0.44193676114082336
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "run_id": "job-1",
+      "seed": 17,
+      "options": {
+        "rounds": 4,
+        "learning_rate": 0.5,
+        "max_depth": 1,
+        "step": "fixed",
+        "max_trials": 1,
+        "patience": 1,
+        "min_delta": 100.0
+      },
+      "binning_identity": "62b3ded73a714f51659a2e494e887c7a0426d419083e0902eaae4c06ec7055bb",
+      "result": {
+        "model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -1.1111111640930176
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    4.7683716530855236e-08
+                  ],
+                  [
+                    1.074074149131775
+                  ],
+                  [
+                    -0.4027777314186096
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            }
+          ],
+          "classes": null
+        },
+        "best_model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -1.1111111640930176
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    4.7683716530855236e-08
+                  ],
+                  [
+                    1.074074149131775
+                  ],
+                  [
+                    -0.4027777314186096
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            }
+          ],
+          "classes": null
+        },
+        "state": {
+          "identity": "b13af00cfd5ca820f708a47b92c61185127d5c9641e7601b9a69aac9f4b2c98e",
+          "run_id": "job-1",
+          "version": 1,
+          "loss": 0.4994924471992815,
+          "validation_score": 3.2040001052611893,
+          "best_score": 3.2040001052611893,
+          "n_terms": 1,
+          "best_n_terms": 1
+        },
+        "steps": [
+          {
+            "round_index": 0,
+            "coefficients": [
+              0.5
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 0.4994924471992815,
+            "validation_score": 3.2040001052611893,
+            "best_score": 3.2040001052611893
+          }
+        ],
+        "stop": {
+          "rounds": 4,
+          "patience": 1,
+          "min_delta": 100.0,
+          "reference_score": 3.8672840094860703,
+          "last_score": 3.2040001052611893,
+          "completed_rounds": 1,
+          "stale_rounds": 1
+        },
+        "reason": "patience"
+      },
+      "rng": [
+        1207518268,
+        1788113883,
+        1664669718,
+        195991966,
+        2495406839,
+        1575384992,
+        4025786528,
+        1408207993
+      ],
+      "inputs": {
+        "train": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAAAIQAAAAAAAAPh/AAAAAAAAAEAAAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8AAAAAAAAAQAAAAAAAAABAAAAAAAAA+H8AAAAAAADwPwAAAAAAAAhAAAAAAAAAAAA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAF0AAAAAAAADwvwAAAAAAAOi/AAAAAAAA9L8AAAAAAADwvwAAAAAAAPy/AAAAAAAA/D8AAAAAAAAAwA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAA=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAA8D8AAAAAAAAAAAAAAAAAAAhAAAAAAAAA8D8AAAAAAADwPw=="
+          }
+        },
+        "validation": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAACEAAAAAAAAAAAAAAAAAAAPh/AAAAAAAA8D8AAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAD4fwAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPwAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAQAAAAAAAAAAAAAAAAAAACEA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "LQEAAAAAAAA4AQAAAAAAAEMBAAAAAAAATgEAAAAAAABZAQAAAAAAAGQBAAAAAAAAbwEAAAAAAAB6AQAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAMAAAAAAAAD+PwAAAAAAAP6/AAAAAAAA8L8AAAAAAADyvwAAAAAAAOy/AAAAAAAA8L8AAAAAAIAXQA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvw=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+          }
+        }
+      },
+      "predictions": {
+        "model": {
+          "train": [
+            [
+              -0.8240740895271301
+            ],
+            [
+              -0.5740740895271301
+            ],
+            [
+              -1.0625000298023224
+            ],
+            [
+              -1.5625000298023224
+            ],
+            [
+              -1.3125000298023224
+            ],
+            [
+              -1.0625000298023224
+            ],
+            [
+              -0.8240740895271301
+            ],
+            [
+              -1.3125000298023224
+            ]
+          ],
+          "validation": [
+            [
+              -1.3125000298023224
+            ],
+            [
+              -0.6990740895271301
+            ],
+            [
+              -1.1875000298023224
+            ],
+            [
+              -1.3125000298023224
+            ],
+            [
+              -1.4375000298023224
+            ],
+            [
+              -1.1875000298023224
+            ],
+            [
+              -0.5740740895271301
+            ],
+            [
+              -0.6990740895271301
+            ]
+          ]
+        },
+        "best_model": {
+          "train": [
+            [
+              -0.8240740895271301
+            ],
+            [
+              -0.5740740895271301
+            ],
+            [
+              -1.0625000298023224
+            ],
+            [
+              -1.5625000298023224
+            ],
+            [
+              -1.3125000298023224
+            ],
+            [
+              -1.0625000298023224
+            ],
+            [
+              -0.8240740895271301
+            ],
+            [
+              -1.3125000298023224
+            ]
+          ],
+          "validation": [
+            [
+              -1.3125000298023224
+            ],
+            [
+              -0.6990740895271301
+            ],
+            [
+              -1.1875000298023224
+            ],
+            [
+              -1.3125000298023224
+            ],
+            [
+              -1.4375000298023224
+            ],
+            [
+              -1.1875000298023224
+            ],
+            [
+              -0.5740740895271301
+            ],
+            [
+              -0.6990740895271301
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "run_id": "job-2",
+      "seed": 17,
+      "options": {
+        "rounds": 3,
+        "learning_rate": 0.0,
+        "max_depth": 1,
+        "step": "fixed",
+        "max_trials": 1,
+        "patience": 2,
+        "min_delta": 0.0
+      },
+      "binning_identity": "62b3ded73a714f51659a2e494e887c7a0426d419083e0902eaae4c06ec7055bb",
+      "result": {
+        "model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -1.1111111640930176
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    4.7683716530855236e-08
+                  ],
+                  [
+                    1.074074149131775
+                  ],
+                  [
+                    -0.4027777314186096
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.0
+            },
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    4.7683716530855236e-08
+                  ],
+                  [
+                    1.074074149131775
+                  ],
+                  [
+                    -0.4027777314186096
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.0
+            }
+          ],
+          "classes": null
+        },
+        "best_model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -1.1111111640930176
+          ],
+          "terms": [],
+          "classes": null
+        },
+        "state": {
+          "identity": "57afc18d6992253a11477fb22ebf5e71bb0e0a9fa354de8730362965643d01ff",
+          "run_id": "job-2",
+          "version": 2,
+          "loss": 0.7160493827160508,
+          "validation_score": 3.8672840094860703,
+          "best_score": 3.8672840094860703,
+          "n_terms": 2,
+          "best_n_terms": 0
+        },
+        "steps": [
+          {
+            "round_index": 0,
+            "coefficients": [
+              0.0
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 0.7160493827160508,
+            "validation_score": 3.8672840094860703,
+            "best_score": 3.8672840094860703
+          },
+          {
+            "round_index": 1,
+            "coefficients": [
+              0.0
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 0.7160493827160508,
+            "validation_score": 3.8672840094860703,
+            "best_score": 3.8672840094860703
+          }
+        ],
+        "stop": {
+          "rounds": 3,
+          "patience": 2,
+          "min_delta": 0.0,
+          "reference_score": 3.8672840094860703,
+          "last_score": 3.8672840094860703,
+          "completed_rounds": 2,
+          "stale_rounds": 2
+        },
+        "reason": "patience"
+      },
+      "rng": [
+        3449935666,
+        3787850113,
+        1345036419,
+        3591641112,
+        638761289,
+        2724181295,
+        1703210445,
+        4036473642
+      ],
+      "inputs": {
+        "train": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAAAIQAAAAAAAAPh/AAAAAAAAAEAAAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8AAAAAAAAAQAAAAAAAAABAAAAAAAAA+H8AAAAAAADwPwAAAAAAAAhAAAAAAAAAAAA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAF0AAAAAAAADwvwAAAAAAAOi/AAAAAAAA9L8AAAAAAADwvwAAAAAAAPy/AAAAAAAA/D8AAAAAAAAAwA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAA=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAA8D8AAAAAAAAAAAAAAAAAAAhAAAAAAAAA8D8AAAAAAADwPw=="
+          }
+        },
+        "validation": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAACEAAAAAAAAAAAAAAAAAAAPh/AAAAAAAA8D8AAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAD4fwAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPwAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAQAAAAAAAAAAAAAAAAAAACEA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "LQEAAAAAAAA4AQAAAAAAAEMBAAAAAAAATgEAAAAAAABZAQAAAAAAAGQBAAAAAAAAbwEAAAAAAAB6AQAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAMAAAAAAAAD+PwAAAAAAAP6/AAAAAAAA8L8AAAAAAADyvwAAAAAAAOy/AAAAAAAA8L8AAAAAAIAXQA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvw=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+          }
+        }
+      },
+      "predictions": {
+        "model": {
+          "train": [
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -0.8611111640930176
+            ],
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -0.8611111640930176
+            ],
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ]
+          ],
+          "validation": [
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ],
+            [
+              -0.9861111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ],
+            [
+              -0.9861111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ]
+          ]
+        },
+        "best_model": {
+          "train": [
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -0.8611111640930176
+            ],
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -0.8611111640930176
+            ],
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ]
+          ],
+          "validation": [
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ],
+            [
+              -0.9861111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ],
+            [
+              -0.9861111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "run_id": "job-3",
+      "seed": 17,
+      "options": {
+        "rounds": 2,
+        "learning_rate": 256.0,
+        "max_depth": 1,
+        "step": "backtracking",
+        "max_trials": 1,
+        "patience": null,
+        "min_delta": 0.0
+      },
+      "binning_identity": "62b3ded73a714f51659a2e494e887c7a0426d419083e0902eaae4c06ec7055bb",
+      "result": {
+        "model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -1.1111111640930176
+          ],
+          "terms": [],
+          "classes": null
+        },
+        "best_model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -1.1111111640930176
+          ],
+          "terms": [],
+          "classes": null
+        },
+        "state": {
+          "identity": "081e22d8151c35dc10860c817779e99fb30ca89d402b49a9c91db28274622bab",
+          "run_id": "job-3",
+          "version": 0,
+          "loss": 0.7160493827160508,
+          "validation_score": 3.8672840094860703,
+          "best_score": 3.8672840094860703,
+          "n_terms": 0,
+          "best_n_terms": 0
+        },
+        "steps": [
+          {
+            "round_index": 0,
+            "coefficients": [
+              256.0
+            ],
+            "accepted": false,
+            "failures": [],
+            "loss": 0.7160493827160508,
+            "validation_score": 3.8672840094860703,
+            "best_score": 3.8672840094860703
+          },
+          {
+            "round_index": 1,
+            "coefficients": [
+              256.0
+            ],
+            "accepted": false,
+            "failures": [],
+            "loss": 0.7160493827160508,
+            "validation_score": 3.8672840094860703,
+            "best_score": 3.8672840094860703
+          }
+        ],
+        "stop": {
+          "rounds": 2,
+          "patience": null,
+          "min_delta": 0.0,
+          "reference_score": 3.8672840094860703,
+          "last_score": 3.8672840094860703,
+          "completed_rounds": 2,
+          "stale_rounds": 2
+        },
+        "reason": "budget"
+      },
+      "rng": [
+        2220897132,
+        2771137745,
+        3955789476,
+        3025221646,
+        1710628501,
+        1251965114,
+        1619172674,
+        2088103238
+      ],
+      "inputs": {
+        "train": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAAAIQAAAAAAAAPh/AAAAAAAAAEAAAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8AAAAAAAAAQAAAAAAAAABAAAAAAAAA+H8AAAAAAADwPwAAAAAAAAhAAAAAAAAAAAA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAF0AAAAAAAADwvwAAAAAAAOi/AAAAAAAA9L8AAAAAAADwvwAAAAAAAPy/AAAAAAAA/D8AAAAAAAAAwA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAA=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAA8D8AAAAAAAAAAAAAAAAAAAhAAAAAAAAA8D8AAAAAAADwPw=="
+          }
+        },
+        "validation": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAACEAAAAAAAAAAAAAAAAAAAPh/AAAAAAAA8D8AAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAD4fwAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPwAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAQAAAAAAAAAAAAAAAAAAACEA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "LQEAAAAAAAA4AQAAAAAAAEMBAAAAAAAATgEAAAAAAABZAQAAAAAAAGQBAAAAAAAAbwEAAAAAAAB6AQAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAMAAAAAAAAD+PwAAAAAAAP6/AAAAAAAA8L8AAAAAAADyvwAAAAAAAOy/AAAAAAAA8L8AAAAAAIAXQA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvw=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+          }
+        }
+      },
+      "predictions": {
+        "model": {
+          "train": [
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -0.8611111640930176
+            ],
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -0.8611111640930176
+            ],
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ]
+          ],
+          "validation": [
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ],
+            [
+              -0.9861111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ],
+            [
+              -0.9861111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ]
+          ]
+        },
+        "best_model": {
+          "train": [
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -0.8611111640930176
+            ],
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -0.8611111640930176
+            ],
+            [
+              -1.3611111640930176
+            ],
+            [
+              -1.1111111640930176
+            ]
+          ],
+          "validation": [
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ],
+            [
+              -0.9861111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ],
+            [
+              -0.9861111640930176
+            ],
+            [
+              -1.1111111640930176
+            ],
+            [
+              -1.2361111640930176
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "run_id": "job-4",
+      "seed": 17,
+      "options": {
+        "rounds": 2,
+        "learning_rate": 0.5,
+        "max_depth": 1,
+        "step": "fixed",
+        "max_trials": 1,
+        "patience": null,
+        "min_delta": 0.0
+      },
+      "binning_identity": "62b3ded73a714f51659a2e494e887c7a0426d419083e0902eaae4c06ec7055bb",
+      "result": {
+        "model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -2.222222328186035
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    9.536743306171047e-08
+                  ],
+                  [
+                    2.14814829826355
+                  ],
+                  [
+                    -0.8055554628372192
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            },
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    0.06712961196899414
+                  ],
+                  [
+                    1.028549313545227
+                  ],
+                  [
+                    -1.100000023841858
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            }
+          ],
+          "classes": null
+        },
+        "best_model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -2.222222328186035
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    9.536743306171047e-08
+                  ],
+                  [
+                    2.14814829826355
+                  ],
+                  [
+                    -0.8055554628372192
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            },
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    0.06712961196899414
+                  ],
+                  [
+                    1.028549313545227
+                  ],
+                  [
+                    -1.100000023841858
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            }
+          ],
+          "classes": null
+        },
+        "state": {
+          "identity": "ca0e2eacfc967687dc2a5f55c99428e3943ebf3e38111aa345c3adadf4990e0d",
+          "run_id": "job-4",
+          "version": 2,
+          "loss": 1.4499092240464195,
+          "validation_score": 11.607515051599968,
+          "best_score": 11.607515051599968,
+          "n_terms": 2,
+          "best_n_terms": 2
+        },
+        "steps": [
+          {
+            "round_index": 0,
+            "coefficients": [
+              0.5
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 1.997969788797126,
+            "validation_score": 12.816000421044757,
+            "best_score": 12.816000421044757
+          },
+          {
+            "round_index": 1,
+            "coefficients": [
+              0.5
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 1.4499092240464195,
+            "validation_score": 11.607515051599968,
+            "best_score": 11.607515051599968
+          }
+        ],
+        "stop": {
+          "rounds": 2,
+          "patience": null,
+          "min_delta": 0.0,
+          "reference_score": 11.607515051599968,
+          "last_score": 11.607515051599968,
+          "completed_rounds": 2,
+          "stale_rounds": 0
+        },
+        "reason": "budget"
+      },
+      "rng": [
+        832109477,
+        3526058962,
+        2424697577,
+        1423748445,
+        72233264,
+        3709515750,
+        1809225899,
+        636814301
+      ],
+      "inputs": {
+        "train": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAAAIQAAAAAAAAPh/AAAAAAAAAEAAAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8AAAAAAAAAQAAAAAAAAABAAAAAAAAA+H8AAAAAAADwPwAAAAAAAAhAAAAAAAAAAAA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAACAJ0AAAAAAAAAAwAAAAAAAAPy/AAAAAAAAAsAAAAAAAAAAwAAAAAAAAA7AAAAAAAAADkAAAAAAAAAQwA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAA=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAA8D8AAAAAAAAAAAAAAAAAAAhAAAAAAAAA8D8AAAAAAADwPw=="
+          }
+        },
+        "validation": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAACEAAAAAAAAAAAAAAAAAAAPh/AAAAAAAA8D8AAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAD4fwAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPwAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAQAAAAAAAAAAAAAAAAAAACEA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "LQEAAAAAAAA4AQAAAAAAAEMBAAAAAAAATgEAAAAAAABZAQAAAAAAAGQBAAAAAAAAbwEAAAAAAAB6AQAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAEMAAAAAAAAAPQAAAAAAAAA/AAAAAAAAAAMAAAAAAAAABwAAAAAAAAP6/AAAAAAAAAMAAAAAAAMAnQA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvw=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+          }
+        }
+      },
+      "predictions": {
+        "model": {
+          "train": [
+            [
+              -0.8838735222816467
+            ],
+            [
+              -0.6338735222816467
+            ],
+            [
+              -1.8607254028320312
+            ],
+            [
+              -2.3607254028320312
+            ],
+            [
+              -3.1750000715255737
+            ],
+            [
+              -2.9250000715255737
+            ],
+            [
+              -0.8838735222816467
+            ],
+            [
+              -3.1750000715255737
+            ]
+          ],
+          "validation": [
+            [
+              -3.1750000715255737
+            ],
+            [
+              -0.7588735222816467
+            ],
+            [
+              -3.0500000715255737
+            ],
+            [
+              -3.1750000715255737
+            ],
+            [
+              -2.2357254028320312
+            ],
+            [
+              -1.9857254028320312
+            ],
+            [
+              -0.6338735222816467
+            ],
+            [
+              -0.7588735222816467
+            ]
+          ]
+        },
+        "best_model": {
+          "train": [
+            [
+              -0.8838735222816467
+            ],
+            [
+              -0.6338735222816467
+            ],
+            [
+              -1.8607254028320312
+            ],
+            [
+              -2.3607254028320312
+            ],
+            [
+              -3.1750000715255737
+            ],
+            [
+              -2.9250000715255737
+            ],
+            [
+              -0.8838735222816467
+            ],
+            [
+              -3.1750000715255737
+            ]
+          ],
+          "validation": [
+            [
+              -3.1750000715255737
+            ],
+            [
+              -0.7588735222816467
+            ],
+            [
+              -3.0500000715255737
+            ],
+            [
+              -3.1750000715255737
+            ],
+            [
+              -2.2357254028320312
+            ],
+            [
+              -1.9857254028320312
+            ],
+            [
+              -0.6338735222816467
+            ],
+            [
+              -0.7588735222816467
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "run_id": "job-5",
+      "seed": 17,
+      "options": {
+        "rounds": 4,
+        "learning_rate": 0.5,
+        "max_depth": 1,
+        "step": "fixed",
+        "max_trials": 1,
+        "patience": 1,
+        "min_delta": 100.0
+      },
+      "binning_identity": "62b3ded73a714f51659a2e494e887c7a0426d419083e0902eaae4c06ec7055bb",
+      "result": {
+        "model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -2.222222328186035
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    9.536743306171047e-08
+                  ],
+                  [
+                    2.14814829826355
+                  ],
+                  [
+                    -0.8055554628372192
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            }
+          ],
+          "classes": null
+        },
+        "best_model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -2.222222328186035
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    9.536743306171047e-08
+                  ],
+                  [
+                    2.14814829826355
+                  ],
+                  [
+                    -0.8055554628372192
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.5
+            }
+          ],
+          "classes": null
+        },
+        "state": {
+          "identity": "1f23c98070551c002d64fbac1a5678924ddf5ca4f4d5fd1446dad69b69c9c36f",
+          "run_id": "job-5",
+          "version": 1,
+          "loss": 1.997969788797126,
+          "validation_score": 12.816000421044757,
+          "best_score": 12.816000421044757,
+          "n_terms": 1,
+          "best_n_terms": 1
+        },
+        "steps": [
+          {
+            "round_index": 0,
+            "coefficients": [
+              0.5
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 1.997969788797126,
+            "validation_score": 12.816000421044757,
+            "best_score": 12.816000421044757
+          }
+        ],
+        "stop": {
+          "rounds": 4,
+          "patience": 1,
+          "min_delta": 100.0,
+          "reference_score": 15.469136037944281,
+          "last_score": 12.816000421044757,
+          "completed_rounds": 1,
+          "stale_rounds": 1
+        },
+        "reason": "patience"
+      },
+      "rng": [
+        261254435,
+        1493662031,
+        1582294478,
+        1931125633,
+        3038052789,
+        230062996,
+        428348296,
+        2848004388
+      ],
+      "inputs": {
+        "train": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAAAIQAAAAAAAAPh/AAAAAAAAAEAAAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8AAAAAAAAAQAAAAAAAAABAAAAAAAAA+H8AAAAAAADwPwAAAAAAAAhAAAAAAAAAAAA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAACAJ0AAAAAAAAAAwAAAAAAAAPy/AAAAAAAAAsAAAAAAAAAAwAAAAAAAAA7AAAAAAAAADkAAAAAAAAAQwA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAA=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAA8D8AAAAAAAAAAAAAAAAAAAhAAAAAAAAA8D8AAAAAAADwPw=="
+          }
+        },
+        "validation": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAACEAAAAAAAAAAAAAAAAAAAPh/AAAAAAAA8D8AAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAD4fwAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPwAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAQAAAAAAAAAAAAAAAAAAACEA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "LQEAAAAAAAA4AQAAAAAAAEMBAAAAAAAATgEAAAAAAABZAQAAAAAAAGQBAAAAAAAAbwEAAAAAAAB6AQAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAEMAAAAAAAAAPQAAAAAAAAA/AAAAAAAAAAMAAAAAAAAABwAAAAAAAAP6/AAAAAAAAAMAAAAAAAMAnQA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvw=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+          }
+        }
+      },
+      "predictions": {
+        "model": {
+          "train": [
+            [
+              -1.3981481790542603
+            ],
+            [
+              -1.1481481790542603
+            ],
+            [
+              -2.3750000596046448
+            ],
+            [
+              -2.8750000596046448
+            ],
+            [
+              -2.6250000596046448
+            ],
+            [
+              -2.3750000596046448
+            ],
+            [
+              -1.3981481790542603
+            ],
+            [
+              -2.6250000596046448
+            ]
+          ],
+          "validation": [
+            [
+              -2.6250000596046448
+            ],
+            [
+              -1.2731481790542603
+            ],
+            [
+              -2.5000000596046448
+            ],
+            [
+              -2.6250000596046448
+            ],
+            [
+              -2.7500000596046448
+            ],
+            [
+              -2.5000000596046448
+            ],
+            [
+              -1.1481481790542603
+            ],
+            [
+              -1.2731481790542603
+            ]
+          ]
+        },
+        "best_model": {
+          "train": [
+            [
+              -1.3981481790542603
+            ],
+            [
+              -1.1481481790542603
+            ],
+            [
+              -2.3750000596046448
+            ],
+            [
+              -2.8750000596046448
+            ],
+            [
+              -2.6250000596046448
+            ],
+            [
+              -2.3750000596046448
+            ],
+            [
+              -1.3981481790542603
+            ],
+            [
+              -2.6250000596046448
+            ]
+          ],
+          "validation": [
+            [
+              -2.6250000596046448
+            ],
+            [
+              -1.2731481790542603
+            ],
+            [
+              -2.5000000596046448
+            ],
+            [
+              -2.6250000596046448
+            ],
+            [
+              -2.7500000596046448
+            ],
+            [
+              -2.5000000596046448
+            ],
+            [
+              -1.1481481790542603
+            ],
+            [
+              -1.2731481790542603
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "run_id": "job-6",
+      "seed": 17,
+      "options": {
+        "rounds": 3,
+        "learning_rate": 0.0,
+        "max_depth": 1,
+        "step": "fixed",
+        "max_trials": 1,
+        "patience": 2,
+        "min_delta": 0.0
+      },
+      "binning_identity": "62b3ded73a714f51659a2e494e887c7a0426d419083e0902eaae4c06ec7055bb",
+      "result": {
+        "model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -2.222222328186035
+          ],
+          "terms": [
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    9.536743306171047e-08
+                  ],
+                  [
+                    2.14814829826355
+                  ],
+                  [
+                    -0.8055554628372192
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.0
+            },
+            {
+              "kind": "tree",
+              "learner": {
+                "format": "openboost-tree-v3",
+                "feature_names": [
+                  "f0",
+                  "f1"
+                ],
+                "cuts": [
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ],
+                  [
+                    0.5,
+                    1.5,
+                    2.5
+                  ]
+                ],
+                "categories": [
+                  null,
+                  null
+                ],
+                "feature": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "threshold": [
+                  0,
+                  -1,
+                  -1
+                ],
+                "missing_left": [
+                  true,
+                  false,
+                  false
+                ],
+                "left": [
+                  1,
+                  -1,
+                  -1
+                ],
+                "right": [
+                  2,
+                  -1,
+                  -1
+                ],
+                "value": [
+                  [
+                    9.536743306171047e-08
+                  ],
+                  [
+                    2.14814829826355
+                  ],
+                  [
+                    -0.8055554628372192
+                  ]
+                ]
+              },
+              "mapping": [
+                [
+                  1.0
+                ]
+              ],
+              "coefficient": 0.0
+            }
+          ],
+          "classes": null
+        },
+        "best_model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -2.222222328186035
+          ],
+          "terms": [],
+          "classes": null
+        },
+        "state": {
+          "identity": "fe0dad8f2e6a65cbb02e46fa76cd917f67b79cd783f0a54414c325d1fb222513",
+          "run_id": "job-6",
+          "version": 2,
+          "loss": 2.864197530864203,
+          "validation_score": 15.469136037944281,
+          "best_score": 15.469136037944281,
+          "n_terms": 2,
+          "best_n_terms": 0
+        },
+        "steps": [
+          {
+            "round_index": 0,
+            "coefficients": [
+              0.0
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 2.864197530864203,
+            "validation_score": 15.469136037944281,
+            "best_score": 15.469136037944281
+          },
+          {
+            "round_index": 1,
+            "coefficients": [
+              0.0
+            ],
+            "accepted": true,
+            "failures": [],
+            "loss": 2.864197530864203,
+            "validation_score": 15.469136037944281,
+            "best_score": 15.469136037944281
+          }
+        ],
+        "stop": {
+          "rounds": 3,
+          "patience": 2,
+          "min_delta": 0.0,
+          "reference_score": 15.469136037944281,
+          "last_score": 15.469136037944281,
+          "completed_rounds": 2,
+          "stale_rounds": 2
+        },
+        "reason": "patience"
+      },
+      "rng": [
+        65409543,
+        49801551,
+        540921251,
+        156275134,
+        1397940301,
+        3880151966,
+        484157641,
+        2349629995
+      ],
+      "inputs": {
+        "train": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAAAIQAAAAAAAAPh/AAAAAAAAAEAAAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8AAAAAAAAAQAAAAAAAAABAAAAAAAAA+H8AAAAAAADwPwAAAAAAAAhAAAAAAAAAAAA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAACAJ0AAAAAAAAAAwAAAAAAAAPy/AAAAAAAAAsAAAAAAAAAAwAAAAAAAAA7AAAAAAAAADkAAAAAAAAAQwA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAA=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAA8D8AAAAAAAAAAAAAAAAAAAhAAAAAAAAA8D8AAAAAAADwPw=="
+          }
+        },
+        "validation": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAACEAAAAAAAAAAAAAAAAAAAPh/AAAAAAAA8D8AAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAD4fwAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPwAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAQAAAAAAAAAAAAAAAAAAACEA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "LQEAAAAAAAA4AQAAAAAAAEMBAAAAAAAATgEAAAAAAABZAQAAAAAAAGQBAAAAAAAAbwEAAAAAAAB6AQAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAEMAAAAAAAAAPQAAAAAAAAA/AAAAAAAAAAMAAAAAAAAABwAAAAAAAAP6/AAAAAAAAAMAAAAAAAMAnQA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvw=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+          }
+        }
+      },
+      "predictions": {
+        "model": {
+          "train": [
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -1.9722223281860352
+            ],
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -1.9722223281860352
+            ],
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ]
+          ],
+          "validation": [
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ],
+            [
+              -2.097222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ],
+            [
+              -2.097222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ]
+          ]
+        },
+        "best_model": {
+          "train": [
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -1.9722223281860352
+            ],
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -1.9722223281860352
+            ],
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ]
+          ],
+          "validation": [
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ],
+            [
+              -2.097222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ],
+            [
+              -2.097222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "run_id": "job-7",
+      "seed": 17,
+      "options": {
+        "rounds": 2,
+        "learning_rate": 256.0,
+        "max_depth": 1,
+        "step": "backtracking",
+        "max_trials": 1,
+        "patience": null,
+        "min_delta": 0.0
+      },
+      "binning_identity": "62b3ded73a714f51659a2e494e887c7a0426d419083e0902eaae4c06ec7055bb",
+      "result": {
+        "model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -2.222222328186035
+          ],
+          "terms": [],
+          "classes": null
+        },
+        "best_model": {
+          "format": "openboost-ensemble-v2",
+          "feature_names": [
+            "f0",
+            "f1"
+          ],
+          "base": [
+            -2.222222328186035
+          ],
+          "terms": [],
+          "classes": null
+        },
+        "state": {
+          "identity": "b2ccacccb9d75731ea93fd2ba69893ada07762d804a8de01e3e8c2873d6e3c06",
+          "run_id": "job-7",
+          "version": 0,
+          "loss": 2.864197530864203,
+          "validation_score": 15.469136037944281,
+          "best_score": 15.469136037944281,
+          "n_terms": 0,
+          "best_n_terms": 0
+        },
+        "steps": [
+          {
+            "round_index": 0,
+            "coefficients": [
+              256.0
+            ],
+            "accepted": false,
+            "failures": [],
+            "loss": 2.864197530864203,
+            "validation_score": 15.469136037944281,
+            "best_score": 15.469136037944281
+          },
+          {
+            "round_index": 1,
+            "coefficients": [
+              256.0
+            ],
+            "accepted": false,
+            "failures": [],
+            "loss": 2.864197530864203,
+            "validation_score": 15.469136037944281,
+            "best_score": 15.469136037944281
+          }
+        ],
+        "stop": {
+          "rounds": 2,
+          "patience": null,
+          "min_delta": 0.0,
+          "reference_score": 15.469136037944281,
+          "last_score": 15.469136037944281,
+          "completed_rounds": 2,
+          "stale_rounds": 2
+        },
+        "reason": "budget"
+      },
+      "rng": [
+        1068107503,
+        2203590572,
+        2516234992,
+        3977038853,
+        1308649964,
+        3147815096,
+        4050216158,
+        2419994457
+      ],
+      "inputs": {
+        "train": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAAAIQAAAAAAAAPh/AAAAAAAAAEAAAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8AAAAAAAAAQAAAAAAAAABAAAAAAAAA+H8AAAAAAADwPwAAAAAAAAhAAAAAAAAAAAA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAACAJ0AAAAAAAAAAwAAAAAAAAPy/AAAAAAAAAsAAAAAAAAAAwAAAAAAAAA7AAAAAAAAADkAAAAAAAAAQwA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAAAAAAAAANA/AAAAAAAA0L8AAAAAAAAAAA=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAA8D8AAAAAAAAAAAAAAAAAAAhAAAAAAAAA8D8AAAAAAADwPw=="
+          }
+        },
+        "validation": {
+          "features": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              2
+            ],
+            "data_base64": "AAAAAAAACEAAAAAAAAAAAAAAAAAAAPh/AAAAAAAA8D8AAAAAAAAAQAAAAAAAAABAAAAAAAAAAEAAAAAAAAD4fwAAAAAAAPA/AAAAAAAAAAAAAAAAAADwPwAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAQAAAAAAAAAAAAAAAAAAACEA="
+          },
+          "row_ids": {
+            "dtype": "<i8",
+            "shape": [
+              8
+            ],
+            "data_base64": "LQEAAAAAAAA4AQAAAAAAAEMBAAAAAAAATgEAAAAAAABZAQAAAAAAAGQBAAAAAAAAbwEAAAAAAAB6AQAAAAAAAA=="
+          },
+          "target": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAEMAAAAAAAAAPQAAAAAAAAA/AAAAAAAAAAMAAAAAAAAABwAAAAAAAAP6/AAAAAAAAAMAAAAAAAMAnQA=="
+          },
+          "offset": {
+            "dtype": "<f8",
+            "shape": [
+              8,
+              1
+            ],
+            "data_base64": "AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvwAAAAAAAMA/AAAAAAAAAAAAAAAAAADAvw=="
+          },
+          "weight": {
+            "dtype": "<f8",
+            "shape": [
+              8
+            ],
+            "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+          }
+        }
+      },
+      "predictions": {
+        "model": {
+          "train": [
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -1.9722223281860352
+            ],
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -1.9722223281860352
+            ],
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ]
+          ],
+          "validation": [
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ],
+            [
+              -2.097222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ],
+            [
+              -2.097222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ]
+          ]
+        },
+        "best_model": {
+          "train": [
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -1.9722223281860352
+            ],
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -1.9722223281860352
+            ],
+            [
+              -2.472222328186035
+            ],
+            [
+              -2.222222328186035
+            ]
+          ],
+          "validation": [
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ],
+            [
+              -2.097222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ],
+            [
+              -2.097222328186035
+            ],
+            [
+              -2.222222328186035
+            ],
+            [
+              -2.347222328186035
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}

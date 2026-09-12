@@ -61,3 +61,18 @@ collection check that did not opt into the newly explicit historical selection.
 Restore the original 383-case collection through the historical flag. Record the
 optional SDK and unsupported-host skips precisely; do not promote them to passes
 or install authoring infrastructure solely to remove a deferred control's skip.
+
+## Installed path is part of readiness
+
+The first GPU attempt at `51186a5d` returned 422 passes and 19 failures because the
+wheel-installed extension still lived inside the checkout's `.venv`. Checking
+only for `site-packages` did not reproduce the actual consumer's installation
+boundary. Keep this failed evidence and preserve the original assertion.
+
+Use `/tmp/pr27-environment` through `UV_PROJECT_ENVIRONMENT` and pin every build
+and validation executable there. CPU readiness must resolve the installed core
+and extension paths and reject any path inside the checkout, including symlinks.
+Metadata-only fake modules expose all three missing rejections before the fix.
+These checks validate the correction's construction; fresh source-bound CPU and
+CUDA results are still required. The checkpoint reserve is now $8 within the
+unchanged $200 task ceiling, with consumed attempts preserved separately.

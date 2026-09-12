@@ -1,0 +1,1346 @@
+{
+  "case": "poisson/1/backtracking/0.0",
+  "inputs": {
+    "train": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAAPh/AAAAAAAAGEAAAAAAAAAcQA=="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAAAAABAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAAEAAAAAAAAAAUAAAAAAAAABgAAAAAAAAAHAAAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAAAAAAAAAAAAEEAAAAAAAAAcQAAAAAAAAABAAAAAAAAAIEAAAAAAAAAIQA=="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAwL8AAAAAAAAAAAAAAAAAAMA/AAAAAAAAwL8AAAAAAAAAAAAAAAAAAMA/AAAAAAAAwL8AAAAAAAAAAA=="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAPA/AAAAAAAACEAAAAAAAADwPwAAAAAAAPA/AAAAAAAAAEAAAAAAAADwPw=="
+      },
+      "exposure": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAA4D8AAAAAAADwPwAAAAAAAPg/AAAAAAAAAEAAAAAAAADgPwAAAAAAAPA/AAAAAAAA+D8AAAAAAAAAQA=="
+      }
+    },
+    "validation": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAHEAAAAAAAAAAQAAAAAAAAPh/AAAAAAAAAAAAAAAAAAAYQAAAAAAAAAhAAAAAAAAA8D8AAAAAAAAQQA=="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "ZAAAAAAAAABlAAAAAAAAAGYAAAAAAAAAZwAAAAAAAABoAAAAAAAAAGkAAAAAAAAAagAAAAAAAABrAAAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAACEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAgQAAAAAAAABBAAAAAAAAA8D8AAAAAAAAcQA=="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAACwPwAAAAAAALA/AAAAAAAAsL8AAAAAAACwvwAAAAAAALC/AAAAAAAAAAAAAAAAAAAAAA=="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhAAAAAAAAAEEAAAAAAAAAUQAAAAAAAABhAAAAAAAAAHEAAAAAAAAAgQA=="
+      },
+      "exposure": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAEEAAAAAAAAAIQAAAAAAAAABAAAAAAAAA8D8AAAAAAAAIQAAAAAAAABBAAAAAAAAAAEAAAAAAAADwPw=="
+      }
+    }
+  },
+  "model": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.9829526543617249
+    ],
+    "terms": [],
+    "classes": null
+  },
+  "best": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.9829526543617249
+    ],
+    "terms": [],
+    "classes": null
+  },
+  "steps": [
+    {
+      "round_index": 0,
+      "before_version": 0,
+      "after_version": 0,
+      "trials": [
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        }
+      ],
+      "loss": 2.807233675522561,
+      "validation_score": 3.757977713857324,
+      "best_score": 3.757977713857324,
+      "validation_change": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      }
+    },
+    {
+      "round_index": 1,
+      "before_version": 0,
+      "after_version": 0,
+      "trials": [
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.807233675522561,
+          "validation_score": 3.757977713857324,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "poisson-convex-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        }
+      ],
+      "loss": 2.807233675522561,
+      "validation_score": 3.757977713857324,
+      "best_score": 3.757977713857324,
+      "validation_change": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      }
+    }
+  ],
+  "stop": {
+    "rounds": 3,
+    "patience": 2,
+    "min_delta": 0.01,
+    "reference_score": 3.757977713857324,
+    "last_score": 3.757977713857324,
+    "completed_rounds": 2,
+    "stale_rounds": 2
+  },
+  "comparisons": [
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          3.0,
+          0.0,
+          2.0,
+          0.0,
+          8.0,
+          4.0,
+          1.0,
+          7.0
+        ],
+        [
+          0.0,
+          0.0625,
+          0.0625,
+          -0.0625,
+          -0.0625,
+          -0.0625,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          8.0
+        ],
+        [
+          4.0,
+          3.0,
+          2.0,
+          1.0,
+          3.0,
+          4.0,
+          2.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          4.0,
+          7.0,
+          2.0,
+          8.0,
+          3.0
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          1.0,
+          2.0,
+          1.0
+        ],
+        [
+          0.5,
+          1.0,
+          1.5,
+          2.0,
+          0.5,
+          1.0,
+          1.5,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-219"
+    },
+    {
+      "inputs": [
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249,
+          0.9829526543617249
+        ],
+        [
+          3.0,
+          0.0,
+          2.0,
+          0.0,
+          8.0,
+          4.0,
+          1.0,
+          7.0
+        ],
+        [
+          0.0,
+          0.0625,
+          0.0625,
+          -0.0625,
+          -0.0625,
+          -0.0625,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          8.0
+        ],
+        [
+          4.0,
+          3.0,
+          2.0,
+          1.0,
+          3.0,
+          4.0,
+          2.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "poisson-convex-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    }
+  ]
+}

@@ -30,7 +30,9 @@ pass. No launch or passing result is implied by this execution plan.
 Each protocol pins source revision, inventory, interpreter, packages, test population,
 resources, deadlines and zero retries. CPU receipts and the actual installed CUDA
 collection are prerequisites for allocating a GPU. The original cumulative $200
-ceiling remains in force, with a $5 reserve for this checkpoint phase.
+ceiling remains in force, with an $8 reserve for this checkpoint phase: five
+consumed attempts and three separately frozen $1 correction allowances. These are
+planning reserves, not invoices; original attempt records retain their original bounds.
 
 GitHub runs `.github/scripts/check_modal_validation.py` to verify the committed
 receipts and raw artifacts against every tracked candidate blob. Only
@@ -72,3 +74,21 @@ these two CPU skips with exact IDs/reasons, without counting them as passes or
 activating deferred authoring infrastructure. All CUDA/prerequisite skips still
 fail. Original failed phase outputs remain retained; distinct corrected attempts
 must validate the new candidate before merge.
+
+## Installed-location correction
+
+At `51186a5d`, both CPU versions passed 4,631 tests with the two exact expected
+skips; Python 3.12 also passed strict documentation and the 48 installed CPU
+prerequisites. The first GPU attempt returned 422 passes and 19 failures. Its
+installed extension was inside `/tmp/pr27-source/.venv`, while the unchanged
+consumer requires installation outside the entire source checkout. Preserve
+[that failed attempt](../docs/v1/evidence/pr27-modal-validation/failed-gpu-run1/manifest.json).
+
+Set `UV_PROJECT_ENVIRONMENT=/tmp/pr27-environment` for every synchronization and
+use that environment for builds, installs and validation commands. CPU readiness
+now resolves both installed core and extension paths and applies the original
+outside-checkout condition before CUDA allocation, including symlink resolution.
+The source-byte and extension-version checks remain. Metadata controls reproduce
+the original missing rejection, then verify the corrected boundary. No production
+or scientific test assertion changes; all three phases require new source-bound
+results before merge.

@@ -1,0 +1,67 @@
+{
+  "case": "balanced",
+  "kind": "large",
+  "stage": "complete",
+  "x": [
+    [
+      0
+    ],
+    [
+      0
+    ]
+  ],
+  "fields": [
+    [
+      3.4028234663852886e+38,
+      3.4028234663852886e+38
+    ],
+    [
+      3.4028234663852886e+38,
+      3.4028234663852886e+38
+    ]
+  ],
+  "parameters": {
+    "depth": 0,
+    "regularization": 0
+  },
+  "tree": {
+    "format": "openboost-tree-v3",
+    "feature_names": [
+      "x"
+    ],
+    "cuts": [
+      []
+    ],
+    "categories": [
+      null
+    ],
+    "feature": [
+      -1
+    ],
+    "threshold": [
+      -1
+    ],
+    "missing_left": [
+      false
+    ],
+    "left": [
+      -1
+    ],
+    "right": [
+      -1
+    ],
+    "value": [
+      [
+        -1.0
+      ]
+    ]
+  },
+  "prediction": [
+    [
+      -1.0
+    ],
+    [
+      -1.0
+    ]
+  ]
+}

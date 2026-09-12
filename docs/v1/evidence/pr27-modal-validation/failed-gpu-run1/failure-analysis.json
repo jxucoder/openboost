@@ -1,0 +1,14 @@
+{
+  "source_commit": "51186a5de6afed6c3d589a5df2383dd29dd76c1b",
+  "verdict": "fail",
+  "cases": 441,
+  "passed": 422,
+  "failed": 19,
+  "skipped": 0,
+  "worker_seconds": 435.295581192,
+  "gpu_test_child_seconds": 407.618046124,
+  "root_cause": "Installed wheel environment is nested under source checkout; all 19 extension consumers stop at original outside-checkout path assertion before extension training.",
+  "correction": "Keep consumer assertions; move actual installed validation environment outside checkout and enforce the exact boundary in CPU readiness. Freeze new source and rerun both CPUs before dependent GPU.",
+  "artifacts": 955,
+  "manifest_sha256": "ecc94cfac352590ccfb5917466fd59d5d6f1871df9ecc9973bcb5ac8384cf76e"
+}

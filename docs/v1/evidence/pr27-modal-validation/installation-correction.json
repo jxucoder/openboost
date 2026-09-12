@@ -1,0 +1,17 @@
+{
+  "source_commit": "51186a5de6afed6c3d589a5df2383dd29dd76c1b",
+  "failed_manifest": {
+    "path": "failed-gpu-run1/manifest.json",
+    "sha256": "ecc94cfac352590ccfb5917466fd59d5d6f1871df9ecc9973bcb5ac8384cf76e",
+    "bytes": 830668
+  },
+  "observed": {
+    "cases": 441,
+    "passed": 422,
+    "failed": 19,
+    "skipped": 0
+  },
+  "cause": "All19 installed extension consumers stopped before training at their original outside-checkout guard. The real wheel was installed under the checkout .venv.",
+  "correction": "Move validation environment outside checkout and enforce the exact installed-origin condition in CPU readiness. Preserve original consumer assertions and production bytes.",
+  "verification_required": "Fresh CPU310 and CPU312 receipts at corrected source, then a distinct bounded441-case T4 run. Prior failed verdict remains failed."
+}

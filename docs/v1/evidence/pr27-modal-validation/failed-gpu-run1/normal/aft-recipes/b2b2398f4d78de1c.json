@@ -1,0 +1,1353 @@
+{
+  "case": "aft/2/1/backtracking/0.0/False",
+  "sigma": 2,
+  "inputs": {
+    "train": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAAPh/AAAAAAAAGEAAAAAAAAAcQA=="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAAAAABAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAAEAAAAAAAAAAUAAAAAAAAABgAAAAAAAAAHAAAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAABAAAAAAAAA8H8AAAAAAADwPwAAAAAAAPA/AAAAAAAAIEAAAAAAAAAgQAAAAAAAADBAAAAAAAAA8H8AAAAAAAAQQAAAAAAAAPB/AAAAAAAAQEAAAAAAAABAQAAAAAAAACBAAAAAAAAA8H8="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAwL8AAAAAAAAAAAAAAAAAAMA/AAAAAAAAwL8AAAAAAAAAAAAAAAAAAMA/AAAAAAAAwL8AAAAAAAAAAA=="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAPA/AAAAAAAACEAAAAAAAADwPwAAAAAAAABAAAAAAAAAAEAAAAAAAADwPw=="
+      }
+    },
+    "validation": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAHEAAAAAAAAAAQAAAAAAAAPh/AAAAAAAAAAAAAAAAAAAYQAAAAAAAAAhAAAAAAAAA8D8AAAAAAAAQQA=="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "ZAAAAAAAAABlAAAAAAAAAGYAAAAAAAAAZwAAAAAAAABoAAAAAAAAAGkAAAAAAAAAagAAAAAAAABrAAAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAAMEAAAAAAAADwfwAAAAAAAABAAAAAAAAAAEAAAAAAAAAgQAAAAAAAAPB/AAAAAAAAAEAAAAAAAAAAQAAAAAAAAFBAAAAAAAAAUEAAAAAAAAAwQAAAAAAAADBAAAAAAAAAEEAAAAAAAADwfwAAAAAAAEBAAAAAAAAA8H8="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAACwPwAAAAAAALA/AAAAAAAAsL8AAAAAAACwvwAAAAAAALC/AAAAAAAAAAAAAAAAAAAAAA=="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhAAAAAAAAAEEAAAAAAAAAUQAAAAAAAABhAAAAAAAAAHEAAAAAAAAAgQA=="
+      }
+    }
+  },
+  "model": {
+    "format": "openboost-aft-lognormal-v1",
+    "sigma": 2.0,
+    "model": {
+      "format": "openboost-ensemble-v2",
+      "feature_names": [
+        "x"
+      ],
+      "base": [
+        1.735054612159729
+      ],
+      "terms": [],
+      "classes": null
+    }
+  },
+  "best": {
+    "format": "openboost-aft-lognormal-v1",
+    "sigma": 2.0,
+    "model": {
+      "format": "openboost-ensemble-v2",
+      "feature_names": [
+        "x"
+      ],
+      "base": [
+        1.735054612159729
+      ],
+      "terms": [],
+      "classes": null
+    }
+  },
+  "steps": [
+    {
+      "round_index": 0,
+      "before_version": 0,
+      "after_version": 0,
+      "trials": [
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        }
+      ],
+      "loss": 2.3039863989238083,
+      "validation_score": 2.6464143514988496,
+      "best_score": 2.6464143514988496,
+      "validation_change": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      }
+    },
+    {
+      "round_index": 1,
+      "before_version": 0,
+      "after_version": 0,
+      "trials": [
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 2.3039863989238083,
+          "validation_score": 2.6464143514988496,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "aft-mills-integral-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        }
+      ],
+      "loss": 2.3039863989238083,
+      "validation_score": 2.6464143514988496,
+      "best_score": 2.6464143514988496,
+      "validation_change": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      }
+    }
+  ],
+  "stop": {
+    "rounds": 3,
+    "patience": 2,
+    "min_delta": 0.01,
+    "reference_score": 2.6464143514988496,
+    "last_score": 2.6464143514988496,
+    "completed_rounds": 2,
+    "stale_rounds": 2
+  },
+  "comparisons": [
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          16.0,
+          2.0,
+          8.0,
+          2.0,
+          64.0,
+          16.0,
+          4.0,
+          32.0
+        ],
+        [
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        [
+          0.0,
+          0.0625,
+          0.0625,
+          -0.0625,
+          -0.0625,
+          -0.0625,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          8.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          8.0,
+          16.0,
+          4.0,
+          32.0,
+          8.0
+        ],
+        [
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false
+        ],
+        [
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0,
+          0.125,
+          -0.125,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          1.0,
+          3.0,
+          1.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    },
+    {
+      "inputs": [
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729,
+          1.735054612159729
+        ],
+        [
+          16.0,
+          2.0,
+          8.0,
+          2.0,
+          64.0,
+          16.0,
+          4.0,
+          32.0
+        ],
+        [
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        [
+          0.0,
+          0.0625,
+          0.0625,
+          -0.0625,
+          -0.0625,
+          -0.0625,
+          0.0,
+          0.0
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          8.0
+        ],
+        2.0
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "aft-mills-integral-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal220": "0E-218"
+    }
+  ]
+}
