@@ -320,18 +320,27 @@ class Multiclass:
 
     @classmethod
     def geometry(cls, problem, raw):
-        from .outputs import softmax_probabilities
-
         cls.validate(problem)
         values = problem.with_offset(raw)
-        probability = softmax_probabilities(values)
         codes = problem.target[:, 0].astype(int)
         with np.errstate(over="raise", invalid="raise", divide="raise"):
-            shifted = values - values.max(axis=1, keepdims=True)
-            losses = np.log(np.exp(shifted).sum(axis=1)) - shifted[np.arange(len(values)), codes]
+            rows = np.arange(len(values))
+            maximum = values.argmax(axis=1)
+            shifted = values - values[rows, maximum, None]
+            tails = np.exp(shifted)
+            tails[rows, maximum] = 0
+            tail = tails.sum(axis=1)
+            denominator = 1 + tail
+            probability = tails / denominator[:, None]
+            probability[rows, maximum] = 1 / denominator
+            complement = 1 - probability
+            # The dominant probability can round to one while its complement is
+            # representable. Keep that complement and the correct-class loss.
+            complement[rows, maximum] = tail / denominator
+            losses = np.log1p(tail) - shifted[rows, codes]
             gradient = probability.copy()
-            gradient[np.arange(len(values)), codes] -= 1
-            bound = 2 * probability * (1 - probability)
+            gradient[rows, codes] = -complement[rows, codes]
+            bound = 2 * probability * complement
             loss = float(np.dot(problem.weight / problem.weight.sum(), losses))
         if not np.isfinite(loss):
             raise ValueError("nonfinite multiclass loss")

@@ -1,0 +1,459 @@
+........................................................................ [ 16%]
+........................................................................ [ 32%]
+........................................................................ [ 48%]
+........................................................................ [ 65%]
+........................................................................ [ 81%]
+.............................................................FFFFFFFFFFF [ 97%]
+FFFFFFF.F                                                                [100%]
+=================================== FAILURES ===================================
+_ test_installed_exact_d2_matches_validated_models_and_repeats[fixed-joint-ordinary] _
+
+geometry = 'ordinary', update = 'joint', step = 'fixed'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche0')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[fixed-joint-natural] _
+
+geometry = 'natural', update = 'joint', step = 'fixed'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche1')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[fixed-joint-damped] _
+
+geometry = 'damped', update = 'joint', step = 'fixed'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche2')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[fixed-forward-ordinary] _
+
+geometry = 'ordinary', update = 'forward', step = 'fixed'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche3')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[fixed-forward-natural] _
+
+geometry = 'natural', update = 'forward', step = 'fixed'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche4')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[fixed-forward-damped] _
+
+geometry = 'damped', update = 'forward', step = 'fixed'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche5')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[fixed-reverse-ordinary] _
+
+geometry = 'ordinary', update = 'reverse', step = 'fixed'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche6')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[fixed-reverse-natural] _
+
+geometry = 'natural', update = 'reverse', step = 'fixed'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche7')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[fixed-reverse-damped] _
+
+geometry = 'damped', update = 'reverse', step = 'fixed'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche8')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-joint-ordinary] _
+
+geometry = 'ordinary', update = 'joint', step = 'backtracking'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche9')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-joint-natural] _
+
+geometry = 'natural', update = 'joint', step = 'backtracking'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche10')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-joint-damped] _
+
+geometry = 'damped', update = 'joint', step = 'backtracking'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche11')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-forward-ordinary] _
+
+geometry = 'ordinary', update = 'forward', step = 'backtracking'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche12')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-forward-natural] _
+
+geometry = 'natural', update = 'forward', step = 'backtracking'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche13')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-forward-damped] _
+
+geometry = 'damped', update = 'forward', step = 'backtracking'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche14')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-reverse-ordinary] _
+
+geometry = 'ordinary', update = 'reverse', step = 'backtracking'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche15')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-reverse-natural] _
+
+geometry = 'natural', update = 'reverse', step = 'backtracking'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche16')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_ test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-reverse-damped] _
+
+geometry = 'damped', update = 'reverse', step = 'backtracking'
+tmp_path = PosixPath('/tmp/pr27-results/pytest-tmp/test_installed_exact_d2_matche17')
+
+    @pytest.mark.parametrize('geometry',['ordinary','natural','damped'])
+    @pytest.mark.parametrize('update',['joint','forward','reverse'])
+    @pytest.mark.parametrize('step',['fixed','backtracking'])
+    def test_installed_exact_d2_matches_validated_models_and_repeats(geometry,update,step,tmp_path):
+        import ob_cohort_splits.device as extension
+        path=Path(extension.__file__).resolve()
+        source=ROOT/'examples/v1_extensions/cohort_splits/src/ob_cohort_splits/device.py'
+>       assert 'site-packages' in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_checkpoint_normal_extension_cuda.py:73: AssertionError
+_____ test_installed_d2_rejects_wrong_identity_and_releases_after_failure ______
+
+    def test_installed_d2_rejects_wrong_identity_and_releases_after_failure():
+>       cls = installed_learner()
+              ^^^^^^^^^^^^^^^^^^^
+
+tests/v1/test_compared_normal_extension_cuda.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def installed_learner():
+        import ob_cohort_splits.device as extension
+    
+        path = Path(extension.__file__).resolve()
+>       assert "site-packages" in path.parts and not path.is_relative_to(ROOT)
+E       AssertionError: assert ('site-packages' in ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) and not True)
+E        +  where ('/', 'tmp', 'pr27-source', '.venv', 'lib', 'python3.12', ...) = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').parts
+E        +  and   True = is_relative_to(PosixPath('/tmp/pr27-source'))
+E        +    where is_relative_to = PosixPath('/tmp/pr27-source/.venv/lib/python3.12/site-packages/ob_cohort_splits/device.py').is_relative_to
+
+tests/v1/test_compared_normal_extension_cuda.py:35: AssertionError
+=============================== warnings summary ===============================
+tests/v1/test_device_glm_recipes_cuda.py: 58 warnings
+tests/v1/test_device_aft_recipes_cuda.py: 50 warnings
+tests/v1/test_device_multiclass_recipes_cuda.py: 44 warnings
+tests/v1/test_device_multi_squared_recipes_cuda.py: 75 warnings
+tests/v1/test_device_inputs_cuda.py: 23 warnings
+tests/v1/test_grouped_runs_cuda.py: 34 warnings
+tests/v1/test_grouped_growth_cuda.py: 32 warnings
+tests/v1/test_device_tree_policy_cuda.py: 42 warnings
+tests/v1/test_current_normal_cuda.py: 97 warnings
+tests/v1/test_newton_reduction_cuda.py: 24 warnings
+tests/v1/test_compared_normal_extension_cuda.py: 1 warning
+  /tmp/pr27-source/.venv/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 1 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_glm_recipes_cuda.py: 40 warnings
+tests/v1/test_device_aft_recipes_cuda.py: 48 warnings
+tests/v1/test_device_multiclass_recipes_cuda.py: 40 warnings
+tests/v1/test_device_multi_squared_recipes_cuda.py: 55 warnings
+tests/v1/test_device_inputs_cuda.py: 18 warnings
+tests/v1/test_grouped_runs_cuda.py: 28 warnings
+tests/v1/test_grouped_growth_cuda.py: 31 warnings
+tests/v1/test_device_tree_policy_cuda.py: 48 warnings
+tests/v1/test_current_normal_cuda.py: 95 warnings
+tests/v1/test_newton_reduction_cuda.py: 7 warnings
+tests/v1/test_compared_normal_extension_cuda.py: 1 warning
+  /tmp/pr27-source/.venv/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 2 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_multiclass_recipes_cuda.py: 19 warnings
+tests/v1/test_grouped_growth_cuda.py: 5 warnings
+tests/v1/test_device_tree_policy_cuda.py: 1 warning
+  /tmp/pr27-source/.venv/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 3 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_multiclass_recipes_cuda.py: 10 warnings
+tests/v1/test_grouped_runs_cuda.py: 3 warnings
+  /tmp/pr27-source/.venv/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 5 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_multi_squared_recipes_cuda.py: 33 warnings
+tests/v1/test_grouped_runs_cuda.py: 3 warnings
+tests/v1/test_grouped_growth_cuda.py: 38 warnings
+tests/v1/test_current_normal_cuda.py: 18 warnings
+tests/v1/test_newton_reduction_cuda.py: 1 warning
+  /tmp/pr27-source/.venv/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 4 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_multi_squared_recipes_cuda.py: 13 warnings
+tests/v1/test_grouped_growth_cuda.py: 2 warnings
+tests/v1/test_newton_reduction_cuda.py: 1 warning
+  /tmp/pr27-source/.venv/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 8 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_grouped_growth_cuda.py::test_grouped_trees_match_independent_runs_and_original_row_math[False-2-32]
+tests/v1/test_grouped_growth_cuda.py::test_grouped_trees_match_independent_runs_and_original_row_math[True-2-32]
+  /tmp/pr27-source/.venv/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 6 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_newton_reduction_cuda.py::test_parallel_rational_winner_and_every_odd_tail[housing_width]
+  /tmp/pr27-source/.venv/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 32 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_newton_reduction_cuda.py::test_parallel_rational_winner_and_every_odd_tail[housing_width]
+  /tmp/pr27-source/.venv/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 16 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[fixed-joint-ordinary]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[fixed-joint-natural]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[fixed-joint-damped]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[fixed-forward-ordinary]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[fixed-forward-natural]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[fixed-forward-damped]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[fixed-reverse-ordinary]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[fixed-reverse-natural]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[fixed-reverse-damped]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-joint-ordinary]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-joint-natural]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-joint-damped]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-forward-ordinary]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-forward-natural]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-forward-damped]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-reverse-ordinary]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-reverse-natural]
+FAILED tests/v1/test_checkpoint_normal_extension_cuda.py::test_installed_exact_d2_matches_validated_models_and_repeats[backtracking-reverse-damped]
+FAILED tests/v1/test_compared_normal_extension_cuda.py::test_installed_d2_rejects_wrong_identity_and_releases_after_failure
+19 failed, 422 passed, 1042 warnings in 399.20s (0:06:39)

@@ -6,6 +6,7 @@ import sys
 import numpy as np
 
 from ._comparison_math import cpu_add, cpu_div, cpu_mul, cpu_row_change
+from ._normal_comparison_arrays import rows
 from .comparison import _normal_result
 from .data import _owned
 
@@ -38,19 +39,26 @@ def compare(problem, before, after):
         raise RuntimeError("round-to-nearest binary64 required for comparison")
     before, after = _raw(problem, before), _raw(problem, after)
     total, mass, code = (0.0, 0.0), (0.0, 0.0), 0
-    for old, new, target, offset, weight in zip(
-        before, after, problem.target, problem.offset, problem.weight, strict=True
-    ):
-        lower, upper, row_code = cpu_row_change(
-            float(old[0]),
-            float(old[1]),
-            float(new[0]),
-            float(new[1]),
-            float(target[0]),
-            float(offset[0]),
-            float(offset[1]),
+    if len(before) >= 32:
+        changes = rows(before, after, problem.target[:, 0], problem.offset)
+    else:
+        changes = (
+            cpu_row_change(
+                float(old[0]),
+                float(old[1]),
+                float(new[0]),
+                float(new[1]),
+                float(target[0]),
+                float(offset[0]),
+                float(offset[1]),
+            )
+            for old, new, target, offset in zip(
+                before, after, problem.target, problem.offset, strict=True
+            )
         )
-        code = max(code, row_code)
+    for (lower, upper, row_code), weight in zip(changes, problem.weight, strict=True):
+        lower, upper = float(lower), float(upper)
+        code = max(code, int(row_code))
         w = float(weight), float(weight)
         total, mass = cpu_add(total, cpu_mul((lower, upper), w)), cpu_add(mass, w)
     bounds = cpu_div(total, mass)

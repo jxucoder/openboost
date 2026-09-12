@@ -1,0 +1,79 @@
+........................................................................ [ 16%]
+........................................................................ [ 32%]
+........................................................................ [ 48%]
+........................................................................ [ 65%]
+........................................................................ [ 81%]
+........................................................................ [ 97%]
+.........                                                                [100%]
+=============================== warnings summary ===============================
+tests/v1/test_device_glm_recipes_cuda.py: 58 warnings
+tests/v1/test_device_aft_recipes_cuda.py: 50 warnings
+tests/v1/test_device_multiclass_recipes_cuda.py: 44 warnings
+tests/v1/test_device_multi_squared_recipes_cuda.py: 75 warnings
+tests/v1/test_device_inputs_cuda.py: 23 warnings
+tests/v1/test_grouped_runs_cuda.py: 34 warnings
+tests/v1/test_grouped_growth_cuda.py: 32 warnings
+tests/v1/test_device_tree_policy_cuda.py: 42 warnings
+tests/v1/test_current_normal_cuda.py: 97 warnings
+tests/v1/test_newton_reduction_cuda.py: 24 warnings
+tests/v1/test_checkpoint_normal_extension_cuda.py: 18 warnings
+tests/v1/test_compared_normal_extension_cuda.py: 2 warnings
+  /tmp/pr27-environment/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 1 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_glm_recipes_cuda.py: 40 warnings
+tests/v1/test_device_aft_recipes_cuda.py: 48 warnings
+tests/v1/test_device_multiclass_recipes_cuda.py: 40 warnings
+tests/v1/test_device_multi_squared_recipes_cuda.py: 55 warnings
+tests/v1/test_device_inputs_cuda.py: 18 warnings
+tests/v1/test_grouped_runs_cuda.py: 28 warnings
+tests/v1/test_grouped_growth_cuda.py: 31 warnings
+tests/v1/test_device_tree_policy_cuda.py: 48 warnings
+tests/v1/test_current_normal_cuda.py: 95 warnings
+tests/v1/test_newton_reduction_cuda.py: 7 warnings
+tests/v1/test_checkpoint_normal_extension_cuda.py: 18 warnings
+tests/v1/test_compared_normal_extension_cuda.py: 2 warnings
+  /tmp/pr27-environment/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 2 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_multiclass_recipes_cuda.py: 19 warnings
+tests/v1/test_grouped_growth_cuda.py: 5 warnings
+tests/v1/test_device_tree_policy_cuda.py: 1 warning
+  /tmp/pr27-environment/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 3 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_multiclass_recipes_cuda.py: 10 warnings
+tests/v1/test_grouped_runs_cuda.py: 3 warnings
+  /tmp/pr27-environment/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 5 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_multi_squared_recipes_cuda.py: 33 warnings
+tests/v1/test_grouped_runs_cuda.py: 3 warnings
+tests/v1/test_grouped_growth_cuda.py: 38 warnings
+tests/v1/test_current_normal_cuda.py: 18 warnings
+tests/v1/test_newton_reduction_cuda.py: 1 warning
+tests/v1/test_checkpoint_normal_extension_cuda.py: 18 warnings
+  /tmp/pr27-environment/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 4 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_device_multi_squared_recipes_cuda.py: 13 warnings
+tests/v1/test_grouped_growth_cuda.py: 2 warnings
+tests/v1/test_newton_reduction_cuda.py: 1 warning
+  /tmp/pr27-environment/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 8 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_grouped_growth_cuda.py::test_grouped_trees_match_independent_runs_and_original_row_math[False-2-32]
+tests/v1/test_grouped_growth_cuda.py::test_grouped_trees_match_independent_runs_and_original_row_math[True-2-32]
+  /tmp/pr27-environment/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 6 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_newton_reduction_cuda.py::test_parallel_rational_winner_and_every_odd_tail[housing_width]
+  /tmp/pr27-environment/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 32 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+tests/v1/test_newton_reduction_cuda.py::test_parallel_rational_winner_and_every_odd_tail[housing_width]
+  /tmp/pr27-environment/lib/python3.12/site-packages/numba_cuda/numba/cuda/dispatcher.py:716: NumbaPerformanceWarning: [1mGrid size 16 will likely result in GPU under-utilization due to low occupancy.[0m
+    warn(errors.NumbaPerformanceWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+441 passed, 1098 warnings in 465.82s (0:07:45)

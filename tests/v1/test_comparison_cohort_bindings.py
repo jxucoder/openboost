@@ -78,7 +78,8 @@ def test_binding_file_covers_all_historical_cases_and_actual_collection():
     assert len(nodes) == len(set(nodes)) == 383
     files = list(dict.fromkeys(n.split("::")[0] for n in nodes))
     result = subprocess.check_output(
-        [sys.executable, "-m", "pytest", *files, "--collect-only", "-o", "addopts=", "-q"],
+        [sys.executable, "-m", "pytest", *files, "--include-historical-normal",
+         "--collect-only", "-o", "addopts=", "-n", "0", "-q"],
         cwd=ROOT,
         text=True,
     )

@@ -198,6 +198,25 @@ def _parameter(value):
     return result
 
 
+def _vector_schema(names, roles):
+    """Canonical channel indices; physical field order and extra information are free."""
+    names, roles = _schema(tuple(names), tuple(roles), len(names))
+    gradient_names = {n for n in names if n.startswith("gradient:")}
+    curvature_names = {n for n in names if n.startswith("curvature:")}
+    width = len(gradient_names)
+    if (
+        not width
+        or gradient_names != {f"gradient:{k}" for k in range(width)}
+        or curvature_names != {f"curvature:{k}" for k in range(width)}
+    ):
+        raise ValueError("paired contiguous vector gradient:k and curvature:k fields required")
+    g = tuple(names.index(f"gradient:{k}") for k in range(width))
+    h = tuple(names.index(f"curvature:{k}") for k in range(width))
+    if any(roles[k] != "training" for k in (*g, *h)):
+        raise ValueError("once-weighted training vector gradient and curvature required")
+    return g, h
+
+
 class DeviceOperations:
     """Public composition of context-owned fields and actual routed reductions.
 
@@ -479,6 +498,86 @@ class DeviceOperations:
         self.execution._counts["decision_export_bytes"] += result.nbytes
         self.execution.release(buffer)
         return result
+
+    def _vector_columns(self, histogram):
+        fields = self._get(histogram.fields, DeviceFields)
+        g, h = _vector_schema(fields.names, fields.roles)
+        for column in h:
+            self._validate(
+                self.execution._array(fields.values)[:, column : column + 1], nonnegative=True
+            )
+        return g, h
+
+    @_atomic
+    def vector_scores(self, candidates, *, reg_lambda=1.0, split_penalty=0.0):
+        """Sum diagonal Newton node criteria in channel order; subtract one split penalty."""
+        batch = self._batch(candidates)
+        regularization, penalty = _parameter(reg_lambda), _parameter(split_penalty)
+        g, h = self._vector_columns(batch.histogram)
+        context = self.execution
+        output = context._empty((batch.size,), np.float32)
+        self._launch(
+            "vector_scores",
+            batch.size,
+            context._array(batch.values),
+            context._array(batch.counts),
+            context._array(batch.active),
+            context._array(batch.histogram.total),
+            g,
+            h,
+            regularization,
+            penalty,
+            context._array(output),
+        )
+        self._validate(
+            context._array(output).reshape(-1, 1),
+            message="finite vector gains and positive finite Newton denominators required",
+        )
+        return self._record(DeviceScores(batch, output), (output,), (output,))
+
+    @_atomic
+    def vector_feasible(self, candidates, *, min_child_h=0.0):
+        """Nonempty children with positive curvature meeting the minimum in every channel."""
+        batch = self._batch(candidates)
+        minimum = _parameter(min_child_h)
+        _, h = self._vector_columns(batch.histogram)
+        context = self.execution
+        output = context._empty((batch.size,), bool)
+        self._launch(
+            "vector_feasible",
+            batch.size,
+            context._array(batch.values),
+            context._array(batch.counts),
+            context._array(batch.active),
+            h,
+            minimum,
+            context._array(output),
+        )
+        return self._record(DeviceMask(batch, output), (output,), (output,))
+
+    @_atomic
+    def vector_leaf(self, histogram, *, reg_lambda=1.0):
+        """Owned [L] diagonal Newton values for exactly the histogram's routed rows."""
+        hist = self._get(histogram, DeviceHistogram)
+        self._get(hist.rows, DeviceRows)
+        regularization = _parameter(reg_lambda)
+        g, h = self._vector_columns(hist)
+        context = self.execution
+        output = context._empty((len(g),), np.float32)
+        self._launch(
+            "vector_leaf",
+            len(g),
+            context._array(hist.total),
+            g,
+            h,
+            regularization,
+            context._array(output),
+        )
+        self._validate(
+            context._array(output).reshape(1, -1),
+            message="finite vector leaf with nonnegative curvature and positive denominator required",
+        )
+        return output
 
     @_atomic
     def candidates(self, histogram):

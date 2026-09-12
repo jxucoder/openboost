@@ -1,0 +1,19 @@
+{
+  "schema": "openboost-pr27-validation-construction-v1",
+  "numerical_tests_executed": 0,
+  "production_files_unchanged": 64,
+  "new_extension_functions_preserved": 4,
+  "gpu_cases_collected": 441,
+  "gpu_collection_seconds": 1.16,
+  "receipt_metadata_checks": 9,
+  "candidate_runtime": "pending",
+  "prelaunch_failures": [
+    "Initial deployed metadata controls could not locate the policy beside scripts; corrected parent-directory lookup.",
+    "Review found node-specific GPU selectors were rejected by the policy checker; aligned selector syntax and added actual-policy coverage."
+  ],
+  "source_sha256": {
+    ".github/scripts/modal_validate_checkpoint.py": "25ac5d4ab7381171b858a4a62512e1bc9eb71d9d5f85f217b48d248a7a10c3f9",
+    ".github/scripts/check_modal_validation.py": "553a8ff1556ba585155a7a23b248c9b7b3dfcc90fa15777240a9dba16dc76284",
+    ".github/scripts/test_check_modal_validation.py": "2096070126d2d2191531167a4d717adc1c7e1bdcbce0f2fedb7ba8923c1297c4"
+  }
+}

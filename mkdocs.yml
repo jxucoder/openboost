@@ -13,9 +13,17 @@ markdown_extensions:
   - tables
 nav:
   - Current v1 status: index.md
+  - Foundation checkpoint: checkpoint.md
   - CPU state components: cpu-state.md
   - Experimental CUDA storage: execution.md
+  - Sequential device runs: device-runs.md
+  - Grouped device histograms: device-groups.md
   - Numeric operations: numeric-ops.md
+  - Exact Newton ordering: newton-order.md
+  - Exact device Newton ordering: exact-device-newton.md
+  - Exact device leaves: exact-device-leaf.md
+  - Device numerical policies: device-tree-numerical-policies.md
+  - Exact Normal defaults: normal-exact-default.md
   - Tree policies: trees.md
   - Squared boosting: squared.md
   - Normal boosting: normal.md

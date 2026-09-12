@@ -1,74 +1,63 @@
 # OpenBoost v1
 
-OpenBoost is a programmable boosting foundation for researchers and agents, under
-construction. Initial public CPU ownership, run-state and mapped ensemble artifact
-components are available; see [CPU state usage](cpu-state.md).
+OpenBoost is a programmable boosting foundation for researchers and agents.
+Public data, state, tree, recipe and model components support building algorithm
+changes from explicit operations. CPU recipes and a required subset of CUDA
+recipes have implementation and bounded correctness evidence. V1 is still under
+construction; implementation does not by itself establish real-data quality,
+speed or complete acceptance.
 
-[Numeric operations](numeric-ops.md) provide binning, histograms, candidate
-selection, routing and scalar leaves. [Numeric tree policies](trees.md) compose these
-operations and support numeric inference/persistence. The first complete
-[squared-error recipe](squared.md) provides fixed/backtracking CPU boosting.
-[Normal boosting](normal.md) uses the same state and scalar learners for joint
-mean/log-scale updates. [Formula and sequential runs](formula-runs.md) add
-full-metric structured updates and independent heterogeneous execution.
-[Categorical support](categorical.md) now uses
-explicit dictionaries and equality conditions in all three growth policies.
-All R1–R9/C1–C7/A1–A13 remain required. Evaluation preparation continues alongside
-the user-approved B03–B06 construction overlap. No complete quality, speed or
-agent/adoption result is claimed for the new production foundation.
+The [foundation checkpoint](checkpoint.md) describes this PR's source scope,
+available historical evidence and pending candidate validation. Individual guides
+explain the interfaces; they do not establish complete v1 acceptance.
 
-The old production API was retired. Historical examples require revision
-`50acfc6`; current APIs are not backward compatible. See the repository's
-`v1-sprints/` for construction records and `planning/` for requirements and gates.
+## Start with the components
 
-[Binary classification](binary.md) adds typed class schemas, stable logistic
-geometry and persisted probability/label output through the same foundation.
-[Multiclass and vector leaves](multiclass.md) add joint softmax updates, separate
-split/leaf statistics and arbitrary learner-to-model output mappings.
+1. [CPU data, state and models](cpu-state.md): construct a problem, own run state
+   and persist an ensemble with explicit output mappings.
+2. [Numeric operations](numeric-ops.md) and [tree policies](trees.md): compose
+   binning, statistics, candidate selection, routing and leaves. CPU trees support
+   depthwise, leafwise and oblivious growth, with [categorical conditions](categorical.md).
+3. [Squared-error boosting](squared.md): follow a complete recipe, then use
+   [validation stopping](stopping.md) and [shared preparation](preparation.md)
+   for independent runs.
+4. [Installed extensions](extensions.md): replace split constraints or leaves
+   through public interfaces and verify inference after removing training plugins.
 
-[Query-local ranking](ranking.md) adds pairwise/lambda CPU geometry and
-fixed-step recipes with validation NDCG selection. Real A4 evaluation remains open.
+## Choose a recipe
 
-[Quantile and penalized leaves](quantile.md) expose routed residuals/original
-weights and compose all three CPU growth policies. Real A5 evaluation remains open.
+| Task | Guide and distinguishing behavior |
+| --- | --- |
+| Regression | [Squared error](squared.md), fixed or backtracking updates |
+| Classification | [Binary](binary.md) class schemas and probabilities; [multiclass](multiclass.md) softmax, vector leaves and output mappings |
+| Ranking | [Query-local ranking](ranking.md), pairwise and lambda geometry |
+| Quantiles | [Quantile and penalized leaves](quantile.md), routed residuals and original weights |
+| Counts and positive targets | [Poisson](poisson.md) exposure and rate/count units; [Gamma](gamma.md) positive means; [Tweedie](tweedie.md) nonnegative means |
+| Composed loss | [Frequency–severity](frequency-severity.md), matched aggregates and two-model inference |
+| Survival | [Log-normal AFT](aft.md), event/right-censored targets and survival outputs |
+| Distributional prediction | [Normal](normal.md), ordinary/Fisher directions and joint/ordered mean and log-scale updates |
+| Structured prediction | [Formula and sequential runs](formula-runs.md), structural Jacobians and independent heterogeneous execution |
+| Multiple targets | [Multi-output squared](multioutput.md), independent/shared trees, projected splits and training-fitted target scales |
 
-[Poisson counts and exposure](poisson.md) add a CPU count recipe with explicit
-rate/count outputs. Real A7 evaluation remains open.
+## Execution and current evidence
 
-[Gamma positive-target means](gamma.md) add weighted CPU mean regression.
-Real A8 quality and distributional calibration remain unverified.
+[Exact Newton ordering](newton-order.md) and exact original-row leaves define
+the numerical choices used by Normal. [CUDA execution](execution.md) provides
+context-owned storage and resident operations; [device runs](device-runs.md)
+describe independent outcomes and scheduling. CUDA coverage is narrower than CPU
+coverage: consult the [required-device contract](https://github.com/jxucoder/openboost/blob/main/v1-sprints/080-cuda-required-recipes.md)
+and the [checkpoint scope](checkpoint.md) before selecting a recipe or interpreting an older test result.
 
-[Tweedie nonnegative means](tweedie.md) support fixed-power CPU fitting and
-explicit annualized-loss weight semantics. Real A9 evaluation remains open.
+Compatible scalar squared scheduling, exact Normal policies and installed
+extensions have source-specific historical validation. The
+[checkpoint report](checkpoint.md#historical-observations-and-available-evidence)
+retains a compact audit of a real two-round Housing M=1/8/32 diagnostic. Its
+underlying replay archives are omitted from this PR. Full-budget train-many,
+complete real-data quality, execution cost and validation of the curated candidate
+remain open; no speed claim follows.
 
-[Frequency–severity composition](frequency-severity.md) binds matched paid-loss aggregates
-and persists two-model inference with explicit output units. Real A9 evaluation remains open.
-
-[Log-normal AFT](aft.md) adds event/right-censored CPU training and
-persisted scale-aware survival outputs. Real A10 evaluation remains open.
-
-[Multi-output squared regression](multioutput.md) supports independent/shared trees,
-projected splits and persisted training-only target scaling. Real A6 evaluation remains open.
-
-[Shared training preparation](preparation.md) reuses fitted CPU binning/codes
-across independent jobs, verified at M=1/8/32.
-[Independent validation stopping](stopping.md) separates outer-round patience
-from model acceptance and strict best-model selection across all CPU recipes.
-
-[Public development extensions](extensions.md) exercise installed cohort split
-constraints and external penalized leaves, with core inference after plugin removal.
-
-
-[Experimental CUDA execution](execution.md) provides context-owned storage,
-named fields, histograms, candidate/feasibility/routing/leaf operations and resident
-scalar boosting. The bounded scalar path passes 212 real T4 checks at `af026ef`.
-Normal joint/ordered updates and an installed cohort-feasibility extension also
-exist. The objective-owned comparison correction rejects both historical false
-improvements on real T4. Run 8 passes 528/529 revised cases; a corrected no-op
-best-prefix fixture then passes with all fifteen recipe cases in run 9.
-Together these establish 514 earlier passes plus fifteen new passes with identical
-production, completing bounded revised coverage across two executions. The
-original failed verdicts remain preserved. These results
-do not establish current full CUDA conformance, speed parity, fused train-many or
-support for every CPU recipe. See the execution page for exact public operations
-and evidence boundaries.
+V1 APIs are intentionally not backward compatible with the retired production
+API. Historical examples require revision `50acfc6`. For current requirements,
+see the [application contracts](https://github.com/jxucoder/openboost/blob/main/planning/foundation-application-contracts.md)
+and [evaluation protocol](https://github.com/jxucoder/openboost/blob/main/planning/openboost-v1-evaluation.md); for evidence
+scope, start at the [foundation checkpoint](checkpoint.md).

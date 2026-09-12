@@ -1,0 +1,5839 @@
+{
+  "case": "5/1/backtracking/0.25",
+  "inputs": {
+    "train": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          15,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAABRAAAAAAAAAGEAAAAAAAAAcQAAAAAAAACBAAAAAAAAAIkAAAAAAAAAkQAAAAAAAACZAAAAAAAAAKEAAAAAAAAD4fwAAAAAAACxA"
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          15
+        ],
+        "data_base64": "AAAAAAAAAAABAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAAEAAAAAAAAAAUAAAAAAAAABgAAAAAAAAAHAAAAAAAAAAgAAAAAAAAACQAAAAAAAAAKAAAAAAAAAAsAAAAAAAAADAAAAAAAAAANAAAAAAAAAA4AAAAAAAAA"
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          15,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAAAEAAAAAAAAAAQAAAAAAAAABAAAAAAAAACEAAAAAAAAAIQAAAAAAAAAhAAAAAAAAAEEAAAAAAAAAQQAAAAAAAABBA"
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          15,
+          5
+        ],
+        "data_base64": "AAAAAAAA1L8AAAAAAADAPwAAAAAAAMC/AAAAAAAA1D8AAAAAAACwPwAAAAAAAMi/AAAAAAAA0D8AAAAAAAAAAAAAAAAAANC/AAAAAAAAyD8AAAAAAACwvwAAAAAAANS/AAAAAAAAwD8AAAAAAADAvwAAAAAAANQ/AAAAAAAAsD8AAAAAAADIvwAAAAAAANA/AAAAAAAAAAAAAAAAAADQvwAAAAAAAMg/AAAAAAAAsL8AAAAAAADUvwAAAAAAAMA/AAAAAAAAwL8AAAAAAADUPwAAAAAAALA/AAAAAAAAyL8AAAAAAADQPwAAAAAAAAAAAAAAAAAA0L8AAAAAAADIPwAAAAAAALC/AAAAAAAA1L8AAAAAAADAPwAAAAAAAMC/AAAAAAAA1D8AAAAAAACwPwAAAAAAAMi/AAAAAAAA0D8AAAAAAAAAAAAAAAAAANC/AAAAAAAAyD8AAAAAAACwvwAAAAAAANS/AAAAAAAAwD8AAAAAAADAvwAAAAAAANQ/AAAAAAAAsD8AAAAAAADIvwAAAAAAANA/AAAAAAAAAAAAAAAAAADQvwAAAAAAAMg/AAAAAAAAsL8AAAAAAADUvwAAAAAAAMA/AAAAAAAAwL8AAAAAAADUPwAAAAAAALA/AAAAAAAAyL8AAAAAAADQPwAAAAAAAAAAAAAAAAAA0L8AAAAAAADIPwAAAAAAALC/AAAAAAAA1L8AAAAAAADAPwAAAAAAAMC/AAAAAAAA1D8AAAAAAACwPwAAAAAAAMi/AAAAAAAA0D8AAAAAAAAAAAAAAAAAANC/"
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          15
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhAAAAAAAAAEEAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAAPA/AAAAAAAAAEAAAAAAAAAIQAAAAAAAABBAAAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhA"
+      }
+    },
+    "validation": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          15,
+          1
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAAAAAAAAAACxAAAAAAAAA+H8AAAAAAAAoQAAAAAAAACZAAAAAAAAAJEAAAAAAAAAiQAAAAAAAACBAAAAAAAAAHEAAAAAAAAAYQAAAAAAAABRAAAAAAAAAEEAAAAAAAAAIQAAAAAAAAABA"
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          15
+        ],
+        "data_base64": "ZAAAAAAAAABlAAAAAAAAAGYAAAAAAAAAZwAAAAAAAABoAAAAAAAAAGkAAAAAAAAAagAAAAAAAABrAAAAAAAAAGwAAAAAAAAAbQAAAAAAAABuAAAAAAAAAG8AAAAAAAAAcAAAAAAAAABxAAAAAAAAAHIAAAAAAAAA"
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          15,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAABBAAAAAAAAAEEAAAAAAAAAQQAAAAAAAAAhAAAAAAAAACEAAAAAAAAAIQAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAAAA"
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          15,
+          5
+        ],
+        "data_base64": "AAAAAAAAuL8AAAAAAADAPwAAAAAAAAAAAAAAAAAAwL8AAAAAAAC4PwAAAAAAAMS/AAAAAAAAsD8AAAAAAACwvwAAAAAAAMQ/AAAAAAAAoD8AAAAAAACgPwAAAAAAALi/AAAAAAAAwD8AAAAAAAAAAAAAAAAAAMC/AAAAAAAAoL8AAAAAAADEvwAAAAAAALA/AAAAAAAAsL8AAAAAAADEPwAAAAAAALi/AAAAAAAAwD8AAAAAAAAAAAAAAAAAAMC/AAAAAAAAuD8AAAAAAADEvwAAAAAAALA/AAAAAAAAsL8AAAAAAADEPwAAAAAAAKA/AAAAAAAAwD8AAAAAAAAAAAAAAAAAAMC/AAAAAAAAuD8AAAAAAACgvwAAAAAAALA/AAAAAAAAsL8AAAAAAADEPwAAAAAAAKA/AAAAAAAAuL8AAAAAAAAAAAAAAAAAAMC/AAAAAAAAuD8AAAAAAACgvwAAAAAAAMS/AAAAAAAAsL8AAAAAAADEPwAAAAAAAKA/AAAAAAAAuL8AAAAAAADAPwAAAAAAAMC/AAAAAAAAuD8AAAAAAACgvwAAAAAAAMS/AAAAAAAAsD8AAAAAAADEPwAAAAAAAKA/AAAAAAAAuL8AAAAAAADAPwAAAAAAAAAAAAAAAAAAuD8AAAAAAACgvwAAAAAAAMS/AAAAAAAAsD8AAAAAAACwvwAAAAAAAKA/AAAAAAAAuL8AAAAAAADAPwAAAAAAAAAAAAAAAAAAwL8AAAAAAACgvwAAAAAAAMS/AAAAAAAAsD8AAAAAAACwvwAAAAAAAMQ/"
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          15
+        ],
+        "data_base64": "AAAAAAAAAEAAAAAAAAAQQAAAAAAAABhAAAAAAAAAIEAAAAAAAAAAQAAAAAAAABBAAAAAAAAAGEAAAAAAAAAgQAAAAAAAAABAAAAAAAAAEEAAAAAAAAAYQAAAAAAAACBAAAAAAAAAAEAAAAAAAAAQQAAAAAAAABhA"
+      }
+    }
+  },
+  "model": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "terms": [
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.07375635951757431
+            ],
+            [
+              1.8460766077041626
+            ],
+            [
+              -0.5662797093391418
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.0130393598228693
+            ],
+            [
+              0.9415419101715088
+            ],
+            [
+              -0.561248242855072
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.0455692894756794
+            ],
+            [
+              -0.5324154496192932
+            ],
+            [
+              0.4852394759654999
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            8,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.15186400711536407
+            ],
+            [
+              -0.5378437638282776
+            ],
+            [
+              1.108637809753418
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            11,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.11072190850973129
+            ],
+            [
+              -0.5750340223312378
+            ],
+            [
+              1.6131713390350342
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.05723947659134865
+            ],
+            [
+              1.373474359512329
+            ],
+            [
+              -0.5442101955413818
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.015968047082424164
+            ],
+            [
+              0.7053622007369995
+            ],
+            [
+              -0.5381000638008118
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            8,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.03443098068237305
+            ],
+            [
+              0.45972156524658203
+            ],
+            [
+              -0.5330922603607178
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            8,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.1242239698767662
+            ],
+            [
+              -0.5198484659194946
+            ],
+            [
+              0.8613203167915344
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            11,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.0922321230173111
+            ],
+            [
+              -0.5516105890274048
+            ],
+            [
+              1.270764708518982
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.03967991843819618
+            ],
+            [
+              1.1408964395523071
+            ],
+            [
+              -0.5248658657073975
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.013203747570514679
+            ],
+            [
+              0.5915199518203735
+            ],
+            [
+              -0.5204965472221375
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.02568107657134533
+            ],
+            [
+              -0.5150794982910156
+            ],
+            [
+              0.38822123408317566
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            8,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.09615980833768845
+            ],
+            [
+              -0.4987178146839142
+            ],
+            [
+              0.6630021929740906
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            11,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.07906176894903183
+            ],
+            [
+              -0.5303171873092651
+            ],
+            [
+              1.039296269416809
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      }
+    ],
+    "classes": [
+      "class-0",
+      "class-1",
+      "class-2",
+      "class-3",
+      "class-4"
+    ]
+  },
+  "best": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "terms": [
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.07375635951757431
+            ],
+            [
+              1.8460766077041626
+            ],
+            [
+              -0.5662797093391418
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.0130393598228693
+            ],
+            [
+              0.9415419101715088
+            ],
+            [
+              -0.561248242855072
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.0455692894756794
+            ],
+            [
+              -0.5324154496192932
+            ],
+            [
+              0.4852394759654999
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            8,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.15186400711536407
+            ],
+            [
+              -0.5378437638282776
+            ],
+            [
+              1.108637809753418
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            11,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.11072190850973129
+            ],
+            [
+              -0.5750340223312378
+            ],
+            [
+              1.6131713390350342
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.05723947659134865
+            ],
+            [
+              1.373474359512329
+            ],
+            [
+              -0.5442101955413818
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.015968047082424164
+            ],
+            [
+              0.7053622007369995
+            ],
+            [
+              -0.5381000638008118
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            8,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.03443098068237305
+            ],
+            [
+              0.45972156524658203
+            ],
+            [
+              -0.5330922603607178
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            8,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.1242239698767662
+            ],
+            [
+              -0.5198484659194946
+            ],
+            [
+              0.8613203167915344
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            11,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.0922321230173111
+            ],
+            [
+              -0.5516105890274048
+            ],
+            [
+              1.270764708518982
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            2,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.03967991843819618
+            ],
+            [
+              1.1408964395523071
+            ],
+            [
+              -0.5248658657073975
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.013203747570514679
+            ],
+            [
+              0.5915199518203735
+            ],
+            [
+              -0.5204965472221375
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            5,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.02568107657134533
+            ],
+            [
+              -0.5150794982910156
+            ],
+            [
+              0.38822123408317566
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            8,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            true,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              0.09615980833768845
+            ],
+            [
+              -0.4987178146839142
+            ],
+            [
+              0.6630021929740906
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        ],
+        "coefficient": 0.25
+      },
+      {
+        "kind": "tree",
+        "learner": {
+          "format": "openboost-tree-v3",
+          "feature_names": [
+            "x"
+          ],
+          "cuts": [
+            [
+              0.0,
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0,
+              6.0,
+              7.0,
+              8.0,
+              9.0,
+              10.0,
+              11.0,
+              12.0,
+              13.0
+            ]
+          ],
+          "categories": [
+            null
+          ],
+          "feature": [
+            0,
+            -1,
+            -1
+          ],
+          "threshold": [
+            11,
+            -1,
+            -1
+          ],
+          "missing_left": [
+            false,
+            false,
+            false
+          ],
+          "left": [
+            1,
+            -1,
+            -1
+          ],
+          "right": [
+            2,
+            -1,
+            -1
+          ],
+          "value": [
+            [
+              -0.07906176894903183
+            ],
+            [
+              -0.5303171873092651
+            ],
+            [
+              1.039296269416809
+            ]
+          ]
+        },
+        "mapping": [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "coefficient": 0.25
+      }
+    ],
+    "classes": [
+      "class-0",
+      "class-1",
+      "class-2",
+      "class-3",
+      "class-4"
+    ]
+  },
+  "steps": [
+    {
+      "round_index": 0,
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "before_version": 0,
+      "after_version": 1,
+      "trials": [
+        {
+          "coefficient": 0.25,
+          "loss": 1.328393425111388,
+          "validation_score": 1.30913425003709,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -0.29398781903123133,
+            "upper": -0.27540741119393597,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 1.328393425111388,
+      "validation_score": 1.30913425003709,
+      "best_score": 1.30913425003709,
+      "validation_change": {
+        "lower": -0.3050921396929794,
+        "upper": -0.28525506350790886,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    },
+    {
+      "round_index": 1,
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "before_version": 1,
+      "after_version": 2,
+      "trials": [
+        {
+          "coefficient": 0.25,
+          "loss": 1.1172359799295544,
+          "validation_score": 1.0909386977310012,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -0.21847215290740518,
+            "upper": -0.2073122721305568,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 1.1172359799295544,
+      "validation_score": 1.0909386977310012,
+      "best_score": 1.0909386977310012,
+      "validation_change": {
+        "lower": -0.22611418616243034,
+        "upper": -0.21421124386032644,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    },
+    {
+      "round_index": 2,
+      "channels": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "before_version": 2,
+      "after_version": 3,
+      "trials": [
+        {
+          "coefficient": 0.25,
+          "loss": 0.9546489861732215,
+          "validation_score": 0.9263508633069524,
+          "accepted": true,
+          "failure": null,
+          "comparison": {
+            "lower": -0.16756178462202223,
+            "upper": -0.1597672173773168,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "bounded_sign",
+            "unchanged": false
+          }
+        }
+      ],
+      "loss": 0.9546489861732215,
+      "validation_score": 0.9263508633069524,
+      "best_score": 0.9263508633069524,
+      "validation_change": {
+        "lower": -0.17004866897730797,
+        "upper": -0.16188098815808935,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      }
+    }
+  ],
+  "stop": {
+    "rounds": 3,
+    "patience": 2,
+    "min_delta": 0.01,
+    "reference_score": 0.9263508633069524,
+    "last_score": 0.9263508633069524,
+    "completed_rounds": 3,
+    "stale_rounds": 0
+  },
+  "comparisons": [
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0,
+          3.0,
+          3.0,
+          3.0,
+          4.0,
+          4.0,
+          4.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125,
+            0.0625
+          ],
+          [
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875,
+            0.25,
+            0.0
+          ],
+          [
+            -0.25,
+            0.1875,
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25,
+            0.1875,
+            -0.0625
+          ],
+          [
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125,
+            0.0625
+          ],
+          [
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0
+        ]
+      ],
+      "result": {
+        "lower": -0.29398781903123133,
+        "upper": -0.27540741119393597,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.28327732995239800470182877949271257152381172322211716306921725377100141027575008746125370398859408805606226894885538439110033994757214522819505989585735199893558844952101280644890363542879771452192902933383921519115824726061284201892115943706904215359388557539"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          4.0,
+          4.0,
+          4.0,
+          3.0,
+          3.0,
+          3.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0
+        ]
+      ],
+      "result": {
+        "lower": -0.3050921396929794,
+        "upper": -0.28525506350790886,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.29338681743396319656485222600588440936194971732045211515639256323209842199662053638961818490600016325521852922338164306250312056768266634160827092162026728964452579895779455135140027065634841761556002596235901250322872953952211919582259155937282483917786993242"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          4.0,
+          4.0,
+          4.0,
+          3.0,
+          3.0,
+          3.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0
+        ]
+      ],
+      "result": {
+        "lower": -0.3050921396929794,
+        "upper": -0.28525506350790886,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.29338681743396319656485222600588440936194971732045211515639256323209842199662053638961818490600016325521852922338164306250312056768266634160827092162026728964452579895779455135140027065634841761556002596235901250322872953952211919582259155937282483917786993242"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ]
+        ],
+        [
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.26637691259384155,
+            -0.26442307233810425,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0,
+          3.0,
+          3.0,
+          3.0,
+          4.0,
+          4.0,
+          4.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125,
+            0.0625
+          ],
+          [
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875,
+            0.25,
+            0.0
+          ],
+          [
+            -0.25,
+            0.1875,
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25,
+            0.1875,
+            -0.0625
+          ],
+          [
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125,
+            0.0625
+          ],
+          [
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0
+        ]
+      ],
+      "result": {
+        "lower": -0.21847215290740518,
+        "upper": -0.2073122721305568,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.21115744518183371337607622784371812385817872608007996530374357606408652299073530013472547097061813703964760126751327677404424676690544400178778297484976976797361847285143753341884615867267823676388369127095564192833312770367628328612970876703091958492226994828"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ]
+        ],
+        [
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.26637691259384155,
+            -0.26442307233810425,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          4.0,
+          4.0,
+          4.0,
+          3.0,
+          3.0,
+          3.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0
+        ]
+      ],
+      "result": {
+        "lower": -0.22611418616243034,
+        "upper": -0.21421124386032644,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.21819555230608845776094808200188119679204041067772505307599368162950065395920583481845999246798604439007622787306727735265335098906692165249405578490960203381748953432952852135130879468973259255654588143307415788509926467779686841656897217267785593091012350938"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            0.40329283475875854
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            0.2771594524383545,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            -0.140312060713768,
+            0.12130986899137497,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            -0.14156992733478546,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ],
+          [
+            0.46151915192604065,
+            0.2353854775428772,
+            -0.1331038624048233,
+            -0.1344609409570694,
+            -0.14375850558280945
+          ]
+        ],
+        [
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.26637691259384155,
+            -0.26442307233810425,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          4.0,
+          4.0,
+          4.0,
+          3.0,
+          3.0,
+          3.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0
+        ]
+      ],
+      "result": {
+        "lower": -0.22611418616243034,
+        "upper": -0.21421124386032644,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.21819555230608845776094808200188119679204041067772505307599368162950065395920583481845999246798604439007622787306727735265335098906692165249405578490960203381748953432952852135130879468973259255654588143307415788509926467779686841656897217267785593091012350938"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.26637691259384155,
+            -0.26442307233810425,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ]
+        ],
+        [
+          [
+            1.0901118516921997,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            1.0901118516921997,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            1.0901118516921997,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.3332955837249756,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.3332955837249756,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.3332955837249756,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            0.9808080196380615
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            -0.39514678716659546,
+            -0.3891025185585022,
+            0.9808080196380615
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            0.9808080196380615
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0,
+          3.0,
+          3.0,
+          3.0,
+          4.0,
+          4.0,
+          4.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125,
+            0.0625
+          ],
+          [
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875,
+            0.25,
+            0.0
+          ],
+          [
+            -0.25,
+            0.1875,
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25,
+            0.1875,
+            -0.0625
+          ],
+          [
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125,
+            0.0625
+          ],
+          [
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25,
+            0.0,
+            -0.25
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0
+        ]
+      ],
+      "result": {
+        "lower": -0.16756178462202223,
+        "upper": -0.1597672173773168,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.16258699375633274173350577487798638630622773738424076565741819263877137563770466227484059582181970150344702105600986809965149419213760332942927816087013951189796276270038897929211711070736452562394274424670706496565236280904653319386441674231473947382277486689"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.26637691259384155,
+            -0.26442307233810425,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ]
+        ],
+        [
+          [
+            1.0901118516921997,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            1.0901118516921997,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            0.9808080196380615
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            -0.39514678716659546,
+            -0.3891025185585022,
+            0.9808080196380615
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            0.9808080196380615
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.3332955837249756,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.3332955837249756,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.3332955837249756,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            1.0901118516921997,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          4.0,
+          4.0,
+          4.0,
+          3.0,
+          3.0,
+          3.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0
+        ]
+      ],
+      "result": {
+        "lower": -0.17004866897730797,
+        "upper": -0.16188098815808935,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.16458783442404880940702094937531156182274900729951690763097994564314589705163838869151463613191123307636464118702995363949318089000007715863478683048120938527119356306279976164419005288292525755163903997534545410732083896609880105503115164444047891823939001742"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.26637691259384155,
+            -0.26442307233810425,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            0.7209839820861816
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            -0.011963196098804474,
+            0.4924895167350769,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            -0.27483707666397095,
+            0.23624026775360107,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            -0.2776224613189697,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ],
+          [
+            0.8048877716064453,
+            0.4117260277271271,
+            -0.018173471093177795,
+            -0.26442307233810425,
+            -0.28166115283966064
+          ]
+        ],
+        [
+          [
+            1.0901118516921997,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            1.0901118516921997,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            0.9808080196380615
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            -0.39514678716659546,
+            -0.3891025185585022,
+            0.9808080196380615
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            0.9808080196380615
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.08509211242198944,
+            0.6582400798797607,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.3332955837249756,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.3332955837249756,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            -0.4049612283706665,
+            0.3332955837249756,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            -0.4088389277458191,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ],
+          [
+            1.0901118516921997,
+            0.5596060156822205,
+            -0.1469433456659317,
+            -0.3891025185585022,
+            -0.41424044966697693
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          4.0,
+          4.0,
+          4.0,
+          3.0,
+          3.0,
+          3.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            -0.125,
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.15625,
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125,
+            0.0,
+            -0.125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625,
+            -0.0625,
+            0.15625
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0
+        ]
+      ],
+      "result": {
+        "lower": -0.17004866897730797,
+        "upper": -0.16188098815808935,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "bounded_sign",
+        "unchanged": false
+      },
+      "decimal260": "-0.16458783442404880940702094937531156182274900729951690763097994564314589705163838869151463613191123307636464118702995363949318089000007715863478683048120938527119356306279976164419005288292525755163903997534545410732083896609880105503115164444047891823939001742"
+    }
+  ]
+}

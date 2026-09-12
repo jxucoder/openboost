@@ -1,0 +1,5 @@
+Using Python 3.12.1 environment at: /tmp/pr27-fresh
+Resolved 2 packages in 126ms
+Installed 2 packages in 29ms
+ + numpy==2.3.5
+ + openboost==1.0.0.dev0 (from file:///tmp/pr27-results/dist/openboost-1.0.0.dev0-py3-none-any.whl)

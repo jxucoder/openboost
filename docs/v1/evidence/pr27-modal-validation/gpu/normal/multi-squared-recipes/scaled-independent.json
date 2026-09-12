@@ -1,0 +1,412 @@
+{
+  "case": "scaled-independent",
+  "inputs": {
+    "train": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAAEEAAAAAAAAAcQAAAAAAAgBBAAAAAAAAAHEAAAAAAAADovwAAAAAAABxAAAAAAAAA5L8AAAAAAAAcQAAAAAAAAATAAAAAAAAAHEAAAAAAAAADwAAAAAAAABxAAAAAAAAAE0AAAAAAAAAcQAAAAAAAAAHAAAAAAAAAHEA="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAMA/AAAAAAAAwD8AAAAAAADQPwAAAAAAANA/AAAAAAAA2D8AAAAAAADYPwAAAAAAAOA/AAAAAAAA4D8AAAAAAADkPwAAAAAAAOQ/AAAAAAAA6D8AAAAAAADoPwAAAAAAAOw/AAAAAAAA7D8="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAPA/AAAAAAAAAAAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA8D8AAAAAAADgPw=="
+      }
+    },
+    "validation": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAAAEAAAAAAAAD4fwAAAAAAAPh/AAAAAAAAAAAAAAAAAAAAQAAAAAAAAPA/AAAAAAAAAEAAAAAAAAAAAAAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAAAAAAAAAAAAAAAAAAAAAADwPwAAAAAAAAAAAAAAAAAAAAA="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "9QEAAAAAAAD8AQAAAAAAAAMCAAAAAAAACgIAAAAAAAARAgAAAAAAABgCAAAAAAAAHwIAAAAAAAAmAgAAAAAAAA=="
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAACABMAAAAAAACAjwAAAAAAAgBFAAAAAAADAJEAAAAAAAIAFwAAAAAAAYCPAAAAAAAAABsAAAAAAAIAkQAAAAAAAAOq/AAAAAACgI8AAAAAAAADsvwAAAAAAQCRAAAAAAABAEEAAAAAAAOAjwAAAAAAAABBAAAAAAAAAJEA="
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAA3D8AAAAAAADcPwAAAAAAANg/AAAAAAAA2D8AAAAAAADUPwAAAAAAANQ/AAAAAAAA0D8AAAAAAADQPwAAAAAAAMg/AAAAAAAAyD8AAAAAAADAPwAAAAAAAMA/AAAAAAAAsD8AAAAAAACwPwAAAAAAAAAAAAAAAAAAAAA="
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          8
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPw=="
+      }
+    }
+  },
+  "model": {
+    "format": "openboost-multioutput-v1",
+    "model": {
+      "format": "openboost-ensemble-v2",
+      "feature_names": [
+        "a",
+        "b"
+      ],
+      "base": [
+        -0.12225167453289032,
+        -0.3897058963775635
+      ],
+      "terms": [
+        {
+          "kind": "tree",
+          "learner": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.0
+              ],
+              [
+                0.0
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                2.509669272399151e-08
+              ],
+              [
+                0.8709853291511536
+              ],
+              [
+                -0.7918047308921814
+              ]
+            ]
+          },
+          "mapping": [
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "coefficient": 0.5
+        },
+        {
+          "kind": "tree",
+          "learner": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.0
+              ],
+              [
+                0.0
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              1,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              false,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                1.2548346361995755e-08
+              ],
+              [
+                0.21176472306251526
+              ],
+              [
+                -0.1925133615732193
+              ]
+            ]
+          },
+          "mapping": [
+            [
+              0.0,
+              1.0
+            ]
+          ],
+          "coefficient": 0.5
+        },
+        {
+          "kind": "tree",
+          "learner": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.0
+              ],
+              [
+                0.0
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.0041673495434224606
+              ],
+              [
+                0.5225911736488342
+              ],
+              [
+                -0.46788471937179565
+              ]
+            ]
+          },
+          "mapping": [
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "coefficient": 0.5
+        },
+        {
+          "kind": "tree",
+          "learner": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.0
+              ],
+              [
+                0.0
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              1,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              false,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.0010132382158190012
+              ],
+              [
+                0.12705883383750916
+              ],
+              [
+                -0.1137578934431076
+              ]
+            ]
+          },
+          "mapping": [
+            [
+              0.0,
+              1.0
+            ]
+          ],
+          "coefficient": 0.5
+        }
+      ],
+      "classes": null
+    },
+    "mean": [
+      0.9191176470588236,
+      7.0
+    ],
+    "scale": [
+      3.187735336315495,
+      1.0
+    ],
+    "constant": [
+      false,
+      true
+    ]
+  },
+  "prediction": [
+    [
+      -1.0408666224685719,
+      6.894658476114273
+    ],
+    [
+      3.125588195143833,
+      6.832158476114273
+    ],
+    [
+      -1.1658666224685719,
+      6.769658476114273
+    ],
+    [
+      -1.2283666224685719,
+      6.707158476114273
+    ],
+    [
+      -1.2908666224685719,
+      6.967205882072449
+    ],
+    [
+      -1.3533666224685719,
+      6.904705882072449
+    ],
+    [
+      2.813088195143833,
+      6.842205882072449
+    ],
+    [
+      2.750588195143833,
+      6.779705882072449
+    ]
+  ]
+}

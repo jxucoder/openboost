@@ -1,0 +1,64 @@
+{
+  "schema": "openboost-pr27-modal-validation-policy-v1",
+  "gpu_tests": [
+    "tests/v1/test_device_glm_recipes_cuda.py",
+    "tests/v1/test_device_aft_recipes_cuda.py",
+    "tests/v1/test_device_multiclass_recipes_cuda.py",
+    "tests/v1/test_device_multi_squared_recipes_cuda.py",
+    "tests/v1/test_device_inputs_cuda.py",
+    "tests/v1/test_grouped_runs_cuda.py",
+    "tests/v1/test_grouped_growth_cuda.py",
+    "tests/v1/test_device_tree_policy_cuda.py",
+    "tests/v1/test_current_normal_cuda.py",
+    "tests/v1/test_newton_reduction_cuda.py",
+    "tests/v1/test_checkpoint_normal_extension_cuda.py",
+    "tests/v1/test_compared_normal_extension_cuda.py::test_missing_normal_replays_without_cuda_or_training_plugin",
+    "tests/v1/test_compared_normal_extension_cuda.py::test_installed_d2_rejects_wrong_identity_and_releases_after_failure"
+  ],
+  "expected_gpu_cases": 441,
+  "jobs": {
+    "cpu310": {
+      "python": "3.10",
+      "kind": "pytest",
+      "allowed_skips": [
+        {
+          "id": "tests.v1.test_author_linux_worker::test_real_packet_is_staged_file_by_file_and_sdk_can_construct_image",
+          "reason": "could not import 'modal': No module named 'modal'"
+        },
+        {
+          "id": "tests.v1.test_author_worker_identity::test_actual_unsupported_host_stops_before_command",
+          "reason": "requires an unsupported host"
+        }
+      ]
+    },
+    "cpu312": {
+      "python": "3.12",
+      "kind": "pytest",
+      "allowed_skips": [
+        {
+          "id": "tests.v1.test_author_linux_worker::test_real_packet_is_staged_file_by_file_and_sdk_can_construct_image",
+          "reason": "could not import 'modal': No module named 'modal'"
+        },
+        {
+          "id": "tests.v1.test_author_worker_identity::test_actual_unsupported_host_stops_before_command",
+          "reason": "requires an unsupported host"
+        }
+      ]
+    },
+    "gpu": {
+      "python": "3.12",
+      "kind": "pytest",
+      "allowed_skips": []
+    },
+    "build": {
+      "python": "3.12",
+      "kind": "build",
+      "allowed_skips": []
+    },
+    "docs": {
+      "python": "3.12",
+      "kind": "docs",
+      "allowed_skips": []
+    }
+  }
+}

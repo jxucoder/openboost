@@ -1,0 +1,1 @@
+{"case": "tests/v1/test_compared_normal_extension_cuda.py::test_installed_d2_rejects_wrong_identity_and_releases_after_failure", "inputs": {}, "comparisons": [], "timing_scope": "instrumented correctness only"}

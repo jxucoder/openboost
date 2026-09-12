@@ -1,0 +1,2171 @@
+{
+  "count": 8,
+  "width": 1,
+  "projected": false,
+  "input": {
+    "feature_names": [
+      "a",
+      "b"
+    ],
+    "arrays": {
+      "values": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+      }
+    }
+  },
+  "jobs": [
+    {
+      "run_id": "run-0",
+      "depth": 2
+    },
+    {
+      "run_id": "run-1",
+      "depth": 0
+    },
+    {
+      "run_id": "run-2",
+      "depth": 1
+    },
+    {
+      "run_id": "run-3",
+      "depth": 2
+    },
+    {
+      "run_id": "run-4",
+      "depth": 0
+    },
+    {
+      "run_id": "run-5",
+      "depth": 1
+    },
+    {
+      "run_id": "run-6",
+      "depth": 2
+    },
+    {
+      "run_id": "run-7",
+      "depth": 0
+    }
+  ],
+  "schedules": [
+    {
+      "groups": [
+        [
+          "run-0",
+          "run-1",
+          "run-2",
+          "run-3",
+          "run-4",
+          "run-5",
+          "run-6",
+          "run-7"
+        ]
+      ],
+      "observed": [
+        {
+          "run_id": "run-0",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2142857164144516
+              ],
+              [
+                1.3333333730697632
+              ],
+              [
+                -0.8846153616905212
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.3333333730697632
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ]
+          ]
+        },
+        {
+          "run_id": "run-1",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              -1
+            ],
+            "threshold": [
+              -1
+            ],
+            "missing_left": [
+              false
+            ],
+            "left": [
+              -1
+            ],
+            "right": [
+              -1
+            ],
+            "value": [
+              [
+                0.4736842215061188
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ]
+          ]
+        },
+        {
+          "run_id": "run-2",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.6428571343421936
+              ],
+              [
+                4.0
+              ],
+              [
+                -2.653846263885498
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              4.0
+            ],
+            [
+              4.0
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              4.0
+            ],
+            [
+              -2.653846263885498
+            ]
+          ]
+        },
+        {
+          "run_id": "run-3",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2368421107530594
+              ],
+              [
+                1.600000023841858
+              ],
+              [
+                -1.045454502105713
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.600000023841858
+            ],
+            [
+              1.600000023841858
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              1.600000023841858
+            ],
+            [
+              -1.045454502105713
+            ]
+          ]
+        },
+        {
+          "run_id": "run-4",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              -1
+            ],
+            "threshold": [
+              -1
+            ],
+            "missing_left": [
+              false
+            ],
+            "left": [
+              -1
+            ],
+            "right": [
+              -1
+            ],
+            "value": [
+              [
+                0.4285714328289032
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ]
+          ]
+        },
+        {
+          "run_id": "run-5",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.7105262875556946
+              ],
+              [
+                4.800000190734863
+              ],
+              [
+                -3.1363637447357178
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              4.800000190734863
+            ],
+            [
+              4.800000190734863
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              4.800000190734863
+            ],
+            [
+              -3.1363637447357178
+            ]
+          ]
+        },
+        {
+          "run_id": "run-6",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2142857164144516
+              ],
+              [
+                1.3333333730697632
+              ],
+              [
+                -0.8846153616905212
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.3333333730697632
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ]
+          ]
+        },
+        {
+          "run_id": "run-7",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              -1
+            ],
+            "threshold": [
+              -1
+            ],
+            "missing_left": [
+              false
+            ],
+            "left": [
+              -1
+            ],
+            "right": [
+              -1
+            ],
+            "value": [
+              [
+                0.4736842215061188
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ]
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "upload_bytes": 535,
+          "export_bytes": 664,
+          "device_copy_bytes": 4408,
+          "synchronizations": 356,
+          "live_bytes": 432,
+          "peak_live_bytes": 3425,
+          "peak_pool_bytes": 28160,
+          "kernel_launches": 236,
+          "kernel_dispatch_seconds": 0.0779119990004915,
+          "validation_export_bytes": 580,
+          "decision_export_bytes": 44,
+          "feature_prepare_calls": 0,
+          "feature_upload_bytes": 0,
+          "feature_bind_calls": 0,
+          "feature_bind_upload_bytes": 0,
+          "grouped_growth_calls": 1,
+          "grouped_growth_phases": 3,
+          "grouped_growth_node_slots": 18,
+          "grouped_histogram_calls": 3,
+          "grouped_metadata_upload_bytes": 90,
+          "grouped_pack_bytes": 1568,
+          "grouped_histogram_kernel_launches": 6,
+          "grouped_histogram_slots": 18,
+          "grouped_validation_kernel_launches": 3,
+          "grouped_validation_export_bytes": 72,
+          "grouped_unpack_bytes": 2448,
+          "grouped_histogram_successes": 18,
+          "grouped_partition_calls": 1,
+          "grouped_partition_metadata_upload_bytes": 85,
+          "grouped_partition_pack_bytes": 160,
+          "grouped_partition_kernel_launches": 1,
+          "grouped_partition_slots": 5,
+          "grouped_partition_export_bytes": 40,
+          "grouped_partition_unpack_bytes": 160,
+          "grouped_growth_successes": 8
+        }
+      ]
+    },
+    {
+      "groups": [
+        [
+          "run-7",
+          "run-6",
+          "run-5",
+          "run-4",
+          "run-3",
+          "run-2",
+          "run-1",
+          "run-0"
+        ]
+      ],
+      "observed": [
+        {
+          "run_id": "run-7",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              -1
+            ],
+            "threshold": [
+              -1
+            ],
+            "missing_left": [
+              false
+            ],
+            "left": [
+              -1
+            ],
+            "right": [
+              -1
+            ],
+            "value": [
+              [
+                0.4736842215061188
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ]
+          ]
+        },
+        {
+          "run_id": "run-6",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2142857164144516
+              ],
+              [
+                1.3333333730697632
+              ],
+              [
+                -0.8846153616905212
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.3333333730697632
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ]
+          ]
+        },
+        {
+          "run_id": "run-5",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.7105262875556946
+              ],
+              [
+                4.800000190734863
+              ],
+              [
+                -3.1363637447357178
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              4.800000190734863
+            ],
+            [
+              4.800000190734863
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              4.800000190734863
+            ],
+            [
+              -3.1363637447357178
+            ]
+          ]
+        },
+        {
+          "run_id": "run-4",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              -1
+            ],
+            "threshold": [
+              -1
+            ],
+            "missing_left": [
+              false
+            ],
+            "left": [
+              -1
+            ],
+            "right": [
+              -1
+            ],
+            "value": [
+              [
+                0.4285714328289032
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ]
+          ]
+        },
+        {
+          "run_id": "run-3",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2368421107530594
+              ],
+              [
+                1.600000023841858
+              ],
+              [
+                -1.045454502105713
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.600000023841858
+            ],
+            [
+              1.600000023841858
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              1.600000023841858
+            ],
+            [
+              -1.045454502105713
+            ]
+          ]
+        },
+        {
+          "run_id": "run-2",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.6428571343421936
+              ],
+              [
+                4.0
+              ],
+              [
+                -2.653846263885498
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              4.0
+            ],
+            [
+              4.0
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              4.0
+            ],
+            [
+              -2.653846263885498
+            ]
+          ]
+        },
+        {
+          "run_id": "run-1",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              -1
+            ],
+            "threshold": [
+              -1
+            ],
+            "missing_left": [
+              false
+            ],
+            "left": [
+              -1
+            ],
+            "right": [
+              -1
+            ],
+            "value": [
+              [
+                0.4736842215061188
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ]
+          ]
+        },
+        {
+          "run_id": "run-0",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2142857164144516
+              ],
+              [
+                1.3333333730697632
+              ],
+              [
+                -0.8846153616905212
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.3333333730697632
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ]
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "upload_bytes": 535,
+          "export_bytes": 664,
+          "device_copy_bytes": 4408,
+          "synchronizations": 356,
+          "live_bytes": 432,
+          "peak_live_bytes": 0,
+          "peak_pool_bytes": 0,
+          "kernel_launches": 236,
+          "kernel_dispatch_seconds": 0.07634068100071545,
+          "validation_export_bytes": 580,
+          "decision_export_bytes": 44,
+          "feature_prepare_calls": 0,
+          "feature_upload_bytes": 0,
+          "feature_bind_calls": 0,
+          "feature_bind_upload_bytes": 0,
+          "grouped_growth_calls": 1,
+          "grouped_growth_phases": 3,
+          "grouped_growth_node_slots": 18,
+          "grouped_histogram_calls": 3,
+          "grouped_metadata_upload_bytes": 90,
+          "grouped_pack_bytes": 1568,
+          "grouped_histogram_kernel_launches": 6,
+          "grouped_histogram_slots": 18,
+          "grouped_validation_kernel_launches": 3,
+          "grouped_validation_export_bytes": 72,
+          "grouped_unpack_bytes": 2448,
+          "grouped_histogram_successes": 18,
+          "grouped_partition_calls": 1,
+          "grouped_partition_metadata_upload_bytes": 85,
+          "grouped_partition_pack_bytes": 160,
+          "grouped_partition_kernel_launches": 1,
+          "grouped_partition_slots": 5,
+          "grouped_partition_export_bytes": 40,
+          "grouped_partition_unpack_bytes": 160,
+          "grouped_growth_successes": 8
+        }
+      ]
+    },
+    {
+      "groups": [
+        [
+          "run-0",
+          "run-2",
+          "run-4",
+          "run-6"
+        ],
+        [
+          "run-1",
+          "run-3",
+          "run-5",
+          "run-7"
+        ]
+      ],
+      "observed": [
+        {
+          "run_id": "run-0",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2142857164144516
+              ],
+              [
+                1.3333333730697632
+              ],
+              [
+                -0.8846153616905212
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.3333333730697632
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ]
+          ]
+        },
+        {
+          "run_id": "run-2",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.6428571343421936
+              ],
+              [
+                4.0
+              ],
+              [
+                -2.653846263885498
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              4.0
+            ],
+            [
+              4.0
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              -2.653846263885498
+            ],
+            [
+              4.0
+            ],
+            [
+              -2.653846263885498
+            ]
+          ]
+        },
+        {
+          "run_id": "run-4",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              -1
+            ],
+            "threshold": [
+              -1
+            ],
+            "missing_left": [
+              false
+            ],
+            "left": [
+              -1
+            ],
+            "right": [
+              -1
+            ],
+            "value": [
+              [
+                0.4285714328289032
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ],
+            [
+              0.4285714328289032
+            ]
+          ]
+        },
+        {
+          "run_id": "run-6",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2142857164144516
+              ],
+              [
+                1.3333333730697632
+              ],
+              [
+                -0.8846153616905212
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.3333333730697632
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ]
+          ]
+        },
+        {
+          "run_id": "run-1",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              -1
+            ],
+            "threshold": [
+              -1
+            ],
+            "missing_left": [
+              false
+            ],
+            "left": [
+              -1
+            ],
+            "right": [
+              -1
+            ],
+            "value": [
+              [
+                0.4736842215061188
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ]
+          ]
+        },
+        {
+          "run_id": "run-3",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2368421107530594
+              ],
+              [
+                1.600000023841858
+              ],
+              [
+                -1.045454502105713
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.600000023841858
+            ],
+            [
+              1.600000023841858
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              -1.045454502105713
+            ],
+            [
+              1.600000023841858
+            ],
+            [
+              -1.045454502105713
+            ]
+          ]
+        },
+        {
+          "run_id": "run-5",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.7105262875556946
+              ],
+              [
+                4.800000190734863
+              ],
+              [
+                -3.1363637447357178
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              4.800000190734863
+            ],
+            [
+              4.800000190734863
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              -3.1363637447357178
+            ],
+            [
+              4.800000190734863
+            ],
+            [
+              -3.1363637447357178
+            ]
+          ]
+        },
+        {
+          "run_id": "run-7",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              -1
+            ],
+            "threshold": [
+              -1
+            ],
+            "missing_left": [
+              false
+            ],
+            "left": [
+              -1
+            ],
+            "right": [
+              -1
+            ],
+            "value": [
+              [
+                0.4736842215061188
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ],
+            [
+              0.4736842215061188
+            ]
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "upload_bytes": 301,
+          "export_bytes": 392,
+          "device_copy_bytes": 2456,
+          "synchronizations": 216,
+          "live_bytes": 240,
+          "peak_live_bytes": 0,
+          "peak_pool_bytes": 0,
+          "kernel_launches": 144,
+          "kernel_dispatch_seconds": 0.06593540599976677,
+          "validation_export_bytes": 340,
+          "decision_export_bytes": 28,
+          "feature_prepare_calls": 0,
+          "feature_upload_bytes": 0,
+          "feature_bind_calls": 0,
+          "feature_bind_upload_bytes": 0,
+          "grouped_growth_calls": 1,
+          "grouped_growth_phases": 3,
+          "grouped_growth_node_slots": 10,
+          "grouped_histogram_calls": 3,
+          "grouped_metadata_upload_bytes": 50,
+          "grouped_pack_bytes": 864,
+          "grouped_histogram_kernel_launches": 6,
+          "grouped_histogram_slots": 10,
+          "grouped_validation_kernel_launches": 3,
+          "grouped_validation_export_bytes": 40,
+          "grouped_unpack_bytes": 1360,
+          "grouped_histogram_successes": 10,
+          "grouped_partition_calls": 1,
+          "grouped_partition_metadata_upload_bytes": 51,
+          "grouped_partition_pack_bytes": 96,
+          "grouped_partition_kernel_launches": 1,
+          "grouped_partition_slots": 3,
+          "grouped_partition_export_bytes": 24,
+          "grouped_partition_unpack_bytes": 96,
+          "grouped_growth_successes": 4
+        },
+        {
+          "upload_bytes": 234,
+          "export_bytes": 272,
+          "device_copy_bytes": 1952,
+          "synchronizations": 161,
+          "live_bytes": 192,
+          "peak_live_bytes": 0,
+          "peak_pool_bytes": 0,
+          "kernel_launches": 102,
+          "kernel_dispatch_seconds": 0.034449195000433974,
+          "validation_export_bytes": 240,
+          "decision_export_bytes": 16,
+          "feature_prepare_calls": 0,
+          "feature_upload_bytes": 0,
+          "feature_bind_calls": 0,
+          "feature_bind_upload_bytes": 0,
+          "grouped_growth_calls": 1,
+          "grouped_growth_phases": 3,
+          "grouped_growth_node_slots": 8,
+          "grouped_histogram_calls": 3,
+          "grouped_metadata_upload_bytes": 40,
+          "grouped_pack_bytes": 704,
+          "grouped_histogram_kernel_launches": 6,
+          "grouped_histogram_slots": 8,
+          "grouped_validation_kernel_launches": 3,
+          "grouped_validation_export_bytes": 32,
+          "grouped_unpack_bytes": 1088,
+          "grouped_histogram_successes": 8,
+          "grouped_partition_calls": 1,
+          "grouped_partition_metadata_upload_bytes": 34,
+          "grouped_partition_pack_bytes": 64,
+          "grouped_partition_kernel_launches": 1,
+          "grouped_partition_slots": 2,
+          "grouped_partition_export_bytes": 16,
+          "grouped_partition_unpack_bytes": 64,
+          "grouped_growth_successes": 4
+        }
+      ]
+    }
+  ],
+  "input_live_bytes": 848,
+  "final_live_bytes": 848,
+  "fresh": {
+    "models": 24,
+    "predictions_matched": true,
+    "training_imports_denied": true
+  }
+}

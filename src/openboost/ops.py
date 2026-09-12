@@ -217,6 +217,129 @@ def choose(options, *, scoring=score, legality=feasible):
     return best
 
 
+def newton_choice(
+    hist, *, reg_lambda=1.0, min_child_h=0.0, split_penalty=0.0, min_information=None
+):
+    """Return ``(Candidate, gain)`` or None using ordinary rounded Newton rules.
+
+    Numeric histograms use array operations with the same prefix/suffix and
+    half-square evaluation order as candidates/feasible/score/choose. Exact
+    floating ties use the lexicographic condition key; no tolerance is applied.
+    Categorical conditions, information constraints and exceptional arithmetic
+    use those public operations directly. Returned fields own immutable bytes.
+    This operation does not implement the separate exact-rational ordering policy.
+    """
+
+    def exhaustive():
+        best = choose(
+            candidates(hist),
+            scoring=lambda c: score(c, reg_lambda=reg_lambda, split_penalty=split_penalty),
+            legality=lambda c: feasible(
+                c, min_child_h=min_child_h, min_information=min_information
+            ),
+        )
+        return (
+            None
+            if best is None
+            else (best, score(best, reg_lambda=reg_lambda, split_penalty=split_penalty))
+        )
+
+    if min_information or any(c is not None for c in hist.data.binning.categories):
+        return exhaustive()
+    try:
+        regularizer = _nonnegative(reg_lambda)
+        minimum = _nonnegative(min_child_h)
+        penalty = _nonnegative(split_penalty)
+        g, h = hist.fields.names.index("gradient"), hist.fields.names.index("curvature")
+    except (ValueError, TypeError):
+        return exhaustive()
+
+    # Finish all candidate-field construction before scoring, preserving the
+    # exhaustive path's rejection of invalid statistics even for illegal splits.
+    blocks = []
+    for feature, (sums, counts) in enumerate(zip(hist.sums, hist.counts, strict=True)):
+        active = np.unique(hist.data.codes[feature, ~hist.data.missing[feature]])
+        if not len(active):
+            continue
+        with np.errstate(over="ignore", invalid="ignore"):
+            prefix = np.cumsum(sums[:-1], axis=0)[active]
+            suffix = np.concatenate(
+                (np.cumsum(sums[:-1][::-1], axis=0)[::-1], np.zeros_like(sums[:1])), axis=0
+            )[active + 1]
+            left = np.empty((2 * len(active), sums.shape[1]), dtype=np.float64)
+            right = np.empty_like(left)
+            left[0::2], left[1::2] = prefix + 0, prefix + sums[-1]
+            right[0::2], right[1::2] = suffix + sums[-1], suffix + 0
+        if not np.isfinite(left).all() or not np.isfinite(right).all():
+            return exhaustive()
+        count = np.cumsum(counts[:-1])[active]
+        nleft = np.empty(2 * len(active), dtype=np.int64)
+        nleft[0::2], nleft[1::2] = count, count + counts[-1]
+        legal = (
+            (nleft > 0)
+            & (nleft < len(hist.rows))
+            & (left[:, h] > 0)
+            & (right[:, h] > 0)
+            & (left[:, h] >= minimum)
+            & (right[:, h] >= minimum)
+        )
+        blocks.append((feature, active, left, right, nleft, legal))
+
+    best, best_gain = None, 0.0
+    parent = None
+    for feature, active, left, right, nleft, legal in blocks:
+        positions = np.flatnonzero(legal)
+        if not len(positions):
+            continue
+        if parent is None:
+            # Parent validation and arithmetic occur only when a legal split exists.
+            try:
+                parent = (
+                    -0.5
+                    * hist.total[g]
+                    * newton_leaf(hist.total, hist.fields.names, reg_lambda=regularizer)
+                )
+            except ValueError:
+                return exhaustive()
+        a, b = left[positions], right[positions]
+        with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
+            ad, bd = a[:, h] + regularizer, b[:, h] + regularizer
+            av, bv = -a[:, g] / ad, -b[:, g] / bd
+            gain = ((-0.5 * a[:, g]) * av + (-0.5 * b[:, g]) * bv) - parent - penalty
+        if not all(np.isfinite(v).all() for v in (ad, bd, av, bv, gain)):
+            return exhaustive()
+        slot = int(np.argmax(gain))
+        value = float(gain[slot])
+        if value > best_gain:
+            position = int(positions[slot])
+            best_gain = value
+            best = (
+                feature,
+                int(active[position // 2]),
+                bool(position % 2),
+                left[position],
+                right[position],
+                int(nleft[position]),
+            )
+    if best is None:
+        return None
+    feature, threshold, missing_left, left, right, count = best
+    return Candidate(
+        feature,
+        threshold,
+        missing_left,
+        hist.fields.names,
+        hist.fields.roles,
+        _owned(left, ndim=1),
+        _owned(right, ndim=1),
+        hist.total,
+        count,
+        len(hist.rows) - count,
+        hist.data.identity,
+        _identity(hist.rows),
+    ), best_gain
+
+
 def partition(data, rows, candidate):
     """Return original positional indices; row IDs remain available on data.data."""
     selected = _rows(rows, len(data.data.values))
@@ -232,6 +355,83 @@ def partition(data, rows, candidate):
         else data.codes[candidate.feature, selected] <= candidate.threshold,
     )
     return _array(selected[mask], "<i8"), _array(selected[~mask], "<i8")
+
+
+def _bound_choice(hist, result):
+    """Bind a cooperative selector's single result to actual histogram fields."""
+    if result is None:
+        return None
+    if not isinstance(result, tuple) or len(result) != 2:
+        raise ValueError("selection must return a Candidate/gain pair or None")
+    candidate, gain = result
+    if not isinstance(candidate, Candidate):
+        raise ValueError("selection must return a Candidate")
+    f, t, missing = candidate.feature, candidate.threshold, candidate.missing_left
+    if (
+        type(f) is not int
+        or not 0 <= f < len(hist.sums)
+        or type(t) is not int
+        or type(missing) is not bool
+        or candidate.data_identity != hist.data.identity
+        or candidate.rows_identity != _identity(hist.rows)
+        or candidate.names != hist.fields.names
+        or candidate.roles != hist.fields.roles
+    ):
+        raise ValueError("selection candidate must bind the actual node and fields")
+    active = np.unique(hist.data.codes[f, ~hist.data.missing[f]])
+    if t not in active or candidate.kind != hist.data.binning.feature_kinds[f]:
+        raise ValueError("selection condition must belong to the actual histogram")
+    sums, counts = hist.sums[f], hist.counts[f]
+    if candidate.kind == "categorical":
+        left = sums[t]
+        right = sums[:t].sum(axis=0) + sums[t + 1 : -1].sum(axis=0)
+        count = counts[t]
+    else:
+        left = np.cumsum(sums[:-1], axis=0)[t]
+        suffix = np.cumsum(sums[:-1][::-1], axis=0)[::-1]
+        right = suffix[t + 1] if t + 1 < len(suffix) else np.zeros_like(left)
+        count = np.cumsum(counts[:-1])[t]
+    left = _owned(left + (sums[-1] if missing else 0), ndim=1)
+    right = _owned(right + (0 if missing else sums[-1]), ndim=1)
+    count = int(count + (counts[-1] if missing else 0))
+    for value, expected in (
+        (candidate.left, left),
+        (candidate.right, right),
+        (candidate.parent, hist.total),
+    ):
+        if (
+            not isinstance(value, np.ndarray)
+            or value.dtype != expected.dtype
+            or value.shape != expected.shape
+            or value.tobytes() != expected.tobytes()
+        ):
+            raise ValueError("selection fields differ from the actual histogram")
+    if (
+        type(candidate.left_count) is not int
+        or type(candidate.right_count) is not int
+        or candidate.left_count != count
+        or candidate.right_count != len(hist.rows) - count
+        or min(count, len(hist.rows) - count) <= 0
+    ):
+        raise ValueError("selection counts must match nonempty actual children")
+    if not np.isscalar(gain) or not np.isfinite(gain) or gain <= 0:
+        raise ValueError("selection requires a finite strictly positive gain")
+    # The callback's buffers remain borrowed; growth uses canonical owned fields.
+    return Candidate(
+        f,
+        t,
+        missing,
+        hist.fields.names,
+        hist.fields.roles,
+        left,
+        right,
+        hist.total,
+        count,
+        len(hist.rows) - count,
+        hist.data.identity,
+        candidate.rows_identity,
+        candidate.kind,
+    ), float(gain)
 
 
 def _vector_indices(names):

@@ -1,0 +1,381 @@
+{
+  "execution": "sequential-feature-reuse",
+  "count": 1,
+  "failed_id": "job-0",
+  "inputs_from": "shared-M1.json",
+  "resident_bytes": 160,
+  "context_metrics": {
+    "upload_bytes": 1224,
+    "export_bytes": 1236,
+    "device_copy_bytes": 1164,
+    "synchronizations": 546,
+    "live_bytes": 160,
+    "peak_live_bytes": 1412,
+    "peak_pool_bytes": 15360,
+    "kernel_launches": 323,
+    "kernel_dispatch_seconds": 0.10374630199996204,
+    "validation_export_bytes": 872,
+    "decision_export_bytes": 60,
+    "metric_export_bytes": 128,
+    "feature_prepare_calls": 2,
+    "feature_upload_bytes": 160,
+    "feature_bind_calls": 4,
+    "feature_bind_upload_bytes": 128
+  },
+  "outcomes": [
+    {
+      "run_id": "job-0",
+      "result": null,
+      "error_type": "ValueError",
+      "error_message": "forced later shared failure"
+    }
+  ],
+  "retry": {
+    "run_id": "job-0",
+    "result": {
+      "model": {
+        "format": "openboost-ensemble-v2",
+        "feature_names": [
+          "f0",
+          "f1"
+        ],
+        "base": [
+          -1.1111111640930176
+        ],
+        "terms": [
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0",
+                "f1"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5
+                ],
+                [
+                  0.5,
+                  1.5,
+                  2.5
+                ]
+              ],
+              "categories": [
+                null,
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                0,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                true,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  4.7683716530855236e-08
+                ],
+                [
+                  1.074074149131775
+                ],
+                [
+                  -0.4027777314186096
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0
+              ]
+            ],
+            "coefficient": 0.5
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0",
+                "f1"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5
+                ],
+                [
+                  0.5,
+                  1.5,
+                  2.5
+                ]
+              ],
+              "categories": [
+                null,
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                true,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  0.03356480598449707
+                ],
+                [
+                  0.5142746567726135
+                ],
+                [
+                  -0.550000011920929
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0
+              ]
+            ],
+            "coefficient": 0.5
+          }
+        ],
+        "classes": null
+      },
+      "best_model": {
+        "format": "openboost-ensemble-v2",
+        "feature_names": [
+          "f0",
+          "f1"
+        ],
+        "base": [
+          -1.1111111640930176
+        ],
+        "terms": [
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0",
+                "f1"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5
+                ],
+                [
+                  0.5,
+                  1.5,
+                  2.5
+                ]
+              ],
+              "categories": [
+                null,
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                0,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                true,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  4.7683716530855236e-08
+                ],
+                [
+                  1.074074149131775
+                ],
+                [
+                  -0.4027777314186096
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0
+              ]
+            ],
+            "coefficient": 0.5
+          },
+          {
+            "kind": "tree",
+            "learner": {
+              "format": "openboost-tree-v3",
+              "feature_names": [
+                "f0",
+                "f1"
+              ],
+              "cuts": [
+                [
+                  0.5,
+                  1.5,
+                  2.5
+                ],
+                [
+                  0.5,
+                  1.5,
+                  2.5
+                ]
+              ],
+              "categories": [
+                null,
+                null
+              ],
+              "feature": [
+                0,
+                -1,
+                -1
+              ],
+              "threshold": [
+                1,
+                -1,
+                -1
+              ],
+              "missing_left": [
+                true,
+                false,
+                false
+              ],
+              "left": [
+                1,
+                -1,
+                -1
+              ],
+              "right": [
+                2,
+                -1,
+                -1
+              ],
+              "value": [
+                [
+                  0.03356480598449707
+                ],
+                [
+                  0.5142746567726135
+                ],
+                [
+                  -0.550000011920929
+                ]
+              ]
+            },
+            "mapping": [
+              [
+                1.0
+              ]
+            ],
+            "coefficient": 0.5
+          }
+        ],
+        "classes": null
+      },
+      "state": {
+        "identity": "250148850aad883c72313f504fa8a2816c84e80aee6a4d1e9b0da705ac27a905",
+        "run_id": "job-0",
+        "version": 2,
+        "loss": 0.3624773060116049,
+        "validation_score": 2.901878762899992,
+        "best_score": 2.901878762899992,
+        "n_terms": 2,
+        "best_n_terms": 2
+      },
+      "steps": [
+        {
+          "round_index": 0,
+          "coefficients": [
+            0.5
+          ],
+          "accepted": true,
+          "failures": [],
+          "loss": 0.4994924471992815,
+          "validation_score": 3.2040001052611893,
+          "best_score": 3.2040001052611893
+        },
+        {
+          "round_index": 1,
+          "coefficients": [
+            0.5
+          ],
+          "accepted": true,
+          "failures": [],
+          "loss": 0.3624773060116049,
+          "validation_score": 2.901878762899992,
+          "best_score": 2.901878762899992
+        }
+      ],
+      "stop": {
+        "rounds": 2,
+        "patience": null,
+        "min_delta": 0.0,
+        "reference_score": 2.901878762899992,
+        "last_score": 2.901878762899992,
+        "completed_rounds": 2,
+        "stale_rounds": 0
+      },
+      "reason": "budget"
+    }
+  },
+  "final_live_bytes": 0
+}

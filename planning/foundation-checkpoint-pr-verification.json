@@ -1,0 +1,48 @@
+{
+  "schema": "openboost-checkpoint-metadata-verification-v1",
+  "source_files": 64,
+  "production_python_modules": 63,
+  "copied_test_helpers": 104,
+  "source_and_test_hashes_match": true,
+  "python_ast_files": 170,
+  "ruff": "pass: src/openboost tests/v1 tests/conftest.py benchmarks/v1/replay_glm_run12.py",
+  "collection": {
+    "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 BLIS_NUM_THREADS=1 NUMBA_NUM_THREADS=1 PYTHONPATH=src:. python -B -m pytest <82 manifest test_*.py modules> --collect-only -n 0 -q --tb=short",
+    "exit_code": 0,
+    "collected": 3083,
+    "seconds": 4.63,
+    "numerical_tests_executed": 0,
+    "total_distinct_collected": 3386
+  },
+  "credential_literal_scan": {
+    "scope": "Copied source/test files and compact raw audit report",
+    "matched_files": [],
+    "limitation": "Known key-format scan; not a general secret detection guarantee."
+  },
+  "candidate_installed_cpu": "not_run",
+  "candidate_cuda": "not_run",
+  "candidate_builds": "not_run",
+  "candidate_full_regression": "not_run",
+  "draft_ci": "intentionally skipped; not passing validation",
+  "additional_harnesses": 1,
+  "historical_report_exact_production_matches": 63,
+  "required_glm_revisions_in_public_main": true,
+  "derived_test_collection": {
+    "files": 2,
+    "collected": 303,
+    "seconds": 0.25,
+    "executed": 0,
+    "function_bodies_exact": 13
+  },
+  "documentation_metadata": {
+    "markdown_files": 32,
+    "local_links_and_anchors": 127,
+    "mkdocs_nav_entries": 31,
+    "missing_targets": 0,
+    "relative_links_outside_docs_dir": 0,
+    "absent_plain_evidence_paths": 0,
+    "strict_build": "not_run"
+  },
+  "static_review": "No missing source/import dependency found. The original GLM source guard is handled by its exact historical-source wrapper; no additional concrete default-test source-guard blocker found. This is not a runtime result.",
+  "inspection_scope": "Historical metadata-only inspection of initial public draft f143eb2; current validation is in docs/v1/evidence/pr27-modal-validation/report.json."
+}

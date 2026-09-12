@@ -1,16 +1,10 @@
 # Experimental CUDA storage ownership
 
-`openboost.execution.ExecutionContext` owns a CUDA stream and private CuPy memory
-pool. `upload`, `copy`, `export` and `release` operate on opaque `DeviceBuffer`
-handles. A handle exposes shape/dtype/size, never a mutable device array. Cross-
-context, forged, released or closed handles fail. Contexts are single-thread owned.
-
-Host upload makes an independent snapshot and synchronizes before returning;
-export is an explicit blocking copy. Device copies use the owning stream and
-independent allocations. Release/close synchronize before invalidating handles.
-Transfer bytes, synchronization counts, live logical bytes and sampled pool peaks
-are exposed through a detached read-only metrics record. `max_bytes` limits the
-private CuPy pool, not driver/context memory or other GPU allocations.
+This guide describes explicit device interfaces. Earlier construction results
+with retained public artifacts describe their original revisions. Newer raw
+archives are omitted from this PR; see the [checkpoint](checkpoint.md) for the
+available evidence and pending validation of this candidate. See [Normal](normal.md)
+and [grouped execution](device-groups.md) for their current interface boundaries.
 
 ```python
 import numpy as np
@@ -160,6 +154,62 @@ Diagnostic exports made by tests are separate from measured operation transfers.
 Allocation/validation cleanup preserves inputs but is not a boosting transaction.
 Initial choice and stable routing use ordered kernels; no speed claim is made.
 
+## Vector Newton components: local construction
+
+Sprint 117 adds `ops.vector_scores`, `ops.vector_feasible` and `ops.vector_leaf`.
+These resident operations are constructed and their real-device tests collect;
+they have not yet executed on CUDA. Historical scalar results above retain their
+original executed revisions.
+
+Use paired `gradient:0` through `gradient:L-1` and `curvature:0` through
+`curvature:L-1`, each with `training` role after applying weight once. Physical
+field order may differ; extra independent-information fields remain composable.
+Missing, orphaned or noncanonical channel names fail. Every original curvature
+column must be nonnegative, including rows outside the current routed view.
+
+`vector_scores(batch, reg_lambda=1, split_penalty=0)` sums each node's diagonal
+Newton criteria in canonical channel order, then subtracts the parent criterion
+and one total penalty. Products round independently in float32 to preserve swapped
+child symmetry. Structurally empty or nonpositive-curvature candidates score zero.
+`vector_feasible(batch, min_child_h=0)` requires both children to have positive
+curvature meeting the minimum in every channel. `vector_leaf(histogram,
+reg_lambda=1)` returns an owned float32 `[L]` buffer with per-channel `-G/(H+lambda)`.
+Nonfinite scores/values and nonpositive or nonfinite denominators fail atomically.
+Release values through the execution context and score/mask records through ops.
+
+`device_tree.depthwise(..., output_width=L, leaf_fields=full_fields)` now accepts
+explicit vector leaf callbacks. Split `fields` and `leaf_fields` must belong to
+the same prepared data record; both reduce the actual routed original rows.
+Their widths may differ, for example S=1 projected split fields and L=4 full leaf
+fields. The default output width is one, and default policies remain scalar.
+Supply vector policies explicitly:
+
+```python
+# Experimental resident API; requires real CUDA and prepared numeric data.
+# ops/data/binning are prepared; split_fields and full_fields are once-weighted.
+from openboost import device_tree
+
+tree = device_tree.depthwise(
+    ops, data, split_fields, binning=binning, output_width=4,
+    leaf_fields=full_fields,
+    scoring=lambda ops, batch: ops.vector_scores(batch),
+    legality=lambda ops, batch: ops.vector_feasible(batch),
+    leaf=lambda ops, histogram: ops.vector_leaf(histogram),
+)
+```
+
+Callbacks return exactly `[L]`; every node has the declared width. Tree-owned
+values occupy `[nodes,L]` for L>1, and scalar storage remains unchanged for L=1.
+`predict` returns `[N,L]`; `copy` retains width and independent buffers. `export`
+uses the existing CPU Tree format, preserving output columns without a training
+extension. Callback scratch is released, borrowed leaves are copied, and failures
+roll back all new records and buffers. General `[L,K]` resident transactions,
+multi-output squared geometry/comparison and independent/shared recipes compose
+these operations; see the [multi-output guide](multioutput.md#experimental-resident-recipes-and-general-mappings).
+`DeviceTerm` rejects a tree whose output width differs from the mapping's L
+dimension. Historical checks and pending candidate validation are scoped in the
+[checkpoint](checkpoint.md).
+
 ## Resident squared geometry and trees: bounded T4 evidence
 
 Sprint 088 adds `openboost.device_objectives` and `openboost.device_tree`.
@@ -285,7 +335,9 @@ passes all 23 Normal geometry checks and reruns all 212 scalar cases successfull
 at `4143d18`. The overall 383-case run fails two ordered acceptance checks, so it
 does not establish full Normal conformance or quality/cost parity.
 
-`DeviceTerm(tree, mapping)` owns an immutable float32 `[1,K]` mapping. A
+The Normal recipe supplies scalar trees and immutable float32 `[1,K]` mappings
+through `DeviceTerm(tree, mapping)`. Sprint 118 also constructs general `[L,K]`
+maps, with bounded T4 validation as described in the multi-output guide. A
 `run.propose_terms(state, terms, coefficient=...)` call snapshots the entire tuple
 of trees and evaluates their mapped contributions in term order. All terms share
 one trial coefficient and commit atomically. A joint two-term proposal increments
@@ -558,3 +610,38 @@ loss-change enclosures and replays 32 final/best models from lossless fixture by
 See `benchmarks/v1/evidence/cuda-glm-108/README.md` for raw results and scope.
 These APIs remain experimental; full R1/R4, remaining required CUDA recipes,
 train-many, real-data quality and formal E4 are not closed by this matrix.
+
+## Bounded multiclass execution
+
+The [multiclass guide](multiclass.md#experimental-device-components) describes
+resident geometry, weighted class fields, loss-change comparison and joint
+K-tree recipes. Historical validation included a separate correction of two host
+fixtures; the original failed verdict remains in development history. The newer
+raw archives are outside this PR. Full R1 and exact candidate validation remain
+open; see the [checkpoint](checkpoint.md).
+
+## AFT comparison and recipe construction
+
+The [AFT guide](aft.md#experimental-device-components) describes fixed-scale
+event/right-censored resident operations and scale-aware CPU export. Sprint 114
+adds stored-input tail/domain controls, explicit bool censoring, float64 fitting
+scale and prescribed scalar-tree compositions. Sprint 115 constructs independent
+event-polynomial/censored-integral loss-change bounds and the AFT wrapper over the
+shared scalar recipe. Accepted, best validation and patience anchors are separate;
+reported likelihood differences do not supply decisions. Censored comparisons may
+remain explicitly unresolved when bounds are wide or outside their declared range.
+
+Historical CUDA checks cover the declared component, comparison and recipe
+controls and scale-aware saved inference. The newer raw archive is outside this
+PR; see the [checkpoint](checkpoint.md). Full R5, real-data quality, cost and exact
+candidate validation remain open.
+
+## Sequential and compatible scheduling
+
+[Sequential device runs](device-runs.md) provides a separate scalar scheduling
+boundary with stable identities, retained failures and detached final/best CPU
+artifacts. The separate [compatible squared scheduler](device-groups.md#compatible-squared-scheduling)
+uses grouped operations explicitly. The [checkpoint](checkpoint.md) retains a
+compact historical audit of the real two-round M=1/8/32 diagnostic. Full-budget
+semantics, resources and complete execution cost remain open; the sequential API
+does not implicitly select grouped execution.

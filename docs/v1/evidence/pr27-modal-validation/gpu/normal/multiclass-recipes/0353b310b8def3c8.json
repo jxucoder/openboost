@@ -1,0 +1,2794 @@
+{
+  "case": "3/1/backtracking/0.0",
+  "inputs": {
+    "train": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAABRAAAAAAAAAGEAAAAAAAAD4fwAAAAAAACBA"
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          9
+        ],
+        "data_base64": "AAAAAAAAAAABAAAAAAAAAAIAAAAAAAAAAwAAAAAAAAAEAAAAAAAAAAUAAAAAAAAABgAAAAAAAAAHAAAAAAAAAAgAAAAAAAAA"
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAPA/AAAAAAAAAEAAAAAAAAAAQAAAAAAAAABA"
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          3
+        ],
+        "data_base64": "AAAAAAAA1L8AAAAAAADAPwAAAAAAAMC/AAAAAAAA1D8AAAAAAACwPwAAAAAAAMi/AAAAAAAA0D8AAAAAAAAAAAAAAAAAANC/AAAAAAAAyD8AAAAAAACwvwAAAAAAANS/AAAAAAAAwD8AAAAAAADAvwAAAAAAANQ/AAAAAAAAsD8AAAAAAADIvwAAAAAAANA/AAAAAAAAAAAAAAAAAADQvwAAAAAAAMg/AAAAAAAAsL8AAAAAAADUvwAAAAAAAMA/AAAAAAAAwL8AAAAAAADUPwAAAAAAALA/"
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          9
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAQAAAAAAAAAhAAAAAAAAAEEAAAAAAAADwPwAAAAAAAABAAAAAAAAACEAAAAAAAAAQQAAAAAAAAPA/"
+      }
+    },
+    "validation": {
+      "features": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAA8D8AAAAAAAAAAAAAAAAAACBAAAAAAAAA+H8AAAAAAAAYQAAAAAAAABRAAAAAAAAAEEAAAAAAAAAIQAAAAAAAAABA"
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          9
+        ],
+        "data_base64": "ZAAAAAAAAABlAAAAAAAAAGYAAAAAAAAAZwAAAAAAAABoAAAAAAAAAGkAAAAAAAAAagAAAAAAAABrAAAAAAAAAGwAAAAAAAAA"
+      },
+      "target": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          1
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA8D8AAAAAAADwPwAAAAAAAAAA"
+      },
+      "offset": {
+        "dtype": "<f8",
+        "shape": [
+          9,
+          3
+        ],
+        "data_base64": "AAAAAAAAxD8AAAAAAACgPwAAAAAAALi/AAAAAAAAxL8AAAAAAACwPwAAAAAAALC/AAAAAAAAsL8AAAAAAADEPwAAAAAAAKA/AAAAAAAAoL8AAAAAAADEvwAAAAAAALA/AAAAAAAAAAAAAAAAAADAvwAAAAAAALg/AAAAAAAAoD8AAAAAAAC4vwAAAAAAAMA/AAAAAAAAsD8AAAAAAACwvwAAAAAAAMQ/AAAAAAAAuD8AAAAAAACgvwAAAAAAAMS/AAAAAAAAwD8AAAAAAAAAAAAAAAAAAMC/"
+      },
+      "weight": {
+        "dtype": "<f8",
+        "shape": [
+          9
+        ],
+        "data_base64": "AAAAAAAAAEAAAAAAAAAQQAAAAAAAABhAAAAAAAAAIEAAAAAAAAAAQAAAAAAAABBAAAAAAAAAGEAAAAAAAAAgQAAAAAAAAABA"
+      }
+    }
+  },
+  "model": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "terms": [],
+    "classes": [
+      "class-0",
+      "class-1",
+      "class-2"
+    ]
+  },
+  "best": {
+    "format": "openboost-ensemble-v2",
+    "feature_names": [
+      "x"
+    ],
+    "base": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "terms": [],
+    "classes": [
+      "class-0",
+      "class-1",
+      "class-2"
+    ]
+  },
+  "steps": [
+    {
+      "round_index": 0,
+      "channels": [
+        0,
+        1,
+        2
+      ],
+      "before_version": 0,
+      "after_version": 0,
+      "trials": [
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        }
+      ],
+      "loss": 1.0312549051654325,
+      "validation_score": 1.1049424688060785,
+      "best_score": 1.1049424688060785,
+      "validation_change": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      }
+    },
+    {
+      "round_index": 1,
+      "channels": [
+        0,
+        1,
+        2
+      ],
+      "before_version": 0,
+      "after_version": 0,
+      "trials": [
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        },
+        {
+          "coefficient": 0.0,
+          "loss": 1.0312549051654325,
+          "validation_score": 1.1049424688060785,
+          "accepted": false,
+          "failure": null,
+          "comparison": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "method": "multiclass-path-variance-taylor18-interval-v1",
+            "reason": "identical_stored_raw",
+            "unchanged": true
+          }
+        }
+      ],
+      "loss": 1.0312549051654325,
+      "validation_score": 1.1049424688060785,
+      "best_score": 1.1049424688060785,
+      "validation_change": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      }
+    }
+  ],
+  "stop": {
+    "rounds": 3,
+    "patience": 2,
+    "min_delta": 0.01,
+    "reference_score": 1.1049424688060785,
+    "last_score": 1.1049424688060785,
+    "completed_rounds": 2,
+    "stale_rounds": 2
+  },
+  "comparisons": [
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        [
+          [
+            -0.3125,
+            0.125,
+            -0.125
+          ],
+          [
+            0.3125,
+            0.0625,
+            -0.1875
+          ],
+          [
+            0.25,
+            0.0,
+            -0.25
+          ],
+          [
+            0.1875,
+            -0.0625,
+            -0.3125
+          ],
+          [
+            0.125,
+            -0.125,
+            0.3125
+          ],
+          [
+            0.0625,
+            -0.1875,
+            0.25
+          ],
+          [
+            0.0,
+            -0.25,
+            0.1875
+          ],
+          [
+            -0.0625,
+            -0.3125,
+            0.125
+          ],
+          [
+            -0.125,
+            0.3125,
+            0.0625
+          ]
+        ],
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          1.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    },
+    {
+      "inputs": [
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        [
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          [
+            0.15625,
+            0.03125,
+            -0.09375
+          ],
+          [
+            -0.15625,
+            0.0625,
+            -0.0625
+          ],
+          [
+            -0.0625,
+            0.15625,
+            0.03125
+          ],
+          [
+            -0.03125,
+            -0.15625,
+            0.0625
+          ],
+          [
+            0.0,
+            -0.125,
+            0.09375
+          ],
+          [
+            0.03125,
+            -0.09375,
+            0.125
+          ],
+          [
+            0.0625,
+            -0.0625,
+            0.15625
+          ],
+          [
+            0.09375,
+            -0.03125,
+            -0.15625
+          ],
+          [
+            0.125,
+            0.0,
+            -0.125
+          ]
+        ],
+        [
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0,
+          4.0,
+          6.0,
+          8.0,
+          2.0
+        ]
+      ],
+      "result": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "method": "multiclass-path-variance-taylor18-interval-v1",
+        "reason": "identical_stored_raw",
+        "unchanged": true
+      },
+      "decimal260": "0E-258"
+    }
+  ]
+}

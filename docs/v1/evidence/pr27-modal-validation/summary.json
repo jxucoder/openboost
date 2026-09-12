@@ -1,0 +1,86 @@
+{
+  "schema": "openboost-pr27-validation-summary-v1",
+  "status": "pass",
+  "tested_source_commit": "312d8213900c0e4b35e7bdcac3d92d74ca5dbb81",
+  "phases": {
+    "cpu310": {
+      "python": "3.10.17",
+      "worker_seconds": 414.59456416,
+      "jobs": {
+        "cpu310": {
+          "status": "pass",
+          "cases": 4633,
+          "passed": 4631,
+          "skipped": 2
+        },
+        "cpu310-build": {
+          "status": "pass"
+        },
+        "lint": {
+          "status": "pass"
+        }
+      },
+      "raw_archive": {
+        "sha256": "70f1a78527e00b11807a0446f8f92885899777e098ff0727eb5ed99c0c35ab85",
+        "bytes": 3287040
+      }
+    },
+    "cpu312": {
+      "python": "3.12.10",
+      "worker_seconds": 390.46765346999996,
+      "jobs": {
+        "build": {
+          "status": "pass"
+        },
+        "cpu312": {
+          "status": "pass",
+          "cases": 4633,
+          "passed": 4631,
+          "skipped": 2
+        },
+        "docs": {
+          "status": "pass"
+        },
+        "gpu-prerequisites": {
+          "status": "pass",
+          "cases": 48,
+          "passed": 48,
+          "skipped": 0
+        },
+        "lint": {
+          "status": "pass"
+        }
+      },
+      "raw_archive": {
+        "sha256": "e62a0bfaa489ede52b93fc29b70569e6c78f6ff616c449b92a2b3ea82cd1b677",
+        "bytes": 3635200
+      }
+    },
+    "gpu": {
+      "python": "3.12.1",
+      "worker_seconds": 508.126693353,
+      "jobs": {
+        "gpu": {
+          "status": "pass",
+          "cases": 441,
+          "passed": 441,
+          "skipped": 0
+        },
+        "gpu-build": {
+          "status": "pass"
+        },
+        "gpu-prerequisites": {
+          "status": "pass",
+          "cases": 48,
+          "passed": 48,
+          "skipped": 0
+        }
+      },
+      "raw_archive": {
+        "sha256": "a267f204622ff505915ccab45ef06cfd4a15b9410ec250135b89cdfcf90d8bce",
+        "bytes": 26859520
+      }
+    }
+  },
+  "scope": "Foundation checkpoint merge validation; OpenBoost v1 remains incomplete."
+}

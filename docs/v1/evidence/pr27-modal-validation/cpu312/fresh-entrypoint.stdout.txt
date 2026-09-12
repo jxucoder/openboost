@@ -1,0 +1,1 @@
+{"packages": {"openboost": "1.0.0.dev0", "numpy": "2.3.5"}, "installed_core": "/tmp/pr27-fresh/lib/python3.12/site-packages/openboost/__init__.py"}

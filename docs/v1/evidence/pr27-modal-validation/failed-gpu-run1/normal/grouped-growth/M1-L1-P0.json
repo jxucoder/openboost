@@ -1,0 +1,442 @@
+{
+  "count": 1,
+  "width": 1,
+  "projected": false,
+  "input": {
+    "feature_names": [
+      "a",
+      "b"
+    ],
+    "arrays": {
+      "values": {
+        "dtype": "<f8",
+        "shape": [
+          8,
+          2
+        ],
+        "data_base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAAAAAAAAAAAA8D8AAAAAAADwPwAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAPA/AAAAAAAA+H8AAAAAAAAAAAAAAAAAAABAAAAAAAAA+H8="
+      },
+      "row_ids": {
+        "dtype": "<i8",
+        "shape": [
+          8
+        ],
+        "data_base64": "ZQAAAAAAAABsAAAAAAAAAHMAAAAAAAAAegAAAAAAAACBAAAAAAAAAIgAAAAAAAAAjwAAAAAAAACWAAAAAAAAAA=="
+      }
+    }
+  },
+  "jobs": [
+    {
+      "run_id": "run-0",
+      "depth": 2
+    }
+  ],
+  "schedules": [
+    {
+      "groups": [
+        [
+          "run-0"
+        ]
+      ],
+      "observed": [
+        {
+          "run_id": "run-0",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2142857164144516
+              ],
+              [
+                1.3333333730697632
+              ],
+              [
+                -0.8846153616905212
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.3333333730697632
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ]
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "upload_bytes": 92,
+          "export_bytes": 140,
+          "device_copy_bytes": 740,
+          "synchronizations": 89,
+          "live_bytes": 72,
+          "peak_live_bytes": 25,
+          "peak_pool_bytes": 0,
+          "kernel_launches": 59,
+          "kernel_dispatch_seconds": 0.0217229070001963,
+          "validation_export_bytes": 120,
+          "decision_export_bytes": 12,
+          "feature_prepare_calls": 0,
+          "feature_upload_bytes": 0,
+          "feature_bind_calls": 0,
+          "feature_bind_upload_bytes": 0,
+          "grouped_growth_calls": 1,
+          "grouped_growth_phases": 3,
+          "grouped_growth_node_slots": 3,
+          "grouped_histogram_calls": 3,
+          "grouped_metadata_upload_bytes": 15,
+          "grouped_pack_bytes": 256,
+          "grouped_histogram_kernel_launches": 6,
+          "grouped_histogram_slots": 3,
+          "grouped_validation_kernel_launches": 3,
+          "grouped_validation_export_bytes": 12,
+          "grouped_unpack_bytes": 408,
+          "grouped_histogram_successes": 3,
+          "grouped_partition_calls": 1,
+          "grouped_partition_metadata_upload_bytes": 17,
+          "grouped_partition_pack_bytes": 32,
+          "grouped_partition_kernel_launches": 1,
+          "grouped_partition_slots": 1,
+          "grouped_partition_export_bytes": 8,
+          "grouped_partition_unpack_bytes": 32,
+          "grouped_growth_successes": 1
+        }
+      ]
+    },
+    {
+      "groups": [
+        [
+          "run-0"
+        ]
+      ],
+      "observed": [
+        {
+          "run_id": "run-0",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2142857164144516
+              ],
+              [
+                1.3333333730697632
+              ],
+              [
+                -0.8846153616905212
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.3333333730697632
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ]
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "upload_bytes": 92,
+          "export_bytes": 140,
+          "device_copy_bytes": 740,
+          "synchronizations": 89,
+          "live_bytes": 72,
+          "peak_live_bytes": 0,
+          "peak_pool_bytes": 0,
+          "kernel_launches": 59,
+          "kernel_dispatch_seconds": 0.02066983500014885,
+          "validation_export_bytes": 120,
+          "decision_export_bytes": 12,
+          "feature_prepare_calls": 0,
+          "feature_upload_bytes": 0,
+          "feature_bind_calls": 0,
+          "feature_bind_upload_bytes": 0,
+          "grouped_growth_calls": 1,
+          "grouped_growth_phases": 3,
+          "grouped_growth_node_slots": 3,
+          "grouped_histogram_calls": 3,
+          "grouped_metadata_upload_bytes": 15,
+          "grouped_pack_bytes": 256,
+          "grouped_histogram_kernel_launches": 6,
+          "grouped_histogram_slots": 3,
+          "grouped_validation_kernel_launches": 3,
+          "grouped_validation_export_bytes": 12,
+          "grouped_unpack_bytes": 408,
+          "grouped_histogram_successes": 3,
+          "grouped_partition_calls": 1,
+          "grouped_partition_metadata_upload_bytes": 17,
+          "grouped_partition_pack_bytes": 32,
+          "grouped_partition_kernel_launches": 1,
+          "grouped_partition_slots": 1,
+          "grouped_partition_export_bytes": 8,
+          "grouped_partition_unpack_bytes": 32,
+          "grouped_growth_successes": 1
+        }
+      ]
+    },
+    {
+      "groups": [
+        [
+          "run-0"
+        ]
+      ],
+      "observed": [
+        {
+          "run_id": "run-0",
+          "model": {
+            "format": "openboost-tree-v3",
+            "feature_names": [
+              "a",
+              "b"
+            ],
+            "cuts": [
+              [
+                0.5,
+                1.5
+              ],
+              [
+                0.5
+              ]
+            ],
+            "categories": [
+              null,
+              null
+            ],
+            "feature": [
+              0,
+              -1,
+              -1
+            ],
+            "threshold": [
+              0,
+              -1,
+              -1
+            ],
+            "missing_left": [
+              true,
+              false,
+              false
+            ],
+            "left": [
+              1,
+              -1,
+              -1
+            ],
+            "right": [
+              2,
+              -1,
+              -1
+            ],
+            "value": [
+              [
+                0.2142857164144516
+              ],
+              [
+                1.3333333730697632
+              ],
+              [
+                -0.8846153616905212
+              ]
+            ]
+          },
+          "prediction": [
+            [
+              1.3333333730697632
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              -0.8846153616905212
+            ],
+            [
+              1.3333333730697632
+            ],
+            [
+              -0.8846153616905212
+            ]
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "upload_bytes": 92,
+          "export_bytes": 140,
+          "device_copy_bytes": 740,
+          "synchronizations": 89,
+          "live_bytes": 72,
+          "peak_live_bytes": 0,
+          "peak_pool_bytes": 0,
+          "kernel_launches": 59,
+          "kernel_dispatch_seconds": 0.02128500099968278,
+          "validation_export_bytes": 120,
+          "decision_export_bytes": 12,
+          "feature_prepare_calls": 0,
+          "feature_upload_bytes": 0,
+          "feature_bind_calls": 0,
+          "feature_bind_upload_bytes": 0,
+          "grouped_growth_calls": 1,
+          "grouped_growth_phases": 3,
+          "grouped_growth_node_slots": 3,
+          "grouped_histogram_calls": 3,
+          "grouped_metadata_upload_bytes": 15,
+          "grouped_pack_bytes": 256,
+          "grouped_histogram_kernel_launches": 6,
+          "grouped_histogram_slots": 3,
+          "grouped_validation_kernel_launches": 3,
+          "grouped_validation_export_bytes": 12,
+          "grouped_unpack_bytes": 408,
+          "grouped_histogram_successes": 3,
+          "grouped_partition_calls": 1,
+          "grouped_partition_metadata_upload_bytes": 17,
+          "grouped_partition_pack_bytes": 32,
+          "grouped_partition_kernel_launches": 1,
+          "grouped_partition_slots": 1,
+          "grouped_partition_export_bytes": 8,
+          "grouped_partition_unpack_bytes": 32,
+          "grouped_growth_successes": 1
+        }
+      ]
+    }
+  ],
+  "input_live_bytes": 176,
+  "final_live_bytes": 176,
+  "fresh": {
+    "models": 3,
+    "predictions_matched": true,
+    "training_imports_denied": true
+  }
+}

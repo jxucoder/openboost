@@ -1,0 +1,85 @@
+{
+  "case": "zero_denominator",
+  "pairs": [
+    [
+      "0x1",
+      "0x1"
+    ],
+    [
+      "0x1",
+      "0x1"
+    ],
+    [
+      "0x1",
+      "0x1"
+    ],
+    [
+      "0x1",
+      "0x1"
+    ],
+    [
+      "0x1",
+      "0x1"
+    ],
+    [
+      "0x1",
+      "0x1"
+    ],
+    [
+      "0x1",
+      "0x0"
+    ],
+    [
+      "0x1",
+      "0x1"
+    ],
+    [
+      "0x1",
+      "0x1"
+    ]
+  ],
+  "eligible": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "extra": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "stage": "complete",
+  "levels": [
+    [
+      0,
+      2,
+      4,
+      -2,
+      8
+    ],
+    [
+      0,
+      -2,
+      8
+    ],
+    [
+      -2,
+      8
+    ],
+    [
+      -2
+    ]
+  ]
+}

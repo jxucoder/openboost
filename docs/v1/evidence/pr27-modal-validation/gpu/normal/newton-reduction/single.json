@@ -1,0 +1,21 @@
+{
+  "case": "single",
+  "stage": "complete",
+  "pairs": [
+    [
+      "0x1",
+      "0x2"
+    ]
+  ],
+  "eligible": [
+    true
+  ],
+  "extra": [
+    true
+  ],
+  "levels": [
+    [
+      0
+    ]
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "protocol_sha256": "ca62533200f9c3bbb2a52f800aa0e50c657f55477212f37929af993df7b0b52d",
+  "canonical_protocol_sha256": "88c588b53bad8d08c8fd8c9a1a53b71b27676dd668ac00a35b5543fb26ec6ae6",
+  "runner_sha256": "25ac5d4ab7381171b858a4a62512e1bc9eb71d9d5f85f217b48d248a7a10c3f9",
+  "status": "fail",
+  "serialized_function_bytes": 33190
+}

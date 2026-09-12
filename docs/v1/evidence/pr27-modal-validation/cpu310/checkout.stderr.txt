@@ -1,0 +1,1 @@
+HEAD is now at 312d821 Validate installed packages outside the source checkout
