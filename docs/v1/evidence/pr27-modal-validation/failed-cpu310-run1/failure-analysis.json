@@ -1,0 +1,10 @@
+{
+  "status": "failed_before_worker_creation",
+  "failure": "Modal rejects a serialized Python 3.12 function bound to a Python 3.10 image.",
+  "image_built": true,
+  "validation_worker_created": false,
+  "numerical_tests_executed": 0,
+  "automatic_retry": false,
+  "retained_host_log_sha256": "6c64aa351a07c59f184f4c7573e09952acb9a66fb818dedbda9f3f8daae03c1a",
+  "correction": "Keep controller image on Python 3.12 and run the installed candidate under a separately pinned Python 3.10 child interpreter."
+}

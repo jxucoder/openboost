@@ -1,0 +1,29 @@
+{
+  "status": "failed",
+  "candidate": "c95dc2018fec94228e12199768b5f58aa0821f32",
+  "cases": 4633,
+  "passed": 4630,
+  "failed": 1,
+  "skipped": 2,
+  "failed_cases": [
+    "tests.v1.test_comparison_cohort_bindings::test_binding_file_covers_all_historical_cases_and_actual_collection"
+  ],
+  "skipped_cases": [
+    {
+      "id": "tests.v1.test_author_linux_worker::test_real_packet_is_staged_file_by_file_and_sdk_can_construct_image",
+      "reason": "could not import 'modal': No module named 'modal'"
+    },
+    {
+      "id": "tests.v1.test_author_worker_identity::test_actual_unsupported_host_stops_before_command",
+      "reason": "requires an unsupported host"
+    }
+  ],
+  "wheel_and_sdist": "pass",
+  "lint": "pass",
+  "worker_seconds": 309.563464189,
+  "cpu_test_child_seconds": 290.144325068,
+  "clock_note": "CPU child time is within worker time; do not add them. Image construction and transfer are separate.",
+  "diagnosis": "Historical binding collection must opt into its original source-specific cases; two existing optional/platform controls are expected skips.",
+  "automatic_retry": false,
+  "host_log_sha256": "76ebbed435ff03aab9e0310d77d56ff73ce30c631b69aefee12d70bbdbddf8e8"
+}

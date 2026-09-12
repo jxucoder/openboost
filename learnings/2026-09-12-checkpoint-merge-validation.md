@@ -49,3 +49,15 @@ does not close full-budget train-many, remaining application evaluations or E5.
 ## Commits
 
 This slice follows the curated public checkpoint commit `f143eb2`.
+
+
+## First remote attempts
+
+Retain the original `c95dc201` failures. Modal rejects Python 3.12 serialized
+controller bytecode in a Python 3.10 image before worker creation. Match controller
+and image versions, then select the tested child interpreter explicitly and record
+both identities. The Python 3.12 CPU run passes 4,630 cases but exposes a historical
+collection check that did not opt into the newly explicit historical selection.
+Restore the original 383-case collection through the historical flag. Record the
+optional SDK and unsupported-host skips precisely; do not promote them to passes
+or install authoring infrastructure solely to remove a deferred control's skip.

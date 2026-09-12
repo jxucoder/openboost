@@ -270,6 +270,9 @@
     },
     "historical_extension_cases_deselected": 36,
     "original_hash_maps_describe": "Initial curated checkpoint; this follow-up records the intentional test-selection changes separately.",
-    "current_validation": "docs/v1/evidence/pr27-modal-validation/report.json"
+    "current_validation": "docs/v1/evidence/pr27-modal-validation/report.json",
+    "additional_changed_test_helpers": {
+      "tests/v1/test_comparison_cohort_bindings.py": "2ce7e4153f8254a3ba260eb348818bd918f24a88bd4dfee520b5ed788963105c"
+    }
   }
 }

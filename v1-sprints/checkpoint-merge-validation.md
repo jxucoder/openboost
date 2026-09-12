@@ -53,3 +53,22 @@ All 85 consumed GLM audit sources are reconstructible from public ancestry. The
 default CPU gate exercises its existing historical wrapper and original eleven
 controls. Full-budget train-many, formal E4, remaining real application evaluations
 and deferred E5 remain outside this scoped checkpoint merge and still open for v1.
+
+
+## First-attempt diagnosis
+
+At candidate `c95dc201`, the Python 3.10 launch failed before worker creation because
+serialized controller bytecode used Python 3.12. The correction keeps the Modal
+controller on Python 3.12 and runs candidate checks under managed Python 3.10.17.
+It rejects incompatible controller/image versions before creating an image.
+
+The Python 3.12 worker built the wheel and source distribution and passed lint.
+Its CPU suite returned 4,630 passes, one historical-collection mismatch and two
+expected skips. The historical 383-case binding check must explicitly opt into
+historical collection; its mapping and original expected cases remain unchanged.
+The optional authoring SDK is absent, and the negative unsupported-host check is
+inapplicable on supported Linux. The corrected frozen policy allows precisely
+these two CPU skips with exact IDs/reasons, without counting them as passes or
+activating deferred authoring infrastructure. All CUDA/prerequisite skips still
+fail. Original failed phase outputs remain retained; distinct corrected attempts
+must validate the new candidate before merge.

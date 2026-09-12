@@ -1,0 +1,18 @@
+{
+  "source_baseline": "c95dc2018fec94228e12199768b5f58aa0821f32",
+  "scope": "Interpreter compatibility, explicit historical collection, exact optional/platform skip accounting. Production unchanged.",
+  "historical_binding_metadata_check": "1 passed in 1.22s; collection/hash checks only",
+  "runner_metadata_controls": 21,
+  "runtime_correction_status": "not_run",
+  "original_failure_paths": [
+    "failed-cpu310-run1",
+    "failed-cpu312-run1"
+  ],
+  "host_logs": "Retained in original execution checkout; not included here.",
+  "helper_sha256": {
+    ".github/scripts/modal_validate_checkpoint.py": "6cd336e9439b1f1f9426c2f20efe6427817de522b30f1326673c3d84a66708e8",
+    ".github/scripts/check_modal_validation.py": "553a8ff1556ba585155a7a23b248c9b7b3dfcc90fa15777240a9dba16dc76284",
+    ".github/scripts/test_modal_validate_checkpoint.py": "43e05a51d135bee0e2a9509c81f840a66b2fbfddecc381417ce86fee8d59f418",
+    ".github/scripts/test_check_modal_validation.py": "a8c30d8a315ec53da060e6fa536f7109ea5f074572b3c7185a18328574d9bb64"
+  }
+}

@@ -16,6 +16,68 @@ REPOSITORY = "https://github.com/jxucoder/openboost.git"
 EVIDENCE = "docs/v1/evidence/pr27-modal-validation/"
 BUILD_PACKAGES = ["hatchling==1.27.0", "pathspec==1.1.1", "trove-classifiers==2026.6.1.19"]
 RETURN_LIMIT = 64 * 1024**2
+CONTROLLER_PYTHON = "3.12"
+MANAGED_PYTHON_DIRECTORY = "/opt/pr27-python"
+CPU_SKIPS = [
+    dict(id="tests.v1.test_author_linux_worker::test_real_packet_is_staged_file_by_file_and_sdk_can_construct_image",
+         reason="could not import 'modal': No module named 'modal'"),
+    dict(id="tests.v1.test_author_worker_identity::test_actual_unsupported_host_stops_before_command",
+         reason="requires an unsupported host"),
+]
+
+
+def allowed_job_skips(name):
+    return [dict(item) for item in CPU_SKIPS] if name in ("cpu310", "cpu312") else []
+
+
+def junit_observations(cases):
+    """Keep executed, skipped and failed counts distinct even on a false verdict."""
+    observed, seen, passed, failures = [], set(), 0, 0
+    for case in cases:
+        name = case.attrib.get("classname", "") + "::" + case.attrib.get("name", "")
+        if not case.attrib.get("classname") or not case.attrib.get("name") or name in seen:
+            raise ValueError("unique fully named JUnit cases required")
+        seen.add(name)
+        skips = case.findall("skipped")
+        if len(skips) > 1:
+            raise ValueError("duplicate JUnit skip record")
+        failure = bool(case.findall("failure") or case.findall("error"))
+        failures += failure
+        passed += not failure and not skips
+        if skips:
+            observed.append(dict(id=name, reason=skips[0].attrib.get("message", "")))
+    return dict(cases=len(cases), passed=passed, failures=failures, skipped=len(observed),
+                observed_skips=sorted(observed, key=lambda value: value["id"]))
+
+
+def validate_junit_observations(value, name, expected):
+    if (not value["cases"] or not value["passed"] or value["failures"]
+            or (expected is not None and value["cases"] != expected)
+            or value["observed_skips"] != allowed_job_skips(name)):
+        raise ValueError("exact JUnit population and frozen skip identities/reasons required")
+
+
+def interpreter_policy(phase):
+    """Modal serializes controller bytecode; the tested interpreter is separate."""
+    if phase not in ("cpu310", "cpu312", "gpu"):
+        raise ValueError("unknown interpreter phase")
+    return dict(controller=CONTROLLER_PYTHON, child="3.10.17" if phase == "cpu310" else "3.12",
+                managed_install="3.10.17" if phase == "cpu310" else None)
+
+
+def validate_controller(local_version, image_python):
+    """Reject incompatible serialized bytecode before constructing a Modal image."""
+    actual = ".".join(map(str, tuple(local_version)[:2]))
+    if actual != CONTROLLER_PYTHON or image_python != actual:
+        raise ValueError("serialized Modal controller and image must both use Python " + CONTROLLER_PYTHON)
+
+
+def validate_child_version(phase, actual):
+    expected = interpreter_policy(phase)["child"]
+    valid = actual == expected if phase == "cpu310" else bool(re.fullmatch(r"3\.12\.[0-9]+", actual))
+    if not valid:
+        raise ValueError("actual installed child interpreter differs from frozen phase: " + actual)
+    return actual
 
 
 def digest(value):
@@ -57,8 +119,8 @@ def validate_protocol(p):
         raise ValueError("fixed return/log bounds required")
     if p["policy"]["path"] != ".github/modal-validation-policy.json" or not re.fullmatch(r"[0-9a-f]{64}", p["policy"]["sha256"]):
         raise ValueError("candidate-tracked execution policy required")
-    if p["expected_core_modules"] != 63 or p["allowed_skips"] != []:
-        raise ValueError("exact current installed module count and no waived skips required")
+    if p["expected_core_modules"] != 63 or p["allowed_skips"] != allowed_job_skips(p["phase"]):
+        raise ValueError("exact current installed module count and frozen phase skip records required")
     if type(p["gpu_tests"]) is not list or not p["gpu_tests"] or len(set(p["gpu_tests"])) != len(p["gpu_tests"]):
         raise ValueError("explicit complete selected GPU module list required")
     if any(not re.fullmatch(r"tests/v1/test_[A-Za-z0-9_]+\.py(?:::[A-Za-z0-9_]+)?", name) for name in p["gpu_tests"]):
@@ -79,12 +141,16 @@ def remote_phase(p):
     from datetime import datetime, timezone
 
     validate_protocol(p)
+    runtime = interpreter_policy(p["phase"])
+    validate_controller(sys.version_info, runtime["controller"])
+    child_selector = runtime["child"] if runtime["managed_install"] else sys.executable
     started = time.monotonic()
     deadline = started + p["resources"]["work_seconds"]
     out, repo = Path("/tmp/pr27-results"), Path("/tmp/pr27-source")
     out.mkdir()
     env = dict(os.environ, GIT_TERMINAL_PROMPT="0", GIT_CONFIG_GLOBAL="/dev/null", GIT_CONFIG_SYSTEM="/dev/null",
-               UV_PYTHON_DOWNLOADS="never", UV_NO_PROGRESS="1", PYTHONDONTWRITEBYTECODE="1",
+               UV_PYTHON_DOWNLOADS="never", UV_PYTHON_INSTALL_DIR=MANAGED_PYTHON_DIRECTORY,
+               UV_NO_PROGRESS="1", PYTHONDONTWRITEBYTECODE="1",
                OPENBLAS_CORETYPE="HASWELL",
                NPY_DISABLE_CPU_FEATURES="AVX512F,AVX512CD,AVX512_KNL,AVX512_KNM,AVX512_SKX,AVX512_CLX,AVX512_CNL,AVX512_ICL,AVX512_SPR")
     env.pop("PYTHONPATH", None)
@@ -93,7 +159,8 @@ def remote_phase(p):
         env[name] = "1"
     report = dict(schema=SCHEMA, source_commit=p["source_commit"], inventory_sha256=p["inventory_sha256"],
                   protocol=p, protocol_sha256=digest(p), phase=p["phase"], passed=False, jobs={}, commands=[],
-                  started_at=datetime.now(timezone.utc).isoformat(), platform=dict(python=platform.python_version(),
+                  started_at=datetime.now(timezone.utc).isoformat(), runtime_policy=runtime,
+                  platform=dict(python=None, controller_python=platform.python_version(),
                   system=platform.platform(), machine=platform.machine(), os=platform.system(), provider="Modal"), installed_sources={}, inventory={},
                   packages={}, observed_limits={}, artifacts={}, collection_complete=False)
     log_bytes = 0
@@ -158,7 +225,7 @@ def remote_phase(p):
 
     def job(name, argv, *, junit=None, expected=None, maximum_seconds=None):
         row = dict(status="not_run", source_commit=p["source_commit"], inventory_sha256=p["inventory_sha256"],
-                   command=argv, junit=junit, allowed_skips=p["allowed_skips"], artifacts=[],
+                   command=argv, junit=junit, allowed_skips=allowed_job_skips(name), artifacts=[],
                    started_at=datetime.now(timezone.utc).isoformat(), wall_seconds=0, exit_code=None)
         report["jobs"][name] = row
         begin = time.monotonic()
@@ -172,14 +239,18 @@ def remote_phase(p):
                 row["collection"] = name + "-collection.json"
                 write(row["collection"], dict(case_count=len(nodeids), nodeids=nodeids, command=collection_argv))
                 expected = len(nodeids)
-            command(name, argv, cwd=repo, maximum_seconds=maximum_seconds)
-            row.update(status="pass", exit_code=0)
+            execution_error = None
+            try:
+                command(name, argv, cwd=repo, maximum_seconds=maximum_seconds)
+            except Exception as error:
+                execution_error = error
+            if junit and (out / junit).exists():
+                row.update(junit_observations(ET.parse(out / junit).findall(".//testcase")))
+            if execution_error is not None:
+                raise execution_error
             if junit:
-                cases = ET.parse(out / junit).findall(".//testcase")
-                row.update(cases=len(cases), failures=sum(len(c.findall("failure")) + len(c.findall("error")) for c in cases),
-                           skipped=sum(len(c.findall("skipped")) for c in cases))
-                if not cases or row["failures"] or row["skipped"] or (expected is not None and len(cases) != expected):
-                    raise ValueError("exact nonempty passing JUnit population required")
+                validate_junit_observations(row, name, expected)
+            row.update(status="pass", exit_code=0)
         except Exception as error:
             row.update(status="fail", reason=type(error).__name__ + ": " + str(error)[:1024])
             raise
@@ -200,16 +271,20 @@ def remote_phase(p):
 
     def installed_check(name):
         code = """
-import hashlib,importlib.metadata,json,pathlib,sys
+import hashlib,importlib.metadata,json,pathlib,platform,sys
 import openboost
 root=pathlib.Path(openboost.__file__).parent
 assert 'site-packages' in root.parts and not root.is_relative_to(pathlib.Path(sys.argv[1])/'src')
 actual={'src/openboost/'+str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in root.rglob('*.py')}
 expected={'src/openboost/'+str(p.relative_to(pathlib.Path(sys.argv[1])/'src/openboost')):hashlib.sha256(p.read_bytes()).hexdigest() for p in (pathlib.Path(sys.argv[1])/'src/openboost').rglob('*.py')}
 assert actual == expected and len(actual)==63
-print(json.dumps({'installed_sources':actual,'packages':{d.metadata['Name']:d.version for d in importlib.metadata.distributions()},'installed_path':str(root)}))
+print(json.dumps({'installed_sources':actual,'packages':{d.metadata['Name']:d.version for d in importlib.metadata.distributions()},'installed_path':str(root),'worker_python':platform.python_version()}))
 """
         value = json.loads(command(name, [str(repo / ".venv/bin/python"), "-I", "-c", code, str(repo)], cwd=repo))
+        actual_python = validate_child_version(p["phase"], value.pop("worker_python"))
+        if report["platform"]["python"] not in (None, actual_python):
+            raise ValueError("installed child interpreter changed during validation")
+        report["platform"]["python"] = actual_python
         report.update(value)
 
     def prepare_gpu_consumers(python, wheels):
@@ -219,7 +294,7 @@ print(json.dumps({'installed_sources':actual,'packages':{d.metadata['Name']:d.ve
         if len(extension_wheels) != 1:
             raise ValueError("one current extension wheel required")
         command("extension-install", ["uv", "pip", "install", "--python", python, "--no-deps", str(extension_wheels[0])], cwd=repo)
-        command("fresh-venv", ["uv", "venv", "--python", sys.executable, "/tmp/pr27-fresh"], cwd=repo)
+        command("fresh-venv", ["uv", "venv", "--python", python, "/tmp/pr27-fresh"], cwd=repo)
         command("fresh-install", ["uv", "pip", "install", "--python", "/tmp/pr27-fresh/bin/python", "--no-deps", "numpy==2.3.5", str(wheels[0])], cwd=repo)
         env["OPENBOOST_FRESH_CPU_PYTHON"] = "/tmp/pr27-fresh/bin/python"
         ready = """
@@ -268,8 +343,10 @@ print(json.dumps({'packages':actual,'installed_core':openboost.__file__}))
         report["lock_sha256"] = hashlib.sha256((repo / "uv.lock").read_bytes()).hexdigest()
         if command("clean-before", ["git", "status", "--porcelain"], cwd=repo).strip():
             raise ValueError("clone unexpectedly dirty")
-        command("sync", ["uv", "sync", "--locked", "--extra", "test", "--no-install-project", "--python", sys.executable], cwd=repo)
+        command("sync", ["uv", "sync", "--locked", "--extra", "test", "--no-install-project", "--python", child_selector], cwd=repo)
         python = str(repo / ".venv/bin/python")
+        child_version = command("child-interpreter", [python, "-I", "-c", "import platform;print(platform.python_version())"], cwd=repo).decode().strip()
+        report["platform"]["python"] = validate_child_version(p["phase"], child_version)
         command("build-tools", ["uv", "pip", "install", "--python", python, "--no-deps", *p["build_packages"]], cwd=repo)
         job("build" if p["phase"] == "cpu312" else p["phase"] + "-build",
             ["uv", "build", "--python", python, "--no-build-isolation", "--out-dir", str(out / "dist")])
@@ -288,7 +365,7 @@ print(json.dumps({'packages':actual,'installed_core':openboost.__file__}))
                 write("docs-files.json", {str(path.relative_to(site)):hashlib.sha256(path.read_bytes()).hexdigest() for path in site.rglob("*") if path.is_file()})
                 # This changes only optional packages, then reinstalls the same
                 # wheel: uv sync would otherwise remove the installed project.
-                command("sync-cuda-collection", ["uv", "sync", "--locked", "--extra", "test", "--extra", "cuda", "--no-install-project", "--python", sys.executable], cwd=repo)
+                command("sync-cuda-collection", ["uv", "sync", "--locked", "--extra", "test", "--extra", "cuda", "--no-install-project", "--python", child_selector], cwd=repo)
                 command("reinstall-wheel", ["uv", "pip", "install", "--python", python, "--no-deps", str(wheels[0])], cwd=repo)
                 prepare_gpu_consumers(python, wheels)
                 raw = command("gpu-collection", pytest_command(p["gpu_tests"], ["-m", "gpu", "--collect-only"]), cwd=repo)
@@ -298,7 +375,7 @@ print(json.dumps({'packages':actual,'installed_core':openboost.__file__}))
                 write("gpu-collection.json", dict(cases=len(collected), nodeids=collected, tests=p["gpu_tests"]))
                 report["gpu_readiness"] = dict(passed=True, cases=len(collected), artifact="gpu-collection.json")
         else:
-            command("sync-cuda", ["uv", "sync", "--locked", "--extra", "test", "--extra", "cuda", "--no-install-project", "--python", sys.executable], cwd=repo)
+            command("sync-cuda", ["uv", "sync", "--locked", "--extra", "test", "--extra", "cuda", "--no-install-project", "--python", child_selector], cwd=repo)
             command("reinstall-wheel", ["uv", "pip", "install", "--python", python, "--no-deps", str(wheels[0])], cwd=repo)
             hardware = command("gpu-hardware", ["nvidia-smi", "--query-gpu=name,driver_version,memory.total", "--format=csv,noheader"], cwd=repo, maximum_seconds=30).decode().strip()
             if "T4" not in hardware:
@@ -365,6 +442,8 @@ def main():
         raise ValueError("small frozen protocol required")
     p = json.loads(raw)
     validate_protocol(p)
+    runtime = interpreter_policy(p["phase"])
+    validate_controller(sys.version_info, runtime["controller"])
     if os.environ.get("MODAL_PROFILE") != "edamame-labs":
         raise ValueError("explicit authorized Modal profile required")
     if args.output.exists():
@@ -388,13 +467,20 @@ def main():
     args.output.mkdir(parents=True)
     launch = dict(protocol_sha256=hashlib.sha256(raw).hexdigest(), canonical_protocol_sha256=digest(p),
                   runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), status="starting",
-                  serialized_function_bytes=len(serialize(remote_phase)))
+                  serialized_function_bytes=len(serialize(remote_phase)), runtime_policy=runtime,
+                  controller_python=".".join(map(str, sys.version_info[:3])))
     (args.output / "launch.json").write_text(json.dumps(launch, indent=2) + "\n")
     if launch["serialized_function_bytes"] > 65536:
         raise ValueError("remote function serialization exceeds bound")
-    image = (modal.Image.from_registry("nvidia/cuda:12.6.3-devel-ubuntu22.04", add_python="3.12")
-             if p["phase"] == "gpu" else modal.Image.debian_slim(python_version=p["python"]))
+    image = (modal.Image.from_registry("nvidia/cuda:12.6.3-devel-ubuntu22.04", add_python=runtime["controller"])
+             if p["phase"] == "gpu" else modal.Image.debian_slim(python_version=runtime["controller"]))
     image = image.apt_install("git").uv_pip_install("uv==" + p["uv"], uv_version=p["uv"])
+    image = image.env({"UV_PYTHON_INSTALL_DIR": MANAGED_PYTHON_DIRECTORY})
+    if runtime["managed_install"]:
+        image = image.run_commands("uv python install " + runtime["managed_install"])
+    # The managed interpreter is installed remotely during image construction;
+    # every worker command refuses implicit interpreter downloads.
+    image = image.env({"UV_PYTHON_DOWNLOADS": "never"})
     app = modal.App("openboost-pr27-" + p["phase"])
     options = dict(image=image, cpu=(2, 2), memory=(8192, 8192), timeout=p["resources"]["timeout_seconds"],
                    max_containers=1, retries=0, serialized=True, include_source=False)

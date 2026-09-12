@@ -1,0 +1,8 @@
+{
+  "protocol_sha256": "8c87d97c49e28808b857a9d1ef85df8aa2b15f3739edd3e7bee7a2e0223213e0",
+  "canonical_protocol_sha256": "77f4c1acd89324d279abd6164fc051f7bb2aa7ad9a8b65686c81d40b355f6aa4",
+  "runner_sha256": "25ac5d4ab7381171b858a4a62512e1bc9eb71d9d5f85f217b48d248a7a10c3f9",
+  "status": "error",
+  "serialized_function_bytes": 33190,
+  "error": "InvalidError: The 'remote_phase' Function (using `serialized=True`) was defined with Python 3.12, but its Image has 3.10. A serialized Function must be defined using a Python version that is compatible with the one in its remote environment."
+}

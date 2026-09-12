@@ -33,6 +33,8 @@ class Check(unittest.TestCase):
         policy = json.loads(policy_path.read_text())
         self.actual_policy = copy.deepcopy(policy)
         policy.update(gpu_tests=["tests/v1/test_case.py"], expected_gpu_cases=1)
+        for rule in policy["jobs"].values():
+            rule["allowed_skips"] = []
         self.put(gate.POLICY, policy)
         self.write("src/openboost/example.py", b"x = 1\n")
         protocol = dict(source_commit=self.commit, inventory_sha256=self.identity,

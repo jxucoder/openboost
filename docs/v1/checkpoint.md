@@ -54,6 +54,9 @@ Read its status and source binding before claiming a pass. The merge gate requir
 installed CPU regression on Python 3.10 and 3.12, wheel and source builds, strict
 documentation, and 441 selected current CUDA cases on real T4 hardware, including
 fresh CPU serialization consumers and eighteen installed D2 extension cases.
+The CPU protocol records two expected skips: an optional authoring SDK control and
+a negative host check that requires an unsupported platform. They are not passes;
+CUDA and installed prerequisite checks permit no skips.
 
 The D2 extension cases compare against the same run's ninety independently checked
 current Normal trajectories. Thirty-six older extension trajectories retain their

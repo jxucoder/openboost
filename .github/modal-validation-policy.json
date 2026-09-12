@@ -20,12 +20,30 @@
     "cpu310": {
       "python": "3.10",
       "kind": "pytest",
-      "allowed_skips": []
+      "allowed_skips": [
+        {
+          "id": "tests.v1.test_author_linux_worker::test_real_packet_is_staged_file_by_file_and_sdk_can_construct_image",
+          "reason": "could not import 'modal': No module named 'modal'"
+        },
+        {
+          "id": "tests.v1.test_author_worker_identity::test_actual_unsupported_host_stops_before_command",
+          "reason": "requires an unsupported host"
+        }
+      ]
     },
     "cpu312": {
       "python": "3.12",
       "kind": "pytest",
-      "allowed_skips": []
+      "allowed_skips": [
+        {
+          "id": "tests.v1.test_author_linux_worker::test_real_packet_is_staged_file_by_file_and_sdk_can_construct_image",
+          "reason": "could not import 'modal': No module named 'modal'"
+        },
+        {
+          "id": "tests.v1.test_author_worker_identity::test_actual_unsupported_host_stops_before_command",
+          "reason": "requires an unsupported host"
+        }
+      ]
     },
     "gpu": {
       "python": "3.12",
